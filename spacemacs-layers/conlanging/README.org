@@ -1,0 +1,32 @@
+#+TITLE: Conlanging layer
+
+# The maximum height of the logo should be 200 pixels.
+[[img/conlanging.png]]
+
+# TOC links should be GitHub style anchors.
+* Table of Contents                                        :TOC_4_gh:noexport:
+- [[#description][Description]]
+  - [[#features][Features:]]
+- [[#install][Install]]
+- [[#key-bindings][Key bindings]]
+
+* Description
+This layer adds support for conlanging.
+
+** Features:
+  - Conversion from translittion to other alphabets
+  - Open linguistic files
+
+* Install
+To use this configuration layer, add it to your =~/.spacemacs=. You will need to
+add =conlanging= to the existing =dotspacemacs-configuration-layers= list in this
+file.
+
+* Key bindings
+
+| Key Binding   | Description                                         |
+|---------------+-----------------------------------------------------|
+| ~SPC o l m o~ | Open ~matter.org~ file                              |
+| ~SPC o l m r~ | Translate Mattér translitteration into runes        |
+| ~SPC o l m l~ | Translate Mattér translitteration into native latin |
+| ~SPC o l m h~ | Open ~hjepl.org~ file                               |

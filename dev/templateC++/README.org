@@ -1,0 +1,14 @@
+[[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+
+* PROJECTNAME
+
+PROJECTNAME is a C++17 project written for and built with CMake.
+
+* How to build PROJECTNAME
+
+You can directly run either ~make~ or ~make release~ to compile the release
+version of the binaries which will be generated in ~bin/~. If you wish to
+compile its debug version instead, run ~make debug~ to generate the binaries in
+the ~debug/~ directory. Once you have ran ~make~ at the root of the project, you
+can recompile the project from the ~build/~ directory if you wish to avoid to
+re-run CMake.
