@@ -1,0 +1,51 @@
+[[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+
+* P’undrak’s dotfiles
+
+** Presentation
+
+   This is my collection of dotfiles for my daily GNU/Linux environment, tweaked
+   to  my liking.  If  you  wish to  get  the same  setup  as  mine, follow  the
+   instructions below.
+
+   As you can see, I personally use [[https://fishshell.com/][fish]]  as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] using
+   [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding) as my main text editor.
+
+   I also use  [[https://github.com/resloved/i3][Resolved]]’s [[https://github.com/resloved/i3][fork]] of [[https://github.com/Airblader/i3][i3-gaps]] with two  [[https://github.com/jaagr/polybar][polybar]] bars and [[https://github.com/tryone144][Tryone144]]’s
+   [[https://github.com/tryone144/compton][fork]] of  [[https://github.com/chjj/compton][Compton]]. The colors  scheme for [[https://github.com/davatorium/rofi][rofi]],  Emacs and polybar  are chosen
+   from the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
+
+** Features
+
+   - Emacs configuration perfectly tailored for my own use
+   - Beautiful and comfy i3 and polybar configuration
+
+** Dependencies
+
+   Of course, some dependencies are needed for my dotfiles to work well. Here is
+   a non-exhaustive list of software needed by these configuration files:
+   - Emacs >= 26.2
+     - Spacemacs (develop branch)
+   - fish
+   - [[https://st.suckless.org/][st]] ([[https://github.com/mattiadr][Mattiadr]]’s [[https://github.com/mattiadr/st][fork]])
+   - i3-gaps
+   - compton
+   - pywal
+   - j4-dmenu-desktop
+   - minted
+   - Rust nightly
+   - texlive-core
+   And some other stuff scattered around in my dotfiles.
+
+** Installation
+
+   To have the same install as I  do, simply symlink your configuration files to
+   the files in this git repository.
+
+** Licence
+
+   All of my dotfiles  (and my dotfiles only) are available  under the GNU GPLv3
+   Licence. Please consult  [[file:LICENCE.md]] for more information.  In short: you
+   are free to access,  edit and redistribute all of my  dotfiles under the same
+   licence and  as allowed by  the licence, and if  you fuck up  something, it’s
+   your own responsibility.
