@@ -699,17 +699,6 @@ dump."
   (spacemacs/declare-prefix "og" "gnus")
   (spacemacs/declare-prefix "oi" "insert")
   (spacemacs/declare-prefix "oii" "invisible space")
-  (spacemacs/declare-prefix "ol" "conlanging")
-  (spacemacs/declare-prefix "olh" "Hjelp")
-  (spacemacs/declare-prefix "olho" "hjelp.org")
-  (spacemacs/declare-prefix "olm" "Mattér")
-  (spacemacs/declare-prefix "olmo" "matter.org")
-  (spacemacs/declare-prefix "ole" "Einnlanda")
-  (spacemacs/declare-prefix "oleo" "einnlanda.org")
-  (spacemacs/declare-prefix "oln" "Ňyqy")
-  (spacemacs/declare-prefix "olno" "nyqy.org")
-  (spacemacs/declare-prefix "olt" "Tãso")
-  (spacemacs/declare-prefix "olto" "taso.org")
   (spacemacs/declare-prefix "om" "multiple-cursors")
   (spacemacs/declare-prefix "oo" "org-mode")
   (spacemacs/declare-prefix "ooi" "custom IDs")
@@ -734,19 +723,6 @@ dump."
     "ogd" 'turn-on-gnus-dired-mode
     "oii" (lambda () (interactive)
             (insert "​"))
-    "olho" (lambda () (interactive)
-             (find-file "~/Documents/code/web/langue-phundrak-fr/hjelp.org"))
-    "olmo" (lambda () (interactive)
-             (find-file "~/Documents/code/web/langue-phundrak-fr/matter.org"))
-    "olno" (lambda () (interactive)
-             (find-file "~/Documents/code/web/langue-phundrak-fr/nyqy.org"))
-    "oleo" (lambda () (interactive)
-             (find-file "~/Documents/code/web/langue-phundrak-fr/einnlanda.org"))
-    "olto" (lambda () (interactive)
-             (find-file "~/Documents/code/web/langue-phundrak-fr/taso.org"))
-    "olmr" 'conlanging/matter-to-runes
-    "olml" 'conlanging/matter-to-native-latin
-    "olmL" 'conlanging/matter-to-latex-runes
     "ome" 'mc/edit-lines
     "omn" 'mc/mark-next-like-this
     "omp" 'mc/mark-previous-like-this
