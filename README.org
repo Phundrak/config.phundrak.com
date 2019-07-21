@@ -45,6 +45,9 @@
    - texlive-core
    And some other stuff scattered around in my dotfiles.
 
+   I also use my own layer for conlanging when within org-mode in Emacs, you can
+   find it [[https://labs.phundrak.fr/phundrak/conlang-layer][here]]. I also use [[https://github.com/venmos][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]].
+
 ** Installation
 
    To have the same install as I  do, simply symlink your configuration files to
