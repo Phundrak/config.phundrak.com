@@ -173,7 +173,7 @@ bindsym XF86MonBrightnessUp       exec light -A 5
 bindsym XF86MonBrightnessDown     exec light -U 5
 
 # Wal
-bindsym $mod+Ctrl+w               exec wal -i ~/.config/Wallpapers -o wal-set
+bindsym $mod+Ctrl+w               exec wal -i ~/Pictures/Wallpapers -o wal-set
 
 # Take a screenshot
 bindsym --release Print           exec --no-startup-id scrot
