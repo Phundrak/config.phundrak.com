@@ -107,7 +107,6 @@ This function should only modify configuration layer settings."
           org-enable-sticky-header t
           org-enable-epub-support t
           org-projectile-file "TODOs.org")
-     pandoc
      pdf
      (plantuml :variables
                plantuml-jar-path "/opt/plantuml/plantuml.jar"
