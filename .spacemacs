@@ -584,8 +584,8 @@ See the header of this file for more information."
   (require 'ox-latex)
   (require 'ox-publish)
 
-  (add-to-list 'package-archives
-               '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  ;; (add-to-list 'package-archives
+  ;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (add-to-list 'custom-theme-load-path "~/.emacs.d/private/themes")
   (flyspell-mode 0)
@@ -761,7 +761,8 @@ dump."
         message-directory "~/Mails"
         gnus-fetch-old-headers 'some
         mm-discouraged-alternatives '("text/html" "text/richtext")
-        mm-text-html-renderer 'w3m)
+        mm-text-html-renderer 'w3m
+        gnus-use-cache t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;              org--mode              ;
