@@ -294,7 +294,7 @@ ramp-used-7 = █
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/wlan]
 type = internal/network
-interface = wlp3s0
+interface = wlp8s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
@@ -316,7 +316,7 @@ ramp-signal-4 = 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/eth]
 type = internal/network
-interface = enp0s25
+interface = enp9s0
 interval = 3.0
 
 format-connected-underline = #55aa55
