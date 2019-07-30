@@ -106,7 +106,8 @@ This function should only modify configuration layer settings."
           spaceline-org-clock-p t
           org-enable-sticky-header t
           org-enable-epub-support t
-          org-projectile-file "TODOs.org")
+          org-projectile-file "TODOs.org"
+          org-list-allow-alphabetical t)
      pdf
      (plantuml :variables
                plantuml-jar-path "/opt/plantuml/plantuml.jar"
@@ -125,7 +126,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 40
             shell-default-position 'bottom
-            shell-default-shell 'eshell)
+            shell-default-shell 'term)
      shell-scripts
      selectric
      semantic
