@@ -13,7 +13,8 @@ set $right                        Right
 set $exiti3                       "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 set $lockscreen                   "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
 set $rofiexec                     "rofi -combi-modi window,drun -show combi -mohh combi -m -1"
-set $execgnus                     "exec emacsclient --create-frame --eval '(gnus)'"
+set $execgnus                     "exec emacsclient --create-frame --eval '(gnus)' -a nvim -n"
+set $ec                           "emacsclient --create-frame -a nvim -n"
 set $term                         st
 
 # use Mouse+$mod to drag floating windows to their wanted position
@@ -37,7 +38,6 @@ assign [class="Steam"] 9
 
 # start a terminal
 bindsym $mod+Return               exec $term
-bindsym Ctrl+$mod+Return          exec emacsclient --eval "(eshell-new)" --create-frame
 bindsym $mod+$alt+Return          split h;; exec $term
 bindsym $mod+Shift+Return         split v;; exec $term
 
@@ -134,8 +134,8 @@ bindsym $mod+$alt+Shift+k         exec setxkbmap fr
 bindsym $mod+$alt+Ctrl+k          exec setxkbmap us
 
 # bindings for MS Natural Ergonomic Keyboard 4000 ##############################
-bindsym XF86Launch5               exec emacsclient --create-frame
-bindsym $mod+e                    exec emacsclient --create-frame
+bindsym XF86Launch5               exec $ec
+bindsym $mod+e                    exec $ec
 bindsym XF86Launch6               exec chromium
 bindsym $mod+c                    exec chromium
 bindsym XF86HomePage              exec chromium https://labs.phundrak.fr
