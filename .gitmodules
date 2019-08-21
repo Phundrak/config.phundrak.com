@@ -1,0 +1,9 @@
+[submodule "spacemacs-layers/w3m-layer"]
+	path = spacemacs-layers/w3m-layer
+	url = git@github.com:venmos/w3m-layer.git
+[submodule "spacemacs-layers/conlang-layer"]
+	path = spacemacs-layers/conlang-layer
+	url = git@labs.phundrak.fr:phundrak/conlang-layer.git
+[submodule "tmux"]
+	path = tmux
+	url = git@github.com:gpakosz/.tmux.git
