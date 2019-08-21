@@ -107,7 +107,8 @@ This function should only modify configuration layer settings."
           org-enable-sticky-header t
           org-enable-epub-support t
           org-projectile-file "TODOs.org"
-          org-list-allow-alphabetical t)
+          org-download-image-dir "~/Pictures/org"
+          org-return-follows-link t)
      pdf
      (plantuml :variables
                plantuml-jar-path "/opt/plantuml/plantuml.jar"
@@ -179,7 +180,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(popwin)
+   dotspacemacs-excluded-packages '()
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -283,7 +284,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-startup-lists '((recents . 15)
                                 (projects . 15))
 
-   ;; True if the home buffer should respond to resize events.
+   ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
 
    ;; Default major mode for a new empty buffer. Possible values are mode
@@ -335,14 +336,11 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
-   ;; quickly tweak the mode-line size to make separators look not too crappy.
-   ;; link to the Fantasque font : https://github.com/belluzj/fantasque-sans
-   dotspacemacs-default-font '("Fantasque Sans Mono"
-                               :size 13
+   ;; Default font or prioritized list of fonts.
+   dotspacemacs-default-font '("DejaVu Sans Mono"
+                               :size 8.0
                                :weight normal
-                               :width normal
-                               :powerline-scale 1.0)
+                               :width normal)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
 
@@ -491,7 +489,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    dotspacemacs-line-numbers '(:relative nil
-                                         :enabled-for-modes prog-mode)
+                               :enabled-for-modes prog-mode)
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -502,7 +500,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-smartparens-strict-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis nil
 
@@ -524,7 +522,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -586,10 +584,14 @@ See the header of this file for more information."
   (require 'ox-latex)
   (require 'ox-publish)
 
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/")
+                           ("melpa-stable" . "https://melpa.milkbox.net/packages/")
+                           ("org" . "https://orgmode.org/elpa/")))
+
   ;; (add-to-list 'package-archives
-  ;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+               ;; '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/private/themes")
   (flyspell-mode 0)
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no"))
@@ -599,8 +601,6 @@ See the header of this file for more information."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-  (with-temp-buffer (org-mode))
-  (require 'org-projectile)
   )
 
 (defun dotspacemacs/user-config ()
@@ -612,6 +612,9 @@ dump."
   (setq dionysos-backend 'mpd
         dionysos-notify-p t
         dionysos-volume-cmd 'pamixer)
+  (global-set-key (kbd "<s-next>") 'mpd-next)
+  (global-set-key (kbd "<s-prior>") 'mpd-prev)
+  (global-set-key (kbd "s-p") 'mpd-pause)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 Misc                ;
@@ -624,7 +627,19 @@ dump."
         epa-pinentry-mode 'loopback
         paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] "
         wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
-                                "Saint Agrève"))
+                                "Saint Agrève")
+        prettify-symbols-alist '(("lambda" . 955) ; λ
+                                 ("->" . 8594)    ; →
+                                 ("<->" . 8596)   ; ↔
+                                 ("<-" . 8592)    ; ←
+                                 ("=>" . 8658)    ; ⇒
+                                 ("<=>" . 8860)   ; ⇔
+                                 ("<=" . 8656)    ; ⇐
+                                 ("mapc" . 8614)  ; ↦
+                                 ("map" . 8614)   ; ↦
+                                 (">>" . 187)     ; »
+                                 ("<<" . 171)     ; «
+                                 ))
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook 'eldoc-mode)
   (mapc (lambda (x)
@@ -637,11 +652,6 @@ dump."
           org-mode-hook
           text-mode-hook
           markdown-mode-hook))
-
-  (defun eshell-new()
-    "Open a new instance of eshell"
-    (interactive)
-    (eshell 'N))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;               Nov-mode              ;
@@ -659,18 +669,10 @@ dump."
                                         ;            file extension           ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (dolist (e '(("xml" . web-mode)
-               ("xinp" . web-mode)
-               ("aiml" . web-mode)
-               ("C" . c++-mode)
-               ("dconf" . conf-mode)
-               ("yy" . bison-mode)
-               ("ll" . flex-mode)
-               ("s" . asm-mode)
-               ("pl" . prolog-mode)
-               ("l" . scheme-mode)
-               ("vs" . glsl-mode)
-               ("fs" . glsl-mode)))
+  (dolist (e '(("xml" . web-mode)    ("xinp"  . web-mode)  ("aiml" . web-mode)
+               ("C"   . c++-mode)    ("dconf" . conf-mode) ("yy" . bison-mode)
+               ("ll"  . flex-mode)   ("s"     . asm-mode)  ("pl" . prolog-mode)
+               ("l"   . scheme-mode) ("vs"    . glsl-mode) ("fs" . glsl-mode)))
     (push (cons (concat "\\." (car e) "\\'") (cdr e)) auto-mode-alist))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -697,6 +699,7 @@ dump."
   (global-set-key (kbd "<C-tab>") 'evil-close-fold)
   (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
   (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
+  (global-set-key (kbd "<s-f1>") (lambda () (interactive) (dired "~/")))
   (spacemacs/declare-prefix "o" "custom")
   (spacemacs/declare-prefix "oa" "applications")
   (spacemacs/declare-prefix "oc" "comments")
@@ -712,6 +715,7 @@ dump."
   (spacemacs/declare-prefix "oott" "toggle width")
   (spacemacs/declare-prefix "oote" "expand")
   (spacemacs/declare-prefix "oots" "shrink")
+  (spacemacs/declare-prefix "or" "external command")
   (spacemacs/declare-prefix "ow" "writeroom")
   (spacemacs/set-leader-keys
     "oac" 'calc
@@ -719,14 +723,13 @@ dump."
     "oae" 'eww
     "oaf" 'fireplace
     "oaw" 'wttrin
-    "oB" 'fancy-battery-mode
+    "ob" 'fancy-battery-mode
     "occ" 'outorg-copy-edits-and-exit
     "oce" 'outorg-edit-as-org
     "od" 'elcord-mode
     "of" 'flycheck-mode
     "ogd" 'turn-on-gnus-dired-mode
-    "oii" (lambda () (interactive)
-            (insert "​"))
+    "oii" (lambda () (interactive) (insert "​"))
     "ome" 'mc/edit-lines
     "omn" 'mc/mark-next-like-this
     "omp" 'mc/mark-previous-like-this
@@ -739,6 +742,8 @@ dump."
     "oots" 'org-table-shrink
     "oow" 'org-pomodoro
     "owi" 'writeroom-increase-width
+    "or" 'helm-run-external-command
+    "os" 'prettify-symbols-mode
     "owd" 'writeroom-decrease-width)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -746,12 +751,11 @@ dump."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;; get email, store in nnml
-  (setq gnus-secondary-select-methods
-        '((nnimap "1and1"
-                  (nnimap-address
-                   "imap.1and1.fr")
-                  (nnimap-server-port 993)
-                  (nnimap-stream ssl)))
+  (setq gnus-secondary-select-methods '((nnimap "1and1"
+                                                (nnimap-address
+                                                 "imap.1and1.fr")
+                                                (nnimap-server-port 993)
+                                                (nnimap-stream ssl)))
         ;; send email via 1and1
         message-send-mail-function 'smtpmail-send-it
         smtpmail-smtp-server "auth.smtp.1and1.fr"
@@ -769,6 +773,102 @@ dump."
         gnus-use-cache t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        ;                Dired                ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (eval-after-load "dired"
+    '(progn
+       (define-key dired-mode-map "F" 'xah-open-in-external-app)
+       (define-key dired-mode-map "f" 'phundrak-open-marked-files)
+       (define-key dired-mode-map "s" 'xah-dired-sort)
+       (define-key dired-mode-map "-" 'xah-dired-rename-space-to-hyphen)
+       (define-key dired-mode-map "_" 'xah-dired-rename-space-to-underscore)
+       (defun phundrak-open-marked-files (&optional @fname)
+         "Open all marked files in dired buffer as new Emacs buffers"
+         (interactive)
+         (let* (($file-list (if @fname
+                                (progn (list @fname))
+                              (if (string-equal major-mode "dired-mode")
+                                  (dired-get-marked-files)
+                                (list (buffer-file-name))))))
+           (mapc (lambda ($fpath)
+                   (find-file $fpath))
+                 $file-list)))
+       (defun xah-open-in-external-app (&optional @fname)
+         "Open the current file or dired marked file in external app.
+The app is chosen from your OS’ preference.
+
+When called in emacs lisp, if @fname is given, open that.
+
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2019-01-18"
+         (interactive)
+         (let* (($file-list (if @fname
+                                (progn (list @fname))
+                              (if (string-equal major-mode "dired-mode")
+                                  (dired-get-marked-files)
+                                (list (buffer-file-name)))))
+                ($do-it-p (if (<= (length $file-list) 5)
+                              t
+                            (y-or-n-p "Open more than 5 files? "))))
+           (when $do-it-p
+             (mapc (lambda ($fpath)
+                     (let ((process-connection-type nil))
+                       (start-process "" nil "xdg-open" $fpath)))
+                   $file-list))))
+       (defun xah-dired-sort ()
+         "Sort dired dir listing in different ways.
+Prompt for a choice.
+URL `http://ergoemacs.org/emacs/dired_sort.html'
+Version 2018-12-23, modified by Phundrak on 2019-08-06"
+         (interactive)
+         (let ($sort-by $arg)
+           (setq $sort-by (ido-completing-read "Sort by:" '( "name" "size" "date" "extension" )))
+           (cond
+            ((equal $sort-by "name") (setq $arg "-ahl --group-directories-first"))
+            ((equal $sort-by "date") (setq $arg "-ahl -t --group-directories-first"))
+            ((equal $sort-by "size") (setq $arg "-ahl -S --group-directories-first"))
+            ((equal $sort-by "extension") (setq $arg "-ahlD -X --group-directories-first"))
+            (t (error "logic error 09535" )))
+           (dired-sort-other $arg )))
+       (defun xah-dired-rename-space-to-underscore ()
+         "In dired, rename current or marked files by replacing space to underscore _.
+If not in `dired', do nothing.
+URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
+Version 2017-01-02"
+         (interactive)
+         (require 'dired-aux)
+         (if (equal major-mode 'dired-mode)
+             (progn
+               (mapc (lambda (x)
+                       (when (string-match " " x )
+                         (dired-rename-file x (replace-regexp-in-string " " "_" x) nil)))
+                     (dired-get-marked-files ))
+               (revert-buffer))
+           (user-error "Not in dired.")))
+       (defun xah-dired-rename-space-to-hyphen ()
+         "In dired, rename current or marked files by replacing space to hyphen -.
+If not in `dired', do nothing.
+URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
+Version 2016-12-22"
+         (interactive)
+         (require 'dired-aux)
+         (if (equal major-mode 'dired-mode)
+             (progn
+               (mapc (lambda (x)
+                       (when (string-match " " x )
+                         (dired-rename-file x (replace-regexp-in-string " " "_" x) nil)))
+                     (dired-get-marked-files ))
+               (revert-buffer))
+           (user-error "Not in dired")))))
+
+  (setq dired-recursive-copies (quote always)
+        dired-dwim-target t
+        dired-listing-switches "-ahl --group-directories-first")
+  (require 'org-download)
+  (add-hook 'dired-mode-hook 'org-download-enable)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;              org--mode              ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -781,7 +881,6 @@ dump."
     ;; custom IDs when exporting
     ;; inspired by
     ;; https://writequit.org/articles/emacs-org-mode-generate-ids.html
-		(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 		(defun org-id-new (&optional prefix)
 			"Create a new globally unique ID.
 
@@ -846,17 +945,17 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
     ;; org-babel languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((C . t)
-       (ditaa . t)
-       (dot . t)
-       (emacs-lisp .t)
-       (gnuplot . t)
-       (latex . t)
-       (makefile . t)
-       (python . t)
-       (R . t)
-       (scheme . t)
-       (shell . t)))
+     '((C          . t)
+       (ditaa      . t)
+       (dot        . t)
+       (emacs-lisp . t)
+       (gnuplot    . t)
+       (latex      . t)
+       (makefile   . t)
+       (python     . t)
+       (R          . t)
+       (scheme     . t)
+       (shell      . t)))
 
     ;; org hooks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		(add-hook 'org-mode-hook
@@ -869,6 +968,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 
     ;; variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (setq
+     org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
      geiser-default-implementation 'racket
      org-agenda-custom-commands '(("h" "Daily habits"
                                    ((agenda ""))
@@ -900,25 +1000,29 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      user-mail-address "phundrak@phundrak.fr"
      ;; subscripts and superscripts need {} to work
      org-use-sub-superscripts (quote {})
-     org-latex-default-packages-alist
-     '((""     "graphicx"  t)
-       (""     "grffile"   t)
-       (""     "longtable" nil)
-       (""     "wrapfig"   nil)
-       (""     "rotating"  nil)
-       ("normalem" "ulem"  t)
-       (""     "amsmath"   t)
-       (""     "textcomp"  t)
-       (""     "amssymb"   t)
-       (""     "capt-of"   nil)
-       (""     "hyperref"  nil))
-
+     org-latex-default-packages-alist '((""         "graphicx"  t)
+                                        (""         "grffile"   t)
+                                        (""         "longtable" nil)
+                                        (""         "wrapfig"   nil)
+                                        (""         "rotating"  nil)
+                                        ("normalem" "ulem"      t)
+                                        (""         "amsmath"   t)
+                                        (""         "textcomp"  t)
+                                        (""         "amssymb"   t)
+                                        (""         "capt-of"   nil)
+                                        (""         "hyperref"  nil))
+     org-structure-template-alist (append
+                                   org-structure-template-alist
+                                   '(("el" "#+BEGIN_SRC emacs-lisp :exports results
+?
+#+END_SRC")))
+     ;;; Org projects
      org-publish-project-alist
      '(("langue-phundrak-fr-org"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude ".\/(CONTRIB|README|head).*"
-        :publishing-directory "~/Documents/code/web/langue-phundrak-fr-export/"
+        :exclude "\.\/(CONTRIB|README|head).*"
+        :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
         :publishing-function org-html-publish-to-html
         :headline-levels 5
@@ -926,8 +1030,8 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
        ("langue-phundrak-fr-pdf"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude ".\/(CONTRIB|README|index|head).*"
-        :publishing-directory "~/Documents/code/web/langue-phundrak-fr-export/"
+        :exclude "\.\/(CONTRIB|README|index|head).*"
+        :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
         :publishing-function org-latex-publish-to-pdf
         :headline-levels 5
@@ -936,7 +1040,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :base-directory "~/Documents/code/web/langue-phundrak-fr"
         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|woff\\|txt"
         :exclude ".*auto-generated.*"
-        :publishing-directory "~/Documents/code/web/langue-phundrak-fr-export"
+        :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
         :publishing-function org-publish-attachment)
        ("langue-phundrak-fr"
@@ -948,6 +1052,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 
 
     (with-eval-after-load 'org-agenda
+      (require 'org-projectile)
       (mapcar '(lambda (file)
                  (when (file-exists-p file)
                    (push file org-agenda-files)))
@@ -1094,7 +1199,8 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#5B6268")
  '(hl-todo-keyword-faces
-   '(("TODO" . "#dc752f")
+   (quote
+    (("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
      ("THEM" . "#2d9574")
      ("PROG" . "#3a81c3")
@@ -1108,21 +1214,23 @@ This function is called at the very end of Spacemacs initialization."
      ("TEMP" . "#b1951d")
      ("FIXME" . "#dc752f")
      ("XXX" . "#dc752f")
-     ("XXXX" . "#dc752f")))
+     ("XXXX" . "#dc752f"))))
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(objed-cursor-color "#ff6c6b")
  '(org-export-headline-levels 4)
  '(package-selected-packages
-   '(alda-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
- '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
+   (quote
+    (grip-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(safe-local-variable-values
-   '((org-confirm-babel-evaluate)
+   (quote
+    ((org-confirm-babel-evaluate)
      (javascript-backend . tern)
      (javascript-backend . lsp)
      (go-backend . go-mode)
-     (go-backend . lsp)))
+     (go-backend . lsp))))
  '(solaire-mode-auto-swap-bg t)
  '(vc-annotate-background "#282c34")
  '(vc-annotate-color-map
