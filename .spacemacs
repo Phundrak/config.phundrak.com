@@ -161,6 +161,7 @@ This function should only modify configuration layer settings."
                                       doom-themes
                                       edit-indirect
                                       elcord
+                                      evil
                                       eshell-git-prompt
                                       fireplace
                                       image-dired+
@@ -578,6 +579,7 @@ See the header of this file for more information."
   (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
   (load "~/dotfiles/private/private_emacs.el")
   (require 'org-id)
   (require 'package)
