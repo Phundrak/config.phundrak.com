@@ -597,6 +597,8 @@ See the header of this file for more information."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
+  (with-temp-buffer (org-mode))
+  (require 'org-projectile)
   )
 
 (defun dotspacemacs/user-config ()
@@ -944,7 +946,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 
 
     (with-eval-after-load 'org-agenda
-      (require 'org-projectile)
       (mapcar '(lambda (file)
                  (when (file-exists-p file)
                    (push file org-agenda-files)))
