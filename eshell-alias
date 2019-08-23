@@ -18,7 +18,6 @@ alias optimize sudo pacman-optimize && sync
 alias nmcli nmcli -p -c auto $*
 alias mp3 youtube-dl -x --audio-format flac --audio-quality 0 $*
 alias meminfo free -m -l -t
-alias ls ls --color $*
 alias lns ln -si $*
 alias ll ls -alh $*
 alias la ls -A --color $*
