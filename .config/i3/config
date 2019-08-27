@@ -234,7 +234,7 @@ smart_borders                     on
 ################################################################################
 #                                Modules startup                               #
 ################################################################################
-exec_always --no-startup-id       ~/dotfiles/enable_thouch.sh
+exec_always --no-startup-id       ~/dotfiles/enable_touch.sh
 exec_always --no-startup-id       ~/.config/polybar/launch.sh
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
 exec        --no-startup-id       xss-lock -- i3lock-fancy -t $lockscreen
