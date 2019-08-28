@@ -1021,7 +1021,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      '(("langue-phundrak-fr-org"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude "\.\/(CONTRIB|README|head).*"
+        :exclude "\\.\\(CONTRIB\\|README\\|head\\|temp\\).*"
         :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
         :publishing-function org-html-publish-to-html
@@ -1030,7 +1030,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
        ("langue-phundrak-fr-pdf"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude "\.\/(CONTRIB|README|index|head).*"
+        :exclude "\\.\\(CONTRIB\\|README\\|index\\|head\\|temp\\).*"
         :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
         :publishing-function org-latex-publish-to-pdf
@@ -1038,7 +1038,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :auto-preamble t)
        ("langue-phundrak-fr-static"
         :base-directory "~/Documents/code/web/langue-phundrak-fr"
-        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|woff\\|txt"
+        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
         :exclude ".*auto-generated.*"
         :publishing-directory "/ssh:Naro:~/www/langue"
         :recursive t
