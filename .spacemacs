@@ -97,9 +97,9 @@ This function should only modify configuration layer settings."
                markdown-mmm-auto-modes '("c"
                                          "c++"
                                          "python"
-                                         "scala"
                                          "rust"
                                          ("elisp" "emacs-lisp")))
+     nginx
      (org :variables
           org-enable-reveal-js-support t
           org-enable-github-support t
@@ -135,12 +135,12 @@ This function should only modify configuration layer settings."
                      spell-checking-enable-by-default nil
                      spell-checking-enable-auto-dictionary t
                      enable-flyspell-auto-completion nil)
-     sql
      (syntax-checking :variables
                       spell-checking-enable-by-default nil
                       spell-checking-enable-auto-dictionary t
                       syntax-checking-enable-tooltips t
                       syntax-checking-use-original-bitmaps t)
+     systemd
      (treemacs :variables
                treemacs-use-follow-mode nil
                treemacs-use-filewatch-mode t)
