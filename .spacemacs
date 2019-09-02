@@ -772,6 +772,9 @@ dump."
         mm-text-html-renderer 'w3m
         gnus-use-cache t)
 
+  (gnus-add-configuration
+   '(article (horizontal 1.0 (summary .4 point) (article 1.0))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                Dired                ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
