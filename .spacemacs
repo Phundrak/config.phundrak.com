@@ -1064,6 +1064,13 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
       ;; update the list of LaTeX classes and associated header (encoding, etc.)
       ;; and structure
       '(add-to-list 'org-latex-classes
+                    '("conlang"
+                      "\\documentclass{book}"
+                      ;; ("\\part{%s}" . "\\part*{%s}")
+                      ("\\chapter{%s}" . "\\chapter*{%s}")
+                      ("\\section{%s}" . "\\section*{%s}")
+                      ("\\subsection{%s}" . "\\subsection*{%s}")
+                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
                     `("beamer"
                       ,(concat "\\documentclass[presentation]{beamer}\n"
                                "[DEFAULT-PACKAGES]"
