@@ -182,8 +182,8 @@ bindsym           Shift+Print     exec --no-startup-id scrot -d 3
 
 # Lock screen
 bindsym $mod+l                    exec i3lock -fol
-bindsym $mod+$alt+h               exec i3lock -fol && systemctl suspend
-bindsym $mod+Shift+h              exec i3lock -fol && systemctl hibernate
+bindsym $mod+$alt+h               exec systemctl suspend
+bindsym $mod+Shift+h              exec systemctl hibernate
 
 # SSH terminals
 bindsym $mod+$alt+m               exec $term ssh Mila
@@ -237,7 +237,7 @@ smart_borders                     on
 exec_always --no-startup-id       ~/dotfiles/enable_touch.sh
 exec_always --no-startup-id       ~/.config/polybar/launch.sh
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
-exec        --no-startup-id       xss-lock -- i3lock-fancy -t $lockscreen
+exec        --no-startup-id       xss-lock -- i3lock -fol
 exec        --no-startup-id       "xrdb $HOME/.Xresources"
 exec        --no-startup-id       xfce4-power-manager
 exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
