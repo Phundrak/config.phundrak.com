@@ -33,8 +33,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(alda
-     asm
+   '(asm
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence-delay 0.02
                       auto-completion-enable-help-tooltip 'manual
@@ -61,7 +60,6 @@ This function should only modify configuration layer settings."
      django
      docker
      emacs-lisp
-     emoji
      epub
      ess
      games
@@ -626,6 +624,7 @@ dump."
         edit-server-default-major-mode 'org-mode
         epa-pinentry-mode 'loopback
         paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] "
+        python-shell-completion-native-disabled-interpreters '("python")
         wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
                                 "Saint Agrève")
         prettify-symbols-alist '(("lambda" . 955) ; λ
@@ -872,7 +871,7 @@ Version 2016-12-22"
   (add-hook 'dired-mode-hook 'org-download-enable)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                        ;              org--mode              ;
+                                        ;               org-mode              ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (with-eval-after-load 'org
