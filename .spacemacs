@@ -1024,8 +1024,8 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      '(("langue-phundrak-fr-org"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude "\\.\\(CONTRIB\\|README\\|head\\|temp\\).*"
-        :publishing-directory "/ssh:Naro:~/www/langue"
+        :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
         :recursive t
         :publishing-function org-html-publish-to-html
         :headline-levels 5
@@ -1033,8 +1033,8 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
        ("langue-phundrak-fr-pdf"
         :base-directory "~/Documents/code/web/langue-phundrak-fr/"
         :base-extension "org"
-        :exclude "\\.\\(CONTRIB\\|README\\|index\\|head\\|temp\\).*"
-        :publishing-directory "/ssh:Naro:~/www/langue"
+        :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
         :recursive t
         :publishing-function org-latex-publish-to-pdf
         :headline-levels 5
@@ -1043,7 +1043,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :base-directory "~/Documents/code/web/langue-phundrak-fr"
         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
         :exclude ".*auto-generated.*"
-        :publishing-directory "/ssh:Naro:~/www/langue"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
         :recursive t
         :publishing-function org-publish-attachment)
        ("langue-phundrak-fr"
