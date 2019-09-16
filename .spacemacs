@@ -972,6 +972,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 
     ;; variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (setq
+     org-hide-macro-markers t
      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
      geiser-default-implementation 'racket
      org-agenda-custom-commands '(("h" "Daily habits"
