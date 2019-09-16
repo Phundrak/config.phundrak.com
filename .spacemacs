@@ -35,7 +35,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(asm
      (auto-completion :variables
-                      auto-completion-complete-with-key-sequence-delay 0.02
+                      auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip 'manual
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-sort-by-usage t
@@ -62,7 +62,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      epub
      ess
-     games
      git
      github
 		 graphviz
@@ -72,7 +71,8 @@ This function should only modify configuration layer settings."
      gnus
      gpu
      (helm :variables
-           helm-no-header t)
+           helm-no-header t
+           helm-use-fuzzy 'source)
      (html :variables
            web-fmt-tool 'web-beautify)
      (ibuffer :variables
@@ -111,6 +111,7 @@ This function should only modify configuration layer settings."
      (plantuml :variables
                plantuml-jar-path "/opt/plantuml/plantuml.jar"
                org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+     prettier
      prolog
      (python :variables
              python-backend 'anaconda
@@ -147,6 +148,7 @@ This function should only modify configuration layer settings."
      w3m
      web-beautify
      xkcd
+     web-beautify
      yaml)
 
    ;; List of additional packages that will be installed without being
