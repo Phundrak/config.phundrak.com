@@ -1023,7 +1023,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      ;;; Org projects
      org-publish-project-alist
      '(("langue-phundrak-fr-org"
-        :base-directory "~/Documents/code/web/langue-phundrak-fr/"
+        :base-directory "~/Documents/conlanging/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
@@ -1032,7 +1032,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :headline-levels 5
         :auto-preamble t)
        ("langue-phundrak-fr-pdf"
-        :base-directory "~/Documents/code/web/langue-phundrak-fr/"
+        :base-directory "~/Documents/conlanging/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
@@ -1041,7 +1041,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :headline-levels 5
         :auto-preamble t)
        ("langue-phundrak-fr-static"
-        :base-directory "~/Documents/code/web/langue-phundrak-fr"
+        :base-directory "~/Documents/conlanging"
         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
         :exclude ".*auto-generated.*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
