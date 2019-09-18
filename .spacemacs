@@ -1023,7 +1023,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 #+END_SRC")))
      ;;; Org projects
      org-publish-project-alist
-     '(("langue-phundrak-fr-org"
+     '(("langue-phundrak-fr-html"
         :base-directory "~/Documents/conlanging/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
@@ -1043,13 +1043,13 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :auto-preamble t)
        ("langue-phundrak-fr-static"
         :base-directory "~/Documents/conlanging"
-        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
+        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
         :exclude ".*auto-generated.*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
         :recursive t
         :publishing-function org-publish-attachment)
        ("langue-phundrak-fr"
-        :components ("langue-phundrak-fr-org"
+        :components ("langue-phundrak-fr-html"
                      "langue-phundrak-fr-static"
                      "langue-phundrak-fr-pdf"))))
 
@@ -1068,7 +1068,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
       '(add-to-list 'org-latex-classes
                     '("conlang"
                       "\\documentclass{book}"
-                      ;; ("\\part{%s}" . "\\part*{%s}")
                       ("\\chapter{%s}" . "\\chapter*{%s}")
                       ("\\section{%s}" . "\\section*{%s}")
                       ("\\subsection{%s}" . "\\subsection*{%s}")
