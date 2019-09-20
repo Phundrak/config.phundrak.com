@@ -237,9 +237,11 @@ smart_borders                     on
 ################################################################################
 exec_always --no-startup-id       ~/dotfiles/enable_touch.sh
 exec_always --no-startup-id       ~/.config/polybar/launch.sh
-exec_always --no-startup-id       setxkbmap fr bepo
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
+{% if YADM_HOSTNAME == 'Gampo' -%}
+exec_always --no-startup-id       setxkbmap fr bepo
 exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+{% endif -%}
 exec        --no-startup-id       xss-lock -- i3lock -fol
 exec        --no-startup-id       "xrdb $HOME/.Xresources"
 exec        --no-startup-id       xfce4-power-manager
