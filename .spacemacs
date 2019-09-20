@@ -78,8 +78,6 @@ This function should only modify configuration layer settings."
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      imenu-list
-     (java :variables
-           java-backend 'meghanada)
      (javascript :variables
                  javascript-backend 'tern
                  javascript-fmt-tool 'web-beautify)
@@ -125,7 +123,7 @@ This function should only modify configuration layer settings."
      semantic
      (shell :variables
             shell-default-height 40
-            shell-default-position 'bottom
+            shell-default-position 'right
             shell-default-shell 'term)
      shell-scripts
      selectric
@@ -782,13 +780,14 @@ dump."
 
   (eval-after-load "dired"
     '(progn
-       (define-key dired-mode-map "F" 'xah-open-in-external-app)
-       (define-key dired-mode-map "f" 'phundrak-open-marked-files)
-       (define-key dired-mode-map "s" 'xah-dired-sort)
-       (define-key dired-mode-map "-" 'xah-dired-rename-space-to-hyphen)
-       (define-key dired-mode-map "_" 'xah-dired-rename-space-to-underscore)
-       (defun phundrak-open-marked-files (&optional @fname)
-         "Open all marked files in dired buffer as new Emacs buffers"
+       (define-key dired-mode-map "F" 'xah/open-in-external-app)
+       (define-key dired-mode-map "f" 'phundrak/open-marked-files)
+       (define-key dired-mode-map "s" 'xah/dired-sort)
+       (define-key dired-mode-map "-" 'xah/dired-rename-space-to-hyphen)
+       (define-key dired-mode-map "_" 'xah/dired-rename-space-to-underscore)
+       (defun phundrak/open-marked-files (&optional @fname)
+         "Open all marked files in dired buffer as new Emacs
+buffers"
          (interactive)
          (let* (($file-list (if @fname
                                 (progn (list @fname))
@@ -798,7 +797,7 @@ dump."
            (mapc (lambda ($fpath)
                    (find-file $fpath))
                  $file-list)))
-       (defun xah-open-in-external-app (&optional @fname)
+       (defun xah/open-in-external-app (&optional @fname)
          "Open the current file or dired marked file in external app.
 The app is chosen from your OS’ preference.
 
@@ -820,7 +819,7 @@ Version 2019-01-18"
                      (let ((process-connection-type nil))
                        (start-process "" nil "xdg-open" $fpath)))
                    $file-list))))
-       (defun xah-dired-sort ()
+       (defun xah/dired-sort ()
          "Sort dired dir listing in different ways.
 Prompt for a choice.
 URL `http://ergoemacs.org/emacs/dired_sort.html'
@@ -835,9 +834,10 @@ Version 2018-12-23, modified by Phundrak on 2019-08-06"
             ((equal $sort-by "extension") (setq $arg "-ahlD -X --group-directories-first"))
             (t (error "logic error 09535" )))
            (dired-sort-other $arg )))
-       (defun xah-dired-rename-space-to-underscore ()
-         "In dired, rename current or marked files by replacing space to underscore _.
-If not in `dired', do nothing.
+       (defun xah/dired-rename-space-to-underscore ()
+         "In dired,  rename current or marked  files by replacing
+ space to underscore _. If not in `dired', do nothing.
+
 URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
 Version 2017-01-02"
          (interactive)
@@ -850,9 +850,9 @@ Version 2017-01-02"
                      (dired-get-marked-files ))
                (revert-buffer))
            (user-error "Not in dired.")))
-       (defun xah-dired-rename-space-to-hyphen ()
-         "In dired, rename current or marked files by replacing space to hyphen -.
-If not in `dired', do nothing.
+       (defun xah/dired-rename-space-to-hyphen ()
+         "In dired,  rename current or marked  files by replacing
+space to hyphen -. If not in `dired', do nothing.
 URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
 Version 2016-12-22"
          (interactive)
@@ -885,16 +885,18 @@ Version 2016-12-22"
     ;; custom IDs when exporting
     ;; inspired by
     ;; https://writequit.org/articles/emacs-org-mode-generate-ids.html
-		(defun org-id-new (&optional prefix)
+		(defun eos/org-id-new (&optional prefix)
 			"Create a new globally unique ID.
 
 An ID consists of two parts separated by a colon:
 - a prefix
-- a unique part that will be created according to `org-id-method'.
+- a   unique   part   that   will   be   created   according   to
+  `org-id-method'.
 
-PREFIX can specify the prefix, the default is given by the variable
-`org-id-prefix'.  However, if PREFIX is the symbol `none', don't use any
-prefix even if `org-id-prefix' specifies one.
+PREFIX  can specify  the  prefix,  the default  is  given by  the
+variable  `org-id-prefix'.  However,  if  PREFIX  is  the  symbol
+`none', don't  use any  prefix even if  `org-id-prefix' specifies
+one.
 
 So a typical ID could look like \"Org-4nd91V40HI\"."
 			(let* ((prefix (if (eq prefix 'none)
@@ -918,11 +920,11 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 				(concat prefix unique)))
 		(defun eos/org-custom-id-get (&optional pom create prefix)
 			"Get the CUSTOM_ID property of the entry at point-or-marker POM.
-   If POM is nil, refer to the entry at point. If the entry does
+   If POM is nil, refer to the  entry at point. If the entry does
    not have an CUSTOM_ID, the function returns nil. However, when
-   CREATE is non nil, create a CUSTOM_ID if none is present
-   already. PREFIX will be passed through to `org-id-new'. In any
-   case, the CUSTOM_ID of the entry is returned."
+   CREATE  is non  nil, create  a  CUSTOM_ID if  none is  present
+   already. PREFIX will be passed through to `eos/org-id-new'. In
+   any case, the CUSTOM_ID of the entry is returned."
 			(interactive)
 			(org-with-point-at pom
 				(let ((id (org-entry-get nil "CUSTOM_ID")))
@@ -930,7 +932,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 					 ((and id (stringp id) (string-match "\\S-" id))
 						id)
 					 (create
-						(setq id (org-id-new (concat prefix "h")))
+						(setq id (eos/org-id-new (concat prefix "h")))
 						(org-entry-put pom "CUSTOM_ID" id)
 						(org-id-add-location id (buffer-file-name (buffer-base-buffer)))
 						id)))))
