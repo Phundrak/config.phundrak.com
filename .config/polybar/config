@@ -294,11 +294,7 @@ ramp-used-7 = █
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/wlan]
 type = internal/network
-{% if YADM_HOSTNAME == 'Gampo' -%}
 interface = wlp3s0
-{% else -%}
-interface = wlp8s0
-{% endif -%}
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
@@ -320,11 +316,7 @@ ramp-signal-4 = 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/eth]
 type = internal/network
-{% if YADM_HOSTNAME == 'Gampo' -%}
 interface = enp0s25
-{% else -%}
-interface = enp9s0
-{% endif -%}
 interval = 3.0
 
 format-connected-underline = #55aa55
