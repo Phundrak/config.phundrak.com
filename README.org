@@ -121,11 +121,35 @@
      unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which \
      whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom \
      xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit
-     xss-lock
+     xss-lock yadm
    #+END_SRC
 
    Given how many packages  will be install from the AUR,  I’ll probably have to
    type my password a few times.
+
+** Set up =yadm=
+   =yadm= is my  dotfiles manager. It has some very  interesting, including host
+   and   machine-specific  files   and  file   content,  as   can  be   seen  in
+   =dotfiles/.config/i3/config##yadm.j2=.
+
+*** Get the dotfiles
+    You should clone the dotfiles with the help of =yadm=. For that purpose, you
+    can execute either of the two following commands.
+    - From [[https://labs.phundrak.fr/phundrak/dotfiles][labs.phundrak.fr]]:
+      #+BEGIN_SRC fish :dir ~ :exports code
+        yadm clone https://labs.phundrak.fr/phundrak/dotfiles.git
+      #+END_SRC
+    - From [[https://github.com/phundrak/dotfiles][Github]]:
+      #+BEGIN_SRC fish :dir ~ :exports code
+        yadm clone https://gitlab.com/phundrak/dotfiles.git
+      #+END_SRC
+
+*** Generate the alt dotfiles
+    =yadm= will need  to generate the host-specific dotfiles. To  do so, you can
+    run the following command:
+    #+BEGIN_SRC fish :dir ~ :exports code
+      yadm alt
+    #+END_SRC
 
 ** Set up Emacs
    The first thing to do after setting up our system is setting up Emacs.
