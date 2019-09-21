@@ -148,11 +148,11 @@ bindsym XF86Mail                  $execgnus
 bindsym $mod+m                    $execgnus
 bindsym XF86Launch7               exec discord-canary
 bindsym Ctrl+Shift+d              exec discord-canary
-bindsym XF86AudioMute             exec amixer -D pulse set Master 1+ toggle
-bindsym Ctrl+$mod+Prior           exec amixer -D pulse -q set Master 2%+ unmute
-bindsym XF86AudioRaiseVolume      exec amixer -D pulse -q set Master 2%+ unmute
-bindsym Ctrl+$mod+Next            exec amixer -D pulse -q set Master 2%- unmute
-bindsym XF86AudioLowerVolume      exec amixer -D pulse -q set Master 2%- unmute
+bindsym XF86AudioMute             exec amixer set Master 1+ toggle
+bindsym Ctrl+$mod+Prior           exec amixer -q set Master 2%+ unmute
+bindsym XF86AudioRaiseVolume      exec amixer -q set Master 2%+ unmute
+bindsym Ctrl+$mod+Next            exec amixer -q set Master 2%- unmute
+bindsym XF86AudioLowerVolume      exec amixer -q set Master 2%- unmute
 bindsym XF86Calculator            exec /usr/bin/speedcrunch
 bindsym $mod+$alt+c               exec /usr/bin/speedcrunch
 #bindsym XF86Favourites
@@ -169,6 +169,7 @@ bindsym $mod+$alt+c               exec /usr/bin/speedcrunch
 
 bindsym $mod+F3                   exec arandr
 bindsym $mod+Shift+l              exec dmenu-lpass
+bindsym $mod+Shift+p              exec ~/.config/polybar/launch.sh
 
 # Brightness keyboard shortcuts
 bindsym XF86MonBrightnessUp       exec light -A 5
