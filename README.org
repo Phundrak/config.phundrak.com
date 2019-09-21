@@ -1,62 +1,280 @@
+#+TITLE: Phundrak’s dotfiles
+#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
+#+EMAIL: phundrak@phundrak.fr
+
 [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
-* P’undrak’s dotfiles
+* Presentation
+  This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
+  to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
+  instructions below.
 
-** Presentation
+  As you can see,  I personally use [[https://fishshell.com/][fish]] as my shell of  choice, and [[https://www.gnu.org/software/emacs/][Emacs]] using
+  [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding) as my main text editor.
 
-   This is my collection of dotfiles for my daily GNU/Linux environment, tweaked
-   to  my liking.  If  you  wish to  get  the same  setup  as  mine, follow  the
-   instructions below.
+  I also  use [[https://github.com/resloved/i3][Resloved]]’s [[https://github.com/resloved/i3][fork]] of  [[https://github.com/Airblader/i3][i3-gaps]] with two [[https://github.com/jaagr/polybar][polybar]]  bars and [[https://github.com/tryone144][Tryone144]]’s
+  [[https://github.com/tryone144/compton][fork]] of [[https://github.com/chjj/compton][Compton]]. The colors scheme for [[https://github.com/davatorium/rofi][rofi]], Emacs and polybar are chosen from
+  the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
 
-   As you can see, I personally use [[https://fishshell.com/][fish]]  as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] using
-   [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding) as my main text editor.
+* Features
+  - Emacs configuration perfectly tailored for my own use
+  - Beautiful and comfy i3 and polybar configuration
+  - And enough information  below to get basically the same  distro install as I
+    have on my main computer and my travel laptop.
 
-   I also use  [[https://github.com/resloved/i3][Resloved]]’s [[https://github.com/resloved/i3][fork]] of [[https://github.com/Airblader/i3][i3-gaps]] with two  [[https://github.com/jaagr/polybar][polybar]] bars and [[https://github.com/tryone144][Tryone144]]’s
-   [[https://github.com/tryone144/compton][fork]] of  [[https://github.com/chjj/compton][Compton]]. The colors  scheme for [[https://github.com/davatorium/rofi][rofi]],  Emacs and polybar  are chosen
-   from the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
+* Screenshots
 
-** Features
+  [[./img/neofetch.png]]
 
-   - Emacs configuration perfectly tailored for my own use
-   - Beautiful and comfy i3 and polybar configuration
+  [[./img/emacs.png]]
 
-** Screenshots
+  [[./img/rofi.png]]
 
-   [[./img/neofetch.png]]
+* Dependencies
+  Of course, some dependencies are needed for  my dotfiles to work well. Here is
+  a non-exhaustive list of software needed by these configuration files:
+  - [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
+    - [[http://spacemacs.org][Spacemacs]] (develop branch)
+    - My [[https://labs.phundrak.fr/phundrak/conlang-layer][conlanging layer]]
+    - [[https://github.com/venmos/w3m-layer][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]]
+  - The [[https://fishshell.com/][Fish shell]], using [[https://github.com/jorgebucaran/fisher][fisher]]
+  - [[https://lukesmith.xyz/][Luke Smith]]’s [[https://github.com/LukeSmithxyz/st][fork]] of [[https://st.suckless.org/][st]]
+  - [[https://resloved.info/][Resloved]]’s [[https://github.com/resloved/i3][i3-gaps-rounded]] fork of [[https://github.com/Airblader/i3][Airblader]]’s [[https://github.com/Airblader/i3][i3-gaps]], itself a fork of [[https://i3wm.org/][i3]]
+  - [[https://github.com/yshui/compton][Compton]], more specificaly [[https://github.com/tryone144/compton][Tryone]]’s [[https://github.com/tryone144/compton][fork]]
+  - [[https://github.com/dylanaraps/pywal/][pywal]]
+  - [[https://tools.suckless.org/dmenu/][dmenu]]
+  - [[https://github.com/enkore/j4-dmenu-desktop][j4-dmenu-desktop]]
+  - [[https://github.com/davatorium/rofi][Rofi]]
+  - [[https://github.com/gpoore/minted][minted]]
+  - [[https://www.rust-lang.org/][Rust]] (stable and nightly)
+  - [[https://www.latex-project.org/][LaTeX]] and [[http://xetex.sourceforge.net/][XeTeX]] (=texlive= packages on Arch Linux)
+  - [[https://github.com/tmux/tmux][tmux]], based on [[https://github.com/gpakosz/.tmux][this repo]]’s configuration by [[https://pempek.net/][Grégory Pakosz]].
+  - And a bunch of other stuff, see below
+  And some other stuff scattered around in my dotfiles.
 
-   [[./img/emacs.png]]
+  BTW, I use Arch.
 
-   [[./img/rofi.png]]
+* Installation
+  Here will be  presented what I do to  get my system up and running  on a fresh
+  Arch Linux install.  These installation instructions were written  in order to
+  get an Arch  Linux distribution up and running with  the same configuration as
+  my main computer’s and my travelling laptop’s configuration.
 
-** Dependencies
+** Update the system
+   First of all, let’s update the system in  order to be sure to have the latest
+   version.
+   #+BEGIN_SRC fish /sudo:localhost:~ :exports code
+     sudo pacman -Syu
+     sudo pacman -S git emacs --needed
+   #+END_SRC
 
-   Of course, some dependencies are needed for my dotfiles to work well. Here is
-   a non-exhaustive list of software needed by these configuration files:
-   - Emacs >= 26.2
-     - Spacemacs (develop branch)
-   - fish
-   - [[https://st.suckless.org/][st]] ([[https://lukesmith.xyz/][Luke Smith]]’s [[https://github.com/LukeSmithxyz/st][fork]])
-   - i3-gaps
-   - compton
-   - pywal
-   - j4-dmenu-desktop
-   - minted
-   - Rust nightly
-   - texlive-core
-   And some other stuff scattered around in my dotfiles.
+** Install =yay=
+   Next step  is to install  the AUR  helper =yay= (DO  NOT use =yaourt=,  it is
+   discontinued,  seriously updated  and  represents a  serious security  flaw).
+   Let’s clone it in a folder =fromGIT= that will be in our home folder. This is
+   also where we’ll download every other packages we’ll install from git.
+   #+BEGIN_SRC fish :dir ~ :exports code
+     mkdir -p fromGIT
+     cd fromGIT
+     git clone https://aur.archlinux.org/yay.git
+     cd yay
+     makepkg -si --noconfirm
+   #+END_SRC
 
-   I also use my own layer for conlanging when within org-mode in Emacs, you can
-   find it [[https://labs.phundrak.fr/phundrak/conlang-layer][here]]. I also use [[https://github.com/venmos][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]].
+   Now, we can install all the packages I usually have installed on my computer.
+   #+BEGIN_SRC fish /sudo:localhost:~ :exports code
+     yay -S --needed --noconfirm asar ascii aspell-en aspell-fr assimp \
+     autoconf automake awesome-terminal-fonts bash bat biber binutils bison \
+     bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
+     compton-tryone-git coreutils cppcheck cppreference cppreference-devhelp \
+     cpupower cronie cryptsetup cups device-mapper dhcpcd diffutils\
+     discord-canary discount ditaa dmenu dmenu-lpass docker docker-compose \
+     doxygen dwarffortress e2fsprogs emacs exfat-utils fakeroot feh \
+     ffmpegthumbnailer file filesystem findutils fingerprint-gui firefox fish \
+     flake8 flex font-mathematica fontforge freeglut fzf gawk gcc gcc-libs gdb \
+     gettext gimp git glibc gnome-disk-utility gnome-epub-thumbnailer \
+     gnu-free-fonts gnuplot go-tools grep gzip htop i3-gaps i3lock-blur \
+     i3status icecat-bin igdm-bin inetutils intel-ucode iproute2 iputils \
+     j4-dmenu-desktop jfsutils lastpass-cli less libnewt libtool licenses \
+     light linux linux-firmware linux-headers lldb logrotate lsof lvm2 m4 make \
+     man-db man-pages mate-polkit mdadm meson minted mpc mpd \
+     mpd-rich-presence-discord-git mpv mupdf-tools nano nasm ncdu ncmpcpp \
+     nemo-fileroller nemo-preview neofetch netctl networkmanager \
+     networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji \
+     npm ntfs-3g openmp openssh p7zip pacman pacman-contrib pandoc-bin patch \
+     pavucontrol pciutils pcurses pdfpc perl pkgconf polybar procps-ng psmisc \
+     pulseaudio-bluetooth python-envtpl-git python-pip python-pywal qemu r \
+     raw-thumbnailer redshift refind-efi reflector reiserfsprogs rofi \
+     rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sdl2_gfx \
+     sdl2_image sdl2_mixer sdl2_ttf sed sent shadow siji-git \
+     simplescreenrecorder speedcrunch sshfs st-luke-git sudo sysfsutils \
+     systemd-sysvcompat tar texinfo texlive-bibtexextra texlive-bin \
+     texlive-core texlive-fontsextra texlive-formatsextra texlive-games \
+     texlive-humanities texlive-langchinese texlive-langcyrillic \
+     texlive-langextra texlive-langgreek texlive-langjapanese \
+     texlive-langkorean texlive-latexextra texlive-music texlive-pictures \
+     texlive-pstricks texlive-publishers texlive-science tmux tree \
+     ttf-arphic-uming ttf-baekmuk ttf-bitstream-vera ttf-dejavu \
+     ttf-google-fonts-opinionated-git ttf-joypixels ttf-liberation
+     ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
+     ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji \
+     unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which \
+     whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom \
+     xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit
+     xss-lock
+   #+END_SRC
 
-** Installation
+   Given how many packages  will be install from the AUR,  I’ll probably have to
+   type my password a few times.
 
-   To have the same install as I  do, simply symlink your configuration files to
-   the files in this git repository.
+** Set up Emacs
+   The first thing to do after setting up our system is setting up Emacs.
 
-** Licence
+*** Download Spacemacs
+    First, let’s download Spacemacs.
+    #+BEGIN_SRC fish :dir ~ :exports code
+    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+    #+END_SRC
 
-   All of my dotfiles  (and my dotfiles only) are available  under the GNU GPLv3
-   Licence. Please consult  [[file:LICENCE.md]] for more information.  In short: you
-   are free to access,  edit and redistribute all of my  dotfiles under the same
-   licence and  as allowed by  the licence, and if  you fuck up  something, it’s
-   your own responsibility.
+    Let’s switch Spacemacs’ branch to =develop=.
+    #+BEGIN_SRC fish :dir ~/.emacs.d :exports code
+    git checkout develop
+    #+END_SRC
+
+*** Set the custom layers
+    As mentionned  above, I use some  custom layers. Let’s symlink  these to the
+    private folder of our =.emacs.d/= folder.
+    #+BEGIN_SRC fish :dir ~/.emacs.d/private :exports code
+      for d in ~/dotfiles/spacemacs-layers/*
+          ln -s $d
+      end
+    #+END_SRC
+
+*** Symlink the Emacs config
+    Let’s not  forget our Spacemacs/Emacs config,  we’ll symlink it to  our home
+    directory.
+    #+BEGIN_SRC fish :dir ~ :exports code
+      ln -s ~/dotfiles/.spacemacs
+    #+END_SRC
+
+** Install the Fish shell
+    As mentionned above, I  use the fish shell as my main shell.  And I use some
+    extensions too that I installed from fisher, and custom functions.
+
+*** Install fisher
+    Let’s install fisher:
+    #+BEGIN_SRC fish :exports code
+      curl https://git.io/fisher --create-dirs -sLo \
+           ~/.config/fish/functions/fisher.fish
+    #+END_SRC
+
+    Awesome! Now, onto the fisher packages:
+    #+BEGIN_SRC fish :exports code
+      fisher add edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
+                 jorgebucaran/fish-getopts laughedelic/pisces \
+                 matchai/spacefish tuvistavie/fish-ssh-agent
+    #+END_SRC
+
+*** Install the fish config and custom functions
+    I will be symlinking my fishfile to its location =~/.config=.
+    #+BEGIN_SRC fish :dir ~/.config/ :exports code
+    ln -s ~/dotfiles/config.fish
+    #+END_SRC
+
+    Now,  in  the =functions=  subdirectory,  let’s  symlink  all of  my  custom
+    functions.
+    #+BEGIN_SRC fish :dir ~/.config/fish/functions :exports code
+      for f in ~/dotfiles/fishfunctions/*.fish
+          ln -s $f
+      end
+    #+END_SRC
+
+** Install the dotfiles
+*** Update the submodules
+    Alright, let’s do  something about all these dotfiles  laying around. First,
+    let’s symlink those that are in our home directory.
+    #+BEGIN_SRC fish :exports code
+      yadm submodule update
+    #+END_SRC
+
+*** Update the remotes
+    Now, let’s make sure we have the correct remotes set up for the dotfiles.
+    #+BEGIN_SRC fish :exports code :dir ~/dotfiles
+      yadm remote set-url origin "git@labs.phundrak.fr:phundrak/dotfiles.git"
+      yadm remote set-url github "git@github.com:phundrak/dotfiles.git"
+    #+END_SRC
+
+*** Symlink the dotfiles
+    Let’s now symlink our dotfiles. First,  we’ll take care of those that should
+    be symlinked to our home directory.
+    #+BEGIN_SRC fish :dir ~ :exports code
+      ln -s ~/dotfiles/.Xresources
+      ln -s ~/dotfiles/.gitignore_global
+      ln -s ~/dotfiles/.nanorc
+      ln -s ~/dotfiles/rustfmt.toml
+      ln -s ~/dotfiles/.signature
+      ln -s ~/dotfiles/.tmux.conf.local
+      ln -s ~/dotfiles/tmux/.tmux.conf
+      ln -s ~/dotfiles/.config/i3 .i3
+    #+END_SRC
+
+    Finally, let’s symlink everything that belongs to the =~/.config= folder.
+    #+BEGIN_SRC fish :dir ~/.config :exports code
+      for elem in ~/dotfiles/.config/*
+          ln -s $elem
+      end
+    #+END_SRC
+
+** Install packages from git
+   Now, we move on to the installation of git-based packages.
+
+*** Install =i3-gaps-rounded=
+    I know we already installed =i3-gaps=  from the AUR, why reinstall it? Well,
+    that is  certainly bad practices,  but this allowed  me to already  have the
+    needed dependencies for building =i3=  installed. Now, let’s clone it, build
+    it,  and  install it.  It  will  required  the  password during  the  actual
+    installation.
+    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
+      git clone https://github.com/resloved/i3.git i3-gaps-rounded
+      cd i3-gaps-rounded
+      rm -rf build
+      autoreconf --force --install
+      mkdir build && cd build
+      ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+      make
+      sudo make install
+    #+END_SRC
+
+*** Install Polybar Battery
+    I use a custom  tool for my battery indicator which  also launches a warning
+    when  the battery  is low.  However, I  need to  build it,  since it  is not
+    available in the repos nor the AUR.
+    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
+      git clone https://github.com/drdeimos/polybar_another_battery.git
+      cd polybar_another_battery
+      go get -u github.com/distatus/battery/cmd/battery
+      make build
+    #+END_SRC
+
+    Let’s also  create the =~/.local/bin/=  directory in  which I will  put some
+    custom executables, including the executable we just built.
+
+*** Download Reveal.JS
+    Now, let’s  download [[https://revealjs.com/#/][Reveal.JS]]. I use  it for some of  my Org presentations,
+    and I set it so it is found in =~/fromGIT=.
+    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
+      git clone https://github.com/hakimel/reveal.js.git
+    #+END_SRC
+
+** Clean the =pacman= and =yay= cache
+   Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=
+   #+BEGIN_SRC fish :dir /sudo:localhost:~ :exports code
+     yay -Sc --noconfirm
+   #+END_SRC
+
+* Licence
+  All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
+  Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you
+  are free to  access, edit and redistribute  all of my dotfiles  under the same
+  licence and as allowed by the licence, and if you fuck up something, it’s your
+  own responsibility.
