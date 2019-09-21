@@ -18,4 +18,4 @@ if test "$TERM" = "dumb"
 end
 
 set -gx PATH $HOME/go/bin $HOME/.cargo/bin $HOME/.local/bin $HOME/.gem/ruby/2.6.0/bin $PATH
-set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/
+set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
