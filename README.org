@@ -60,6 +60,19 @@
   get an Arch  Linux distribution up and running with  the same configuration as
   my main computer’s and my travelling laptop’s configuration.
 
+** Install Arch Linux
+   I usually install Arch from the vanilla  ISO, however I began using [[https://github.com/MatMoul/archfi][archfi]] to
+   install easily the  distro (I’ve done it  so many times, I know  how it works
+   now). Usually, my  distros will be installed on at  least two partitions, one
+   dedicated to =/home=, the other to the root partition =/=. When you boot into
+   the live ISO, execute the following command:
+   #+BEGIN_SRC sh :exports code
+     wget archfi.sf.net/archfi
+     # Or from matmoul.github.io/archfi if SourceForge is down
+     sh archfi
+   #+END_SRC
+   Then, follow the instructions and install Arch Linux.
+
 ** Update the system
    First of all, let’s update the system in  order to be sure to have the latest
    version.
