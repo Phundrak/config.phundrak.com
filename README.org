@@ -63,9 +63,9 @@
 ** Update the system
    First of all, let’s update the system in  order to be sure to have the latest
    version.
-   #+BEGIN_SRC fish /sudo:localhost:~ :exports code
-     sudo pacman -Syu
-     sudo pacman -S git emacs --needed
+   #+BEGIN_SRC fish :dir /sudo:: :exports code
+     sudo pacman -Syu --noconfirm
+     sudo pacman -S git emacs --needed --noconfirm
    #+END_SRC
 
 ** Install =yay=
@@ -82,7 +82,7 @@
    #+END_SRC
 
    Now, we can install all the packages I usually have installed on my computer.
-   #+BEGIN_SRC fish /sudo:localhost:~ :exports code
+   #+BEGIN_SRC fish :dir /sudo:: :exports code
      yay -S --needed --noconfirm asar ascii aspell-en aspell-fr assimp \
      autoconf automake awesome-terminal-fonts bash bat biber binutils bison \
      bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
@@ -268,7 +268,7 @@
 
 ** Clean the =pacman= and =yay= cache
    Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=
-   #+BEGIN_SRC fish :dir /sudo:localhost:~ :exports code
+   #+BEGIN_SRC fish :dir /sudo:: :exports code
      yay -Sc --noconfirm
    #+END_SRC
 
