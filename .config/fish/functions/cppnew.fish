@@ -9,7 +9,7 @@ function cppnew -d "Create new C++17 project" --argument-names 'projectname'
                     set conanproj "true"
                     set conanprojname $value
                 case -h --help
-                    man ~/dotfiles/fishfunctions/cppnew.man
+                    man ~/dev/fishfunctions/cppnew.man
                     return 0
                 case '*'
                     set projname $item

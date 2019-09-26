@@ -4,7 +4,7 @@ function cnew -d "Create new C11 project"
         for item in $argv
             switch "$item"
                 case -h --help
-                    man ~/dotfiles/fishfunctions/cnew.man
+                    man ~/dev/fishfunctions/cnew.man
                     return 0
                 case '*'
                     set projname $item

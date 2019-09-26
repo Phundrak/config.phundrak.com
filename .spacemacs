@@ -577,7 +577,7 @@ See the header of this file for more information."
 
 (defun dotspacemacs/user-init ()
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-  (load "~/dotfiles/private/private_emacs.el")
+  (load "~/private/private_emacs.el")
   (require 'org-id)
   (require 'package)
   (require 'ox-latex)
@@ -1216,7 +1216,7 @@ This function is called at the very end of Spacemacs initialization."
  '(ansi-color-names-vector
    ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
  '(default-input-method "ipa-x-sampa")
- '(eshell-aliases-file "/home/phundrak/dotfiles/eshell-alias")
+ '(eshell-aliases-file "/home/phundrak/.emacs.d/private/eshell-alias")
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#5B6268")
  '(hl-todo-keyword-faces
