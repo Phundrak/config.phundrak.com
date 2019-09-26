@@ -577,7 +577,7 @@ See the header of this file for more information."
 
 (defun dotspacemacs/user-init ()
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-  (load "~/private/private_emacs.el")
+  (load "~/.emacs.d/private/private_emacs.el")
   (require 'org-id)
   (require 'package)
   (require 'ox-latex)
@@ -589,7 +589,7 @@ See the header of this file for more information."
                            ("org" . "https://orgmode.org/elpa/")))
 
   ;; (add-to-list 'package-archives
-               ;; '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  ;; '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (flyspell-mode 0)
   (setq tramp-ssh-controlmaster-options
