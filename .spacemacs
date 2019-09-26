@@ -626,7 +626,8 @@ dump."
         epa-pinentry-mode 'loopback
         paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] "
         python-shell-completion-native-disabled-interpreters '("python")
-        wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
+        wttrin-default-cities '("Aubervilliers" "Paris"
+                                "Lyon"          "Nonières"
                                 "Saint Agrève")
         prettify-symbols-alist '(("lambda" . 955) ; λ
                                  ("->" . 8594)    ; →
@@ -652,6 +653,7 @@ dump."
           org-mode-hook
           text-mode-hook
           markdown-mode-hook))
+  (global-aggressive-indent-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;               Nov-mode              ;
@@ -661,8 +663,10 @@ dump."
     (face-remap-add-relative 'variable-pitch :family "Charis SIL"
                              :size 16
                              :height 1.0))
-  (add-hook 'nov-mode-hook 'my-nov-font-setup)
-  (add-hook 'nov-mode-hook 'visual-line-mode)
+  (mapc (lambda (mode)
+          (add-hook 'nov-mode-hook mode))
+        '('my-nov-font-setup
+          'visual-line-mode))
   (setq nov-text-width 80)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -716,6 +720,7 @@ dump."
   (spacemacs/declare-prefix "oote" "expand")
   (spacemacs/declare-prefix "oots" "shrink")
   (spacemacs/declare-prefix "or" "external command")
+  (spacemacs/declare-prefix "ot" "toggle")
   (spacemacs/declare-prefix "ow" "writeroom")
   (spacemacs/set-leader-keys
     "oac" 'calc
@@ -744,6 +749,8 @@ dump."
     "owi" 'writeroom-increase-width
     "or" 'helm-run-external-command
     "os" 'prettify-symbols-mode
+    "oti" 'toggle-input-method
+    "otI" 'set-input-method
     "owd" 'writeroom-decrease-width)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
