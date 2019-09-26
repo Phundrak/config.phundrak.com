@@ -1,10 +1,74 @@
 #+TITLE: Phundrak’s dotfiles
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
 #+EMAIL: phundrak@phundrak.fr
+#+HTML_HEAD: <meta name="description" content="Phundrak's dotfiles" />
+#+HTML_HEAD: <meta property="og:title" content="Phundrak's dotfiles" />
+#+HTML_HEAD: <meta property="og:description" content="Installation instructions for Phundrak's dotfiles" />
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto_id:t
+#+LATEX_CLASS: conlang
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{multicol}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+#+LATEX_HEADER_EXTRA: \sloppy
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
+#+INFOJS_OPT: view:info toc:1 home:https://langue.phundrak.fr toc:t
 
-[[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+- [[#presentation][Presentation]]
+- [[#features][Features]]
+- [[#screenshots][Screenshots]]
+- [[#dependencies][Dependencies]]
+- [[#installation][Installation]]
+  - [[#install-arch-linux][Install Arch Linux]]
+  - [[#update-the-system][Update the system]]
+  - [[#install-yay-and-all-the-official-repos-packages][Install =yay= and all the official repos’ packages]]
+  - [[#set-up-yadm][Set up =yadm=]]
+    - [[#get-the-dotfiles][Get the dotfiles]]
+    - [[#generate-the-alt-dotfiles][Generate the alt dotfiles]]
+  - [[#set-up-emacs][Set up Emacs]]
+    - [[#download-spacemacs][Download Spacemacs]]
+    - [[#set-the-custom-layers][Set the custom layers]]
+    - [[#symlink-the-emacs-config][Symlink the Emacs config]]
+  - [[#install-the-fish-shell][Install the Fish shell]]
+    - [[#install-fisher][Install fisher]]
+    - [[#install-the-fish-config-and-custom-functions][Install the fish config and custom functions]]
+  - [[#install-the-dotfiles][Install the dotfiles]]
+    - [[#update-the-submodules][Update the submodules]]
+    - [[#update-the-remotes][Update the remotes]]
+    - [[#symlink-the-dotfiles][Symlink the dotfiles]]
+  - [[#install-packages-from-git][Install packages from git]]
+    - [[#install-i3-gaps-rounded][Install =i3-gaps-rounded=]]
+    - [[#install-polybar-battery][Install Polybar Battery]]
+    - [[#download-revealjs][Download Reveal.JS]]
+  - [[#install-rust][Install Rust]]
+    - [[#install-the-toolchains][Install the toolchains]]
+  - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
+- [[#licence][Licence]]
 
 * Presentation
+  [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+
   This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
   to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
   instructions below.
@@ -74,14 +138,22 @@
    Then, follow the instructions and install Arch Linux.
 
 ** Update the system
-   First of all, let’s update the system in  order to be sure to have the latest
+   First of all, let’s make sure we have a sorted mirrorlist for pacman.
+   #+BEGIN_SRC fish :exports code :dir /sudo::
+     pacman -Sy reflector
+     reflector --country France --country Germany --latest 200 \
+               --protocol http --protocol httpqs --sort rate \
+               --save /etc/pacman.d/mirrorlist
+   #+END_SRC
+
+   Now, let’s update the system in  order to be sure to have the latest
    version.
    #+BEGIN_SRC fish :dir /sudo:: :exports code
      sudo pacman -Syu --noconfirm
      sudo pacman -S git emacs --needed --noconfirm
    #+END_SRC
 
-** Install =yay=
+** Install =yay= and all the official repos’ packages
    Next step  is to install  the AUR  helper =yay= (DO  NOT use =yaourt=,  it is
    discontinued,  seriously updated  and  represents a  serious security  flaw).
    Let’s clone it in a folder =fromGIT= that will be in our home folder. This is
@@ -133,8 +205,8 @@
      ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji \
      unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which \
      whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom \
-     xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit
-     xss-lock yadm
+     xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit \
+     xss-lock yadm graphviz
    #+END_SRC
 
    Given how many packages  will be install from the AUR,  I’ll probably have to
@@ -301,6 +373,25 @@
     and I set it so it is found in =~/fromGIT=.
     #+BEGIN_SRC fish :dir ~/fromGIT :exports code
       git clone https://github.com/hakimel/reveal.js.git
+    #+END_SRC
+
+** Install Rust
+*** Install the toolchains
+    When using rust, I bounce between two toolchains, the =stable= toolchain and
+    the =nightly=  toolchain. To  install them,  I will  use =rustup=  which has
+    already been installed.
+    #+BEGIN_SRC fish :exports code
+      rustup default stable
+    #+END_SRC
+    This will both download the stable toolchain  and set it as the default one.
+    Now to install the nightly toolchain, let’s run this:
+    #+BEGIN_SRC fish :exports code
+      rustup toolchain install nightly
+    #+END_SRC
+    This one is updated about daily (hence the name), so we’ll often have to run
+    the following command:
+    #+BEGIN_SRC fish :exports code
+      rustup update
     #+END_SRC
 
 ** Clean the =pacman= and =yay= cache
