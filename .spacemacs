@@ -58,6 +58,7 @@ This function should only modify configuration layer settings."
      conlanging
      csv
      colors
+     dired-phundrak
      django
      docker
      emacs-lisp
@@ -156,7 +157,6 @@ This function should only modify configuration layer settings."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(atomic-chrome
 																			cmake-mode
-                                      dired-x
                                       dionysos
                                       doom-themes
                                       edit-indirect
@@ -164,7 +164,6 @@ This function should only modify configuration layer settings."
                                       evil
                                       eshell-git-prompt
                                       fireplace
-                                      image-dired+
                                       kaolin-themes
                                       meson-mode
                                       modern-cpp-font-lock
@@ -703,7 +702,6 @@ dump."
   (global-set-key (kbd "<C-tab>") 'evil-close-fold)
   (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
   (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
-  (global-set-key (kbd "<s-f1>") (lambda () (interactive) (dired "~/")))
   (spacemacs/declare-prefix "o" "custom")
   (spacemacs/declare-prefix "oa" "applications")
   (spacemacs/declare-prefix "oc" "comments")
@@ -785,94 +783,6 @@ dump."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                Dired                ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (eval-after-load "dired"
-    '(progn
-       (define-key dired-mode-map "F" 'xah/open-in-external-app)
-       (define-key dired-mode-map "f" 'phundrak/open-marked-files)
-       (define-key dired-mode-map "s" 'xah/dired-sort)
-       (define-key dired-mode-map "-" 'xah/dired-rename-space-to-hyphen)
-       (define-key dired-mode-map "_" 'xah/dired-rename-space-to-underscore)
-       (defun phundrak/open-marked-files (&optional @fname)
-         "Open all marked files in dired buffer as new Emacs
-buffers"
-         (interactive)
-         (let* (($file-list (if @fname
-                                (progn (list @fname))
-                              (if (string-equal major-mode "dired-mode")
-                                  (dired-get-marked-files)
-                                (list (buffer-file-name))))))
-           (mapc (lambda ($fpath)
-                   (find-file $fpath))
-                 $file-list)))
-       (defun xah/open-in-external-app (&optional @fname)
-         "Open the current file or dired marked file in external app.
-The app is chosen from your OS’ preference.
-
-When called in emacs lisp, if @fname is given, open that.
-
-URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
-Version 2019-01-18"
-         (interactive)
-         (let* (($file-list (if @fname
-                                (progn (list @fname))
-                              (if (string-equal major-mode "dired-mode")
-                                  (dired-get-marked-files)
-                                (list (buffer-file-name)))))
-                ($do-it-p (if (<= (length $file-list) 5)
-                              t
-                            (y-or-n-p "Open more than 5 files? "))))
-           (when $do-it-p
-             (mapc (lambda ($fpath)
-                     (let ((process-connection-type nil))
-                       (start-process "" nil "xdg-open" $fpath)))
-                   $file-list))))
-       (defun xah/dired-sort ()
-         "Sort dired dir listing in different ways.
-Prompt for a choice.
-URL `http://ergoemacs.org/emacs/dired_sort.html'
-Version 2018-12-23, modified by Phundrak on 2019-08-06"
-         (interactive)
-         (let ($sort-by $arg)
-           (setq $sort-by (ido-completing-read "Sort by:" '( "name" "size" "date" "extension" )))
-           (cond
-            ((equal $sort-by "name") (setq $arg "-ahl --group-directories-first"))
-            ((equal $sort-by "date") (setq $arg "-ahl -t --group-directories-first"))
-            ((equal $sort-by "size") (setq $arg "-ahl -S --group-directories-first"))
-            ((equal $sort-by "extension") (setq $arg "-ahlD -X --group-directories-first"))
-            (t (error "logic error 09535" )))
-           (dired-sort-other $arg )))
-       (defun xah/dired-rename-space-to-underscore ()
-         "In dired,  rename current or marked  files by replacing
- space to underscore _. If not in `dired', do nothing.
-
-URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
-Version 2017-01-02"
-         (interactive)
-         (require 'dired-aux)
-         (if (equal major-mode 'dired-mode)
-             (progn
-               (mapc (lambda (x)
-                       (when (string-match " " x )
-                         (dired-rename-file x (replace-regexp-in-string " " "_" x) nil)))
-                     (dired-get-marked-files ))
-               (revert-buffer))
-           (user-error "Not in dired.")))
-       (defun xah/dired-rename-space-to-hyphen ()
-         "In dired,  rename current or marked  files by replacing
-space to hyphen -. If not in `dired', do nothing.
-URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'
-Version 2016-12-22"
-         (interactive)
-         (require 'dired-aux)
-         (if (equal major-mode 'dired-mode)
-             (progn
-               (mapc (lambda (x)
-                       (when (string-match " " x )
-                         (dired-rename-file x (replace-regexp-in-string " " "_" x) nil)))
-                     (dired-get-marked-files ))
-               (revert-buffer))
-           (user-error "Not in dired")))))
 
   (setq dired-recursive-copies (quote always)
         dired-dwim-target t

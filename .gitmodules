@@ -13,3 +13,6 @@
 [submodule "spacemacs"]
 	path = .emacs.d
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "dired-phundrak"]
+	path = .emacs.d/private/dired-phundrak
+	url = https://labs.phundrak.fr/phundrak/dired-phundrak.git
