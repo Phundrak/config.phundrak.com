@@ -1,1 +1,2 @@
+numlockx &
 exec i3
