@@ -1,4 +1,4 @@
-# -*- mode: fundamental -*-
+# -*- mode: conf -*-
 # Declaration of the mod key
 set $mod                          Mod4
 set $alt                          Mod1
@@ -61,6 +61,16 @@ bindsym $mod+Shift+$left          move left
 bindsym $mod+Shift+$down          move down
 bindsym $mod+Shift+$up            move up
 bindsym $mod+Shift+$right         move right
+# move focused container
+bindsym $mod+Ctrl+$left           move container to output left
+bindsym $mod+Ctrl+$down           move container to output down
+bindsym $mod+Ctrl+$up             move container to output up
+bindsym $mod+Ctrl+$right          move container to output right
+# move focused workspace
+bindsym $mod+Ctrl+Shift+$left           move workspace to output left
+bindsym $mod+Ctrl+Shift+$down           move workspace to output down
+bindsym $mod+Ctrl+Shift+$up             move workspace to output up
+bindsym $mod+Ctrl+Shift+$right          move workspace to output right
 
 # Change split
 bindsym $mod+h                    split h
