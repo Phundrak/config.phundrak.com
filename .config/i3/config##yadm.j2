@@ -11,10 +11,10 @@ set $up                           Up
 set $down                         Down
 set $left                         Left
 set $right                        Right
-set $exiti3                       "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+set $exiti3                       "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
 set $lockscreen                   "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-set $rofiexec                     "rofi -combi-modi window,drun -show combi -mohh combi -m -1"
-set $execgnus                     "exec emacsclient --create-frame --eval '(gnus)' -a nvim -n"
+set $rofiexec                     "rofi -combi-modi window,drun -show combi -mohh combi -m -1 -show-icons"
+set $gnus                         "emacsclient --create-frame --eval '(gnus)' -a nvim -n"
 set $ec                           "emacsclient --create-frame -a nvim -n"
 set $term                         st
 
@@ -119,6 +119,11 @@ bindsym $mod+Shift+0              move container to workspace 10
 bindsym $mod+Tab                  workspace next
 bindsym $mod+Shift+Tab            workspace previous
 
+{% if YADM_HOSTNAME == 'Marpa' -%}
+# Assign workspace to designated screen
+workspace 10                      output eDP-1
+{% endif -%}
+
 # reload the configuration file
 bindsym $mod+Shift+c              reload
 # restart i3 inplace
@@ -149,22 +154,22 @@ bindsym XF86Launch5               exec $ec
 bindsym $mod+e                    exec $ec
 bindsym XF86Launch6               exec chromium
 bindsym $mod+c                    exec chromium
-bindsym XF86HomePage              exec chromium https://labs.phundrak.fr
-bindsym XF86Search                exec chromium https://www.google.com
+bindsym XF86HomePage              exec "chromium https://labs.phundrak.fr"
+bindsym XF86Search                exec "chromium https://duckduckgo.com/"
 bindsym XF86Launch9               exec nemo
 bindsym $mod+n                    exec nemo
-bindsym XF86Launch8               $execgnus
-bindsym XF86Mail                  $execgnus
-bindsym $mod+m                    $execgnus
+bindsym XF86Launch8               exec $gnus
+bindsym XF86Mail                  exec $gnus
+bindsym $mod+m                    exec $gnus
 bindsym XF86Launch7               exec discord-canary
 bindsym Ctrl+Shift+d              exec discord-canary
-bindsym XF86AudioMute             exec amixer set Master 1+ toggle
-bindsym Ctrl+$mod+Prior           exec amixer -q set Master 2%+ unmute
-bindsym XF86AudioRaiseVolume      exec amixer -q set Master 2%+ unmute
-bindsym Ctrl+$mod+Next            exec amixer -q set Master 2%- unmute
-bindsym XF86AudioLowerVolume      exec amixer -q set Master 2%- unmute
-bindsym XF86Calculator            exec /usr/bin/speedcrunch
-bindsym $mod+$alt+c               exec /usr/bin/speedcrunch
+bindsym XF86AudioMute             exec "amixer set Master 1+ toggle"
+bindsym Ctrl+$mod+Prior           exec "amixer -q set Master 2%+ unmute"
+bindsym XF86AudioRaiseVolume      exec "amixer -q set Master 2%+ unmute"
+bindsym Ctrl+$mod+Next            exec "amixer -q set Master 2%- unmute"
+bindsym XF86AudioLowerVolume      exec "amixer -q set Master 2%- unmute"
+bindsym XF86Calculator            exec speedcrunch
+bindsym $mod+$alt+c               exec speedcrunch
 #bindsym XF86Favourites
 #bindsym Help
 #bindsym Undo
@@ -182,25 +187,24 @@ bindsym $mod+Shift+l              exec dmenu-lpass
 bindsym $mod+Shift+p              exec ~/.config/polybar/launch.sh
 
 # Brightness keyboard shortcuts
-bindsym XF86MonBrightnessUp       exec light -A 5
-bindsym XF86MonBrightnessDown     exec light -U 5
+bindsym XF86MonBrightnessUp       exec "light -A 5"
+bindsym XF86MonBrightnessDown     exec "light -U 5"
 
 # Wal
-bindsym $mod+Ctrl+w               exec wal -i ~/Pictures/Wallpapers -o wal-set
+bindsym $mod+Ctrl+w               exec "wal -i ~/Pictures/Wallpapers -o wal-set"
 
 # Take a screenshot
 bindsym --release Print           exec --no-startup-id scrot
-bindsym --release Ctrl+Print      exec --no-startup-id scrot -s
-bindsym           Shift+Print     exec --no-startup-id scrot -d 3
+bindsym --release Ctrl+Print      exec --no-startup-id "scrot -s"
+bindsym           Shift+Print     exec --no-startup-id "scrot -d 3"
 
 # Lock screen
-bindsym $mod+l                    exec i3lock -fol
-bindsym $mod+$alt+h               exec systemctl suspend
-bindsym $mod+Ctrl+h               exec systemctl hibernate
+bindsym $mod+l                    exec "i3lock -fol"
+bindsym $mod+$alt+h               exec "systemctl suspend"
+bindsym $mod+Ctrl+h               exec "systemctl hibernate"
 
 # SSH terminals
 bindsym $mod+$alt+m               exec $term ssh Mila
-bindsym $mod+$alt+t               exec $term ssh Tilo
 bindsym $mod+$alt+n               exec $term ssh Naro
 
 # Utilities
@@ -247,23 +251,34 @@ smart_borders                     on
 ################################################################################
 #                                Modules startup                               #
 ################################################################################
-exec_always --no-startup-id       ~/dotfiles/enable_touch.sh
-exec_always --no-startup-id       ~/.config/polybar/launch.sh
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
+exec        --no-startup-id       xrdb $HOME/.Xresources
+exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
 {% if YADM_HOSTNAME == 'Gampo' -%}
 exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 {% endif -%}
+exec_always --no-startup-id       ~/dotfiles/enable_touch.sh
+exec_always --no-startup-id       ~/.config/polybar/launch.sh
 exec        --no-startup-id       xss-lock -- i3lock -fol
-exec        --no-startup-id       "xrdb $HOME/.Xresources"
 exec        --no-startup-id       xfce4-power-manager
-exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
 exec        --no-startup-id       redshift-gtk
 exec        --no-startup-id       mpd
 exec        --no-startup-id       mpc stop
-exec        --no-startup-id       syndaemon -i 1.0 -t -k
-exec        --no-startup-id       sleep 3; emacs --eval "(server-start)"
 exec        --no-startup-id       mpd_discord_richpresence --no-idle --fork
+exec        --no-startup-id       syndaemon -i 1.0 -t -k
 exec        --no-startup-id       i3-battery-popup -N -t 2m
+exec                              sleep 3; emacs --eval "(server-start)"
+exec        --no-startup-id       sleep 3; i3-msg '[class="emacs"] move scratchpad'
+
+
+################################################################################
+#                   Set up second output for presentation                      #
+################################################################################
+{% if YADM_HOSTNAME == 'Marpa' -%}
+bindsym $mod+Ctrl+p              xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1
+{% else %}
+bindsym $mod+Ctrl+p              xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
+{% endif -%}
 
 
 ################################################################################
