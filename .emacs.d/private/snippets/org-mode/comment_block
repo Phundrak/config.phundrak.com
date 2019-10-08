@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: comment block
+# key: <co
+# --
+#+BEGIN_COMMENT
+$0
+#+END_COMMENT
