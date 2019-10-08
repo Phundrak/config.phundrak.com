@@ -63,6 +63,7 @@
     - [[#download-revealjs][Download Reveal.JS]]
   - [[#set-your-locale][Set your locale]]
   - [[#launch-x][Launch X]]
+  - [[#create-some-directories][Create some directories]]
   - [[#install-rust][Install Rust]]
     - [[#install-the-toolchains][Install the toolchains]]
     - [[#install-some-utilities][Install some utilities]]
@@ -441,6 +442,14 @@
    installation logs me in the tty by default,  and I do this by choice, I don’t
    really like display managers or desktop environments. So, to launch i3, let’s
    run =startx=.
+
+** Create some directories
+   Thanks to the  [[file:.local/bin/dmount][dmount]] and [[file:.local/bin/dumount][dumount]] utilities, mounting  and unmounting devices
+   can be done very  easily. And to add to some easiness,  let’s create a couple
+   of directories dedicated to what we might mount on our computer:
+   #+BEGIN_SRC fish :dir /sudo:: :exports code
+     mkdir -p /mnt/{USB,CD,Android}
+   #+END_SRC
 
 ** Install Rust
 *** Install the toolchains
