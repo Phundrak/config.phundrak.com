@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Gnus
+GenericName=Gnus
+Comment=Emacs' email client
+MimeType=x-scheme-handler/mailto;
+Exec=emacs --eval "(gnus)" %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Network;Email;TextEditor
+StartupWMClass=Gnus
+Keywords=Text;Editor;
