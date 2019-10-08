@@ -1,0 +1,61 @@
+#!/bin/fish
+# -*- mode: fish -*-
+# A dmenu prompt to unmount drives.
+# Provides you with mounted partitions, select one to unmount.
+# Drives mounted at /, /boot and /home will not be options to unmount.
+
+# From https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dumount
+
+set -g drives (lsblk -nrpo "name,type,size,mountpoint" | awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
+set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
+set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
+set -g undrivefile /tmp/undrives
+rm -f $undrivefile
+touch $undrivefile
+test -n "$drives" && echo "USB" >> $undrivefile
+test -n "$cds" && echo "CD" >> $undrivefile
+test -n "$androids" && echo "Android" >> $undrivefile
+
+function unmountusb
+    test -z "$drives" && rm $undrivefile && return 0
+    set chosen (echo $drives | rofi -dmenu -i -p "Unmount which drive?" | awk '{print $1}')
+    test -z "$chosen" && rm $undrivefile && return 0
+    sudo -A umount $chosen && notify-send "💻 USB unmounting" "$chosen unmounted."
+end
+
+function unmountandroid
+    set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
+    test -z "$chosen" && rm $undrivefile && return 0
+    sudo -A umount -l $chosen && notify-send "🤖 Android unmounting" "$chosen unmounted."
+end
+
+function unmountcd
+    set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
+    test -z "$chosen" && rm $undrivefile && return 0
+    sudo -A umount -l $chosen && notify-send "💿 CD unmounting" "$chosen unmounted."
+end
+
+function asktype
+    switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
+        case 'USB'
+            unmountusb
+        case 'CD'
+            unmountcd
+        case 'Android'
+            unmountandroid
+    end
+end
+
+switch (wc -l < $undrivefile)
+    case 0
+        notify-send "No USB drive or Android device or CD to unmount"
+    case 1
+        switch (cat $undrivefile)
+            case 'USB'
+                unmountusb
+            case 'CD'
+                unmountcd
+            case 'Android'
+                unmountandroid
+        end
+end

@@ -1,0 +1,105 @@
+#!/usr/bin/fish
+# -*- mode: fish -*-
+# Gives a dmenu prompt to mount unmounted drives.
+# If they’re in /etc/fstab, they’ll be mounted automatically.
+# Otherwise, you’ll be prompted to give a mountpoint from already existing directories.
+# If you input a novel directory, it will prompt you to create that directory.
+
+# Inspired from https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount
+
+begin
+    set -l LFS
+    set a (math (jmtpfs -l | wc -l) - 2) # test if any android device is connected
+    test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -z anddrives
+    lsblk -rpo "name,type,size,mountpoint" | awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | read -z usbdrives
+    blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
+end
+set -g basemount /mnt
+rm -f /tmp/drives
+touch /tmp/drives
+test -n "$usbdrives" && echo "USB" >> /tmp/drives
+test -n "$cddrives" && echo "CD" >> /tmp/drives
+test -n "$anddrives" && echo "Android" >> /tmp/drives
+
+function getmount -d "Get the directory in which the device will be mounted"
+    set -g mp (for d in $basemount
+        find $d -maxdepth 5 -type d
+    end | rofi -dmenu -i -p 'Type in mount point.')
+    if test -z $mp || test $mp = ""
+        return 1
+    end
+    if test ! -d $mp
+        switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
+            case 'Yes'
+                mkdir -p $mp || sudo -A mkdir -p $mp
+            case '*'
+                return 1
+        end
+    end
+end
+
+function mountusb -d "Mount a USB device"
+    set -g chosen (echo $usbdrives | rofi -dmenu -i -p "Mount which drive?" | awk '{print $1}')
+    test -z $chosen && return 1
+    set -g alreadymounted (lsblk -nrpo "name,type,mountpoint" | awk '$2=="part"&&$3!~/\/boot|\/home$|SWAP/&&length($3)>1{printf "-not ( -path *%s -prune )  \n",$3}')
+    getmount
+    test -z $mp && return 1
+    switch (lsblk -no "fstype" $chosen)
+        case "vfat"
+            sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
+        case "ntfs"
+            sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
+        case '*'
+            sudo -A mount $chosen $mp
+            set user (whoami)
+            sudo -A chown -R $user:users $mp
+    end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
+end
+
+function mountandroid -d "Mount an Android device"
+    set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
+    set bus (echo $chosen | sed 's/,.*//')
+    getmount "$HOME -maxdepth 3 -type d"
+    jmtpfs -device=$chosen $mp
+    echo "OK" | rofi -dmenu -i -p "Press (Allow) on your phone screen"
+    set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
+    echo $newchosen
+    sudo -A umount $mp
+    jmtpfs -device=$newchosen $mp
+	  notify-send "🤖 Android Mounting" "Android device mounted to $mp."
+end
+
+function mountcd
+    set chosen (echo $cddrives)
+    getmount "$HOME -maxdepth 3 -type d"
+    sudo -A mount $chosen $mp && notify-send "💿 CD mounting" "$chosen mounted." && exit 0
+end
+
+function asktype
+    cat /tmp/drives
+    switch (cat /tmp/drives | rofi -dmenu -i -p "Mount which drive?")
+        case "USB"
+            mountusb
+        case "Android"
+            mountandroid
+        case "CD"
+            mountcd
+    end
+end
+
+switch (wc -l < /tmp/drives)
+    case 0
+        notify-send "No USB drive or Android device or CD detected"
+    case 1
+        switch (cat /tmp/drives)
+            case "USB"
+                mountusb
+            case "Android"
+                mountandroid
+            case CD
+                mountCD
+        end
+    case '*'
+        asktype
+end
+rm /tmp/drives
