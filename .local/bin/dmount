@@ -66,13 +66,13 @@ function mountandroid -d "Mount an Android device"
     echo $newchosen
     sudo -A umount $mp
     jmtpfs -device=$newchosen $mp
-	  notify-send "🤖 Android Mounting" "Android device mounted to $mp."
+	  notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
 end
 
 function mountcd
     set chosen (echo $cddrives)
     getmount "$HOME -maxdepth 3 -type d"
-    sudo -A mount $chosen $mp && notify-send "💿 CD mounting" "$chosen mounted." && exit 0
+    sudo -A mount $chosen $mp && notify-send -a "dmount" "💿 CD mounting" "$chosen mounted." && exit 0
 end
 
 function asktype
@@ -89,7 +89,7 @@ end
 
 switch (wc -l < /tmp/drives)
     case 0
-        notify-send "No USB drive or Android device or CD detected"
+        notify-send "No USB drive or Android device or CD detected" -a "dmount"
     case 1
         switch (cat /tmp/drives)
             case "USB"

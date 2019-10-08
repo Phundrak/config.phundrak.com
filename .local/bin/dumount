@@ -20,19 +20,19 @@ function unmountusb
     test -z "$drives" && rm $undrivefile && return 0
     set chosen (echo $drives | rofi -dmenu -i -p "Unmount which drive?" | awk '{print $1}')
     test -z "$chosen" && rm $undrivefile && return 0
-    sudo -A umount $chosen && notify-send "💻 USB unmounting" "$chosen unmounted."
+    sudo -A umount $chosen && notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
 end
 
 function unmountandroid
     set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
     test -z "$chosen" && rm $undrivefile && return 0
-    sudo -A umount -l $chosen && notify-send "🤖 Android unmounting" "$chosen unmounted."
+    sudo -A umount -l $chosen && notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
 end
 
 function unmountcd
     set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
     test -z "$chosen" && rm $undrivefile && return 0
-    sudo -A umount -l $chosen && notify-send "💿 CD unmounting" "$chosen unmounted."
+    sudo -A umount -l $chosen && notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
 end
 
 function asktype
@@ -48,7 +48,7 @@ end
 
 switch (wc -l < $undrivefile)
     case 0
-        notify-send "No USB drive or Android device or CD to unmount"
+        notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
     case 1
         switch (cat $undrivefile)
             case 'USB'
