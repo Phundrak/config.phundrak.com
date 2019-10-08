@@ -450,6 +450,11 @@
    #+BEGIN_SRC fish :dir /sudo:: :exports code
      mkdir -p /mnt/{USB,CD,Android}
    #+END_SRC
+   And in case we need to mount  some ext4 partitions on these, let’s change the
+   ownership of these directories.
+   #+BEGIN_SRC fish :exports code
+     sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+   #+END_SRC
 
 ** Install Rust
 *** Install the toolchains
