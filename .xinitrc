@@ -1,2 +1,0 @@
-numlockx &
-exec i3
