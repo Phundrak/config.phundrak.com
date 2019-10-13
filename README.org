@@ -223,21 +223,27 @@
       #+END_SRC
     - From [[https://github.com/phundrak/dotfiles][Github]]:
       #+BEGIN_SRC sh :dir ~ :exports code
-        yadm clone https://gitlab.com/phundrak/dotfiles.git
+        yadm clone https://github.com/phundrak/dotfiles.git
       #+END_SRC
+
+    To decrypt the encrypted files, run the following command:
+    #+BEGIN_SRC sh :dir ~ :exports code
+      yadm decrypt
+    #+END_SRC
+    It will ask the passphrase.
 
 *** Update the remotes
     Now, let’s make sure we have the correct remotes set up for the dotfiles.
-    #+BEGIN_SRC fish :exports code :dir ~/dotfiles
-      yadm remote set-url origin "https://labs.phundrak.fr/phundrak/dotfiles.git"
-      yadm remote add-url github "https://github.com/phundrak/dotfiles.git"
+    #+BEGIN_SRC sh :exports code :dir ~/dotfiles
+      yadm remote set-url origin https://labs.phundrak.fr/phundrak/dotfiles.git
+      yadm remote add github https://github.com/phundrak/dotfiles.git
     #+END_SRC
     You can swap the  two links if you feel more comfortable  with Github as the
     =origin=  remote,  just  rename  the   =github=  remote  to  something  like
     =phundraklabs= or something like that.
 
     If you have already  generated (or copied, but don’t do  that) your SSH keys
-    and uploaded them to Github and/or to Phundrak Labs, you can use the
+    and  uploaded them  to  Github and/or  to  Phundrak Labs,  you  can use  the
     following urls instead as the remotes’ urls.
     #+BEGIN_SRC text
       git@labs.phundrak.fr:phundrak/dotfiles.git
