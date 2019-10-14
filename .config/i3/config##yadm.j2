@@ -256,7 +256,6 @@ smart_borders                     on
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
 exec        --no-startup-id       xrdb $HOME/.Xresources
 exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
-exec                              dunst -config ~/.config/dunst/dunstrc
 {% if YADM_HOSTNAME == 'Gampo' -%}
 exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 {% endif -%}
@@ -270,8 +269,7 @@ exec        --no-startup-id       mpc stop
 exec        --no-startup-id       mpd_discord_richpresence --no-idle --fork
 exec        --no-startup-id       syndaemon -i 1.0 -t -k
 exec        --no-startup-id       i3-battery-popup -N -t 2m
-exec                              sleep 3; emacs --eval "(server-start)"
-
+exec        --no-startup-id       dunst -config ~/.config/dunst/dunstrc
 
 ################################################################################
 #                   Set up second output for presentation                      #
