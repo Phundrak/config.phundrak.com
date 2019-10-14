@@ -28,6 +28,15 @@ yay -Syua emacs python-envtpl-git
 printf "\n# Getting yadm susbmodules ####################################################\n"
 yadm submodule update --init --recursive
 
+if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
+    printf "\n# Update yadm’s remotes #######################################################\n"
+    yadm remote set-url origin git@labs.phundrak.fr:phundrak/dotfiles.git
+    yadm remote add github git@github.com:phundrak/dotfiles.git
+
+    printf "\n# Decrypt encrypted dotfiles ##################################################\n"
+    yadm decrypt
+end
+
 printf "\n# Generating alt files ########################################################\n"
 yadm alt
 
