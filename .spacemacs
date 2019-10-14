@@ -126,7 +126,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 40
             shell-default-position 'right
-            shell-default-shell 'term)
+            shell-default-shell 'eshell)
      shell-scripts
      selectric
      semantic
@@ -725,6 +725,7 @@ dump."
     "oaC" 'calendar
     "oae" 'eww
     "oaf" 'fireplace
+    "oao" 'find-file-at-point
     "oaw" 'wttrin
     "ob" 'fancy-battery-mode
     "occ" 'outorg-copy-edits-and-exit
@@ -978,9 +979,9 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
 
     (with-eval-after-load 'org-agenda
       (require 'org-projectile)
-      (mapcar '(lambda (file)
-                 (when (file-exists-p file)
-                   (push file org-agenda-files)))
+      (mapcar #'(lambda (file)
+                  (when (file-exists-p file)
+                    (push file org-agenda-files)))
               (org-projectile-todo-files)))
     (eval-after-load "ox-latex"
       ;; update the list of LaTeX classes and associated header (encoding, etc.)
