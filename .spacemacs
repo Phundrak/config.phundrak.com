@@ -709,6 +709,8 @@ dump."
   (spacemacs/declare-prefix "oa" "applications")
   (spacemacs/declare-prefix "oc" "comments")
   (spacemacs/declare-prefix "of" "files")
+  (spacemacs/declare-prefix "ofi" "i3 config")
+  (spacemacs/declare-prefix "ofp" "polybar config")
   (spacemacs/declare-prefix "og" "gnus")
   (spacemacs/declare-prefix "oi" "insert")
   (spacemacs/declare-prefix "oii" "invisible space")
@@ -1087,10 +1089,10 @@ double-quotes matter and must be escaped appropriately."
     (if (listp filename)
         (loop for f in filename do (find-file f wildcards))
       ad-do-it))
-  (defalias 'ei3 (lambda ()
-                   (find-file-other-window "~/.config/i3/config")))
-  (defalias 'epoly (lambda ()
-                     (find-file-other-window "~/.config/polybar/config")))
+  (defun eshell-new()
+    "Open a new instance of eshell."
+    (interactive)
+    (eshell 'N))
   (defalias 'open 'find-file)
   (defalias 'openo 'find-file-other-window)
   (defalias 'yes-or-no-p 'y-or-n-p)
@@ -1114,7 +1116,7 @@ double-quotes matter and must be escaped appropriately."
          (with-face "➜" :foreground "#2345ba"))
        " ")))
   (setq eshell-visual-commands
-        '("fish" "zsh" "bash" "tmux" "htop" "top" "vim" "bat")
+        '("fish" "zsh" "bash" "tmux" "htop" "top" "vim" "bat" "nano")
         eshell-visual-subcommands
         '("git" "log" "l" "diff" "show")
         eshell-prompt-regexp "^[^#$\n]*[#$] "
