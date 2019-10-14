@@ -1,5 +1,3 @@
-#!/usr/bin/env fish
-
 function 4chandl -d "Download media from 4chan thread"
     if ! count $argv > /dev/null
         echo 'No URL specified! Give the URL to thread as the only argument.'
