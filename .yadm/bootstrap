@@ -6,6 +6,9 @@
 # file. No other packages are required.                                       #
 ###############################################################################
 
+printf "\n# Set fish as the default shell ###############################################\n"
+chsh -s /usr/bin/fish
+
 # install yay if it isn’t already
 if ! test which yay
     printf "\n# Installing yay ##############################################################\n"
