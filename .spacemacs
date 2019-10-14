@@ -705,6 +705,7 @@ dump."
   (spacemacs/declare-prefix "o" "custom")
   (spacemacs/declare-prefix "oa" "applications")
   (spacemacs/declare-prefix "oc" "comments")
+  (spacemacs/declare-prefix "of" "files")
   (spacemacs/declare-prefix "og" "gnus")
   (spacemacs/declare-prefix "oi" "insert")
   (spacemacs/declare-prefix "oii" "invisible space")
@@ -725,13 +726,16 @@ dump."
     "oaC" 'calendar
     "oae" 'eww
     "oaf" 'fireplace
-    "oao" 'find-file-at-point
     "oaw" 'wttrin
     "ob" 'fancy-battery-mode
     "occ" 'outorg-copy-edits-and-exit
     "oce" 'outorg-edit-as-org
+    "oco" 'outline-minor-mode
     "od" 'elcord-mode
-    "of" 'flycheck-mode
+    "oF" 'flycheck-mode
+    "ofi" (lambda () (interactive) (find-file "~/.config/i3/config##yadm.j2"))
+    "ofp" (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
+    "ofo" 'find-file-at-point
     "ogd" 'turn-on-gnus-dired-mode
     "oii" (lambda () (interactive) (insert "​"))
     "ome" 'mc/edit-lines
