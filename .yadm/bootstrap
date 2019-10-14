@@ -26,7 +26,7 @@ printf "\n# Installing Spacemacs ###############################################
 git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
 printf "\n# Emacs, Envtpl ###############################################################\n"
-yay -Syua emacs python-envtpl-git
+yay -Syu emacs python-envtpl-git
 
 printf "\n# Getting yadm susbmodules ####################################################\n"
 yadm submodule update --init --recursive
