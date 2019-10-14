@@ -202,7 +202,7 @@
    installation. And  let’s install  =yadm= (our  dotfiles manager)  and =emacs=
    while we’re at it.
    #+BEGIN_SRC sh :exports code
-     yay -Syua yadm emacs
+     yay -Syua yadm emacs python-envtpl-git
    #+END_SRC
 
 ** Set up =yadm=
@@ -258,8 +258,8 @@
     #+END_SRC
 
 *** Generate the alt dotfiles
-    =yadm= will need  to generate the host-specific dotfiles. To  do so, you can
-    run the following command:
+    We  will  need to  generate  the  host-specific  dotfiles.  We can  run  the
+    following command:
     #+BEGIN_SRC sh :dir ~ :exports code
       yadm alt
     #+END_SRC
