@@ -1,0 +1,110 @@
+#!/usr/bin/fish
+###############################################################################
+#                    Bootstrap file for Phundrak’s dotfiles                   #
+#                                                                             #
+#   Please be aware you will need `fish' and `git' installed to run this      #
+# file. No other packages are required.                                       #
+###############################################################################
+
+# install yay if it isn’t already
+if ! test which yay
+    printf "\n# Installing yay ##############################################################\n"
+    cd
+    mkdir -p fromGIT
+    cd fromGIT
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+else
+    printf "\n# yay already installed #######################################################\n"
+end
+
+printf "\n# Installing Spacemacs ########################################################\n"
+git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
+
+printf "\n# Emacs, Envtpl ###############################################################\n"
+yay -Syua emacs python-envtpl-git
+
+printf "\n# Getting yadm susbmodules ####################################################\n"
+yadm submodule update --init --recursive
+
+printf "\n# Generating alt files ########################################################\n"
+yadm alt
+
+printf "\n# Installing needed packages ##################################################\n"
+yay -S --needed asar ascii aspell-en aspell-fr assimp autoconf automake awesome-terminal-fonts bash bat biber binutils bison bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp compton coreutils cppcheck cppreference cppreference-devhelp cpupower cronie cryptsetup cups device-mapper dhcpcd diffutils discord-canary discount ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress e2fsprogs emacs exfat-utils fakeroot feh ffmpegthumbnailer file filesystem findutils fingerprint-gui firefox flake8 flex font-mathematica fontforge freeglut fzf gawk gcc gcc-libs gdb gettext gimp git glibc gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools graphviz grep gzip htop i3-gaps i3lock-blur i3status icecat-bin  igdm-bin inetutils intel-ucode iproute2 iputils j4-dmenu-desktop jfsutils jmtpfs lastpass-cli less libnewt libtool licenses light linux-headers lldb logrotate lsof lvm2 m4 make man-db man-pages mate-polkit mdadm meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano nasm ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl networkmanager networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji npm ntfs-3g numlockx openmp openssh p7zip pacman pacman-contrib pandoc-bin patch pavucontrol pciutils pcurses pdfpc perl pkgconf polybar procps-ng psmisc pulseaudio-bluetooth python-envtpl-git python-pip python-pywal qemu r raw-thumbnailer redshift refind-efi reflector reiserfsprogs rofi rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sdl2_gfx sdl2_image sdl2_mixer sdl2_ttf sed sent shadow siji-git simplescreenrecorder speedcrunch sshfs st-luke-git sudo sysfsutils systemd-sysvcompat tar texinfo texlive-bibtexextra texlive-bin texlive-core texlive-fontsextra texlive-formatsextra texlive-games texlive-humanities texlive-langchinese texlive-langcyrillic texlive-langextra texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks texlive-publishers texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk ttf-bitstream-vera ttf-dejavu  ttf-google-fonts-opinionated-git ttf-joypixels ttf-liberation  ttf-material-design-icons-git ttf-ms-fonts ttf-symbola  ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji  unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which  whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom  xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit xss-lock xorg-xprop yadm
+
+printf "\n# Installing tryone’s compton fork ############################################\n"
+yay -S compton-tryone-git
+
+# enable our services for Docker, Emacs and our ssh server
+printf "\n# Enabling and starting Docker ################################################\n"
+sudo systemctl enable --now docker
+printf "\n# Adding user to Docker group #################################################\n"
+sudo usermod -aG docker $USER
+printf "\n# Enabling Emacs as user service ##############################################\n"
+systemctl --user enable --now emacs
+
+# echo "Enable ssh server?"
+read --prompt "echo 'Do you want to activate the ssh server? (yes/no): ' " -l sshdserver
+if ! test (echo "yes" | sed -e "s/^.*$sshdserver//I")
+    printf "\n# Enabling ssh server #########################################################\n"
+    sudo systemctl enable --now sshd
+end
+
+printf "\n# Installing fisher ###########################################################\n"
+curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+printf "\n# Installing fisher extensions ################################################\n"
+fisher add edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish tuvistavie/fish-ssh-agent
+
+printf "\n# Install i3-gaps-rounded #####################################################\n"
+cd ~/fromGIT
+git clone https://github.com/resloved/i3.git i3-gaps-rounded
+cd i3-gaps-rounded
+rm -rf build
+autoreconf --force --install
+mkdir build && cd build
+../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+make
+sudo make install
+
+printf "\n# Install polybar-battery #####################################################\n"
+cd ~/fromGIT
+git clone https://github.com/drdeimos/polybar_another_battery.git
+cd polybar_another_battery
+go get -u github.com/distatus/battery/cmd/battery
+make build
+
+printf "\n# Install Reveal.JS ###########################################################\n"
+cd ~/fromGIT
+git clone https://github.com/hakimel/reveal.js.git
+
+printf "\n# Set our locale ##############################################################\n"
+echo "LANG=en_US.UTF-8
+LC_COLLATE=C
+LC_NAME=fr_FR.UTF-8
+LC_NUMERIC=fr_FR.UTF-8
+LC_IDENTIFICATION=fr_FR.UTF-8
+LC_TELEPHONE=fr_FR.UTF-8
+LC_MONETARY=fr_FR.UTF-8
+LC_PAPER=fr_FR.UTF-8
+LC_ADDRESS=fr_FR.UTF-8
+LC_TIME=fr_FR.UTF-8
+LC_MEASUREMENT=fr_FR.UTF-8" | sudo tee /etc/locale.conf
+
+printf "\n# Generate locale #############################################################\n"
+sudo locale-gen
+
+printf "\n# Create some directories for mounting our drives #############################\n"
+sudo mkdir -p /mnt/{USB,CD,Android}
+sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+
+printf "\n# Install the rust toolchains, nightly is the default one #####################\n"
+rustup default nightly
+rustup toolchain install stable
+
+printf "\n# Add rust utilities ##########################################################\n"
+cargo install rustfmt racer
+
+printf "\n# Clean the pacman and yay cache ##############################################\n"
+yay -Sc --no-confirm
