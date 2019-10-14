@@ -312,16 +312,16 @@
          texlive-core texlive-fontsextra texlive-formatsextra texlive-games \
          texlive-humanities texlive-langchinese texlive-langcyrillic \
          texlive-langextra texlive-langgreek texlive-langjapanese \
-         texlive-langkorean texlive-latexextra texlive-music texlive-pictures \
-         texlive-pstricks texlive-publishers texlive-science tmux tree \
-         ttf-arphic-uming ttf-baekmuk ttf-bitstream-vera ttf-dejavu \
-         ttf-google-fonts-opinionated-git ttf-joypixels ttf-liberation \
-         ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
-         ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji \
-         unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which \
-         whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom \
-         xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit \
-         xss-lock yadm graphviz xorg-xprop
+         texlive-langkorean texlive-latexextra texlive-localmanager-git \
+         texlive-music texlive-pictures texlive-pstricks texlive-publishers \
+         texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk \
+         ttf-bitstream-vera ttf-dejavu  ttf-google-fonts-opinionated-git \
+         ttf-joypixels ttf-liberation  ttf-material-design-icons-git ttf-ms-fonts \
+         ttf-symbola  ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode \
+         unicode-emoji  unrar usbutils util-linux valgrind vi vim vulkan-headers \
+         w3m wget which  whois x11-ssh-askpass xclip xdg-user-dirs-gtk \
+         xf86-input-wacom  xf86-video-intel xfce4-power-manager xfsprogs \
+         xorg-server xorg-xinit xss-lock yadm graphviz xorg-xprop
    #+END_SRC
    Given how many packages  will be install from the AUR,  I’ll probably have to
    type my password a few times.
