@@ -294,34 +294,34 @@
          filesystem findutils fingerprint-gui firefox fish flake8 flex \
          font-mathematica fontforge freeglut fzf gawk gcc gcc-libs gdb gettext \
          gimp git glibc gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
-         gnuplot go-tools grep gzip htop i3-gaps i3lock-blur i3status icecat-bin \
-         igdm-bin inetutils intel-ucode iproute2 iputils j4-dmenu-desktop \
-         jfsutils jmtpfs lastpass-cli less libnewt libtool licenses light \
-         linux-headers lldb logrotate lsof lvm2 m4 make man-db man-pages \
-         mate-polkit mdadm meson minted mpc mpd mpd-rich-presence-discord-git mpv \
-         mupdf-tools nano nasm ncdu ncmpcpp nemo-fileroller nemo-preview neofetch \
-         netctl networkmanager networkmanager-openvpn nm-connection-editor nnn \
-         nomacs noto-fonts-emoji npm ntfs-3g numlockx openmp openssh p7zip pacman \
-         pacman-contrib pandoc-bin patch pavucontrol pciutils pcurses pdfpc perl \
-         pkgconf polybar procps-ng psmisc pulseaudio-bluetooth python-envtpl-git \
-         python-pip python-pywal qemu r raw-thumbnailer redshift refind-efi \
-         reflector reiserfsprogs rofi rofi-wifi-menu-git rsync rtv rustup s-nail \
-         samba scrot sdl2_gfx sdl2_image sdl2_mixer sdl2_ttf sed sent shadow \
-         siji-git simplescreenrecorder speedcrunch sshfs st-luke-git sudo \
-         sysfsutils systemd-sysvcompat tar texinfo texlive-bibtexextra texlive-bin \
-         texlive-core texlive-fontsextra texlive-formatsextra texlive-games \
-         texlive-humanities texlive-langchinese texlive-langcyrillic \
-         texlive-langextra texlive-langgreek texlive-langjapanese \
-         texlive-langkorean texlive-latexextra texlive-localmanager-git \
-         texlive-music texlive-pictures texlive-pstricks texlive-publishers \
-         texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk \
+         gnuplot go-tools graphviz grep gzip htop i3-gaps i3lock-blur i3status \
+         icecat-bin  igdm-bin inetutils intel-ucode iproute2 iputils \
+         j4-dmenu-desktop jfsutils jmtpfs lastpass-cli less libnewt libtool \
+         licenses light linux-headers lldb logrotate lsof lvm2 m4 make man-db \
+         man-pages mate-polkit mdadm meson minted mpc mpd \
+         mpd-rich-presence-discord-git mpv mupdf-tools nano nasm ncdu ncmpcpp \
+         nemo-fileroller nemo-preview neofetch netctl networkmanager \
+         networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji \
+         npm ntfs-3g numlockx openmp openssh p7zip pacman pacman-contrib pandoc-bin \
+         patch pavucontrol pciutils pcurses pdfpc perl pkgconf polybar procps-ng \
+         psmisc pulseaudio-bluetooth python-envtpl-git python-pip python-pywal qemu \
+         r raw-thumbnailer redshift refind-efi reflector reiserfsprogs rofi \
+         rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sdl2_gfx sdl2_image \
+         sdl2_mixer sdl2_ttf sed sent shadow siji-git simplescreenrecorder \
+         speedcrunch sshfs st-luke-git sudo sysfsutils systemd-sysvcompat tar \
+         texinfo texlive-bibtexextra texlive-bin texlive-core texlive-fontsextra \
+         texlive-formatsextra texlive-games texlive-humanities texlive-langchinese \
+         texlive-langcyrillic texlive-langextra texlive-langgreek \
+         texlive-langjapanese texlive-langkorean texlive-latexextra \
+         texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks \
+         texlive-publishers texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk \
          ttf-bitstream-vera ttf-dejavu  ttf-google-fonts-opinionated-git \
          ttf-joypixels ttf-liberation  ttf-material-design-icons-git ttf-ms-fonts \
          ttf-symbola  ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode \
          unicode-emoji  unrar usbutils util-linux valgrind vi vim vulkan-headers \
          w3m wget which  whois x11-ssh-askpass xclip xdg-user-dirs-gtk \
          xf86-input-wacom  xf86-video-intel xfce4-power-manager xfsprogs \
-         xorg-server xorg-xinit xss-lock yadm graphviz xorg-xprop
+         xorg-server xorg-xinit xss-lock xorg-xprop yadm
    #+END_SRC
    Given how many packages  will be install from the AUR,  I’ll probably have to
    type my password a few times.
