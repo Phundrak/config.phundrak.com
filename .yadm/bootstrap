@@ -55,8 +55,8 @@ printf "\n# Enabling Emacs as user service #####################################
 systemctl --user enable --now emacs
 
 # echo "Enable ssh server?"
-read --prompt "echo 'Do you want to activate the ssh server? (yes/no): ' " -l sshdserver
-if ! test (echo "yes" | sed -e "s/^.*$sshdserver//I")
+read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
+if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
     printf "\n# Enabling ssh server #########################################################\n"
     sudo systemctl enable --now sshd
 end
