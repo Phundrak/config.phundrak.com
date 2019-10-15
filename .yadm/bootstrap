@@ -6,12 +6,12 @@
 # file. No other packages are required.                                       #
 ###############################################################################
 
-printf "\n# Set fish as the default shell ###############################################\n"
+printf "\n# Set fish as the default shell ###############################################\n\n"
 chsh -s /usr/bin/fish
 
 # install yay if it isn’t already
 if ! test which yay
-    printf "\n# Installing yay ##############################################################\n"
+    printf "\n# Installing yay ##############################################################\n\n"
     cd
     mkdir -p fromGIT
     cd fromGIT
@@ -19,57 +19,57 @@ if ! test which yay
     cd yay
     makepkg -si --noconfirm
 else
-    printf "\n# yay already installed #######################################################\n"
+    printf "\n# yay already installed #######################################################\n\n"
 end
 
-printf "\n# Installing Spacemacs ########################################################\n"
+printf "\n# Installing Spacemacs ########################################################\n\n"
 git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
-printf "\n# Emacs, Envtpl ###############################################################\n"
+printf "\n# Emacs, Envtpl ###############################################################\n\n"
 yay -Syu emacs python-envtpl-git
 
-printf "\n# Getting yadm susbmodules ####################################################\n"
+printf "\n# Getting yadm susbmodules ####################################################\n\n"
 yadm submodule update --init --recursive
 
 if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
-    printf "\n# Update yadm’s remotes #######################################################\n"
+    printf "\n# Update yadm’s remotes #######################################################\n\n"
     yadm remote set-url origin git@labs.phundrak.fr:phundrak/dotfiles.git
     yadm remote add github git@github.com:phundrak/dotfiles.git
 
-    printf "\n# Decrypt encrypted dotfiles ##################################################\n"
+    printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
     yadm decrypt
 end
 
-printf "\n# Generating alt files ########################################################\n"
+printf "\n# Generating alt files ########################################################\n\n"
 yadm alt
 
-printf "\n# Installing needed packages ##################################################\n"
+printf "\n# Installing needed packages ##################################################\n\n"
 yay -S --needed asar ascii aspell-en aspell-fr assimp autoconf automake awesome-terminal-fonts bash bat biber binutils bison bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp compton coreutils cppcheck cppreference cppreference-devhelp cpupower cronie cryptsetup cups device-mapper dhcpcd diffutils discord-canary discount ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress e2fsprogs emacs exfat-utils fakeroot feh ffmpegthumbnailer file filesystem findutils fingerprint-gui firefox flake8 flex font-mathematica fontforge freeglut fzf gawk gcc gcc-libs gdb gettext gimp git glibc gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools graphviz grep gzip htop i3-gaps i3lock-blur i3status icecat-bin  igdm-bin inetutils intel-ucode iproute2 iputils j4-dmenu-desktop jfsutils jmtpfs lastpass-cli less libnewt libtool licenses light linux-headers lldb logrotate lsof lvm2 m4 make man-db man-pages mate-polkit mdadm meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano nasm ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl networkmanager networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji npm ntfs-3g numlockx openmp openssh p7zip pacman pacman-contrib pandoc-bin patch pavucontrol pciutils pcurses pdfpc perl pkgconf polybar procps-ng psmisc pulseaudio-bluetooth python-envtpl-git python-pip python-pywal qemu r raw-thumbnailer redshift refind-efi reflector reiserfsprogs rofi rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sdl2_gfx sdl2_image sdl2_mixer sdl2_ttf sed sent shadow siji-git simplescreenrecorder speedcrunch sshfs st-luke-git sudo sysfsutils systemd-sysvcompat tar texinfo texlive-bibtexextra texlive-bin texlive-core texlive-fontsextra texlive-formatsextra texlive-games texlive-humanities texlive-langchinese texlive-langcyrillic texlive-langextra texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks texlive-publishers texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk ttf-bitstream-vera ttf-dejavu  ttf-google-fonts-opinionated-git ttf-joypixels ttf-liberation  ttf-material-design-icons-git ttf-ms-fonts ttf-symbola  ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji  unrar usbutils util-linux valgrind vi vim vulkan-headers w3m wget which  whois x11-ssh-askpass xclip xdg-user-dirs-gtk xf86-input-wacom  xf86-video-intel xfce4-power-manager xfsprogs xorg-server xorg-xinit xss-lock xorg-xprop yadm
 
-printf "\n# Installing tryone’s compton fork ############################################\n"
+printf "\n# Installing tryone’s compton fork ############################################\n\n"
 yay -S compton-tryone-git
 
 # enable our services for Docker, Emacs and our ssh server
-printf "\n# Enabling and starting Docker ################################################\n"
+printf "\n# Enabling and starting Docker ################################################\n\n"
 sudo systemctl enable --now docker
-printf "\n# Adding user to Docker group #################################################\n"
+printf "\n# Adding user to Docker group #################################################\n\n"
 sudo usermod -aG docker $USER
-printf "\n# Enabling Emacs as user service ##############################################\n"
+printf "\n# Enabling Emacs as user service ##############################################\n\n"
 systemctl --user enable --now emacs
 
 # echo "Enable ssh server?"
 read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
 if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
-    printf "\n# Enabling ssh server #########################################################\n"
+    printf "\n# Enabling ssh server #########################################################\n\n"
     sudo systemctl enable --now sshd
 end
 
-printf "\n# Installing fisher ###########################################################\n"
+printf "\n# Installing fisher ###########################################################\n\n"
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
-printf "\n# Installing fisher extensions ################################################\n"
+printf "\n# Installing fisher extensions ################################################\n\n"
 fisher add edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish tuvistavie/fish-ssh-agent
 
-printf "\n# Install i3-gaps-rounded #####################################################\n"
+printf "\n# Install i3-gaps-rounded #####################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/resloved/i3.git i3-gaps-rounded
 cd i3-gaps-rounded
@@ -77,21 +77,32 @@ rm -rf build
 autoreconf --force --install
 mkdir build && cd build
 ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
-make
+make -j
 sudo make install
 
-printf "\n# Install polybar-battery #####################################################\n"
+printf "\n# Install polybar-battery #####################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/drdeimos/polybar_another_battery.git
 cd polybar_another_battery
 go get -u github.com/distatus/battery/cmd/battery
 make build
 
-printf "\n# Install Reveal.JS ###########################################################\n"
+printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/hakimel/reveal.js.git
 
-printf "\n# Set our locale ##############################################################\n"
+printf "\n# Set our locale ##############################################################\n\n"
+# This is assuming the only enabled locale is en_US.UTF-8
+# echo "fr_FR.UTF-8 UTF-8
+# ja_JP.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen
+set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
+
+for item in $mylocales
+    if test (grep -e "#$item" /etc/locale.gen)
+        sudo sed -i "/$item/s/^#//g" /etc/locale.gen
+    end
+end
+
 echo "LANG=en_US.UTF-8
 LC_COLLATE=C
 LC_NAME=fr_FR.UTF-8
@@ -104,19 +115,110 @@ LC_ADDRESS=fr_FR.UTF-8
 LC_TIME=fr_FR.UTF-8
 LC_MEASUREMENT=fr_FR.UTF-8" | sudo tee /etc/locale.conf
 
-printf "\n# Generate locale #############################################################\n"
+printf "\n# Set keyboard layout #########################################################\n\n"
+echo 'Section "InputClass"
+Identifier "system-keyboard"
+MatchIsKeyboard "on"
+Option "XkbLayout" "fr,fr,us"
+Option "XkbModel" "pc104"
+Option "XkbVariant" "bepo,,"
+Option "XkbOptions" "grp:menu_toggle"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+
+printf "\n# Generate locale #############################################################\n\n"
 sudo locale-gen
 
-printf "\n# Create some directories for mounting our drives #############################\n"
+printf "\n# Create some directories for mounting our drives #############################\n\n"
 sudo mkdir -p /mnt/{USB,CD,Android}
 sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 
-printf "\n# Install the rust toolchains, nightly is the default one #####################\n"
+printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
 rustup default nightly
 rustup toolchain install stable
 
-printf "\n# Add rust utilities ##########################################################\n"
+printf "\n# Add rust utilities ##########################################################\n\n"
 cargo install rustfmt racer
 
-printf "\n# Clean the pacman and yay cache ##############################################\n"
-yay -Sc --no-confirm
+read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l sshdserver
+if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
+    printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
+    set source $HOME/.nanorc
+    sudo ln -s $source /root/.nanorc
+end
+
+printf "\n# Clean the pacman and yay cache ##############################################\n\n"
+yay -Sc
+
+printf "\n# Add abbreviations for fish ##################################################\n\n"
+abbr -a -U -- S 'sudo systemctl'
+abbr -a -U -- chgrp 'chgrp --preserve-root'
+abbr -a -U -- chmod 'chmod --preserve-root'
+abbr -a -U -- chown 'chown --preserve-root'
+abbr -a -U -- clang 'clang -Wall'
+abbr -a -U -- clang++ 'clang++ -Wall'
+abbr -a -U -- clean clear
+abbr -a -U -- compress 'tar -czf'
+abbr -a -U -- cp 'cp -i'
+abbr -a -U -- cpuinfo lscpu
+abbr -a -U -- cdebug 'cmake -DCMAKE_BUILD_TYPE=Debug'
+abbr -a -U -- crelease 'cmake -DCMAKE_BUILD_TYPE=Release'
+abbr -a -U -- dc docker-compose
+abbr -a -U -- dcd 'docker-compose down'
+abbr -a -U -- dcr 'docker-compose run --rm'
+abbr -a -U -- dcu 'docker-compose up'
+abbr -a -U -- dcub 'docker-compose up --build'
+abbr -a -U -- df 'df -H'
+abbr -a -U -- diskspace 'sudo df -h | grep -E "sd|lv|Size"'
+abbr -a -U -- du 'du -ch'
+abbr -a -U -- e 'emacsclient -c'
+abbr -a -U -- ei3 'vim ~/.config/i3/config##yadm.j2'
+abbr -a -U -- epoly 'vim ~/.config/polybar/config'
+abbr -a -U -- enw 'emacsclient -c -nw'
+abbr -a -U -- exi exit
+abbr -a -U -- exti exit
+abbr -a -U -- feh 'feh -Zx.'
+abbr -a -U -- flac 'youtube-dl -x --audio-format flac --audio-quality 0'
+abbr -a -U -- g++ 'g++ -Wall -std=c++17'
+abbr -a -U -- gcc 'gcc -Wall -std=c18'
+abbr -a -U -- gpumeminfo 'grep -i --color memory /var/log/Xorg.0.log'
+abbr -a -U -- hist history
+abbr -a -U -- hotp htop
+abbr -a -U -- install 'sudo pacman -Sy'
+abbr -a -U -- la 'ls -A --color'
+abbr -a -U -- ll 'ls -alh | less'
+abbr -a -U -- ln 'ln -i'
+abbr -a -U -- lns 'ln -si'
+abbr -a -U -- ls 'ls --color'
+abbr -a -U -- lsl 'ls -ahl'
+abbr -a -U -- meminfo 'free -m -l -t'
+abbr -a -U -- mp3 'youtube-dl -x --audio-format flac --audio-quality 0'
+abbr -a -U -- mpv 'mpv --no-border --force-window=no'
+abbr -a -U -- mv 'mv -i'
+abbr -a -U -- nmcli 'nmcli -p -c auto'
+abbr -a -U -- optimize 'sudo pacman-optimize && sync'
+abbr -a -U -- p 'sudo pacman'
+abbr -a -U -- please 'sudo -A'
+abbr -a -U -- pscpu 'ps auxf | sort -nr -k 3'
+abbr -a -U -- pscpu10 'ps auxf | sort -nr -k 3 | head -10'
+abbr -a -U -- psmem 'ps auxf | sort -nr -k 4'
+abbr -a -U -- psmem10 'ps auxf | sort -nr -k 4 | head -10'
+abbr -a -U -- purge 'yay -Sc'
+abbr -a -U -- q exit
+abbr -a -U -- randcommit 'git commit -m (curl -s whatthecommit.com/index.txt)'
+abbr -a -U -- remove 'sudo pacman -Rscnd'
+abbr -a -U -- rm 'rm -I'
+abbr -a -U -- rmd 'rm --preserve-root -Ir'
+abbr -a -U -- rmdf 'rm --preserve-root -Irf'
+abbr -a -U -- rmf 'rm --preserve-root -If'
+abbr -a -U -- s 'systemctl --user'
+abbr -a -U -- search 'pacman -Ss'
+abbr -a -U -- sudo 'sudo -A'
+abbr -a -U -- swipl 'clear && swipl -q && clear'
+abbr -a -U -- texhash 'sudo texhash'
+abbr -a -U -- tlmgr tllocalmgr
+abbr -a -U -- umountC 'cd ~; and sudo umount /media/C'
+abbr -a -U -- umountD 'cd; and sudo umount /media/Marpa'
+abbr -a -U -- untar 'tar -xvzf'
+abbr -a -U -- update 'sudo pacman -Syu'
+abbr -a -U -- vi vim
+abbr -a -U -- wget 'wget -c'
