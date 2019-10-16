@@ -66,7 +66,7 @@ function mountandroid -d "Mount an Android device"
     echo $newchosen
     sudo -A umount $mp
     jmtpfs -device=$newchosen $mp
-	  notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
+    notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
 end
 
 function mountcd
