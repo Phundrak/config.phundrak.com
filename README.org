@@ -46,28 +46,38 @@
   - [[#install-arch-linux][Install Arch Linux]]
     - [[#get-the-latest-live-system-with-fast-mirrors][Get the latest live system with fast mirrors]]
     - [[#install-the-system][Install the system]]
-  - [[#install-yay-if-it-hasnt-been-done-during-the-system-installation][Install =yay= if it hasn’t been done during the system installation]]
-  - [[#update-the-system][Update the system]]
-  - [[#set-up-yadm][Set up =yadm=]]
-    - [[#get-the-dotfiles][Get the dotfiles]]
-    - [[#update-the-remotes][Update the remotes]]
-    - [[#get-our-git-submodules][Get our git submodules]]
-    - [[#generate-the-alt-dotfiles][Generate the alt dotfiles]]
-  - [[#set-up-emacs][Set up Emacs]]
-  - [[#install-our-needed-packages][Install our needed packages]]
-  - [[#enable-and-start-some-services][Enable and start some services]]
-  - [[#install-fisher-and-our-fish-shell-extensions][Install Fisher and our fish shell extensions]]
-  - [[#install-packages-from-git][Install packages from git]]
-    - [[#install-i3-gaps-rounded][Install =i3-gaps-rounded=]]
-    - [[#install-polybar-battery][Install Polybar Battery]]
-    - [[#download-revealjs][Download Reveal.JS]]
-  - [[#set-your-locale][Set your locale]]
-  - [[#launch-x][Launch X]]
-  - [[#create-some-directories][Create some directories]]
-  - [[#install-rust][Install Rust]]
-    - [[#install-the-toolchains][Install the toolchains]]
-    - [[#install-some-utilities][Install some utilities]]
-  - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
+  - [[#install-basic-packages][Install basic packages]]
+  - [[#execute-bootstrap][Execute bootstrap]]
+    - [[#get-a-correct-keyboard-layout][Get a correct keyboard layout]]
+    - [[#set-our-locale][Set our locale]]
+    - [[#create-some-folders][Create some folders]]
+    - [[#set-users-shell-to-fish][Set user’s shell to fish]]
+    - [[#install-yay-if-it-isnt-already-installed][Install =yay= if it isn’t already installed]]
+    - [[#setting-up-emacs-installing-spacemacs][Setting up Emacs: Installing Spacemacs]]
+    - [[#set-up-dotfiles][Set up dotfiles]]
+      - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
+      - [[#get-envtpl][Get =envtpl=]]
+      - [[#update-our-submodules][Update our submodules]]
+      - [[#generate-our-alt-files][Generate our alt files]]
+      - [[#symlink-some-system-config-files][Symlink some system config files]]
+    - [[#install-basic-packages-1][Install basic packages]]
+    - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
+    - [[#enable-some-of-our-services][Enable some of our services]]
+      - [[#docker][Docker]]
+      - [[#emacs][Emacs]]
+      - [[#ssh-server][SSH server]]
+      - [[#ly][Ly]]
+    - [[#set-up-our-fish-shell][Set up our fish shell]]
+      - [[#install-fisher][Install =fisher=]]
+      - [[#install-our-extensions][Install our extensions]]
+    - [[#install-packages-from-git][Install packages from git]]
+      - [[#i3-gaps-rounded][i3-gaps rounded]]
+      - [[#polybar-battery][Polybar Battery]]
+      - [[#revealjs][Reveal.JS]]
+    - [[#install-rust][Install Rust]]
+      - [[#install-the-toolchains][Install the toolchains]]
+      - [[#install-some-utilities][Install some utilities]]
+    - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
 - [[#licence][Licence]]
 
 * Presentation
@@ -151,11 +161,10 @@
    12GB of combined RAM and swap. This means  on my main computer I have 16GB of
    RAM and 4GB of swap, but on my thinkpad I have 4GB of RAM and 8GB of swap.
 
-
 *** Get the latest live system with fast mirrors
     When you boot into the live ISO, execute the following command:
-    #+BEGIN_SRC sh :exports code
-      pacman -Syu reflector
+    #+BEGIN_SRC sh :exports code :tangle no
+      pacman -Sy reflector
       reflector --country France --country Germany --latest 200 \
                 --protocol http --protocol https --sort rate \
                 --save /etc/pacman.d/mirrorlist
@@ -169,333 +178,425 @@
     not wish to do it manually.  Personally, I’ve done it several times already,
     I know  how the distro works,  I just want to  be able to install  my distro
     quickly now.
-    #+BEGIN_SRC sh :exports code
+    #+BEGIN_SRC sh :exports code :tangle no
       wget archfi.sf.net/archfi
       # Or from matmoul.github.io/archfi if SourceForge is down
       sh archfi
     #+END_SRC
     Then, follow the  instructions and install Arch Linux.  Take the opportunity
     to install  as many packages  as you  need, mainly =yay=  which I use  as my
-    package manager (it is just a wrapper for =pacman=) and AUR helper.
+    package manager  (it is  just a  wrapper for =pacman=)  and AUR  helper, and
+    =pacman-contrib= which will help us installing some packages later.
 
     Once your  system is  installed, reboot and  remove your  installation media
     from your computer.
 
-** Install =yay= if it hasn’t been done during the system installation
-   Next step is  to install the AUR  helper =yay=. *DO NOT* use  =yaourt=, it is
-   discontinued, seriously updated and represents a serious security flaw.
-
-   Let’s clone =yay= in a folder =fromGIT= that will be in our home folder. This
-   is also where we’ll download every other packages we’ll install from git.
-   #+BEGIN_SRC sh :dir ~ :exports code
-     mkdir -p fromGIT
-     cd fromGIT
-     git clone https://aur.archlinux.org/yay.git
-     cd yay
-     makepkg -si --noconfirm
-   #+END_SRC
-   We now have our AUR helper!
-
-** Update the system
-   Congrats, Arch  is now  installed on your  system! But we  are not  done yet.
-   Let’s update the  system, just in case some packages  were updated during the
-   installation. And  let’s install  =yadm= (our  dotfiles manager)  and =emacs=
-   while we’re at it.
-   #+BEGIN_SRC sh :exports code
-     yay -Syua yadm emacs python-envtpl-git
+** Install basic packages
+   We will  need some  basic packages in  order to run  the bootstrap  file. So,
+   let’s install =fish= (our shell running the script) and =git=.
+   #+BEGIN_SRC sh :exports code :tangle no
+     sudo pacman -Sy fish git yadm
    #+END_SRC
 
-** Set up =yadm=
-   =yadm= is my  dotfiles manager. It has some very  interesting, including host
-   and   machine-specific  files   and  file   content,  as   can  be   seen  in
-   =.config/i3/config##yadm.j2=. It  also manages some files  system-wide (well,
-   actually =home=-wide), so you usually don’t have to symlink anything.
+** Execute bootstrap
+   =yadm= comes with  a very handy feature: its bootstrap  script. We can
+   execute it by running the following command:
+   #+BEGIN_SRC fish :exports code :tangle no
+     yadm bootstrap
+   #+END_SRC
 
-   For  some reason,  when I’m  in i3,  polybar crashes  when I  run any  =yadm=
-   command, so I made the =C-S-p= shortcut to relaunch it at will.
+   Notice these two header files, we can see this is a fish script, hence why we
+   need fish (which is my daily shell anyway).
+   #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #!/usr/bin/fish
+     # -*- mode: fish -*-
+   #+END_SRC
+   Let’s take a look at what it does.
 
-*** Get the dotfiles
-    You should clone the dotfiles with the help of =yadm=. For that purpose, you
-    can execute either of the two following commands.
-    - From [[https://labs.phundrak.fr/phundrak/dotfiles][labs.phundrak.fr]]:
-      #+BEGIN_SRC sh :dir ~ :exports code
-        yadm clone https://labs.phundrak.fr/phundrak/dotfiles.git
-      #+END_SRC
-    - From [[https://github.com/phundrak/dotfiles][Github]]:
-      #+BEGIN_SRC sh :dir ~ :exports code
-        yadm clone https://github.com/phundrak/dotfiles.git
-      #+END_SRC
-
-    To decrypt the encrypted files, run the following command:
-    #+BEGIN_SRC sh :dir ~ :exports code
-      yadm decrypt
+*** Get a correct keyboard layout
+    I use  mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout,  a French keyboard layout  inspired by Dvorak
+    layouts, however  I sometimes  need to  switch back  to the  standard French
+    AZERTY or the American QWERTY layout, so  I make it so the Menu key switches
+    for me my layout between these three. This makes it so my xorg configuration
+    of my keyboard looks like this:
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      set keyboardconf \
+      'Section "InputClass"
+              Identifier "system-keyboard"
+              MatchIsKeyboard "on"
+              Option "XkbLayout" "fr,fr,us"
+              Option "XkbModel" "pc104"
+              Option "XkbVariant" "bepo,,"
+              Option "XkbOptions" "grp:menu_toggle"
+      EndSection'
     #+END_SRC
-    It will ask the passphrase.
-
-*** Update the remotes
-    Now, let’s make sure we have the correct remotes set up for the dotfiles.
-    #+BEGIN_SRC sh :exports code :dir ~/dotfiles
-      yadm remote set-url origin https://labs.phundrak.fr/phundrak/dotfiles.git
-      yadm remote add github https://github.com/phundrak/dotfiles.git
-    #+END_SRC
-    You can swap the  two links if you feel more comfortable  with Github as the
-    =origin=  remote,  just  rename  the   =github=  remote  to  something  like
-    =phundraklabs= or something like that.
-
-    If you have already  generated (or copied, but don’t do  that) your SSH keys
-    and  uploaded them  to  Github and/or  to  Phundrak Labs,  you  can use  the
-    following urls instead as the remotes’ urls.
-    #+BEGIN_SRC text
-      git@labs.phundrak.fr:phundrak/dotfiles.git
-      git@github.com:phundrak/dotfiles.git
+    So, let’s set it as our keyboard configuration.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Set keyboard layout #########################################################\n\n"
+      echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
     #+END_SRC
 
-*** Get our git submodules
-    Our dotfiles  rely on a couple  of submodules we should  get. Let’s download
-    them.
-    #+BEGIN_SRC sh :dir ~ :exports code
-      yadm submodule update --init --recursive
+*** Set our locale
+    I use two main locales, the French and  US UTF-8 locales, and I like to keep
+    the Japanese locale activated just in case.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
+    #+END_SRC
+    Let’s enable these.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Set our locale ##############################################################\n\n"
+      for item in $mylocales
+          if test (grep -e "#$item" /etc/locale.gen)
+              sudo sed -i "/$item/s/^#//g" /etc/locale.gen
+          end
+      end
     #+END_SRC
 
-*** Generate the alt dotfiles
-    We  will  need to  generate  the  host-specific  dotfiles.  We can  run  the
-    following command:
-    #+BEGIN_SRC sh :dir ~ :exports code
-      yadm alt
+    This is my configuration I usually use when it comes to my locale.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      set localeconf "LANG=en_US.UTF-8
+      LC_COLLATE=C
+      LC_NAME=fr_FR.UTF-8
+      LC_NUMERIC=fr_FR.UTF-8
+      LC_IDENTIFICATION=fr_FR.UTF-8
+      LC_TELEPHONE=fr_FR.UTF-8
+      LC_MONETARY=fr_FR.UTF-8
+      LC_PAPER=fr_FR.UTF-8
+      LC_ADDRESS=fr_FR.UTF-8
+      LC_TIME=fr_FR.UTF-8
+      LC_MEASUREMENT=fr_FR.UTF-8"
     #+END_SRC
-    And with that, we should have all  of our dotfiles placed where they need to
-    be!
+    Let’s set it as our system’s locale.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      echo $localeconf | sudo tee /etc/locale.conf
+    #+END_SRC
+    Now we can generate our locale!
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Generate locale #############################################################\n\n"
+      sudo locale-gen
+    #+END_SRC
 
-** Set up Emacs
-   Now that  we have our  dotfiles installed, let’s  set up Emacs.  First, let’s
-   download Spacemacs.
-   #+BEGIN_SRC sh :dir ~ :exports code
-     git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
-   #+END_SRC
+*** Create some folders
+    Let’s create  some folders we  might need  for mounting our  drives, Android
+    devices and CDs.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Create directories for mounting #############################################\n\n"
+      sudo mkdir -p /mnt/{USB,CD,Android}
+      sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+    #+END_SRC
 
-   In our =.emacs.d= directory, let’s switch Spacemacs’ branch to =develop=.
-   #+BEGIN_SRC sh :dir ~/.emacs.d :exports code
-     git checkout develop
-   #+END_SRC
-   The rest  of this README’s  code blocks should  now be executable  from Emacs
-   itself, and we should be able to have a perfectly running Emacs installation.
-   That’s the power of Org-mode!
+*** Set user’s shell to fish
+    First of all, the bootstrap shell will set the user’s shell to fish.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Set fish as the default shell ###############################################\n\n"
+      chsh -s /usr/bin/fish
+    #+END_SRC
 
-** Install our needed packages
-   Now, we can install all the packages I usually have installed on my computer.
-   #+BEGIN_SRC sh :dir /sudo:: :exports code
-     yay -S --needed asar ascii aspell-en aspell-fr assimp autoconf automake \
-         awesome-terminal-fonts bash bat biber binutils bison bleachbit \
-         bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp compton \
-         coreutils cppcheck cppreference cppreference-devhelp cpupower cronie \
-         cryptsetup cups device-mapper dhcpcd diffutils discord-canary discount \
-         ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress \
-         e2fsprogs emacs exfat-utils fakeroot feh ffmpegthumbnailer file \
-         filesystem findutils fingerprint-gui firefox fish flake8 flex \
-         font-mathematica fontforge freeglut fzf gawk gcc gcc-libs gdb gettext \
-         gimp git glibc gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
-         gnuplot go-tools graphviz grep gzip htop i3-gaps i3lock-blur i3status \
-         icecat-bin  igdm-bin inetutils intel-ucode iproute2 iputils \
-         j4-dmenu-desktop jfsutils jmtpfs lastpass-cli less libnewt libtool \
-         licenses light linux-headers lldb logrotate lsof lvm2 m4 make man-db \
-         man-pages mate-polkit mdadm meson minted mpc mpd \
-         mpd-rich-presence-discord-git mpv mupdf-tools nano nasm ncdu ncmpcpp \
-         nemo-fileroller nemo-preview neofetch netctl networkmanager \
-         networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji \
-         npm ntfs-3g numlockx openmp openssh p7zip pacman pacman-contrib pandoc-bin \
-         patch pavucontrol pciutils pcurses pdfpc perl pkgconf polybar procps-ng \
-         psmisc pulseaudio-bluetooth python-envtpl-git python-pip python-pywal qemu \
-         r raw-thumbnailer redshift refind-efi reflector reiserfsprogs rofi \
-         rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sdl2_gfx sdl2_image \
-         sdl2_mixer sdl2_ttf sed sent shadow siji-git simplescreenrecorder \
-         speedcrunch sshfs st-luke-git sudo sysfsutils systemd-sysvcompat tar \
-         texinfo texlive-bibtexextra texlive-bin texlive-core texlive-fontsextra \
-         texlive-formatsextra texlive-games texlive-humanities texlive-langchinese \
-         texlive-langcyrillic texlive-langextra texlive-langgreek \
-         texlive-langjapanese texlive-langkorean texlive-latexextra \
-         texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks \
-         texlive-publishers texlive-science tmux tree  ttf-arphic-uming ttf-baekmuk \
-         ttf-bitstream-vera ttf-dejavu  ttf-google-fonts-opinionated-git \
-         ttf-joypixels ttf-liberation  ttf-material-design-icons-git ttf-ms-fonts \
-         ttf-symbola  ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode \
-         unicode-emoji  unrar usbutils util-linux valgrind vi vim vulkan-headers \
-         w3m wget which  whois x11-ssh-askpass xclip xdg-user-dirs-gtk \
-         xf86-input-wacom  xf86-video-intel xfce4-power-manager xfsprogs \
-         xorg-server xorg-xinit xss-lock xorg-xprop yadm
-   #+END_SRC
-   Given how many packages  will be install from the AUR,  I’ll probably have to
-   type my password a few times.
+*** Install =yay= if it isn’t already installed
+    Now we’ll need to be sure =yay=, our AUR helper, is installed on our system.
+    If it is, we don’t need to  to anything. However, if it isn’t, we’ll install
+    it manually.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      if ! test which yay
+          printf "\n# Installing yay ##############################################################\n\n"
+          cd
+          mkdir -p fromGIT
+          cd fromGIT
+          git clone https://aur.archlinux.org/yay.git
+          cd yay
+          makepkg -si --noconfirm
+      else
+          printf "\n# yay already installed #######################################################\n\n"
+      end
+    #+END_SRC
+*** Setting up Emacs: Installing Spacemacs
+    Now, the  first thing  we want  to do  with Emacs  is install  its Spacemacs
+    distribution. We’ll clone its =develop= branch into =~/.emacs.d=. We need to
+    do this prior  to our dotfiles’ cloning because of  some submodules that are
+    cloned  within  our =~/.emacs.d=  directory,  and  git  won’t let  us  clone
+    Spacemacs in  an already existing and  non-empty directory. To make  sure it
+    isn’t one, let’s delete any potentially existing =~/.emacs.d= directory:
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Installing Spacemacs ########################################################\n\n"
+      rm -rf ~/.emacs.d
+    #+END_SRC
+    Now we can clone Spacemacs:
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
+    #+END_SRC
+    And we can restore what might  have been deleted in our =~/.emacs.d/private=
+    directory:
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      yadm checkout -- ~/.emacs.d/private/
+    #+END_SRC
 
-   For  some  reasons,  if  you directly  install  =compton-tryone-git=  without
-   installing =compton= first,  the package won’t work, which is  why I made you
-   install   =compton=   in   the   command   above.   Now   you   can   install
-   =compton-tryone-git=. It will  replace =compton=, so say “yes”  when it warns
-   you about the package conflict and whether =compton= should be removed.
-   #+BEGIN_SRC fish :exports code
-     yay -S compton-tryone-git
-   #+END_SRC
+*** Set up dotfiles
+**** Update our dotfiles’ remotes
+     This line in the bootstrap script will test if the current user is using my
+     username. If yes, it’s probably me.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
+     #+END_SRC
+     If it is me  installing and using these dotfiles, I want  the remotes of my
+     dotfiles to be set to ssh remotes using my ssh keys.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Update yadm’s remotes #######################################################\n\n"
+       yadm remote set-url origin git@labs.phundrak.fr:phundrak/dotfiles.git
+       yadm remote add github git@github.com:phundrak/dotfiles.git
+     #+END_SRC
+     I will also want to decrypt my encrypted files, such as said ssh keys.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
+       yadm decrypt
+     #+END_SRC
+     Finally, let’s close this =if= statement.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       end
+     #+END_SRC
 
-** Enable and start some services
-   As you can see above, docker has been installed. Let’s enable and start its
-   service.
-   #+BEGIN_SRC fish :dir /sudo:: :exports code
-     systemctl enable docker
-     systemctl start docker
-   #+END_SRC
-   I also usually add myself as a member of the =docker= group because I don’t
-   like prefixing every single docker command with =sudo=. So let’s execute this
-   command:
-   #+BEGIN_SRC fish :exports code
-     sudo usermod -aG docker $USER
-   #+END_SRC
+**** Get =envtpl=
+     Before  we set  our  dotfiles up,  let’s make  sure  =envtpl= is  correctly
+     installed. This package will be needed for generating our alt dotfiles.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf '\n# Install envtpl ##############################################################\n\n'
+       yay -Syu python-envtpl-git
+     #+END_SRC
 
-   Depending  on  my  machine,  I  might enable  the  SSH  server  shipped  with
-   =openssh=. Edit  your =/etc/ssh/sshd_config=  file as  needed, then  let’s do
-   that here:
-   #+BEGIN_SRC fish :dir /sudo:: :exports code
-     systemctl enable sshd
-     systemctl start sshd
-   #+END_SRC
+**** Update our submodules
+     Now we  can download the  various dependencies of  our dotfiles. To  do so,
+     let’s run the following command:
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Getting yadm susbmodules ####################################################\n\n"
+       yadm submodule update --init --recursive
+     #+END_SRC
 
-** Install Fisher and our fish shell extensions
-   As mentionned above,  I use the fish shell  as my main shell. And  I use some
-   extensions  too that  I installed  from fisher,  and custom  functions.First,
-   let’s install fisher:
-   #+BEGIN_SRC fish :exports code
-     curl https://git.io/fisher --create-dirs -sLo \
-     ~/.config/fish/functions/fisher.fish
-   #+END_SRC
+**** Generate our alt files
+     Now this should be the last  manipulation on our dotfiles: let’s create our
+     alternate files:
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Generating alt files ########################################################\n\n"
+       yadm alt
+     #+END_SRC
 
-   Awesome! Now, onto the fisher packages:
-   #+BEGIN_SRC fish :exports code
-     fisher add edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
-     jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish \
-     tuvistavie/fish-ssh-agent
-   #+END_SRC
-   Now  our fish  shell is  ready  to rock!  Plus,  we already  have our  custom
-   functions installed from our dotfiles!
+**** Symlink some system config files
+     We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       for f in (find ~/etc -type f)
+           set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
+           sudo ln -s $f $dest
+       end
+     #+END_SRC
 
-** Install packages from git
-   Now, we move on to the installation of git-based packages.
+     We may also want to symlink our [[file:.nanorc][nanorc]] to the =/root= directory for when we
+     use =nano= as =sudo=.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
+       if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
+           printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
+           sudo ln -s $HOME/.nanorc /root/.nanorc
+       end
+     #+END_SRC
 
-*** Install =i3-gaps-rounded=
+*** Install basic packages
+    Let’s set in a custom varible what packages we’ll be needing.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      set PACKAGES \
+      asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts base-devel bat \
+      biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
+      compton cppcheck cppreference cppreference-devhelp cpupower cronie cryptsetup \
+      device-mapper diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
+      docker-compose doxygen dunst dwarffortress emacs exfat-utils ffmpegthumbnailer \
+      findutils firefox flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb \
+      gimp glibc gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot \
+      go-tools graphviz htop i3-gaps i3lock-blur i3status igdm-bin inetutils \
+      j4-dmenu-desktop jfsutils jmtpfs lastpass-cli less linux-headers lldb \
+      logrotate lvm2 ly-git meson minted mpc mpd mpd-rich-presence-discord-git mpv \
+      mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
+      networkmanager networkmanager-openvpn nm-connection-editor nnn nomacs \
+      noto-fonts-emoji npm ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin \
+      pavucontrol pciutils pcurses pdfpc polybar pulseaudio-bluetooth \
+      python-envtpl-git python-pip python-pywal qemu r raw-thumbnailer redshift \
+      reflector rofi rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sent \
+      shadow siji-git simplescreenrecorder speedcrunch sshfs st-luke-git \
+      texlive-bibtexextra texlive-bin texlive-core texlive-fontsextra \
+      texlive-formatsextra texlive-games texlive-humanities texlive-langchinese \
+      texlive-langcyrillic texlive-langextra texlive-langgreek texlive-langjapanese \
+      texlive-langkorean texlive-latexextra texlive-localmanager-git texlive-music \
+      texlive-pictures texlive-pstricks texlive-publishers texlive-science tmux tree \
+      ttf-arphic-uming ttf-baekmuk ttf-bitstream-vera ttf-dejavu \
+      ttf-google-fonts-opinionated-git ttf-joypixels ttf-liberation \
+      ttf-material-design-icons-git ttf-ms-fonts ttf-symbola ttf-tibetan-machine \
+      ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar usbutils valgrind \
+      vim w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk xorg-drivers xorg-apps \
+      xfsprogs xorg-server xorg-xinit xss-lock yapf
+    #+END_SRC
+    These are the minimum  I would have in my own installation.  You can edit it
+    however you want. Let’s install those.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Installing needed packages ##################################################\n\n"
+      yay -S --needed $PACKAGES
+    #+END_SRC
+
+*** Installing Tryone’s Compton fork
+    For some reason, I found installing directly  this fork does not work, and I
+    need  to  install  it  after  I  installed  the  regular  compton  packages.
+    =compton-tryone-git= will replace =compton= which will be removed.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Installing tryone’s compton fork ############################################\n\n"
+      yay -S compton-tryone-git
+    #+END_SRC
+
+*** Enable some of our services
+    We have  installed some packages which  require some services to  run. Let’s
+    enable them.
+
+**** Docker
+     First, let’s activate Docker.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Enabling and starting Docker ################################################\n\n"
+       sudo systemctl enable --now docker
+     #+END_SRC
+
+     Now, if we wish it, we can be  added to the =docker= group so we won’t have
+     to type =sudo= each time we call Docker or Docker Compose.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
+       if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
+           sudo usermod -aG docker $USER
+       end
+     #+END_SRC
+
+**** Emacs
+     Emacs will run as a user service, which means it won’t be launched until we
+     log in.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Enabling Emacs as user service ##############################################\n\n"
+       systemctl --user enable --now emacs
+     #+END_SRC
+
+**** SSH server
+     Maybe we  want to  activate an  SSH server on  our machine.  If so,  we can
+     enable it. Let’s ask the question.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
+       if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
+           printf "\n# Enabling ssh server #########################################################\n\n"
+           sudo systemctl enable --now sshd
+       end
+     #+END_SRC
+
+**** Ly
+     Ly is a display manager based on ncurses which I find nice enough for me to
+     use (I generally  don’t like using display managers). Let’s  enable it, and
+     let’s disable tty2 while we’re at it (Ly uses it to run X).
+     #+BEGIN_SRC fish
+       sudo systemctl enable --now ly
+       sudo systemctl disable getty@tty2
+     #+END_SRC
+
+*** Set up our fish shell
+**** Install =fisher=
+     We will be using =fisher= as our extensions manager for Fish. Let’s install
+     it.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Installing fisher ###########################################################\n\n"
+       curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+     #+END_SRC
+**** Install our extensions
+     I generally use the following extensions in my Fish shell.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       set FISHEXTENSIONS \
+       edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
+       jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish \
+       tuvistavie/fish-ssh-agent
+     #+END_SRC
+     Let’s install these:
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       fisher add $FISHEXTENSIONS
+     #+END_SRC
+
+*** Install packages from git
+    Now, let’s install some packages from git directly.
+
+**** i3-gaps rounded
     I know we already installed =i3-gaps=  from the AUR, why reinstall it? Well,
     that is  certainly bad practices,  but this allowed  me to already  have the
     needed dependencies for building =i3=  installed. Now, let’s clone it, build
-    it,  and  install it.  It  will  required  the  password during  the  actual
-    installation.
-    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
+    it, and  install it. Doing  this is probably  very bad practices  though, be
+    warned.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Install i3-gaps-rounded #####################################################\n\n"
+      cd ~/fromGIT
       git clone https://github.com/resloved/i3.git i3-gaps-rounded
       cd i3-gaps-rounded
       rm -rf build
       autoreconf --force --install
       mkdir build && cd build
       ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
-      make
+      make -j
       sudo make install
     #+END_SRC
 
-*** Install Polybar Battery
-    I use a custom  tool for my battery indicator which  also launches a warning
-    when  the battery  is low.  However, I  need to  build it,  since it  is not
-    available in the repos nor the AUR.
-    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
-      git clone https://github.com/drdeimos/polybar_another_battery.git
-      cd polybar_another_battery
-      go get -u github.com/distatus/battery/cmd/battery
-      make build
+**** Polybar Battery
+     Now let’s install  =polybar-battery=. This is a binary that  I’ll use in my
+     [[file:.config/i3/config][i3 config]] to indicate my battery level. It also sends a notification on low
+     battery and on charging completed.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Install polybar-battery #####################################################\n\n"
+       cd ~/fromGIT
+       git clone https://github.com/drdeimos/polybar_another_battery.git
+       cd polybar_another_battery
+       go get -u github.com/distatus/battery/cmd/battery
+       make build
+     #+END_SRC
+
+     Now, we  have our binary, let’s  symlink it in our  local binary directory,
+     =~/.local/bin=.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       ln -s polybar-ab ~/.local/bin/polybar-ab
+     #+END_SRC
+
+**** Reveal.JS
+     I sometimes use Reveal.JS to make  presentations, and I set its location in
+     my [[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Install Reveal.JS ###########################################################\n\n"
+       cd ~/fromGIT
+       git clone https://github.com/hakimel/reveal.js.git
+     #+END_SRC
+
+*** Install Rust
+**** Install the toolchains
+     When using  rust, I bounce  between two toolchains, the  =stable= toolchain
+     and the =nightly= toolchain. To install them, I will use =rustup= which has
+     already been installed.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
+       rustup default nightly
+     #+END_SRC
+     This will  both download the  nightly toolchain and  set it as  the default
+     one. Yup, I like to live  dangerously. Now to install the stable toolchain,
+     let’s run this:
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       rustup toolchain install stable
+     #+END_SRC
+
+**** Install some utilities
+     We’ll need some utilities when developing Rust from Emacs, namely =rustfmt=
+     and =racer=. Let’s install them with =cargo=.
+     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+       printf "\n# Add rust utilities ##########################################################\n\n"
+       cargo install rustfmt racer
+     #+END_SRC
+
+*** Clean the =pacman= and =yay= cache
+    Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=.
+    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+      printf "\n# Clean the pacman and yay cache ##############################################\n\n"
+      yay -Sc --noconfirm
     #+END_SRC
-
-    Let’s also  create the =~/.local/bin/=  directory in  which I will  put some
-    custom executables, including the executable we just built.
-
-*** Download Reveal.JS
-    Now, let’s  download [[https://revealjs.com/#/][Reveal.JS]]. I use  it for some of  my Org presentations,
-    and I set it so it is found in =~/fromGIT=.
-    #+BEGIN_SRC fish :dir ~/fromGIT :exports code
-      git clone https://github.com/hakimel/reveal.js.git
-    #+END_SRC
-
-** Set your locale
-   Arch’s default locale configuration is crap. Like… really. It took me a while
-   to figure out why some elements in  polybar didn’t work along with some other
-   pieces  of  software.  So,  go  and  uncomment  the  locales  you’ll  use  in
-   =/etc/locale.gen=.  I   personally  have  =en_US.UTF-8=,   =fr_FR.UTF-8=  and
-   =ja_JP.UTF-8= uncommented, but what you choose  is really up to you. Then run
-   the following command as sudo.
-   #+BEGIN_SRC fish :dir /sudo:: :exports code
-     locale-gen
-   #+END_SRC
-
-   Now you can edit your =/etc/locale.conf= file. Mine looks like this, edit it
-   to fit your needs.
-   #+BEGIN_SRC conf :exports code
-     LANG=en_US.UTF-8
-     LC_COLLATE=C
-     LC_NAME=fr_FR.UTF-8
-     LC_NUMERIC=fr_FR.UTF-8
-     LC_IDENTIFICATION=fr_FR.UTF-8
-     LC_TELEPHONE=fr_FR.UTF-8
-     LC_MONETARY=fr_FR.UTF-8
-     LC_PAPER=fr_FR.UTF-8
-     LC_ADDRESS=fr_FR.UTF-8
-     LC_TIME=fr_FR.UTF-8
-     LC_MEASUREMENT=fr_FR.UTF-8
-   #+END_SRC
-
-** Launch X
-   Aaaand  we  should finally  be  good  to launch  X  for  the first  time!  My
-   installation logs me in the tty by default,  and I do this by choice, I don’t
-   really like display managers or desktop environments. So, to launch i3, let’s
-   run =startx=.
-
-** Create some directories
-   Thanks to the  [[file:.local/bin/dmount][dmount]] and [[file:.local/bin/dumount][dumount]] utilities, mounting  and unmounting devices
-   can be done very  easily. And to add to some easiness,  let’s create a couple
-   of directories dedicated to what we might mount on our computer:
-   #+BEGIN_SRC fish :dir /sudo:: :exports code
-     mkdir -p /mnt/{USB,CD,Android}
-   #+END_SRC
-   And in case we need to mount  some ext4 partitions on these, let’s change the
-   ownership of these directories.
-   #+BEGIN_SRC fish :exports code
-     sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
-   #+END_SRC
-
-** Install Rust
-*** Install the toolchains
-    When using rust, I bounce between two toolchains, the =stable= toolchain and
-    the =nightly=  toolchain. To  install them,  I will  use =rustup=  which has
-    already been installed.
-    #+BEGIN_SRC fish :exports code
-      rustup default nightly
-    #+END_SRC
-    This will both download the nightly toolchain and set it as the default one.
-    Yup, I like to live dangerously. Now to install the stable toolchain, let’s
-    run this:
-    #+BEGIN_SRC fish :exports code
-      rustup toolchain install stable
-    #+END_SRC
-    The nightly  toolchain is  ironically updated about  daily (hence  the name…
-    sort of?), so we’ll often have to run the following command:
-    #+BEGIN_SRC fish :exports code
-      rustup update
-    #+END_SRC
-
-*** Install some utilities
-    We’ll need some utilities when developing Rust from Emacs, namely =rustfmt=
-    and =racer=. Let’s install them with =cargo=.
-    #+BEGIN_SRC fish
-      cargo install rustfmt racer
-    #+END_SRC
-
-** Clean the =pacman= and =yay= cache
-   Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=
-   #+BEGIN_SRC fish :dir /sudo:: :exports code
-     yay -Sc --noconfirm
-   #+END_SRC
-   You  should now  run a  system pretty  close to  the one  I have  on my  main
-   computer and my thinkpad.
+    You should  now run  a system  pretty close  to the  one I  have on  my main
+    computer and my thinkpad.
 
 * Licence
   All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
