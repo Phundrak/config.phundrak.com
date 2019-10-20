@@ -1,0 +1,53 @@
+#!/usr/bin/fish
+
+function set_device
+    set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
+    set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
+    set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
+    xsetwacom set "$DEVICE" ResetArea
+    set AREATOT (xsetwacom get "$DEVICE" Area)
+    set -g AREAX (echo $AREATOT | awk '{print $3}')
+    set -g AREAY (echo $AREATOT | awk '{print $4}')
+end
+
+function set_screen
+    set CONNECTED_DISPLAYS (xrandr -q --current | sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
+    set -g SCREEN (for d in $CONNECTED_DISPLAYS
+        echo $d
+    end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
+    set -g LINE (xrandr -q --current | if [ "$SCREEN" = desktop ]
+        sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
+    else
+        sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
+    end)
+    echo $LINE | read -g WIDTH HEIGHT
+    if test -z $WIDTH || test -z $HEIGHT
+        return 1
+    end
+end
+
+function adjust_device
+    set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
+    set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
+
+    if test $AREAY -gt $RATIOAREAY
+        set -g NEWAREAX $AREAX
+        set -g NEWAREAY $RATIOAREAY
+    else
+        set -g NEWAREAX $RATIOAREAX
+        set -g NEWAREAY $AREAY
+    end
+
+    xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
+    xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
+
+    # slow down touchpad
+    xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
+
+    # slow down scrolling speed
+    xsetwacom set $DEVICETOUCH "ScrollDistance" "90"
+end
+
+set_device
+set_screen
+adjust_device
