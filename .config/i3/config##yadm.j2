@@ -190,6 +190,8 @@ bindsym $mod+Shift+p              exec ~/.config/polybar/launch.sh
 # Brightness keyboard shortcuts
 bindsym XF86MonBrightnessUp       exec "light -A 5"
 bindsym XF86MonBrightnessDown     exec "light -U 5"
+bindsym $mod+$alt+Next            exec "light -A 5"
+bindsym $mod+$alt+Prev            exec "light -U 5"
 
 # Wal
 bindsym $mod+Ctrl+w               exec "wal -i ~/Pictures/Wallpapers -o wal-set"
@@ -254,6 +256,9 @@ smart_borders                     on
 ################################################################################
 #                                Modules startup                               #
 ################################################################################
+{% if YADM_HOSTNAME=="Marpa" -%}
+exec        --no-startup-id       numlockx
+{% endif -%}
 exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
 exec        --no-startup-id       xrdb $HOME/.Xresources
 exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
