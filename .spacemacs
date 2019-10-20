@@ -805,7 +805,6 @@ dump."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (with-eval-after-load 'org
-
     ;; custom org functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (defun ck/org-confirm-babel-evaluate (lang body)
       (not (or (string= lang "latex") (string= lang "maxima"))))
@@ -813,8 +812,8 @@ dump."
     ;; custom IDs when exporting
     ;; inspired by
     ;; https://writequit.org/articles/emacs-org-mode-generate-ids.html
-		(defun eos/org-id-new (&optional prefix)
-			"Create a new globally unique ID.
+    (defun eos/org-id-new (&optional prefix)
+      "Create a new globally unique ID.
 
 An ID consists of two parts separated by a colon:
 - a prefix
@@ -827,54 +826,54 @@ variable  `org-id-prefix'.  However,  if  PREFIX  is  the  symbol
 one.
 
 So a typical ID could look like \"Org-4nd91V40HI\"."
-			(let* ((prefix (if (eq prefix 'none)
-												 ""
-											 (concat (or prefix org-id-prefix) "-")))
-						 unique)
-				(if (equal prefix "-") (setq prefix ""))
-				(cond
-				 ((memq org-id-method '(uuidgen uuid))
-					(setq unique (org-trim (shell-command-to-string org-id-uuid-program)))
-					(unless (org-uuidgen-p unique)
-						(setq unique (org-id-uuid))))
-				 ((eq org-id-method 'org)
-					(let* ((etime (org-reverse-string (org-id-time-to-b36)))
-								 (postfix (if org-id-include-domain
-															(progn
-																(require 'message)
-																(concat "@" (message-make-fqdn))))))
-						(setq unique (concat etime postfix))))
-				 (t (error "Invalid `org-id-method'")))
-				(concat prefix unique)))
-		(defun eos/org-custom-id-get (&optional pom create prefix)
-			"Get the CUSTOM_ID property of the entry at point-or-marker POM.
+      (let* ((prefix (if (eq prefix 'none)
+                         ""
+                       (concat (or prefix org-id-prefix) "-")))
+             unique)
+        (if (equal prefix "-") (setq prefix ""))
+        (cond
+         ((memq org-id-method '(uuidgen uuid))
+          (setq unique (org-trim (shell-command-to-string org-id-uuid-program)))
+          (unless (org-uuidgen-p unique)
+            (setq unique (org-id-uuid))))
+         ((eq org-id-method 'org)
+          (let* ((etime (org-reverse-string (org-id-time-to-b36)))
+                 (postfix (if org-id-include-domain
+                              (progn
+                                (require 'message)
+                                (concat "@" (message-make-fqdn))))))
+            (setq unique (concat etime postfix))))
+         (t (error "Invalid `org-id-method'")))
+        (concat prefix unique)))
+    (defun eos/org-custom-id-get (&optional pom create prefix)
+      "Get the CUSTOM_ID property of the entry at point-or-marker POM.
    If POM is nil, refer to the  entry at point. If the entry does
    not have an CUSTOM_ID, the function returns nil. However, when
    CREATE  is non  nil, create  a  CUSTOM_ID if  none is  present
    already. PREFIX will be passed through to `eos/org-id-new'. In
    any case, the CUSTOM_ID of the entry is returned."
-			(interactive)
-			(org-with-point-at pom
-				(let ((id (org-entry-get nil "CUSTOM_ID")))
-					(cond
-					 ((and id (stringp id) (string-match "\\S-" id))
-						id)
-					 (create
-						(setq id (eos/org-id-new (concat prefix "h")))
-						(org-entry-put pom "CUSTOM_ID" id)
-						(org-id-add-location id (buffer-file-name (buffer-base-buffer)))
-						id)))))
-		(defun eos/org-add-ids-to-headlines-in-file ()
-			"Add CUSTOM_ID properties to all headlines in the current
+      (interactive)
+      (org-with-point-at pom
+        (let ((id (org-entry-get nil "CUSTOM_ID")))
+          (cond
+           ((and id (stringp id) (string-match "\\S-" id))
+            id)
+           (create
+            (setq id (eos/org-id-new (concat prefix "h")))
+            (org-entry-put pom "CUSTOM_ID" id)
+            (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+            id)))))
+    (defun eos/org-add-ids-to-headlines-in-file ()
+      "Add CUSTOM_ID properties to all headlines in the current
    file which do not already have one. Only adds ids if the
    `auto-id' option is set to `t' in the file somewhere. ie,
    #+OPTIONS: auto-id:t"
-			(interactive)
-			(save-excursion
-				(widen)
-				(goto-char (point-min))
-				(when (re-search-forward "^#\\+OPTIONS:.*auto-id:t" (point-max) t)
-					(org-map-entries (lambda () (eos/org-custom-id-get (point) 'create))))))
+      (interactive)
+      (save-excursion
+        (widen)
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t" (point-max) t)
+          (org-map-entries (lambda () (eos/org-custom-id-get (point) 'create))))))
 
     ;; org-babel languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (org-babel-do-load-languages
@@ -892,13 +891,13 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
        (shell      . t)))
 
     ;; org hooks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-		(add-hook 'org-mode-hook
-							(lambda ()
-								(add-hook 'before-save-hook
-													(lambda ()
-														(when (and (eq major-mode 'org-mode)
-																			 (eq buffer-read-only nil))
-															(eos/org-add-ids-to-headlines-in-file))))))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (add-hook 'before-save-hook
+                          (lambda ()
+                            (when (and (eq major-mode 'org-mode)
+                                       (eq buffer-read-only nil))
+                              (eos/org-add-ids-to-headlines-in-file))))))
 
     ;; variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (setq
@@ -984,8 +983,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
                      "langue-phundrak-fr-pdf"))))
 
     ;; Shortcuts ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
     (with-eval-after-load 'org-agenda
       (require 'org-projectile)
       (mapcar #'(lambda (file)
