@@ -952,9 +952,10 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
                                    '(("el" "#+BEGIN_SRC emacs-lisp :exports results
 ?
 #+END_SRC")))
+
      ;;; Org projects
      org-publish-project-alist
-     '(("langue-phundrak-fr-html"
+     '(("langue-phundrak-fr-org"
         :base-directory "~/Documents/conlanging/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
@@ -980,7 +981,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :recursive t
         :publishing-function org-publish-attachment)
        ("langue-phundrak-fr"
-        :components ("langue-phundrak-fr-html"
+        :components ("langue-phundrak-fr-org"
                      "langue-phundrak-fr-static"
                      "langue-phundrak-fr-pdf"))))
 
