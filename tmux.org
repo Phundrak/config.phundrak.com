@@ -1,0 +1,452 @@
+#+TITLE: Phundrak’s dotfiles
+#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
+#+EMAIL: phundrak@phundrak.fr
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
+
+# ### LaTeX ####################################################################
+#+LATEX_CLASS: conlang
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{multicol}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+#+LATEX_HEADER_EXTRA: \sloppy
+
+# ### HTML #####################################################################
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Installation instructions for Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :END:
+
+- [[#presentation][Presentation]]
+  - [[#windows-and-pane-creation][Windows and pane creation]]
+  - [[#display][Display]]
+    - [[#colors-and-style][Colors and style]]
+    - [[#window-status-bar][Window status bar]]
+  - [[#clipboard][Clipboard]]
+  - [[#user-customizations][User customizations]]
+
+* Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-d6e5eaf3-150c-4f3e-bc8e-fbbbb604640e
+  :HEADER-ARGS: :tangle ~/.tmux.conf.local
+  :END:
+  I don’t really use tmux often, but I certainly do like a nice presentation and
+  useful features,  hence this  configuration. This config  file is  inspired by
+  gpakosz’s tmux configuration repo you can find [[https://github.com/gpakosz/.tmux][here]].
+
+** Windows and pane creation
+   :PROPERTIES:
+   :CUSTOM_ID: h-b7e4f3a6-ab16-47e8-aa72-b74b3a66893d
+   :END:
+   Whether if a new *window* will retain the current path. Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+   tmux_conf_new_window_retain_current_path=true
+   #+END_SRC
+
+   Whether if a new *pane* should retain the current path. Possible values are:
+   - true (default)
+   - false
+   #+BEGIN_SRC conf-unix
+   tmux_conf_new_window_retain_current_path=true
+   #+END_SRC
+
+   Whether or not  tmux should attempt to reconnect to  the current ssh session.
+   This is still experimental. Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+   tmux_conf_new_pane_reconnect_ssh=true
+   #+END_SRC
+
+   Whether tmux should prompt for new session name when creating a new one.
+   Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+   tmux_conf_new_session_prompt=false
+   #+END_SRC
+
+** Display
+   :PROPERTIES:
+   :CUSTOM_ID: h-a1b48bb1-40d8-4ffb-9ec0-b77e63f7ef84
+   :END:
+
+   Whether to activate RGB 24-bit color support (only available in tmux >= 2.2).
+   Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+   tmux_conf_theme_24b_colour=false
+   #+END_SRC
+
+   These variables are for chosing the window style. I use the default one.
+   #+BEGIN_SRC conf-unix
+     tmux_conf_theme_window_fg='default'
+     tmux_conf_theme_window_bg='default'
+   #+END_SRC
+
+   Whether the  focused pane should  be highlighted  (only available in  tmux >=
+   2.1). Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+     tmux_conf_theme_highlight_focused_pane=false
+   #+END_SRC
+
+   Set the terminal title. Built-in variables are:
+   - =#{circled_window_index}=
+   - =#{circled_session_name}=
+   - =#{hostname}=
+   - =#{hostname_ssh}=
+   - =#{username}=
+   - =#{username_ssh}=
+   #+BEGIN_SRC conf-unix
+     tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'
+   #+END_SRC
+
+   These  variables set  the left/right  separators between  sections. With  the
+   current values, you  don’t need to install Powerline, but  only fonts patched
+   with Powerline symbols or the standalone PowerlineSymbols.otf font.
+   #+BEGIN_SRC conf-unix
+     tmux_conf_theme_left_separator_main='\uE0B0'
+     tmux_conf_theme_left_separator_sub='\uE0B1'
+     tmux_conf_theme_right_separator_main='\uE0B2'
+     tmux_conf_theme_right_separator_sub='\uE0B3'
+   #+END_SRC
+
+*** Colors and style
+    :PROPERTIES:
+    :CUSTOM_ID: h-3142ab15-458c-434b-99d6-1f89462a6f26
+    :END:
+    Colors displayed  in tmux can be  chosen thanks to the  following variables.
+    Any color should be formatted as a hexadecimal RGB value preceded by a pound
+    sign =#=  (e.g. =#00afff= for light  blue) or =default= to  let our terminal
+    set it for us.
+
+    Choose the style of the pane borders. Possible values are:
+    - thin (default)
+    - fat
+    #+BEGIN_SRC conf-unix
+    tmux_conf_theme_pane_border_style=thin
+    #+END_SRC
+
+    Declare what  the colors of the  focused pane should be.  The first variable
+    specifies the foreground  color, the other the background  color.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_focused_pane_fg='default'
+      tmux_conf_theme_focused_pane_bg='#0087d7'
+    #+END_SRC
+
+    Here you  can set  the colors  of the pane  borders.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_pane_border='#444444'
+      tmux_conf_theme_pane_active_border='#00afff'
+    #+END_SRC
+
+    With these variables, you can set the colors for the pane indicators.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_pane_indicator='#00afff'
+      tmux_conf_theme_pane_active_indicator='#00afff'
+    #+END_SRC
+
+    These variables set the colors and the style of the status line.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_message_fg='#000000'
+      tmux_conf_theme_message_bg='#ffff00'
+      tmux_conf_theme_message_attr='bold'
+    #+END_SRC
+
+    Same as above for the status line command style.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_message_command_fg='#ffff00'
+      tmux_conf_theme_message_command_bg='#000000'
+      tmux_conf_theme_message_command_attr='bold'
+    #+END_SRC
+
+    These variables set the style of the window modes.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_mode_fg='#000000'
+      tmux_conf_theme_mode_bg='#ffff00'
+      tmux_conf_theme_mode_attr='bold'
+    #+END_SRC
+
+    Set the style of the status line.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_status_fg='#8a8a8a'
+      tmux_conf_theme_status_bg='#080808'
+      tmux_conf_theme_status_attr='none'
+    #+END_SRC
+
+*** Window status bar
+    :PROPERTIES:
+    :CUSTOM_ID: h-f6a802f9-3b1e-4c83-8ffc-a72a35a691e9
+    :END:
+    The following variables are to set the window’s status style and format.
+
+    Sets the colors and style of the window status.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_fg='#8a8a8a'
+      tmux_conf_theme_window_status_bg='#080808'
+      tmux_conf_theme_window_status_attr='none'
+    #+END_SRC
+
+    Sets the format of the window status. Built-in variables are:
+    - =#{circled_window_index}=
+    - =#{circled_session_name}=
+    - =#{hostname}=
+    - =#{hostname_ssh}=
+    - =#{username}=
+    - =#{username_ssh}=
+    #+BEGIN_SRC conf-unix
+    tmux_conf_theme_window_status_format='#I #W'
+    #+END_SRC
+
+    Sets the colors and style of the current window status.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_current_fg='#000000'
+      tmux_conf_theme_window_status_current_bg='#00afff'
+      tmux_conf_theme_window_status_current_attr='bold'
+    #+END_SRC
+
+    Sets the format of the currentwindow status. Built-in variables are:
+    - =#{circled_window_index}=
+    - =#{circled_session_name}=
+    - =#{hostname}=
+    - =#{hostname_ssh}=
+    - =#{username}=
+    - =#{username_ssh}=
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_current_format='#I #W'
+    #+END_SRC
+
+    Sets the window activity status style.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_activity_fg='default'
+      tmux_conf_theme_window_status_activity_bg='default'
+      tmux_conf_theme_window_status_activity_attr='underscore'
+    #+END_SRC
+
+    Sets the window bell status style.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_bell_fg='#ffff00'
+      tmux_conf_theme_window_status_bell_bg='default'
+      tmux_conf_theme_window_status_bell_attr='blink,bold'
+    #+END_SRC
+
+    Sets the window last status style.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_window_status_last_fg='#00afff'
+      tmux_conf_theme_window_status_last_bg='default'
+      tmux_conf_theme_window_status_last_attr='none'
+    #+END_SRC
+
+    Sets the left and right content of the status bar of tmux. Sections should
+    be separated with =|=, subsections with =,=. The built-in values are:
+    - =#{battery_bar}=
+    - =#{battery_hbar}=
+    - =#{battery_percentage}=
+    - =#{battery_status}=
+    - =#{battery_vbar}=
+    - =#{circled_session_name}=
+    - =#{hostname_ssh}=
+    - =#{hostname}=
+    - =#{loadavg}=
+    - =#{pairing}=
+    - =#{prefix}=
+    - =#{root}=
+    - =#{synchronized}=
+    - =#{uptime_y}=
+    - =#{uptime_d}= (modulo 365 when =#{uptime_y}= is used)
+    - =#{uptime_h}=
+    - =#{uptime_m}=
+    - =#{uptime_s}=
+    - =#{username}=
+    - =#{username_ssh}=
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '
+      tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized} #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '
+    #+END_SRC
+
+    Sets the left status style and colors.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_status_left_fg='#000000,#e4e4e4,#e4e4e4'
+      tmux_conf_theme_status_left_bg='#ffff00,#ff00af,#00afff'
+      tmux_conf_theme_status_left_attr='bold,none,none'
+    #+END_SRC
+
+    Sets the right status style and colors.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000'
+      tmux_conf_theme_status_right_bg='#080808,#d70000,#e4e4e4'
+      tmux_conf_theme_status_right_attr='none,none,bold'
+    #+END_SRC
+
+    Set the pairing indicator, its style and its attribute.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_pairing='👓 '          # U+1F453
+      tmux_conf_theme_pairing_fg='none'
+      tmux_conf_theme_pairing_bg='none'
+      tmux_conf_theme_pairing_attr='none'
+    #+END_SRC
+
+    Set the pairing indicator, its style and its attribute.
+    #+BEGIN_SRC conf-unix
+      # prefix indicator
+      tmux_conf_theme_prefix='⌨ '            # U+2328
+      tmux_conf_theme_prefix_fg='none'
+      tmux_conf_theme_prefix_bg='none'
+      tmux_conf_theme_prefix_attr='none'
+    #+END_SRC
+
+    Set the root indicator, its style and its attribute.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_root='!'
+      tmux_conf_theme_root_fg='none'
+      tmux_conf_theme_root_bg='none'
+      tmux_conf_theme_root_attr='bold,blink'
+    #+END_SRC
+
+    Set the synchronized indicator, its style and its attribute.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_synchronized='🔒'     # U+1F512
+      tmux_conf_theme_synchronized_fg='none'
+      tmux_conf_theme_synchronized_bg='none'
+      tmux_conf_theme_synchronized_attr='none'
+    #+END_SRC
+
+    Set the battery bar symbols.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_bar_symbol_full='◼'
+      tmux_conf_battery_bar_symbol_empty='◻'
+    #+END_SRC
+
+    Set the  battery bar length in  terms of amount of  symbols. Possible values
+    are:
+    - =auto=
+    - an integer number, e.g. 5
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_bar_length='auto'
+    #+END_SRC
+
+    Set the battery bar palette. Possible values are:
+    - =gradient= (default)
+    - =heat=
+    - =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+      value preceded by a pound symbol =#=.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_bar_palette='gradient'
+      #tmux_conf_battery_bar_palette='#d70000,#e4e4e4,#000000'
+    #+END_SRC
+
+    Set the hbar palette. Possible values are:
+    - =gradient= (default)
+    - =heat=
+    - =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+      value preceded by a pound symbol =#=.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_hbar_palette='gradient'
+    #+END_SRC
+
+    Set the vbar palette. Possible values are:
+    - =gradient= (default)
+    - =heat=
+    - =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+      value preceded by a pound symbol =#=.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_vbar_palette='gradient'
+    #+END_SRC
+
+    Set symbols used to indicate whether the battery is charging or discharging.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_battery_status_charging='⚡ '    # U+26A1
+      tmux_conf_battery_status_discharging='🔋 ' # U+1F50B
+      # tmux_conf_battery_status_charging='↑'       # U+2191
+      # tmux_conf_battery_status_discharging='↓'    # U+2193
+      #tmux_conf_battery_status_charging='🔌 '    # U+1F50C
+    #+END_SRC
+
+    Set the clock style. If it is displayed on the right side of the status bar,
+    it   might   be  better   to   use   =%I:%M   %p=   rather  than   =%R=   in
+    =tmux_conf_theme_status_right=.
+    #+BEGIN_SRC conf-unix
+      tmux_conf_theme_clock_colour='#00afff'
+      tmux_conf_theme_clock_style='24'
+    #+END_SRC
+
+** Clipboard
+   :PROPERTIES:
+   :CUSTOM_ID: h-47a20d72-6406-4467-b833-a4bd33731487
+   :END:
+   Whether  if  in copy  mode,  copying  the selection  also  copies  to the  OS
+   clipboard. Possible values are:
+   - true
+   - false (default)
+   #+BEGIN_SRC conf-unix
+     tmux_conf_copy_to_os_clipboard=false
+   #+END_SRC
+
+** User customizations
+   :PROPERTIES:
+   :CUSTOM_ID: h-68bc0e1c-48d9-4b14-953d-875601d0edb7
+   :END:
+   Here we can override or undo some setting from settings from tmux.
+
+   First, we can increase the history size.
+   #+BEGIN_SRC conf-unix
+     set -g history-limit 10000
+   #+END_SRC
+
+   We can also start with mouse mode enabled. But I don’t.
+   #+BEGIN_SRC conf-unix
+     #set -g mouse on
+   #+END_SRC
+
+   Whether or not Vi mode should be enabled. But really, we should rather export
+   the =VISUAL= or =EDITOR= environment variables, see the tmux manual. Although
+   I don’t, as said in my dotfish, I prefer to use Emacs.
+   #+BEGIN_SRC conf-unix
+     #set -g status-keys vi
+     #set -g mode-keys vi
+   #+END_SRC
+
+   Replace =C-b= by =C-a= instead of using both prefixes. I personally prefer to
+   just use =C-b=, hence why the lines are commented.
+   #+BEGIN_SRC conf-unix
+     # set -gu prefix2
+     # unbind C-a
+     # unbind C-b
+     # set -g prefix C-a
+     # bind C-a send-prefix
+   #+END_SRC
+
+   Move the status line to the top.
+   #+BEGIN_SRC conf-unix
+     #set -g status-position top
+   #+END_SRC
