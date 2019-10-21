@@ -709,6 +709,7 @@ dump."
   (spacemacs/declare-prefix "oa" "applications")
   (spacemacs/declare-prefix "oc" "comments")
   (spacemacs/declare-prefix "of" "files")
+  (spacemacs/declare-prefix "off" "fish config")
   (spacemacs/declare-prefix "ofi" "i3 config")
   (spacemacs/declare-prefix "ofp" "polybar config")
   (spacemacs/declare-prefix "og" "gnus")
@@ -738,6 +739,7 @@ dump."
     "oco" 'outline-minor-mode
     "od" 'elcord-mode
     "oF" 'flycheck-mode
+    "off" (lambda () (interactive) (find-file "~/.config/fish/config.fish"))
     "ofi" (lambda () (interactive) (find-file "~/.config/i3/config##yadm.j2"))
     "ofp" (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
     "ofo" 'find-file-at-point
