@@ -20,6 +20,7 @@ end
 set -gx PATH $HOME/go/bin $HOME/.cargo/bin $HOME/.local/bin $HOME/.gem/ruby/2.6.0/bin $PATH
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 set -gx SUDO_ASKPASS ~/.local/bin/askpass
+set -gx EDITOR emacsclient -c -nw
 
 abbr S 'sudo systemctl'
 abbr cdebug 'cmake -DCMAKE_BUILD_TYPE=Debug'
