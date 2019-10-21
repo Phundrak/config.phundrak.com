@@ -16,3 +16,6 @@
 [submodule "dired-phundrak"]
 	path = .emacs.d/private/dired-phundrak
 	url = https://labs.phundrak.fr/phundrak/dired-phundrak.git
+[submodule "nanorc"]
+	path = .config/nanorc
+	url = https://github.com/scopatz/nanorc.git
