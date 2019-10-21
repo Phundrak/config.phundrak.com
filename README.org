@@ -231,6 +231,7 @@
 ** Execute bootstrap
    :PROPERTIES:
    :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
+   :HEADER-ARGS: :tangle ~/.yadm/bootstrap
    :END:
    =yadm= comes with  a very handy feature: its bootstrap  script. We can
    execute it by running the following command:
@@ -240,7 +241,7 @@
 
    Notice these two header files, we can see this is a fish script, hence why we
    need fish (which is my daily shell anyway).
-   #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+   #+BEGIN_SRC fish :exports code
      #!/usr/bin/fish
      # -*- mode: fish -*-
    #+END_SRC
@@ -255,7 +256,7 @@
     AZERTY or the American QWERTY layout, so  I make it so the Menu key switches
     for me my layout between these three. This makes it so my xorg configuration
     of my keyboard looks like this:
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       set keyboardconf \
       'Section "InputClass"
               Identifier "system-keyboard"
@@ -267,7 +268,7 @@
       EndSection'
     #+END_SRC
     So, let’s set it as our keyboard configuration.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Set keyboard layout #########################################################\n\n"
       echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
     #+END_SRC
@@ -278,11 +279,11 @@
     :END:
     I use two main locales, the French and  US UTF-8 locales, and I like to keep
     the Japanese locale activated just in case.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
     #+END_SRC
     Let’s enable these.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Set our locale ##############################################################\n\n"
       for item in $mylocales
           if test (grep -e "#$item" /etc/locale.gen)
@@ -292,7 +293,7 @@
     #+END_SRC
 
     This is my configuration I usually use when it comes to my locale.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       set localeconf "LANG=en_US.UTF-8
       LC_COLLATE=C
       LC_NAME=fr_FR.UTF-8
@@ -306,11 +307,11 @@
       LC_MEASUREMENT=fr_FR.UTF-8"
     #+END_SRC
     Let’s set it as our system’s locale.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       echo $localeconf | sudo tee /etc/locale.conf
     #+END_SRC
     Now we can generate our locale!
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Generate locale #############################################################\n\n"
       sudo locale-gen
     #+END_SRC
@@ -321,7 +322,7 @@
     :END:
     Let’s create  some folders we  might need  for mounting our  drives, Android
     devices and CDs.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Create directories for mounting #############################################\n\n"
       sudo mkdir -p /mnt/{USB,CD,Android}
       sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
@@ -332,7 +333,7 @@
     :CUSTOM_ID: h-c1a78394-c156-4a03-ae82-e5e9d4090dab
     :END:
     First of all, the bootstrap shell will set the user’s shell to fish.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Set fish as the default shell ###############################################\n\n"
       chsh -s /usr/bin/fish
     #+END_SRC
@@ -344,7 +345,7 @@
     Now we’ll need to be sure =yay=, our AUR helper, is installed on our system.
     If it is, we don’t need to  to anything. However, if it isn’t, we’ll install
     it manually.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       if ! test which yay
           printf "\n# Installing yay ##############################################################\n\n"
           cd
@@ -368,17 +369,17 @@
     cloned  within  our =~/.emacs.d=  directory,  and  git  won’t let  us  clone
     Spacemacs in  an already existing and  non-empty directory. To make  sure it
     isn’t one, let’s delete any potentially existing =~/.emacs.d= directory:
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Installing Spacemacs ########################################################\n\n"
       rm -rf ~/.emacs.d
     #+END_SRC
     Now we can clone Spacemacs:
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     #+END_SRC
     And we can restore what might  have been deleted in our =~/.emacs.d/private=
     directory:
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       yadm checkout -- ~/.emacs.d/private/
     #+END_SRC
 
@@ -392,23 +393,23 @@
      :END:
      This line in the bootstrap script will test if the current user is using my
      username. If yes, it’s probably me.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
      #+END_SRC
      If it is me  installing and using these dotfiles, I want  the remotes of my
      dotfiles to be set to ssh remotes using my ssh keys.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Update yadm’s remotes #######################################################\n\n"
        yadm remote set-url origin git@labs.phundrak.fr:phundrak/dotfiles.git
        yadm remote add github git@github.com:phundrak/dotfiles.git
      #+END_SRC
      I will also want to decrypt my encrypted files, such as said ssh keys.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
        yadm decrypt
      #+END_SRC
      Finally, let’s close this =if= statement.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        end
      #+END_SRC
 
@@ -418,7 +419,7 @@
      :END:
      Before  we set  our  dotfiles up,  let’s make  sure  =envtpl= is  correctly
      installed. This package will be needed for generating our alt dotfiles.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf '\n# Install envtpl ##############################################################\n\n'
        yay -Syu python-envtpl-git
      #+END_SRC
@@ -429,7 +430,7 @@
      :END:
      Now we  can download the  various dependencies of  our dotfiles. To  do so,
      let’s run the following command:
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Getting yadm susbmodules ####################################################\n\n"
        yadm submodule update --init --recursive
      #+END_SRC
@@ -440,7 +441,7 @@
      :END:
      Now this should be the last  manipulation on our dotfiles: let’s create our
      alternate files:
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Generating alt files ########################################################\n\n"
        yadm alt
      #+END_SRC
@@ -450,7 +451,7 @@
      :CUSTOM_ID: h-b14d7d03-da49-4a7b-ba05-1c0848bd8e44
      :END:
      We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        for f in (find ~/.etc -type f)
            set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
            sudo ln -s $f $dest
@@ -459,7 +460,7 @@
 
      We may also want to symlink our [[file:.nanorc][nanorc]] to the =/root= directory for when we
      use =nano= as =sudo=.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
        if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
            printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
@@ -472,7 +473,7 @@
     :CUSTOM_ID: h-887ec6d4-535d-4363-a0a7-884717b87a47
     :END:
     Let’s set in a custom varible what packages we’ll be needing.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       set PACKAGES \
       asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts base-devel bat \
       biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
@@ -505,7 +506,7 @@
     #+END_SRC
     These are the minimum  I would have in my own installation.  You can edit it
     however you want. Let’s install those.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Installing needed packages ##################################################\n\n"
       yay -S --needed $PACKAGES
     #+END_SRC
@@ -517,7 +518,7 @@
     For some reason, I found installing directly  this fork does not work, and I
     need  to  install  it  after  I  installed  the  regular  compton  packages.
     =compton-tryone-git= will replace =compton= which will be removed.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Installing tryone’s compton fork ############################################\n\n"
       yay -S compton-tryone-git
     #+END_SRC
@@ -534,14 +535,14 @@
      :CUSTOM_ID: h-429cb31a-fccb-420f-a5aa-21054c45fb38
      :END:
      First, let’s activate Docker.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Enabling and starting Docker ################################################\n\n"
        sudo systemctl enable --now docker
      #+END_SRC
 
      Now, if we wish it, we can be  added to the =docker= group so we won’t have
      to type =sudo= each time we call Docker or Docker Compose.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
        if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
            sudo usermod -aG docker $USER
@@ -554,7 +555,7 @@
      :END:
      Emacs will run as a user service, which means it won’t be launched until we
      log in.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Enabling Emacs as user service ##############################################\n\n"
        systemctl --user enable --now emacs
      #+END_SRC
@@ -565,7 +566,7 @@
      :END:
      Maybe we  want to  activate an  SSH server on  our machine.  If so,  we can
      enable it. Let’s ask the question.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
        if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
            printf "\n# Enabling ssh server #########################################################\n\n"
@@ -580,7 +581,7 @@
      Ly is a display manager based on ncurses which I find nice enough for me to
      use (I generally  don’t like using display managers). Let’s  enable it, and
      let’s disable tty2 while we’re at it (Ly uses it to run X).
-     #+BEGIN_SRC fish
+     #+BEGIN_SRC fish :exports code
        sudo systemctl enable --now ly
        sudo systemctl disable getty@tty2
      #+END_SRC
@@ -595,7 +596,7 @@
      :END:
      We will be using =fisher= as our extensions manager for Fish. Let’s install
      it.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Installing fisher ###########################################################\n\n"
        curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
      #+END_SRC
@@ -605,14 +606,14 @@
      :CUSTOM_ID: h-3d540273-bdfb-4c63-a05f-2374a010dc29
      :END:
      I generally use the following extensions in my Fish shell.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        set FISHEXTENSIONS \
        edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
        jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish \
        tuvistavie/fish-ssh-agent
      #+END_SRC
      Let’s install these:
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        fisher add $FISHEXTENSIONS
      #+END_SRC
 
@@ -631,7 +632,7 @@
     needed dependencies for building =i3=  installed. Now, let’s clone it, build
     it, and  install it. Doing  this is probably  very bad practices  though, be
     warned.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Install i3-gaps-rounded #####################################################\n\n"
       cd ~/fromGIT
       git clone https://github.com/resloved/i3.git i3-gaps-rounded
@@ -651,7 +652,7 @@
      Now let’s install  =polybar-battery=. This is a binary that  I’ll use in my
      [[file:.config/i3/config][i3 config]] to indicate my battery level. It also sends a notification on low
      battery and on charging completed.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Install polybar-battery #####################################################\n\n"
        cd ~/fromGIT
        git clone https://github.com/drdeimos/polybar_another_battery.git
@@ -662,7 +663,7 @@
 
      Now, we  have our binary, let’s  symlink it in our  local binary directory,
      =~/.local/bin=.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        ln -s polybar-ab ~/.local/bin/polybar-ab
      #+END_SRC
 
@@ -672,7 +673,7 @@
      :END:
      I sometimes use Reveal.JS to make  presentations, and I set its location in
      my [[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Install Reveal.JS ###########################################################\n\n"
        cd ~/fromGIT
        git clone https://github.com/hakimel/reveal.js.git
@@ -689,14 +690,14 @@
      When using  rust, I bounce  between two toolchains, the  =stable= toolchain
      and the =nightly= toolchain. To install them, I will use =rustup= which has
      already been installed.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
        rustup default nightly
      #+END_SRC
      This will  both download the  nightly toolchain and  set it as  the default
      one. Yup, I like to live  dangerously. Now to install the stable toolchain,
      let’s run this:
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        rustup toolchain install stable
      #+END_SRC
 
@@ -706,7 +707,7 @@
      :END:
      We’ll need some utilities when developing Rust from Emacs, namely =rustfmt=
      and =racer=. Let’s install them with =cargo=.
-     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+     #+BEGIN_SRC fish :exports code
        printf "\n# Add rust utilities ##########################################################\n\n"
        cargo install rustfmt racer
      #+END_SRC
@@ -716,7 +717,7 @@
     :CUSTOM_ID: h-fa5307ec-065b-4d06-9d47-05ccde0da8ac
     :END:
     Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=.
-    #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
+    #+BEGIN_SRC fish :exports code
       printf "\n# Clean the pacman and yay cache ##############################################\n\n"
       yay -Sc --noconfirm
     #+END_SRC

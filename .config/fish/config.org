@@ -76,6 +76,7 @@
 * Presentation
   :PROPERTIES:
   :CUSTOM_ID: h-c2560b46-7f97-472f-b898-5ab483832228
+  :HEADER-ARGS: :tangle yes
   :END:
   The file present in =~/.config/fish/config.fish= is the configuration file for
   the  [[https://fishshell.com/][fish  shell]]. It  contains  custom  functions, environment  variables  and
@@ -83,7 +84,7 @@
 
   Just  in  case,  we  might  need   sometimes  to  declare  the  fish  function
   =fish_title= as =true=, so let’s do so.
-  #+BEGIN_SRC fish :tangle yes
+  #+BEGIN_SRC fish
     function fish_title
         true
     end
@@ -95,7 +96,7 @@
    :END:
    I sometimes call fish from within  emacs, with =M-x ansi-term=. In this case,
    the variable =TERM= needs to have the value =eterm-color=.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      if test -n "$EMACS"
          set -x TERM eterm-color
      end
@@ -110,7 +111,7 @@
    the  commands it  needs to  execute,  and nothing  else. Due  to this,  let’s
    deactivate  and redefine  some of  the functions  defining the  appearance of
    fish.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      if test "$TERM" = "dumb"
          function fish_prompt
              echo "\$ "
@@ -128,7 +129,7 @@
    Now, there is only  one function I modify when it comes  to the appearance of
    fish  when I’m  the  one  using it:  I  simply  “delete” the  =fish_greeting=
    function.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      function fish_greeting; end
    #+END_SRC
 
@@ -140,26 +141,26 @@
    is for example the case with my =PATH= variable in which I add Rust’s Cargo’s
    binaries, Go’s binaries  and my own executables. And of  course, don’t forget
    to add the already existing =PATH=.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      set -gx PATH $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
    #+END_SRC
 
    Sometimes, software  will rely on =SUDO_ASKPASS=  to get a GUI  from which it
    can get the sudo password. So, let’s declare it.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      set -gx SUDO_ASKPASS ~/.local/bin/askpass
    #+END_SRC
 
    Now, let’s declare our editor of choice,  EmacsClient. Now, we want it to run
    in the terminal,  since it will most  often be just quick  edits, nothing too
    heavy, if it is called from the =EDITOR= variable (from Git, for example).
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      set -gx EDITOR emacsclient -c -nw
    #+END_SRC
 
    Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
    so let’s do so.
-   #+BEGIN_SRC fish :tangle yes
+   #+BEGIN_SRC fish
      set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
    #+END_SRC
 
@@ -174,31 +175,31 @@
     Here I have  some abbreviations which are quite useful  when performing some
     system  monitoring. With  =df=, we  can get  an overview  of our  filesystem
     usage, while with =diskspace= we get some more precise information.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr df 'df -H'
       abbr diskspace 'sudo df -h | grep -E "sd|lv|Size"'
     #+END_SRC
 
     =meminfo= is a call to =free= with sane defaults.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr meminfo 'free -m -l -t'
     #+END_SRC
 
     Similar to =meminfo=, we  also have =gpumeminfo= so we can  get a quick look
     at the memory-related logs of our X session.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr gpumeminfo 'grep -i --color memory /var/log/Xorg.0.log'
     #+END_SRC
 
     I also  declared =cpuinfo= an alias  of =lscpu= in order  to keep consistent
     with =meminfo=.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr cpuinfo lscpu
     #+END_SRC
 
     =pscpu=  gives us  information on  what the  CPU is  running right  now, and
     =pscpu10= limits that to the top 10 threads.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr pscpu 'ps auxf | sort -nr -k 3'
       abbr pscpu10 'ps auxf | sort -nr -k 3 | head -10'
     #+END_SRC
@@ -206,7 +207,7 @@
     Similarly, =psmem= gives  us information on the memory usage  of the current
     threads,  and =psmem10=  only the  ten most  important threads  in terms  of
     memory usage.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr psmem 'ps auxf | sort -nr -k 4'
       abbr psmem10 'ps auxf | sort -nr -k 4 | head -10'
     #+END_SRC
@@ -224,36 +225,36 @@
      :END:
      The first  command is =remove= which  removes a package from  my system, as
      well as its dependencies no longer needed.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr remove 'sudo pacman -Rscnd'
      #+END_SRC
 
      And if I want to install something, I just have to type =install=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr install 'sudo pacman -Sy'
      #+END_SRC
 
      But if I just  want to run =pacman= as sudo, then I  could always just type
      =p=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr p 'sudo -A pacman'
      #+END_SRC
 
      Sometimes,  I  just  want  to  purge my  package  manager’s  cache,  be  it
      =pacman='s or =yay='s. This is why I simply type =purge=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr purge 'yay -Sc'
      #+END_SRC
 
      And  if I  want  to simply  seach  among  the =pacman=  repos,  I can  type
      =search=. Otherwise, if I want to include AUR results, I’ll use =yay=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr search 'pacman -Ss'
      #+END_SRC
 
      To update everything from the  official repos, I’ll sometimes type =update=
      instead of the full command.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr update 'sudo pacman -Syu'
      #+END_SRC
 
@@ -263,13 +264,13 @@
      :END:
      I don’t have the muscle memory of =systemctl=. So instead, I simply type
      =c= when I want to do something user service related.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr s 'systemctl --user'
      #+END_SRC
 
      And if I  want to manipulate system  services, I can instead  type a simple
      capital =S=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr S 'sudo systemctl'
      #+END_SRC
 
@@ -286,7 +287,7 @@
      :END:
      I have the following abbreviations so I  can quickly run CMake and create a
      configuration for debug or release profiles.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr cdebug 'cmake -DCMAKE_BUILD_TYPE=Debug'
        abbr crelease 'cmake -DCMAKE_BUILD_TYPE=Release'
      #+END_SRC
@@ -310,7 +311,7 @@
      :END:
      And of course, when it comes to  Docker Compose, I don’t have time to write
      the full command, so I use these instead.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr dc docker-compose
        abbr dcd 'docker-compose down'
        abbr dcr 'docker-compose run --rm'
@@ -335,7 +336,7 @@
      :END:
      When I  launch =swipl=,  I prefer  to have my  terminal cleaned  before and
      after it runs, I find it more clean.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr swipl 'clear && swipl -q && clear'
      #+END_SRC
 
@@ -346,19 +347,19 @@
      I greatly prefer to use Emacsclient as my main text editor; Emacs has
      basically all I need. So, it’s only normal I have an abbreviation to launch
      a new instance of it.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr e 'emacsclient -c'
      #+END_SRC
      However,  in a  graphical environment,  this  will launch  a new  graphical
      window of Emacs. To launch a terminal instance, I’ll use =enw= (=nw= stands
      for the option “nowindow” =-nw= of Emacs).
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr enw 'emacsclient -c -nw'
      #+END_SRC
 
      I also  have the abbreviation =vi=  which refers to =vim=.  I really should
      learn =vi=, but I also really don’t feel like it.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr vi vim
      #+END_SRC
 
@@ -371,11 +372,11 @@
     package manager. It  is recommended to use =tllocalmgr=  instead of =tlmgr=,
     but I can never  remember the command, and the latter is  faster to type, so
     time for an abbreviation.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
     abbr tlmgr tllocalmgr
     #+END_SRC
 
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
     abbr texhash 'sudo texhash'
     #+END_SRC
 
@@ -386,7 +387,7 @@
     Some commands can be quite dangerous when  not used properly, which is why I
     added default  flags and  options so  I can get  warnings before  things get
     ugly.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr cp 'cp -i'
       abbr ln 'ln -i'
       abbr lns 'ln -si'
@@ -402,7 +403,7 @@
     delition  of  a directory.  Notice  also  the =--preserve-root=  which  will
     prevent me  from accidentally  removing the  root folder.  I added  the same
     option to =chgrp=, =chmod=, and =chown=.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr chgrp 'chgrp --preserve-root'
       abbr chmod 'chmod --preserve-root'
       abbr chown 'chown --preserve-root'
@@ -419,18 +420,18 @@
 
     Sometimes  for some  reasons, my  brain makes  me write  =clean= instead  of
     =clear=. So, let’s just replace the former by the latter.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
     abbr clean clear
     #+END_SRC
 
     I’m also very bad at typing =exit=.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr exi exit
       abbr exti exit
     #+END_SRC
 
     And sometimes I suck at typing =htop=.
-    #+BEGIN_SRC fish :tangle yes
+    #+BEGIN_SRC fish
       abbr hotp htop
     #+END_SRC
 
@@ -449,7 +450,7 @@
      my    custom   graphical    script   for    getting   my    password   (see
      [[file:~/.local/bin/askpass][.local/bin/askpass]]). I also  made it so =please= is an  equivalent to =sudo
      -A= as a joke.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr sudo 'sudo -A'
        abbr please 'sudo -A'
      #+END_SRC
@@ -459,7 +460,7 @@
      :CUSTOM_ID: h-8cf0e895-b919-41a8-ad3d-c5294dc507fd
      :END:
      Sometimes I find it easier to just type =q= instead of =exit=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr q exit
      #+END_SRC
 
@@ -469,7 +470,7 @@
      :END:
      I also find  it more intuitive and  faster to just write  =hist= instead of
      =history=, so let’s declare that.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr hist history
      #+END_SRC
 
@@ -479,7 +480,7 @@
      :END:
      When I  want to  download a song  from YouTube, I’ll  just use  the command
      =flac videoIdentifier= to get it through =youtube-dl=.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0'
      #+END_SRC
 
@@ -490,7 +491,7 @@
      When it comes to mpv, I do not  want to force it to open a graphical window
      if for example  I want to listen to  an audio file. I also do  not want any
      border on that window. So, I declared this abbreviation.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr mpv 'mpv --no-border --force-window=no'
      #+END_SRC
 
@@ -503,7 +504,7 @@
      one day hopefully, after seeing  the abbreviations’ expansion over and over
      I’ll remember the command like I  did for the abbreviation of =remove= (see
      [[#h-281a59aa-4ea0-47ab-a4cc-33fff8d38165][Package management]]).
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr compress 'tar -czf'
        abbr untar 'tar -xvzf'
      #+END_SRC
@@ -515,7 +516,7 @@
      Some sane default options for =feh=, including auto-zoom to fit the picture
      to the window,  a borderless window, and  again scale the image  to fit the
      window geometry.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr feh 'feh -Zx.'
      #+END_SRC
 
@@ -525,7 +526,7 @@
      :END:
      Yep, an  abbreviation of =ls=  called =lsl=. It allows  me to view  all the
      files in a directory as a list with detailed, human-readable information.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr lsl 'ls -ahl'
      #+END_SRC
 
@@ -535,7 +536,7 @@
      :END:
      This is  just =nmcli= with  sane default options,  that is a  pretty output
      with colors.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr nmcli 'nmcli -p -c auto'
      #+END_SRC
 
@@ -544,6 +545,6 @@
      :CUSTOM_ID: h-74f84f1c-433d-488a-88a7-89915c1a3bd5
      :END:
      By default, continue a download that was interupted.
-     #+BEGIN_SRC fish :tangle yes
+     #+BEGIN_SRC fish
        abbr wget 'wget -c'
      #+END_SRC

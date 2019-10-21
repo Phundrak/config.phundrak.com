@@ -150,6 +150,9 @@ if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
     sudo systemctl enable --now sshd
 end
 
+sudo systemctl enable --now ly
+sudo systemctl disable getty@tty2
+
 printf "\n# Installing fisher ###########################################################\n\n"
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
 
