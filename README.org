@@ -42,9 +42,9 @@
   :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
   :END:
 - [[#presentation][Presentation]]
+- [[#screenshots][Screenshots]]
 - [[#features][Features]]
   - [[#xresources][Xresources]]
-- [[#screenshots][Screenshots]]
 - [[#dependencies][Dependencies]]
 - [[#installation][Installation]]
   - [[#install-arch-linux][Install Arch Linux]]
@@ -101,6 +101,23 @@
   [[https://github.com/tryone144/compton][fork]] of [[https://github.com/chjj/compton][Compton]]. The colors scheme for [[https://github.com/davatorium/rofi][rofi]], Emacs and polybar are chosen from
   the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
 
+* Screenshots
+  :PROPERTIES:
+  :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
+  :END:
+
+  #+ATTR_HTML: :width 100%
+  #+CAPTION: Desktop with Neofetch in the terminal
+  [[./img/neofetch.png]]
+
+  #+CAPTION: Desktop with Emacs opened
+  #+ATTR_HTML: :width 100%
+  [[./img/emacs.png]]
+
+  #+CAPTION: Desktop with Rofi
+  #+ATTR_HTML: :width 100%
+  [[./img/rofi.png]]
+
 * Features
   :PROPERTIES:
   :CUSTOM_ID: h-8539dd6f-4fcb-4dc7-a3ef-b8ad198c91d4
@@ -135,23 +152,6 @@
 
    I used to have lines dedicated to UXTerm and URxvt, but I cast them out of my
    system.
-
-* Screenshots
-  :PROPERTIES:
-  :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
-  :END:
-
-  #+ATTR_HTML: :width 100%
-  #+CAPTION: Desktop with Neofetch in the terminal
-  [[./img/neofetch.png]]
-
-  #+CAPTION: Desktop with Emacs opened
-  #+ATTR_HTML: :width 100%
-  [[./img/emacs.png]]
-
-  #+CAPTION: Desktop with Rofi
-  #+ATTR_HTML: :width 100%
-  [[./img/rofi.png]]
 
 * Dependencies
   :PROPERTIES:

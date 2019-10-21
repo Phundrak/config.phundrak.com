@@ -1,4 +1,4 @@
-#+TITLE: Phundrak’s dotfiles
+#+TITLE: Phundrak’s tmux config
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
 #+EMAIL: phundrak@phundrak.fr
 #+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
@@ -19,9 +19,9 @@
 
 # ### HTML #####################################################################
 #+HTML_DOCTYPE: html5
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Installation instructions for Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's tmux config" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's tmux config" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s tmux configuration explained" />
 #+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
 #+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
