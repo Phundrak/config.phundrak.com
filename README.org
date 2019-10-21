@@ -1,7 +1,7 @@
 #+TITLE: Phundrak’s dotfiles
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
 #+EMAIL: phundrak@phundrak.fr
-#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto_id:t
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
 
 # ### LaTeX ####################################################################
 #+LATEX_CLASS: conlang
@@ -38,6 +38,9 @@
 #+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :END:
 - [[#presentation][Presentation]]
 - [[#features][Features]]
 - [[#screenshots][Screenshots]]
@@ -81,6 +84,9 @@
 - [[#licence][Licence]]
 
 * Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-536e69f5-c012-4b7d-8a45-3a340d3bc7ee
+  :END:
   [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
   This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
@@ -95,12 +101,18 @@
   the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
 
 * Features
+  :PROPERTIES:
+  :CUSTOM_ID: h-8539dd6f-4fcb-4dc7-a3ef-b8ad198c91d4
+  :END:
   - Emacs configuration perfectly tailored for my own use
   - Beautiful and comfy i3 and polybar configuration
   - And enough information  below to get basically the same  distro install as I
     have on my main computer and my travel laptop.
 
 * Screenshots
+  :PROPERTIES:
+  :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
+  :END:
 
   #+ATTR_HTML: :width 100%
   #+CAPTION: Desktop with Neofetch in the terminal
@@ -115,6 +127,9 @@
   [[./img/rofi.png]]
 
 * Dependencies
+  :PROPERTIES:
+  :CUSTOM_ID: h-5849dbcf-a650-4323-9a90-bec549a7b982
+  :END:
   Of course, some dependencies are needed for  my dotfiles to work well. Here is
   a non-exhaustive list of software needed by these configuration files:
   - [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
@@ -139,12 +154,18 @@
   BTW, I use Arch.
 
 * Installation
+  :PROPERTIES:
+  :CUSTOM_ID: h-bfb2e09b-d5d7-4d6f-8b29-763c49b3fd09
+  :END:
   Here will be  presented what I do to  get my system up and running  on a fresh
   Arch Linux install.  These installation instructions were written  in order to
   get an Arch  Linux distribution up and running with  the same configuration as
   my main computer’s and my travelling laptop’s configuration.
 
 ** Install Arch Linux
+   :PROPERTIES:
+   :CUSTOM_ID: h-cfe21de6-15fa-477a-a5ff-6cd81dfead19
+   :END:
    I usually install Arch from the [[https://www.archlinux.org/download/][vanilla  ISO]], however I began using [[https://github.com/MatMoul/archfi][archfi]] to
    install easily the  distro (I’ve done it  so many times, I know  how it works
    now). Usually, my  distros will be installed on at  least two partitions, one
@@ -162,6 +183,9 @@
    RAM and 4GB of swap, but on my thinkpad I have 4GB of RAM and 8GB of swap.
 
 *** Get the latest live system with fast mirrors
+    :PROPERTIES:
+    :CUSTOM_ID: h-da7951ee-e39a-4a59-a05d-7b7fffdc7825
+    :END:
     When you boot into the live ISO, execute the following command:
     #+BEGIN_SRC sh :exports code :tangle no
       pacman -Sy reflector
@@ -174,6 +198,9 @@
     to your location.
 
 *** Install the system
+    :PROPERTIES:
+    :CUSTOM_ID: h-9f9e1fe5-4726-486b-9875-5fcfd91d0bb0
+    :END:
     Then you can use a custom script to ease your installation of Arch if you do
     not wish to do it manually.  Personally, I’ve done it several times already,
     I know  how the distro works,  I just want to  be able to install  my distro
@@ -192,6 +219,9 @@
     from your computer.
 
 ** Install basic packages
+   :PROPERTIES:
+   :CUSTOM_ID: h-d2485595-3014-4151-a76c-63bc353359a8
+   :END:
    We will  need some  basic packages in  order to run  the bootstrap  file. So,
    let’s install =fish= (our shell running the script) and =git=.
    #+BEGIN_SRC sh :exports code :tangle no
@@ -199,6 +229,9 @@
    #+END_SRC
 
 ** Execute bootstrap
+   :PROPERTIES:
+   :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
+   :END:
    =yadm= comes with  a very handy feature: its bootstrap  script. We can
    execute it by running the following command:
    #+BEGIN_SRC fish :exports code :tangle no
@@ -214,6 +247,9 @@
    Let’s take a look at what it does.
 
 *** Get a correct keyboard layout
+    :PROPERTIES:
+    :CUSTOM_ID: h-89fb8f3a-6ec4-4701-a5d9-3e593c47ece9
+    :END:
     I use  mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout,  a French keyboard layout  inspired by Dvorak
     layouts, however  I sometimes  need to  switch back  to the  standard French
     AZERTY or the American QWERTY layout, so  I make it so the Menu key switches
@@ -237,6 +273,9 @@
     #+END_SRC
 
 *** Set our locale
+    :PROPERTIES:
+    :CUSTOM_ID: h-48678405-93ae-41b6-b44b-285ab0da4e92
+    :END:
     I use two main locales, the French and  US UTF-8 locales, and I like to keep
     the Japanese locale activated just in case.
     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -277,6 +316,9 @@
     #+END_SRC
 
 *** Create some folders
+    :PROPERTIES:
+    :CUSTOM_ID: h-85ce90ff-56dc-469b-bf08-480ecf27acc4
+    :END:
     Let’s create  some folders we  might need  for mounting our  drives, Android
     devices and CDs.
     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -286,6 +328,9 @@
     #+END_SRC
 
 *** Set user’s shell to fish
+    :PROPERTIES:
+    :CUSTOM_ID: h-c1a78394-c156-4a03-ae82-e5e9d4090dab
+    :END:
     First of all, the bootstrap shell will set the user’s shell to fish.
     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
       printf "\n# Set fish as the default shell ###############################################\n\n"
@@ -293,6 +338,9 @@
     #+END_SRC
 
 *** Install =yay= if it isn’t already installed
+    :PROPERTIES:
+    :CUSTOM_ID: h-fef57cea-cf1d-4900-9d90-ec6353ea9661
+    :END:
     Now we’ll need to be sure =yay=, our AUR helper, is installed on our system.
     If it is, we don’t need to  to anything. However, if it isn’t, we’ll install
     it manually.
@@ -311,6 +359,9 @@
     #+END_SRC
 
 *** Setting up Emacs: Installing Spacemacs
+    :PROPERTIES:
+    :CUSTOM_ID: h-bd5a92c4-1a4f-49ea-a447-050a4ff0301c
+    :END:
     Now, the  first thing  we want  to do  with Emacs  is install  its Spacemacs
     distribution. We’ll clone its =develop= branch into =~/.emacs.d=. We need to
     do this prior  to our dotfiles’ cloning because of  some submodules that are
@@ -332,7 +383,13 @@
     #+END_SRC
 
 *** Set up dotfiles
+    :PROPERTIES:
+    :CUSTOM_ID: h-cf2c3a24-b08e-4b07-9d51-31f6df781e62
+    :END:
 **** Update our dotfiles’ remotes
+     :PROPERTIES:
+     :CUSTOM_ID: h-18967335-2637-44d6-b407-bb1d2d2718b9
+     :END:
      This line in the bootstrap script will test if the current user is using my
      username. If yes, it’s probably me.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -356,6 +413,9 @@
      #+END_SRC
 
 **** Get =envtpl=
+     :PROPERTIES:
+     :CUSTOM_ID: h-39034878-7864-4a1c-855d-d9882795aac0
+     :END:
      Before  we set  our  dotfiles up,  let’s make  sure  =envtpl= is  correctly
      installed. This package will be needed for generating our alt dotfiles.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -364,6 +424,9 @@
      #+END_SRC
 
 **** Update our submodules
+     :PROPERTIES:
+     :CUSTOM_ID: h-ae2f8ccb-a8f3-4699-832c-52cbc8b6d081
+     :END:
      Now we  can download the  various dependencies of  our dotfiles. To  do so,
      let’s run the following command:
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -372,6 +435,9 @@
      #+END_SRC
 
 **** Generate our alt files
+     :PROPERTIES:
+     :CUSTOM_ID: h-f924c003-a15c-4132-891f-36cd3948a7c1
+     :END:
      Now this should be the last  manipulation on our dotfiles: let’s create our
      alternate files:
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -380,6 +446,9 @@
      #+END_SRC
 
 **** Symlink some system config files
+     :PROPERTIES:
+     :CUSTOM_ID: h-b14d7d03-da49-4a7b-ba05-1c0848bd8e44
+     :END:
      We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
        for f in (find ~/etc -type f)
@@ -399,6 +468,9 @@
      #+END_SRC
 
 *** Install basic packages
+    :PROPERTIES:
+    :CUSTOM_ID: h-887ec6d4-535d-4363-a0a7-884717b87a47
+    :END:
     Let’s set in a custom varible what packages we’ll be needing.
     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
       set PACKAGES \
@@ -439,6 +511,9 @@
     #+END_SRC
 
 *** Installing Tryone’s Compton fork
+    :PROPERTIES:
+    :CUSTOM_ID: h-aecf9f01-268c-40cd-8fc3-622c6ce822e4
+    :END:
     For some reason, I found installing directly  this fork does not work, and I
     need  to  install  it  after  I  installed  the  regular  compton  packages.
     =compton-tryone-git= will replace =compton= which will be removed.
@@ -448,10 +523,16 @@
     #+END_SRC
 
 *** Enable some of our services
+    :PROPERTIES:
+    :CUSTOM_ID: h-1044da09-e992-4dcb-90ff-513725e1d450
+    :END:
     We have  installed some packages which  require some services to  run. Let’s
     enable them.
 
 **** Docker
+     :PROPERTIES:
+     :CUSTOM_ID: h-429cb31a-fccb-420f-a5aa-21054c45fb38
+     :END:
      First, let’s activate Docker.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
        printf "\n# Enabling and starting Docker ################################################\n\n"
@@ -468,6 +549,9 @@
      #+END_SRC
 
 **** Emacs
+     :PROPERTIES:
+     :CUSTOM_ID: h-7131fa13-3c6e-4cfc-b8e8-c880de9d380f
+     :END:
      Emacs will run as a user service, which means it won’t be launched until we
      log in.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -476,6 +560,9 @@
      #+END_SRC
 
 **** SSH server
+     :PROPERTIES:
+     :CUSTOM_ID: h-1f355779-f1dc-4c0f-9cf1-14724ce05f4d
+     :END:
      Maybe we  want to  activate an  SSH server on  our machine.  If so,  we can
      enable it. Let’s ask the question.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -487,6 +574,9 @@
      #+END_SRC
 
 **** Ly
+     :PROPERTIES:
+     :CUSTOM_ID: h-2785fc5b-cd35-4c99-9f47-3dcbf1a7a870
+     :END:
      Ly is a display manager based on ncurses which I find nice enough for me to
      use (I generally  don’t like using display managers). Let’s  enable it, and
      let’s disable tty2 while we’re at it (Ly uses it to run X).
@@ -496,7 +586,13 @@
      #+END_SRC
 
 *** Set up our fish shell
+    :PROPERTIES:
+    :CUSTOM_ID: h-f6f4df67-b0de-40bf-95fb-888d42169088
+    :END:
 **** Install =fisher=
+     :PROPERTIES:
+     :CUSTOM_ID: h-d6490ddc-c909-4713-b36a-19c25a79c7ac
+     :END:
      We will be using =fisher= as our extensions manager for Fish. Let’s install
      it.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -505,6 +601,9 @@
      #+END_SRC
 
 **** Install our extensions
+     :PROPERTIES:
+     :CUSTOM_ID: h-3d540273-bdfb-4c63-a05f-2374a010dc29
+     :END:
      I generally use the following extensions in my Fish shell.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
        set FISHEXTENSIONS \
@@ -518,9 +617,15 @@
      #+END_SRC
 
 *** Install packages from git
+    :PROPERTIES:
+    :CUSTOM_ID: h-e79da7b2-9286-4b66-812e-453e3b2505c7
+    :END:
     Now, let’s install some packages from git directly.
 
 **** i3-gaps rounded
+     :PROPERTIES:
+     :CUSTOM_ID: h-10e229f7-9a45-4401-a9c0-3f974482bb9f
+     :END:
     I know we already installed =i3-gaps=  from the AUR, why reinstall it? Well,
     that is  certainly bad practices,  but this allowed  me to already  have the
     needed dependencies for building =i3=  installed. Now, let’s clone it, build
@@ -540,6 +645,9 @@
     #+END_SRC
 
 **** Polybar Battery
+     :PROPERTIES:
+     :CUSTOM_ID: h-f228ec52-a7d0-4c16-adfa-75c544fcfa93
+     :END:
      Now let’s install  =polybar-battery=. This is a binary that  I’ll use in my
      [[file:.config/i3/config][i3 config]] to indicate my battery level. It also sends a notification on low
      battery and on charging completed.
@@ -559,6 +667,9 @@
      #+END_SRC
 
 **** Reveal.JS
+     :PROPERTIES:
+     :CUSTOM_ID: h-68d1cdb4-1447-420f-ab0c-53ef905e757b
+     :END:
      I sometimes use Reveal.JS to make  presentations, and I set its location in
      my [[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -568,7 +679,13 @@
      #+END_SRC
 
 *** Install Rust
+    :PROPERTIES:
+    :CUSTOM_ID: h-57e8af4c-93f2-4145-9c39-a5f8d1c9f012
+    :END:
 **** Install the toolchains
+     :PROPERTIES:
+     :CUSTOM_ID: h-05ee25dc-3885-46ca-afaf-35bfb2e385d4
+     :END:
      When using  rust, I bounce  between two toolchains, the  =stable= toolchain
      and the =nightly= toolchain. To install them, I will use =rustup= which has
      already been installed.
@@ -584,6 +701,9 @@
      #+END_SRC
 
 **** Install some utilities
+     :PROPERTIES:
+     :CUSTOM_ID: h-f94f2e18-623f-4aa5-be99-6a7df6a9cbcd
+     :END:
      We’ll need some utilities when developing Rust from Emacs, namely =rustfmt=
      and =racer=. Let’s install them with =cargo=.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
@@ -592,6 +712,9 @@
      #+END_SRC
 
 *** Clean the =pacman= and =yay= cache
+    :PROPERTIES:
+    :CUSTOM_ID: h-fa5307ec-065b-4d06-9d47-05ccde0da8ac
+    :END:
     Finally, we are almost done! Let’s clean the cache of =pacman= and =yay=.
     #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
       printf "\n# Clean the pacman and yay cache ##############################################\n\n"
@@ -601,6 +724,9 @@
     computer and my thinkpad.
 
 * Licence
+  :PROPERTIES:
+  :CUSTOM_ID: h-a3438126-ee60-4f11-a2f6-f52e49dade59
+  :END:
   All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
   Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you
   are free to  access, edit and redistribute  all of my dotfiles  under the same
