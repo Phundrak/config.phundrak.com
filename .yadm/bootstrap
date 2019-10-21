@@ -44,6 +44,8 @@ printf "\n# Create directories for mounting ####################################
 sudo mkdir -p /mnt/{USB,CD,Android}
 sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 
+mkdir -p $HOME/.cache/nano/backups
+
 printf "\n# Set fish as the default shell ###############################################\n\n"
 chsh -s /usr/bin/fish
 

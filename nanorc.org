@@ -1,0 +1,160 @@
+#+TITLE: Phundrak’s nano config
+#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
+#+EMAIL: phundrak@phundrak.fr
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
+
+# ### LaTeX ####################################################################
+#+LATEX_CLASS: conlang
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{multicol}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+#+LATEX_HEADER_EXTRA: \sloppy
+
+# ### HTML #####################################################################
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's nano config" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's nano config" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s nano configuration explained" />
+#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-193b6c50-9986-4e02-baee-5d9eb1e81773
+  :END:
+- [[#presentation][Presentation]]
+  - [[#configuration][Configuration]]
+  - [[#included-configuration-file][Included configuration file]]
+
+* Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
+  :HEADER-ARGS: :tangle ~/.nanorc
+  :END:
+  Although  it  is  a very  simple  piece  of  software,  nano does  offer  some
+  customization. Here is mine.
+
+** Configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-76aa0ff6-9e6a-4a35-974f-9132b08c8eb4
+   :END:
+      When soft  line wrapping is enabled,  make it wrap lines  at blank characters
+   (tabs and spaces) instead of always at the edge of the screen.
+   #+BEGIN_SRC conf
+   set atblanks
+   #+END_SRC
+
+   Automatically indent a  newly created line to the same  number of tabs and/or
+   spaces as the previous line (or as the  next line if the previous line is the
+   beginning of a paragraph).
+   #+BEGIN_SRC conf
+     set autoindent
+   #+END_SRC
+
+   When saving  a file,  create a  backup file by  adding a  tilde (=~=)  to the
+   file's name. And make and keep not just  one backup file, but make and keep a
+   uniquely numbered one every  time a file is saved —  when backups are enabled
+   with =set  backup= or  =--backup= or  =-B=. The  uniquely numbered  files are
+   stored in the directory =~/.cache/nano/backups/=.
+   #+BEGIN_SRC conf
+     set backup
+     set backupdir /home/phundrak/.cache/nano/backups/
+   #+END_SRC
+
+   Use bold instead of reverse video for  the title bar, status bar, key combos,
+   function tags,  line numbers, and  selected text.  This can be  overridden by
+   setting the options =titlecolor=, =statuscolor=, =keycolor=, =functioncolor=,
+   =numbercolor=, and =selectedcolor=.
+   #+BEGIN_SRC conf
+   set boldtext
+   #+END_SRC
+
+   Do case-unsensitive searches by default.
+   #+BEGIN_SRC conf
+     unset casesensitive
+   #+END_SRC
+
+   Constantly display the cursor position in  the status bar. This overrides the
+   option =quickblank=.
+   #+BEGIN_SRC conf
+   set constantshow
+   #+END_SRC
+
+   Display line numbers to the left of the text area.
+   #+BEGIN_SRC conf
+   set linenumbers
+   #+END_SRC
+
+   Do regular-expression searches by default.  Regular expressions in =nano= are
+   of the extended type (ERE).
+   #+BEGIN_SRC conf
+   set regexp
+   #+END_SRC
+
+   Make the  Home key  smarter. When Home  is pressed anywhere  but at  the very
+   beginning of  non-whitespace characters on  a line,  the cursor will  jump to
+   that beginning  (either forwards or backwards).  If the cursor is  already at
+   that position, it will jump to the true beginning of the line.
+   #+BEGIN_SRC conf
+   set smarthome
+   #+END_SRC
+
+   Enable soft line wrapping for easier viewing of very long lines.
+   #+BEGIN_SRC conf
+   set softwrap
+   #+END_SRC
+
+   Use a tab  size of a certain amount  of columns. The value of  number must be
+   greater than 0. The default value is 8.
+   #+BEGIN_SRC conf
+   set tabsize 2
+   #+END_SRC
+
+   Convert typed tabs to spaces. Sue me.
+   #+BEGIN_SRC conf
+     set tabstospaces
+   #+END_SRC
+
+   Remove trailing  whitespace from  wrapped lines when  automatic hard-wrapping
+   occurs or when text is justified.
+   #+BEGIN_SRC conf
+   set trimblanks
+   #+END_SRC
+
+   Save a file by default in Unix format. This overrides nano's default behavior
+   of saving a file  in the format that it had. (This option  has no effect when
+   you also use =set noconvert=.)
+   #+BEGIN_SRC conf
+   set unix
+   #+END_SRC
+
+** Included configuration file
+   :PROPERTIES:
+   :CUSTOM_ID: h-491cba80-5fa9-4b75-a9cb-2865ec39440a
+   :END:
+   Nano gives the  opportunity to include some files located  elsewhere. This is
+   why I added [[https://github.com/scopatz/nanorc][this repo]] as a submodule of  my dotfiles so I can access a lot of
+   them at the  same time. Since the submodule is  cloned in =~/.config/nanorc=,
+   we can add only one line to include all of the =.nanorc= files.
+   #+BEGIN_SRC conf
+     include ~/.config/nanorc/*.nanorc
+   #+END_SRC

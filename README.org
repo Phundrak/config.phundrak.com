@@ -43,6 +43,7 @@
   :END:
 - [[#presentation][Presentation]]
 - [[#features][Features]]
+  - [[#xresources][Xresources]]
 - [[#screenshots][Screenshots]]
 - [[#dependencies][Dependencies]]
 - [[#installation][Installation]]
@@ -108,6 +109,32 @@
   - Beautiful and comfy i3 and polybar configuration
   - And enough information  below to get basically the same  distro install as I
     have on my main computer and my travel laptop.
+
+  Most of the org  files you will find in this repos are  the actual source code
+  of much  of my config  files. For instance,  the [[#h-c13d132f-9e69-4bb0-838b-29c7c5611f11][Execute bootstrap]]  subpart of
+  this file exports almost all of its code snippets to [[file:.yadm/bootstrap][.yadm/bootstrap]] thanks to
+  =M-x  org-babel-tangle= from  within  Emacs.  Below I  will  also present  and
+  comment some of my short config files which  do not deserve to have a full org
+  file dedicated to them.
+
+** Xresources
+   :PROPERTIES:
+   :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
+   :HEADER-ARGS: :tangle ~/.Xresources
+   :END:
+   My Xresources file is very short. Indeed, it only contains two lines which
+   are dedicated to my =st= terminal to set its font and shell. The font is set
+   as follows.
+   #+BEGIN_SRC conf
+     st.font: Source Code Pro for Powerline:style=book
+   #+END_SRC
+   And I will set my shell like this:
+   #+BEGIN_SRC conf
+     st.shell: /usr/bin/fish
+   #+END_SRC
+
+   I used to have lines dedicated to UXTerm and URxvt, but I cast them out of my
+   system.
 
 * Screenshots
   :PROPERTIES:
@@ -326,6 +353,11 @@
       printf "\n# Create directories for mounting #############################################\n\n"
       sudo mkdir -p /mnt/{USB,CD,Android}
       sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+    #+END_SRC
+
+    We also need the following folder for our nano backups.
+    #+BEGIN_SRC fish :exports code
+      mkdir -p $HOME/.cache/nano/backups
     #+END_SRC
 
 *** Set user’s shell to fish
