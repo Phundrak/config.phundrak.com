@@ -86,7 +86,7 @@ yadm submodule update --init --recursive
 printf "\n# Generating alt files ########################################################\n\n"
 yadm alt
 
-for f in (find ~/etc -type f)
+for f in (find ~/.etc -type f)
     set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
     sudo ln -s $f $dest
 end

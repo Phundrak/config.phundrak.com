@@ -451,7 +451,7 @@
      :END:
      We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
      #+BEGIN_SRC fish :exports code :tangle ~/.yadm/bootstrap
-       for f in (find ~/etc -type f)
+       for f in (find ~/.etc -type f)
            set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
            sudo ln -s $f $dest
        end
