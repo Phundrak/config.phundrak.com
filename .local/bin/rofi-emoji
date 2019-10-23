@@ -2,6 +2,6 @@
 grep -v "#" ~/.config/emoji.txt | rofi -dmenu -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
 
 set emoji (xclip -o -selection clipboard | tr -d '\n')
-test -z "$emoji" && exit
+test -z "$emoji" && notify-send "No emoji copied" && exit
 set -a emoji "copied to clipboard"
 pgrep -x dunst >/dev/null && notify-send $emoji
