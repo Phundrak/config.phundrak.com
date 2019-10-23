@@ -46,7 +46,8 @@
 - [[#askpass][Askpass]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
-- [[#rofimount][Rofimount]]
+- [[#polybar-launch][Polybar-launch]]
+- [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
   - [[#get-the-drive-to-mount][Get the drive to mount]]
   - [[#mount-a-usb-drive-hard-drive-or-partition][Mount a USB drive, hard drive or partition]]
@@ -54,7 +55,7 @@
   - [[#mount-a-cd-drive][Mount a CD drive]]
   - [[#ask-what-type-of-drive-we-want-to-mount][Ask what type of drive we want to mount]]
   - [[#launch-the-mounting-functions][Launch the mounting functions]]
-- [[#rofiumount][Rofiumount]]
+- [[#rofi-umount][Rofi-umount]]
   - [[#get-the-unmountable-drives][Get the unmountable drives]]
   - [[#unmount-disk-partitions][Unmount disk partitions]]
   - [[#unmount-android-device][Unmount Android device]]
@@ -67,6 +68,7 @@
   - [[#select-our-screen][Select our screen]]
   - [[#adjust-the-tablet][Adjust the tablet]]
   - [[#lauch-the-functions][Lauch the functions]]
+- [[#yadm][Yadm]]
 
 * Presentation
   :PROPERTIES:
@@ -94,7 +96,7 @@
   and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
   we ignore the initial shebang. This executable is pointed at by the
   #+BEGIN_SRC fish :exports code
-    #!/usr/bin/fish
+    #!/usr/bin/env fish
     rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
     -p (printf $argv[1] | sed s/://)
   #+END_SRC
@@ -108,8 +110,8 @@
   emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
   rofi’s dmenu emulation with the arguments initially passed to dmenu.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
-    /usr/bin/rofi -dmenu $argv
+    #!/usr/bin/env fish
+    rofi -dmenu $argv
   #+END_SRC
 
 * Emoji picker
@@ -121,7 +123,7 @@
   [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
   emoji is selected, it is copied to the clipboard using =xclipboard=.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
+    #!/usr/bin/env fish
     grep -v "#" ~/.config/emoji.txt | rofi -dmenu -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
   #+END_SRC
 
@@ -135,7 +137,49 @@
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
 
-* Rofimount
+* Polybar-launch
+  :PROPERTIES:
+  :CUSTOM_ID: h-68587918-879b-42db-b304-901d01233f95
+  :HEADER-ARGS: :tangle polybar-launch :exports code
+  :END:
+  This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
+  launch it  if polybar  isn’t launched yet.  This script is  a bash  script, so
+  let’s declare its shebang.
+  #+BEGIN_SRC bash
+  #!/usr/bin/env bash
+  #+END_SRC
+
+  First thing to do is kill all polybar processes.
+  #+BEGIN_SRC bash
+  killall -q polybar
+  #+END_SRC
+
+  Now we have to wait untill all polybar processes have been shut down.
+  #+BEGIN_SRC bash
+  while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+  #+END_SRC
+
+  Now that  our system isn’t running  polybar anymore, we’ll launch  it again on
+  all of our  screens. By the way, I  have two bars, so I’ll have  to lauch them
+  both.
+  #+BEGIN_SRC bash
+    if type "xrandr"; then
+        for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+            MONITOR=$m polybar --reload top &
+            MONITOR=$m polybar --reload bottom &
+        done
+    else
+        polybar --reload top &
+        polybar --reload bottom &
+    fi
+  #+END_SRC
+
+  And we’re done! Let’s just launch a notification polybar has been relaunched.
+  #+BEGIN_SRC bash
+    notify-send "Polybar restarted!" -a "polybar-launch"
+  #+END_SRC
+
+* Rofi-mount
   :PROPERTIES:
   :HEADER-ARGS: :tangle rofi-mount :exports code
   :CUSTOM_ID: h-32ee4a66-e7fb-4abf-a168-fa259efdb1f4
@@ -146,7 +190,7 @@
   original script.  For the  record, this  is a fish  script. Let’s  declare our
   shebang.
   #+BEGIN_SRC fish
-  #!/usr/bin/fish
+  #!/usr/bin/env fish
   #+END_SRC
 
 ** Get the mountable elements
@@ -527,7 +571,7 @@
 
    And with that, this is the end of our script!
 
-* Rofiumount
+* Rofi-umount
   :PROPERTIES:
   :CUSTOM_ID: h-68a1f671-5dc6-4120-81c8-c94fffa7d7a3
   :HEADER-ARGS: :tangle rofi-umount :exports code
@@ -535,7 +579,7 @@
   =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
   partitions. It is a fish script, so let’s declare it as that with its shebang.
   #+BEGIN_SRC fish
-  #!/usr/bin/fish
+  #!/usr/bin/env fish
   #+END_SRC
 
 ** Get the unmountable drives
@@ -773,7 +817,7 @@
   This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
   in your terminal. Here is the code:
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
+    #!/usr/bin/env fish
     telnet towel.blinkenlights.nl
   #+END_SRC
 
@@ -785,7 +829,7 @@
   I made a small and quick utility to set up my Wacom tablet so it is only bound
   to one screen. This is a fish script, so let’s insert the sheband.
   #+BEGIN_SRC fish
-  #!/usr/bin/fish
+  #!/usr/bin/env fish
   #+END_SRC
 
 ** Set our variables
@@ -944,3 +988,17 @@
      set_screen
      adjust_device
    #+END_SRC
+
+* Yadm
+  :PROPERTIES:
+  :CUSTOM_ID: h-9535957b-7559-4244-a5e0-d056c4770fea
+  :HEADER-ARGS: :tangle yadm :exports code
+  :END:
+  For some  reason, =yadm= won’t stop  making polybar crash. So,  I created this
+  script  that  will  wrap yadm  with  a  call  to  yadm,  and then  a  call  to
+  =polybar-launch= declared  in [[#polybar-launch][Polybar-launch]]. This  is a oneliner, as  you can
+  see below:
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    /usr/bin/yadm $argv; polybar-launch 2>/dev/null >/dev/null
+  #+END_SRC

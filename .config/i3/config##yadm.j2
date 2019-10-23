@@ -50,7 +50,6 @@ bindsym $alt+F4                   kill
 # program launcher
 bindsym $mod+Shift+d              exec --no-startup-id j4-dmenu-desktop
 bindsym $mod+d                    exec --no-startup-id $rofiexec
-bindsym $mod+w                    exec --no-startup-id rofi-wifi-menu
 
 # change focus
 bindsym $mod+$left                focus left
@@ -126,9 +125,9 @@ workspace 10                      output eDP-1
 {% endif -%}
 
 # reload the configuration file
-bindsym $mod+Shift+c              reload
+bindsym $mod+Shift+c              exec yadm alt && i3-msg reload
 # restart i3 inplace
-bindsym $mod+Shift+r              restart
+bindsym $mod+Shift+r              exec yadm alt && i3-msg restart
 # exit i3
 bindsym $mod+Shift+e              exec $exiti3
 
@@ -185,7 +184,7 @@ bindsym $mod+$alt+c               exec speedcrunch
 
 bindsym $mod+F3                   exec arandr
 bindsym $mod+Shift+l              exec dmenu-lpass
-bindsym $mod+Shift+p              exec ~/.config/polybar/launch.sh
+bindsym $mod+Shift+p              exec polybar-launch
 
 # Brightness keyboard shortcuts
 bindsym XF86MonBrightnessUp       exec "light -A 5"
@@ -215,6 +214,7 @@ bindsym $mod+Shift+h              exec $term htop
 bindsym $mod+Ctrl+m               exec rofi-mount
 bindsym $mod+Ctrl+u               exec rofi-dumount
 bindsym $mod+$alt+e               exec rofi-emoji
+bindsym $mod+w                    exec wacom-setup
 
 # Music shortcuts
 bindsym $alt+XF86AudioRaiseVolume exec mpc next
@@ -267,7 +267,7 @@ exec        --no-startup-id       compton -F --opengl --config ~/.config/compton
 exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 {% endif -%}
 exec_always --no-startup-id       enable_touch
-exec_always --no-startup-id       ~/.config/polybar/launch.sh
+exec_always --no-startup-id       polybar-launch
 exec        --no-startup-id       xss-lock -- i3lock -fol
 exec        --no-startup-id       xfce4-power-manager
 exec        --no-startup-id       clight

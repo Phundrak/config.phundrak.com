@@ -1,63 +1,63 @@
-#!/usr/bin/fish
+#!/usr/bin/env fish
 
 function set_device
 
-    set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
-    set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
+set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
+set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
 
-    set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
-    set -g WACOMPROPSCROLLPSEED "ScrollDistance"
+set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
+set -g WACOMPROPSCROLLPSEED "ScrollDistance"
 
-    xsetwacom set "$DEVICE" ResetArea
+xsetwacom set "$DEVICE" ResetArea
 
-    set -l AREATOT (xsetwacom get "$DEVICE" Area)
-    set -g AREAX (echo $AREATOT | awk '{print $3}')
-    set -g AREAY (echo $AREATOT | awk '{print $4}')
+set -l AREATOT (xsetwacom get "$DEVICE" Area)
+set -g AREAX (echo $AREATOT | awk '{print $3}')
+set -g AREAY (echo $AREATOT | awk '{print $4}')
 
 end
 
 function set_screen
 
-    set CONNECTED_DISPLAYS (xrandr -q --current | \
-    sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
+set CONNECTED_DISPLAYS (xrandr -q --current | \
+sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
 
-    set -g SCREEN (for d in $CONNECTED_DISPLAYS
-        echo $d
-    end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
+set -g SCREEN (for d in $CONNECTED_DISPLAYS
+    echo $d
+end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
 
-    set -l LINE (xrandr -q --current | if [ "$SCREEN" = "desktop" ]
-        sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
-    else
-        sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
-    end)
+set -l LINE (xrandr -q --current | if [ "$SCREEN" = "desktop" ]
+    sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
+else
+    sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
+end)
 
-    echo $LINE | read -g WIDTH HEIGHT
+echo $LINE | read -g WIDTH HEIGHT
 
-    if test -z $WIDTH || test -z $HEIGHT
-        exit 1
-    end
+if test -z $WIDTH || test -z $HEIGHT
+    exit 1
+end
 
 end
 
 function adjust_device
 
-    set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
-    set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
+set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
+set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
 
-    if test $AREAY -gt $RATIOAREAY
-        set -g NEWAREAX $AREAX
-        set -g NEWAREAY $RATIOAREAY
-    else
-        set -g NEWAREAX $RATIOAREAX
-        set -g NEWAREAY $AREAY
-    end
+if test $AREAY -gt $RATIOAREAY
+    set -g NEWAREAX $AREAX
+    set -g NEWAREAY $RATIOAREAY
+else
+    set -g NEWAREAX $RATIOAREAX
+    set -g NEWAREAY $AREAY
+end
 
-    xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
-    xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
+xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
+xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
 
-    xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
+xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
 
-    xsetwacom set $DEVICETOUCH $WACOMPROPSCROLLPSEED "90"
+xsetwacom set $DEVICETOUCH $WACOMPROPSCROLLPSEED "90"
 
 end
 

@@ -1,2 +1,2 @@
-#!/usr/bin/fish
-/usr/bin/rofi -dmenu $argv
+#!/usr/bin/env fish
+rofi -dmenu $argv

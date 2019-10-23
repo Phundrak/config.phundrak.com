@@ -1,0 +1,2 @@
+#!/usr/bin/env fish
+/usr/bin/yadm $argv; polybar-launch 2>/dev/null >/dev/null
