@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.1.0.1
+Name=Wonderdraft
+Comment=Wonderdraft is a powerful yet intuitive fantasy map creation tool.
+Exec=/usr/bin/primusrun /home/phundrak/Wonderdraft/Wonderdraft.x86_64
+Path=/home/phundrak/Wonderdraft
+Icon=/home/phundrak/Wonderdraft/Wonderdraft.png
+Terminal=false
+Type=Application
+Categories=Graphics
