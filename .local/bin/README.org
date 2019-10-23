@@ -1,0 +1,256 @@
+#+TITLE: Phundrak’s executable scripts
+#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
+#+EMAIL: phundrak@phundrak.fr
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
+
+# ### LaTeX ####################################################################
+#+LATEX_CLASS: conlang
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{multicol}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+#+LATEX_HEADER_EXTRA: \sloppy
+
+# ### HTML #####################################################################
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's executable scripts" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's executable scripts" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s executable scripts explained" />
+#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :END:
+
+- [[#presentation][Presentation]]
+- [[#askpass][Askpass]]
+- [[#emoji-picker][Emoji picker]]
+- [[#rofimount][Rofimount]]
+  - [[#get-the-mountable-elements][Get the mountable elements]]
+  - [[#get-the-drive-to-mount][Get the drive to mount]]
+  - [[#mount-a-usb-drive-hard-drive-or-partition][Mount a USB drive, hard drive or partition]]
+
+* Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-309d8596-c35e-4700-a174-13f40884940d
+  :END:
+  This file will  present all the executable  scripts I wrote. It  is also their
+  original source code, all the following code snippets are exported and tangled
+  from this file to the actual executables.
+
+  Please do not forget to run the following before tangling files from this file
+  to make sure the tangled files will be executables.
+  #+begin_src emacs-lisp :exports code
+    (defun phundrak/make-tangled-files-executable ()
+      (set-file-modes (buffer-file-name) #o755))
+    (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
+  #+end_src
+
+  #+RESULTS:
+  | phundrak/make-tangled-files-executable |
+
+* Askpass
+  :PROPERTIES:
+  :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
+  :HEADER-ARGS: :tangle askpass :exports code
+  :END:
+  Askpass is a simple script that invokes =rofi=  as a way to get from a GUI the
+  user’s sudo password. It is inspired  by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
+  and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
+  we ignore the initial shebang. This executable is pointed at by the
+  #+BEGIN_SRC fish :exports code
+    #!/usr/bin/fish
+    rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
+    -p (printf $argv[1] | sed s/://)
+  #+END_SRC
+
+* Emoji picker
+  :PROPERTIES:
+  :CUSTOM_ID: h-477cd486-c9a6-4d59-bd9d-62d8f08ee62d
+  :HEADER-ARGS: :tangle rofiemoji :exports code
+  :END:
+  The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
+  [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
+  emoji is selected, it is copied to the clipboard using =xclipboard=.
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+  #+END_SRC
+
+  Also, let’s send a notification telling the user the emoji has been copied!
+  #+BEGIN_SRC fish
+    set emoji (xclip -o -selection clipboard | tr -d '\n')
+    set -a emoji "copied to clipboard"
+    pgrep -x dunst >/dev/null && notify-send $emoji
+  #+END_SRC
+
+  It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
+
+* Rofimount
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle rofimount :exports code
+  :CUSTOM_ID: h-32ee4a66-e7fb-4abf-a168-fa259efdb1f4
+  :END:
+  =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
+  interactively asks the user  what to mount, and where to mount  it. What I did
+  was replace  dmenu with rofi, and  fix a couple  of bugs I encountered  in the
+  original script.
+
+** Get the mountable elements
+   :PROPERTIES:
+   :CUSTOM_ID: h-2307005f-385e-4149-b885-55e699c822bb
+   :END:
+   #+BEGIN_SRC fish
+     begin
+   #+END_SRC
+   What the script does first is detect everything that can be mounted. Between
+   a =begin= and =end=, let’s set =LFS= as a local variable. This si in order to
+   get sane variables in the current block.
+   #+BEGIN_SRC fish
+   set -l LFS
+   #+END_SRC
+
+   Now, let’s detect the amount of mountable Android filesystems, and if any are
+   detected, let’s read them into a global variable.
+   #+BEGIN_SRC fish
+     set -l a (math (jmtpfs -l | wc -l) - 2)
+     test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
+   #+END_SRC
+
+   We’ll do the same for external and internal drives and partitions that can be
+   mounted here.
+   #+BEGIN_SRC fish
+     lsblk -rpo "name,type,size,mountpoint" | \
+     awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
+     read -zg usbdrives
+   #+END_SRC
+
+   Finally, we look for any CD drive that could be mounted on our device.
+   #+BEGIN_SRC fish
+     blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
+   #+END_SRC
+
+   And that’s the end of our first block!
+   #+BEGIN_SRC fish
+     end
+   #+END_SRC
+
+   Alright, we’ll  save what  kind on drives  we can mount  in a  temporary file
+   called =/tmp/drives=. We’ll make sure it’s  blank by erasing it then creating
+   it again with  =touch=, like so. The =-f=  flag on =rm= is here so  we get no
+   error if we try to delete a file that doesn’t exist (yet).
+   #+BEGIN_SRC fish
+     set -g TMPDRIVES /tmp/drives
+     rm -f $TMPDRIVES
+     touch $TMPDRIVES
+   #+END_SRC
+
+   Now, let’s write what type of drives we can mount in this temporary file.
+   #+BEGIN_SRC fish
+     test -n "$usbdrives" && echo "USB" >> /tmp/drives
+     test -n "$cddrives" && echo "CD" >> /tmp/drives
+     test -n "$anddrives" && echo "Android" >> /tmp/drives
+   #+END_SRC
+
+   Now, we want to  declare where to look for mount  directories. For now, we’ll
+   only look in =/mnt=, but you can add more if you wish.
+   #+BEGIN_SRC fish
+     set -g basemount /mnt
+   #+END_SRC
+
+** Get the drive to mount
+   :PROPERTIES:
+   :CUSTOM_ID: h-a17825bd-96e2-4c90-99ef-b0f2895cffb6
+   :END:
+   Now, let’s declare a function that will allow us to chose the drive we want
+   to mount.
+   #+BEGIN_SRC fish
+     function getmount
+   #+END_SRC
+
+   First, we want to get our mount point.  We’ll run a =find= command on each of
+   the directories listed in =$basemount= to look for folders on which our drive
+   could be mounted. This  list will be passed to rofi from  which we will chose
+   our mount point.
+   #+BEGIN_SRC fish
+     set -g mp (for d in $basemount
+         find $d -maxdepth 5 -type d
+     end | rofi -dmenu -i -p 'Type in mount point.')
+   #+END_SRC
+
+   We  should verify  that something  has been  actually selected,  otherwise we
+   should abort the script.
+   #+BEGIN_SRC fish
+     if test -z $mp || test $mp = ""
+         return 1
+     end
+   #+END_SRC
+
+   Now, if the selected  mount point does not exist, we’ll  ask the user whether
+   the directory  should be created.  If no, the script  will abort. If  yes, an
+   attempt will be made at creating the  directory as the user; if that fails, a
+   new attempt will be made as sudo.
+   #+BEGIN_SRC fish
+     if test ! -d $mp
+         switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
+             case 'Yes'
+                 mkdir -p $mp || sudo -A mkdir -p $mp
+             case '*'
+                 return 1
+         end
+     end
+   #+END_SRC
+
+   Finally, let’s close the function
+   #+BEGIN_SRC fish
+     end
+   #+END_SRC
+
+** Mount a USB drive, hard drive or partition
+   :PROPERTIES:
+   :CUSTOM_ID: h-72781187-ebf2-418c-99b3-bba44922fc60
+   :END:
+   Alright,  we  want  to  mount  a  partition  that  answers  by  the  name  of
+   =/dev/sdXX=, how  do we do that?  Let’s create first the  function =mountusb=
+   that will take care of it for us.
+   #+BEGIN_SRC fish
+   function mountusb
+   #+END_SRC
+
+   Now, the first thing we want to do  is select the partition we want to mount.
+   Remember, we  stored those in =$usbdrives=  earlier, so let’s pipe  them into
+   rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
+   #+BEGIN_SRC fish
+   set -g chosen (echo $usbdrives | rofi -dmenu -i -p "Mount which drive?" | awk '{print $1}')
+   #+END_SRC
+
+   As usual  after a user  selection, let’s  verify something has  actually been
+   selected. If not, let’s abort the script.
+   #+BEGIN_SRC fish
+   test -z $chosen && return 1
+   #+END_SRC
+
+   Finally, let’s close the function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC

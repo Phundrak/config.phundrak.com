@@ -1,5 +1,3 @@
 #!/usr/bin/fish
-
-# Utility to ask password, to be used with dmount and dumount
-# inspired from https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass
-rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines -p "(printf "$1" | sed s/://)"
+rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
+-p (printf $argv[1] | sed s/://)
