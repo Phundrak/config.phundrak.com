@@ -44,11 +44,24 @@
 
 - [[#presentation][Presentation]]
 - [[#askpass][Askpass]]
+- [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
 - [[#rofimount][Rofimount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
   - [[#get-the-drive-to-mount][Get the drive to mount]]
   - [[#mount-a-usb-drive-hard-drive-or-partition][Mount a USB drive, hard drive or partition]]
+  - [[#mount-an-android-device][Mount an Android device]]
+  - [[#mount-a-cd-drive][Mount a CD drive]]
+  - [[#ask-what-type-of-drive-we-want-to-mount][Ask what type of drive we want to mount]]
+  - [[#launch-the-mounting-functions][Launch the mounting functions]]
+- [[#rofiumount][Rofiumount]]
+  - [[#get-the-unmountable-drives][Get the unmountable drives]]
+  - [[#unmount-disk-partitions][Unmount disk partitions]]
+  - [[#unmount-android-device][Unmount Android device]]
+  - [[#unmount-cd-drive][Unmount CD drive]]
+  - [[#ask-what-type-of-drive-to-unmount][Ask what type of drive to unmount]]
+  - [[#launch-the-unmounting-functions][Launch the unmounting functions]]
+- [[#starwars][Starwars]]
 
 * Presentation
   :PROPERTIES:
@@ -66,9 +79,6 @@
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
   #+end_src
 
-  #+RESULTS:
-  | phundrak/make-tangled-files-executable |
-
 * Askpass
   :PROPERTIES:
   :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
@@ -84,10 +94,23 @@
     -p (printf $argv[1] | sed s/://)
   #+END_SRC
 
+* Dmenu
+  :PROPERTIES:
+  :CUSTOM_ID: h-50623ecd-b633-4af7-9cc4-5a032f01d1ee
+  :HEADER-ARGS: :tangle dmenu :exports code
+  :END:
+  I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
+  emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
+  rofi’s dmenu emulation with the arguments initially passed to dmenu.
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    /usr/bin/rofi -dmenu $argv
+  #+END_SRC
+
 * Emoji picker
   :PROPERTIES:
   :CUSTOM_ID: h-477cd486-c9a6-4d59-bd9d-62d8f08ee62d
-  :HEADER-ARGS: :tangle rofiemoji :exports code
+  :HEADER-ARGS: :tangle rofi-emoji :exports code
   :END:
   The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
   [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
@@ -108,13 +131,17 @@
 
 * Rofimount
   :PROPERTIES:
-  :HEADER-ARGS: :tangle rofimount :exports code
+  :HEADER-ARGS: :tangle rofi-mount :exports code
   :CUSTOM_ID: h-32ee4a66-e7fb-4abf-a168-fa259efdb1f4
   :END:
   =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
   interactively asks the user  what to mount, and where to mount  it. What I did
   was replace  dmenu with rofi, and  fix a couple  of bugs I encountered  in the
-  original script.
+  original script.  For the  record, this  is a fish  script. Let’s  declare our
+  shebang.
+  #+BEGIN_SRC fish
+  #!/usr/bin/fish
+  #+END_SRC
 
 ** Get the mountable elements
    :PROPERTIES:
@@ -167,9 +194,9 @@
 
    Now, let’s write what type of drives we can mount in this temporary file.
    #+BEGIN_SRC fish
-     test -n "$usbdrives" && echo "USB" >> /tmp/drives
-     test -n "$cddrives" && echo "CD" >> /tmp/drives
-     test -n "$anddrives" && echo "Android" >> /tmp/drives
+     test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
+     test -n "$cddrives" && echo "CD" >> $TMPDRIVES
+     test -n "$anddrives" && echo "Android" >> $TMPDRIVES
    #+END_SRC
 
    Now, we want to  declare where to look for mount  directories. For now, we’ll
@@ -241,7 +268,9 @@
    Remember, we  stored those in =$usbdrives=  earlier, so let’s pipe  them into
    rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
    #+BEGIN_SRC fish
-   set -g chosen (echo $usbdrives | rofi -dmenu -i -p "Mount which drive?" | awk '{print $1}')
+     set -g chosen (echo $usbdrives | \
+     rofi -dmenu -i -p "Mount which drive?" | \
+     awk '{print $1}')
    #+END_SRC
 
    As usual  after a user  selection, let’s  verify something has  actually been
@@ -250,7 +279,494 @@
    test -z $chosen && return 1
    #+END_SRC
 
+   Now, let’s select  the mount point of our partition.  We’ll call the function
+   =getmount= described in [[#get-the-drive-to-mount][Get the drive to mount]] to select it.
+   #+BEGIN_SRC fish
+   getmount
+   #+END_SRC
+
+   Let’s verify  the variable  =mp= set  in =getmount=  is not  empty, otherwise
+   abort the script.
+   #+BEGIN_SRC fish
+   test -z $mp && return 1
+   #+END_SRC
+
+   Now, let’s mount it! We’ll use a switch which will detect the filesystem used
+   so we know how to mount the partition.
+   #+BEGIN_SRC fish
+   switch (lsblk -no "fstype" $chosen)
+   #+END_SRC
+
+   We have two named case: =vfat= filesystems.
+   #+BEGIN_SRC fish
+     case "vfat"
+         sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
+   #+END_SRC
+
+   And =ntfs= filesystems.
+   #+BEGIN_SRC fish
+     case "ntfs"
+         sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
+   #+END_SRC
+
+   Else, we’ll let  =mount= determine which filesystem is used  by the partition
+   (generally =ext4=).
+   #+BEGIN_SRC fish
+     case '*'
+         sudo -A mount $chosen $mp
+   #+END_SRC
+
+   We’ll also  run a =chown=  on this newly mounted  filesystem so the  user can
+   access it without any issues.
+   #+BEGIN_SRC fish
+     sudo -A chown -R $USER:(id -g $USER) $mp
+   #+END_SRC
+
+   Let’s close the  switch block and send a notification  the partition has been
+   mounted.
+   #+BEGIN_SRC fish
+   end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
+   #+END_SRC
+
+   And let’s close the function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Mount an Android device
+   :PROPERTIES:
+   :CUSTOM_ID: h-af36260f-2c00-43b7-9383-5235ebac9b51
+   :END:
+   The function  that manages  to mount  Android filesystems  is =mountandroid=.
+   Let’s declare it.
+   #+BEGIN_SRC fish
+   function mountandroid -d "Mount an Android device"
+   #+END_SRC
+
+   We’ll select which Android we want to mount. We will be asked through rofi.
+   #+BEGIN_SRC fish
+   set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
+   #+END_SRC
+
+   Now, we need to  get the bus of the Android device we  want to mount. It will
+   be useful  later, after we  authorized mounting from  our device, to  get the
+   path to our partition.
+   #+BEGIN_SRC fish
+   set bus (echo $chosen | sed 's/,.*//')
+   #+END_SRC
+
+   Let’s temporarily mount our device.
+   #+BEGIN_SRC fish
+   jmtpfs -device=$chosen $mp
+   #+END_SRC
+
+   Now, we need to allow our computer  to mount our Android device. Depending on
+   the Android version it is running on, we either need to specify our device is
+   USB connected in order to exchange  files, or Android will explicitely ask us
+   if it is OK for our computer to access it. Let’s inform the user of that.
+   #+BEGIN_SRC fish
+     echo "OK" | \
+     rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
+   #+END_SRC
+
+   Now, let’s get the actual path of our Android filesystem we wish to mount,
+   and let’s unmount the previous temporary filesystem.
+   #+BEGIN_SRC fish
+     set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
+     sudo -A umount $mp
+   #+END_SRC
+
+   Now we  cam mount the  new filesystem and  send a notification  if everything
+   went well.
+   #+BEGIN_SRC fish
+     jmtpfs -device=$newchosen $mp && \
+     notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
+   #+END_SRC
+
+   And now, we can close our function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Mount a CD drive
+   :PROPERTIES:
+   :CUSTOM_ID: h-73ff10ea-10aa-4044-9315-2321fff73c3f
+   :END:
+   This part  is way  easier than the  previous functions. As  we will  see, the
+   function =mountcd='s body is only three  lines long. First, let’s declare the
+   function.
+   #+BEGIN_SRC fish
+   function mountcd
+   #+END_SRC
+
+   Now, let’s chose the CD drive we want to mount using =rofi=.
+   #+BEGIN_SRC fish
+     set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
+   #+END_SRC
+
+   We’ll also  get the  mountpoint thanks to  the =getmount=  function described
+   earlier.
+   #+BEGIN_SRC fish
+   getmount
+   #+END_SRC
+
+   And finally, let’s mount it and send the notification everything went well.
+   #+BEGIN_SRC fish
+     sudo -A mount $chosen $mp && \
+     notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
+   #+END_SRC
+
+   Finally, let’s close our function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Ask what type of drive we want to mount
+   :PROPERTIES:
+   :CUSTOM_ID: h-0bc6ffba-5c45-44e5-a3d3-039a8ea43905
+   :END:
+   The first thing we will be asked if different types of drives are detected is
+   which of these types the user wishes to mount. This is done with the function
+   =asktype= which is declared below.
+   #+BEGIN_SRC fish
+   function asktype
+   #+END_SRC
+
+   We will use a  switch statement which will use our anwser  to rofi about what
+   we wish to mount.
+   #+BEGIN_SRC fish
+   switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
+   #+END_SRC
+
+   If we  chose the  option "USB", we’ll  mount a hard  drive, partition  or USB
+   drive. In which case we’ll call the =mountusb= function.
+   #+BEGIN_SRC fish
+     case "USB"
+         mountusb
+   #+END_SRC
+
+   If we chose the "Android" option, the =mountandroid= function is called.
+   #+BEGIN_SRC fish
+     case "Android"
+         mountandroid
+   #+END_SRC
+
+   Else if we chose the "CD" option, we’ll call the =mountcd= function.
+   #+BEGIN_SRC fish
+     case "CD"
+         mountcd
+   #+END_SRC
+   If nothing  is selected, the function  will naturally exit. Now,  let’s close
+   our switch statement and our function.
+   #+BEGIN_SRC fish
+   end
+   end
+   #+END_SRC
+
+** Launch the mounting functions
+   :PROPERTIES:
+   :CUSTOM_ID: h-646dc678-4d87-4fec-8130-5d7d0fc16756
+   :END:
+   Now that we have declared our functions and set our variables, we’ll read the
+   temporary file described  in [[#get-the-mountable-elements][Get the mountable elements]]. The  amount of lines
+   is passed in a switch statement.
+   #+BEGIN_SRC fish
+   switch (wc -l < $TMPDRIVES)
+   #+END_SRC
+
+   If the file has no lines, i.e. it is empty, we have no mountable media. Let’s
+   inform our user this is the case.
+   #+BEGIN_SRC fish
+     case 0
+         notify-send "No USB drive or Android device or CD detected" -a "dmount"
+   #+END_SRC
+
+   If we  only have one line,  we have only  one type of mountable  media. We’ll
+   pass this line to a second switch statement.
+   #+BEGIN_SRC fish
+     case 1
+         switch (cat $TMPDRIVES)
+   #+END_SRC
+   This will allow the script to automatically  detect what type of media it is,
+   and mount the corresponding function.
+   #+BEGIN_SRC fish
+     case "USB"
+         mountusb
+     case "Android"
+         mountandroid
+     case "CD"
+         mountCD
+   #+END_SRC
+   Let’s close this nested switch case.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+   If we have more than one line, we’ll have to ask the user what type of media
+   they want to mount.
+   #+BEGIN_SRC fish
+     case '*'
+         asktype
+   #+END_SRC
+
+   Now, let’s end our switch statement!
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+   Finally, we’ll delete our temporary file.
+   #+BEGIN_SRC fish
+   rm -f $TMPDRIVES
+   #+END_SRC
+
+   And with that, this is the end of our script!
+
+* Rofiumount
+  :PROPERTIES:
+  :CUSTOM_ID: h-68a1f671-5dc6-4120-81c8-c94fffa7d7a3
+  :HEADER-ARGS: :tangle rofi-umount :exports code
+  :END:
+  =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
+  partitions. It is a fish script, so let’s declare it as that with its shebang.
+  #+BEGIN_SRC fish
+  #!/usr/bin/fish
+  #+END_SRC
+
+** Get the unmountable drives
+   :PROPERTIES:
+   :CUSTOM_ID: h-dab41471-4f69-4be8-8d77-58ccc604e4e2
+   :END:
+   First, we will need to list all the drives that can be safely unmounted.
+   Let’s run this.
+   #+BEGIN_SRC fish
+     set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
+     awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
+   #+END_SRC
+
+   Now, let’s get the android devices that are mounted.
+   #+BEGIN_SRC fish
+   set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
+   #+END_SRC
+
+   And let’s get the CD drives that are mounted.
+   #+BEGIN_SRC fish
+   set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
+   #+END_SRC
+
+   We’ll store all of our information in a temporary file, =/tmp/undrives=.
+   #+BEGIN_SRC fish
+   set -g undrivefile /tmp/undrives
+   #+END_SRC
+
+   Let’s make sure we begin with a clean, empty file.
+   #+BEGIN_SRC fish
+     rm -f $undrivefile
+     touch $undrivefile
+   #+END_SRC
+
+   Depending on if  the related variables are set, write  the different types of
+   mounted drives in the temporary file.
+   #+BEGIN_SRC fish
+     test -n "$drives" && echo "USB" >> $undrivefile
+     test -n "$cds" && echo "CD" >> $undrivefile
+     test -n "$androids" && echo "Android" >> $undrivefile
+   #+END_SRC
+
+** Unmount disk partitions
+   :PROPERTIES:
+   :CUSTOM_ID: h-01c37335-5ae8-484f-911a-a08cc4679398
+   :END:
+   The  function =unmountusb=  will take  care of  unmounting any  drive we  can
+   safely unmount. First, let’s declare the function.
+   #+BEGIN_SRC fish
+   function unmountusb
+   #+END_SRC
+
+   Let’s chose the drive to unmount with rofi.
+   #+BEGIN_SRC fish
+     set chosen (echo $drives | \
+     rofi -dmenu -i -p "Unmount which drive?" | \
+     awk '{print $1}')
+   #+END_SRC
+
+   Let’s verify if the user actually selected  any drive. If no, let’s abort the
+   script.
+   #+BEGIN_SRC fish
+   test -z "$chosen" && exit 0
+   #+END_SRC
+
+   Now, let’s unmount  the chosen drive and  send a notification if  it has been
+   done. Otherwise, a notification will be sent, saying the operation failed.
+   #+BEGIN_SRC fish
+     sudo -A umount $chosen && \
+     notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount" || \
+     notify-send "💻 USB unmounting" "$chosen unmounting failed." -a "dumount"
+   #+END_SRC
+
+   Now, let’s close the function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Unmount Android device
+   :PROPERTIES:
+   :CUSTOM_ID: h-d7d2a12e-c759-4dbe-a17b-bb90c514dca2
+   :END:
+   The  function  =unmountandroid= will  take  care  of unmounting  any  mounted
+   Android device. First, let’s declare our function.
+   #+BEGIN_SRC fish
+   function unmountandroid
+   #+END_SRC
+
+   Let the user choose which Android device to unmount.
+   #+BEGIN_SRC fish
+   set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
+   #+END_SRC
+
+   We’ll verify the user chose any device.
+   #+BEGIN_SRC fish
+     test -z "$chosen" && exit 0
+   #+END_SRC
+
+   If a device has been chosen, let’s unmount it and send a notification whether
+   it has been successfuly unmounted.
+   #+BEGIN_SRC fish
+     sudo -A umount -l $chosen && |
+     notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount" || \
+     notify-send "🤖 Android unmounting" "$chosen failed to unmount." -a "dumount"
+   #+END_SRC
+
    Finally, let’s close the function.
    #+BEGIN_SRC fish
    end
    #+END_SRC
+
+** Unmount CD drive
+   :PROPERTIES:
+   :CUSTOM_ID: h-ae7a8a83-f022-493c-8410-ad99abf42b89
+   :END:
+   =unmountcd= will take care of unmounting any mounted CD drive. Let’s declare
+   this function.
+   #+BEGIN_SRC fish
+   function unmountcd
+   #+END_SRC
+
+   As before, let the user chose which CD drive to unmount.
+   #+BEGIN_SRC fish
+   set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
+   #+END_SRC
+
+   We’ll verify the user chose any device.
+   #+BEGIN_SRC fish
+     test -z "$chosen" && exit 0
+   #+END_SRC
+
+   If a drive has been chosen, let’s  unmount it and send a notification whether
+   it has been successfuly unmounted.
+   #+BEGIN_SRC fish
+     sudo -A umount -l $chosen && \
+     notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount" || \
+     notify-send "💿 CD unmounting" "$chosen failed to unmount." -a "dumount"
+   #+END_SRC
+
+   Now, let’s close the function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Ask what type of drive to unmount
+   :PROPERTIES:
+   :CUSTOM_ID: h-4320a68b-8369-4ac5-a049-cfb12435e45e
+   :END:
+   If several  types of  unmountable drives  are available,  let’s ask  the user
+   which type to unmount based on the  content of the temporary file declared in
+   [[#get-the-unmountable-drives][Get the unmountable drives]]. First, let’s declare the function.
+   #+BEGIN_SRC fish
+   function asktype
+   #+END_SRC
+
+   Let’s create a switch statement to which  will be passed the selection of the
+   user from rofi.
+   #+BEGIN_SRC fish
+     switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
+   #+END_SRC
+
+   Three types of values can be returned: "USB", "CD", or "Android". These
+   values will be used to launch their corresponding function.
+   #+BEGIN_SRC fish
+     case 'USB'
+         unmountusb
+     case 'CD'
+         unmountcd
+     case 'Android'
+         unmountandroid
+   #+END_SRC
+
+   Let’s close the switch statement.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+   Let’s now close the function.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+** Launch the unmounting functions
+   :PROPERTIES:
+   :CUSTOM_ID: h-5880963f-1403-41dc-ae7a-3958e2013fa9
+   :END:
+   Now back to the  body of our script, let’s input in a  switch case the number
+   of lines contained in our temporary file.
+   #+BEGIN_SRC fish
+   switch (wc -l < $undrivefile)
+   #+END_SRC
+
+   If the file containes no lines. i.e. it is empty, nothing is to be unmounted.
+   Let’s inform the user of that.
+   #+BEGIN_SRC fish
+     case 0
+         notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
+   #+END_SRC
+
+   Else, if there is only one type  of drive, we’ll automatically let our script
+   choose based on the content of this sole line.
+   #+BEGIN_SRC fish
+     case 1
+         switch (cat $undrivefile)
+             case 'USB'
+                 unmountusb
+             case 'CD'
+                 unmountcd
+             case 'Android'
+                 unmountandroid
+         end
+   #+END_SRC
+
+   And if there are more types than one, let’s ask the user.
+   #+BEGIN_SRC fish
+   case '*'
+        asktype
+   #+END_SRC
+
+   Let’s close our main switch statement.
+   #+BEGIN_SRC fish
+   end
+   #+END_SRC
+
+   And finally, let’s delete our temporary file.
+   #+BEGIN_SRC fish
+   rm -f $undrivefile
+   #+END_SRC
+
+* Starwars
+  :PROPERTIES:
+  :CUSTOM_ID: h-127de2b2-d84b-4508-89d2-b4577e8dbece
+  :HEADER-ARGS: :tangle starwars :exports code
+  :END:
+  This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
+  in your terminal. Here is the code:
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    telnet towel.blinkenlights.nl
+  #+END_SRC

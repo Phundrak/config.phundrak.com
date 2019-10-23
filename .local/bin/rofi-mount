@@ -1,0 +1,146 @@
+#!/usr/bin/fish
+
+begin
+
+set -l LFS
+
+set -l a (math (jmtpfs -l | wc -l) - 2)
+test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
+
+lsblk -rpo "name,type,size,mountpoint" | \
+awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
+read -zg usbdrives
+
+blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
+
+end
+
+set -g TMPDRIVES /tmp/drives
+rm -f $TMPDRIVES
+touch $TMPDRIVES
+
+test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
+test -n "$cddrives" && echo "CD" >> $TMPDRIVES
+test -n "$anddrives" && echo "Android" >> $TMPDRIVES
+
+set -g basemount /mnt
+
+function getmount
+
+set -g mp (for d in $basemount
+    find $d -maxdepth 5 -type d
+end | rofi -dmenu -i -p 'Type in mount point.')
+
+if test -z $mp || test $mp = ""
+    return 1
+end
+
+if test ! -d $mp
+    switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
+        case 'Yes'
+            mkdir -p $mp || sudo -A mkdir -p $mp
+        case '*'
+            return 1
+    end
+end
+
+end
+
+function mountusb
+
+set -g chosen (echo $usbdrives | \
+rofi -dmenu -i -p "Mount which drive?" | \
+awk '{print $1}')
+
+test -z $chosen && return 1
+
+getmount
+
+test -z $mp && return 1
+
+switch (lsblk -no "fstype" $chosen)
+
+case "vfat"
+    sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
+
+case "ntfs"
+    sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
+
+case '*'
+    sudo -A mount $chosen $mp
+
+sudo -A chown -R $USER:(id -g $USER) $mp
+
+end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
+
+end
+
+function mountandroid -d "Mount an Android device"
+
+set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
+
+set bus (echo $chosen | sed 's/,.*//')
+
+jmtpfs -device=$chosen $mp
+
+echo "OK" | \
+rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
+
+set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
+sudo -A umount $mp
+
+jmtpfs -device=$newchosen $mp && \
+notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
+
+end
+
+function mountcd
+
+set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
+
+getmount
+
+sudo -A mount $chosen $mp && \
+notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
+
+end
+
+function asktype
+
+switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
+
+case "USB"
+    mountusb
+
+case "Android"
+    mountandroid
+
+case "CD"
+    mountcd
+
+end
+end
+
+switch (wc -l < $TMPDRIVES)
+
+case 0
+    notify-send "No USB drive or Android device or CD detected" -a "dmount"
+
+case 1
+    switch (cat $TMPDRIVES)
+
+case "USB"
+    mountusb
+case "Android"
+    mountandroid
+case "CD"
+    mountCD
+
+end
+
+case '*'
+    asktype
+
+end
+
+rm -f $TMPDRIVES

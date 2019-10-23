@@ -1,0 +1,2 @@
+#!/usr/bin/fish
+/usr/bin/rofi -dmenu $argv
