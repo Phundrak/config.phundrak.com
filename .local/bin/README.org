@@ -123,6 +123,7 @@
   Also, let’s send a notification telling the user the emoji has been copied!
   #+BEGIN_SRC fish
     set emoji (xclip -o -selection clipboard | tr -d '\n')
+    test -z "$emoji" && notify-send "No emoji copied" && exit
     set -a emoji "copied to clipboard"
     pgrep -x dunst >/dev/null && notify-send $emoji
   #+END_SRC
