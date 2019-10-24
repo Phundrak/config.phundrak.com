@@ -1,0 +1,90 @@
+[user]
+	email = phundrak@phundrak.fr
+	name = Phuntsok Drak-pa
+	signingkey = BD7789E705CB8DCA
+[core]
+	# editor = vim
+	whitespace = fix,-indent-with-non-tab,trailing-space
+	excludesfile = /home/phundrak/dotfiles/.gitignore_global
+	autocrlf = false
+[web]
+	browser = chromium
+[color]
+	ui = auto
+[alias]
+	a = add --all
+	####
+	b = branch
+	####
+	c = commit -S
+	ca = commit -a
+	cm = commit -m
+	cam = commit -am
+	####
+	co = checkout
+	cob = checkout -b
+	####
+	cl = clone
+	####
+	d = diff -w
+	####
+	l = log --oneline --graph --decorate
+	####
+	ps = push
+	psf = push -f
+	pso = push origin
+	psfo = push -f origin
+	psom = push origin master
+	psfom = push -f origin master
+	####
+	pl = pull
+	pb = pull --rebase
+	####
+	re = reset
+	reh = reset --hard
+	rehh = reset --hard HEAD
+	####
+	r = remote
+	ra = remote add
+	rr = remote rm
+	###
+	rmf = rm -f
+	rmrf = rm -r -f
+	####
+	s = status
+	####
+	staged = diff --cached
+	####
+	sc = stash clear
+	sp = stash pop
+	sw = stash show
+	####
+	pushall = !git remote | xargs -L1 git push
+	psl = !git remote | xargs -L1 git push
+	pullall = !git remote | xargs -L1 git pull
+	pll = !git remote | xargs -L1 git pull
+	####
+	u = reset --
+	unstage = reset --
+	####
+	webui = !/home/phundrak/.git-webui/release/libexec/git-core/git-webui
+[magithub]
+	online = true
+[magithub "status"]
+	includeStatusHeader = true
+	includePullRequestsSection = true
+	includeIssuesSection = true
+[gpg]
+	program = gpg2
+[webui]
+	autoupdate = true
+[mergetool.ediff]
+	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
+[merge]
+	tool = ediff
+[github]
+	user = phundrak
+[init]
+	templatedir = /home/phundrak/.git-templates
+[gitlab "labs.phundrak.fr/api/v4"]
+	user = phundrak
