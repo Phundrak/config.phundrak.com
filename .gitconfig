@@ -88,3 +88,5 @@
 	templatedir = /home/phundrak/.git-templates
 [gitlab "labs.phundrak.fr/api/v4"]
 	user = phundrak
+[commit]
+	gpgsign = true
