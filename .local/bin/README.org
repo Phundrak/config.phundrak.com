@@ -41,9 +41,12 @@
   :PROPERTIES:
   :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
   :END:
-
 - [[#presentation][Presentation]]
+- [[#4chandl][4chandl]]
 - [[#askpass][Askpass]]
+- [[#backup][Backup]]
+- [[#cppnew][Cppnew]]
+- [[#cnew][Cnew]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
 - [[#polybar-launch][Polybar-launch]]
@@ -86,6 +89,77 @@
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
   #+end_src
 
+* 4chandl
+  :PROPERTIES:
+  :CUSTOM_ID: h-39e14885-9da7-4cba-b24e-c3b181ef5f6b
+  :HEADER-ARGS: :tangle 4chandl :exports code
+  :END:
+  Usage: =4chandl [ URL TO THREAD ]=
+
+  I made  this small  script to  download the attached  files of  4chan threads.
+  First of all, let’s declare it as a fish script.
+  #+BEGIN_SRC fish
+  #!/usr/bin/env fish
+  #+END_SRC
+
+  Now, let’s check if any arguments were  passed to the executable. If none were
+  passed, the script should be aborted.
+  #+BEGIN_SRC fish
+    if ! count $argv > /dev/null
+        echo 'No URL specified! Give the URL to thread as the only argument.'
+        exit 1
+    end
+  #+END_SRC
+
+  Now, let’s store the regex we use to get the link to the attached files.
+  #+BEGIN_SRC fish
+  set regex_4cdn '\/\/is2\.4chan\.org\/[a-z]+\/[A-Za-z0-9]+\.[A-Za-z]{3,4}'
+  #+END_SRC
+
+  We’ll use a thread  counter to get a visual indication on  how the download is
+  going.
+  #+BEGIN_SRC fish
+    set thread_counter 1
+  #+END_SRC
+
+  Now, we will use  each of the arguments passed as a URL  to download the files
+  from.
+  #+BEGIN_SRC fish
+  for url in $argv
+  #+END_SRC
+
+  As  a visual  indicator, let’s  get the  amount of  elements we  are going  to
+  download from the current thread and print it.
+  #+BEGIN_SRC fish
+    set file_total (curl -ks $url | grep -oE $regex_4cdn | uniq | wc -l)
+    echo total files to download in current thread: $file_total
+  #+END_SRC
+
+  Let’s set a file counter so we can visualize the download progress.
+  #+BEGIN_SRC fish
+  set file_counter 1
+  #+END_SRC
+
+  Now, let’s download each file from the current thread.
+  #+BEGIN_SRC fish
+    for image_url in (curl -k -s $url | grep -Eo $regex_4cdn | uniq | sed 's/^/https:/')
+        echo -n Downloading image $counter of $total...
+        wget --no-check-certificate -q -nc $image_url
+        echo ' Done (thread: $thread_counter/thread_total\tfile: $file_counter/file_total)'
+        set file_counter (math $file_counter + 1)
+    end
+  #+END_SRC
+
+  Let’s increment the thread counter.
+  #+BEGIN_SRC fish
+  set thread_counter (math $thread_counter + 1)
+  #+END_SRC
+
+  Let’s now close the for loop.
+  #+BEGIN_SRC fish
+  end
+  #+END_SRC
+
 * Askpass
   :PROPERTIES:
   :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
@@ -100,6 +174,104 @@
     rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
     -p (printf $argv[1] | sed s/://)
   #+END_SRC
+
+* Backup
+  :PROPERTIES:
+  :CUSTOM_ID: h-30cb6655-382f-492a-a005-df15512ab7a5
+  :HEADER-ARGS: :tangle backup :exports code
+  :END:
+  =backup= is a very simple, oneliner script  that will create a local copy of a
+  file and add the date at which it  was copied in the filename. You can see its
+  source code here:
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    cp $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
+  #+END_SRC
+
+* Cppnew
+  :PROPERTIES:
+  :CUSTOM_ID: h-264945df-fe7a-4f9d-845a-9cc26c196f4b
+  :HEADER-ARGS: :tangle cppnew :exports code
+  :END:
+  =cppnew= is a small utility that helps you create a new C++ project. Several
+  templates are available, the default one using CMake, and three others that
+  are a bit more advances, based on:
+  - CMake + [[https://conan.io/][Conan]]
+  - [[https://mesonbuild.com/][Meson]] + [[https://ninja-build.org/][Ninja]]
+  - Meson + Ninja + Conan
+  There is also a default [[http://doxygen.nl/][Doxygen]] file included for your documentation, ready to
+  go. I  even made it  so that you  can execute it  as an executable  file, like
+  =./doc/Doxyfile= from the project root.
+
+  The choice is given to the user which of them to use with options that will be
+  given to =cppnew=.
+
+* Cnew
+  :PROPERTIES:
+  :CUSTOM_ID: h-a4ccdc0f-6813-4207-9479-4d68296f5fdb
+  :HEADER-ARGS: :tangle cnew :exports code
+  :END:
+  =cnew=  is a  small utility  script similar  to but  simpler than  [[#cppnew][cppnew]] that
+  creates a  CMake template C project  from the template that  already exists in
+  [[file:~/dev/templateC][~/dev/templateC]]. This script is a fish script, so let’s insert the shebang.
+  #+BEGIN_SRC fish
+  #!/usr/bin/env fish
+  #+END_SRC
+
+  If no argument was passed, display an error message and exit.
+  #+BEGIN_SRC fish
+    if ! count $argv > /dev/null
+        echo "Missing argument: PROJECT" && return -1
+    end
+  #+END_SRC
+
+  Pass the first argument to a switch statement.
+  #+BEGIN_SRC fish
+  switch "$argv[1]"
+  #+END_SRC
+
+  If the argument  is =-h= or =--help=,  then display the help  message and exit
+  the script normally.
+  #+BEGIN_SRC fish
+    case -h --help
+        man ~/dev/fishfunctions/cnew.man
+        exit 0
+  #+END_SRC
+
+  Else, the argument is the name of the project the user wants to create.
+  #+BEGIN_SRC fish
+    case '*'
+        set -g project_name $argv[1]
+  #+END_SRC
+
+  Let’s close the switch statement.
+  #+BEGIN_SRC fish
+  end
+  #+END_SRC
+
+  Now, let’s copy the template where the  user is executing =cnew= from, give it
+  the name of the project and move to the project.
+  #+BEGIN_SRC fish
+    cp -r ~/dev/templateC $argv[1]
+    cd $argv[1]
+  #+END_SRC
+
+  The  default files  have a  placeholder  for the  name of  the project.  Let’s
+  replace these placeholders with the project’s name.
+  #+BEGIN_SRC fish
+    sed -i "s/PROJECTNAME/$argv[1]/g" CMakeLists.txt
+    sed -i "s/PROJECTNAME/$argv[1]/g" README.org
+    sed -i "s/CPROJECTNAME/$argv[1]/g" doc/Doxyfile
+  #+END_SRC
+
+  Now, let’s create a git repository and initialize it.
+  #+BEGIN_SRC fish
+    git init
+    git add .
+    git commit -m "initial commit"
+  #+END_SRC
+
+  And we’re done!
 
 * Dmenu
   :PROPERTIES:
@@ -646,11 +818,10 @@
    #+END_SRC
 
    Now, let’s unmount  the chosen drive and  send a notification if  it has been
-   done. Otherwise, a notification will be sent, saying the operation failed.
+   done.
    #+BEGIN_SRC fish
      sudo -A umount $chosen && \
-     notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount" || \
-     notify-send "💻 USB unmounting" "$chosen unmounting failed." -a "dumount"
+     notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
    #+END_SRC
 
    Now, let’s close the function.
@@ -678,12 +849,11 @@
      test -z "$chosen" && exit 0
    #+END_SRC
 
-   If a device has been chosen, let’s unmount it and send a notification whether
-   it has been successfuly unmounted.
+   If a device has been chosen, let’s  unmount it and send a notification it has
+   been successfuly unmounted.
    #+BEGIN_SRC fish
-     sudo -A umount -l $chosen && |
-     notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount" || \
-     notify-send "🤖 Android unmounting" "$chosen failed to unmount." -a "dumount"
+     sudo -A umount -l $chosen && \
+     notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
    #+END_SRC
 
    Finally, let’s close the function.
@@ -711,12 +881,11 @@
      test -z "$chosen" && exit 0
    #+END_SRC
 
-   If a drive has been chosen, let’s  unmount it and send a notification whether
-   it has been successfuly unmounted.
+   If a drive has  been chosen, let’s unmount it and send  a notification it has
+   been successfuly unmounted.
    #+BEGIN_SRC fish
      sudo -A umount -l $chosen && \
-     notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount" || \
-     notify-send "💿 CD unmounting" "$chosen failed to unmount." -a "dumount"
+     notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
    #+END_SRC
 
    Now, let’s close the function.
