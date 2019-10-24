@@ -187,10 +187,10 @@ bindsym $mod+Shift+l              exec dmenu-lpass
 bindsym $mod+Shift+p              exec polybar-launch
 
 # Brightness keyboard shortcuts
-bindsym XF86MonBrightnessUp       exec "light -A 5"
-bindsym XF86MonBrightnessDown     exec "light -U 5"
-bindsym $mod+$alt+Next            exec "light -A 5"
-bindsym $mod+$alt+Prev            exec "light -U 5"
+bindsym XF86MonBrightnessUp       exec xbacklight -inc 5
+bindsym $mod+$alt+Next            exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown     exec xbacklight -dec 5
+bindsym $mod+$alt+Prev            exec xbacklight -dec 5
 
 # Wal
 bindsym $mod+Ctrl+w               exec "wal -i ~/Pictures/Wallpapers -o wal-set"
@@ -269,8 +269,6 @@ exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authenticatio
 exec_always --no-startup-id       enable_touch
 exec_always --no-startup-id       polybar-launch
 exec        --no-startup-id       xss-lock -- i3lock -fol
-exec        --no-startup-id       xfce4-power-manager
-exec        --no-startup-id       clight
 exec        --no-startup-id       mpd
 exec        --no-startup-id       mpc stop
 exec        --no-startup-id       mpd_discord_richpresence --no-idle --fork

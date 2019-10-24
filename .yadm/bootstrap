@@ -100,10 +100,10 @@ if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
 end
 
 set PACKAGES \
-asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts base-devel bat \
-biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
-clight compton cppcheck cppreference cppreference-devhelp cpupower cronie \
-cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
+acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
+base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
+chromium clisp compton cppcheck cppreference cppreference-devhelp cpupower \
+cronie cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
 dmenu-lpass docker docker-compose doxygen dunst dwarffortress emacs \
 exfat-utils ffmpegthumbnailer findutils firefox flake8 font-mathematica \
 fontforge freeglut fzf gcc-libs gdb gimp glibc gnome-disk-utility \
@@ -117,12 +117,10 @@ ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
 pcurses pdfpc polybar pulseaudio-bluetooth python-envtpl-git python-pip \
 python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
 rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
-speedcrunch sshfs st-luke-git swi-prolog texlive-bibtexextra texlive-bin \
-texlive-core texlive-fontsextra texlive-formatsextra texlive-games \
-texlive-humanities texlive-langchinese texlive-langcyrillic texlive-langextra \
-texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
-texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks \
-texlive-publishers texlive-science tmux tree ttf-arphic-uming ttf-baekmuk \
+speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
+texlive-langchinese texlive-langcyrillic texlive-langgreek \
+texlive-langjapanese texlive-langkorean texlive-latexextra \
+texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
 ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
 ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
 ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
@@ -154,6 +152,8 @@ end
 
 sudo systemctl enable --now ly
 sudo systemctl disable getty@tty2
+
+sudo usermod -aG video $USER
 
 printf "\n# Installing fisher ###########################################################\n\n"
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish

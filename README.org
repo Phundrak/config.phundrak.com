@@ -74,6 +74,7 @@
       - [[#emacs][Emacs]]
       - [[#ssh-server][SSH server]]
       - [[#ly][Ly]]
+      - [[#acpilight][Acpilight]]
     - [[#set-up-our-fish-shell][Set up our fish shell]]
       - [[#install-fisher][Install =fisher=]]
       - [[#install-our-extensions][Install our extensions]]
@@ -643,10 +644,10 @@
     Let’s set in a custom varible what packages we’ll be needing.
     #+BEGIN_SRC fish
       set PACKAGES \
-      asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts base-devel bat \
-      biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 chromium clisp \
-      clight compton cppcheck cppreference cppreference-devhelp cpupower cronie \
-      cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
+      acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
+      base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
+      chromium clisp compton cppcheck cppreference cppreference-devhelp cpupower \
+      cronie cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
       dmenu-lpass docker docker-compose doxygen dunst dwarffortress emacs \
       exfat-utils ffmpegthumbnailer findutils firefox flake8 font-mathematica \
       fontforge freeglut fzf gcc-libs gdb gimp glibc gnome-disk-utility \
@@ -660,12 +661,10 @@
       pcurses pdfpc polybar pulseaudio-bluetooth python-envtpl-git python-pip \
       python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
       rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
-      speedcrunch sshfs st-luke-git swi-prolog texlive-bibtexextra texlive-bin \
-      texlive-core texlive-fontsextra texlive-formatsextra texlive-games \
-      texlive-humanities texlive-langchinese texlive-langcyrillic texlive-langextra \
-      texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
-      texlive-localmanager-git texlive-music texlive-pictures texlive-pstricks \
-      texlive-publishers texlive-science tmux tree ttf-arphic-uming ttf-baekmuk \
+      speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
+      texlive-langchinese texlive-langcyrillic texlive-langgreek \
+      texlive-langjapanese texlive-langkorean texlive-latexextra \
+      texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
       ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
       ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
       ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
@@ -752,6 +751,18 @@
      #+BEGIN_SRC fish
        sudo systemctl enable --now ly
        sudo systemctl disable getty@tty2
+     #+END_SRC
+
+**** Acpilight
+     :PROPERTIES:
+     :CUSTOM_ID: h-5423e2a7-d2ce-4bc3-9d5d-85677c18181e
+     :END:
+     =acpilight= is our utility managing the  brightness of our screen. There is
+     actually no service to enable here, but  we must ensure the user is part of
+     the =video=  group so we  can modify the  brightness of our  screen without
+     using =sudo=.
+     #+BEGIN_SRC fish
+       sudo usermod -aG video $USER
      #+END_SRC
 
 *** Set up our fish shell
