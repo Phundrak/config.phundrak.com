@@ -44,9 +44,15 @@
 - [[#presentation][Presentation]]
 - [[#screenshots][Screenshots]]
 - [[#features][Features]]
+  - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
   - [[#email-signature][Email signature]]
+  - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
+  - [[#nano][Nano]]
+    - [[#configuration][Configuration]]
+    - [[#included-configuration-file][Included configuration file]]
   - [[#global-gitignore][Global gitignore]]
   - [[#rustfmt][Rustfmt]]
+  - [[#tmux-configuration][Tmux configuration]]
   - [[#xresources][Xresources]]
 - [[#dependencies][Dependencies]]
 - [[#installation][Installation]]
@@ -138,6 +144,17 @@
   comment some of my short config files which  do not deserve to have a full org
   file dedicated to them.
 
+** Custom scripts in =PATH=
+   :PROPERTIES:
+   :CUSTOM_ID: h-d582e107-fa66-4f79-869e-2b49116ed1ec
+   :END:
+   I have written some scripts that  help me daily accomplish some simple tasks,
+   like mounting  and unmounting a drive  or Android device, an  emoji picker, a
+   utility to  set up my Wacom  tablet, and so on.  You can find them  stored in
+   [[file:.local/bin][.local/bin]] along with their detailed explanation  in the [[file:.local/bin/README.org][README]] placed in the
+   same folder —which is actually their  source code once the org-mode file gets
+   tangled.
+
 ** Email signature
    :PROPERTIES:
    :CUSTOM_ID: h-f6c48286-a320-493f-b330-ee0a697e6d79
@@ -152,6 +169,128 @@
      Pensez à notre planète, avez-vous vraiment besoin d’imprimer ce courriel ?
      Please mind our planet, do you really need to print this email?
    #+END_SRC
+
+** Fish configuration with useful abbreviations
+   :PROPERTIES:
+   :CUSTOM_ID: h-f35ed9a3-c9fc-458c-8a62-693f679f6992
+   :END:
+   You can also find in [[file:.config/fish][.config/fish]] my Fish shell configuration, which contains
+   my usual abbreviations. Most of its configuration is made with fisher though,
+   and this is shown below in [[#install-fisher][Install =fisher=]].j
+
+** Nano
+  :PROPERTIES:
+  :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
+  :HEADER-ARGS: :tangle ~/.nanorc
+  :END:
+  Although  it  is  a very  simple  piece  of  software,  nano does  offer  some
+  customization. Here is mine.
+
+*** Configuration
+    :PROPERTIES:
+    :CUSTOM_ID: h-76aa0ff6-9e6a-4a35-974f-9132b08c8eb4
+    :END:
+    When soft line  wrapping is enabled, make it wrap  lines at blank characters
+    (tabs and spaces) instead of always at the edge of the screen.
+    #+BEGIN_SRC conf
+    set atblanks
+    #+END_SRC
+
+    Automatically indent a newly created line  to the same number of tabs and/or
+    spaces as the previous line (or as the next line if the previous line is the
+    beginning of a paragraph).
+    #+BEGIN_SRC conf
+      set autoindent
+    #+END_SRC
+
+    When saving  a file, create  a backup  file by adding  a tilde (=~=)  to the
+    file's name. And make and keep not just one backup file, but make and keep a
+    uniquely numbered one every time a file  is saved — when backups are enabled
+    with =set  backup= or =--backup=  or =-B=.  The uniquely numbered  files are
+    stored in the directory =~/.cache/nano/backups/=.
+    #+BEGIN_SRC conf
+      set backup
+      set backupdir /home/phundrak/.cache/nano/backups/
+    #+END_SRC
+
+    Use bold instead of reverse video for the title bar, status bar, key combos,
+    function tags,  line numbers, and selected  text. This can be  overridden by
+    setting    the    options     =titlecolor=,    =statuscolor=,    =keycolor=,
+    =functioncolor=, =numbercolor=, and =selectedcolor=.
+    #+BEGIN_SRC conf
+    set boldtext
+    #+END_SRC
+
+    Do case-unsensitive searches by default.
+    #+BEGIN_SRC conf
+      unset casesensitive
+    #+END_SRC
+
+    Constantly display the cursor position in the status bar. This overrides the
+    option =quickblank=.
+    #+BEGIN_SRC conf
+    set constantshow
+    #+END_SRC
+
+    Display line numbers to the left of the text area.
+    #+BEGIN_SRC conf
+    set linenumbers
+    #+END_SRC
+
+    Do regular-expression searches by default. Regular expressions in =nano= are
+    of the extended type (ERE).
+    #+BEGIN_SRC conf
+    set regexp
+    #+END_SRC
+
+    Make the  Home key smarter.  When Home is pressed  anywhere but at  the very
+    beginning of  non-whitespace characters on a  line, the cursor will  jump to
+    that beginning (either  forwards or backwards). If the cursor  is already at
+    that position, it will jump to the true beginning of the line.
+    #+BEGIN_SRC conf
+    set smarthome
+    #+END_SRC
+
+    Enable soft line wrapping for easier viewing of very long lines.
+    #+BEGIN_SRC conf
+    set softwrap
+    #+END_SRC
+
+    Use a tab size  of a certain amount of columns. The value  of number must be
+    greater than 0. The default value is 8.
+    #+BEGIN_SRC conf
+    set tabsize 2
+    #+END_SRC
+
+    Convert typed tabs to spaces. Sue me.
+    #+BEGIN_SRC conf
+      set tabstospaces
+    #+END_SRC
+
+    Remove trailing  whitespace from wrapped lines  when automatic hard-wrapping
+    occurs or when text is justified.
+    #+BEGIN_SRC conf
+    set trimblanks
+    #+END_SRC
+
+    Save  a file  by  default  in Unix  format.  This  overrides nano's  default
+    behavior of  saving a file in  the format that  it had. (This option  has no
+    effect when you also use =set noconvert=.)
+    #+BEGIN_SRC conf
+    set unix
+    #+END_SRC
+
+*** Included configuration file
+    :PROPERTIES:
+    :CUSTOM_ID: h-491cba80-5fa9-4b75-a9cb-2865ec39440a
+    :END:
+    Nano gives the opportunity to include  some files located elsewhere. This is
+    why I added [[https://github.com/scopatz/nanorc][this repo]] as a submodule of my dotfiles so I can access a lot of
+    them at the same time. Since  the submodule is cloned in =~/.config/nanorc=,
+    we can add only one line to include all of the =.nanorc= files.
+    #+BEGIN_SRC conf
+      include ~/.config/nanorc/*.nanorc
+    #+END_SRC
 
 ** Global gitignore
    :PROPERTIES:
@@ -270,6 +409,13 @@
    #+BEGIN_SRC toml
    wrap_comments = true
    #+END_SRC
+
+** Tmux configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-4f48b912-b67b-4549-a671-802e76221f46
+   :END:
+   You can find  my tmux configuration in [[file:tmux.org][tmux.org]]. It  depends on the submodule
+   [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
 
 ** Xresources
    :PROPERTIES:
@@ -649,13 +795,13 @@
       chromium clisp compton cppcheck cppreference cppreference-devhelp cpupower \
       cronie cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
       dmenu-lpass docker docker-compose doxygen dunst dwarffortress emacs \
-      exfat-utils ffmpegthumbnailer findutils firefox flake8 font-mathematica \
-      fontforge freeglut fzf gcc-libs gdb gimp glibc gnome-disk-utility \
-      gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools graphviz htop i3-gaps \
-      i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop jfsutils jmtpfs \
-      lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
-      mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-      nemo-fileroller nemo-preview neofetch netctl networkmanager \
+      exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
+      font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
+      graphviz htop i3-gaps i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop \
+      jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
+      meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
+      ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
       networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji npm \
       ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
       pcurses pdfpc polybar pulseaudio-bluetooth python-envtpl-git python-pip \
@@ -668,7 +814,7 @@
       ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
       ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
       ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
-      usbutils valgrind vim w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
+      usbutils valgrind w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
       xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit xss-lock yapf
     #+END_SRC
     These are the minimum  I would have in my own installation.  You can edit it

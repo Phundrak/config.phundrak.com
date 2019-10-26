@@ -105,13 +105,13 @@ base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
 chromium clisp compton cppcheck cppreference cppreference-devhelp cpupower \
 cronie cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
 dmenu-lpass docker docker-compose doxygen dunst dwarffortress emacs \
-exfat-utils ffmpegthumbnailer findutils firefox flake8 font-mathematica \
-fontforge freeglut fzf gcc-libs gdb gimp glibc gnome-disk-utility \
-gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools graphviz htop i3-gaps \
-i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop jfsutils jmtpfs \
-lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
-mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-nemo-fileroller nemo-preview neofetch netctl networkmanager \
+exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
+font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
+graphviz htop i3-gaps i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop \
+jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
+meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
+ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
 networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji npm \
 ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
 pcurses pdfpc polybar pulseaudio-bluetooth python-envtpl-git python-pip \
@@ -124,7 +124,7 @@ texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
 ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
 ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
 ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
-usbutils valgrind vim w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
+usbutils valgrind w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
 xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit xss-lock yapf
 
 printf "\n# Installing needed packages ##################################################\n\n"
