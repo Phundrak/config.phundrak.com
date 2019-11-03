@@ -23,7 +23,7 @@ test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
 test -n "$cddrives" && echo "CD" >> $TMPDRIVES
 test -n "$anddrives" && echo "Android" >> $TMPDRIVES
 
-set -g basemount /mnt
+set -g basemount /media
 
 function getmount
 
