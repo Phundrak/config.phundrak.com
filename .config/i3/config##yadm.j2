@@ -4,7 +4,7 @@ set $mod                          Mod4
 set $alt                          Mod1
 
 # Font for window titles
-font                              pango:monospace 8
+font                              DejaVuSans:monospace 8
 
 # Variables
 set $up                           Up
@@ -25,14 +25,15 @@ floating_modifier                 $mod
 ###                            Clients position                              ###
 ################################################################################
 
-assign [class="discord"] 10
 assign [class="Emacs"] 2
 assign [class="Chromium"] 3
+assign [class="firefox"] 3
 assign [class="Nemo"] 4
 assign [class="Godot"] 5
 assign [class="Gimp*"] 6
-assign [class="Steam"] 9
 assign [class="gnome-boxes"] 8
+assign [class="discord"] 10
+assign [class="Steam"] 9
 
 ################################################################################
 ###                                 Shortcuts                                ###
@@ -184,7 +185,7 @@ bindsym $mod+$alt+c               exec speedcrunch
 
 bindsym $mod+F3                   exec arandr
 bindsym $mod+Shift+l              exec dmenu-lpass
-bindsym $mod+Shift+p              exec polybar-launch
+bindsym $mod+Shift+p              exec rofi-pass
 
 # Brightness keyboard shortcuts
 bindsym XF86MonBrightnessUp       exec xbacklight -inc 5
