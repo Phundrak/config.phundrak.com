@@ -21,7 +21,7 @@ set -gx PATH $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
 
 set -gx SUDO_ASKPASS ~/.local/bin/askpass
 
-set -gx EDITOR emacsclient -c -nw
+set -gx EDITOR emacsclient -c
 
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 
@@ -41,8 +41,6 @@ abbr psmem 'ps auxf | sort -nr -k 4'
 abbr psmem10 'ps auxf | sort -nr -k 4 | head -10'
 
 abbr remove 'sudo pacman -Rscnd'
-
-abbr install 'sudo pacman -Sy'
 
 abbr p 'sudo -A pacman'
 

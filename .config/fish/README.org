@@ -1,4 +1,4 @@
-#+TITLE: Phundrak’s dotfiles
+#+TITLE: Phundrak’s fish config
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
 #+EMAIL: phundrak@phundrak.fr
 #+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
@@ -155,11 +155,11 @@
     set -gx SUDO_ASKPASS ~/.local/bin/askpass
   #+END_SRC
 
-  Now, let’s declare our editor of choice,  EmacsClient. Now, we want it to run
-  in the terminal,  since it will most  often be just quick  edits, nothing too
-  heavy, if it is called from the =EDITOR= variable (from Git, for example).
+  Now, let’s declare  our editor of choice, EmacsClient; not  Emacs itself since
+  it will  most often be just  quick edits, nothing  too heavy, if it  is called
+  from the =EDITOR= variable (from Git, for example).
   #+BEGIN_SRC fish
-    set -gx EDITOR emacsclient -c -nw
+    set -gx EDITOR emacsclient -c
   #+END_SRC
 
   Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
@@ -232,11 +232,6 @@
     well as its dependencies no longer needed.
     #+BEGIN_SRC fish
       abbr remove 'sudo pacman -Rscnd'
-    #+END_SRC
-
-    And if I want to install something, I just have to type =install=.
-    #+BEGIN_SRC fish
-      abbr install 'sudo pacman -Sy'
     #+END_SRC
 
     But if I just  want to run =pacman= as sudo, then I  could always just type
