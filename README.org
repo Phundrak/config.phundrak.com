@@ -815,7 +815,7 @@
       ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
       ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
       usbutils valgrind w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
-      xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit xss-lock yapf
+      xdotool xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit xss-lock yapf
     #+END_SRC
     These are the minimum  I would have in my own installation.  You can edit it
     however you want. Let’s install those.
