@@ -1,45 +1,6 @@
-alias wget wget -c $*
-alias update sudo pacman -Syu
-alias untar tar -xvzf $*
-alias search pacman -Ss $*
-alias rmf rm --preserve-root -If $*
-alias rmdf rm --preserve-root -Irf $*
-alias rmd rm --preserve-root -Ir $*
-alias rm rm -I $*
-alias remove sudo pacman -Rscnd $*
-alias q exit
-alias purge sudo pacman -Scc
-alias psmem10 ps auxf | sort -nr -k 4 | head -10
-alias psmem ps auxf | sort -nr -k 4
-alias pscpu10 ps auxf | sort -nr -k 3 | head -10
-alias pscpu ps auxf | sort -nr -k 3
-alias p sudo pacman $*
-alias optimize sudo pacman-optimize && sync
-alias nmcli nmcli -p -c auto $*
-alias mp3 youtube-dl -x --audio-format flac --audio-quality 0 $*
-alias meminfo free -m -l -t
-alias lns ln -si $*
-alias ll ls -alh $*
-alias la ls -A --color $*
-alias install sudo pacman -Sy $*
-alias grep grep --color=auto $*
-alias gpumeminfo grep -i --color memory /var/log/Xorg.0.log
-alias gcc gcc -Wall -std=c11 $*
-alias g++ g++ -Wall -std=c++17 $*
-alias flac youtube-dl -x --audio-format flac --audio-quality 0
-alias exti exit
-alias exi exit
-alias du du -ch
-alias diskspace sudo df -h | grep -E "sd|lv|Size"
-alias df df -H $*
-alias crelease cmake -DCMAKE_BUILD_TYPE=Release $*
-alias cpuinfo lscpu
-alias cp cp -i $*
-alias cdebug cmake -DCMAKE_BUILD_TYPE=Debug $*
-alias aurupdate yay -Syua
 alias S sudo systemctl $*
-alias lsl ls -aHl $*
-alias mkdir mkdir -p $*
+alias aurupdate yay -Syua
+alias cdebug cmake -DCMAKE_BUILD_TYPE=Debug $*
 alias chgrp chgrp --preserve-root $*
 alias chmod chmod --preserve-root $*
 alias chown chown --preserve-root $*
@@ -47,3 +8,41 @@ alias clang clang -Wall $*
 alias clang++ clang++ -Wall $*
 alias clean clear
 alias compress tar -czf $*
+alias cpuinfo lscpu
+alias crelease cmake -DCMAKE_BUILD_TYPE=Release $*
+alias df df -H $*
+alias diskspace sudo df -h | grep -E "sd|lv|Size"
+alias du du -ch
+alias exi exit
+alias exti exit
+alias flac youtube-dl -x --audio-format flac --audio-quality 0
+alias g++ g++ -Wall -std=c++17 $*
+alias gcc gcc -Wall -std=c11 $*
+alias gpumeminfo grep -i --color memory /var/log/Xorg.0.log
+alias grep grep --color=auto $*
+alias install sudo pacman -Sy $*
+alias la ls -A --color $*
+alias ll ls -alh $*
+alias lns ln -si $*
+alias lsl ls -aHl $*
+alias meminfo free -m -l -t
+alias mkdir mkdir -p $*
+alias mp3 youtube-dl -x --audio-format flac --audio-quality 0 $*
+alias nmcli nmcli -p -c auto $*
+alias optimize sudo pacman-optimize && sync
+alias p sudo pacman $*
+alias pscpu ps auxf | sort -nr -k 3
+alias pscpu10 ps auxf | sort -nr -k 3 | head -10
+alias psmem ps auxf | sort -nr -k 4
+alias psmem10 ps auxf | sort -nr -k 4 | head -10
+alias purge sudo pacman -Scc
+alias q exit
+alias remove sudo pacman -Rscnd $*
+alias rm rm -I $*
+alias rmd rm --preserve-root -Ir $*
+alias rmdf rm --preserve-root -Irf $*
+alias rmf rm --preserve-root -If $*
+alias search pacman -Ss $*
+alias untar tar -xvzf $*
+alias update sudo pacman -Syu
+alias wget wget -c $*
