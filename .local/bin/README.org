@@ -52,12 +52,13 @@
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
-  - [[#get-the-drive-to-mount][Get the drive to mount]]
+  - [[#get-the-mount-point][Get the mount point]]
   - [[#mount-a-usb-drive-hard-drive-or-partition][Mount a USB drive, hard drive or partition]]
   - [[#mount-an-android-device][Mount an Android device]]
   - [[#mount-a-cd-drive][Mount a CD drive]]
   - [[#ask-what-type-of-drive-we-want-to-mount][Ask what type of drive we want to mount]]
   - [[#launch-the-mounting-functions][Launch the mounting functions]]
+- [[#rofi-pass][Rofi-pass]]
 - [[#rofi-umount][Rofi-umount]]
   - [[#get-the-unmountable-drives][Get the unmountable drives]]
   - [[#unmount-disk-partitions][Unmount disk partitions]]
@@ -83,7 +84,7 @@
 
   Please do not forget to run the following before tangling files from this file
   to make sure the tangled files will be executables.
-  #+begin_src emacs-lisp :exports code
+  #+begin_src emacs-lisp :exports code :results silent
     (defun phundrak/make-tangled-files-executable ()
       (set-file-modes (buffer-file-name) #o755))
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
@@ -422,12 +423,12 @@
    #+END_SRC
 
    Now, we want to  declare where to look for mount  directories. For now, we’ll
-   only look in =/mnt=, but you can add more if you wish.
+   only look in =/media=, but you can add more if you wish.
    #+BEGIN_SRC fish
-     set -g basemount /mnt
+     set -g basemount /media
    #+END_SRC
 
-** Get the drive to mount
+** Get the mount point
    :PROPERTIES:
    :CUSTOM_ID: h-a17825bd-96e2-4c90-99ef-b0f2895cffb6
    :END:
@@ -742,6 +743,47 @@
    #+END_SRC
 
    And with that, this is the end of our script!
+
+* Rofi-pass
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle rofi-pass :exports code
+  :CUSTOM_ID: h-a52876ed-351b-400a-b250-d93aab27e0c8
+  :END:
+  =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
+  password manager with  rofi as its interface, and then  stores the password in
+  the clipboard. It is a fish script, so let’s declare it as one.
+  #+BEGIN_SRC fish
+  #!/usr/bin/env fish
+  #+END_SRC
+
+  Now, let’s get the list of the passwords that exist in our =pass= repository.
+  #+BEGIN_SRC fish
+    set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
+    string replace -r ".*.password-store/" "" | \
+    string replace -r ".gpg" "" | sort)
+  #+END_SRC
+
+  Let the user choose which password they wish to select.
+  #+BEGIN_SRC fish
+    set password (for elem in $passwords
+        echo $elem
+    end | rofi -dmenu -i -p "Select your password")
+  #+END_SRC
+
+  Let’s  verify we  actually selected  a  password and  not just  exited. If  no
+  password was selected, let’s simply exit the script.
+  #+BEGIN_SRC fish
+    if test -z $password
+        exit
+    end
+  #+END_SRC
+
+  Finally, let’s copy the password for 45 seconds in the clipboard.
+  #+BEGIN_SRC fish
+    pass show -c $password 2> /dev/null
+  #+END_SRC
+
+  And we’re done!
 
 * Rofi-umount
   :PROPERTIES:

@@ -1,0 +1,15 @@
+#!/usr/bin/env fish
+
+set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
+string replace -r ".*.password-store/" "" | \
+string replace -r ".gpg" "" | sort)
+
+set password (for elem in $passwords
+    echo $elem
+end | rofi -dmenu -i -p "Select your password")
+
+if test -z $password
+    exit
+end
+
+pass show -c $password 2> /dev/null
