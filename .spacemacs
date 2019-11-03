@@ -108,6 +108,7 @@ This function should only modify configuration layer settings."
           org-projectile-file "TODOs.org"
           org-download-image-dir "~/Pictures/org"
           org-return-follows-link t)
+     pass
      pdf
      (plantuml :variables
                plantuml-jar-path "/opt/plantuml/plantuml.jar"
