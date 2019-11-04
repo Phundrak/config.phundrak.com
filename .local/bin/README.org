@@ -756,6 +756,25 @@
   #!/usr/bin/env fish
   #+END_SRC
 
+  Let’s  parse all  the  arguments passed  to  the  script. If  one  of them  is
+  =--type=, =-t= or =type=, the script will  attempt to type the password to the
+  text area already selected without pasting the password to the clipboard.
+  #+BEGIN_SRC fish
+    for arg in $argv
+        switch $arg
+            case '--type'
+                set -g TYPE "yes"
+            case '-t'
+                set -g TYPE "yes"
+            case 'type'
+                set -g TYPE "yes"
+            case '*'
+                printf 'Unknown argument: %s\n.' $arg
+                exit 1
+        end
+    end
+  #+END_SRC
+
   Now, let’s get the list of the passwords that exist in our =pass= repository.
   #+BEGIN_SRC fish
     set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
@@ -778,12 +797,39 @@
     end
   #+END_SRC
 
-  Finally, let’s copy the password for 45 seconds in the clipboard.
-  #+BEGIN_SRC fish
+  Depending  on the  arguments  passed  earlier, we  might  want some  different
+  behavior.
+  #+BEGIN_SRC fish :noweb yes
+    if test $TYPE = "yes"
+        <<rofi-pass-type>>
+    else
+        <<rofi-pass-copy>>
+    end
+  #+END_SRC
+
+  The default behavior is to copy the  password to the clipboard for 45 seconds,
+  so let’s do that.
+  #+NAME: rofi-pass-copy
+  #+BEGIN_SRC fish :noweb yes :tangle no
     pass show -c $password 2> /dev/null
   #+END_SRC
 
-  And we’re done!
+  Else, if we passed  =--type=, =-t= or =type= as an argument  of the script, we
+  want it to attempt to type our  password in the currently selected text input.
+  Let’s do that.
+  #+NAME: rofi-pass-type
+  #+BEGIN_SRC fish :noweb yes :tangle no
+    set -l IFS
+    <<rofi-pass-type-get-password>>
+    printf %s $pass | xvkbd -file -
+  #+END_SRC
+
+  To correctly  get the password  from =pass=, we need  to parse the  output and
+  only get the first line, hence the following command.
+  #+NAME: rofi-pass-type-get-password
+  #+BEGIN_SRC fish :tangle no
+  set pass (pass show $password | string split -n \n)[1]
+  #+END_SRC
 
 * Rofi-umount
   :PROPERTIES:

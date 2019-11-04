@@ -1,5 +1,19 @@
 #!/usr/bin/env fish
 
+for arg in $argv
+    switch $arg
+        case '--type'
+            set -g TYPE "yes"
+        case '-t'
+            set -g TYPE "yes"
+        case 'type'
+            set -g TYPE "yes"
+        case '*'
+            printf 'Unknown argument: %s\n.' $arg
+            exit 1
+    end
+end
+
 set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
 string replace -r ".*.password-store/" "" | \
 string replace -r ".gpg" "" | sort)
@@ -12,4 +26,10 @@ if test -z $password
     exit
 end
 
-pass show -c $password 2> /dev/null
+if test $TYPE = "yes"
+    set -l IFS
+    set pass (pass show $password | string split -n \n)[1]
+    printf %s $pass | xvkbd -file -
+else
+    pass show -c $password 2> /dev/null
+end
