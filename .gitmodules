@@ -1,21 +1,18 @@
-[submodule ".tmux"]
-	path = .tmux
-	url = https://github.com/gpakosz/.tmux.git
 [submodule "tmux"]
 	path = tmux
 	url = https://github.com/gpakosz/.tmux.git
-[submodule "spacemacs-layers/conlanging"]
-	path = .emacs.d/private/conlanging
-	url = https://labs.phundrak.fr/phundrak/conlang-layer.git
-[submodule "spacemacs-layers/w3m"]
-	path = .emacs.d/private/w3m
-	url = https://github.com/venmos/w3m-layer.git
 [submodule "spacemacs"]
 	path = .emacs.d
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "conlanging"]
+	path = .emacs.d/private/conlanging
+	url = git@labs.phundrak.com:phundrak/conlang-layer.git
+[submodule "w3m"]
+	path = .emacs.d/private/w3m
+	url = https://github.com/venmos/w3m-layer.git
 [submodule "dired-phundrak"]
 	path = .emacs.d/private/dired-phundrak
-	url = https://labs.phundrak.fr/phundrak/dired-phundrak.git
+	url = git@labs.phundrak.com:phundrak/dired-phundrak.git
 [submodule "nanorc"]
 	path = .config/nanorc
 	url = https://github.com/scopatz/nanorc.git
