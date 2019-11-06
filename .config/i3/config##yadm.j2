@@ -11,7 +11,7 @@ set $up                           Up
 set $down                         Down
 set $left                         Left
 set $right                        Right
-set $exiti3                       "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
+set $exiti3                       "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'sudo -A systemctl restart ly'"
 set $lockscreen                   "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
 set $rofiexec                     "rofi -combi-modi window,drun -show combi -mohh combi -m -1 -show-icons"
 set $gnus                         "emacsclient --create-frame --eval '(gnus)' -a nvim -n"
@@ -88,6 +88,9 @@ bindsym $mod+space                focus mode_toggle
 # center floating window
 bindsym Ctrl+$mod+c               move position center
 
+# enable sticky window
+bindsym Ctrl+$mod+s               sticky toggle
+
 # Scratchpad
 bindsym $mod+Shift+s              move scratchpad
 bindsym $mod+s                    scratchpad show
@@ -153,10 +156,10 @@ bindsym $mod+$alt+Ctrl+k          exec setxkbmap us
 # bindings for MS Natural Ergonomic Keyboard 4000 ##############################
 bindsym XF86Launch5               exec $ec
 bindsym $mod+e                    exec $ec
-bindsym XF86Launch6               exec chromium
-bindsym $mod+c                    exec chromium
-bindsym XF86HomePage              exec "chromium https://labs.phundrak.fr"
-bindsym XF86Search                exec "chromium https://duckduckgo.com/"
+bindsym XF86Launch6               exec firefox
+bindsym $mod+c                    exec firefox
+bindsym XF86HomePage              exec "firefox https://labs.phundrak.fr"
+bindsym XF86Search                exec "firefox https://duckduckgo.com/"
 bindsym XF86Launch9               exec nemo
 bindsym $mod+n                    exec nemo
 bindsym XF86Launch8               exec $gnus
@@ -186,6 +189,7 @@ bindsym $mod+$alt+c               exec speedcrunch
 bindsym $mod+F3                   exec arandr
 bindsym $mod+Shift+l              exec dmenu-lpass
 bindsym $mod+Shift+p              exec rofi-pass
+bindsym $mod+Ctrl+Shift+p         exec rofi-pass --type
 
 # Brightness keyboard shortcuts
 bindsym XF86MonBrightnessUp       exec xbacklight -inc 5
