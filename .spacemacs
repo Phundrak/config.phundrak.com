@@ -167,6 +167,7 @@ This function should only modify configuration layer settings."
                                       eshell-git-prompt
                                       fireplace
                                       kaolin-themes
+                                      magit-gitflow
                                       meson-mode
                                       modern-cpp-font-lock
                                       multiple-cursors
@@ -262,7 +263,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'hybrid
 
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
@@ -656,6 +657,11 @@ dump."
           markdown-mode-hook))
   (global-aggressive-indent-mode 1)
 
+  (defun phundrak/fill-paragraph()
+    (interactive)
+    (let* ((current-prefix-arg 4))
+      (call-interactively 'fill-paragraph)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;               Nov-mode              ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -731,6 +737,7 @@ dump."
   (spacemacs/declare-prefix "or" "external command")
   (spacemacs/declare-prefix "ot" "toggle")
   (spacemacs/declare-prefix "ow" "writeroom")
+  (spacemacs/declare-prefix "ox" "text")
   (spacemacs/set-leader-keys
     "oac" 'calc
     "oaC" 'calendar
@@ -750,6 +757,8 @@ dump."
     "ofr" (lambda () (interactive) (find-file "~/README.org"))
     "ofo" 'find-file-at-point
     "ogd" 'turn-on-gnus-dired-mode
+    "ogd" 'gnus-summary-delete-article
+    "ogr" 'gnus-summary-insert-new-articles
     "oii" (lambda () (interactive) (insert "​"))
     "ome" 'mc/edit-lines
     "omn" 'mc/mark-next-like-this
@@ -767,7 +776,8 @@ dump."
     "os" 'prettify-symbols-mode
     "oti" 'toggle-input-method
     "otI" 'set-input-method
-    "owd" 'writeroom-decrease-width)
+    "owd" 'writeroom-decrease-width
+    "oxf" 'phundrak/fill-paragraph)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 gnus                ;
@@ -776,7 +786,7 @@ dump."
   ;; get email, store in nnml
   (setq gnus-secondary-select-methods '((nnimap "1and1"
                                                 (nnimap-address "imap.ionos.fr")
-                                                (nnimap-server-port 143)
+                                                (nnimap-server-port 993)
                                                 (nnimap-stream ssl)))
         ;; send email via 1and1
         message-send-mail-function 'smtpmail-send-it
