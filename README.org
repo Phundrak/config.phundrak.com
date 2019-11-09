@@ -1037,6 +1037,12 @@
        cargo install rustfmt racer
      #+END_SRC
 
+     We will also need some components for development purposes:
+     #+BEGIN_SRC fish
+       rustup component add src
+       rustup component add rls
+     #+END_SRC
+
 *** Clean the =pacman= and =yay= cache
     :PROPERTIES:
     :CUSTOM_ID: h-fa5307ec-065b-4d06-9d47-05ccde0da8ac
