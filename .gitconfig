@@ -1,6 +1,6 @@
 [user]
-	email = phundrak@phundrak.fr
-	name = Phuntsok Drak-pa
+	email = lucien@phundrak.com
+	name = Lucien Cartier-Tilet
 	signingkey = BD7789E705CB8DCA
 [core]
 	# editor = vim
@@ -8,7 +8,7 @@
 	excludesfile = /home/phundrak/dotfiles/.gitignore_global
 	autocrlf = false
 [web]
-	browser = chromium
+	browser = firefox
 [color]
 	ui = auto
 [alias]
@@ -83,10 +83,6 @@
 [merge]
 	tool = ediff
 [github]
-	user = phundrak
-[init]
-	templatedir = /home/phundrak/.git-templates
-[gitlab "labs.phundrak.fr/api/v4"]
 	user = phundrak
 [commit]
 	gpgsign = true
