@@ -158,14 +158,12 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(atomic-chrome
-																			cmake-mode
-                                      dionysos
+                                      bbdb
+                                      dianyou
                                       doom-themes
                                       edit-indirect
                                       elcord
-                                      evil
                                       eshell-git-prompt
-                                      fireplace
                                       kaolin-themes
                                       magit-gitflow
                                       meson-mode
@@ -263,7 +261,10 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'hybrid
+   dotspacemacs-editing-style '(hybrid :variables
+                                       hybrid-mode-enable-evilified-state t
+                                       hybrid-mode-enable-hjkl-bindings nil
+                                       hybrid-mode-default-state 'normal)
 
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
@@ -622,6 +623,7 @@ dump."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf"
+        evil-want-C-u-scroll nil
         asm-comment-char ?\#
         twittering-use-master-password t
         edit-server-default-major-mode 'org-mode
@@ -722,7 +724,6 @@ dump."
   (spacemacs/declare-prefix "ofi" "i3 config")
   (spacemacs/declare-prefix "ofp" "polybar config")
   (spacemacs/declare-prefix "ofb" "yadm README")
-  (spacemacs/declare-prefix "og" "gnus")
   (spacemacs/declare-prefix "oi" "insert")
   (spacemacs/declare-prefix "oii" "invisible space")
   (spacemacs/declare-prefix "om" "multiple-cursors")
@@ -739,73 +740,55 @@ dump."
   (spacemacs/declare-prefix "ow" "writeroom")
   (spacemacs/declare-prefix "ox" "text")
   (spacemacs/set-leader-keys
-    "oac" 'calc
-    "oaC" 'calendar
-    "oae" 'eww
-    "oaf" 'fireplace
-    "oaw" 'wttrin
-    "ob" 'fancy-battery-mode
-    "occ" 'outorg-copy-edits-and-exit
-    "oce" 'outorg-edit-as-org
-    "oco" 'outline-minor-mode
-    "od" 'elcord-mode
-    "oF" 'flycheck-mode
-    "ofb" (lambda () (interactive) (find-file "~/.local/bin/README.org"))
-    "off" (lambda () (interactive) (find-file "~/.config/fish/README.org"))
-    "ofi" (lambda () (interactive) (find-file "~/.config/i3/config##yadm.j2"))
-    "ofp" (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
-    "ofr" (lambda () (interactive) (find-file "~/README.org"))
-    "ofo" 'find-file-at-point
-    "ogd" 'turn-on-gnus-dired-mode
-    "ogd" 'gnus-summary-delete-article
-    "ogr" 'gnus-summary-insert-new-articles
-    "oii" (lambda () (interactive) (insert "​"))
-    "ome" 'mc/edit-lines
-    "omn" 'mc/mark-next-like-this
-    "omp" 'mc/mark-previous-like-this
-    "oma" 'mc/mark-all-like-this
-    "ooi" 'eos/org-add-ids-to-headlines-in-file
-    "oop" (lambda () (interactive) (find-file "~/org/private.org"))
-    "oos" (lambda () (interactive) (find-file "~/org/school.org"))
+    "oac"  'calc
+    "oaC"  'calendar
+    "oae"  'eww
+    "oaw"  'wttrin
+    "ob"   'fancy-battery-mode
+    "occ"  'outorg-copy-edits-and-exit
+    "oce"  'outorg-edit-as-org
+    "oco"  'outline-minor-mode
+    "od"   'elcord-mode
+    "oF"   'flycheck-mode
+    "ofb"  (lambda () (interactive) (find-file "~/.local/bin/README.org"))
+    "off"  (lambda () (interactive) (find-file "~/.config/fish/README.org"))
+    "ofi"  (lambda () (interactive) (find-file "~/.config/i3/config##yadm.j2"))
+    "ofp"  (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
+    "ofr"  (lambda () (interactive) (find-file "~/README.org"))
+    "ofo"  'find-file-at-point
+    "oii"  (lambda () (interactive) (insert "​"))
+    "ome"  'mc/edit-lines
+    "omn"  'mc/mark-next-like-this
+    "omp"  'mc/mark-previous-like-this
+    "oma"  'mc/mark-all-like-this
+    "ooi"  'eos/org-add-ids-to-headlines-in-file
+    "oop"  (lambda () (interactive) (find-file "~/org/private.org"))
+    "oos"  (lambda () (interactive) (find-file "~/org/school.org"))
     "oott" 'org-table-toggle-column-width
     "oote" 'org-table-expand
     "oots" 'org-table-shrink
-    "oow" 'org-pomodoro
-    "owi" 'writeroom-increase-width
-    "or" 'helm-run-external-command
-    "os" 'prettify-symbols-mode
-    "oti" 'toggle-input-method
-    "otI" 'set-input-method
-    "owd" 'writeroom-decrease-width
-    "oxf" 'phundrak/fill-paragraph)
+    "oow"  'org-pomodoro
+    "owi"  'writeroom-increase-width
+    "or"   'helm-run-external-command
+    "os"   'prettify-symbols-mode
+    "oti"  'toggle-input-method
+    "otI"  'set-input-method
+    "owd"  'writeroom-decrease-width
+    "oxf"  'phundrak/fill-paragraph)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 gnus                ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;; get email, store in nnml
-  (setq gnus-secondary-select-methods '((nnimap "1and1"
-                                                (nnimap-address "imap.ionos.fr")
-                                                (nnimap-server-port 993)
-                                                (nnimap-stream ssl)))
-        ;; send email via 1and1
-        message-send-mail-function 'smtpmail-send-it
-        smtpmail-smtp-server "smtp.ionos.fr"
-        smtpmail-stream-type 'startls
-        smtpmail-smtp-service 587
-        ;; archive outgoing emails in Sent folder on imap.1and1.fr
-        gnus-message-archive-method '(nnimap "imap.ionos.fr")
-        gnus-message-archive-group "Objets envoyés"
-        ;; store email in ~/Mails directory
-        nnml-directory "~/Mails"
-        message-directory "~/Mails"
-        gnus-fetch-old-headers 'some
-        mm-discouraged-alternatives '("text/html" "text/richtext")
-        mm-text-html-renderer 'w3m
-        gnus-use-cache t)
-
-  (gnus-add-configuration
-   '(article (horizontal 1.0 (summary .4 point) (article 1.0))))
+  (spacemacs/declare-prefix "og" "gnus")
+  (spacemacs/set-leader-keys
+    "ogD" 'turn-on-gnus-dired-mode
+    "ogd" 'gnus-summary-delete-article
+    "ogf" 'gnus-summary-mail-forward
+    "ogo" 'my-gnus-group-list-subscribed-groups
+    "ogr" 'gnus-summary-insert-new-articles
+    "ogs" 'message-send-and-exit)
+  (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                Dired                ;
@@ -1202,7 +1185,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-export-headline-levels 4)
    '(package-selected-packages
      (quote
-      (helm-gtags ggtags counsel-gtags counsel swiper ivy company-php ac-php-core xcscope xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+      (dianyou bbdb helm-gtags ggtags counsel-gtags counsel swiper ivy company-php ac-php-core xcscope xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
    '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
    '(safe-local-variable-values
      (quote
