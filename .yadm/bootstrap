@@ -127,9 +127,9 @@ texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
 ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
 ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
 ttf-tibetan-machine ttf-twemoji-color ttf-unifont typescript unicode \
-unicode-emoji unrar usbutils valgrind w3m wget x11-ssh-askpass xclip \
-xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit \
-xss-lock xvkbd yapf
+unicode-emoji unrar usbutils valgrind vscode-css-languageserver-bin w3m wget \
+x11-ssh-askpass xclip xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs \
+xorg-server xorg-xinit xss-lock xvkbd yapf \
 
 printf "\n# Installing needed packages ##################################################\n\n"
 yay -S --needed $PACKAGES
