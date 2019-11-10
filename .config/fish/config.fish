@@ -17,7 +17,7 @@ end
 
 function fish_greeting; end
 
-set -gx PATH $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
+set -gx PATH $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
 
 set -gx SUDO_ASKPASS ~/.local/bin/askpass
 

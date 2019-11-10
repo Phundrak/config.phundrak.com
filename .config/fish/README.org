@@ -146,7 +146,7 @@
   binaries, Go’s binaries  and my own executables. And of  course, don’t forget
   to add the already existing =PATH=.
   #+BEGIN_SRC fish
-    set -gx PATH $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
+    set -gx PATH $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
   #+END_SRC
 
   Sometimes, software  will rely on =SUDO_ASKPASS=  to get a GUI  from which it
