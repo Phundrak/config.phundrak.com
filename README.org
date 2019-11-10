@@ -91,6 +91,9 @@
     - [[#install-rust][Install Rust]]
       - [[#install-the-toolchains][Install the toolchains]]
       - [[#install-some-utilities][Install some utilities]]
+    - [[#install-some-python-packages][Install some python packages]]
+    - [[#install-go-packages][Install go packages]]
+    - [[#set-up-chicken-scheme-interpretercompiler][Set up Chicken (Scheme interpreter/compiler)]]
     - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
 - [[#licence][Licence]]
 
@@ -792,30 +795,34 @@
       set PACKAGES \
       acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
       base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
-      chromium clisp compton cppcheck cppreference cppreference-devhelp cpupower \
-      cronie cryptsetup device-mapper diffutils discord-canary discount ditaa dmenu \
-      dmenu-lpass docker docker-compose doxygen dunst dwarffortress emacs \
-      exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
+      chiken chromium clisp compton cppcheck cppreference cppreference-devhelp \
+      cpupower cronie cryptsetup device-mapper diffutils discord-canary discount \
+      ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress \
+      emacs exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
       font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
       gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-      graphviz htop i3-gaps i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop \
-      jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
-      meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
-      ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
-      networkmanager-openvpn nm-connection-editor nnn nomacs noto-fonts-emoji npm \
-      ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
-      pcurses pdfpc polybar pulseaudio-bluetooth python-envtpl-git python-pip \
+      golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
+      inetutils j4-dmenu-desktop javascript-typescript-langserver jfsutils jmtpfs \
+      lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
+      mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+      nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
+      networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs \
+      noto-fonts-emoji npm ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin \
+      pavucontrol pciutils pcurses pdfpc polybar prettier pulseaudio-bluetooth \
+      python-autoflake python-envtpl-git python-epc python-importmagic \
+      python-language-server python-nose python-pip python-ptvsd python-pytest \
       python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
-      rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
+      -rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
       speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
       texlive-langchinese texlive-langcyrillic texlive-langgreek \
       texlive-langjapanese texlive-langkorean texlive-latexextra \
       texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
       ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
       ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
-      ttf-tibetan-machine ttf-twemoji-color ttf-unifont unicode unicode-emoji unrar \
-      usbutils valgrind w3m wget x11-ssh-askpass xclip xdg-user-dirs-gtk \
-      xdotool xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit xss-lock yapf
+      ttf-tibetan-machine ttf-twemoji-color ttf-unifont typescript unicode \
+      unicode-emoji unrar usbutils valgrind w3m wget x11-ssh-askpass xclip \
+      xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs xorg-server xorg-xinit \
+      xss-lock xvkbd yapf
     #+END_SRC
     These are the minimum  I would have in my own installation.  You can edit it
     however you want. Let’s install those.
@@ -1042,6 +1049,56 @@
        rustup component add src
        rustup component add rls
      #+END_SRC
+
+*** Install some python packages
+    :PROPERTIES:
+    :CUSTOM_ID: h-8155ae1a-0be1-489f-be13-9222f7686fb2
+    :END:
+    Some  packages will  be needed  from pip  in order  to get  our Emacs  setup
+    correctly working. Let’s install them locally for our user:
+    #+BEGIN_SRC fish
+      pip install --user pyls-isort pyls-mypy
+    #+END_SRC
+
+*** Install go packages
+    :PROPERTIES:
+    :CUSTOM_ID: h-8c6e2311-eb84-4bf4-8e0b-948f89bc9664
+    :END:
+    For go development from Emacs, the Spacemacs go layer requires some packages
+    to be installed.
+    #+BEGIN_SRC fish
+      go get -v golang.org/x/tools/gopls@latest
+      go get -u -v golang.org/x/tools/cmd/godoc
+      go get -u -v golang.org/x/tools/cmd/goimports
+      go get -u -v golang.org/x/tools/cmd/gorename
+      go get -u -v golang.org/x/tools/cmd/guru
+      go get -u -v github.com/cweill/gotests/...
+      go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
+      go get -u -v github.com/fatih/gomodifytags
+      go get -u -v github.com/godoctor/godoctor
+      go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint
+      go get -u -v github.com/haya14busa/gopkgs/cmd/gopkgs
+      go get -u -v github.com/josharian/impl
+      go get -u -v github.com/mdempsky/gocode
+      go get -u -v github.com/rogpeppe/godef
+      go get -u -v github.com/zmb3/gogetdoc
+    #+END_SRC
+
+*** Set up Chicken (Scheme interpreter/compiler)
+    :PROPERTIES:
+    :CUSTOM_ID: h-10ffb0c0-8028-4e9c-842e-9e7d2c165c5b
+    :END:
+    Chicken needs to be set up before being used. First, we need to install its
+    documentation.
+    #+BEGIN_SRC fish
+      chicken-install -s apropos chicken-doc
+    #+END_SRC
+
+    Then, we’ll complete the documentation like so:
+    #+BEGIN_SRC fish
+      cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
+      curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+    #+END_SRC
 
 *** Clean the =pacman= and =yay= cache
     :PROPERTIES:

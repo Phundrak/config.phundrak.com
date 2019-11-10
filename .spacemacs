@@ -51,14 +51,20 @@ This function should only modify configuration layer settings."
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-adopt-subprojects t
-            c-c++-enable-clang-support t
             c-c++-enable-google-style t
-            c-c++-enable-c++11 t)
+            c-c++-enable-c++11 t
+            c-c++-backend 'lsp-ccls
+            c-c++-lsp-executable "/usr/bin/ccls"
+            c-c++-lsp-sem-highlight-method 'overlay
+            c-c++-lsp-sem-highlight-rainbow t
+            c-c++-adopt-subprojects t
+            c++-enable-organize-includes-on-save t)
      (cmake :variables
             cmake-enable-cmake-ide-support t)
      conlanging
      csv
      colors
+     dart
      dired-phundrak
      django
      docker
@@ -69,21 +75,29 @@ This function should only modify configuration layer settings."
      github
 		 graphviz
      (go :variables
-				 go-use-gometalinter t
-				 go-tab-width 2)
+         go-backend 'lsp
+				 go-tab-width 2
+         go-use-golangci-lint t)
      gnus
      gpu
      (helm :variables
            helm-no-header t
            helm-use-fuzzy 'source)
      (html :variables
-           web-fmt-tool 'web-beautify)
+           web-fmt-tool 'web-beautify
+           css-enable-lsp t
+           less-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      imenu-list
      (javascript :variables
-                 javascript-backend 'tern
-                 javascript-fmt-tool 'web-beautify)
+                 javascript-backend 'lsp
+                 javascript-lsp-linter nil
+                 javascript-fmt-tool 'web-beautify
+                 javascript-repl 'skewer
+                 node-add-modules-path t)
      (json :variables
            json-fmt-tool 'web-beautify)
      (latex :variables
@@ -91,6 +105,7 @@ This function should only modify configuration layer settings."
             latex-enable-auto-fill t
             latex-enable-folding t
             latex-enable-magic t)
+     lsp
      (markdown :variables
 							 markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c"
@@ -110,25 +125,25 @@ This function should only modify configuration layer settings."
           org-return-follows-link t)
      pass
      pdf
-     (plantuml :variables
-               plantuml-jar-path "/opt/plantuml/plantuml.jar"
-               org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
      prettier
      prolog
      (python :variables
-             python-backend 'anaconda
+             python-backend 'lsp
              python-sort-imports-on-save t
              python-fill-column 80
-             python-enable-yapf-format-on-save t)
+             python-test-runner '(pytest nose)
+             python-formatter 'lsp)
      (restclient :variables
                  restclient-use-org t)
-     rust
-     scheme
+     (rust :variables rust-backend 'lsp)
+     (scheme :variables
+             geiser-chicken-binary "chicken-csi")
      semantic
      (shell :variables
             shell-default-height 40
             shell-default-position 'right
-            shell-default-shell 'eshell)
+            shell-default-shell 'eshell
+            shell-default-full-span nil)
      shell-scripts
      selectric
      semantic
@@ -148,7 +163,6 @@ This function should only modify configuration layer settings."
      twitter
      unicode-fonts
      w3m
-     web-beautify
      xkcd
      web-beautify
      yaml)
@@ -164,6 +178,7 @@ This function should only modify configuration layer settings."
                                       edit-indirect
                                       elcord
                                       eshell-git-prompt
+                                      flycheck-golangci-lint
                                       kaolin-themes
                                       magit-gitflow
                                       meson-mode
