@@ -47,6 +47,7 @@
 - [[#backup][Backup]]
 - [[#cppnew][Cppnew]]
 - [[#cnew][Cnew]]
+- [[#dart-language-server][Dart Language Server]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
 - [[#polybar-launch][Polybar-launch]]
@@ -273,6 +274,21 @@
   #+END_SRC
 
   And we’re done!
+
+* Dart Language Server
+  :PROPERTIES:
+  :CUSTOM_ID: h-771896e9-ab96-4158-af0b-1fcbef9ab969
+  :HEADER-ARGS: :tangle dart_language_server :exports code
+  :END:
+  Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
+  [[https://github.com/natebosch/dart_language_server][=dart_language_server=]]  is obsolete.  As  recommended by  the  repo owner,  we
+  should launch instead the following code:
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
+  #+END_SRC
+  So, instead of  using the obsolete executable, instead we  will be calling the
+  analysis server as requested.
 
 * Dmenu
   :PROPERTIES:
