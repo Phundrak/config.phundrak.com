@@ -1,6 +1,6 @@
 #+TITLE: Phundrak’s dotfiles
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: phundrak@phundrak.fr
+#+EMAIL: phundrak@phundrak.com
 #+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
 
 # ### LaTeX ####################################################################
@@ -24,18 +24,18 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Installation instructions for Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
 #+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/ toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -74,7 +74,6 @@
       - [[#get-envtpl][Get =envtpl=]]
       - [[#update-our-submodules][Update our submodules]]
       - [[#generate-our-alt-files][Generate our alt files]]
-      - [[#symlink-some-system-config-files][Symlink some system config files]]
     - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
     - [[#enable-some-of-our-services][Enable some of our services]]
       - [[#docker][Docker]]
@@ -82,6 +81,7 @@
       - [[#ssh-server][SSH server]]
       - [[#ly][Ly]]
       - [[#acpilight][Acpilight]]
+    - [[#symlink-some-system-config-files][Symlink some system config files]]
     - [[#set-up-our-fish-shell][Set up our fish shell]]
       - [[#install-fisher][Install =fisher=]]
       - [[#install-our-extensions][Install our extensions]]
@@ -167,8 +167,8 @@
    This file gets inserted automatically at the end of my emails.
    #+BEGIN_SRC text
      Lucien “Phundrak” Cartier-Tilet
-     https://phundrak.fr (Français)
-     https://en.phundrak.fr (English)
+     https://phundrak.com (Français)
+     https://en.phundrak.com (English)
 
      Pensez à notre planète, avez-vous vraiment besoin d’imprimer ce courriel ?
      Please mind our planet, do you really need to print this email?
@@ -448,7 +448,7 @@
   a non-exhaustive list of software needed by these configuration files:
   - [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
     - [[http://spacemacs.org][Spacemacs]] (develop branch)
-    - My [[https://labs.phundrak.fr/phundrak/conlang-layer][conlanging layer]]
+    - My [[https://labs.phundrak.com/phundrak/conlang-layer][conlanging layer]]
     - [[https://github.com/venmos/w3m-layer][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]]
   - The [[https://fishshell.com/][Fish shell]], using [[https://github.com/jorgebucaran/fisher][fisher]]
   - [[https://lukesmith.xyz/][Luke Smith]]’s [[https://github.com/LukeSmithxyz/st][fork]] of [[https://st.suckless.org/][st]]
@@ -545,7 +545,7 @@
 ** Execute bootstrap
    :PROPERTIES:
    :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
-   :HEADER-ARGS: :tangle ~/.yadm/bootstrap :exports code
+   :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap :exports code
    :END:
    =yadm= comes with  a very handy feature: its bootstrap  script. We can
    execute it by running the following command:
@@ -774,7 +774,7 @@
      dotfiles to be set to ssh remotes using my ssh keys.
      #+BEGIN_SRC fish
        printf "\n# Update yadm’s remotes #######################################################\n\n"
-       yadm remote set-url origin git@labs.phundrak.fr:phundrak/dotfiles.git
+       yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
        yadm remote add github git@github.com:phundrak/dotfiles.git
      #+END_SRC
      I will also want to decrypt my encrypted files, such as said ssh keys.
@@ -818,28 +818,6 @@
      #+BEGIN_SRC fish
        printf "\n# Generating alt files ########################################################\n\n"
        yadm alt
-     #+END_SRC
-
-**** Symlink some system config files
-     :PROPERTIES:
-     :CUSTOM_ID: h-b14d7d03-da49-4a7b-ba05-1c0848bd8e44
-     :END:
-     We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
-     #+BEGIN_SRC fish
-       for f in (find ~/.etc -type f)
-           set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
-           sudo ln -s $f $dest
-       end
-     #+END_SRC
-
-     We may also want to symlink our [[file:.nanorc][nanorc]] to the =/root= directory for when we
-     use =nano= as =sudo=.
-     #+BEGIN_SRC fish
-       read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
-       if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
-           printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
-           sudo ln -s $HOME/.nanorc /root/.nanorc
-       end
      #+END_SRC
 
 *** Installing Tryone’s Compton fork
@@ -928,6 +906,28 @@
      #+BEGIN_SRC fish
        sudo usermod -aG video $USER
      #+END_SRC
+
+*** Symlink some system config files
+    :PROPERTIES:
+    :CUSTOM_ID: h-b14d7d03-da49-4a7b-ba05-1c0848bd8e44
+    :END:
+    We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
+    #+BEGIN_SRC fish
+      for f in (find ~/.etc -type f)
+          set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
+          sudo ln -s $f $dest
+      end
+    #+END_SRC
+
+    We may also want to symlink our [[file:.nanorc][nanorc]] to the =/root= directory for when we
+    use =nano= as =sudo=.
+    #+BEGIN_SRC fish
+      read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
+      if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
+          printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
+          sudo ln -s $HOME/.nanorc /root/.nanorc
+      end
+    #+END_SRC
 
 *** Set up our fish shell
     :PROPERTIES:
