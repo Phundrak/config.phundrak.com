@@ -61,11 +61,13 @@
     - [[#install-the-system][Install the system]]
   - [[#install-basic-packages][Install basic packages]]
   - [[#execute-bootstrap][Execute bootstrap]]
+    - [[#decrypt-private-yadm-files][Decrypt private yadm files]]
     - [[#get-a-correct-keyboard-layout][Get a correct keyboard layout]]
     - [[#set-our-locale][Set our locale]]
     - [[#create-some-folders][Create some folders]]
     - [[#set-users-shell-to-fish][Set user’s shell to fish]]
     - [[#install-yay-if-it-isnt-already-installed][Install =yay= if it isn’t already installed]]
+    - [[#install-basic-packages-1][Install basic packages]]
     - [[#setting-up-emacs-installing-spacemacs][Setting up Emacs: Installing Spacemacs]]
     - [[#set-up-dotfiles][Set up dotfiles]]
       - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
@@ -73,7 +75,6 @@
       - [[#update-our-submodules][Update our submodules]]
       - [[#generate-our-alt-files][Generate our alt files]]
       - [[#symlink-some-system-config-files][Symlink some system config files]]
-    - [[#install-basic-packages-1][Install basic packages]]
     - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
     - [[#enable-some-of-our-services][Enable some of our services]]
       - [[#docker][Docker]]
@@ -560,6 +561,16 @@
    #+END_SRC
    Let’s take a look at what it does.
 
+*** Decrypt private yadm files
+    :PROPERTIES:
+    :CUSTOM_ID: h-2ce7e756-3dab-4c12-a3b3-d1b6f8d4805d
+    :END:
+    Some  private files  are  stored  encrypted in  the  repository  of my  yadm
+    dotfiles. I will need them later on during the bootstrap execution.
+    #+BEGIN_SRC fish
+    yadm decrypt
+    #+END_SRC
+
 *** Get a correct keyboard layout
     :PROPERTIES:
     :CUSTOM_ID: h-89fb8f3a-6ec4-4701-a5d9-3e593c47ece9
@@ -664,7 +675,7 @@
     If it is, we don’t need to  to anything. However, if it isn’t, we’ll install
     it manually.
     #+BEGIN_SRC fish
-      if ! test which yay
+      if ! test (which yay)
           printf "\n# Installing yay ##############################################################\n\n"
           cd
           mkdir -p fromGIT
@@ -675,6 +686,51 @@
       else
           printf "\n# yay already installed #######################################################\n\n"
       end
+    #+END_SRC
+
+*** Install basic packages
+    :PROPERTIES:
+    :CUSTOM_ID: h-887ec6d4-535d-4363-a0a7-884717b87a47
+    :END:
+    Let’s set in a custom varible what packages we’ll be needing.
+    #+BEGIN_SRC fish
+      set PACKAGES \
+      acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
+      base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
+      chiken chromium clisp compton cppcheck cppreference cppreference-devhelp \
+      cpupower cronie cryptsetup device-mapper diffutils discord-canary discount \
+      ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress \
+      emacs exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
+      font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
+      golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
+      inetutils j4-dmenu-desktop javascript-typescript-langserver jfsutils jmtpfs \
+      lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
+      mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+      nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
+      networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs \
+      noto-fonts-emoji npm ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin \
+      pavucontrol pciutils pcurses pdfpc polybar prettier pulseaudio-bluetooth \
+      python-autoflake python-envtpl-git python-epc python-importmagic \
+      python-language-server python-nose python-pip python-ptvsd python-pytest \
+      python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
+      -rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
+      speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
+      texlive-langchinese texlive-langcyrillic texlive-langgreek \
+      texlive-langjapanese texlive-langkorean texlive-latexextra \
+      texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
+      ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
+      ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
+      ttf-tibetan-machine ttf-twemoji-color ttf-unifont typescript unicode \
+      unicode-emoji unrar usbutils valgrind vscode-css-languageserver-bin w3m wget \
+      x11-ssh-askpass xclip xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs \
+      xorg-server xorg-xinit xss-lock xvkbd yapf
+    #+END_SRC
+    These are the minimum  I would have in my own installation.  You can edit it
+    however you want. Let’s install those.
+    #+BEGIN_SRC fish
+      printf "\n# Installing needed packages ##################################################\n\n"
+      yay -S --needed $PACKAGES
     #+END_SRC
 
 *** Setting up Emacs: Installing Spacemacs
@@ -785,51 +841,6 @@
            sudo ln -s $HOME/.nanorc /root/.nanorc
        end
      #+END_SRC
-
-*** Install basic packages
-    :PROPERTIES:
-    :CUSTOM_ID: h-887ec6d4-535d-4363-a0a7-884717b87a47
-    :END:
-    Let’s set in a custom varible what packages we’ll be needing.
-    #+BEGIN_SRC fish
-      set PACKAGES \
-      acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
-      base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
-      chiken chromium clisp compton cppcheck cppreference cppreference-devhelp \
-      cpupower cronie cryptsetup device-mapper diffutils discord-canary discount \
-      ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress \
-      emacs exfat-utils farbfel ffmpegthumbnailer findutils firefox flake8 \
-      font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
-      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-      golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
-      inetutils j4-dmenu-desktop javascript-typescript-langserver jfsutils jmtpfs \
-      lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
-      mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-      nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
-      networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs \
-      noto-fonts-emoji npm ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin \
-      pavucontrol pciutils pcurses pdfpc polybar prettier pulseaudio-bluetooth \
-      python-autoflake python-envtpl-git python-epc python-importmagic \
-      python-language-server python-nose python-pip python-ptvsd python-pytest \
-      python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
-      -rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
-      speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
-      texlive-langchinese texlive-langcyrillic texlive-langgreek \
-      texlive-langjapanese texlive-langkorean texlive-latexextra \
-      texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
-      ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
-      ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
-      ttf-tibetan-machine ttf-twemoji-color ttf-unifont typescript unicode \
-      unicode-emoji unrar usbutils valgrind vscode-css-languageserver-bin w3m wget \
-      x11-ssh-askpass xclip xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs \
-      xorg-server xorg-xinit xss-lock xvkbd yapf \
-    #+END_SRC
-    These are the minimum  I would have in my own installation.  You can edit it
-    however you want. Let’s install those.
-    #+BEGIN_SRC fish
-      printf "\n# Installing needed packages ##################################################\n\n"
-      yay -S --needed $PACKAGES
-    #+END_SRC
 
 *** Installing Tryone’s Compton fork
     :PROPERTIES:
