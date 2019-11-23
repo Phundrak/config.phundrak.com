@@ -46,6 +46,7 @@
 - [[#tramp-remote-access][Tramp remote access]]
 - [[#regular-fish-shell-appearance][Regular fish shell appearance]]
 - [[#global-variables][Global variables]]
+- [[#theme-customization][Theme customization]]
 - [[#abbreviations][Abbreviations]]
   - [[#system-monitoring][System monitoring]]
   - [[#system-management-packages-and-services][System management (packages and services)]]
@@ -162,10 +163,60 @@
     set -gx EDITOR emacsclient -c
   #+END_SRC
 
+  We also need to set the path to the Dart SDK.
+  #+BEGIN_SRC fish
+  set -gx DART_SDK /opt/dart-sdk/bin
+  #+END_SRC
+
+  And we also need to specify where the Android SDK it located.
+  #+BEGIN_SRC fish
+  set -gx ANDROID_HOME $HOME/Android/Sdk
+  #+END_SRC
+
   Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
   so let’s do so.
   #+BEGIN_SRC fish
     set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
+  #+END_SRC
+
+* Theme customization
+  :PROPERTIES:
+  :CUSTOM_ID: h-e9dccb31-8350-459d-b688-b5b7cbeab272
+  :END:
+
+  The theme I use is =bobthefish=. Although its default configuration is quite
+  alright, it allows some customization. The first thing I want to enable is the
+  support for =nerd-fonts=:
+  #+BEGIN_SRC fish
+    set -g theme_nerd_fonts_support yes
+  #+END_SRC
+
+  Next, I want the name of the current process to be shown in the terminal
+  title.
+  #+BEGIN_SRC fish
+    set -g theme_title_display_process yes
+  #+END_SRC
+
+  I also wish to display the current host in the prompt, but only when I am
+  connected through an SSH session.
+  #+BEGIN_SRC fish
+    set -g theme_display_hostname ssh
+  #+END_SRC
+
+  I also want the sudo username to be displayed, as a warning that I am indeed
+  running a session as root.
+  #+BEGIN_SRC fish
+    set -g theme_display_sudo_user yes
+  #+END_SRC
+
+  The exit status can be sometimes really useful, hence why I want it activated.
+  #+BEGIN_SRC fish
+    set -g theme_show_exit_status yes
+  #+END_SRC
+
+  I also want to have proper git worktree support.
+  #+BEGIN_SRC fish
+    set -g theme_git_worktree_support yes
   #+END_SRC
 
 * Abbreviations

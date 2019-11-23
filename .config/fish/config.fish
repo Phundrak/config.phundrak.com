@@ -23,6 +23,10 @@ set -gx SUDO_ASKPASS ~/.local/bin/askpass
 
 set -gx EDITOR emacsclient -c
 
+set -gx DART_SDK /opt/dart-sdk/bin
+
+set -gx ANDROID_HOME $HOME/Android/Sdk
+
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 
 abbr df 'df -H'
