@@ -222,13 +222,16 @@ bindsym $mod+$alt+e               exec rofi-emoji
 bindsym $mod+w                    exec wacom-setup
 
 # Music shortcuts
+bindsym XF86AudioNext             exec mpc next
 bindsym $alt+XF86AudioRaiseVolume exec mpc next
 bindsym $mod+Next                 exec mpc next
+bindsym XF86AudioPrev             exec mpc prev
 bindsym $alt+XF86AudioLowerVolume exec mpc prev
 bindsym $mod+Prior                exec mpc prev
 bindsym XF86AudioPlay             exec mpc toggle
 bindsym $mod+p                    exec mpc toggle
 bindsym $mod+$alt+p               exec mpc stop
+bindsym XF86AudioStop             exec mpc stop
 bindsym $alt+XF86AudioPlay        exec mpc stop
 # below, 7 and 8 are the emplacement for `+` and `-` on the bépo layout
 # respectively, hence the order
