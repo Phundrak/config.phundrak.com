@@ -99,7 +99,7 @@ This function should only modify configuration layer settings."
            json-fmt-tool 'web-beautify)
      (keyboard-layout :variables
                       kl-layout 'bepo
-                      kl-disabled-configurations '(magit))
+                      kl-disabled-configurations '(magit dired))
      (latex :variables
             latex-build-command "xelatex"
             latex-enable-auto-fill t
@@ -960,7 +960,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      org-use-sub-superscripts (quote {})
      org-latex-default-packages-alist '((""         "graphicx"  t)
                                         (""         "minted"    t)
-                                        (""         "grffile"   t)
                                         (""         "longtable" nil)
                                         (""         "wrapfig"   nil)
                                         (""         "rotating"  nil)
