@@ -71,7 +71,7 @@
     - [[#compression][Compression]]
     - [[#feh][Feh]]
     - [[#ls][ls]]
-    - [[#networkmanager][NetworkManager]]
+    - [[#network-management][Network Management]]
     - [[#wget][Wget]]
 
 * Presentation
@@ -581,14 +581,32 @@
       abbr lsl 'ls -ahl'
     #+END_SRC
 
-*** NetworkManager
+*** Network Management
     :PROPERTIES:
     :CUSTOM_ID: h-5f9d4866-3086-4ed9-9ff3-d80a0af36593
     :END:
-    This is  just =nmcli= with  sane default options,  that is a  pretty output
+    First, we have just =nmcli= with  sane default options,  that is a  pretty output
     with colors.
     #+BEGIN_SRC fish
       abbr nmcli 'nmcli -p -c auto'
+    #+END_SRC
+
+    Next, we  have some  NordVPN-related shortcuts.  The first  one is  a simple
+    abbreviation to  =nordvpn=. The  second one  is a shortcut  to connect  to a
+    server, and to disconnect from the current server.
+    #+BEGIN_SRC fish
+      abbr n 'nordvpn'
+      abbr nc 'nordvpn c'
+      abbr nd 'nordvpn d'
+    #+END_SRC
+
+    I also  have a couple  of shortcuts to  quickly connect to  some preselected
+    countries, mainly France, Germany, Japan and the US.
+    #+BEGIN_SRC fish
+      abbr ncf 'nordvpn c France'
+      abbr ncg 'nordvpn c Germany'
+      abbr ncj 'nordvpn c Japan'
+      abbr ncu 'nordvpn c United_States'
     #+END_SRC
 
 *** Wget

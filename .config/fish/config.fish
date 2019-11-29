@@ -119,4 +119,13 @@ abbr lsl 'ls -ahl'
 
 abbr nmcli 'nmcli -p -c auto'
 
+abbr n 'nordvpn'
+abbr nc 'nordvpn c'
+abbr nd 'nordvpn d'
+
+abbr ncf 'nordvpn c France'
+abbr ncg 'nordvpn c Germany'
+abbr ncj 'nordvpn c Japan'
+abbr ncu 'nordvpn c United_States'
+
 abbr wget 'wget -c'
