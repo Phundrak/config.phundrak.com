@@ -64,36 +64,38 @@ else
 end
 
 set PACKAGES \
-acpilight asar ascii aspell-en aspell-fr assimp awesome-terminal-fonts \
-base-devel bat biber bleachbit bluez-firmware bluez-utils bookworm boost bzip2 \
-chicken chromium clisp compton cppcheck cppreference cppreference-devhelp \
-cpupower cronie cryptsetup device-mapper diffutils discord-canary discount \
-ditaa dmenu dmenu-lpass docker docker-compose doxygen dunst dwarffortress \
-emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox flake8 \
-font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
-gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
-inetutils j4-dmenu-desktop javascript-typescript-langserver jfsutils jmtpfs \
-lastpass-cli less linux-headers lldb logrotate lvm2 ly-git meson minted mpc \
-mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
+awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
+bluez-utils bookworm boost bzip2 chicken chromium clisp compton cppcheck \
+cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
+diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
+docker-compose doxygen dunst dwarffortress emacs exfat-utils farbfeld feh \
+ffmpegthumbnailer findutils firefox flake8 font-mathematica fontforge freeglut \
+fzf gcc-libs gdb gimp glibc gnome-disk-utility gnome-epub-thumbnailer \
+gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop i3-gaps \
+i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop \
+javascript-typescript-langserver jfsutils jmtpfs lastpass-cli less \
+linux-headers lldb logrotate lvm2 ly-git meson minted mpc mpd \
+mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
 nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
-networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs \
-noto-fonts-emoji npm ntfs-3g numlockx openssh p7zip pacman-contrib pandoc-bin \
-pavucontrol pciutils pcurses pdfpc polybar prettier pulseaudio-bluetooth \
-python-autoflake python-envtpl-git python-epc python-importmagic \
-python-language-server python-nose python-pip python-ptvsd python-pytest \
-python-pywal qemu r raw-thumbnailer reflector rofi rofi-wifi-menu-git rsync \
-rtv rustup s-nail samba scrot sent shadow siji-git simplescreenrecorder \
-speedcrunch sshfs st-luke-git swi-prolog texlive-most texlive-bin \
+networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs nordvpn-bin \
+noto-fonts-emoji npm ntfs-3g numlockx openssh otf-ipafont p7zip pacman-contrib \
+pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
+pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
+python-importmagic python-language-server python-nose python-pip python-ptvsd \
+python-pytest python-pywal qemu r raw-thumbnailer reflector rofi \
+rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sent shadow siji-git \
+simplescreenrecorder speedcrunch sshfs st-luke-git swi-prolog texlive-bin \
 texlive-langchinese texlive-langcyrillic texlive-langgreek \
 texlive-langjapanese texlive-langkorean texlive-latexextra \
-texlive-localmanager-git tmux tree ttf-arphic-uming ttf-baekmuk \
-ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-joypixels \
-ttf-liberation ttf-material-design-icons-git ttf-ms-fonts ttf-symbola \
-ttf-tibetan-machine ttf-twemoji-color ttf-unifont typescript unicode \
-unicode-emoji unrar usbutils valgrind vscode-css-languageserver-bin w3m wget \
-x11-ssh-askpass xclip xdg-user-dirs-gtk xorg-drivers xorg-apps xfsprogs \
-xorg-server xorg-xinit xss-lock xvkbd yapf
+texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
+ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono \
+ttf-joypixels ttf-koruri ttf-liberation ttf-material-design-icons-git \
+ttf-monapo ttf-mplus ttf-ms-fonts ttf-sazanami ttf-symbola ttf-tibetan-machine \
+ttf-twemoji-color ttf-unifont ttf-vlgothic typescript unicode unicode-emoji \
+unrar usbutils valgrind vscode-css-languageserver-bin w3m wget x11-ssh-askpass \
+xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers xorg-server xorg-xinit \
+xss-lock xvkbd yapf
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
@@ -150,6 +152,8 @@ sudo systemctl enable --now ly
 sudo systemctl disable getty@tty2
 
 sudo usermod -aG video $USER
+
+sudo systemctl enable --now nordvpnd
 
 for f in (find ~/.etc -type f)
     set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
