@@ -1,302 +1,40 @@
 # -*- mode: conf -*-
-# Declaration of the mod key
-set $mod                          Mod4
-set $alt                          Mod1
 
-# Font for window titles
-font                              DejaVuSans:monospace 8
+set $mod Mod4
+set $alt Mod1
+set $up Up
+set $down Down
+set $left Left
+set $right Right
+set $term st
+set $exiti3 i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'
+set $lockscreen Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89
+set $rofiexec rofi -combi-modi window,drun -show combi -mohh combi -m -1 -show-icons
+set $gnus emacsclient --create-frame --eval '(gnus)' -a nvim -n
+set $ec emacsclient --create-frame -a nvim -n
 
-# Variables
-set $up                           Up
-set $down                         Down
-set $left                         Left
-set $right                        Right
-set $exiti3                       "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'sudo -A systemctl restart ly'"
-set $lockscreen                   "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-set $rofiexec                     "rofi -combi-modi window,drun -show combi -mohh combi -m -1 -show-icons"
-set $gnus                         "emacsclient --create-frame --eval '(gnus)' -a nvim -n"
-set $ec                           "emacsclient --create-frame -a nvim -n"
-set $term                         st
+font DejaVuSans:monospace 8
 
-# use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier                 $mod
-
-################################################################################
-###                            Clients position                              ###
-################################################################################
-
-assign [class="Emacs"] 2
-assign [class="Chromium"] 3
-assign [class="firefox"] 3
-assign [class="Nemo"] 4
-assign [class="Godot"] 5
-assign [class="Gimp*"] 6
-assign [class="gnome-boxes"] 8
-assign [class="discord"] 10
-assign [class="Steam"] 9
-
-################################################################################
-###                                 Shortcuts                                ###
-################################################################################
-
-# start a terminal
-bindsym $mod+Return               exec $term
-bindsym $mod+$alt+Return          split h;; exec $term
-bindsym $mod+Shift+Return         split v;; exec $term
-
-# kill focused window
-bindsym $mod+q                    kill
-bindsym $alt+F4                   kill
-
-# program launcher
-bindsym $mod+Shift+d              exec --no-startup-id j4-dmenu-desktop
-bindsym $mod+d                    exec --no-startup-id $rofiexec
-
-# change focus
-bindsym $mod+$left                focus left
-bindsym $mod+$down                focus down
-bindsym $mod+$up                  focus up
-bindsym $mod+$right               focus right
-# move focused window
-bindsym $mod+Shift+$left          move left
-bindsym $mod+Shift+$down          move down
-bindsym $mod+Shift+$up            move up
-bindsym $mod+Shift+$right         move right
-# move focused container
-bindsym $mod+Ctrl+$left           move container to output left
-bindsym $mod+Ctrl+$down           move container to output down
-bindsym $mod+Ctrl+$up             move container to output up
-bindsym $mod+Ctrl+$right          move container to output right
-# move focused workspace
-bindsym $mod+Ctrl+Shift+$left     move workspace to output left
-bindsym $mod+Ctrl+Shift+$down     move workspace to output down
-bindsym $mod+Ctrl+Shift+$up       move workspace to output up
-bindsym $mod+Ctrl+Shift+$right    move workspace to output right
-
-# Change split
-bindsym $mod+h                    split h
-bindsym $mod+v                    split v
-bindsym $mod+t                    split toggle
-
-# enter fullscreen mode for the focused container
-bindsym $mod+f                    fullscreen toggle
-
-# toggle tiling / floating
-bindsym $mod+Shift+space          floating toggle
-# change focus between tiling / floating windows
-bindsym $mod+space                focus mode_toggle
-# center floating window
-bindsym Ctrl+$mod+c               move position center
-
-# enable sticky window
-bindsym Ctrl+$mod+s               sticky toggle
-
-# Scratchpad
-bindsym $mod+Shift+s              move scratchpad
-bindsym $mod+s                    scratchpad show
-
-# switch to workspace
-bindsym $mod+1                    workspace 1
-bindsym $mod+2                    workspace 2
-bindsym $mod+3                    workspace 3
-bindsym $mod+4                    workspace 4
-bindsym $mod+5                    workspace 5
-bindsym $mod+6                    workspace 6
-bindsym $mod+7                    workspace 7
-bindsym $mod+8                    workspace 8
-bindsym $mod+9                    workspace 9
-bindsym $mod+0                    workspace 10
-
-# move focused container to workspace
-bindsym $mod+Shift+1              move container to workspace 1
-bindsym $mod+Shift+2              move container to workspace 2
-bindsym $mod+Shift+3              move container to workspace 3
-bindsym $mod+Shift+4              move container to workspace 4
-bindsym $mod+Shift+5              move container to workspace 5
-bindsym $mod+Shift+6              move container to workspace 6
-bindsym $mod+Shift+7              move container to workspace 7
-bindsym $mod+Shift+8              move container to workspace 8
-bindsym $mod+Shift+9              move container to workspace 9
-bindsym $mod+Shift+0              move container to workspace 10
-
-# move to previous or next workspace
-bindsym $mod+Tab                  workspace next
-bindsym $mod+Shift+Tab            workspace previous
-
-{% if YADM_HOSTNAME == 'Marpa' -%}
-# Assign workspace to designated screen
-workspace 10                      output eDP-1
-{% endif -%}
-
-# reload the configuration file
-bindsym $mod+Shift+c              exec yadm alt && i3-msg reload
-# restart i3 inplace
-bindsym $mod+Shift+r              exec yadm alt && i3-msg restart
-# exit i3
-bindsym $mod+Shift+e              exec $exiti3
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-    bindsym $right                resize grow width 20 px or 10 ppt
-    bindsym $left                 resize shrink width 10 px or 5 ppt
-    bindsym $down                 resize grow height 10 px or 5 ppt
-    bindsym $up                   resize shrink height 10 px or 5 ppt
-    bindsym Return mode           "default"
-    bindsym Escape mode           "default"
-}
-bindsym $mod+r                    mode "resize"
+floating_modifier $mod
 
 mouse_warping none
 
-# Keyboard layout
-bindsym $mod+$alt+k               exec setxkbmap fr bepo
-bindsym $mod+$alt+Shift+k         exec setxkbmap fr
-bindsym $mod+$alt+Ctrl+k          exec setxkbmap us
+focus_follow_mouse off
 
-# bindings for MS Natural Ergonomic Keyboard 4000 ##############################
-bindsym XF86Launch5               exec $ec
-bindsym $mod+e                    exec $ec
-bindsym XF86Launch6               exec firefox
-bindsym $mod+c                    exec firefox
-bindsym XF86HomePage              exec "firefox https://labs.phundrak.fr"
-bindsym XF86Search                exec "firefox https://duckduckgo.com/"
-bindsym XF86Launch9               exec nemo
-bindsym $mod+n                    exec nemo
-bindsym XF86Launch8               exec $gnus
-bindsym XF86Mail                  exec $gnus
-bindsym $mod+m                    exec $gnus
-bindsym XF86Launch7               exec discord-canary
-bindsym Ctrl+Shift+d              exec discord-canary
-bindsym XF86AudioMute             exec "amixer set Master 1+ toggle"
-bindsym Ctrl+$mod+Prior           exec "amixer -q set Master 2%+ unmute"
-bindsym XF86AudioRaiseVolume      exec "amixer -q set Master 2%+ unmute"
-bindsym Ctrl+$mod+Next            exec "amixer -q set Master 2%- unmute"
-bindsym XF86AudioLowerVolume      exec "amixer -q set Master 2%- unmute"
-bindsym XF86Calculator            exec speedcrunch
-bindsym $mod+$alt+c               exec speedcrunch
-#bindsym XF86Favourites
-#bindsym Help
-#bindsym Undo
-#bindsym Redo
-#bindsym XF86New
-#bindsym SunOpen
-#bindsym XF86Close
-#bindsym XF86Reply
-#bindsym XF86MailForward
-#bindsym XF86Send
-#bindsym XF86Save
+popup_during_fullscreen leave_fullscreen
 
-bindsym $mod+F3                   exec arandr
-bindsym $mod+Shift+l              exec dmenu-lpass
-bindsym $mod+Shift+p              exec rofi-pass
-bindsym $mod+Ctrl+Shift+p         exec rofi-pass --type
+workspace_auto_back_and_forth yes
 
-# Brightness keyboard shortcuts
-bindsym XF86MonBrightnessUp       exec xbacklight -inc 5
-bindsym $mod+$alt+Next            exec xbacklight -inc 5
-bindsym XF86MonBrightnessDown     exec xbacklight -dec 5
-bindsym $mod+$alt+Prev            exec xbacklight -dec 5
+smart_gaps on
 
-# Wal
-bindsym $mod+Ctrl+w               exec "wal -i ~/Pictures/Wallpapers -o wal-set"
+smart_borders off
 
-# Take a screenshot
-bindsym --release Print           exec --no-startup-id scrot
-bindsym --release Ctrl+Print      exec --no-startup-id "scrot -s"
-bindsym           Shift+Print     exec --no-startup-id "scrot -d 3"
+default_border pixel 0
 
-# Lock screen
-bindsym $mod+l                    exec "i3lock -fol"
-bindsym $mod+$alt+h               exec "systemctl suspend"
-bindsym $mod+Ctrl+h               exec "systemctl hibernate"
+gaps inner 20
+gaps outter -10
 
-# SSH terminals
-bindsym $mod+$alt+m               exec $term ssh Mila
-bindsym $mod+$alt+n               exec $term ssh Naro
-
-# Utilities
-bindsym $mod+Shift+h              exec $term htop
-bindsym $mod+Ctrl+m               exec rofi-mount
-bindsym $mod+Ctrl+u               exec rofi-umount
-bindsym $mod+$alt+e               exec rofi-emoji
-bindsym $mod+w                    exec wacom-setup
-
-# Music shortcuts
-bindsym XF86AudioNext             exec mpc next
-bindsym $alt+XF86AudioRaiseVolume exec mpc next
-bindsym $mod+Next                 exec mpc next
-bindsym XF86AudioPrev             exec mpc prev
-bindsym $alt+XF86AudioLowerVolume exec mpc prev
-bindsym $mod+Prior                exec mpc prev
-bindsym XF86AudioPlay             exec mpc toggle
-bindsym $mod+p                    exec mpc toggle
-bindsym $mod+$alt+p               exec mpc stop
-bindsym XF86AudioStop             exec mpc stop
-bindsym $alt+XF86AudioPlay        exec mpc stop
-# below, 7 and 8 are the emplacement for `+` and `-` on the bépo layout
-# respectively, hence the order
-bindsym $mod+$alt+7               exec mpc volume +5
-bindsym $mod+$alt+8               exec mpc volume -5
-bindsym $mod+Shift+n              exec $term ncmpcpp -q
-bindsym $mod+Shift+v              exec $term ncmpcpp -qs visualizer
-
-################################################################################
-#                               i3-gaps settings                               #
-################################################################################
-
-smart_gaps                        on
-gaps                              inner 20
-gaps                              outer -10
-border_radius                     10
-popup_during_fullscreen           leave_fullscreen
-workspace_auto_back_and_forth     yes
-focus_follows_mouse               off
-
-# Change gaps size
-bindsym $mod+g                    gaps inner current plus 5
-bindsym $mod+Shift+g              gaps inner current minus 5
-bindsym $mod+Ctrl+g               gaps outer current plus 5
-bindsym $mod+Ctrl+Shift+g         gaps outer current minus 5
-bindsym $mod+$alt+g               gaps inner all set 20; gaps outer all set -10
-
-default_border                    pixel 0
-smart_borders                     on
-
-################################################################################
-#                                Modules startup                               #
-################################################################################
-{% if YADM_HOSTNAME=="Marpa" -%}
-exec        --no-startup-id       numlockx
-{% endif -%}
-exec_always --no-startup-id       wal -i "$(< "${HOME}/.cache/wal/wal")"
-exec        --no-startup-id       xrdb $HOME/.Xresources
-exec        --no-startup-id       compton -F --opengl --config ~/.config/compton.conf -e 1
-{% if YADM_HOSTNAME == 'Gampo' -%}
-exec        --no-startup-id       /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
-{% endif -%}
-exec_always --no-startup-id       enable_touch
-exec_always --no-startup-id       polybar-launch
-exec        --no-startup-id       xss-lock -- i3lock -fol
-exec        --no-startup-id       mpd
-exec        --no-startup-id       mpc stop
-exec        --no-startup-id       mpd_discord_richpresence --no-idle --fork
-exec        --no-startup-id       syndaemon -i 1.0 -t -k
-exec        --no-startup-id       i3-battery-popup -N -t 2m
-exec        --no-startup-id       dunst -config ~/.config/dunst/dunstrc
-
-################################################################################
-#                   Set up second output for presentation                      #
-################################################################################
-{% if YADM_HOSTNAME == 'Marpa' -%}
-bindsym $mod+Ctrl+p              xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1
-{% else %}
-bindsym $mod+Ctrl+p              xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
-{% endif -%}
-
-
-################################################################################
-#                          Set colors from Xresources                          #
-################################################################################
+border_radius 5
 
 set_from_resource $fg i3wm.color7 #f0f0f0
 set_from_resource $bg i3wm.color2 #f0f0f0
@@ -308,4 +46,179 @@ client.unfocused        $bg     $bg     $fg  $bg       $bg
 client.urgent           $bg     $bg     $fg  $bg       $bg
 client.placeholder      $bg     $bg     $fg  $bg       $bg
 
-# client.background       $bg
+assign [class="Emacs"] 2
+assign [class="Chromium"] 3
+assign [class="firefox"] 3
+assign [class="Nemo"] 4
+assign [class="Godot"] 5
+assign [class="Gimp*"] 6
+assign [class="gnome-boxes"] 8
+assign [class="Steam"] 9
+assign [class="discord"] 10
+
+{% if YADM_HOSTNAME == 'Marpa' -%}
+workspace 10 output eDP-1
+{% endif -%}
+
+bindsym $mod+Return exec $term
+bindsym $mod+$alt+Return split h;; exec $term
+bindsym $mod+Shift+Return split v;; exec $term
+bindsym $mod+$alt+m exec $term ssh Mila
+bindsym $mod+$alt+n exec $term ssh Naro
+bindsym $mod+Shift+h exec $term htop
+
+bindsym $mod+Shift+c exec yadm alt && i3-msg reload
+bindsym $mod+Shift+r exec yadm alt && i3-msg restart
+bindsym $mod+Shift+e exec $exiti3
+bindsym $mod+Ctrl+w exec "wal -i ~/Pictures/Wallpapers -o wal-set"
+bindsym $mod+l i3lock -fol
+bindsym $mod+$alt+h exec "systemctl suspend"
+bindsym $mod+Ctrl+h exec "systemctl hibernate"
+bindsym $mod+Shift+F4 exec poweroff
+
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+$left move container to output left
+bindsym $mod+Shift+$down move container to output down
+bindsym $mod+Shift+$up move container to output up
+bindsym $mod+Shift+$right move container to output right
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+bindsym $mod+Ctrl+Shift+$left move workspace to output left
+bindsym $mod+Ctrl+Shift+$down move workspace to output down
+bindsym $mod+Ctrl+Shift+$up move workspace to output up
+bindsym $mod+Ctrl+Shift+$right move workspace to output right
+
+bindsym $mod+q kill
+bindsym $alt+F4 kill
+
+bindsym $mod+f fullscreen toggle
+bindsym $mod+r mode "resize"
+mode "resize" {
+    bindsym $right resize grow width 20 px or 10 ppt
+    bindsym r resize grow width 20 px or 10 ppt
+    bindsym $left resize shrink width 10 px or 5 ppt
+    bindsym c resize shrink width 10 px or 5 ppt
+    bindsym $down resize grow height 10 px or 5 ppt
+    bindsym t resize grow height 10 px or 5 ppt
+    bindsym $up resize shrink height 10 px or 5 ppt
+    bindsym s resize shrink height 10 px or 5 ppt
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+Ctrl+c move position center
+
+bindsym $mod+Shift+s move scratchpad
+bindsym $mod+s scratchpad show
+bindsym $mod+Ctrl+s sticky toggle
+
+bindsym $mod+g gaps inner current plus 5
+bindsym $mod+Shift+g gaps inner current minus 5
+bindsym $mod+Ctrl+g gaps outer current plus 5
+bindsym $mod+Ctrl+Shift+g gaps outer current minus 5
+bindsym $mod+$alt+g gaps inner all set 20; gaps outer all set -10
+
+bindsym $mod+Shift+d exec --no-startup-id j4-dmenu-desktop
+bindsym $mod+d exec --no-startup-id $rofiexec
+
+bindsym $mod+c exec firefox
+bindsym $mod+m exec $gnus
+bindsym Ctrl+Shift+d exec discord-canary
+
+bindsym Print exec --no-startup-id scrot
+bindsym Ctrl+Print exec --no-startup-id "scrot -s"
+bindsym Shift+Print exec --no-startup-id "scrot -d 3"
+
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym $mod+$alt+Next exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym $mod+$alt+Prev exec xbacklight -dec 5
+
+bindsym XF86AudioNext exec mpc next
+bindsym $alt+XF86AudioRaiseVolume exec mpc next
+bindsym $mod+Next exec mpc next
+bindsym XF86AudioPrev exec mpc prev
+bindsym $alt+XF86AudioLowerVolume exec mpc prev
+bindsym $mod+Prior exec mpc prev
+bindsym XF86AudioPlay exec mpc toggle
+bindsym $mod+p exec mpc toggle
+bindsym $mod+$alt+p exec mpc stop
+bindsym XF86AudioStop exec mpc stop
+bindsym $alt+XF86AudioPlay exec mpc stop
+bindsym $mod+$alt+7 exec mpc volume +5
+bindsym $mod+$alt+8 exec mpc volume -5
+bindsym $mod+Shift+n exec $term ncmpcpp -q
+bindsym $mod+Shift+v exec $term ncmpcpp -qs visualizer
+bindsym XF86AudioMute exec "amixer set Master 1+ toggle"
+bindsym Ctrl+$mod+Prior exec "amixer -q set Master 2%+ unmute"
+bindsym XF86AudioRaiseVolume exec "amixer -q set Master 2%+ unmute"
+bindsym Ctrl+$mod+Next exec "amixer -q set Master 2%- unmute"
+bindsym XF86AudioLowerVolume exec "amixer -q set Master 2%- unmute"
+
+bindsym $mod+Shift+p exec rofi-pass --type
+bindsym $mod+Ctrl+Shift+p exec rofi-pass
+bindsym $mod+Ctrl+m exec rofi-mount
+bindsym $mod+Ctrl+u exec rofi-umount
+bindsym $mod+$alt+e exec rofi-emoji
+bindsym $mod+w exec wacom-setup
+
+bindsym $mod+e exec $ec
+bindsym $mod+n exec nemo
+bindsym $mod+$alt+c exec speedcrunch
+bindsym $mod+F3 exec arandr
+
+{% if YADM_HOSTNAME == 'Marpa' -%}
+bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1
+{% else %}
+bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
+{% endif -%}
+
+{% if YADM_HOSTNAME == 'Gampo' -%}
+exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+{% endif -%}
+exec_always --no-startup-id wal -i "$(< "${HOME}/.cache/wal/wal")"
+exec --no-startup-id xss-lock -- i3lock -fol
+exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+exec --no-startup-id xrdb $HOME/.Xresources
+exec --no-startup-id compton -F --opengl --config ~/.config/compton.conf -e 1
+exec_always --no-startup-id polybar-launch
+exec_always --no-startup-id enable_touch
+exec --no-startup-id syndaemon -i 1.0 -t -k
+exec --no-startup-id mpd
+exec --no-startup-id mpc stop
+exec --no-startup-id mpd_discord_richpresence --no-idle --fork
+exec --no-startup-id nm-applet
