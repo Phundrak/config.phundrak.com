@@ -1,6 +1,6 @@
 #+TITLE: Phundrak’s fish config
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: phundrak@phundrak.fr
+#+EMAIL: lucien@phundrak.com
 #+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
 
 # ### LaTeX ####################################################################
@@ -24,18 +24,18 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
 #+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
 #+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
