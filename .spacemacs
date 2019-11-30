@@ -186,6 +186,7 @@ This function should only modify configuration layer settings."
                                       meson-mode
                                       modern-cpp-font-lock
                                       multiple-cursors
+                                      org-sidebar
                                       outorg
                                       pinentry
                                       visual-fill-column
@@ -270,7 +271,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'. (default 'emacs-version)
-   dotspacemacs-elpa-subdirectory nil
+   dotspacemacs-elpa-subdirectory 'emacs-version
 
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
@@ -280,7 +281,6 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style '(hybrid :variables
                                        hybrid-mode-enable-evilified-state t
-                                       hybrid-mode-enable-hjkl-bindings nil
                                        hybrid-mode-default-state 'normal)
 
    ;; Specify the startup banner. Default value is `official', it displays
@@ -353,10 +353,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("DejaVu Sans Mono"
-                               :size 8.0
-                               :weight normal
-                               :width normal)
+   dotspacemacs-default-font '("FiraCode Nerd Font Mono" :size 8.0 :weight normal :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -528,7 +525,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -539,7 +536,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -747,14 +744,12 @@ biefore packages are loaded."
   (spacemacs/declare-prefix "off" "fish config")
   (spacemacs/declare-prefix "ofi" "i3 config")
   (spacemacs/declare-prefix "ofp" "polybar config")
-  (spacemacs/declare-prefix "ofb" "yadm README")
+  (spacemacs/declare-prefix "ofr" "yadm README")
   (spacemacs/declare-prefix "oi" "insert")
   (spacemacs/declare-prefix "oii" "invisible space")
   (spacemacs/declare-prefix "om" "multiple-cursors")
   (spacemacs/declare-prefix "oo" "org-mode")
   (spacemacs/declare-prefix "ooi" "custom IDs")
-  (spacemacs/declare-prefix "oop" "private.org")
-  (spacemacs/declare-prefix "oos" "school.org")
   (spacemacs/declare-prefix "oot" "tables")
   (spacemacs/declare-prefix "oott" "toggle width")
   (spacemacs/declare-prefix "oote" "expand")
@@ -776,7 +771,7 @@ biefore packages are loaded."
     "oF"   'flycheck-mode
     "ofb"  (lambda () (interactive) (find-file "~/.local/bin/README.org"))
     "off"  (lambda () (interactive) (find-file "~/.config/fish/README.org"))
-    "ofi"  (lambda () (interactive) (find-file "~/.config/i3/config##yadm.j2"))
+    "ofi"  (lambda () (interactive) (find-file "~/.config/i3/README.org"))
     "ofp"  (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
     "ofr"  (lambda () (interactive) (find-file "~/README.org"))
     "ofo"  'find-file-at-point
@@ -786,8 +781,7 @@ biefore packages are loaded."
     "omp"  'mc/mark-previous-like-this
     "oma"  'mc/mark-all-like-this
     "ooi"  'eos/org-add-ids-to-headlines-in-file
-    "oop"  (lambda () (interactive) (find-file "~/org/private.org"))
-    "oos"  (lambda () (interactive) (find-file "~/org/school.org"))
+    "ooT"  'org-sidebar-tree
     "oott" 'org-table-toggle-column-width
     "oote" 'org-table-expand
     "oots" 'org-table-shrink
@@ -829,6 +823,11 @@ biefore packages are loaded."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (with-eval-after-load 'org
+
+    (org-link-set-parameters
+     "file"
+     :face (lambda (path) (if (file-exists-p path) 'org-link 'org-warning)))
+
     ;; custom org functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (defun ck/org-confirm-babel-evaluate (lang body)
       (not (or (string= lang "latex") (string= lang "maxima"))))
@@ -903,7 +902,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((C          . t)
-       (ditaa      . t)
        (dot        . t)
        (emacs-lisp . t)
        (gnuplot    . t)
@@ -911,6 +909,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
        (makefile   . t)
        (python     . t)
        (R          . t)
+       (sass       . t)
        (scheme     . t)
        (shell      . t)))
 
@@ -1217,7 +1216,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-export-headline-levels 4)
    '(package-selected-packages
      (quote
-      (dap-mode bui tree-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+      (org-sidebar dap-mode bui tree-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
    '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
    '(safe-local-variable-values
      (quote
@@ -1226,9 +1225,6 @@ This function is called at the very end of Spacemacs initialization."
        (javascript-backend . lsp)
        (go-backend . go-mode)
        (go-backend . lsp))))
-   '(send-mail-function (quote smtpmail-send-it))
-   '(smtpmail-smtp-server "smtp.ionos.fr" t)
-   '(smtpmail-smtp-service 587 t)
    '(solaire-mode-auto-swap-bg t)
    '(vc-annotate-background "#282c34")
    '(vc-annotate-color-map

@@ -19,28 +19,29 @@
 
 # ### HTML #####################################################################
 #+HTML_DOCTYPE: html5
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's executable scripts" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's executable scripts" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s executable scripts explained" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
 #+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.fr/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.fr/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.fr/ toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.fr/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.fr/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.fr/js/main.js"></script>
+#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
+#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
   :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
   :END:
+
 - [[#presentation][Presentation]]
 - [[#4chandl][4chandl]]
 - [[#askpass][Askpass]]
@@ -213,7 +214,7 @@
   :CUSTOM_ID: h-a4ccdc0f-6813-4207-9479-4d68296f5fdb
   :HEADER-ARGS: :tangle cnew :exports code
   :END:
-  =cnew=  is a  small utility  script similar  to but  simpler than  [[#cppnew][cppnew]] that
+  =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
   creates a  CMake template C project  from the template that  already exists in
   [[file:~/dev/templateC][~/dev/templateC]]. This script is a fish script, so let’s insert the shebang.
   #+BEGIN_SRC fish
@@ -519,7 +520,7 @@
    #+END_SRC
 
    Now, let’s select  the mount point of our partition.  We’ll call the function
-   =getmount= described in [[#get-the-drive-to-mount][Get the drive to mount]] to select it.
+   =getmount= described in [[#h-a17825bd-96e2-4c90-99ef-b0f2895cffb6][Get the mount point]] to select it.
    #+BEGIN_SRC fish
    getmount
    #+END_SRC
@@ -707,7 +708,7 @@
    :CUSTOM_ID: h-646dc678-4d87-4fec-8130-5d7d0fc16756
    :END:
    Now that we have declared our functions and set our variables, we’ll read the
-   temporary file described  in [[#get-the-mountable-elements][Get the mountable elements]]. The  amount of lines
+   temporary file described  in [[#h-2307005f-385e-4149-b885-55e699c822bb][Get the mountable elements]]. The  amount of lines
    is passed in a switch statement.
    #+BEGIN_SRC fish
    switch (wc -l < $TMPDRIVES)
@@ -1003,7 +1004,7 @@
    :END:
    If several  types of  unmountable drives  are available,  let’s ask  the user
    which type to unmount based on the  content of the temporary file declared in
-   [[#get-the-unmountable-drives][Get the unmountable drives]]. First, let’s declare the function.
+   [[#h-dab41471-4f69-4be8-8d77-58ccc604e4e2][Get the unmountable drives]]. First, let’s declare the function.
    #+BEGIN_SRC fish
    function asktype
    #+END_SRC
@@ -1269,7 +1270,7 @@
   :END:
   For some  reason, =yadm= won’t stop  making polybar crash. So,  I created this
   script  that  will  wrap yadm  with  a  call  to  yadm,  and then  a  call  to
-  =polybar-launch= declared  in [[#polybar-launch][Polybar-launch]]. This  is a oneliner, as  you can
+  =polybar-launch= declared  in [[#h-68587918-879b-42db-b304-901d01233f95][Polybar-launch]]. This  is a oneliner, as  you can
   see below:
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
