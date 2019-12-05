@@ -76,7 +76,6 @@ This function should only modify configuration layer settings."
 				 go-tab-width 2
          go-use-golangci-lint t)
      gnus
-     gpu
      (helm :variables
            helm-no-header t
            helm-use-fuzzy 'source)
@@ -114,6 +113,8 @@ This function should only modify configuration layer settings."
                                          "rust"
                                          ("elisp" "emacs-lisp")))
      nginx
+     (notmuch :variables
+              notmuch-message-delete-tags '("+deleted" "-inbox" "-unread"))
      (org :variables
           org-enable-reveal-js-support t
           org-enable-github-support t
@@ -121,7 +122,11 @@ This function should only modify configuration layer settings."
           org-enable-sticky-header t
           org-enable-epub-support t
           org-projectile-file "TODOs.org"
-          org-download-image-dir "~/Pictures/org"
+          org-download-image-dir "~/Pictures/org/"
+          org-enable-org-journal-support t
+          org-journal-dir "~/org/journal/"
+          org-journal-file-format "%Y-%m-%d"
+          org-enable-epub-support t
           org-return-follows-link t)
      pass
      pdf
@@ -601,6 +606,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (require 'package)
   (require 'ox-latex)
   (require 'ox-publish)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (flyspell-mode 0)
@@ -627,16 +633,10 @@ biefore packages are loaded."
   (spacemacs/set-leader-keys-for-major-mode 'dart-mode
     "o=" 'dart-server-format)
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        ;               Notmuch               ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                        ;                Media                ;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (setq dionysos-backend 'mpd
-        dionysos-notify-p t
-        dionysos-volume-cmd 'pamixer)
-  (global-set-key (kbd "<s-next>") 'mpd-next)
-  (global-set-key (kbd "<s-prior>") 'mpd-prev)
-  (global-set-key (kbd "s-p") 'mpd-pause)
+  (add-hook 'notmuch-hello-mode-hook (lambda () (shell-command "offlineimap")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 Misc                ;
@@ -738,6 +738,7 @@ biefore packages are loaded."
   (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
   (spacemacs/declare-prefix "o" "custom")
   (spacemacs/declare-prefix "oa" "applications")
+  (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
   (spacemacs/declare-prefix "oc" "comments")
   (spacemacs/declare-prefix "of" "files")
   (spacemacs/declare-prefix "ofb" ".local/bin sources")
@@ -763,6 +764,7 @@ biefore packages are loaded."
     "oaC"  'calendar
     "oae"  'eww
     "oaw"  'wttrin
+    "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
     "ob"   'fancy-battery-mode
     "occ"  'outorg-copy-edits-and-exit
     "oce"  'outorg-edit-as-org
@@ -945,10 +947,7 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      org-journal-file-format "%Y-%m-%d"
      org-latex-listings 'minted
      org-reveal-root "file:///home/phundrak/fromGIT/reveal.js"
-     ;; org-latex-listings t
-     ;; org-latex-packages-alist '(("" "minted" t)
-     ;;                            ("" "graphicx" t))
-     ;; org-plantuml-jar-path "/opt/plantuml/plantuml.jar"
+     org-latex-compiler "xelatex"
      org-latex-pdf-process
      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
@@ -958,7 +957,6 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
      ;; subscripts and superscripts need {} to work
      org-use-sub-superscripts (quote {})
      org-latex-default-packages-alist '((""         "graphicx"  t)
-                                        (""         "minted"    t)
                                         (""         "longtable" nil)
                                         (""         "wrapfig"   nil)
                                         (""         "rotating"  nil)
@@ -1005,6 +1003,11 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
         :components ("langue-phundrak-fr-org"
                      "langue-phundrak-fr-static"
                      "langue-phundrak-fr-pdf"))))
+
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (add-to-list 'org-latex-packages-alist '("" "fontspec"))
+    (add-to-list 'org-latex-packages-alist '("" "fontspec"))
+    (add-to-list 'org-latex-packages-alist '("" "xeCJK"))
 
     ;; Shortcuts ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     (with-eval-after-load 'org-agenda
