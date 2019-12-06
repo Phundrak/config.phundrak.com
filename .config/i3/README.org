@@ -14,9 +14,7 @@
 #+LATEX_HEADER_EXTRA: \usepackage{xcolor}
 #+LATEX_HEADER_EXTRA: \usepackage{hyperref}
 #+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{multicol}
 #+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-#+LATEX_HEADER_EXTRA: \sloppy
 
 # ### HTML #####################################################################
 #+HTML_DOCTYPE: html5
@@ -136,10 +134,10 @@
    | $term       | st                                                                       |
 
    #+NAME: variable-sh
-   | $exiti3     | i3-nagbar -t warning -m "Leave i3?" -b "Yes" "i3-msg exit"               |
+   | $exiti3     | i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'               |
    | $lockscreen | Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89           |
    | $rofiexec   | rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons |
-   | $gnus       | emacsclient --create-frame --eval "(gnus)" -n                            |
+   | $gnus       | emacsclient --create-frame --eval '(gnus)' -n                            |
    | $ec         | emacsclient --create-frame -n                                            |
    | $walset     | wal -i ~/Pictures/Wallpapers -o wal-set                                  |
 
@@ -542,9 +540,9 @@
     To move  containers between  the available screens,  you have  the following
     shortcuts:
     #+NAME: containers-move-sh
-    | shortcut          | command                        | what it does                                               |
-    |-------------------+--------------------------------+------------------------------------------------------------|
-    | $mod+Ctrl+$left | move container to output left  | Moves the container to the screen left of the current one  |
+    | shortcut         | command                        | what it does                                               |
+    |------------------+--------------------------------+------------------------------------------------------------|
+    | $mod+Ctrl+$left  | move container to output left  | Moves the container to the screen left of the current one  |
     | $mod+Ctrl+$down  | move container to output down  | Moves the container to the screen down of the current one  |
     | $mod+Ctrl+$up    | move container to output up    | Moves the container to the screen above the current one    |
     | $mod+Ctrl+$right | move container to output right | Moves the container to the screen right of the current one |
