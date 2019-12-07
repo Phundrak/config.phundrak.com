@@ -437,7 +437,7 @@
    #+NAME: computer-sh
    | shortcut      | command                    | what it does           |
    |---------------+----------------------------+------------------------|
-   | $mod+l        | i3lock -fol                | Lock the screen        |
+   | $mod+l        | exec i3lock -fol           | Lock the screen        |
    | $mod+$alt+h   | exec "systemctl suspend"   | Suspend the computer   |
    | $mod+Ctrl+h   | exec "systemctl hibernate" | Hibernate the computer |
    | $mod+Shift+F4 | exec poweroff              | Power off the computer |
