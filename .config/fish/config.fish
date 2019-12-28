@@ -17,7 +17,9 @@ end
 
 function fish_greeting; end
 
-set -gx PATH $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
+set -gx PATH \
+$HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin \
+$HOME/.gem/ruby/2.6.0/bin $PATH
 
 set -gx SUDO_ASKPASS ~/.local/bin/askpass
 
@@ -99,7 +101,6 @@ abbr exti exit
 
 abbr hotp htop
 
-abbr sudo 'sudo -A'
 abbr please 'sudo -A'
 
 abbr q exit

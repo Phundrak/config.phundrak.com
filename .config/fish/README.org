@@ -2,20 +2,15 @@
 #+AUTHOR: Lucien "Phundrak” Cartier-Tilet
 #+EMAIL: lucien@phundrak.com
 #+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
+#+EXPORT_FILE_NAME: index.html
 
 # ### LaTeX ####################################################################
-#+LATEX_CLASS: conlang
+#+LATEX_CLASS: article
 #+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,xcolor,hyperref,indentfirst}
 #+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \setmainfont{Charis SIL}
 #+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{multicol}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-#+LATEX_HEADER_EXTRA: \sloppy
 
 # ### HTML #####################################################################
 #+HTML_DOCTYPE: html5
@@ -147,7 +142,9 @@
   binaries, Go’s binaries  and my own executables. And of  course, don’t forget
   to add the already existing =PATH=.
   #+BEGIN_SRC fish
-    set -gx PATH $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $PATH
+    set -gx PATH \
+    $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin \
+    $HOME/.gem/ruby/2.6.0/bin $PATH
   #+END_SRC
 
   Sometimes, software  will rely on =SUDO_ASKPASS=  to get a GUI  from which it
