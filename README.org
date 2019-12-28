@@ -19,9 +19,9 @@
 
 # ### HTML #####################################################################
 #+HTML_DOCTYPE: html5
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
 #+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
 #+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
@@ -704,21 +704,21 @@
       set PACKAGES \
       acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
       awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
-      bluez-utils bookworm boost bzip2 chicken chromium clisp compton cppcheck \
+      bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
       cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
       diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
-      docker-compose doxygen dunst dwarffortress emacs exfat-utils farbfeld feh \
-      ffmpegthumbnailer findutils firefox flake8 font-mathematica fontforge freeglut \
-      fzf gcc-libs gdb gimp glibc gnome-disk-utility gnome-epub-thumbnailer \
-      gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop i3-gaps \
-      i3lock-blur i3status igdm-bin inetutils j4-dmenu-desktop \
-      javascript-typescript-langserver jfsutils jmtpfs lastpass-cli less \
-      linux-headers lldb logrotate lvm2 ly-git meson minted mpc mpd \
-      mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-      nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
+      docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
+      emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox flake8 \
+      font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
+      golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
+      inetutils j4-dmenu-desktop javascript-typescript-langserver js-beautify \
+      jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
+      meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
+      ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
       networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs nordvpn-bin \
-      noto-fonts-emoji npm ntfs-3g numlockx openssh otf-ipafont p7zip pacman-contrib \
-      pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
+      noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
+      pacman-contrib pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
       pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
       python-importmagic python-language-server python-nose python-pip python-ptvsd \
       python-pytest python-pywal qemu r raw-thumbnailer reflector rofi \
@@ -730,10 +730,11 @@
       ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono \
       ttf-joypixels ttf-koruri ttf-liberation ttf-material-design-icons-git \
       ttf-monapo ttf-mplus ttf-ms-fonts ttf-sazanami ttf-symbola ttf-tibetan-machine \
-      ttf-twemoji-color ttf-unifont ttf-vlgothic typescript unicode unicode-emoji \
-      unrar usbutils valgrind vscode-css-languageserver-bin w3m wget x11-ssh-askpass \
-      xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers xorg-server xorg-xinit \
-      xss-lock xvkbd yapf
+      ttf-twemoji-color ttf-unifont ttf-vlgothic typescript \
+      typescript-language-server-bin unicode unicode-emoji unrar usbutils valgrind \
+      vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers \
+      xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
     #+END_SRC
     These are the minimum  I would have in my own installation.  You can edit it
     however you want. Let’s install those.
@@ -1096,8 +1097,8 @@
     :PROPERTIES:
     :CUSTOM_ID: h-8c6e2311-eb84-4bf4-8e0b-948f89bc9664
     :END:
-    For go development from Emacs, the Spacemacs go layer requires some packages
-    to be installed.
+    For go development from Emacs, the Spacemacs go and lsp layers requires some
+    packages to be installed.
     #+BEGIN_SRC fish
       go get -v golang.org/x/tools/gopls@latest
       go get -u -v golang.org/x/tools/cmd/godoc
@@ -1114,6 +1115,7 @@
       go get -u -v github.com/mdempsky/gocode
       go get -u -v github.com/rogpeppe/godef
       go get -u -v github.com/zmb3/gogetdoc
+      go get -u -v golang.org/x/tools/gopls
     #+END_SRC
 
 *** Set up Chicken (Scheme interpreter/compiler)
