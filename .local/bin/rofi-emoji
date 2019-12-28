@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
-grep -v "#" ~/.config/emoji.txt | rofi -dmenu -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
 
 set emoji (xclip -o -selection clipboard | tr -d '\n')
-test -z "$emoji" && notify-send "No emoji copied" && exit
+test -z "$emoji" && notify-send "No emoji copied" -u low && exit
 set -a emoji "copied to clipboard"
-pgrep -x dunst >/dev/null && notify-send $emoji
+pgrep -x dunst >/dev/null && notify-send -u low $emoji

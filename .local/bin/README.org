@@ -41,11 +41,11 @@
   :PROPERTIES:
   :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
   :END:
-
 - [[#presentation][Presentation]]
 - [[#4chandl][4chandl]]
 - [[#askpass][Askpass]]
 - [[#backup][Backup]]
+- [[#connectwifi][ConnectWifi]]
 - [[#cppnew][Cppnew]]
 - [[#cnew][Cnew]]
 - [[#dart-language-server][Dart Language Server]]
@@ -69,6 +69,7 @@
   - [[#ask-what-type-of-drive-to-unmount][Ask what type of drive to unmount]]
   - [[#launch-the-unmounting-functions][Launch the unmounting functions]]
 - [[#starwars][Starwars]]
+- [[#updateflutter][UpdateFlutter]]
 - [[#wacom-setup][Wacom setup]]
   - [[#set-our-variables][Set our variables]]
   - [[#select-our-screen][Select our screen]]
@@ -191,6 +192,28 @@
     cp $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
   #+END_SRC
 
+* ConnectWifi
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle connect-wifi :exports code
+  :CUSTOM_ID: h-7a958906-1f79-448f-95b3-7226bc80e88c
+  :END:
+  =connect-wifi= is  a small  utility tool  that allows the  user to  connect to
+  available WiFi networks. The  first thing to do is to select  the WiFi we want
+  to connect  to. We’ll  use the  =nmcli c  s= command  to get  the list  of the
+  available networks, and we’ll chose one with =rofi=.
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    set SELECTEDWIFI (nmcli d w l | egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | rofi -dmenu -p "Select your WiFi network")
+  #+END_SRC
+  Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
+  let’s just send a notification no network was selected.
+  #+BEGIN_SRC fish
+    if test -z $SELECTEDWIFI
+        notify-send "No WiFi network selected" -u low && exit
+    end
+    nmcli c u $SELECTEDWIFI
+  #+END_SRC
+
 * Cppnew
   :PROPERTIES:
   :CUSTOM_ID: h-264945df-fe7a-4f9d-845a-9cc26c196f4b
@@ -208,6 +231,20 @@
 
   The choice is given to the user which of them to use with options that will be
   given to =cppnew=.
+
+  #+begin_src fish
+#!/usr/bin/env fish
+  #+end_src
+
+  First of all, if no arguments were passed, return an error.
+  #+begin_src fish
+    if ! count $argv >/dev/null
+        echo "Missing argument: PROJECT" && return -1
+    end
+  #+end_src
+
+  Now, let’s set a couple of variables which will prove useful later on when
+  trying to set up our project.
 
 * Cnew
   :PROPERTIES:
@@ -286,7 +323,7 @@
   should launch instead the following code:
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
+    /usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
   #+END_SRC
   So, instead of  using the obsolete executable, instead we  will be calling the
   analysis server as requested.
@@ -314,15 +351,15 @@
   emoji is selected, it is copied to the clipboard using =xclipboard=.
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
   #+END_SRC
 
   Also, let’s send a notification telling the user the emoji has been copied!
   #+BEGIN_SRC fish
     set emoji (xclip -o -selection clipboard | tr -d '\n')
-    test -z "$emoji" && notify-send "No emoji copied" && exit
+    test -z "$emoji" && notify-send "No emoji copied" -u low && exit
     set -a emoji "copied to clipboard"
-    pgrep -x dunst >/dev/null && notify-send $emoji
+    pgrep -x dunst >/dev/null && notify-send -u low $emoji
   #+END_SRC
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
@@ -1093,6 +1130,21 @@
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
     telnet towel.blinkenlights.nl
+  #+END_SRC
+
+* UpdateFlutter
+  :PROPERTIES:
+  :header-args: :tangle UpdateFlutter :exports code
+  :CUSTOM_ID: h-1005db1f-aecc-4fca-be2d-98fd33c1461a
+  :END:
+
+  This is a simple utility to be ran when the ~flutter~ package is updated.
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    sudo chown -R :flutterusers /opt/flutter
+    sudo chmod -R g+w /opt/flutter
+    sudo chmod a+rw /opt/flutter/version
+    sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
   #+END_SRC
 
 * Wacom setup

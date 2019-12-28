@@ -1,0 +1,7 @@
+#!/usr/bin/env fish
+set SELECTEDWIFI (nmcli d w l | egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | rofi -dmenu -p "Select your WiFi network")
+
+if test -z $SELECTEDWIFI
+    notify-send "No WiFi network selected" -u low && exit
+end
+nmcli c u $SELECTEDWIFI
