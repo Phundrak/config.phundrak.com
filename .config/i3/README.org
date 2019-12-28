@@ -876,6 +876,7 @@
     | $mod+Ctrl+u       | exec rofi-umount      | Volume unmounting helper                                              |
     | $mod+$alt+e       | exec rofi-emoji       | Emoji picker, copies it in the clipboard                              |
     | $mod+w            | exec wacom-setup      | Sets my Wacom Bamboo tablet as being active on the selected screen    |
+    | $mod+Shift+w      | exec connect-wifi     | Connect to an available WiFi network                                  |
 
     This gives us the following configuration:
     #+BEGIN_SRC conf
