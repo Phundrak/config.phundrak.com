@@ -40,8 +40,7 @@ This function should only modify configuration layer settings."
                       auto-completion-enable-sort-by-usage t
                       :disabled-for
                       org
-                      git
-                      github)
+                      git)
      (better-defaults :variables
                       better-defaults-move-to-beginning-of-code-first t
                       better-defaults-move-to-end-of-code-first t)
@@ -61,7 +60,10 @@ This function should only modify configuration layer settings."
      conlanging
      csv
      colors
-     dart
+     (dart :variables
+           dart-server-sdk-path "/opt/flutter/bin/cache/dart-sdk/"
+           lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/")
+     dap
      dired-phundrak
      django
      docker
@@ -69,7 +71,6 @@ This function should only modify configuration layer settings."
      epub
      ess
      git
-     github
 		 graphviz
      (go :variables
          go-backend 'lsp
@@ -98,13 +99,14 @@ This function should only modify configuration layer settings."
            json-fmt-tool 'web-beautify)
      (keyboard-layout :variables
                       kl-layout 'bepo
-                      kl-disabled-configurations '(magit dired))
+                      kl-disabled-configurations '(magit dired eww))
      (latex :variables
             latex-build-command "xelatex"
             latex-enable-auto-fill t
             latex-enable-folding t
             latex-enable-magic t)
      lsp
+     major-modes
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c"
@@ -113,8 +115,6 @@ This function should only modify configuration layer settings."
                                          "rust"
                                          ("elisp" "emacs-lisp")))
      nginx
-     (notmuch :variables
-              notmuch-message-delete-tags '("+deleted" "-inbox" "-unread"))
      (org :variables
           org-enable-reveal-js-support t
           org-enable-github-support t
@@ -146,7 +146,7 @@ This function should only modify configuration layer settings."
      semantic
      (shell :variables
             shell-default-height 40
-            shell-default-position 'right
+            shell-default-position 'bottom
             shell-default-shell 'eshell)
      shell-scripts
      selectric
@@ -179,8 +179,7 @@ This function should only modify configuration layer settings."
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(atomic-chrome
-                                      bbdb
-                                      dianyou
+                                      dired-du
                                       doom-themes
                                       edit-indirect
                                       elcord
@@ -606,8 +605,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (require 'package)
   (require 'ox-latex)
   (require 'ox-publish)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  (require 'org-tempo)
+  (require 'dap-lldb)
+  (require 'dap-firefox)
 
+  (add-to-list 'load-path "~/.local/share/icons-in-terminal/")
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (flyspell-mode 0)
   (setq tramp-ssh-controlmaster-options
@@ -627,16 +629,45 @@ configuration.
 Put your configuration code here, except for variables that should be set
 biefore packages are loaded."
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        ;           Custom functions          ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun write-to-buffer (input-string outputbuf &optional switchbuf)
+    "Writes `input-string' to the specified `output-buffer'. If
+`switch-buffer' is non-nil, the active buffer will switch to the
+output buffer; otherwise, it will take the user back to their
+initial buffer. Works with `input-string' as a string or a list
+of strings."
+    (let ((oldbuf (current-buffer)))
+      (switch-to-buffer outputbuf)
+      (cond ((char-or-string-p input-string) (insert input-string))
+            ((listp input-string) (dolist (elem input-string)
+                                    (insert (format "%s\n" elem)))))
+      (if switchbuf
+          (switch-to-buffer oldbuf))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 Dart                ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (spacemacs/set-leader-keys-for-major-mode 'dart-mode
-    "o=" 'dart-server-format)
+    "ofH" 'flutter-hot-restart
+    "ofh" 'flutter-hot-reload
+    "ofq" 'flutter-quit
+    "ofr" (lambda () (interactive) (flutter-run "-v"))
+    "ofs" 'flutter-screenshot)
+  (spacemacs/declare-prefix-for-mode 'dart-mode "o" "custom")
+  (spacemacs/declare-prefix-for-mode 'dart-mode "of" "flutter")
+  (spacemacs/declare-prefix-for-mode 'dart-mode "ofr" "flutter-run")
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                        ;               Notmuch               ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (add-hook 'notmuch-hello-mode-hook (lambda () (shell-command "offlineimap")))
+                                        ;                 LSP                 ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (lsp-treemacs-sync-mode 1)
+  (dap-mode 1)
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;                 Misc                ;
@@ -667,9 +698,7 @@ biefore packages are loaded."
                                  ))
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook 'eldoc-mode)
-  (mapc (lambda (x)
-          (add-hook 'prog-mode-hook x))
-        '(visual-line-mode))
+  (add-hook 'prog-mode-hook 'visual-line-mode)
   (mapc (lambda (x)
           (add-hook x 'auto-fill-mode)
           (add-hook x 'visual-line-mode))
@@ -751,6 +780,7 @@ biefore packages are loaded."
   (spacemacs/declare-prefix "om" "multiple-cursors")
   (spacemacs/declare-prefix "oo" "org-mode")
   (spacemacs/declare-prefix "ooi" "custom IDs")
+  (spacemacs/declare-prefix "oos" "structure")
   (spacemacs/declare-prefix "oot" "tables")
   (spacemacs/declare-prefix "oott" "toggle width")
   (spacemacs/declare-prefix "oote" "expand")
@@ -783,6 +813,7 @@ biefore packages are loaded."
     "omp"  'mc/mark-previous-like-this
     "oma"  'mc/mark-all-like-this
     "ooi"  'eos/org-add-ids-to-headlines-in-file
+    "oos"  'org-insert-structure-template
     "ooT"  'org-sidebar-tree
     "oott" 'org-table-toggle-column-width
     "oote" 'org-table-expand
@@ -939,23 +970,23 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
                                                                 ":DAILY:")))))
      org-agenda-files (list "~/org")
      org-confirm-babel-evaluate 'ck/org-confirm-babel-evaluate
-     org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar"
      org-export-latex-hyperref-format "\\ref{%s}"
      org-html-validation-link nil
      org-journal-date-prefix "#+TITLE: "
      org-journal-dir "~/org/journal/"
      org-journal-file-format "%Y-%m-%d"
-     org-latex-listings 'minted
-     org-reveal-root "file:///home/phundrak/fromGIT/reveal.js"
-     org-latex-compiler "xelatex"
-     org-latex-pdf-process
-     '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-       "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
      org-src-tab-acts-natively t
      user-full-name "Lucien Cartier-Tilet"
      user-mail-address "lucien@phundrak.com"
      ;; subscripts and superscripts need {} to work
      org-use-sub-superscripts (quote {})
+     org-latex-listings 'minted
+     org-reveal-root "file:///home/phundrak/fromGIT/reveal.js"
+     org-latex-compiler "xelatex"
+     org-latex-pdf-process
+     '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+       "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+       "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
      org-latex-default-packages-alist '((""         "graphicx"  t)
                                         (""         "longtable" nil)
                                         (""         "wrapfig"   nil)
@@ -966,46 +997,42 @@ So a typical ID could look like \"Org-4nd91V40HI\"."
                                         (""         "amssymb"   t)
                                         (""         "capt-of"   nil)
                                         (""         "hyperref"  nil))
-     org-structure-template-alist (append
-                                   org-structure-template-alist
-                                   '(("el" "#+BEGIN_SRC emacs-lisp :exports results
-?
-#+END_SRC")))
+     org-structure-template-alist (append org-structure-template-alist
+                                          '(("el" . "src emacs-lisp")))
 
      ;;; Org projects
      org-publish-project-alist
-     '(("langue-phundrak-fr-org"
-        :base-directory "~/Documents/conlanging/"
+     '(("langue-phundrak-com-org"
+        :base-directory "~/Documents/conlanging/web/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
         :recursive t
         :publishing-function org-html-publish-to-html
         :headline-levels 5
+        :auto-sitemap t
         :auto-preamble t)
-       ("langue-phundrak-fr-pdf"
-        :base-directory "~/Documents/conlanging/"
+       ("langue-phundrak-com-pdf"
+        :base-directory "~/Documents/conlanging/web/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
         :recursive t
         :publishing-function org-latex-publish-to-pdf
         :headline-levels 5
         :auto-preamble t)
-       ("langue-phundrak-fr-static"
-        :base-directory "~/Documents/conlanging"
-        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt"
-        :exclude ".*auto-generated.*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.fr/langue"
+       ("langue-phundrak-com-static"
+        :base-directory "~/Documents/conlanging/web/"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
         :recursive t
         :publishing-function org-publish-attachment)
-       ("langue-phundrak-fr"
-        :components ("langue-phundrak-fr-org"
-                     "langue-phundrak-fr-static"
-                     "langue-phundrak-fr-pdf"))))
+       ("langue-phundrak-com"
+        :components ("langue-phundrak-com-org"
+                     "langue-phundrak-com-static"
+                     "langue-phundrak-com-pdf"))))
 
     (add-to-list 'org-latex-packages-alist '("" "minted"))
-    (add-to-list 'org-latex-packages-alist '("" "fontspec"))
     (add-to-list 'org-latex-packages-alist '("" "fontspec"))
     (add-to-list 'org-latex-packages-alist '("" "xeCJK"))
 
@@ -1182,79 +1209,79 @@ double-quotes matter and must be escaped appropriately."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(ansi-color-faces-vector
-     [default default default italic underline success warning error])
-   '(ansi-color-names-vector
-     ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
-   '(default-input-method "ipa-x-sampa")
-   '(eshell-aliases-file "/home/phundrak/.emacs.d/private/eshell-alias")
-   '(evil-want-Y-yank-to-eol nil)
-   '(fci-rule-color "#5B6268")
-   '(hl-todo-keyword-faces
-     (quote
-      (("TODO" . "#dc752f")
-       ("NEXT" . "#dc752f")
-       ("THEM" . "#2d9574")
-       ("PROG" . "#3a81c3")
-       ("OKAY" . "#3a81c3")
-       ("DONT" . "#f2241f")
-       ("FAIL" . "#f2241f")
-       ("DONE" . "#42ae2c")
-       ("NOTE" . "#b1951d")
-       ("KLUDGE" . "#b1951d")
-       ("HACK" . "#b1951d")
-       ("TEMP" . "#b1951d")
-       ("FIXME" . "#dc752f")
-       ("XXX" . "#dc752f")
-       ("XXXX" . "#dc752f"))))
-   '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
-   '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
-   '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
-   '(objed-cursor-color "#ff6c6b")
-   '(org-export-headline-levels 4)
-   '(package-selected-packages
-     (quote
-      (org-sidebar dap-mode bui tree-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-   '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
-   '(safe-local-variable-values
-     (quote
-      ((org-confirm-babel-evaluate)
-       (javascript-backend . tern)
-       (javascript-backend . lsp)
-       (go-backend . go-mode)
-       (go-backend . lsp))))
-   '(solaire-mode-auto-swap-bg t)
-   '(vc-annotate-background "#282c34")
-   '(vc-annotate-color-map
-     (list
-      (cons 20 "#98be65")
-      (cons 40 "#b4be6c")
-      (cons 60 "#d0be73")
-      (cons 80 "#ECBE7B")
-      (cons 100 "#e6ab6a")
-      (cons 120 "#e09859")
-      (cons 140 "#da8548")
-      (cons 160 "#d38079")
-      (cons 180 "#cc7cab")
-      (cons 200 "#c678dd")
-      (cons 220 "#d974b7")
-      (cons 240 "#ec7091")
-      (cons 260 "#ff6c6b")
-      (cons 280 "#cf6162")
-      (cons 300 "#9f585a")
-      (cons 320 "#6f4e52")
-      (cons 340 "#5B6268")
-      (cons 360 "#5B6268")))
-   '(vc-annotate-very-old-color nil))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
+ '(default-input-method "ipa-x-sampa")
+ '(eshell-aliases-file "/home/phundrak/.emacs.d/private/eshell-alias")
+ '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#5B6268")
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#42ae2c")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX" . "#dc752f")
+     ("XXXX" . "#dc752f"))))
+ '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
+ '(objed-cursor-color "#ff6c6b")
+ '(org-export-headline-levels 4)
+ '(package-selected-packages
+   (quote
+    (dired-du org-sidebar dap-mode bui tree-mode xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
+ '(safe-local-variable-values
+   (quote
+    ((org-confirm-babel-evaluate)
+     (javascript-backend . tern)
+     (javascript-backend . lsp)
+     (go-backend . go-mode)
+     (go-backend . lsp))))
+ '(solaire-mode-auto-swap-bg t)
+ '(vc-annotate-background "#282c34")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#98be65")
+    (cons 40 "#b4be6c")
+    (cons 60 "#d0be73")
+    (cons 80 "#ECBE7B")
+    (cons 100 "#e6ab6a")
+    (cons 120 "#e09859")
+    (cons 140 "#da8548")
+    (cons 160 "#d38079")
+    (cons 180 "#cc7cab")
+    (cons 200 "#c678dd")
+    (cons 220 "#d974b7")
+    (cons 240 "#ec7091")
+    (cons 260 "#ff6c6b")
+    (cons 280 "#cf6162")
+    (cons 300 "#9f585a")
+    (cons 320 "#6f4e52")
+    (cons 340 "#5B6268")
+    (cons 360 "#5B6268")))
+ '(vc-annotate-very-old-color nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
