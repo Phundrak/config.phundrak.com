@@ -701,7 +701,8 @@
     :END:
     Let’s set in a custom varible what packages we’ll be needing.
     #+BEGIN_SRC fish
-      set PACKAGES \
+      set PACKAGES
+
       acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
       awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
       bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
@@ -721,10 +722,10 @@
       pacman-contrib pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
       pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
       python-importmagic python-language-server python-nose python-pip python-ptvsd \
-      python-pytest python-pywal qemu r raw-thumbnailer reflector rofi \
-      rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sent shadow siji-git \
-      simplescreenrecorder speedcrunch sshfs st-luke-git swi-prolog texlive-bin \
-      texlive-langchinese texlive-langcyrillic texlive-langgreek \
+      python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
+      rofi rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sent shadow \
+      siji-git simplescreenrecorder speedcrunch sshfs st-luke-git swi-prolog \
+      texlive-bin texlive-langchinese texlive-langcyrillic texlive-langgreek \
       texlive-langjapanese texlive-langkorean texlive-latexextra \
       texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
       ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono \
