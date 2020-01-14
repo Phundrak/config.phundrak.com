@@ -86,40 +86,33 @@
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
   :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-config.el
   :END:
-** File extensions
+** ASM configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-beb67a88-d7d3-4d58-bbc7-7a7be67f64aa
+   :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
    :END:
-   Sometimes,  Emacs   doesn’t  recognize  or  misrecognizes   some  extensions,
-   resulting in a  wrong mode set for  said file. Let’s fix  that by associating
-   the extension with the desired mode:
+   The first thing I  will set with my ASM configuration  is where the reference
+   PDF is located.
    #+BEGIN_SRC emacs-lisp
-     (dolist (e '(("xml" . web-mode)
-                  ("xinp" . web-mode)
-                  ("aiml" . web-mode)
-                  ("C" . c++-mode)
-                  ("dconf" . conf-mode)
-                  ("yy" . bison-mode)
-                  ("ll" . flex-mode)
-                  ("s" . asm-mode)
-                  ("pl" . prolog-mode)
-                  ("l" . scheme-mode)
-                  ("vs" . glsl-mode)
-                  ("fs" . glsl-mode)))
-       (push (cons (concat "\\."
-                           (car e)
-                           "\\'") (cdr e))
-             auto-mode-alist))
+     (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
+   #+END_SRC
+   I will also modify what the comment character is, from a ~;~ to a ~#~:
+   #+BEGIN_SRC emacs-lisp
+     (setq asm-comment-char ?\#)
    #+END_SRC
 
-   We also have a couple of  extensions which should all be in ~conf-unix-mode~,
-   let’s indicate that to Emacs:
+** C/C++
+   :PROPERTIES:
+   :CUSTOM_ID: h-c0ee6b96-db28-408e-872a-4c4347f807d8
+   :END:
+   As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
+   latest standard available, that is C++17 and C17, from Clang.
    #+BEGIN_SRC emacs-lisp
-     (dolist (e '("service" "timer" "target" "mount" "automount"
-                  "slice" "socket" "path" "netdev" "network"
-                  "link"))
-       (push (cons (concat "\\." e "\\'") 'conf-unix-mode)
-             auto-mode-alist))
+     (add-hook 'c-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c17")))
+     (add-hook 'c++-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c++17")))
    #+END_SRC
 
 ** Custom functions
@@ -162,274 +155,6 @@
         '("st"))
     #+END_SRC
 
-** Miscellaneous
-   :PROPERTIES:
-   :CUSTOM_ID: h-cee08965-745a-4a6f-b04e-bf1638342698
-   :END:
-   I have  a lot of variables  that need to be  set but don’t fall  in any other
-   category, so I’ll collect them here.
-
-   I have this regexp for detecting paragraphs.
-   #+BEGIN_SRC emacs-lisp
-   (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
-   #+END_SRC
-
-*** Evil
-    :PROPERTIES:
-    :CUSTOM_ID: h-1d889318-8b93-4e78-9fe4-9e751b0b1cbe
-    :END:
-    As a user of Evil, I’m sometimes  pissed when I accidentally press ~C-u~ and
-    it gets me to the top of the document. So, let’s disable it:
-    #+BEGIN_SRC emacs-lisp
-      (setq evil-want-C-u-scroll nil)
-    #+END_SRC
-
-*** Default modes
-    :PROPERTIES:
-    :CUSTOM_ID: h-3ac59b6b-4ea3-4270-bdf2-07a68b867ebc
-    :END:
-    Some  buffers sometimes  won’t  have a  default  mode at  all,  such as  the
-    ~*scratch*~ buffer. In any vanilla  configuration, they will then default to
-    ~text-mode~. I personally prefer ~org-mode~ to  be my default mode, so let’s
-    set it so!
-    #+BEGIN_SRC emacs-lisp
-      (setq edit-server-default-major-mode 'org-mode)
-    #+END_SRC
-
-    I also  want to  have by  default some aggressive  indentation in  my source
-    files. Let’s enable that:
-    #+BEGIN_SRC emacs-lisp
-      (global-aggressive-indent-mode 1)
-    #+END_SRC
-    However, I do not  wish to see it activated for Dart  mode, so let’s exclude
-    it:
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'aggressive-indent-excluded-modes 'dart-mode)
-    #+END_SRC
-
-*** Hooks
-    :PROPERTIES:
-    :CUSTOM_ID: h-a895c541-505f-4dc2-8eac-d1fbc45e2512
-    :END:
-    I also have  some hooks I use  for enabling some major and  minor modes. The
-    first one here  allows the execution of the deletion  of trailing space each
-    time I save a file.
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'before-save-hook 'delete-trailing-whitespace)
-    #+END_SRC
-
-    I also  want to always  be in  ~visual-line-mode~ so Emacs  soft-wraps lines
-    that are too long for the buffer they are displayed in.
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'prog-mode-hook 'visual-line-mode)
-    #+END_SRC
-
-    I also want  for some non-programming modes to enable  a hard-limit in terms
-    of how many characters can fit on one line. The modes that benefit from that
-    are ~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
-    #+BEGIN_SRC emacs-lisp
-      (mapc (lambda (x)
-           (add-hook x 'auto-fill-mode)
-           (add-hook x 'visual-line-mode))
-         '(message-mode-hook
-           org-mode-hook
-           text-mode-hook
-           markdown-mode-hook))
-    #+END_SRC
-
-*** Pinentry
-    :PROPERTIES:
-    :CUSTOM_ID: h-c69ca384-fb5b-49e9-9b0d-987da0df1d61
-    :END:
-    Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s
-    set it so:
-    #+BEGIN_SRC emacs-lisp
-    (setq epa-pinentry-mode 'loopback)
-    #+END_SRC
-
-*** Prettified symbols
-    :PROPERTIES:
-    :CUSTOM_ID: h-3b37d76b-8da4-4c06-adfc-0ccd04bbef18
-    :END:
-    Just because  it is  pleasing to the  eye, some symbols  in source  code get
-    prettified into simpler symbols. Here is the  list of symbols that are to be
-    prettified. You  can see in  the corresponding  comment what symbol  will be
-    displayed.
-    #+BEGIN_SRC emacs-lisp
-      (setq prettify-symbols-alist '(("lambda" . 955) ; λ
-                                     ("->" . 8594)    ; →
-                                     ("<->" . 8596)   ; ↔
-                                     ("<-" . 8592)    ; ←
-                                     ("=>" . 8658)    ; ⇒
-                                     ("<=>" . 8860)   ; ⇔
-                                     ("<=" . 8656)    ; ⇐
-                                     ("mapc" . 8614)  ; ↦
-                                     ("map" . 8614)   ; ↦
-                                     (">>" . 187)     ; »
-                                     ("<<" . 171)     ; «
-                                     ))
-    #+END_SRC
-
-*** Twittering mode
-    :PROPERTIES:
-    :CUSTOM_ID: h-fb99695a-99f9-4c30-a286-a9accbb8410f
-    :END:
-    For ~twittering-mode~, a Twitter major mode  for Emacs, I want to encrypt my
-    data using a master password, which I do thanks to this option:
-    #+BEGIN_SRC emacs-lisp
-      (setq twittering-use-master-password t)
-    #+END_SRC
-
-*** Wttr.in cities
-    :PROPERTIES:
-    :CUSTOM_ID: h-9d0208e7-f88f-4bba-a48a-e306d3f00939
-    :END:
-    Thanks to the wttrin package, I can  get the weather forecast in Emacs for a
-    couple of cities. I just need to specify them to Emacs like so:
-    #+BEGIN_SRC emacs-lisp
-      (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
-                                    "Saint Agrève"))
-    #+END_SRC
-
-** Shortcuts
-   :PROPERTIES:
-   :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
-   :END:
-   As you  will see, I  defined A  LOT of custom  shortcuts. First, I  have some
-   shortcuts defined the vanilla Emacs way:
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x C-b") 'ibuffer)
-     (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-     (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-     (global-set-key (kbd "S-C-<down>") 'shrink-window)
-     (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-     (global-set-key (kbd "C-x <up>") 'windmove-up)
-     (global-set-key (kbd "C-x <down>") 'windmove-down)
-     (global-set-key (kbd "C-x <right>") 'windmove-right)
-     (global-set-key (kbd "C-x <left>") 'windmove-left)
-     (global-set-key (kbd "C-<prior>") 'previous-buffer)
-     (global-set-key (kbd "C-<next>") 'next-buffer)
-     (global-set-key (kbd "M-»") 'end-of-buffer)
-     (global-set-key (kbd "M-«") 'beginning-of-buffer)
-     (global-set-key (kbd "<XF86HomePage>") 'spacemacs/home)
-     (global-set-key (kbd "<XF86Open>") 'helm-find-files)
-     (global-set-key (kbd "<XF86Close>") 'kill-this-buffer)
-     (global-set-key (kbd "<XF86Save>") 'save-buffer)
-     (global-set-key (kbd "<C-tab>") 'evil-close-fold)
-     (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
-     (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
-   #+END_SRC
-   These shortcuts  can be  called as-is,  that is, typing  ~C-x C-b~  will call
-   ~ibuffer~.
-
-   Now, I also have some Spacemacs shortcuts,  defined in a way they can be used
-   seamlessly with  Evil. First, let’s declare  some prefixes in order  to avoid
-   seeing lots of ~custom~ in helm:
-   #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "o" "custom")
-     (spacemacs/declare-prefix "oa" "applications")
-     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
-     (spacemacs/declare-prefix "oc" "comments")
-     (spacemacs/declare-prefix "of" "files")
-     (spacemacs/declare-prefix "ofb" ".local/bin sources")
-     (spacemacs/declare-prefix "ofe" "spacemacs.org")
-     (spacemacs/declare-prefix "off" "fish config")
-     (spacemacs/declare-prefix "ofi" "i3 config")
-     (spacemacs/declare-prefix "ofp" "polybar config")
-     (spacemacs/declare-prefix "ofr" "yadm README")
-     (spacemacs/declare-prefix "oi" "insert")
-     (spacemacs/declare-prefix "oii" "invisible space")
-     (spacemacs/declare-prefix "om" "multiple-cursors")
-     (spacemacs/declare-prefix "oo" "org-mode")
-     (spacemacs/declare-prefix "ooi" "custom IDs")
-     (spacemacs/declare-prefix "oos" "structure")
-     (spacemacs/declare-prefix "oot" "tables")
-     (spacemacs/declare-prefix "oott" "toggle width")
-     (spacemacs/declare-prefix "oote" "expand")
-     (spacemacs/declare-prefix "oots" "shrink")
-     (spacemacs/declare-prefix "or" "external command")
-     (spacemacs/declare-prefix "ot" "toggle")
-     (spacemacs/declare-prefix "ow" "writeroom")
-     (spacemacs/declare-prefix "ox" "text")
-   #+END_SRC
-
-   Now, onto the shortcuts:
-   #+BEGIN_SRC emacs-lisp
-     (spacemacs/set-leader-keys
-       "oac"  'calc
-       "oaC"  'calendar
-       "oae"  'eww
-       "oaw"  'wttrin
-       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
-       "ob"   'fancy-battery-mode
-       "occ"  'outorg-copy-edits-and-exit
-       "oce"  'outorg-edit-as-org
-       "oco"  'outline-minor-mode
-       "od"   'elcord-mode
-       "oF"   'flycheck-mode
-       "ofb"  (lambda () (interactive) (find-file "~/.local/bin/README.org"))
-       "ofe"  (lambda () (interactive) (find-file "~/spacemacs.org"))
-       "off"  (lambda () (interactive) (find-file "~/.config/fish/README.org"))
-       "ofi"  (lambda () (interactive) (find-file "~/.config/i3/README.org"))
-       "ofp"  (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
-       "ofr"  (lambda () (interactive) (find-file "~/README.org"))
-       "ofo"  'find-file-at-point
-       "oii"  (lambda () (interactive) (insert "​"))
-       "ome"  'mc/edit-lines
-       "omn"  'mc/mark-next-like-this
-       "omp"  'mc/mark-previous-like-this
-       "oma"  'mc/mark-all-like-this
-       "ooi"  'eos/org-add-ids-to-headlines-in-file
-       "oos"  'org-insert-structure-template
-       "ooT"  'org-sidebar-tree
-       "oott" 'org-table-toggle-column-width
-       "oote" 'org-table-expand
-       "oots" 'org-table-shrink
-       "oow"  'org-pomodoro
-       "owi"  'writeroom-increase-width
-       "or"   'helm-run-external-command
-       "os"   'prettify-symbols-mode
-       "oti"  'toggle-input-method
-       "otI"  'set-input-method
-       "owd"  'writeroom-decrease-width
-       "oxf"  'phundrak/fill-paragraph)
-   #+END_SRC
-
-   You can notice they  all begin with ~o~. This is actually  a userspace, and I
-   know these shortcuts won’t conflict with any other packages. These shortcuts,
-   like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
-   key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
-   o a c~.
-
-** C/C++
-   :PROPERTIES:
-   :CUSTOM_ID: h-c0ee6b96-db28-408e-872a-4c4347f807d8
-   :END:
-   As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
-   latest standard available, that is C++17 and C17, from Clang.
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'c-mode-hook
-               (lambda ()
-                 (setq flycheck-clang-language-standard "c17")))
-     (add-hook 'c++-mode-hook
-               (lambda ()
-                 (setq flycheck-clang-language-standard "c++17")))
-   #+END_SRC
-
-** ASM configuration
-   :PROPERTIES:
-   :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
-   :END:
-   The first thing I  will set with my ASM configuration  is where the reference
-   PDF is located.
-   #+BEGIN_SRC emacs-lisp
-     (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
-   #+END_SRC
-   I will also modify what the comment character is, from a ~;~ to a ~#~:
-   #+BEGIN_SRC emacs-lisp
-     (setq asm-comment-char ?\#)
-   #+END_SRC
-
 ** Dart configuration
    :PROPERTIES:
    :CUSTOM_ID: h-00537655-3c5f-4cc0-af90-4f357ba9350f
@@ -451,6 +176,35 @@
        "ofq" 'flutter-quit
        "ofr" (lambda () (interactive) (flutter-run "-v"))
        "ofs" 'flutter-screenshot)
+   #+END_SRC
+
+** Dired
+   :PROPERTIES:
+   :CUSTOM_ID: h-1214442f-4dc7-4855-90ba-bb23d59af2c9
+   :END:
+   When it  comes to dired, I  chose do modify  some elements on how  things are
+   sorted and shown, but there isn’t much configuration. First, I want to always
+   copy folders in a recursive way, no questions asked.
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-recursive-copies 'always)
+   #+END_SRC
+
+   Also, when  I have two  Dired buffers opened side  by side, I  generally want
+   them to interact, for  example if I want to move  something around. So, let’s
+   tell Emacs that:
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-dwim-target t)
+   #+END_SRC
+
+   Finally,  let’s  tell  Dired  how  to sort  the  elements  to  be  displayed:
+   directories first, non-hidden first.
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-listing-switches "-ahl --group-directories-first")
+   #+END_SRC
+
+   By the way, let’s enable ~org-download~ when we are in a Dired buffer:
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'dired-mode-hook 'org-download-enable)
    #+END_SRC
 
 ** Emacs Lisp
@@ -494,33 +248,193 @@
               (switch-to-buffer oldbuf))))
     #+END_SRC
 
-** Dired
+** Eshell
    :PROPERTIES:
-   :CUSTOM_ID: h-1214442f-4dc7-4855-90ba-bb23d59af2c9
+   :CUSTOM_ID: h-846478af-19e5-4e06-a97b-0886062d32c7
    :END:
-   When it  comes to dired, I  chose do modify  some elements on how  things are
-   sorted and shown, but there isn’t much configuration. First, I want to always
-   copy folders in a recursive way, no questions asked.
+   Eshell is a built-in  shell available from Emacs which I  use almost as often
+   as Fish. Some adjustments are necessary for making this shell usable for me.
+
+*** Environment variables
+    :PROPERTIES:
+    :CUSTOM_ID: h-f88fac3c-5bf1-452b-93f2-1f68436f2302
+    :END:
+    Some environment variables need to be  correctly set so Eshell can correctly
+    work. The first  environment variable to be  set is the ~PATH~, as  I have a
+    couple of directories  where executables are located. Let’s add  them to our
+    path.
+    #+BEGIN_SRC emacs-lisp
+      (setenv "PATH"
+              (concat
+               (getenv "HOME") "/.pub-cache/bin"
+               ":" (getenv "HOME") "/.local/bin"
+               ":" (getenv "HOME") "/go/bin"
+               ":" (getenv "HOME") "/.cargo/bin"
+               ":" (getenv "HOME") "/.gem/ruby/2.6.0/bin"
+               ":" (getenv "PATH")))
+    #+END_SRC
+
+    I  would  also  like  to  set two  environment  variables  related  to  Dart
+    development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
+    #+BEGIN_SRC emacs-lisp
+      (setenv "DART_SDK" "/opt/dart-sdk/bin")
+      (setenv "ANDROID_HOME" (concat (getenv "HOME") "/Android/Sdk/"))
+    #+END_SRC
+
+    Finally, I’d like to add a custom directory to the ~PKG_CONFIG_PATH~:
+    #+BEGIN_SRC emacs-lisp
+      (setenv "PKG_CONFIG_PATH" (concat
+                                 "/usr/local/lib/pkgconfig/" ":"
+                                 (getenv "PKG_CONFIG_PATH")))
+    #+END_SRC
+
+*** Custom functions
+    :PROPERTIES:
+    :CUSTOM_ID: h-8c921fc7-6b55-4829-92cd-133131f1e5f8
+    :END:
+    When I’m  in Eshell,  sometimes I  wish to  open multiple  files at  once in
+    Emacs. For this, when I have several arguments for ~find-file~, I want to be
+    able to open them all at once. Let’s modify ~find-file~ like so:
+    #+BEGIN_SRC emacs-lisp
+      (defadvice find-file (around find-files activate)
+        "Also find all files within a list of files. This even works recursively."
+        (if (listp filename)
+            (loop for f in filename do (find-file f wildcards))
+          ad-do-it))
+    #+END_SRC
+
+    I also want to be able to  have multiple instances of Eshell opened at once.
+    For that, I declared the function ~eshell-new~ that does exactly that.
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell-new()
+        "Open a new instance of eshell."
+        (interactive)
+        (eshell 'N))
+    #+END_SRC
+
+*** Aliases
+    :PROPERTIES:
+    :CUSTOM_ID: h-7e11a04b-4387-4a62-af00-5d402814acac
+    :END:
+    Just like most shells, it is possible to declare in Eshell aliases. First, I
+    would like to be able to use ~open~ to open files in Emacs:
+    #+BEGIN_SRC emacs-lisp
+      (defalias 'open 'find-file)
+    #+END_SRC
+
+    I also  have ~openo~  which allows  me to  perform the  same action,  but in
+    another window:
+    #+BEGIN_SRC emacs-lisp
+      (defalias 'openo 'find-file-other-window)
+    #+END_SRC
+
+    The function ~yes-or-no-p~  is also aliased to ~y-or-n-p~ so  I only have to
+    answer by ~y~ or ~n~ instead of typing ~yes~ or ~no~.
+    #+BEGIN_SRC emacs-lisp
+      (defalias 'yes-or-no-p 'y-or-n-p)
+    #+END_SRC
+
+    For  some ease  of use,  I’ll  also declare  ~list-buffers~ as  an alias  of
+    ~ibuffer~.
+    #+BEGIN_SRC emacs-lisp
+      (defalias 'list-buffers 'ibuffer)
+    #+END_SRC
+
+*** Visual commands
+    :PROPERTIES:
+    :CUSTOM_ID: h-b276c491-58ba-43a2-898f-1d65aad0df89
+    :END:
+    With Eshell,  some commands don’t  work very well, especially  commands that
+    create a TUI. So, let’s declare them as visual commands or subcommands:
+    #+BEGIN_SRC emacs-lisp
+      (setq eshell-visual-commands
+            '("fish" "zsh" "bash" "tmux" "htop" "top" "vim" "bat" "nano")
+            eshell-visual-subcommands
+            '("git" "log" "l" "diff" "show"))
+    #+END_SRC
+
+*** Eshell theme
+    :PROPERTIES:
+    :CUSTOM_ID: h-83cff5d6-d77c-40af-ba49-80e5c84ff581
+    :END:
+    As with  most shells, again, it  is possible to customize  the appearance of
+    the Eshell prompt.  First, we need to declare  a macro so we can  set a face
+    with properties:
+    #+BEGIN_SRC emacs-lisp
+      (defmacro with-face (str &rest properties)
+        `(propertize ,str 'face (list ,@properties)))
+    #+END_SRC
+
+    Now,  let’s  declare a  function  that  will  abbreviate the  current  ~pwd~
+    fish-shell style.
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell/abbr-pwd ()
+        (let ((home (getenv "HOME"))
+              (path (eshell/pwd)))
+          (cond
+           ((string-equal home path) "~")
+           ((f-ancestor-of? home path) (concat "~/" (f-relative path home)))
+           (path))))
+    #+END_SRC
+
+    Now, let’s declare our prompt:
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell/my-prompt ()
+        (let ((header-bg "#161616"))
+          (concat
+           (with-face (eshell/abbr-pwd) :foreground "#008700")
+           "\n"
+           (if (= (user-uid) 0)
+               (with-face "➜" :foreground "red")
+             (with-face "➜" :foreground "#2345ba"))
+           " ")))
+    #+END_SRC
+
+    Now, let’s declare our prompt regexp and our prompt functions:
+    #+BEGIN_SRC emacs-lisp
+      (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+            eshell-prompt-function 'eshell/my-prompt)
+    #+END_SRC
+
+    Finally, let’s declare the theme of our shell:
+    #+BEGIN_SRC emacs-lisp
+      (eshell-git-prompt-use-theme 'powerline)
+    #+END_SRC
+
+** File extensions
+   :PROPERTIES:
+   :CUSTOM_ID: h-beb67a88-d7d3-4d58-bbc7-7a7be67f64aa
+   :END:
+   Sometimes,  Emacs   doesn’t  recognize  or  misrecognizes   some  extensions,
+   resulting in a  wrong mode set for  said file. Let’s fix  that by associating
+   the extension with the desired mode:
    #+BEGIN_SRC emacs-lisp
-     (setq dired-recursive-copies 'always)
+     (dolist (e '(("xml" . web-mode)
+                  ("xinp" . web-mode)
+                  ("aiml" . web-mode)
+                  ("C" . c++-mode)
+                  ("dconf" . conf-mode)
+                  ("yy" . bison-mode)
+                  ("ll" . flex-mode)
+                  ("s" . asm-mode)
+                  ("pl" . prolog-mode)
+                  ("l" . scheme-mode)
+                  ("vs" . glsl-mode)
+                  ("fs" . glsl-mode)))
+       (push (cons (concat "\\."
+                           (car e)
+                           "\\'") (cdr e))
+             auto-mode-alist))
    #+END_SRC
 
-   Also, when  I have two  Dired buffers opened side  by side, I  generally want
-   them to interact, for  example if I want to move  something around. So, let’s
-   tell Emacs that:
+   We also have a couple of  extensions which should all be in ~conf-unix-mode~,
+   let’s indicate that to Emacs:
    #+BEGIN_SRC emacs-lisp
-     (setq dired-dwim-target t)
-   #+END_SRC
-
-   Finally,  let’s  tell  Dired  how  to sort  the  elements  to  be  displayed:
-   directories first, non-hidden first.
-   #+BEGIN_SRC emacs-lisp
-     (setq dired-listing-switches "-ahl --group-directories-first")
-   #+END_SRC
-
-   By the way, let’s enable ~org-download~ when we are in a Dired buffer:
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'dired-mode-hook 'org-download-enable)
+     (dolist (e '("service" "timer" "target" "mount" "automount"
+                  "slice" "socket" "path" "netdev" "network"
+                  "link"))
+       (push (cons (concat "\\." e "\\'") 'conf-unix-mode)
+             auto-mode-alist))
    #+END_SRC
 
 ** Gnus
@@ -664,6 +578,135 @@
      (tooltip-mode 1)
    #+END_SRC
 
+** Miscellaneous
+   :PROPERTIES:
+   :CUSTOM_ID: h-cee08965-745a-4a6f-b04e-bf1638342698
+   :END:
+   I have  a lot of variables  that need to be  set but don’t fall  in any other
+   category, so I’ll collect them here.
+
+   I have this regexp for detecting paragraphs.
+   #+BEGIN_SRC emacs-lisp
+   (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
+   #+END_SRC
+
+*** Evil
+    :PROPERTIES:
+    :CUSTOM_ID: h-1d889318-8b93-4e78-9fe4-9e751b0b1cbe
+    :END:
+    As a user of Evil, I’m sometimes  pissed when I accidentally press ~C-u~ and
+    it gets me to the top of the document. So, let’s disable it:
+    #+BEGIN_SRC emacs-lisp
+      (setq evil-want-C-u-scroll nil)
+    #+END_SRC
+
+*** Default modes
+    :PROPERTIES:
+    :CUSTOM_ID: h-3ac59b6b-4ea3-4270-bdf2-07a68b867ebc
+    :END:
+    Some  buffers sometimes  won’t  have a  default  mode at  all,  such as  the
+    ~*scratch*~ buffer. In any vanilla  configuration, they will then default to
+    ~text-mode~. I personally prefer ~org-mode~ to  be my default mode, so let’s
+    set it so!
+    #+BEGIN_SRC emacs-lisp
+      (setq edit-server-default-major-mode 'org-mode)
+    #+END_SRC
+
+    I also  want to  have by  default some aggressive  indentation in  my source
+    files. Let’s enable that:
+    #+BEGIN_SRC emacs-lisp
+      (global-aggressive-indent-mode 1)
+    #+END_SRC
+    However, I do not  wish to see it activated for Dart  mode, so let’s exclude
+    it:
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'aggressive-indent-excluded-modes 'dart-mode)
+    #+END_SRC
+
+*** Hooks
+    :PROPERTIES:
+    :CUSTOM_ID: h-a895c541-505f-4dc2-8eac-d1fbc45e2512
+    :END:
+    I also have  some hooks I use  for enabling some major and  minor modes. The
+    first one here  allows the execution of the deletion  of trailing space each
+    time I save a file.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'before-save-hook 'delete-trailing-whitespace)
+    #+END_SRC
+
+    I also  want to always  be in  ~visual-line-mode~ so Emacs  soft-wraps lines
+    that are too long for the buffer they are displayed in.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'prog-mode-hook 'visual-line-mode)
+    #+END_SRC
+
+    I also want  for some non-programming modes to enable  a hard-limit in terms
+    of how many characters can fit on one line. The modes that benefit from that
+    are ~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
+    #+BEGIN_SRC emacs-lisp
+      (mapc (lambda (x)
+           (add-hook x 'auto-fill-mode)
+           (add-hook x 'visual-line-mode))
+         '(message-mode-hook
+           org-mode-hook
+           text-mode-hook
+           markdown-mode-hook))
+    #+END_SRC
+
+*** Pinentry
+    :PROPERTIES:
+    :CUSTOM_ID: h-c69ca384-fb5b-49e9-9b0d-987da0df1d61
+    :END:
+    Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s
+    set it so:
+    #+BEGIN_SRC emacs-lisp
+    (setq epa-pinentry-mode 'loopback)
+    #+END_SRC
+
+*** Prettified symbols
+    :PROPERTIES:
+    :CUSTOM_ID: h-3b37d76b-8da4-4c06-adfc-0ccd04bbef18
+    :END:
+    Just because  it is  pleasing to the  eye, some symbols  in source  code get
+    prettified into simpler symbols. Here is the  list of symbols that are to be
+    prettified. You  can see in  the corresponding  comment what symbol  will be
+    displayed.
+    #+BEGIN_SRC emacs-lisp
+      (setq prettify-symbols-alist '(("lambda" . 955) ; λ
+                                     ("->" . 8594)    ; →
+                                     ("<->" . 8596)   ; ↔
+                                     ("<-" . 8592)    ; ←
+                                     ("=>" . 8658)    ; ⇒
+                                     ("<=>" . 8860)   ; ⇔
+                                     ("<=" . 8656)    ; ⇐
+                                     ("mapc" . 8614)  ; ↦
+                                     ("map" . 8614)   ; ↦
+                                     (">>" . 187)     ; »
+                                     ("<<" . 171)     ; «
+                                     ))
+    #+END_SRC
+
+*** Twittering mode
+    :PROPERTIES:
+    :CUSTOM_ID: h-fb99695a-99f9-4c30-a286-a9accbb8410f
+    :END:
+    For ~twittering-mode~, a Twitter major mode  for Emacs, I want to encrypt my
+    data using a master password, which I do thanks to this option:
+    #+BEGIN_SRC emacs-lisp
+      (setq twittering-use-master-password t)
+    #+END_SRC
+
+*** Wttr.in cities
+    :PROPERTIES:
+    :CUSTOM_ID: h-9d0208e7-f88f-4bba-a48a-e306d3f00939
+    :END:
+    Thanks to the wttrin package, I can  get the weather forecast in Emacs for a
+    couple of cities. I just need to specify them to Emacs like so:
+    #+BEGIN_SRC emacs-lisp
+      (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
+                                    "Saint Agrève"))
+    #+END_SRC
+
 ** Nov-mode
    :PROPERTIES:
    :CUSTOM_ID: h-fea5c178-425f-4e1d-a491-591a3dbb4f93
@@ -687,6 +730,15 @@
    Let’s also set the maximum length of the lines in ~nov-mode~:
    #+BEGIN_SRC emacs-lisp
      (setq nov-text-width 80)
+   #+END_SRC
+
+** Python
+   :PROPERTIES:
+   :CUSTOM_ID: h-d26ce2ad-94b6-4e50-9803-d53e567f1206
+   :END:
+   Emacs throws me an error about the python interpreter, let’s silence it:
+   #+BEGIN_SRC emacs-lisp
+     (setq python-shell-completion-native-disabled-interpreters '("python"))
    #+END_SRC
 
 ** Org-mode
@@ -1174,11 +1226,112 @@
    (setq geiser-chicken-binary "chicken-csi")
    #+END_SRC
 
-** Python
+** Shortcuts
    :PROPERTIES:
-   :CUSTOM_ID: h-d26ce2ad-94b6-4e50-9803-d53e567f1206
+   :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
    :END:
-   Emacs throws me an error about the python interpreter, let’s silence it:
+   As you  will see, I  defined A  LOT of custom  shortcuts. First, I  have some
+   shortcuts defined the vanilla Emacs way:
    #+BEGIN_SRC emacs-lisp
-     (setq python-shell-completion-native-disabled-interpreters '("python"))
+     (global-set-key (kbd "C-x C-b") 'ibuffer)
+     (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+     (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+     (global-set-key (kbd "S-C-<down>") 'shrink-window)
+     (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+     (global-set-key (kbd "C-x <up>") 'windmove-up)
+     (global-set-key (kbd "C-x <down>") 'windmove-down)
+     (global-set-key (kbd "C-x <right>") 'windmove-right)
+     (global-set-key (kbd "C-x <left>") 'windmove-left)
+     (global-set-key (kbd "C-<prior>") 'previous-buffer)
+     (global-set-key (kbd "C-<next>") 'next-buffer)
+     (global-set-key (kbd "M-»") 'end-of-buffer)
+     (global-set-key (kbd "M-«") 'beginning-of-buffer)
+     (global-set-key (kbd "<XF86HomePage>") 'spacemacs/home)
+     (global-set-key (kbd "<XF86Open>") 'helm-find-files)
+     (global-set-key (kbd "<XF86Close>") 'kill-this-buffer)
+     (global-set-key (kbd "<XF86Save>") 'save-buffer)
+     (global-set-key (kbd "<C-tab>") 'evil-close-fold)
+     (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
+     (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
    #+END_SRC
+   These shortcuts  can be  called as-is,  that is, typing  ~C-x C-b~  will call
+   ~ibuffer~.
+
+   Now, I also have some Spacemacs shortcuts,  defined in a way they can be used
+   seamlessly with  Evil. First, let’s declare  some prefixes in order  to avoid
+   seeing lots of ~custom~ in helm:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "o" "custom")
+     (spacemacs/declare-prefix "oa" "applications")
+     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
+     (spacemacs/declare-prefix "oc" "comments")
+     (spacemacs/declare-prefix "of" "files")
+     (spacemacs/declare-prefix "ofb" ".local/bin sources")
+     (spacemacs/declare-prefix "ofe" "spacemacs.org")
+     (spacemacs/declare-prefix "off" "fish config")
+     (spacemacs/declare-prefix "ofi" "i3 config")
+     (spacemacs/declare-prefix "ofp" "polybar config")
+     (spacemacs/declare-prefix "ofr" "yadm README")
+     (spacemacs/declare-prefix "oi" "insert")
+     (spacemacs/declare-prefix "oii" "invisible space")
+     (spacemacs/declare-prefix "om" "multiple-cursors")
+     (spacemacs/declare-prefix "oo" "org-mode")
+     (spacemacs/declare-prefix "ooi" "custom IDs")
+     (spacemacs/declare-prefix "oos" "structure")
+     (spacemacs/declare-prefix "oot" "tables")
+     (spacemacs/declare-prefix "oott" "toggle width")
+     (spacemacs/declare-prefix "oote" "expand")
+     (spacemacs/declare-prefix "oots" "shrink")
+     (spacemacs/declare-prefix "or" "external command")
+     (spacemacs/declare-prefix "ot" "toggle")
+     (spacemacs/declare-prefix "ow" "writeroom")
+     (spacemacs/declare-prefix "ox" "text")
+   #+END_SRC
+
+   Now, onto the shortcuts:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/set-leader-keys
+       "oac"  'calc
+       "oaC"  'calendar
+       "oae"  'eww
+       "oaw"  'wttrin
+       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+       "ob"   'fancy-battery-mode
+       "occ"  'outorg-copy-edits-and-exit
+       "oce"  'outorg-edit-as-org
+       "oco"  'outline-minor-mode
+       "od"   'elcord-mode
+       "oF"   'flycheck-mode
+       "ofb"  (lambda () (interactive) (find-file "~/.local/bin/README.org"))
+       "ofe"  (lambda () (interactive) (find-file "~/spacemacs.org"))
+       "off"  (lambda () (interactive) (find-file "~/.config/fish/README.org"))
+       "ofi"  (lambda () (interactive) (find-file "~/.config/i3/README.org"))
+       "ofp"  (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
+       "ofr"  (lambda () (interactive) (find-file "~/README.org"))
+       "ofo"  'find-file-at-point
+       "oii"  (lambda () (interactive) (insert "​"))
+       "ome"  'mc/edit-lines
+       "omn"  'mc/mark-next-like-this
+       "omp"  'mc/mark-previous-like-this
+       "oma"  'mc/mark-all-like-this
+       "ooi"  'eos/org-add-ids-to-headlines-in-file
+       "oos"  'org-insert-structure-template
+       "ooT"  'org-sidebar-tree
+       "oott" 'org-table-toggle-column-width
+       "oote" 'org-table-expand
+       "oots" 'org-table-shrink
+       "oow"  'org-pomodoro
+       "owi"  'writeroom-increase-width
+       "or"   'helm-run-external-command
+       "os"   'prettify-symbols-mode
+       "oti"  'toggle-input-method
+       "otI"  'set-input-method
+       "owd"  'writeroom-decrease-width
+       "oxf"  'phundrak/fill-paragraph)
+   #+END_SRC
+
+   You can notice they  all begin with ~o~. This is actually  a userspace, and I
+   know these shortcuts won’t conflict with any other packages. These shortcuts,
+   like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
+   key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
+   o a c~.
