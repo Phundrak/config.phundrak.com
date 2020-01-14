@@ -1,0 +1,1184 @@
+#+title: Phundrak’s Spacemacs User Configuration
+#+author: Lucien “Phundrak” Cartier-Tilet
+#+email: lucien@phundrak.com
+#+OPTIONS: toc:4 h:4 email:t ^:{} auto-id:t
+#+startup: headlines
+
+# ### LaTeX ####################################################################
+#+LATEX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{newunicodechar}
+#+LATEX_HEADER_EXTRA: \newunicodechar{’}{'}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+
+# ### HTML #####################################################################
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" id="theme" href="https://langue.phundrak.com/css/dark.css"/>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/dart/main.dart.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs User Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs User Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs user configuration of Phundrak" />
+#+INFOJS_OPT: view:info toc:t ltoc:above
+
+* User Initialization
+  :PROPERTIES:
+  :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-init.el
+  :END:
+  While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
+  elements and load  some packages. First of  all, I want it to  load my private
+  Emacs config file:
+  #+BEGIN_SRC emacs-lisp
+  (load "~/.emacs.d/private/private_emacs.el")
+  #+END_SRC
+
+  Then, I want a couple of requires:
+  #+BEGIN_SRC emacs-lisp
+    (require 'org-id)
+    (require 'package)
+    (require 'ox-latex)
+    (require 'ox-publish)
+  #+END_SRC
+
+  I also want to load what’s in ~icons-in-terminal~ so I can use them in various
+  packages in Emacs:
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'load-path "~/.local/share/icons-in-terminal/")
+  #+END_SRC
+
+  I would also like to enable the setup of flycheck for Rust when Flycheck is
+  loaded:
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+  #+END_SRC
+
+  By default, Flyspell should be disabled and only enabled manually.
+  #+BEGIN_SRC emacs-lisp
+    (flyspell-mode 0)
+  #+END_SRC
+
+  Finally, here is a quick workaround for Tramp, sometimes it cannot connect to
+  my hosts if I don’t have this code snippet.
+  #+BEGIN_SRC emacs-lisp
+    (setq tramp-ssh-controlmaster-options
+          "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+  #+END_SRC
+
+* User Configuration
+  :PROPERTIES:
+  :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-config.el
+  :END:
+** File extensions
+   :PROPERTIES:
+   :CUSTOM_ID: h-beb67a88-d7d3-4d58-bbc7-7a7be67f64aa
+   :END:
+   Sometimes,  Emacs   doesn’t  recognize  or  misrecognizes   some  extensions,
+   resulting in a  wrong mode set for  said file. Let’s fix  that by associating
+   the extension with the desired mode:
+   #+BEGIN_SRC emacs-lisp
+     (dolist (e '(("xml" . web-mode)
+                  ("xinp" . web-mode)
+                  ("aiml" . web-mode)
+                  ("C" . c++-mode)
+                  ("dconf" . conf-mode)
+                  ("yy" . bison-mode)
+                  ("ll" . flex-mode)
+                  ("s" . asm-mode)
+                  ("pl" . prolog-mode)
+                  ("l" . scheme-mode)
+                  ("vs" . glsl-mode)
+                  ("fs" . glsl-mode)))
+       (push (cons (concat "\\."
+                           (car e)
+                           "\\'") (cdr e))
+             auto-mode-alist))
+   #+END_SRC
+
+   We also have a couple of  extensions which should all be in ~conf-unix-mode~,
+   let’s indicate that to Emacs:
+   #+BEGIN_SRC emacs-lisp
+     (dolist (e '("service" "timer" "target" "mount" "automount"
+                  "slice" "socket" "path" "netdev" "network"
+                  "link"))
+       (push (cons (concat "\\." e "\\'") 'conf-unix-mode)
+             auto-mode-alist))
+   #+END_SRC
+
+** Custom functions
+   :PROPERTIES:
+   :CUSTOM_ID: h-e3766e6a-3b77-488d-8dfc-8489411b1c4f
+   :END:
+   In this section,  I will put my  various custom functions that do  not fit in
+   other sections and  which are more oriented towards  general usage throughout
+   Emacs and in Elisp code.
+
+   Almost all of my code snippets will be prefixed by either my name or the name
+   of  the package  or layer  they  are part  of,  unless they  are an  explicit
+   overwrite of a function that already exists.
+
+*** ~phundrak/fill-paragraph~
+    :PROPERTIES:
+    :CUSTOM_ID: h-e87c6c3f-728d-4065-a886-70eb2c3cc579
+    :END:
+    This function was created in order  to bind to another keyboard shortcut the
+    already existing ~C-u M-q~ which I  cannot type with evil-mode unless I’m in
+    insert mode.
+    #+BEGIN_SRC emacs-lisp
+    (defun phundrak/fill-paragraph ()
+      (interactive)
+      (let* ((current-prefix-arg 4))
+        (call-interactively 'fill-paragraph)))
+    #+END_SRC
+
+*** ~terminal-here-default-terminal-command~
+    :PROPERTIES:
+    :CUSTOM_ID: h-4e7c3229-4baa-47d5-8897-545a8b85800a
+    :END:
+    This function is  actually an overwrite of the default  one which apparently
+    does   not   work   on   my    machine.   This   function   is   called   by
+    ~terminal-here-launch~  and  spawns an  external  terminal  emulator in  the
+    directory emacs was in when the terminal  was invoked. I simply point out to
+    this function the name of my terminal emulator. Here is the code:
+    #+BEGIN_SRC emacs-lisp
+      (defun terminal-here-default-terminal-command (_dir)
+        '("st"))
+    #+END_SRC
+
+** Miscellaneous
+   :PROPERTIES:
+   :CUSTOM_ID: h-cee08965-745a-4a6f-b04e-bf1638342698
+   :END:
+   I have  a lot of variables  that need to be  set but don’t fall  in any other
+   category, so I’ll collect them here.
+
+   I have this regexp for detecting paragraphs.
+   #+BEGIN_SRC emacs-lisp
+   (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
+   #+END_SRC
+
+*** Evil
+    :PROPERTIES:
+    :CUSTOM_ID: h-1d889318-8b93-4e78-9fe4-9e751b0b1cbe
+    :END:
+    As a user of Evil, I’m sometimes  pissed when I accidentally press ~C-u~ and
+    it gets me to the top of the document. So, let’s disable it:
+    #+BEGIN_SRC emacs-lisp
+      (setq evil-want-C-u-scroll nil)
+    #+END_SRC
+
+*** Default modes
+    :PROPERTIES:
+    :CUSTOM_ID: h-3ac59b6b-4ea3-4270-bdf2-07a68b867ebc
+    :END:
+    Some  buffers sometimes  won’t  have a  default  mode at  all,  such as  the
+    ~*scratch*~ buffer. In any vanilla  configuration, they will then default to
+    ~text-mode~. I personally prefer ~org-mode~ to  be my default mode, so let’s
+    set it so!
+    #+BEGIN_SRC emacs-lisp
+      (setq edit-server-default-major-mode 'org-mode)
+    #+END_SRC
+
+    I also  want to  have by  default some aggressive  indentation in  my source
+    files. Let’s enable that:
+    #+BEGIN_SRC emacs-lisp
+      (global-aggressive-indent-mode 1)
+    #+END_SRC
+    However, I do not  wish to see it activated for Dart  mode, so let’s exclude
+    it:
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'aggressive-indent-excluded-modes 'dart-mode)
+    #+END_SRC
+
+*** Hooks
+    :PROPERTIES:
+    :CUSTOM_ID: h-a895c541-505f-4dc2-8eac-d1fbc45e2512
+    :END:
+    I also have  some hooks I use  for enabling some major and  minor modes. The
+    first one here  allows the execution of the deletion  of trailing space each
+    time I save a file.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'before-save-hook 'delete-trailing-whitespace)
+    #+END_SRC
+
+    I also  want to always  be in  ~visual-line-mode~ so Emacs  soft-wraps lines
+    that are too long for the buffer they are displayed in.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'prog-mode-hook 'visual-line-mode)
+    #+END_SRC
+
+    I also want  for some non-programming modes to enable  a hard-limit in terms
+    of how many characters can fit on one line. The modes that benefit from that
+    are ~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
+    #+BEGIN_SRC emacs-lisp
+      (mapc (lambda (x)
+           (add-hook x 'auto-fill-mode)
+           (add-hook x 'visual-line-mode))
+         '(message-mode-hook
+           org-mode-hook
+           text-mode-hook
+           markdown-mode-hook))
+    #+END_SRC
+
+*** Pinentry
+    :PROPERTIES:
+    :CUSTOM_ID: h-c69ca384-fb5b-49e9-9b0d-987da0df1d61
+    :END:
+    Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s
+    set it so:
+    #+BEGIN_SRC emacs-lisp
+    (setq epa-pinentry-mode 'loopback)
+    #+END_SRC
+
+*** Prettified symbols
+    :PROPERTIES:
+    :CUSTOM_ID: h-3b37d76b-8da4-4c06-adfc-0ccd04bbef18
+    :END:
+    Just because  it is  pleasing to the  eye, some symbols  in source  code get
+    prettified into simpler symbols. Here is the  list of symbols that are to be
+    prettified. You  can see in  the corresponding  comment what symbol  will be
+    displayed.
+    #+BEGIN_SRC emacs-lisp
+      (setq prettify-symbols-alist '(("lambda" . 955) ; λ
+                                     ("->" . 8594)    ; →
+                                     ("<->" . 8596)   ; ↔
+                                     ("<-" . 8592)    ; ←
+                                     ("=>" . 8658)    ; ⇒
+                                     ("<=>" . 8860)   ; ⇔
+                                     ("<=" . 8656)    ; ⇐
+                                     ("mapc" . 8614)  ; ↦
+                                     ("map" . 8614)   ; ↦
+                                     (">>" . 187)     ; »
+                                     ("<<" . 171)     ; «
+                                     ))
+    #+END_SRC
+
+*** Twittering mode
+    :PROPERTIES:
+    :CUSTOM_ID: h-fb99695a-99f9-4c30-a286-a9accbb8410f
+    :END:
+    For ~twittering-mode~, a Twitter major mode  for Emacs, I want to encrypt my
+    data using a master password, which I do thanks to this option:
+    #+BEGIN_SRC emacs-lisp
+      (setq twittering-use-master-password t)
+    #+END_SRC
+
+*** Wttr.in cities
+    :PROPERTIES:
+    :CUSTOM_ID: h-9d0208e7-f88f-4bba-a48a-e306d3f00939
+    :END:
+    Thanks to the wttrin package, I can  get the weather forecast in Emacs for a
+    couple of cities. I just need to specify them to Emacs like so:
+    #+BEGIN_SRC emacs-lisp
+      (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
+                                    "Saint Agrève"))
+    #+END_SRC
+
+** Shortcuts
+   :PROPERTIES:
+   :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
+   :END:
+   As you  will see, I  defined A  LOT of custom  shortcuts. First, I  have some
+   shortcuts defined the vanilla Emacs way:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x C-b") 'ibuffer)
+     (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+     (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+     (global-set-key (kbd "S-C-<down>") 'shrink-window)
+     (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+     (global-set-key (kbd "C-x <up>") 'windmove-up)
+     (global-set-key (kbd "C-x <down>") 'windmove-down)
+     (global-set-key (kbd "C-x <right>") 'windmove-right)
+     (global-set-key (kbd "C-x <left>") 'windmove-left)
+     (global-set-key (kbd "C-<prior>") 'previous-buffer)
+     (global-set-key (kbd "C-<next>") 'next-buffer)
+     (global-set-key (kbd "M-»") 'end-of-buffer)
+     (global-set-key (kbd "M-«") 'beginning-of-buffer)
+     (global-set-key (kbd "<XF86HomePage>") 'spacemacs/home)
+     (global-set-key (kbd "<XF86Open>") 'helm-find-files)
+     (global-set-key (kbd "<XF86Close>") 'kill-this-buffer)
+     (global-set-key (kbd "<XF86Save>") 'save-buffer)
+     (global-set-key (kbd "<C-tab>") 'evil-close-fold)
+     (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
+     (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
+   #+END_SRC
+   These shortcuts  can be  called as-is,  that is, typing  ~C-x C-b~  will call
+   ~ibuffer~.
+
+   Now, I also have some Spacemacs shortcuts,  defined in a way they can be used
+   seamlessly with  Evil. First, let’s declare  some prefixes in order  to avoid
+   seeing lots of ~custom~ in helm:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "o" "custom")
+     (spacemacs/declare-prefix "oa" "applications")
+     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
+     (spacemacs/declare-prefix "oc" "comments")
+     (spacemacs/declare-prefix "of" "files")
+     (spacemacs/declare-prefix "ofb" ".local/bin sources")
+     (spacemacs/declare-prefix "ofe" "spacemacs.org")
+     (spacemacs/declare-prefix "off" "fish config")
+     (spacemacs/declare-prefix "ofi" "i3 config")
+     (spacemacs/declare-prefix "ofp" "polybar config")
+     (spacemacs/declare-prefix "ofr" "yadm README")
+     (spacemacs/declare-prefix "oi" "insert")
+     (spacemacs/declare-prefix "oii" "invisible space")
+     (spacemacs/declare-prefix "om" "multiple-cursors")
+     (spacemacs/declare-prefix "oo" "org-mode")
+     (spacemacs/declare-prefix "ooi" "custom IDs")
+     (spacemacs/declare-prefix "oos" "structure")
+     (spacemacs/declare-prefix "oot" "tables")
+     (spacemacs/declare-prefix "oott" "toggle width")
+     (spacemacs/declare-prefix "oote" "expand")
+     (spacemacs/declare-prefix "oots" "shrink")
+     (spacemacs/declare-prefix "or" "external command")
+     (spacemacs/declare-prefix "ot" "toggle")
+     (spacemacs/declare-prefix "ow" "writeroom")
+     (spacemacs/declare-prefix "ox" "text")
+   #+END_SRC
+
+   Now, onto the shortcuts:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/set-leader-keys
+       "oac"  'calc
+       "oaC"  'calendar
+       "oae"  'eww
+       "oaw"  'wttrin
+       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+       "ob"   'fancy-battery-mode
+       "occ"  'outorg-copy-edits-and-exit
+       "oce"  'outorg-edit-as-org
+       "oco"  'outline-minor-mode
+       "od"   'elcord-mode
+       "oF"   'flycheck-mode
+       "ofb"  (lambda () (interactive) (find-file "~/.local/bin/README.org"))
+       "ofe"  (lambda () (interactive) (find-file "~/spacemacs.org"))
+       "off"  (lambda () (interactive) (find-file "~/.config/fish/README.org"))
+       "ofi"  (lambda () (interactive) (find-file "~/.config/i3/README.org"))
+       "ofp"  (lambda () (interactive) (find-file "~/.config/polybar/config##yadm.j2"))
+       "ofr"  (lambda () (interactive) (find-file "~/README.org"))
+       "ofo"  'find-file-at-point
+       "oii"  (lambda () (interactive) (insert "​"))
+       "ome"  'mc/edit-lines
+       "omn"  'mc/mark-next-like-this
+       "omp"  'mc/mark-previous-like-this
+       "oma"  'mc/mark-all-like-this
+       "ooi"  'eos/org-add-ids-to-headlines-in-file
+       "oos"  'org-insert-structure-template
+       "ooT"  'org-sidebar-tree
+       "oott" 'org-table-toggle-column-width
+       "oote" 'org-table-expand
+       "oots" 'org-table-shrink
+       "oow"  'org-pomodoro
+       "owi"  'writeroom-increase-width
+       "or"   'helm-run-external-command
+       "os"   'prettify-symbols-mode
+       "oti"  'toggle-input-method
+       "otI"  'set-input-method
+       "owd"  'writeroom-decrease-width
+       "oxf"  'phundrak/fill-paragraph)
+   #+END_SRC
+
+   You can notice they  all begin with ~o~. This is actually  a userspace, and I
+   know these shortcuts won’t conflict with any other packages. These shortcuts,
+   like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
+   key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
+   o a c~.
+
+** C/C++
+   :PROPERTIES:
+   :CUSTOM_ID: h-c0ee6b96-db28-408e-872a-4c4347f807d8
+   :END:
+   As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
+   latest standard available, that is C++17 and C17, from Clang.
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'c-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c17")))
+     (add-hook 'c++-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c++17")))
+   #+END_SRC
+
+** ASM configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
+   :END:
+   The first thing I  will set with my ASM configuration  is where the reference
+   PDF is located.
+   #+BEGIN_SRC emacs-lisp
+     (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
+   #+END_SRC
+   I will also modify what the comment character is, from a ~;~ to a ~#~:
+   #+BEGIN_SRC emacs-lisp
+     (setq asm-comment-char ?\#)
+   #+END_SRC
+
+** Dart configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-00537655-3c5f-4cc0-af90-4f357ba9350f
+   :END:
+   For  Dart, I  mainly  declared  some custom  shortcuts  bound to  ~dart-mode~
+   related to flutter, so nothing too exciting here. Some prefix are declared in
+   order to avoid the shortcuts in helm to show up as just ~custom~.
+   #+begin_src emacs-lisp
+     (spacemacs/declare-prefix-for-mode 'dart-mode "o" "user-defined")
+     (spacemacs/declare-prefix-for-mode 'dart-mode "of" "flutter")
+     (spacemacs/declare-prefix-for-mode 'dart-mode "ofr" "flutter-run")
+   #+end_src
+
+   Now, for the shortcuts themselves:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/set-leader-keys-for-major-mode 'dart-mode
+       "ofH" 'flutter-hot-restart
+       "ofh" 'flutter-hot-reload
+       "ofq" 'flutter-quit
+       "ofr" (lambda () (interactive) (flutter-run "-v"))
+       "ofs" 'flutter-screenshot)
+   #+END_SRC
+
+** Emacs Lisp
+   :PROPERTIES:
+   :CUSTOM_ID: h-f087976e-3350-46c7-a269-f90c83f60d64
+   :END:
+   Here  will  be  stored  my  configuration directly  related  to  Emacs  Lisp,
+   including some functions or default modes.
+
+*** Enable ~eldoc-mode~ by default
+    :PROPERTIES:
+    :CUSTOM_ID: h-ef91e851-f0f2-4fe6-a1ee-b1556a17761c
+    :END:
+    By default, if some Elisp code is opened, I want to enable ~eldoc-mode~ so I
+    can easily get some documentation on the symbols in the source code. This is
+    done via the use of hooks.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'prog-mode-hook 'eldoc-mode)
+    #+END_SRC
+
+*** ~phundrak/write-to-buffer~
+    :PROPERTIES:
+    :CUSTOM_ID: h-3f3b771e-a4dd-42fd-bf97-8930d20c0a86
+    :END:
+    I was  very surprised when  I discovered no  such function exists  in Elisp.
+    This  function basically  writes  a  string into  a  buffer, and  optionally
+    switches the user to the buffer. Here is the code for that function:
+    #+BEGIN_SRC elisp
+      (defun write-to-buffer (input-string outputbuf &optional switchbuf)
+        "Writes `input-string' to the specified `output-buffer'. If
+      `switch-buffer' is non-nil, the active buffer will switch to the
+      output buffer; otherwise, it will take the user back to their
+      initial buffer. Works with `input-string' as a string or a list
+      of strings."
+        (let ((oldbuf (current-buffer)))
+          (switch-to-buffer outputbuf)
+          (cond ((char-or-string-p input-string) (insert input-string))
+                ((listp input-string) (dolist (elem input-string)
+                                        (insert (format "%s\n" elem)))))
+          (if switchbuf
+              (switch-to-buffer oldbuf))))
+    #+END_SRC
+
+** Dired
+   :PROPERTIES:
+   :CUSTOM_ID: h-1214442f-4dc7-4855-90ba-bb23d59af2c9
+   :END:
+   When it  comes to dired, I  chose do modify  some elements on how  things are
+   sorted and shown, but there isn’t much configuration. First, I want to always
+   copy folders in a recursive way, no questions asked.
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-recursive-copies 'always)
+   #+END_SRC
+
+   Also, when  I have two  Dired buffers opened side  by side, I  generally want
+   them to interact, for  example if I want to move  something around. So, let’s
+   tell Emacs that:
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-dwim-target t)
+   #+END_SRC
+
+   Finally,  let’s  tell  Dired  how  to sort  the  elements  to  be  displayed:
+   directories first, non-hidden first.
+   #+BEGIN_SRC emacs-lisp
+     (setq dired-listing-switches "-ahl --group-directories-first")
+   #+END_SRC
+
+   By the way, let’s enable ~org-download~ when we are in a Dired buffer:
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'dired-mode-hook 'org-download-enable)
+   #+END_SRC
+
+** Gnus
+   :PROPERTIES:
+   :CUSTOM_ID: h-fb05a405-110f-4e7e-a21d-b768615754cc
+   :END:
+   Here comes  my Gnus  configuration. Gnus is  an email client  I use  daily to
+   read, manage, answer to and forward messages I receive by email.
+
+*** Shortcuts
+    :PROPERTIES:
+    :CUSTOM_ID: h-4715e44d-b95b-40d4-b79a-c7873d972b39
+    :END:
+    Some shortcuts needed  to be redefined in  order for Evil to  work well with
+    Gnus. Here is first the declaration of a prefix:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "og" "gnus")
+    #+END_SRC
+    And here  are said shortcuts. As  described above in the  [[#h-f193126f-abc1-4287-aa70-4f2080d2ef8f][shortcuts]] chapter,
+    these Spacemacs shortcuts are invoked with the ~SPC~ leader key.
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "ogD" 'turn-on-gnus-dired-mode
+        "ogd" 'gnus-summary-delete-article
+        "ogf" 'gnus-summary-mail-forward
+        "ogo" 'my-gnus-group-list-subscribed-groups
+        "ogr" 'gnus-summary-insert-new-articles
+        "ogs" 'message-send-and-exit)
+    #+END_SRC
+
+*** Hooks
+    :PROPERTIES:
+    :CUSTOM_ID: h-5208e53f-d2e7-4dc1-a081-964ac1c90d4b
+    :END:
+    To  sort  by   topics  my  different  mailboxes  and  folders,   I  use  the
+    ~gnus-topic-mode~  minor mode.  To  get  it active  by  default,  I use  the
+    following hook to activate it:
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+    #+END_SRC
+
+*** Mail account configuration
+    :PROPERTIES:
+    :CUSTOM_ID: h-eb1a12b5-38ef-4c81-9d6c-01c1e066feaa
+    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
+    :END:
+    This section will be tangled in =~/.gnus.el=.
+
+    I only use one email account with Gnus: ~lucien@phundrak.com~. Here is how I
+    configured it:
+    #+BEGIN_SRC emacs-lisp
+      (setq gnus-secondary-select-methods '((nnimap "lucien@phundrak.com"
+                                                    (nnimap-address "mail.phundrak.com")
+                                                    (nnimap-server-port 143)
+                                                    (nnimap-stream starttls)))
+            message-send-mail-function 'smtpmail-send-it
+            smtpmail-smtp-server "mail.phundrak.com"
+            smtpmail-stream-type 'starttls
+            smtpmail-smtp-service 587
+            gnus-message-archive-method '(nnimap "mail.phundrak.com")
+            gnus-message-archive-group "Sent"
+            nnml-directory "~/Mails"
+            message-directory "~/Mails"
+            gnus-fetch-old-headers 'some
+            mm-discouraged-alternatives '("text/html" "text/richtext"))
+    #+END_SRC
+
+*** General options
+    :PROPERTIES:
+    :CUSTOM_ID: h-336a2c1c-ed8d-4a90-b4a3-6422a0199ba0
+    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
+    :END:
+    This section will be tangled in =~/.gnus.el=.
+
+    I want to use  at one point the [[https://www.emacswiki.org/emacs/EmacsApplicationFramework][Emacs Application Framework]]  which is set to
+    be able one day to render Gnus emails,  but for now I am using w3m to render
+    HTML emails I receive.
+    #+BEGIN_SRC emacs-lisp
+      (setq mm-text-html-renderer 'w3m)
+    #+END_SRC
+
+    I also  want Gnus  to use the  cache in  case I need  to navigate  my emails
+    offline:
+    #+BEGIN_SRC emacs-lisp
+      (setq gnus-use-cache t)
+    #+END_SRC
+
+    Let’s set a quick organization of the Gnus folders, the format in which sent
+    messages should be saved, and the typology of Gnus’ topics:
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'gnus-topic
+        '(progn
+           (setq gnus-message-archive-group '((format-time-string "sent.%Y")))
+           (setq gnus-topic-topology '(("Gnus" visible)
+                                       (("lucien@phundrak.com" visible nil nil))))
+           (setq gnus-topic-alist '(("lucien@phundrak.com" ; the key of the topic
+                                     "nnimap+lucien@phundrak.com:INBOX"
+                                     "nnimap+lucien@phundrak.com:Sent"
+                                     "nnimap+lucien@phundrak.com:Drafts")
+                                    ("Gnus")))))
+    #+END_SRC
+
+*** Visual configuration
+    :PROPERTIES:
+    :CUSTOM_ID: h-8ccda149-c755-4c80-8643-7a9b99ee85b2
+    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
+    :END:
+    This section will be tangled in =~/.gnus.el=.
+
+    I get  it that it  used to be  a good option  with 4/3 screens,  but frankly
+    opening an email at the bottom of the frame instead of the side of the frame
+    does not look good anymore. So, let’s fix that:
+    #+BEGIN_SRC emacs-lisp
+      (gnus-add-configuration
+       '(article (horizontal 1.0 (summary .4 point) (article 1.0))))
+    #+END_SRC
+
+** LSP
+   :PROPERTIES:
+   :CUSTOM_ID: h-4d0272c3-df5e-4f6b-a6e6-f769add4e603
+   :END:
+   When it comes to the LSP layer,  there are some options which are not enabled
+   by default that I want to use, especially some modes I want to take advantage
+   of. This  is why I enable  first the ~lsp-treemacs-sync-mode~ so  treemacs is
+   LSP aware:
+   #+BEGIN_SRC emacs-lisp
+     (lsp-treemacs-sync-mode 1)
+   #+END_SRC
+
+   I also enable some layers related to ~dap~, the Debug Adapter Protocol, which
+   works really nicely with LSP. Let’s enable Dap’s modes:
+   #+BEGIN_SRC emacs-lisp
+     (dap-mode 1)
+     (dap-ui-mode 1)
+     (dap-tooltip-mode 1)
+   #+END_SRC
+
+   Finally, I also want the documentation tooltip  to show up when the cursor is
+   above a documented piece of code or symbol. Let’s enable that too:
+   #+BEGIN_SRC emacs-lisp
+     (tooltip-mode 1)
+   #+END_SRC
+
+** Nov-mode
+   :PROPERTIES:
+   :CUSTOM_ID: h-fea5c178-425f-4e1d-a491-591a3dbb4f93
+   :END:
+   ~nov-mode~ is the  mode used in the  Epub reader. Here I will  write a little
+   function that  I will call through  a hook each  time I’m opening a  new EPUB
+   file.
+   #+BEGIN_SRC emacs-lisp
+     (defun my-nov-font-setup ()
+       (face-remap-add-relative 'variable-pitch :family "Charis SIL"
+                                :size 16
+                                :height 1.0))
+   #+END_SRC
+   Let’s  bind this  function to  the ~nov-mode~  hook. By  the way,  we’ll also
+   enable the ~visual-line-mode~ here, just in case.
+   #+BEGIN_SRC emacs-lisp
+     (mapc (lambda (mode)
+             (add-hook 'nov-mode-hook mode))
+           '('my-nov-font-setup 'visual-line-mode))
+   #+END_SRC
+   Let’s also set the maximum length of the lines in ~nov-mode~:
+   #+BEGIN_SRC emacs-lisp
+     (setq nov-text-width 80)
+   #+END_SRC
+
+** Org-mode
+   :PROPERTIES:
+   :CUSTOM_ID: h-5534acb1-963d-4aec-874d-f1f66b02a597
+   :END:
+   Org-mode is  probably one of the  best if not  the best Emacs feature  I have
+   ever  discovered. It  is awesome  for  writing documents,  regardless of  the
+   format you need it to be exported to, for agenda management, and for literary
+   programming, such as with this document.
+   #+BEGIN_SRC emacs-lisp :tangle no
+     (with-eval-after-load 'org
+       ;; configuration goes here
+       )
+   #+END_SRC
+
+# Don’t delete this, this code block is here to wrap the org configuration
+#+BEGIN_SRC emacs-lisp :exports none
+  (with-eval-after-load 'org
+#+END_SRC
+
+*** Custom org-mode functions
+    :PROPERTIES:
+    :CUSTOM_ID: h-e87fcf0c-2e3e-48e1-80aa-1d8f1a39842b
+    :END:
+    We begin with a couple of custom functions that I use in my org-mode files.
+
+**** Custom and unique headings ID
+     :PROPERTIES:
+     :CUSTOM_ID: h-c6950fac-82a2-49cd-86bb-8f72c0fe9f22
+     :END:
+     The  first ones  are dedicated  to provide  org-mode headings  a fixed  and
+     unique  ID  that  won’t  change  over   time.  This  code  was  taken  from
+     [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][https://writequit.org/articles/emacs-org-mode-generate-ids.html]].  The first
+     function’s job is to create these unique IDs
+     #+BEGIN_SRC emacs-lisp
+       (defun eos/org-id-new (&optional prefix)
+         "Create a new globally unique ID.
+
+       An ID consists of two parts separated by a colon:
+       - a prefix
+       - a   unique   part   that   will   be   created   according   to
+         `org-id-method'.
+
+       PREFIX  can specify  the  prefix,  the default  is  given by  the
+       variable  `org-id-prefix'.  However,  if  PREFIX  is  the  symbol
+       `none', don't  use any  prefix even if  `org-id-prefix' specifies
+       one.
+
+       So a typical ID could look like \"Org-4nd91V40HI\"."
+         (let* ((prefix (if (eq prefix 'none)
+                            ""
+                          (concat (or prefix org-id-prefix)
+                                  "-"))) unique)
+           (if (equal prefix "-")
+               (setq prefix ""))
+           (cond
+            ((memq org-id-method
+                   '(uuidgen uuid))
+             (setq unique (org-trim (shell-command-to-string org-id-uuid-program)))
+             (unless (org-uuidgen-p unique)
+               (setq unique (org-id-uuid))))
+            ((eq org-id-method 'org)
+             (let* ((etime (org-reverse-string (org-id-time-to-b36)))
+                    (postfix (if org-id-include-domain
+                                 (progn
+                                   (require 'message)
+                                   (concat "@"
+                                           (message-make-fqdn))))))
+               (setq unique (concat etime postfix))))
+            (t (error "Invalid `org-id-method'")))
+           (concat prefix unique)))
+     #+END_SRC
+
+     Now, let’s  see the function that  will be used to  get the custom id  of a
+     heading at point. If  the function does not detect any  custom ID, then one
+     should be created and inserted.
+     #+BEGIN_SRC emacs-lisp
+       (defun eos/org-custom-id-get (&optional pom create prefix)
+         "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+          If POM is nil, refer to the  entry at point. If the entry does
+          not have an CUSTOM_ID, the function returns nil. However, when
+          CREATE  is non  nil, create  a  CUSTOM_ID if  none is  present
+          already. PREFIX will be passed through to `eos/org-id-new'. In
+          any case, the CUSTOM_ID of the entry is returned."
+         (interactive)
+         (org-with-point-at pom
+           (let ((id (org-entry-get nil "CUSTOM_ID")))
+             (cond
+              ((and id
+                    (stringp id)
+                    (string-match "\\S-" id)) id)
+              (create (setq id (eos/org-id-new (concat prefix "h")))
+                      (org-entry-put pom "CUSTOM_ID" id)
+                      (org-id-add-location id
+                                           (buffer-file-name (buffer-base-buffer)))
+                      id)))))
+     #+END_SRC
+
+     Finally,  this is  the function  that  gets called  on file  saves. If  the
+     function  detects ~auto-id:t~  among the  org options  in the  ~#+OPTIONS:~
+     header, then the above function is called.
+     #+BEGIN_SRC emacs-lisp
+       (defun eos/org-add-ids-to-headlines-in-file ()
+         "Add CUSTOM_ID properties to all headlines in the current
+          file which do not already have one. Only adds ids if the
+          `auto-id' option is set to `t' in the file somewhere. ie,
+          ,#+OPTIONS: auto-id:t"
+         (interactive)
+         (save-excursion
+           (widen)
+           (goto-char (point-min))
+           (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t"
+                                    (point-max)
+                                    t)
+             (org-map-entries (lambda ()
+                                (eos/org-custom-id-get (point)
+                                                       'create))))))
+     #+END_SRC
+
+     Let’s add  a hook to  the above function so  it is called  automatically on
+     save, and only in read-write functions.
+     #+BEGIN_SRC emacs-lisp
+       (add-hook 'org-mode-hook
+                 (lambda ()
+                   (add-hook 'before-save-hook
+                             (lambda ()
+                               (when (and (eq major-mode 'org-mode)
+                                          (eq buffer-read-only nil))
+                                 (eos/org-add-ids-to-headlines-in-file))))))
+     #+END_SRC
+
+*** Org babel languages
+    :PROPERTIES:
+    :CUSTOM_ID: h-e60e0cf5-55ec-401a-82ed-256baff90f0c
+    :END:
+    One  of  the  amazing  features  of org-mode  is  its  literary  programming
+    capacities by running code blocks from within Org-mode itself. But for that,
+    only a  couple of languages are  supported directly by Org-mode  itself, and
+    they need to be activated. Here are the languages I activated in my Org-mode
+    configuration:
+    #+BEGIN_SRC emacs-lisp
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((C          . t)
+         (dot        . t)
+         (emacs-lisp . t)
+         (gnuplot    . t)
+         (latex      . t)
+         (makefile   . t)
+         (python     . t)
+         (R          . t)
+         (sass       . t)
+         (scheme     . t)
+         (shell      . t)))
+    #+END_SRC
+
+    Scheme requires a default implementation for geiser:
+    #+BEGIN_SRC emacs-lisp
+      (setq geiser-default-implementation 'racket)
+    #+END_SRC
+
+    By the  way, I wish  to see source  code behave the  same way in  the source
+    blocks as in their own major mode. Let’s tell Emacs so:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-src-tab-acts-natively t)
+    #+END_SRC
+
+*** Org variables
+    :PROPERTIES:
+    :CUSTOM_ID: h-8e86e8dc-5889-44ff-9d10-766fb3e8b873
+    :END:
+**** User information
+     :PROPERTIES:
+     :CUSTOM_ID: h-73307234-da02-4e61-8443-616213d5b004
+     :END:
+     Some  variables  about  myself  need  to be  set  so  Org-mode  knows  what
+     information to include in exported files.
+     #+BEGIN_SRC emacs-lisp
+       (setq user-full-name "Lucien Cartier-Tilet"
+             user-real-login-name "Lucien Cartier-Tilet"
+             user-login-name "phundrak"
+             user-mail-address "lucien@phundrak.com")
+     #+END_SRC
+
+**** Visual settings
+     :PROPERTIES:
+     :CUSTOM_ID: h-a88bf63a-5200-46a6-be6e-2e455c347e4a
+     :END:
+     Visually, I prefer to hide the markers of macros, so let’s do that:
+     #+BEGIN_SRC emacs-lisp
+       (setq org-hide-macro-markers t)
+     #+END_SRC
+
+**** Miscellaneous
+     :PROPERTIES:
+     :CUSTOM_ID: h-42ccf90a-f507-4fab-ae42-3fd815a34ef0
+     :END:
+     When creating  a link to an  Org flie, I want  to create an ID  only if the
+     link is  created interactively, and only  if there is no  custom ID already
+     created.
+     #+BEGIN_SRC emacs-lisp
+       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+     #+END_SRC
+
+*** Org files exports
+    :PROPERTIES:
+    :CUSTOM_ID: h-65bba789-e7d5-4f60-9280-5c7d11d7f657
+    :END:
+    When it comes to  exports, I want the LaTeX and PDF exports  to be done with
+    XeLaTeX only. This implies the modification of the following variable:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-latex-compiler "xelatex")
+    #+END_SRC
+
+    I also  want to get  by default  ~minted~ for LaTeX  listings so I  can have
+    syntax highlights:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-latex-listings 'minted)
+    #+END_SRC
+
+    The default  packages break my LaTeX  exports: for some reasons,  images are
+    not  loaded and  exported  in PDFs,  so  I needed  to  redifine the  default
+    packages excluding the  one that broke my exports. I  also added two default
+    packages, ~minted~  and ~xeCJK~  for syntax  highlighting and  Japanese (and
+    additionally Chinese and Korean) support.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-latex-default-packages-alist '((""         "graphicx"  t)
+                                               ("T1"       "fontspec"  t ("pdflatex"))
+                                               (""         "longtable" nil)
+                                               (""         "wrapfig"   nil)
+                                               (""         "rotating"  nil)
+                                               ("normalem" "ulem"      t)
+                                               (""         "amsmath"   t)
+                                               (""         "textcomp"  t)
+                                               (""         "amssymb"   t)
+                                               (""         "capt-of"   nil)
+                                               (""         "minted"    nil)
+                                               (""         "xeCJK"     nil)
+                                               (""         "hyperref"  nil)))
+    #+END_SRC
+
+    By the way, reference links in LaTeX should be written in this format:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-export-latex-hyperref-format "\\ref{%s}")
+    #+END_SRC
+
+    When it  comes to the  export itself, the latex  file needs to  be processed
+    several times through XeLaTeX.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-latex-pdf-process
+            '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+              "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+              "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+    #+END_SRC
+
+    For Reveal.JS exports, I need to set where to find the framework by default:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-reveal-root "file:///home/phundrak/fromGIT/reveal.js")
+    #+END_SRC
+
+    I also  want to  disable by  default behavior of  ~^~ and  ~_~ for  only one
+    character, making it compulsory to use instead ~^{}~ and ~_{}~ respectively.
+    This is  due to my  frequent usage of  the underscore in  my org files  as a
+    regular character and not a markup one. So, let’s disable it:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-use-sub-superscripts (quote {}))
+    #+END_SRC
+
+    On  HTML exports,  Org-mode  tries  to include  a  validation  link for  the
+    exported HTML. Let’s disable that since I never use it.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-html-validation-link nil)
+    #+END_SRC
+
+*** Custom LaTeX formats
+    :PROPERTIES:
+    :CUSTOM_ID: h-783545b6-04b8-4d16-8ab5-12a74c34cfba
+    :END:
+    I currently have two custom formats for my Org-mode exports: one for general
+    use (initialy for my conlanging files, hence its ~conlang~ name), and one
+    for beamer exports.
+
+    Below is the declaration of the ~conlang~ LaTeX class:
+    #+NAME: org-latex-class-conlang
+    #+BEGIN_SRC emacs-lisp :tangle no
+      '("conlang"
+        "\\documentclass{book}"
+        ("\\chapter{%s}" . "\\chapter*{%s}")
+        ("\\section{%s}" . "\\section*{%s}")
+        ("\\subsection{%s}" . "\\subsection*{%s}")
+        ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+    #+END_SRC
+
+    And here is the declaration of the ~beamer~ class:
+    #+NAME: org-latex-class-beamer
+    #+BEGIN_SRC emacs-lisp :tangle no
+      `("beamer"
+        ,(concat "\\documentclass[presentation]{beamer}\n"
+                 "[DEFAULT-PACKAGES]"
+                 "[PACKAGES]"
+                 "[EXTRA]\n")
+        ("\\section{%s}" . "\\section*{%s}")
+        ("\\subsection{%s}" . "\\subsection*{%s}")
+        ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+    #+END_SRC
+
+    Both these classes have to be added to ~org-latex-classes~ like so:
+    #+BEGIN_SRC emacs-lisp :noweb yes
+      (eval-after-load "ox-latex"
+        ;; update the list of LaTeX classes and associated header (encoding, etc.)
+        ;; and structure
+        '(add-to-list 'org-latex-classes
+                      <<org-latex-class-conlang>>
+                      <<org-latex-class-beamer>>
+                      ))
+    #+END_SRC
+
+*** Org agenda
+    :PROPERTIES:
+    :CUSTOM_ID: h-1c4fb1d5-dfc9-4b1e-be8c-375e6d61f886
+    :END:
+    One awesome feature  of Org mode is  the agenda. By default,  my agendas are
+    stored in =~/org=.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-agenda-files (list "~/org"))
+    #+END_SRC
+
+    I also  have a  custom command  in Org agenda  to mark  some tasks  as daily
+    tasks, with the =:DAILY:= tag:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-agenda-custom-commands '(("h" "Daily habits"
+                                          ((agenda ""))
+                                          ((org-agenda-show-log t)
+                                           (org-agenda-ndays 7)
+                                           (org-agenda-log-mode-items '(state))
+                                           (org-agenda-skip-function
+                                            '(org-agenda-skip-entry-if 'notregexp
+                                                                       ":DAILY:"))))))
+    #+END_SRC
+
+    By  the  way,  let’s  also  add   all  TODO.org  files  in  Org-agenda  with
+    Org-projectile:
+    #+BEGIN_SRC emacs-lisp
+      (with-eval-after-load 'org-agenda
+        (require 'org-projectile)
+        (mapcar #'(lambda (file)
+                    (when (file-exists-p file)
+                      (push file org-agenda-files)))
+                (org-projectile-todo-files)))
+    #+END_SRC
+
+*** Org journal
+    :PROPERTIES:
+    :CUSTOM_ID: h-d679ae6c-3096-4933-8e06-9848ad35adb0
+    :END:
+    I  also  occasionally   use  Org  journal.  All  my  files   are  stored  in
+    =~/org/journal=, as set below:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-journal-dir "~/org/journal/")
+    #+END_SRC
+
+    The default prefix for org journals is the following:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-journal-date-prefix "#+TITLE: ")
+    #+END_SRC
+
+    The timestamp will be set following the ISO 8601 format:
+    #+BEGIN_SRC emacs-lisp
+      (setq org-journal-file-format "%Y-%m-%d")
+    #+END_SRC
+
+*** Org projects
+    :PROPERTIES:
+    :CUSTOM_ID: h-a1d5b79e-a053-46b0-a5ea-d5457acd1f7e
+    :END:
+    Another great features  of Org-mode is the Org projects  that allow the user
+    to easily  publish a bunch of  org files to  a remote location. Here  is the
+    current declaration of my projects, which will be detailed later:
+    #+BEGIN_SRC emacs-lisp :noweb yes
+      (setq org-publish-project-alist
+            '(
+              <<org-proj-lang-html>>
+              <<org-proj-lang-pdf>>
+              <<org-proj-lang-static>>
+              <<org-proj-lang>>))
+    #+END_SRC
+
+**** Linguistics website
+     :PROPERTIES:
+     :CUSTOM_ID: h-a54bbe09-960f-428e-9cbd-5dabb4bb8daa
+     :END:
+     In my case, I only have my linguistics website, made out of three projects.
+     The  first component  is the  one generating  the HTML  files from  the org
+     files.
+     #+NAME: org-proj-lang-html
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("langue-phundrak-com-org"
+        :base-directory "~/Documents/conlanging/web/"
+        :base-extension "org"
+        :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :recursive t
+        :language "fr"
+        :publishing-function org-html-publish-to-html
+        :headline-levels 5
+        :auto-sitemap t
+        :auto-preamble t)
+     #+END_SRC
+
+     We also have the component for the LaTeX and PDF part of the website:
+     #+NAME: org-proj-lang-pdf
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("langue-phundrak-com-pdf"
+        :base-directory "~/Documents/conlanging/web/"
+        :base-extension "org"
+        :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :recursive t
+        :language "fr"
+        :publishing-function org-latex-publish-to-pdf
+        :headline-levels 5
+        :auto-preamble t)
+     #+END_SRC
+
+     And lastly, we  have the component for  all the static files  needed to run
+     the website:
+     #+NAME: org-proj-lang-static
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("langue-phundrak-com-static"
+        :base-directory "~/Documents/conlanging/web/"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :recursive t
+        :language "fr"
+        :publishing-function org-publish-attachment)
+     #+END_SRC
+
+     The project is then defined like so:
+     #+NAME: org-proj-lang
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("langue-phundrak-com"
+        :components ("langue-phundrak-com-org"
+                     "langue-phundrak-com-static"
+                     "langue-phundrak-com-pdf"))
+     #+END_SRC
+
+ # Don’t delete this, this code block is here to wrap the org configuration
+ #+BEGIN_SRC emacs-lisp :exports none
+     )
+ #+END_SRC
+
+** Rust
+   :PROPERTIES:
+   :CUSTOM_ID: h-4f572b65-92eb-4ecd-beb3-75aa5c260e37
+   :END:
+   The first thing I need to set for my Rust setup is the path to ~racer~.
+   #+BEGIN_SRC emacs-lisp
+     (setq racer-cmd "~/.cargo/bin/racer")
+   #+END_SRC
+
+   Now, I also need  to point to racer where the source code  of Rust is located
+   so I can get some documentation.
+   #+BEGIN_SRC emacs-lisp
+     (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+   #+END_SRC
+
+   Finally, I  wish to  enable ~electric-pair-mode~ and  ~indent-guide-mode~ for
+   Rust files, so let’s enable that through the use of a hook:
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'rust-mode-hook
+               '(lambda ()
+                  (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
+                  (electric-pair-mode 1)
+                  (indent-guide-mode 1)))
+   #+END_SRC
+
+** Scheme
+   :PROPERTIES:
+   :CUSTOM_ID: h-6b392c4b-9014-4dfa-802d-2bc0c85273b3
+   :END:
+   The Scheme configuration  will be very short,  I just need to  tell Emacs the
+   name of the interpreter since it is not the default one:
+   #+BEGIN_SRC emacs-lisp
+   (setq geiser-chicken-binary "chicken-csi")
+   #+END_SRC
+
+** Python
+   :PROPERTIES:
+   :CUSTOM_ID: h-d26ce2ad-94b6-4e50-9803-d53e567f1206
+   :END:
+   Emacs throws me an error about the python interpreter, let’s silence it:
+   #+BEGIN_SRC emacs-lisp
+     (setq python-shell-completion-native-disabled-interpreters '("python"))
+   #+END_SRC
