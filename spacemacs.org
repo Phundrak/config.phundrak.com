@@ -1,14 +1,634 @@
-#+title: Phundrak’s Spacemacs User Configuration
+#+title: Phundrak’s Spacemacs Configuration
 #+INCLUDE: ~/org/config-website/headers.org
 #+OPTIONS: auto-id:t
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs User Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs User Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs user configuration of Phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
+
+* Init
+  :PROPERTIES:
+  :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/spacemacs-init.el :exports code
+  :END:
+  The ~dotspacemacs/init~ function is the one called at the very begining of the
+  Spacemacs  startup, before  any  kind of  configuration,  including the  layer
+  configuration. Only  the values of  the Spacemacs settings should  be modified
+  here. By  default, every  values are  set in a  ~setq-default~ sexp,  and they
+  represent all the supported Spacemacs settings. Hence, the function looks like
+  this:
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (defun dotspacemacs/init ()
+      (setq-default
+       ;; default Spacemacs configuration here
+       ))
+  #+END_SRC
+
+** Emacs with pdumper
+   :PROPERTIES:
+   :CUSTOM_ID: h-bb7c391e-3d0c-4c3c-99d4-09a1cb20be43
+   :END:
+   It is possible to compile Emacs 27  from source with support for the portable
+   dumper, as  shown in Spacemacs’  =EXPERIMENTAL.org= file.  I do not  use this
+   feature  yet,  as  I  am  still  on  Emacs  26  provided  from  Arch  Linux’s
+   repositories, so  I’ll disable  the Spacemacs support  for this  feature. The
+   default value of this variable is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-enable-emacs-pdumper nil)
+   #+END_SRC
+
+   In case the support for pdumper was enabled, Spacemacs needs to know the name
+   of the Emacs executable which supports such a feature. The executable must be
+   in the user’s =PATH=. By default, the value of the variable is ="emacs"=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-emacs-pdumper-executable-file "emacs")
+   #+END_SRC
+
+   And finally, we can name the Spacemacs  dump file. This is the file that will
+   be created  by the portable dumper  in the cache directory  under the =dumps=
+   sub-directory. To  load it when  starting Emacs, the  parameter =--dump-file=
+   should be  added when invoking Emacs  27.1 executable from the  command line,
+   for instance:
+   #+BEGIN_SRC sh :tangle no :exports code
+     ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
+   #+END_SRC
+   The default value of this variable is ="spacemacs.pdmp"=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp")
+   #+END_SRC
+
+** Package managment and updates
+   :PROPERTIES:
+   :CUSTOM_ID: h-8573bacc-4372-49e3-a0ff-4520fe999c97
+   :END:
+   Spacemacs’ core  configuration can be  updated via git commands  using Github
+   services. If Spacemacs  is not set to  the =develop= branch, it  can check by
+   itself if any update is available. However, I am using said branch, therefore
+   I should set this variable to =nil=. The default value is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-check-for-update nil)
+   #+END_SRC
+
+   When  it comes  to package  management, Spacemacs  is able  to store  them in
+   different directories  depending on  the version  of Emacs  used or  based on
+   other variables. I  personally prefer to use the  value =emacs-version= since
+   it makes  it easier to upgrade  or downgrade Emacs without  any conflict with
+   the already installed packages. The default value is =emacs-version=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-elpa-subdirectory 'emacs-version)
+   #+END_SRC
+
+   Spacemacs has  a capacity of performing  rollbacks after updates. We  can set
+   the maximum number of rollback slots to  keep in the cache. The default value
+   is =5=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-max-rollback-slots 5)
+   #+END_SRC
+
+*** Elpa repository
+    :PROPERTIES:
+    :CUSTOM_ID: h-ac64233a-5c7a-41f4-98b5-ce838b33ba44
+    :END:
+    It is possible to  ask Emacs to use an HTTPS  connection when contacting the
+    Elpa whenever possible. This value should be  set to =nil= when the user has
+    no  way  to  contact  the  Elpa  though  HTTPS,  otherwise  it  is  strongly
+    recommended to  let it set  to =t=. This variable  however has no  effect if
+    Emacs is launched with the parameter  =--insecure= which forces the value of
+    this variable to =nil=. The default value is =t=.
+    #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-elpa-https t)
+    #+END_SRC
+
+    We can  set a  maximum amount  of seconds which  will represent  the maximum
+    allowed time to contact the Elpa repository. By default, this setting is set
+    on =5=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-elpa-timeout 5)
+    #+END_SRC
+
+*** Spacelpa repository
+    :PROPERTIES:
+    :CUSTOM_ID: h-1f432881-39b2-4d60-862f-a1a95ebe4a58
+    :END:
+    The Spacelpa  repository is a  Spacemacs-specific package repository.  It is
+    possible to use  it as the primary  source to install a locked  version of a
+    package. If the below value is set to =nil=, then Spacemacs will install the
+    latest version of packages  from MELPA. I personally don’t use  it, so I let
+    it set to =nil=. The default value is =nil=.
+    #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-use-spacelpa nil)
+    #+END_SRC
+
+    If  the below  value is  not =nil=,  then the  signature for  the downloaded
+    Spacelpa packages must be verified.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-verify-spacelpa-archives t)
+    #+END_SRC
+
+** Editing style
+   :PROPERTIES:
+   :CUSTOM_ID: h-8a6bfe01-3e45-4189-9bde-70efbe9739ee
+   :END:
+   By  default, Spacemacs  encourages the  use  of evil-mode,  which brings  vim
+   keybinding in Emacs. Still, it has three different styles available:
+   - =vim=, which goes full evil-mode usage and most adapted to Emacs newcomers,
+     especially if they were  used to vim before, with the use  of a normal mode
+     and an insert mode.
+   - =emacs=  which keeps  an Emacs-like  feel to  the keybindings,  without any
+     difference between an insert or normal mode.
+   - =hybrid= is a modification of the =vim= mode which brings the =emacs= style
+     in insert mode, but otherwise behaves  like the =vim= style in normal mode.
+     This is the style I personally use.
+   The  value can  also be  a  list with  the =:variables=  keyword (similar  to
+   layers). Check the editing styles section of the documentation for details on
+   available variables. The default value is =vim=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-editing-style '(hybrid :variables
+                                                       hybrid-mode-enable-evilified-state t
+                                                       hybrid-mode-default-state 'normal))
+   #+END_SRC
+
+** Spacemacs home configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-6a78794e-9c0b-4390-99d5-55c5b13c8c5a
+   :END:
+   The value below specifies the startup  banner of Spacemacs. The default value
+   is =official=, it  displays the official Spacemacs logo. An  integer value is
+   the  index of  text banner,  =random=  chooses a  random text  banner in  the
+   =core/banners= directory.  A string value must  be a path to  an image format
+   supported  by your  Emacs build.  If  the value  is  nil, then  no banner  is
+   displayed. The default value is =official=.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-startup-banner 'official)
+   #+END_SRC
+
+   On the Spacemacs homepage, a list of elements can also be shown, be it recent
+   files, projects, agenda items,… Each of the elements making up the list value
+   of the below variable are pairs in the form =(list-type . list-size)=. If the
+   value is =nil=, then it is disabled. The possible values for =list-type= are:
+   - =recents= :: displays recently opened files
+   - =bookmarks= :: displays saved bookmarks
+   - =projects= :: displays projectile projects recently opened
+   - =agenda= :: displays upcoming events from Org-mode agendas
+   - =todos= :: displays recent TODOs detected in projectile projects
+   The order in which they are set in  the below list affects their order on the
+   Spacemacs   startup  page.   List  sikes   may  be   =nil=,  in   which  case
+   =spacemacs-buffer-startup-lists-length= takes effect.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-startup-lists '((recents . 15)
+                                                (projects . 15)))
+   #+END_SRC
+
+   The below variable  allows the startup page to respond  to resize events. Its
+   default value is =t=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-startup-buffer-responsive t)
+   #+END_SRC
+
+** Default major modes
+   :PROPERTIES:
+   :CUSTOM_ID: h-8318ee22-ffaf-419a-a76b-41f327c23970
+   :END:
+   The below variable sets a default major mode for a new empty buffer. Possible
+   values are mode names such as  =text-mode=, or =nil= to use Fundamental mode.
+   The default value is =text-mode=, but I prefer to use =org-mode= by default.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-new-empty-buffer-major-mode 'org-mode)
+   #+END_SRC
+
+   Similarly, the below  variable sets the default mode for  the scratch buffer.
+   Its default  value is  =text-mode=, but I  also set it  to use  =org-mode= by
+   default.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-scratch-mode 'org-mode)
+   #+END_SRC
+   By the way, it  is possible to set a default message  for the scratch buffer,
+   such as “Welcome to Spacemacs!”. I prefer to keep it clean. The default value
+   is =nil=.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-initial-scratch-message nil)
+   #+END_SRC
+
+** Visual configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-d7fe8e66-bfcd-43c4-81e5-fba433300b7b
+   :END:
+*** Themes
+    :PROPERTIES:
+    :CUSTOM_ID: h-013f84c3-92c6-453f-9229-98f0ad6ba884
+    :END:
+    Spacemacs makes  it quite easy  to use themes  and organize them.  The below
+    value is a  list of themes, the  first of the list is  loaded when Spacemacs
+    starts. The user can press =SPC T n= to cycle to the next theme in the list.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-themes '(xresources doom-vibrant doom-nord spacemacs-dark
+                                                     doom-one doom-opera doom-dracula doom-molokai
+                                                     doom-peacock doom-sourcerer doom-spacegrey
+                                                     kaolin-dark kaolin-aurora kaolin-bubblegum
+                                                     kaolin-galaxy kaolin-mono-dark kaolin-temple
+                                                     kaolin-valley-dark))
+    #+END_SRC
+
+    Emacs also makes use  of themes for the Spaceline at  the bottom of buffers.
+    Supported themes are:
+    - =spacemacs=
+    - =all-the-icons=
+    - =custom=
+    - =doom= (the one I use)
+    - =vim-powerline=
+    - =vanilla=
+    The first  three are Spaceline  themes. =doom= is the  Doom-Emacs mode-line,
+    and =vanilla=  is the default  Emacs mode-line.  =custom= is a  user defined
+    theme, refer to Spacemacs’ =DOCUMENTATION.org= file  for more info on how to
+    create  your  own Spaceline  theme.  Value  can be  a  symbol  or list  with
+    additional  properties. The  default value  is ='(spacemacs  :separator wave
+    :separator-scale 1.5))=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-mode-line-theme '(doom
+                                                   :separator wave
+                                                   :separator-scale 1.0))
+    #+END_SRC
+
+    It is also possible to color the cursor depending on which mode Spacemacs is
+    in, in order to mach the state color in GUI Emacs. The default value is =t=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-colorize-cursor-according-to-state t)
+    #+END_SRC
+
+    The below  variable sets either  the default font  or a prioritized  list of
+    fonts to be used by Emacs.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-default-font '("FiraCode Nerd Font Mono" :size 8.0
+                                                :weight normal
+                                                :width normal))
+    #+END_SRC
+
+*** Other on-screen elements
+    :PROPERTIES:
+    :CUSTOM_ID: h-fabead22-a4d0-4826-9ed1-37297810c30b
+    :END:
+    =which-key= is  a helper which  displays available keyboard  shortcuts. This
+    variable sets in seconds the time  Spacemacs should wait between a key press
+    and the moment =which-key= should be shown.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-which-key-delay 0.4)
+    #+END_SRC
+
+    This variable sets =which-key='s frame position. Possible values are:
+    - =right=
+    - =bottom=
+    - =right-then-bottom=
+    =right-then-bottom= tries to display the frame to the right, but if there is
+    insufficient  space it  displays  it at  the bottom.  The  default value  is
+    =bottom=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-which-key-position 'bottom)
+    #+END_SRC
+
+    This controls where =switch-to-buffer= displays  the buffer. If the value is
+    =nil=, =switch-to-buffer= displays the buffer  in the current window even if
+    another  same-purpose window  is available.  If non-nil,  ~switch-to-buffer~
+    displays  the buffer  in a  same-purpose window  even if  the buffer  can be
+    displayed in the current window. The default value is =nil=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-switch-to-buffer-prefers-purpose nil)
+    #+END_SRC
+
+    If this variable  is non-nil, a progress bar is  displayed when Spacemacs is
+    loading. This may  increase the boot time on some  systems and emacs builds,
+    set it to =nil= to boost the loading time. The default value is =t=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-loading-progress-bar t)
+    #+END_SRC
+
+    If the value is non-nil, Emacs will  show the title of the transient states.
+    The default value is ~t~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-show-transient-state-title t)
+    #+END_SRC
+
+    If non-nil,  this will show the  color guide hint for  transient state keys.
+    The default value is ~t~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-show-transient-state-color-guide t)
+    #+END_SRC
+
+    If non-nil, unicode symbols are displayed in the mode line. If you use Emacs
+    as a daemon and want unicode characters  only in GUI set the value to quoted
+    ~display-graphic-p~. The default value is ~t~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-mode-line-unicode-symbols
+                    'display-graphic-p)
+    #+END_SRC
+
+    If non-nil, smooth scrolling (native-scrolling) is enabled. Smooth scrolling
+    overrides  the default  behavior  of  Emacs which  recenters  point when  it
+    reaches the top or bottom of the screen. The default value is ~t~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-smooth-scrolling t)
+    #+END_SRC
+
+    The following  value controls  the line  number activation.  If set  to ~t~,
+    ~relative~ or ~visual~ then line numbers  are enabled in all ~prog-mode~ and
+    ~text-mode~ derivatives. If set to ~relative~, line numbers are relative. If
+    set to ~visual~,  line numbers are also relative, but  only visual lines are
+    counted. For example, folded lines will not be counted and wrapped lines are
+    counted as multiple lines. This variable can  also be set to a property list
+    for finer control:
+    #+BEGIN_SRC emacs-lisp :tangle no
+      '(:relative nil
+        :visual nil
+        :disabled-for-modes dired-mode
+                            doc-view-mode
+                            markdown-mode
+                            org-mode
+                            pdf-view-mode
+                            text-mode
+        :size-limit-kb 1000)
+    #+END_SRC
+    When used in a plist, ~visual~ takes precendence over ~relative~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-line-numbers '(:relative nil :enabled-for-modes prog-mode))
+    #+END_SRC
+
+    Select a scope to highlight delimiter. Possible values are:
+    - ~any~
+    - ~current~
+    - ~all~
+    - ~nil~
+    The default  value is ~all~ (highlights  any scope and emphasis  the current
+    one).
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-highlight-delimiters 'all)
+    #+END_SRC
+
+    After  a certain  amount of  time in  seconds, Spacemacs  can zone-out.  The
+    default value is ~nil~. I set it so Spacemacs zones out after 15 minutes.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-zone-out-when-idle 900)
+    #+END_SRC
+
+    Run ~spacemacs/prettify-org-buffer~ when visiting  the ~README.org~ files of
+    Spacemacs. The default value is ~nil~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-pretty-docs nil)
+    #+END_SRC
+
+*** Appearance of Emacs frames
+    :PROPERTIES:
+    :CUSTOM_ID: h-deae54d7-5790-4c11-8640-573cd3824dbd
+    :END:
+    Starting from Emacs 24.4, it is  possible to make the Emacs frame fullscreen
+    when Emacs starts up if the variable  is set to a non-nil value. The default
+    value is =nil=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-fullscreen-at-startup nil)
+    #+END_SRC
+
+    This  variable is  to  be used  if  the user  does not  want  to use  native
+    fullscreen  with ~spacemacs/toggle-fullscreen~.  This disables  for instance
+    the fullscreen animation under OSX. The default value is =nil=.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-fullscreen-use-non-native nil)
+    #+END_SRC
+
+    If you do not start Emacs in fullscreen  at startup, you might want it to be
+    maximized by  default. If  the value  for the  variable below  is set  to be
+    non-nil,   the  frame   will   be   maximized.  This   can   only  work   if
+    ~dotspacemacs-fullscreen-at-startup~  is  set  to  ~nil~,  and  it  is  only
+    available from Emacs 24.4 onwards. The default value is ~nil~.
+    #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-maximized-at-startup nil)
+    #+END_SRC
+
+    If non-nil, the frame is undecorated when Emacs starts up. Combine this with
+    the variable ~dotspacemacs-maximized-at-startup~ in OSX to obtain borderless
+    fullscreen. The default value is ~nil~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-undecorated-at-startup nil)
+    #+END_SRC
+
+    You  can  also set  a  transparency  level for  Emacs  when  you toggle  the
+    transparency  of the  frame  with ~toggle-transparency~.  The  value of  the
+    transparency,  going from  0 to  100  in increasing  opacity, describes  the
+    transparency level  of a  frame when  it’s active  or selected.  The default
+    value is ~90~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-active-transparency 95)
+    #+END_SRC
+
+    Similarly, you  can set a  value from 0 to  100 in increasing  opacity which
+    describes  the  transparency  level  of   a  frame  when  it’s  inactive  or
+    deselected. The default value is ~90~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-inactive-transparency 80)
+    #+END_SRC
+
+    The variable below sets the format of frame title. You can use:
+    - ~%a~ :: the ~abbreviated-file-name~ or ~buffer-name~
+    - ~%t~ :: ~projectile-project-name~
+    - ~%I~ :: ~invocation-name~
+    - ~%S~ :: ~system-name~
+    - ~%U~ :: contents of ~$USER~
+    - ~%b~ :: buffer name
+    - ~%f~ :: visited file name
+    - ~%F~ :: frame name
+    - ~%s~ :: process status
+    - ~%p~ :: percent of buffer above top of window, or Top, Bot, or All
+    - ~%P~ ::  percent of buffer  above bottom of  window, perhaps plus  Top, or
+              Bot, or All
+    - ~%m~ :: mode name
+    - ~%n~ :: Narrow if appropriate
+    - ~%z~ :: mnemonics of buffer, terminal, and keyboard coding systems
+    - ~%Z~ :: like ~%z~, but including the end-of-line format
+    The default value is ~"%I@%S"~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-frame-title-format "%b (%m)")
+    #+END_SRC
+
+    Format specification for setting the icon title format. The default value is
+    ~nil~, same as ~frame-title-format~.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-icon-title-format nil)
+    #+END_SRC
+
+** Spacemacs leader keys and shortcuts
+   :PROPERTIES:
+   :CUSTOM_ID: h-0bf00e10-d577-4133-91c6-39bdc96d847d
+   :END:
+   The below  setting sets  the Spacemacs  leader key. By  default, this  is the
+   =SPC= key.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-leader-key "SPC")
+   #+END_SRC
+
+   Once the leader  key has been pressed,  it is possible to set  another key in
+   order to call Emacs’ command =M-x=. By default, it is again the =SPC= key.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-emacs-command-key "SPC")
+   #+END_SRC
+
+   It is also possible to invoke Vim Ex commands with the press of a key, and by
+   default it is the =:= key.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-ex-command-key ":")
+   #+END_SRC
+
+   The  below variable  sets  the  leader key  accessible  in =emacs-state=  and
+   =insert-state=:
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-emacs-leader-key "M-m")
+   #+END_SRC
+
+   The  major mode  leader key  is a  shortcut key  which is  the equivalent  of
+   pressing =<leader> m=.  Set it to =nil=  to disable it. Its  default value is
+   =,=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-major-mode-leader-key ",")
+   #+END_SRC
+
+   In =emacs-state=  and =insert-state=, the same  major mode leader key  can be
+   accessible from another shortcut, which by default is =C-M-m=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-major-mode-emacs-leader-key "C-M-m")
+   #+END_SRC
+
+   These variables control whether separate commands are bound in the GUI to the
+   key pairs =C-i= and =TAB=, and =C-m= and =RET=. Setting it to a non-nil value
+   allows for separate  commands under =C-i= and =TAB=, and  =C-m= and =RET=. In
+   the terminal, these pairs are generally indistinguishable, so this only works
+   in the GUI. The default value is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-distinguish-gui-tab nil)
+   #+END_SRC
+
+** Layouts
+   :PROPERTIES:
+   :CUSTOM_ID: h-7b84a553-6c54-431e-ad23-dfa26c8a334f
+   :END:
+   The variable belows sets the name of the default layout. Its default value is
+   ="Default"=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-default-layout-name "Default")
+   #+END_SRC
+
+   If  non-nil, the  default  layout name  is displayed  in  the mode-line.  The
+   default value is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-display-default-layout nil)
+   #+END_SRC
+
+   If non-nil, then the last auto saved layouts are resumed automatically upon
+   start. The default value is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-auto-resume-layouts nil)
+   #+END_SRC
+
+   If non-nil, the layout name will be auto-generated when creating new layouts.
+   It only has an effect when using  the “jump to layout by number” command. The
+   default value is =nil=.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-auto-generate-layout-names nil)
+   #+END_SRC
+
+** Files-related settings
+   :PROPERTIES:
+   :CUSTOM_ID: h-c3aa3e27-4c42-4607-98fa-6e4647247ed3
+   :END:
+   The below value sets the size in MB above which Spacemacs will prompt to open
+   the  file literally  in order  to avoid  preformance issues.  Opening a  file
+   literally means that no  major or minor mode is active.  The default value is
+   =1=.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-large-file-size 5)
+   #+END_SRC
+
+   This variable  sets the  location where to  auto-save files.  Possible values
+   are:
+   - =original= :: auto-saves files in-place
+   - =cache= :: auto-saves files in another file stored in the cache directory
+   - =nil= :: disables auto-saving.
+   The default value is =cache=.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-auto-save-file-location 'original)
+   #+END_SRC
+
+** Emacs server
+   :PROPERTIES:
+   :CUSTOM_ID: h-ca601390-7851-4c05-8021-18ca3eb48ac7
+   :END:
+   Emacs can be  launched as a server  if the following value is  set to non-nil
+   and if one isn’t already running. The default value is ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-enable-server nil)
+   #+END_SRC
+
+   You can  also set  a custom  emacs server  socket location.  If the  value is
+   ~nil~, Emacs  will use whatever the  Emacs default is, otherwise  a directory
+   path     like    ="~/.emacs.d/server"=.     It    has     no    effect     if
+   ~dotspacemacs-enable-server~ is ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-server-socket-dir nil)
+   #+END_SRC
+
+   It is  also possible  to tell Emacs  that the quit  function should  keep the
+   server open when quitting. The default value is ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-persistent-server t)
+   #+END_SRC
+
+** Miscellaneous
+   :PROPERTIES:
+   :CUSTOM_ID: h-69b80cd3-dc0c-405b-bd02-315821105922
+   :END:
+   This value changes the folding method of code blocks. The possible values are
+   either ~evil~, the default value, or ~origami~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-folding-method 'evil)
+   #+END_SRC
+
+   If non-nil,  ~smartparens-strict-mode~ will be enabled  in programming modes.
+   The default value is ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-smartparens-strict-mode nil)
+   #+END_SRC
+
+   If non-nil,  pressing the closing parenthesis  ~)~ key in insert  mode passes
+   over any automatically  added closing parenthesis, bracket,  quote, etc… This
+   can temporarily disabled  by pressing ~C-q~ before ~)~. The  default value is
+   ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-smart-closing-parenthesis nil)
+   #+END_SRC
+
+   List of search tool executable names. Spacemacs uses the first installed tool
+   of the list. Supported tools are:
+   - ~rg~
+   - ~ag~
+   - ~pt~
+   - ~ack~
+   - ~grep~
+   The default value is ~'("rg" "ag" "pt" "ack" "grep")~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep"))
+   #+END_SRC
+
+   Delete whitespace while saving buffer. Possible values are:
+   - ~all~ :: aggresively delete empty lines and long sequences of whitespace
+   - ~trailing~ :: only detele the whitespace at end of lines
+   - ~changed~ :: to delete only whitespace for changed lines
+   - ~nil~ :: disable cleanup
+   The default value is ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-whitespace-cleanup nil)
+   #+END_SRC
+
+   #+END_SRC
+   #+END_SRC
 
 * User Initialization
   :PROPERTIES:
   :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-init.el
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-init.el :exports code
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
@@ -52,7 +672,7 @@
 * User Configuration
   :PROPERTIES:
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-config.el
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-config.el :exports code
   :END:
 ** ASM configuration
    :PROPERTIES:
