@@ -279,8 +279,7 @@
    :END:
    Let’s set in a custom varible what packages we’ll be needing.
    #+BEGIN_SRC fish
-     set PACKAGES
-
+     set PACKAGES \
      acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
      awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
      bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
