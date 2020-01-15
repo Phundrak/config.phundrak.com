@@ -107,7 +107,9 @@ abbr q exit
 
 abbr hist history
 
-abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0'
+abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
+
+abbr ytdl 'youtube-dl -f best -ciw -o "~/Videos/YouTube/%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"'
 
 abbr mpv 'mpv --no-border --force-window=no'
 
@@ -115,8 +117,6 @@ abbr compress 'tar -czf'
 abbr untar 'tar -xvzf'
 
 abbr feh 'feh -Zx.'
-
-abbr lsl 'ls -ahl'
 
 abbr nmcli 'nmcli -p -c auto'
 
