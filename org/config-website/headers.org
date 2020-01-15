@@ -1,0 +1,50 @@
+# -*- mode: org; org-confirm-babel-evaluate: nil -*-
+#+AUTHOR: Lucien Cartier-Tilet
+#+EMAIL: lucien@phundrak.com
+#+CREATOR: Lucien Cartier-Tilet
+#+LANGUAGE: fr
+
+# ### ORG OPTIONS ##############################################################
+
+#+OPTIONS: H:4 broken_links:mark email:t ^:{} tex:dvisvgm
+#+KEYWORDS: dotfiles linux emacs configuration phundrak drakpa
+
+# ### LaTeX ####################################################################
+
+#+LATEX_CLASS: conlang
+#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
+#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
+#+LATEX_HEADER_EXTRA: \setmainfont{Charis SIL}
+#+LATEX_HEADER_EXTRA: \usepackage{newunicodechar}
+#+LATEX_HEADER_EXTRA: \newunicodechar{’}{'}
+#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
+#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
+#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
+
+# ### HTML #####################################################################
+
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" id="theme" href="https://langue.phundrak.com/css/dark.css"/>
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
+#+HTML_HEAD_EXTRA: <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/dart/main.dart.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+INFOJS_OPT: view:info home:https://phundrak.com/config toc:t
+
+# ### MACROS ###################################################################
+#+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@
+#+MACRO: newpage @@latex:\newpage@@
+#+MACRO: latex-html @@latex:$1@@@@html:$2@@
+#+MACRO: phon @@latex:/$1/@@@@html:/$1/@@@@ascii:/$1/@@
+#+MACRO: v @@latex:\rotatebox[origin=c]{270}{$1}@@@@html:<span class=vertical>$1</span>@@
+#+MACRO: begin-largetable @@html:<div class="largetable">@@
+#+MACRO: end-largetable @@html:</div>@@

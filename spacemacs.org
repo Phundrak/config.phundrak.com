@@ -1,41 +1,9 @@
 #+title: Phundrak’s Spacemacs User Configuration
-#+author: Lucien “Phundrak” Cartier-Tilet
-#+email: lucien@phundrak.com
-#+OPTIONS: toc:4 h:4 email:t ^:{} auto-id:t
-#+startup: headlines
-
-# ### LaTeX ####################################################################
-#+LATEX_CLASS: article
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{newunicodechar}
-#+LATEX_HEADER_EXTRA: \newunicodechar{’}{'}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-
-# ### HTML #####################################################################
-#+HTML_DOCTYPE: html5
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" id="theme" href="https://langue.phundrak.com/css/dark.css"/>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/dart/main.dart.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs User Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs User Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs user configuration of Phundrak" />
-#+INFOJS_OPT: view:info toc:t ltoc:above
 
 * User Initialization
   :PROPERTIES:
@@ -1121,11 +1089,54 @@
     #+BEGIN_SRC emacs-lisp :noweb yes
       (setq org-publish-project-alist
             '(
+              <<org-proj-config-html>>
+              <<org-proj-config-static>>
+              <<org-proj-config>>
               <<org-proj-lang-html>>
               <<org-proj-lang-pdf>>
               <<org-proj-lang-static>>
               <<org-proj-lang>>))
     #+END_SRC
+
+**** Configuration website
+     :PROPERTIES:
+     :CUSTOM_ID: h-7559d45e-a1e8-4755-8c34-a95c80a592c7
+     :END:
+     #+NAME: org-proj-config-html
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("config-website-org"
+        :base-directory "~/org/config-website/"
+        :base-extension "org"
+        :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
+        :recursive t
+        :language "fr"
+        :publishing-function org-html-publish-to-html
+        :headline-levels 5
+        :auto-sitemap t
+        :auto-preamble t)
+     #+END_SRC
+
+     And lastly, we  have the component for  all the static files  needed to run
+     the website:
+     #+NAME: org-proj-config-static
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("config-website-static"
+        :base-directory "~/org/config-website/"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|html"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
+        :recursive t
+        :language "fr"
+        :publishing-function org-publish-attachment)
+     #+END_SRC
+
+     The project is then defined like so:
+     #+NAME: org-proj-config
+     #+BEGIN_SRC emacs-lisp :tangle no
+       ("config-website"
+        :components ("config-website-org"
+                     "config-website-static"))
+     #+END_SRC
 
 **** Linguistics website
      :PROPERTIES:

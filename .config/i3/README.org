@@ -1,40 +1,10 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 #+TITLE: Phundrak’s i3 config
-#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: lucien@phundrak.com
-#+OPTIONS: H:4 email:t ^:{} auto-id:t
-
-# ### LaTeX ####################################################################
-#+LATEX_CLASS: article
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-
-# ### HTML #####################################################################
-#+HTML_DOCTYPE: html5
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
-#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -134,6 +104,8 @@
    | $term       | st                                                                       |
 
    #+NAME: variable-sh
+   | variable    | value                                                                    |
+   |-------------+--------------------------------------------------------------------------|
    | $exiti3     | i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'               |
    | $lockscreen | Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89           |
    | $rofiexec   | rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons |
@@ -150,18 +122,18 @@
    #+BEGIN_SRC python :var variables=variable-table :cache yes
      result = ''
      for line in variables:
-         result += "set {0}\t{1}\n".format(line[0], line[1])
+         result += "set {0}    {1}\n".format(line[0], line[1])
      return result
    #+END_SRC
 
-   #+RESULTS[daefb71e1df094fad8f60b95c8b00730d5110ae3]: generate-variables
-   : set $mod	Mod4
-   : set $alt	Mod1
-   : set $up	Up
-   : set $down	Down
-   : set $left	Left
-   : set $right	Right
-   : set $term	st
+   #+RESULTS[58c517fe29b63f631ff0ba754d5d9ec4ea673388]: generate-variables
+   : set $mod    Mod4
+   : set $alt    Mod1
+   : set $up    Up
+   : set $down    Down
+   : set $left    Left
+   : set $right    Right
+   : set $term    st
 
    Finally, some variables  hold some long strings for commands  I don’t want to
    have to type multiple times.
@@ -169,17 +141,17 @@
    #+BEGIN_SRC python :var variables=variable-sh :cache yes
      result = ''
      for line in variables:
-         result += "set {0}\t\"{1}\"\n".format(line[0], line[1])
+         result += "set {0}    \"{1}\"\n".format(line[0], line[1])
      return result
    #+END_SRC
 
-   #+RESULTS[caa4fad487ab743e5398c357542b25eaa2b792cf]: generate-variables2
-   : set $exiti3	"i3-nagbar -t warning -m "Leave i3?" -b "Yes" "i3-msg exit""
-   : set $lockscreen	"Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-   : set $rofiexec	"rofi -combi-modi "window,drun" -show combi -mohh combi -m -1 -show-icons"
-   : set $gnus	"emacsclient --create-frame --eval "(gnus)" -n"
-   : set $ec	"emacsclient --create-frame -n"
-   : set $walset	"wal -i ~/Pictures/Wallpapers -o wal-set"
+   #+RESULTS[13a3244099ec9233a8b7003c1874b3c92cb19e34]: generate-variables2
+   : set $exiti3    "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
+   : set $lockscreen    "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
+   : set $rofiexec    "rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
+   : set $gnus    "emacsclient --create-frame --eval '(gnus)' -n"
+   : set $ec    "emacsclient --create-frame -n"
+   : set $walset    "wal -i ~/Pictures/Wallpapers -o wal-set"
 
    Here is the configuration:
    #+BEGIN_SRC conf :noweb yes
@@ -319,7 +291,7 @@
 * Assigning windows to workspaces
   :PROPERTIES:
   :CUSTOM_ID: h-21870449-7730-4164-8add-167cb4e75218
-  :HEADER-ARGS: :exports code
+  :HEADER-ARGS: :exports code :tangle config##yadm.j2
   :HEADER-ARGS:python: :exports none :tangle no
   :END:
   I decided to bind some windows to some workspaces in order to have a better
@@ -340,7 +312,7 @@
 
   The class table is used in the assignment in the i3 config file. For instance,
   Gimp’s assignment will look like this:
-  #+BEGIN_SRC conf
+  #+BEGIN_SRC conf :tangle no
     assign [class="Gimp*"] 6
   #+END_SRC
 
@@ -353,7 +325,7 @@
   #+END_SRC
 
   Here is the configuration:
-  #+BEGIN_SRC conf :noweb yes :tangle config##yadm.j2
+  #+BEGIN_SRC conf :noweb yes
   <<generate-workspaces()>>
   #+END_SRC
 
@@ -362,7 +334,7 @@
   have  two screens  — and  since this  is the  case when  I am  using only  one
   computer, Marpa, I can make it a conditional thanks to yadm’s jinja2 syntax.
 
-  #+BEGIN_SRC conf :tangle config##yadm.j2
+  #+BEGIN_SRC conf
     {% if YADM_HOSTNAME == 'Marpa' -%}
     workspace 10 output eDP-1
     {% endif -%}
@@ -386,7 +358,7 @@
   #+BEGIN_SRC python :exports none :var table=[] :eval yes :tangle no
     results = ''
     for line in table:
-        results += "bindsym {0}\t{1}\n".format(line[0], line[1])
+        results += "bindsym {0}    {1}\n".format(line[0], line[1])
     return results
   #+END_SRC
 
@@ -763,7 +735,7 @@
     #+NAME: internet-sh
     | shortcut     | command             | what it does                |
     |--------------+---------------------+-----------------------------|
-    | $mod+c       | exec firefox        | Launch firefox              |
+    | $mod+b       | exec firefox        | Launch browser              |
     | $mod+m       | exec $gnus          | Launch Gnus, my mail client |
     | Ctrl+Shift+d | exec discord-canary | Launch Discord              |
 
@@ -913,7 +885,7 @@
     #+BEGIN_SRC conf
       {% if YADM_HOSTNAME == 'Marpa' -%}
       bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1
-      {% else %}
+      {% else -%}
       bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
       {% endif -%}
     #+END_SRC

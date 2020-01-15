@@ -1,36 +1,9 @@
 #+TITLE: Phundrak’s fish config
-#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: lucien@phundrak.com
-#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
-#+EXPORT_FILE_NAME: index.html
-
-# ### LaTeX ####################################################################
-#+LATEX_CLASS: article
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,xcolor,hyperref,indentfirst}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setmainfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-
-# ### HTML #####################################################################
-#+HTML_DOCTYPE: html5
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
-#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -61,11 +34,12 @@
     - [[#sudo][Sudo]]
     - [[#exit][Exit]]
     - [[#history][History]]
-    - [[#song-download-from-youtube][Song download from YouTube]]
+    - [[#youtube-dl-related-commands][~youtube-dl~ related commands]]
+      - [[#song-download-from-youtube][Song download from YouTube]]
+      - [[#videos-download-from-youtube][Videos download from YouTube]]
     - [[#mpv][MPV]]
     - [[#compression][Compression]]
     - [[#feh][Feh]]
-    - [[#ls][ls]]
     - [[#network-management][Network Management]]
     - [[#wget][Wget]]
 
@@ -499,7 +473,6 @@
     [[file:~/.local/bin/askpass][.local/bin/askpass]]). I also  made it so =please= is an  equivalent to =sudo
     -A= as a joke.
     #+BEGIN_SRC fish
-      abbr sudo 'sudo -A'
       abbr please 'sudo -A'
     #+END_SRC
 
@@ -522,15 +495,32 @@
       abbr hist history
     #+END_SRC
 
-*** Song download from YouTube
+*** ~youtube-dl~ related commands
     :PROPERTIES:
-    :CUSTOM_ID: h-4bc663a9-b609-4c86-9a4d-a220013c67f9
+    :CUSTOM_ID: h-177d56dc-39a6-4f4c-a7ba-179dd5c6cac8
     :END:
-    When I  want to  download a song  from YouTube, I’ll  just use  the command
-    =flac videoIdentifier= to get it through =youtube-dl=.
-    #+BEGIN_SRC fish
-      abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0'
-    #+END_SRC
+**** Song download from YouTube
+     :PROPERTIES:
+     :CUSTOM_ID: h-4bc663a9-b609-4c86-9a4d-a220013c67f9
+     :END:
+     When I  want to  download a song  from YouTube, I’ll  just use  the command
+     =flac videoIdentifier= to get it through =youtube-dl=.
+     #+BEGIN_SRC fish
+       abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
+     #+END_SRC
+
+**** Videos download from YouTube
+     :PROPERTIES:
+     :CUSTOM_ID: h-e6e45b59-7620-4d17-ba32-67a33f39cc4b
+     :END:
+     I download a LOT of videos  from YouTube, generally educative videos that I
+     do not want to lose to YouTube one day who will decide that such channel is
+     unworthy of  their platform, or  if the  original author decides  to delete
+     their videos  or whatever. So,  I use  the abbreviation ~ytdl~  to download
+     either one video, or a whole YouTube channel.
+     #+BEGIN_SRC fish
+       abbr ytdl 'youtube-dl -f best -ciw -o "~/Videos/YouTube/%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"'
+     #+END_SRC
 
 *** MPV
     :PROPERTIES:
@@ -566,16 +556,6 @@
     window geometry.
     #+BEGIN_SRC fish
       abbr feh 'feh -Zx.'
-    #+END_SRC
-
-*** ls
-    :PROPERTIES:
-    :CUSTOM_ID: h-9980009d-3fc4-4e2e-861b-1af007212f8d
-    :END:
-    Yep, an  abbreviation of =ls=  called =lsl=. It allows  me to view  all the
-    files in a directory as a list with detailed, human-readable information.
-    #+BEGIN_SRC fish
-      abbr lsl 'ls -ahl'
     #+END_SRC
 
 *** Network Management

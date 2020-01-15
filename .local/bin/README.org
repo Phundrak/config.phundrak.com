@@ -1,41 +1,9 @@
 #+TITLE: Phundrak’s executable scripts
-#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: phundrak@phundrak.fr
-#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
-
-# ### LaTeX ####################################################################
-#+LATEX_CLASS: conlang
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{multicol}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-#+LATEX_HEADER_EXTRA: \sloppy
-
-# ### HTML #####################################################################
-#+HTML_DOCTYPE: html5
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
-#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -51,6 +19,7 @@
 - [[#dart-language-server][Dart Language Server]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
+- [[#lsl][lsl]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
@@ -363,6 +332,20 @@
   #+END_SRC
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
+
+* lsl
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle lsl :exports code
+  :CUSTOM_ID: h-6bcdad54-20ce-40cc-8a4b-8d9c20fc5c95
+  :END:
+  ~lsl~ is a former abbreviation I used to use in fish. However, a recent update
+  of this  abbreviation made it harder  to use as  is, and I believe  a function
+  will better fulfil its role than an  abbreviation. As you’ll see, it is a very
+  simple script:
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    ls -ahlX --group-directories-first $argv | bat
+  #+END_SRC
 
 * Polybar-launch
   :PROPERTIES:

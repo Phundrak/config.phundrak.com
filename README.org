@@ -1,41 +1,9 @@
 #+TITLE: Phundrak’s dotfiles
-#+AUTHOR: Lucien "Phundrak” Cartier-Tilet
-#+EMAIL: lucien@phundrak.com
-#+OPTIONS: H:4 broken_links:mark email:t ^:{} auto-id:t
-
-# ### LaTeX ####################################################################
-#+LATEX_CLASS: conlang
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{tocloft} \setlength{\cftchapnumwidth}{3em}
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra,fontspec,xunicode,svg}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setromanfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{multicol}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
-#+LATEX_HEADER_EXTRA: \sloppy
-
-# ### HTML #####################################################################
-#+HTML_DOCTYPE: html5
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
-#+HTML_HEAD_EXTRA: <script src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+HTML_HEAD_EXTRA: <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
-#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <style>.org-svg{width:auto}</style>
-#+INFOJS_OPT: view:info toc:1 home:https://phundrak.com/config toc:t
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <script src="https://langue.phundrak.com/js/jquery.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/js/main.js"></script>
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -104,11 +72,11 @@
     have on my main computer and my travel laptop.
 
   Most of the org  files you will find in this repos are  the actual source code
-  of much  of my config  files. For instance,  the [[#h-c13d132f-9e69-4bb0-838b-29c7c5611f11][Execute bootstrap]]  subpart of
-  this file  exports almost all  of its code snippets  to [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]]
-  thanks to =M-x org-babel-tangle= from within  Emacs. Below I will also present
-  and comment some of my short config files  which do not deserve to have a full
-  org file dedicated to them.
+  of  much   of  my  config  files.   For  instance,  the  bootstrap   found  in
+  [[file:installation.org][installation.org]]   exports    almost   all    of   its   code    snippets   to
+  [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]]  thanks to  =M-x org-babel-tangle=  from within  Emacs.
+  Below I will also  present and comment some of my short  config files which do
+  not deserve to have a full org file dedicated to them.
 
 ** Custom scripts in =PATH=
    :PROPERTIES:
@@ -130,7 +98,7 @@
    #+begin_quote
    Emacs is a great operating system, it just lacks a good text editor.
    #+end_quote
-   You can find my Emacs config, based  on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/.spacemacs][.spacemacs]] file, and
+   You can find my Emacs config, based  on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and
    my user configuration in my [[file:spacemacs.org][spacemacs.org]] file.
 
 ** Email signature
