@@ -5,6 +5,506 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
 
+* Spacemacs layers and packages
+  :PROPERTIES:
+  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/spacemacs-layers.el :exports code
+  :CUSTOM_ID: h-9d9869e0-4672-419c-bf37-3d3ae1b7c0aa
+  :END:
+  Here  will be  our layer  configuration  set. Everything  here is  set with  a
+  ~setq-default~ in the ~dotspacemacs/layers~ function like so:
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (defun dotspacemacs/layers ()
+      (setq-default
+       ;; configuration goes here
+       ))
+  #+END_SRC
+
+** General configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-ecfe1909-18af-451d-b78f-0d7e5a1d45c0
+   :END:
+   First, we need  to tell Spacemacs which base distribution  we are using. This
+   is a  layer contained  in the directory  ~+distribution~. For  now, available
+   distributions are ~spacemacs-base~ and ~spacemacs~ (the default one).
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-distribution 'spacemacs)
+   #+END_SRC
+
+   We can  seet a lazy  installation of layers  —i.e. layers are  installed only
+   when a file with a supported type is opened. Possible values are:
+   - ~all~ ::  will lazy install any  layer that support lazy  installation even
+              the layers listed in ~dotspacemacs-configuration-layers~
+   - ~unused~ :: will lazy install only unused layers (i.e. layers not listed in
+                 the variable ~dotspacemacs-configuration-layers~)
+   - ~nil~ :: disables the lazy installation  feature and you have to explicitly
+              list a  layer in the  variable ~dotspacemacs-configuration-layers~
+              to install it.
+   The default value is ~unused~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-enable-lazy-installation 'unused)
+   #+END_SRC
+
+   If the  following variable  is non-nil, Spacemacs  will ask  for confirmation
+   before installing a layer lazily. The default value is ~t~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-ask-for-lazy-installation t)
+   #+END_SRC
+
+** Package management
+   :PROPERTIES:
+   :CUSTOM_ID: h-587fd3fb-5a99-4c19-af02-b1553c6acfae
+   :END:
+   It is possible to  indicate to Spacemacs a list of  additional paths where to
+   look  for  configuration layers.  Paths  must  have  a trailing  slash,  i.e.
+   =~/.mycontribs/=. As you can see, I added none:
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-configuration-layer-path '())
+   #+END_SRC
+
+   However, I  do have additional packages  I installed either from  the Elpa or
+   the Melpa.  These are  set in  ~dotspacemacs-additional-packages~, a  list of
+   additional packages that will be installed  without being wrapped in a layer.
+   If you need  some configuration for these packages, then  consider creating a
+   layer. You can also puth  the configuration in ~dotspacemacs/user-config~. To
+   use a local version of a package, use the ~:location~ property, for instance:
+   #+BEGIN_SRC emacs-lisp :tangle no
+     '(your-package :location "~/path/to/your-package/")
+   #+END_SRC
+   Alos include the dependencies as they will not be resolved automatically:
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-additional-packages '(atomic-chrome
+                                                      dired-du
+                                                      doom-themes
+                                                      edit-indirect
+                                                      elcord
+                                                      eshell-git-prompt
+                                                      flycheck-golangci-lint
+                                                      kaolin-themes
+                                                      magit-gitflow
+                                                      meson-mode
+                                                      modern-cpp-font-lock
+                                                      multiple-cursors
+                                                      org-sidebar
+                                                      outorg
+                                                      pinentry
+                                                      visual-fill-column
+                                                      wttrin
+                                                      xresources-theme
+                                                      yasnippet-snippets))
+   #+END_SRC
+
+   It is possible to also list packages that cannot be updated:
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-frozen-packages '())
+   #+END_SRC
+
+   And to list packages which won’t be installed nor loaded:
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-excluded-packages '())
+   #+END_SRC
+
+   Finally, it is possible to define  the behaviour of Spacemacs when installing
+   packages. Possible values are:
+   - ~used-only~  :: installs  only  explicitly used  packages  and deletes  any
+                    unused packages as well as their unused dependencies
+   - ~used-but-keep-unused~ :: installs only the  used packages but won’t delete
+        unused ones
+   - ~all~  ::  installs  *all*  packages   supported  by  Spacemacs  and  never
+              uninstalls them.
+   The default value is ~used-only~.
+   #+BEGIN_SRC emacs-lisp
+   (setq-default dotspacemacs-install-packages 'used-only)
+   #+END_SRC
+
+** Layers
+   :PROPERTIES:
+   :CUSTOM_ID: h-313bf79e-c24c-40a6-8bc0-eb608fda05d9
+   :END:
+   All layers are set one variable: ~dotspacemacs-configuration-layers~. This
+   variable is a list of layers, some of them will have some custom variables.
+   Typically, the variable will be set like so:
+   #+BEGIN_SRC emacs-lisp :tangle no
+     (setq-default dotspacemacs-configuration-layers
+                   '(emacs-lisp
+                     helm
+                     multiple-cursors
+                     org
+                     (shell :variables shell-default-height
+                            30 shell-default-position 'bottom)
+                     treemacs))
+   #+END_SRC
+
+# Don’t delete this code block, it wraps the layers
+#+BEGIN_SRC emacs-lisp :exports none
+(setq-default dotspacemacs-configuration-layers '(
+#+END_SRC
+
+*** Checkers
+    :PROPERTIES:
+    :CUSTOM_ID: h-04664b1a-8138-4566-8b63-8050437351a7
+    :END:
+    The  two  first   checkers  I  use  are  for  spell   and  syntax  checking.
+    ~spell-checking~ is disabled  by default, however it  should auto-detect the
+    dictionary to use.
+    #+BEGIN_SRC emacs-lisp
+      (spell-checking :variables
+                      spell-checking-enable-by-default nil
+                      spell-checking-enable-auto-dictionary t)
+      syntax-checking
+    #+END_SRC
+
+*** Completion
+    :PROPERTIES:
+    :CUSTOM_ID: h-fc18dd98-1411-4516-a87c-6c1047d2a13c
+    :END:
+    ~auto-completion~ is a layer enabled  in order to provide auto-completion to
+    all  supported language  layers. It  is set  so that  the =RET=  key has  no
+    behavior with  this layer, however  the =TAB= key cycles  between candidates
+    displayed by the auto-completion toolbox.  I also want the autocompletion to
+    include snippets  in the popup,  and the content of  the popup is  sorted by
+    usage. It is also disabled for two modes: magit and Org.
+    #+BEGIN_SRC emacs-lisp
+      (auto-completion :variables
+                    auto-completion-complete-with-key-sequence-delay 0.2
+                    auto-completion-enable-help-tooltip 'manual
+                    auto-completion-enable-snippets-in-popup t
+                    auto-completion-enable-sort-by-usage t
+                    :disabled-for
+                    org
+                    git)
+    #+END_SRC
+
+    ~helm~ is also enabled, with its header disabled.
+    #+BEGIN_SRC emacs-lisp
+      (helm :variables helm-no-header t)
+    #+END_SRC
+
+*** Email
+    :PROPERTIES:
+    :CUSTOM_ID: h-0db2333c-86bf-4b41-8226-da66885fce36
+    :END:
+    As described below,  I use Gnus as  my main email client.  Therefore, I have
+    the gnus layer enabled:
+    #+BEGIN_SRC emacs-lisp
+    gnus
+    #+END_SRC
+
+*** Emacs
+    :PROPERTIES:
+    :CUSTOM_ID: h-ad6174a6-4056-420e-9620-3da5f00bd3fc
+    :END:
+    The first layer  enabled in this category is ~better-defaults~.  I also made
+    it so  that when  a command  equivalent to  ~C-a~ or  ~C-e~ is  pressed, the
+    cursor will  respectively first move to  the beginning of code  first before
+    going past the  indentation and to the  end of the code before  going to the
+    end of the line before going over the end of the comments on the same line.
+    #+BEGIN_SRC emacs-lisp
+      (better-defaults :variables
+                       better-defaults-move-to-beginning-of-code-first t
+                       better-defaults-move-to-end-of-code-first t)
+    #+END_SRC
+
+    I also enabled ~ibuffer~ and made it so that buffers are sorted by projects.
+    #+BEGIN_SRC emacs-lisp
+      (ibuffer :variables
+               ibuffer-group-buffers-by 'projects)
+    #+END_SRC
+
+    Most important  of all, the ~org~  layer is also enabled.  I enabled support
+    for Epub  exports, Github,  Reveal.JS exports,  and sticky  headers. Project
+    support is  also enabled  through files  named ~TODOs.org~.  I also  set the
+    org-download folder for images in =~/Pictures/org/=, and I set the =RET= key
+    to follow org links if the cursor is on one.
+    #+BEGIN_SRC emacs-lisp
+      (org :variables
+           org-enable-epub-support t
+           org-enable-github-support t
+           org-enable-reveal-js-support t
+           org-enable-sticky-header t
+           org-enable-org-journal-support t
+           spaceline-org-clock-p t
+           org-projectile-file "TODOs.org"
+           org-download-image-dir "~/Pictures/org/"
+           org-return-follows-link t)
+    #+END_SRC
+
+    The ~semantic~ layer is also enabled.
+    #+BEGIN_SRC emacs-lisp
+      semantic
+    #+END_SRC
+
+*** File trees
+    :PROPERTIES:
+    :CUSTOM_ID: h-35f135ac-45cd-4e91-a23d-41700dc7495f
+    :END:
+    In this category, I only enabled one layer: ~treemacs~. In this layer, I set
+    is  so that  treemacs syncs  with my  current buffer,  and it  automatically
+    refreshes its buffer when  there is a change in the part  of the file system
+    shown by treemacs.
+    #+BEGIN_SRC emacs-lisp
+      (treemacs :variables
+                treemacs-use-follow-mode t
+                treemacs-use-filewatch-mode t)
+    #+END_SRC
+
+*** Fonts
+    :PROPERTIES:
+    :CUSTOM_ID: h-7a0a7d6d-6caa-4504-acf6-f97c25436ef1
+    :END:
+    In this category,  again, one layer is enabled:  ~unicode-fonts~. This layer
+    addssupport for the ~unicode-fonts~ package.
+    #+BEGIN_SRC emacs-lisp
+    unicode-fonts
+    #+END_SRC
+
+*** Fun
+    :PROPERTIES:
+    :CUSTOM_ID: h-3aec0cda-50d5-4c31-a57e-4244a254a57f
+    :END:
+    In this category, I only enabled two layers: ~selectric~ and ~xkcd~.
+    #+BEGIN_SRC emacs-lisp
+    selectric xkcd
+    #+END_SRC
+
+*** Internationalization
+    :PROPERTIES:
+    :CUSTOM_ID: h-0edb1ff3-15a1-46cd-b980-7fdd124020b6
+    :END:
+    In  this  category,   I  enabled  the  ~keyboard-layout~   layer  to  enable
+    compatibility with  the bépo  layout. This layer,  however, is  disabled for
+    magit, Dired and eww.
+    #+BEGIN_SRC emacs-lisp
+      (keyboard-layout :variables
+                       kl-layout 'bepo
+                       kl-disabled-configurations '(magit dired eww))
+    #+END_SRC
+
+*** Programming languages
+    :PROPERTIES:
+    :CUSTOM_ID: h-9dd88370-a959-4266-a01e-2231f9008a1f
+    :END:
+**** Domain-specific (DSLs)
+     :PROPERTIES:
+     :CUSTOM_ID: h-c212d89f-6854-48f3-84a5-8195811bfc4d
+     :END:
+     In this  category, I enabled  support for  the R programming  language (the
+     ~ess~ layer), the ~major-modes~ layer for the Arch Linux PKGBUILDs support,
+     the ~prolog~, ~emacs-lisp~ and ~scheme~  layers, support for the CSV format
+     with the  ~csv~ layer, the  ~yaml~ language, shell scripting  languages and
+     support for the ~dot~ tool with the ~graphviz~ layer.
+     #+BEGIN_SRC emacs-lisp
+       ess major-modes prolog emacs-lisp scheme graphviz yaml shell-scripts
+     #+END_SRC
+
+     I also added support  for HTML and CSS with the ~html~  layer, with the web
+     formatting  tool set  to ~web-beautify~,  and the  LSP layer  compatibility
+     enabled for CSS, less, SCSS and HTML.
+     #+BEGIN_SRC emacs-lisp
+      (html :variables
+            web-fmt-tool 'web-beautify
+            css-enable-lsp t
+            less-enable-lsp t
+            scss-enable-lsp t
+            html-enable-lsp t)
+     #+END_SRC
+
+     The  ~json~   layer  is  also  enabled,   with  the  format  tool   set  to
+     ~web-beautify~.
+     #+BEGIN_SRC emacs-lisp
+      (json :variables
+            json-fmt-tool 'web-beautify)
+     #+END_SRC
+
+     The LaTeX  layer has also  been enabled, with  its default compiler  set to
+     XeLaTeX. I also enabled the auto-fill feature, the folding capacity and the
+     “magic” symbols.
+     #+BEGIN_SRC emacs-lisp
+      (latex :variables
+             latex-build-command "xelatex"
+             latex-enable-auto-fill t
+             latex-enable-folding t
+             latex-enable-magic t)
+     #+END_SRC
+
+     The Markdown  layer has been  enabled, with  support for live  preview with
+     ~vmd~, and and  automatic MMM-mode generation for C, C++,  Python, Rust and
+     Emacs Lisp.
+     #+BEGIN_SRC emacs-lisp
+      (markdown :variables
+                markdown-live-preview-engine 'vmd
+                markdown-mmm-auto-modes '("c"
+                                          "c++"
+                                          "python"
+                                          "rust"
+                                          ("elisp" "emacs-lisp")))
+     #+END_SRC
+
+**** Frameworks
+     :PROPERTIES:
+     :CUSTOM_ID: h-ac43dd9a-5a2f-4a80-bb35-535ec6e31e72
+     :END:
+     Only one  framework support  has been  enabled so  far, and  is is  for the
+     Django framework.
+     #+BEGIN_SRC emacs-lisp
+       django
+     #+END_SRC
+
+**** General-purpose
+     :PROPERTIES:
+     :CUSTOM_ID: h-9d41427d-ec93-40c6-8c24-113c5b174fc3
+     :END:
+     Among  the  layers   I  activated,  the  only  one   without  any  specific
+     configuration is the ~asm~ layer for the Assembly language.
+     #+BEGIN_SRC emacs-lisp
+       asm
+     #+END_SRC
+
+     Next, you can find the C/C++ layer for which I set the default language for
+     ~.h~ files  to be  C. I also  enabled support for  the C++11  standard, the
+     Google coding  style for C++,  support for subprojects and  organization of
+     the include directives on  a file save. I also set  a couple of LSP-related
+     variables, such  as the LSP executable  for C/C++ for its  CCLS backend and
+     some highlight variables.
+     #+BEGIN_SRC emacs-lisp
+       (c-c++ :variables
+              c-c++-default-mode-for-headers 'c-mode
+              c-c++-adopt-subprojects t
+              c-c++-enable-google-style t
+              c-c++-enable-c++11 t
+              c-c++-backend 'lsp-ccls
+              c-c++-lsp-executable "/usr/bin/ccls"
+              c-c++-lsp-sem-highlight-method 'overlay
+              c-c++-lsp-sem-highlight-rainbow t
+              c++-enable-organize-includes-on-save t)
+     #+END_SRC
+
+     Dart has  also been  enabled, with  a custom path  to the  SDK of  the Dart
+     server, and to the LSP server of Dart.
+     #+BEGIN_SRC emacs-lisp
+       (dart :variables
+             dart-server-sdk-path "/opt/flutter/bin/cache/dart-sdk/"
+             lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/")
+     #+END_SRC
+
+     When it comes  to the Python layer,  I set its backend and  formatter to be
+     bound to  the LSP layer.  Its fill columnn was  also set to  80 characters,
+     imports are sorted on  save, and the tests can be  run using either nose.el
+     or pytest.
+     #+BEGIN_SRC emacs-lisp
+       (python :variables
+               python-backend 'lsp
+               python-sort-imports-on-save t
+               python-fill-column 80
+               python-test-runner '(pytest nose)
+               python-formatter 'lsp)
+     #+END_SRC
+
+     With the Rust layer, the only custom configuration set is the backend being
+     bound to the LSP layer.
+     #+BEGIN_SRC emacs-lisp
+       (rust :variables rust-backend 'lsp)
+     #+END_SRC
+
+     As regards the  JavaScript layer, I set  its backend to the  LSP layer, and
+     bound its  format tool to ~web-beautify~  and its REPL is  browser-based. I
+     also want to  include ~node_modules/.bin~ to be automatically  added to the
+     buffer local ~exec_path~.
+     #+BEGIN_SRC emacs-lisp
+       (javascript :variables
+                   javascript-backend 'lsp
+                   javascript-fmt-tool 'web-beautify
+                   javascript-repl 'skewer
+                   node-add-modules-path t)
+     #+END_SRC
+
+*** Readers
+    :PROPERTIES:
+    :CUSTOM_ID: h-02099754-7102-4251-9e2e-a3ee33f4b469
+    :END:
+    In this category, only the ~epub~ and ~pdf~ layers are enabled so I can read
+    these files from Emacs directly.
+    #+BEGIN_SRC emacs-lisp
+    epub pdf
+    #+END_SRC
+
+*** Version control
+    :PROPERTIES:
+    :CUSTOM_ID: h-53ebecc5-53da-4a0c-88f4-b031ff3b1952
+    :END:
+    Only the ~git~ layer is enabled in this category.
+    #+BEGIN_SRC emacs-lisp
+    git
+    #+END_SRC
+
+*** Themes
+    :PROPERTIES:
+    :CUSTOM_ID: h-e593bbe4-d778-4b11-a450-4e6e418109fe
+    :END:
+    Here, the ~colors~  layer is the only one enabled.  It activates support for
+    identifiers colorization, and strings representing colors.
+    #+BEGIN_SRC emacs-lisp
+    colors
+    #+END_SRC
+
+*** Tools
+    :PROPERTIES:
+    :CUSTOM_ID: h-51f1d8a6-5f52-486a-a16b-301429cf8313
+    :END:
+    In this category, the first layer to be enabled is the CMake layer for which
+    I enabled support for the ~cmake-ide~ package.
+    #+BEGIN_SRC emacs-lisp
+      (cmake :variables
+             cmake-enable-cmake-ide-support t)
+    #+END_SRC
+
+    Next, we have the Docker, Nginx,  Pass (the standard Unix password manager),
+    Prettier, Systemd,  Imenu-list, Web-beautify,  Dap, Helpful, and  LSP layers
+    enabled.
+    #+BEGIN_SRC emacs-lisp
+    docker imenu-list nginx pass prettier systemd web-beautify helpful dap lsp
+    #+END_SRC
+
+    We  also have  the RestClient  layer  enabled for  which I  enabled the  Org
+    compatibility support.
+    #+BEGIN_SRC emacs-lisp
+      (restclient :variables
+                  restclient-use-org t)
+    #+END_SRC
+
+    And finally, we also have the Shell  layer for which I specified its default
+    height when spawning  at the bottom of  the screen should be  40 lines high,
+    and the default shell to invoke is Eshell.
+    #+BEGIN_SRC emacs-lisp
+      (shell :variables
+             shell-default-height 40
+             shell-default-position 'bottom
+             shell-default-shell 'eshell)
+    #+END_SRC
+
+*** Web Services
+    :PROPERTIES:
+    :CUSTOM_ID: h-6ec58708-518c-44f4-8ad0-3fa3b58117d5
+    :END:
+    In this category, I have only enabled a layer for Twitter support.
+    #+BEGIN_SRC emacs-lisp
+    twitter
+    #+END_SRC
+
+*** Custom layers
+    :PROPERTIES:
+    :CUSTOM_ID: h-f9c6b261-f06b-4fd5-bf4e-161cb8744aeb
+    :END:
+    Lastly, three custom  layers have been enabled:  a w3m layer, and  two of my
+    custom layers for Dired and for conlanging tools.
+    #+BEGIN_SRC emacs-lisp
+    conlanging dired-phundrak w3m
+    #+END_SRC
+
+# Don’t delete this code block, it wraps the layers
+#+BEGIN_SRC emacs-lisp :exports none
+))
+#+END_SRC
+
 * Init
   :PROPERTIES:
   :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
@@ -620,9 +1120,6 @@
    The default value is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-whitespace-cleanup nil)
-   #+END_SRC
-
-   #+END_SRC
    #+END_SRC
 
 * User Initialization
