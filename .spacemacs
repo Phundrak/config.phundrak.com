@@ -1,7 +1,4 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
-;; This file is loaded by Spacemacs at startup.
-;; It must be stored in your home directory.
-
 (defun dotspacemacs/init ()
   "Initialization:
 This function is called at the very beginning of Spacemacs startup,
@@ -25,7 +22,6 @@ It should only modify the values of Spacemacs settings."
      nil nil t
      "-q" "--batch" "--eval" "(require 'ob-tangle)"
      "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak/src)))
-
   (load-file phundrak/si))
 
 (defun dotspacemacs/layers ()
@@ -47,7 +43,6 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
   (load-file phundrak/ui))
 
 (defun dotspacemacs/user-load ()
@@ -63,8 +58,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
-  ;; load file exported from `~/spacemacs.org' in `dotspacemacs/user-load'
   (load-file phundrak/uc))
 
 

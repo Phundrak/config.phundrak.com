@@ -31,6 +31,18 @@ set -gx ANDROID_HOME $HOME/Android/Sdk
 
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 
+set -g theme_nerd_fonts_support yes
+
+set -g theme_title_display_process yes
+
+set -g theme_display_hostname ssh
+
+set -g theme_display_sudo_user yes
+
+set -g theme_show_exit_status yes
+
+set -g theme_git_worktree_support yes
+
 abbr df 'df -H'
 abbr diskspace 'sudo df -h | grep -E "sd|lv|Size"'
 

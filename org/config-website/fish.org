@@ -4,6 +4,8 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
+#+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code
+#+PROPERTY: header-args :exports code
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -46,7 +48,6 @@
 * Presentation
   :PROPERTIES:
   :CUSTOM_ID: h-c2560b46-7f97-472f-b898-5ab483832228
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
   The file present in =~/.config/fish/config.fish= is the configuration file for
   the  [[https://fishshell.com/][fish  shell]]. It  contains  custom  functions, environment  variables  and
@@ -63,7 +64,6 @@
 * Fish from within Emacs
   :PROPERTIES:
   :CUSTOM_ID: h-97d738f4-1ea0-4f64-a31d-19643486a951
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
   I sometimes call fish from within  emacs, with =M-x ansi-term=. In this case,
   the variable =TERM= needs to have the value =eterm-color=.
@@ -76,7 +76,6 @@
 * Tramp remote access
   :PROPERTIES:
   :CUSTOM_ID: h-6cad2cc9-aef6-4df4-90f9-97053e82072a
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
   When accessing from  a remote machine our computer from  Emacs, tramp needs a
   precise shell appearance: a simple =$= followed by a space after which to put
@@ -97,7 +96,6 @@
 * Regular fish shell appearance
   :PROPERTIES:
   :CUSTOM_ID: h-a8434b29-c146-4141-b8f8-1b446c791907
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
   Now, there is only  one function I modify when it comes  to the appearance of
   fish  when I’m  the  one  using it:  I  simply  “delete” the  =fish_greeting=
@@ -109,7 +107,6 @@
 * Global variables
   :PROPERTIES:
   :CUSTOM_ID: h-0eff37da-af9f-4546-8ad3-201961a2200f
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
   Some global variables might sometimes be needed and need to be modified. This
   is for example the case with my =PATH= variable in which I add Rust’s Cargo’s
@@ -154,7 +151,6 @@
   :PROPERTIES:
   :CUSTOM_ID: h-e9dccb31-8350-459d-b688-b5b7cbeab272
   :END:
-
   The theme I use is =bobthefish=. Although its default configuration is quite
   alright, it allows some customization. The first thing I want to enable is the
   support for =nerd-fonts=:
@@ -193,7 +189,6 @@
 * Abbreviations
   :PROPERTIES:
   :CUSTOM_ID: h-740bd904-3e32-4c09-b0a4-bde16ae2e116
-  :HEADER-ARGS: :tangle config.fish :exports code
   :END:
 ** System monitoring
    :PROPERTIES:

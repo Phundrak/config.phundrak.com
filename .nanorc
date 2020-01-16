@@ -1,30 +1,30 @@
-set atblanks
-
-set autoindent
-
 set backup
 set backupdir /home/phundrak/.cache/nano/backups/
 
-set boldtext
-
-unset casesensitive
-
-set constantshow
-
-set linenumbers
-
-set regexp
+set unix
 
 set smarthome
 
+unset casesensitive
+
+set regexp
+
+set boldtext
+
 set softwrap
 
-set tabsize 2
+set atblanks
+
+set linenumbers
+
+set constantshow
 
 set tabstospaces
 
-set trimblanks
+set tabsize 2
 
-set unix
+set autoindent
+
+set trimblanks
 
 include ~/.config/nanorc/*.nanorc

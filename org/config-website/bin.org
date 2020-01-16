@@ -4,6 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
+#+PROPERTY: header-args :exports code
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -14,6 +15,7 @@
 - [[#askpass][Askpass]]
 - [[#backup][Backup]]
 - [[#connectwifi][ConnectWifi]]
+  - [[#fix-it][fix it]]
 - [[#cppnew][Cppnew]]
 - [[#cnew][Cnew]]
 - [[#dart-language-server][Dart Language Server]]
@@ -44,7 +46,6 @@
   - [[#select-our-screen][Select our screen]]
   - [[#adjust-the-tablet][Adjust the tablet]]
   - [[#lauch-the-functions][Lauch the functions]]
-- [[#yadm][Yadm]]
 
 * Presentation
   :PROPERTIES:
@@ -56,7 +57,7 @@
 
   Please do not forget to run the following before tangling files from this file
   to make sure the tangled files will be executables.
-  #+begin_src emacs-lisp :exports code :results silent
+  #+begin_src emacs-lisp  :results silent
     (defun phundrak/make-tangled-files-executable ()
       (set-file-modes (buffer-file-name) #o755))
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
@@ -65,7 +66,7 @@
 * 4chandl
   :PROPERTIES:
   :CUSTOM_ID: h-39e14885-9da7-4cba-b24e-c3b181ef5f6b
-  :HEADER-ARGS: :tangle 4chandl :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/4chandl
   :END:
   Usage: =4chandl [ URL TO THREAD ]=
 
@@ -136,13 +137,13 @@
 * Askpass
   :PROPERTIES:
   :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
-  :HEADER-ARGS: :tangle askpass :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/askpass
   :END:
   Askpass is a simple script that invokes =rofi=  as a way to get from a GUI the
   user’s sudo password. It is inspired  by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
   and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
   we ignore the initial shebang. This executable is pointed at by the
-  #+BEGIN_SRC fish :exports code
+  #+BEGIN_SRC fish
     #!/usr/bin/env fish
     rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
     -p (printf $argv[1] | sed s/://)
@@ -151,7 +152,7 @@
 * Backup
   :PROPERTIES:
   :CUSTOM_ID: h-30cb6655-382f-492a-a005-df15512ab7a5
-  :HEADER-ARGS: :tangle backup :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/backup
   :END:
   =backup= is a very simple, oneliner script  that will create a local copy of a
   file and add the date at which it  was copied in the filename. You can see its
@@ -163,7 +164,7 @@
 
 * ConnectWifi
   :PROPERTIES:
-  :HEADER-ARGS: :tangle connect-wifi :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/connect-wifi
   :CUSTOM_ID: h-7a958906-1f79-448f-95b3-7226bc80e88c
   :END:
   =connect-wifi= is  a small  utility tool  that allows the  user to  connect to
@@ -183,10 +184,15 @@
     nmcli c u $SELECTEDWIFI
   #+END_SRC
 
+** TODO fix it
+   :PROPERTIES:
+   :CUSTOM_ID: h-15c1dbea-fb23-405e-9a73-1039412ebd97
+   :END:
+
 * Cppnew
   :PROPERTIES:
   :CUSTOM_ID: h-264945df-fe7a-4f9d-845a-9cc26c196f4b
-  :HEADER-ARGS: :tangle cppnew :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/cppnew
   :END:
   =cppnew= is a small utility that helps you create a new C++ project. Several
   templates are available, the default one using CMake, and three others that
@@ -218,7 +224,7 @@
 * Cnew
   :PROPERTIES:
   :CUSTOM_ID: h-a4ccdc0f-6813-4207-9479-4d68296f5fdb
-  :HEADER-ARGS: :tangle cnew :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/cnew
   :END:
   =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
   creates a  CMake template C project  from the template that  already exists in
@@ -285,7 +291,7 @@
 * Dart Language Server
   :PROPERTIES:
   :CUSTOM_ID: h-771896e9-ab96-4158-af0b-1fcbef9ab969
-  :HEADER-ARGS: :tangle dart_language_server :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/dart_language_server
   :END:
   Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
   [[https://github.com/natebosch/dart_language_server][=dart_language_server=]]  is obsolete.  As  recommended by  the  repo owner,  we
@@ -300,7 +306,7 @@
 * Dmenu
   :PROPERTIES:
   :CUSTOM_ID: h-50623ecd-b633-4af7-9cc4-5a032f01d1ee
-  :HEADER-ARGS: :tangle dmenu :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/dmenu
   :END:
   I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
   emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
@@ -313,7 +319,7 @@
 * Emoji picker
   :PROPERTIES:
   :CUSTOM_ID: h-477cd486-c9a6-4d59-bd9d-62d8f08ee62d
-  :HEADER-ARGS: :tangle rofi-emoji :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/rofi-emoji
   :END:
   The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
   [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
@@ -335,7 +341,7 @@
 
 * lsl
   :PROPERTIES:
-  :HEADER-ARGS: :tangle lsl :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/lsl
   :CUSTOM_ID: h-6bcdad54-20ce-40cc-8a4b-8d9c20fc5c95
   :END:
   ~lsl~ is a former abbreviation I used to use in fish. However, a recent update
@@ -350,7 +356,7 @@
 * Polybar-launch
   :PROPERTIES:
   :CUSTOM_ID: h-68587918-879b-42db-b304-901d01233f95
-  :HEADER-ARGS: :tangle polybar-launch :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/polybar-launch
   :END:
   This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
   launch it  if polybar  isn’t launched yet.  This script is  a bash  script, so
@@ -391,7 +397,7 @@
 
 * Rofi-mount
   :PROPERTIES:
-  :HEADER-ARGS: :tangle rofi-mount :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/rofi-mount
   :CUSTOM_ID: h-32ee4a66-e7fb-4abf-a168-fa259efdb1f4
   :END:
   =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
@@ -783,7 +789,7 @@
 
 * Rofi-pass
   :PROPERTIES:
-  :HEADER-ARGS: :tangle rofi-pass :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/rofi-pass
   :CUSTOM_ID: h-a52876ed-351b-400a-b250-d93aab27e0c8
   :END:
   =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
@@ -871,7 +877,7 @@
 * Rofi-umount
   :PROPERTIES:
   :CUSTOM_ID: h-68a1f671-5dc6-4120-81c8-c94fffa7d7a3
-  :HEADER-ARGS: :tangle rofi-umount :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/rofi-umount
   :END:
   =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
   partitions. It is a fish script, so let’s declare it as that with its shebang.
@@ -1106,7 +1112,7 @@
 * Starwars
   :PROPERTIES:
   :CUSTOM_ID: h-127de2b2-d84b-4508-89d2-b4577e8dbece
-  :HEADER-ARGS: :tangle starwars :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/starwars
   :END:
   This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
   in your terminal. Here is the code:
@@ -1117,10 +1123,9 @@
 
 * UpdateFlutter
   :PROPERTIES:
-  :header-args: :tangle UpdateFlutter :exports code
+  :header-args: :tangle ~/.local/bin/UpdateFlutter
   :CUSTOM_ID: h-1005db1f-aecc-4fca-be2d-98fd33c1461a
   :END:
-
   This is a simple utility to be ran when the ~flutter~ package is updated.
   #+BEGIN_SRC fish
     #!/usr/bin/fish
@@ -1133,7 +1138,7 @@
 * Wacom setup
   :PROPERTIES:
   :CUSTOM_ID: h-e407ceef-2f14-4474-916b-6b687cf9f2e9
-  :HEADER-ARGS: :tangle wacom-setup :exports code
+  :HEADER-ARGS: :tangle ~/.local/bin/wacom-setup
   :END:
   I made a small and quick utility to set up my Wacom tablet so it is only bound
   to one screen. This is a fish script, so let’s insert the sheband.
@@ -1297,17 +1302,3 @@
      set_screen
      adjust_device
    #+END_SRC
-
-* Yadm
-  :PROPERTIES:
-  :CUSTOM_ID: h-9535957b-7559-4244-a5e0-d056c4770fea
-  :HEADER-ARGS: :tangle yadm :exports code
-  :END:
-  For some  reason, =yadm= won’t stop  making polybar crash. So,  I created this
-  script  that  will  wrap yadm  with  a  call  to  yadm,  and then  a  call  to
-  =polybar-launch= declared  in [[#h-68587918-879b-42db-b304-901d01233f95][Polybar-launch]]. This  is a oneliner, as  you can
-  see below:
-  #+BEGIN_SRC fish
-    #!/usr/bin/env fish
-    /usr/bin/yadm $argv; polybar-launch 2>/dev/null >/dev/null
-  #+END_SRC

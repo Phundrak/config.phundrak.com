@@ -5,6 +5,8 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
+#+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config##yadm.j2
+#+PROPERTY: header-args:python :exports none :tangle no
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -50,7 +52,6 @@
 * Presentation
   :PROPERTIES:
   :CUSTOM_ID: h-2b02cfba-4ada-4f75-b522-bfcb8512119c
-  :HEADER-ARGS: :tangle config##yadm.j2
   :END:
   =i3= is  a window manager for  GNU/Linux which automatically tiles  windows in
   workspaces. This configuration was ade to automatically handle some tasks such
@@ -68,8 +69,6 @@
 * Variables declaration
   :PROPERTIES:
   :CUSTOM_ID: h-27f4474a-e037-4e40-b33a-7fe34ca012e3
-  :HEADER-ARGS: :exports code :tangle config##yadm.j2
-  :HEADER-ARGS:python: :exports none :tangle no
   :END:
 ** Global
    :PROPERTIES:
@@ -187,7 +186,6 @@
 * i3 global settings
   :PROPERTIES:
   :CUSTOM_ID: h-d9bc7729-d325-4071-8ad9-043ea5b80430
-  :HEADER-ARGS: :exports code :tangle config##yadm.j2
   :END:
   Some settings affect i3 globally, such as its aspect or how it handles the
   mouse. Hence, here are some settings I set in my configuration.
@@ -291,8 +289,6 @@
 * Assigning windows to workspaces
   :PROPERTIES:
   :CUSTOM_ID: h-21870449-7730-4164-8add-167cb4e75218
-  :HEADER-ARGS: :exports code :tangle config##yadm.j2
-  :HEADER-ARGS:python: :exports none :tangle no
   :END:
   I decided to bind some windows to some workspaces in order to have a better
   organization of my desktop.
@@ -343,7 +339,6 @@
 * Shortcuts
   :PROPERTIES:
   :CUSTOM_ID: h-b364743d-2ff0-4548-805e-9a9e6efdaddd
-  :HEADER-ARGS: :exports code :noweb yes :tangle config##yadm.j2
   :END:
   I use *A LOT*  of shortcuts when it comes to my workflow.  Like, all the time.
   So, expect  this chapter to be  a bit long, and  I’ll try to make  it readable
@@ -893,7 +888,6 @@
 * Software autolaunch
   :PROPERTIES:
   :CUSTOM_ID: h-18769c14-2ec0-41a2-9450-dae71714d0f4
-  :HEADER-ARGS: :exports code :noweb yes :tangle config##yadm.j2
   :END:
   When i3  is launched, I  want it to  also launch some  software automatically.
   Here is what we will launch:

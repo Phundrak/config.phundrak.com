@@ -1,0 +1,1103 @@
+# -*- org-confirm-babel-evaluate: nil -*-
+#+TITLE: Phundrak’s polybar config
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's polybar config" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's polybar config" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the polybar config file of Phundrak" />
+#+PROPERTY: header-args :exports none
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-c7ab05d0-4c5f-4a4c-8603-4c79e264141c
+  :END:
+- [[#presentation][Presentation]]
+- [[#general-settings][General settings]]
+- [[#colors-declaration-for-polybar][Colors declaration for polybar]]
+- [[#declaration-of-the-bars][Declaration of the bars]]
+  - [[#top-bar-declaration][Top bar declaration]]
+    - [[#positioning][Positioning]]
+    - [[#colors-and-display][Colors and display]]
+    - [[#fonts-and-locale][Fonts and locale]]
+    - [[#modules][Modules]]
+  - [[#bottom-bar-declaration][Bottom bar declaration]]
+    - [[#positioning-1][Positioning]]
+    - [[#colors-and-display-1][Colors and display]]
+    - [[#fonts-and-locale-1][Fonts and locale]]
+    - [[#modules-1][Modules]]
+- [[#modules-2][Modules]]
+  - [[#hardware][Hardware]]
+    - [[#battery][Battery]]
+    - [[#filesystem][Filesystem]]
+    - [[#xbacklight][Xbacklight]]
+    - [[#acpi-backlight][ACPI backlight]]
+    - [[#cpu][CPU]]
+    - [[#memory][Memory]]
+    - [[#wlan][Wlan]]
+    - [[#ethernet][Ethernet]]
+    - [[#volume][Volume]]
+    - [[#temperature][Temperature]]
+  - [[#software][Software]]
+    - [[#window-title][Window title]]
+    - [[#i3][i3]]
+      - [[#workspace-icons][Workspace icons]]
+      - [[#focused-workspaces][Focused workspaces]]
+      - [[#visible-workspaces][Visible workspaces]]
+      - [[#unfocused-workspaces][Unfocused workspaces]]
+      - [[#urgent-workspaces][Urgent workspaces]]
+    - [[#mpd][Mpd]]
+    - [[#date][Date]]
+- [[#footnotes][Footnotes]]
+
+* Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-03c830ff-e6a9-426c-8d98-8ffb8a79b1d1
+  :END:
+  Polybar is  a desktop utility  for displaying  various information in  form of
+  bars for GNU/Linux systems. It is often  used as a replacement for native bars
+  available in window managers,  such as i3. In my case, I  use two instances of
+  polybar in  order to get  two bars displayed  on each screen.  The information
+  displayed is either related to i3 itself, or it is system information, such as
+  CPU or disk usage. More information will be given and explained below.
+
+  If you want  to learn more about how  to configure Polybar, you can  go to its
+  [[https://github.com/jaagr/polybar][official repository on Github]].
+
+  #+BEGIN_EXPORT latex
+  Be aware  that this PDF  documents suffers from a  couple of issues  with some
+  characters such  as emojis. If you  wish to see everything  correctly, I would
+  suggest  you to  take a  look at  the online  HTML version  of this  document.
+  #+END_EXPORT
+
+* General settings
+  :PROPERTIES:
+  :CUSTOM_ID: h-c4387167-95ea-4349-a5d9-4ebdcffccc97
+  :END:
+  Some general settings are available for Polybar, and they are declared under
+  the ~[settings]~ section.
+  #+BEGIN_SRC conf-windows
+  [settings]
+  #+END_SRC
+  Only one setting is used in this configuration though: the ability to relauch
+  polybar on a configuration file rewrite.
+  #+BEGIN_SRC conf-windows
+    screenchange-reload = true
+  #+END_SRC
+
+  Some global settings are also available in order to adjust the
+  ~_NET_WM_STRUT_PARTIAL~ top and bottom values:
+  #+BEGIN_SRC conf-windows
+    [global/wm]
+    margin-top = 32
+    margin-bottom = 22
+  #+END_SRC
+
+* Colors declaration for polybar
+  :PROPERTIES:
+  :CUSTOM_ID: h-7adb4647-995d-4f75-846c-6f7f3e15487a
+  :END:
+  #+BEGIN_SRC conf-windows :exports none
+    ; -*- mode: conf-windows -*-
+  #+END_SRC
+  Like most status  bars available, we can  declare custom colors to  be used in
+  polybar. This  part of the configuration  file is declared with  the following
+  header:
+  #+BEGIN_SRC conf-windows
+  [colors]
+  #+END_SRC
+
+  As I use pywal as a color scheme generator based on the color of my wallpaper,
+  I need  to tell polybar  to fetch the  colors it will  use from xrdb.  If such
+  color cannot  be used, other  colors will be  used as fallback  colors. First,
+  let’s  declare  our  default  background  and  foreground  colors  with  their
+  alternative option.
+  #+BEGIN_SRC conf-windows
+    background = ${xrdb:color1:#50000000}
+    background-alt = ${xrdb:color2:#444}
+    foreground = ${xrdb:color7:#dfdfdf}
+    foreground-alt = ${xrdb:color6:#555}
+  #+END_SRC
+
+  Now, we can also declare our primary and secondary colors.
+  #+BEGIN_SRC conf-windows
+    primary = #ffb52a
+    secondary = #e60053
+  #+END_SRC
+
+  Polybar is  also aware of  alerts sent  by window managers  such as i3  when a
+  window  opens in  an unfocused  workspace. For  that, let’s  declare an  alert
+  color.
+  #+BEGIN_SRC conf-windows
+    alert = #bd2c40
+  #+END_SRC
+
+* Declaration of the bars
+  :PROPERTIES:
+  :CUSTOM_ID: h-9c14f550-d104-4b45-a7a4-04a6f2c32e00
+  :END:
+  It is  possible in i3 to  declare as many bars  as we wish, and  each of these
+  bars will be named. Naming the bar is done in its module declaration like so:
+  #+BEGIN_SRC conf-windows :tangle no
+  [bar/nameofthebar]
+  #+END_SRC
+  In my configuration, I use two of such bars, one atop of my screen, and one at
+  the bottom.
+
+** Top bar declaration
+   :PROPERTIES:
+   :CUSTOM_ID: h-ff6e9020-b3d9-4da9-b351-29a4b914d3c4
+   :END:
+   As unimaginative as it  might seem, I went for a rather  explicit name for my
+   bars. The top one is simply named ~top~, as shown below.
+   #+BEGIN_SRC conf-windows
+   [bar/top]
+   #+END_SRC
+
+*** Positioning
+    :PROPERTIES:
+    :CUSTOM_ID: h-6c670bf7-0904-4b5c-8551-540212f16e25
+    :END:
+    We need  to set on which  screen the bar is  to be displayed. Indeed,  it is
+    possible  to display  a bar  on  only one  specific  screen if  we wish  to.
+    Actually, it  is even the  default behavior of polybar,  but as we  will see
+    later with the  launching script, it is possible to  launch bars on multiple
+    outputs at  the same  time. Here, we  simply get the  value of  the variable
+    ~monitor~ from the launch environment.
+    #+NAME: monitor-bar
+    #+BEGIN_SRC conf-windows
+    monitor = ${env:MONITOR}
+    #+END_SRC
+
+    We have a few position-related variables that need to be set. We can specify
+    whether or  not we want our  bar at the bottom  of the screen —which  is the
+    default behavior  of polybar—,  its width,  its height,  the radius  for the
+    rounding of its corners and whether the bar should be centered or not. In my
+    case, my  bars are  rather small  height-wise, and it  occupies most  of the
+    width of my screens.  There is some gaps between this bar  and the border of
+    the screen, but this is due to a border around the bar itself which acts not
+    only on the width of the bar itself, but also on its height.
+    #+BEGIN_SRC conf-windows
+      bottom = false
+      border-size = 5
+      <<position-bar-top>>
+    #+END_SRC
+
+    #+NAME: position-bar-top
+    #+BEGIN_SRC conf-windows :exports none :tangle no
+      width = 100%
+      height = 22
+      radius = 10.0
+      fixed-center = true
+    #+END_SRC
+    We also want to add some padding to our bar so our modules are not too close
+    to its edges, especially due to the rounding of the top bar.
+    #+NAME: padding-bar
+    #+BEGIN_SRC conf-windows
+      padding-left = 2
+      padding-right = 4
+    #+END_SRC
+
+    Each module will  have some padding around it, so  that modules aren’t glued
+    together and instead have some room to breathe. The padding on the left is a
+    bit less than the padding on the right for aesthetic reasons.
+    #+NAME: module-margin-bar
+    #+BEGIN_SRC conf-windows
+      module-margin-left = 1
+      module-margin-right = 2
+    #+END_SRC
+
+    The top bar doesn’t include any system tray, so let’s disable that.
+    #+BEGIN_SRC conf-windows
+      tray-position = none
+    #+END_SRC
+
+*** Colors and display
+    :PROPERTIES:
+    :CUSTOM_ID: h-9f83a6fd-652a-45ca-894b-0a0e0d3f0084
+    :END:
+    As  explained above,  we declared  some global  variables when  it comes  to
+    colors, and this is where they will be used. The bar’s background will be of
+    the same color  as the main background color declared  earlier, and the same
+    goes for the foreground.
+    #+NAME: bar-colors
+    #+BEGIN_SRC conf-windows
+      background = ${colors.background}
+      foreground = ${colors.foreground}
+    #+END_SRC
+
+    If we wanted, we could also declare a default color for the underlines under
+    the various modules that  will be included in the bar, but  in our case this
+    variable is unused. So  we will simply add this commented  line as a memento
+    this  is  possible,  but  it  won’t   have  any  effect  with  this  current
+    configuration of polybar. Same  goes for the border around the  bar, it is a
+    useless  variable in  this  configuration since  we want  the  border to  be
+    transparent.
+    #+NAME: line-border-color
+    #+BEGIN_SRC conf-windows
+      line-color = #f00
+      ; border-color = #00000000
+    #+END_SRC
+
+    Although the variable for the default line  color is not used, we still have
+    to set the default width of the  underline of our modules. By default, their
+    underline will be three pixels thick.
+    #+NAME: line-size-bar
+    #+BEGIN_SRC conf-windows
+      line-size = 3
+    #+END_SRC
+
+*** Fonts and locale
+    :PROPERTIES:
+    :CUSTOM_ID: h-c5660945-4785-40f7-b89e-f9f31b85a062
+    :END:
+    Now we can  chose which font fill be  used in order to display  text in this
+    bar, as well as the locale we want. The locale will be useful for displaying
+    information such as  date and time, which  is a module we will  have in this
+    top bar. First, the declaration of the locale is done like so:
+    #+NAME: locale-bar
+    #+BEGIN_SRC conf-windows
+      locale = ja_JP.UTF-8
+    #+END_SRC
+
+    Now, we can declare  the fonts we want to use in Polybar.  It is possible to
+    declare several of  them, the first one  is the one which  gets the absolute
+    priority, and  the next ones  with a larger  index are fallback  fonts. Font
+    declaration accepts the fontconfig format  as well as possible offset[fn:1].
+    Five fonts are used in my polybar config:
+    #+NAME: fonts-polybar
+    | Font         | fontconfig                                         | Vertical offset | Why it’s used         |
+    |--------------+----------------------------------------------------+-----------------+-----------------------|
+    | Fira Sans    | Fira Sans Book:style=Book:pixelsize=10             |               1 | Text display          |
+    | IPA Mincho   | IPAMincho:style=regular:pixelsize=6                |               0 | Japanese text display |
+    | Unifont      | unifont:fontformat=truetype:size=6:antialias=false |               0 | Fallback font         |
+    | NotoEmoji    | NotoEmoji:scale=12:style=Book                      |               0 | Emoji display         |
+    | Siji         | Siji:pixelsize=8                                   |               0 | Symbol display        |
+    | Default font | fixed:pixelsize=8                                  |               0 | Fallback font         |
+
+    #+NAME: font-config
+    #+BEGIN_SRC python :var table=fonts-polybar :cache yes
+      for i in range(0, len(table)):
+          print("font-{0} = {1};{2}".format(i, table[i][1], table[i][2]))
+    #+END_SRC
+
+    #+RESULTS[a055f871fdabec995b015a8f083a77b0096a9c7f]: font-config
+    : font-0 = Fira Sans Book:style=Book:pixelsize=10;1
+    : font-1 = IPAMincho:style=regular:pixelsize=6;0
+    : font-2 = unifont:fontformat=truetype:size=6:antialias=false;0
+    : font-3 = NotoEmoji:scale=12:style=Book;0
+    : font-4 = Siji:pixelsize=8;0
+    : font-5 = fixed:pixelsize=8;0
+
+    Here’s the font configuration:
+    #+BEGIN_SRC conf-windows
+      <<font-config()>>
+    #+END_SRC
+
+    Note that only Fira Sans get a small  offset due to the size of the font and
+    the height of the bar itself.
+
+*** Modules
+    :PROPERTIES:
+    :CUSTOM_ID: h-93f91f00-620c-4d09-846b-9e40c304fdaf
+    :END:
+    Finally, arguably one of the most  important parts of our bar configuration:
+    the module selection. Modules can be  positioned in three different parts of
+    our bar: to  the right, in middle or  to the left. On the left,  we want our
+    workspace  indicator for  i3. In  the  middle, we’ll  get the  title of  the
+    focused window, and to the left we’ll have the date and time.
+    #+NAME: modules-generate
+    #+BEGIN_SRC python :var table=[] :results value :cache yes
+      left = 'modules-left = '
+      center = 'modules-center = '
+      right = 'modules-right = '
+      for line in table:
+          if line[1] == 'left':
+              left += line[0] + ' '
+          elif line[1] == 'center':
+              center += line[0] + ' '
+          else:
+              right += line[0] + ' '
+      return left + '\n' + center + '\n' + right
+    #+END_SRC
+
+    Here is the list of modules used:
+    #+NAME: top-modules
+    | Module name | Position | Brief description          |
+    |-------------+----------+----------------------------|
+    | i3          | left     | i3 workspace indicator     |
+    | xwindow     | center   | Name of the focused window |
+    | date        | right    | Date and time              |
+
+    #+BEGIN_SRC conf-windows :cache yes
+      <<modules-generate(table=top-modules)>>
+    #+END_SRC
+
+    Each module will be described in details later in this document.
+
+** Bottom bar declaration
+   :PROPERTIES:
+   :CUSTOM_ID: h-2478b0a6-1727-45fb-b8df-3f9aac2f0f5f
+   :END:
+   As  described above,  we will  once again  have to  declare our  bar with  an
+   equally unimaginative but explicit name.
+   #+BEGIN_SRC conf-windows
+   [bar/bottom]
+   #+END_SRC
+
+*** Positioning
+    :PROPERTIES:
+    :CUSTOM_ID: h-31291b7e-d1df-493a-bcb2-8decab434044
+    :END:
+    The  variables are  the same  as above,  but two  of them  will be  slightly
+    modified:
+    #+BEGIN_SRC conf-windows
+      bottom = true
+      border-size = 0
+      <<position-bar-bottom>>
+    #+END_SRC
+
+    #+NAME: position-bar-bottom
+    #+BEGIN_SRC conf-windows :exports none :tangle no
+      width = 100%
+      height = 22
+      radius = 0.0
+      fixed-center = true
+    #+END_SRC
+
+    When it comes to the bottom bar, I prefer to have it fit my outputs, without
+    any margin around  it. And of course, I  have to declare it as  being at the
+    bottom of the  screen, hence these modifications. As regards  the padding of
+    our modules, their own margins, and the screen output, they aren’t modified.
+    #+BEGIN_SRC conf-windows
+      <<padding-bar>>
+      <<module-margin-bar>>
+      <<monitor-bar>>
+    #+END_SRC
+
+    However, we do display  the system tray on this bottom bar  at its right. It
+    has no padding and  it is not detached from the bar (this  allows the bar to
+    be displayed under the icons of the system tray), and their maximum size was
+    chosen so they are well visible without being too big.
+    #+BEGIN_SRC conf-windows
+      tray-position = right
+      tray-padding = 0
+      tray-detached = false
+      tray-maxsize = 15
+    #+END_SRC
+
+*** Colors and display
+    :PROPERTIES:
+    :CUSTOM_ID: h-3ec14c14-fd68-449a-b4a8-47d1c8279242
+    :END:
+    Nothing  changes from  the top  bar, all  the variables  stay with  the same
+    values. See [[#h-9f83a6fd-652a-45ca-894b-0a0e0d3f0084][Colors and display]] of the top bar for more information.
+    #+BEGIN_SRC conf-windows
+      <<bar-colors>>
+      <<line-border-color>>
+      <<line-size-bar>>
+    #+END_SRC
+
+*** Fonts and locale
+    :PROPERTIES:
+    :CUSTOM_ID: h-518c6613-b0b0-4d5b-a854-a26b3feefaab
+    :END:
+    Again, nothing changes  from the top bar,  so for more info  on what’s going
+    on, see [[#h-c5660945-4785-40f7-b89e-f9f31b85a062][Fonts and locale]] of the top bar.
+    #+BEGIN_SRC conf-windows
+      <<locale-bar>>
+      <<font-config()>>
+    #+END_SRC
+
+*** Modules
+    :PROPERTIES:
+    :CUSTOM_ID: h-57e48e86-e468-4d71-b088-c9d31d36ec27
+    :END:
+    Now, we can get to something interesting  again: modules. This bar has a lot
+    more modules than  the top bar. Here is  the list of the modules  we have on
+    the bottom bar:
+    #+NAME: table-modules-bottom
+    | Module name    | Position | Brief description               |
+    |----------------+----------+---------------------------------|
+    | mpd            | left     | MPD status indicator            |
+    | filesystem     | right    | Free storage in our filesystem  |
+    | wlan           | right    | Name of the active WiFi network |
+    | eth            | right    | Local address on Ethernet       |
+    | volume         | right    | System volume                   |
+    | backlight-acpi | right    | Screen backlight                |
+    | cpu            | right    | CPU usage                       |
+    | memory         | right    | RAM usage                       |
+    | temperature    | right    | CPU temperature                 |
+    | custom-battery | right    | Battery usage                   |
+
+    Here’s the corresponding configuration:
+    #+ATTR_LATEX: :options breaklines
+    #+BEGIN_SRC conf-windows
+      <<modules-generate(table=table-modules-bottom)>>
+    #+END_SRC
+    All these modules will be explained below.
+
+    As you may have noticed, no modules  will be displayed in the middle of this
+    bar.
+
+* Modules
+  :PROPERTIES:
+  :CUSTOM_ID: h-7b18b41a-e7d2-4028-8185-4ba732603392
+  :END:
+  Before we begin to  describe the different modules, I would  like to point out
+  something that will be repeated multiple times  if I don’t talk about it right
+  now: for each module, it is  possible to declare the foreground and background
+  color of  the prefix of the  modules, as well  as the underline color  and the
+  padding of the module. I like these parameters to be rather consistent, so the
+  code block you  will see below will  often be reused. The colors  refer to the
+  colors declared earlier, and the padding is minimal.
+  #+NAME: mod-prefix-col
+  #+BEGIN_SRC conf-windows :tangle no
+    format-prefix-foreground = ${colors.foreground-alt}
+    format-prefix-underline = ${colors.secondary}
+    format-underline = ${colors.secondary}
+    format-padding = 1
+  #+END_SRC
+
+** Hardware
+   :PROPERTIES:
+   :CUSTOM_ID: h-52212ebe-82c1-4663-9b36-61cfb990ac04
+   :END:
+*** Battery
+    :PROPERTIES:
+    :CUSTOM_ID: h-1a177975-be38-44c2-bac7-9743dae1ef69
+    :END:
+    This  module allows  the user  to  get a  battery widget  among the  polybar
+    modules that will also send a notification  to the user if the battery level
+    drops below a certain value. This module relies on ~polybar-another-battery~
+    ([[https://github.com/drdeimos/polybar_another_battery][link]]) and its generated binary ~polybar-ab~ which should be in the ~$PATH~.
+
+    The  first line  of the  module declaration  lets the  user name  the module
+    however they want. In this case, the name is ~custom-battery~.
+    #+BEGIN_SRC conf-windows
+      [module/custom-battery]
+    #+END_SRC
+
+    Since it is not  a core module, we have to declare it  as a custom script so
+    polybar knows what to do with it.
+    #+BEGIN_SRC conf-windows
+      type = custom/script
+    #+END_SRC
+
+    We now can specify the script execution,  and whether or not the script will
+    be continuously outputting  something. In our case, the answer  to this last
+    question is yes.
+    #+BEGIN_SRC conf-windows
+      exec = polybar-ab -polybar -thr 10
+      tail = true
+    #+END_SRC
+    The ~-thr 10~ specifies the threshold for polybar-ab at which it should warn
+    the user about the battery level of the computer.
+
+    Of course, users on desktop computers  won’t need this module which is aimed
+    at laptop users. Feel free to remove it if you do not need it.
+
+*** Filesystem
+    :PROPERTIES:
+    :CUSTOM_ID: h-e007ebb2-bc1a-4e1d-84e7-1332a4682511
+    :END:
+    This module  allows to display  information about our  filesystem, including
+    (and this  is what  I use  this module  for) displaying  the used  space and
+    remaining space on different mount points. This module is an internal module
+    to polybar, so let’s declare it as such:
+    #+BEGIN_SRC conf-windows
+      [module/filesystem]
+      type = internal/fs
+    #+END_SRC
+    We can specify how  often the filesystem is to be  checked with the variable
+    ~interval~. I prefer it  not to check it too often in order  to not ping too
+    often  my drives,  but  I want  it  to be  often enough  so  it is  somewhat
+    responsive. This is why I settled on a 20 seconds interval.
+    #+BEGIN_SRC conf-windows
+      interval = 20
+    #+END_SRC
+
+    We now have to indicate where  our different filesystems are mounted. In the
+    case of my main computer /Marpa/,  I have two partitions, the root partition
+    and  the home  partition. But  on my  travel laptop,  I only  have the  root
+    partition, hence the usage of the  below Elisp code that determines based on
+    the computer it is running whether or  not the second mount point to my home
+    partition should be included.
+    #+NAME: include-home-partition
+    #+BEGIN_SRC emacs-lisp :tangle no :cache yes :exports code
+      (if (string= system-name "Marpa")
+          "mount-1 = /home")
+    #+END_SRC
+
+    #+RESULTS[3eb35c69438ba3b982ebe442fa64f8879b7b727b]: include-home-partition
+    : mount-1 = /home
+
+    #+BEGIN_SRC conf-windows
+      mount-0 = /
+      <<include-home-partition()>>
+    #+END_SRC
+
+    Now we can  set the format of  our module. There are two  mains formats, one
+    for mounted  and one for unmounted  mountpoints. For both, we’ll  simply use
+    their label.
+    #+BEGIN_SRC conf-windows
+      format-mounted = <label-mounted>
+      format-unmounted = <label-unmounted>
+    #+END_SRC
+    When it comes to  the mounted partition, we want to display  the name of the
+    mountpoint and how used it is, both in terms of gigabytes and percentage.
+    #+BEGIN_SRC conf-windows
+      label-mounted = 💽 %mountpoint%: %used%/%total% (%percentage_used%%)
+      label-mounted-foreground = ${colors.foreground}
+      label-mounted-underline = ${colors.secondary}
+    #+END_SRC
+
+    If  the  volume is  unmounted  (which  should  be worrying  considering  the
+    mountpoints chosen), then we’ll simply have a message telling us about that,
+    and the foreground color will use the alternative foreground color described
+    earlier.
+    #+BEGIN_SRC conf-windows
+      label-unmounted = %mountpoint% not mounted
+      label-unmounted-foreground = ${colors.foreground-alt}
+    #+END_SRC
+
+*** Xbacklight
+    :PROPERTIES:
+    :CUSTOM_ID: h-8c6dd375-381c-47c4-861d-fda6e7283e9e
+    :END:
+    This module is used in order to display the level of brightness of a screen.
+    It  is not  used  by itself,  but  rather  by other  modules,  such as  [[#h-9adad94d-961c-44a7-aed1-91a8f22b4eef][ACPI
+    backlight]]. First of  all, this module is an internal  module for xbacklight.
+    It will  also display the  brightness percentage,  prefixed by a  sun emoji.
+    Lastly, it will be underlined by a green line.
+    #+BEGIN_SRC conf-windows
+      [module/xbacklight]
+      type = internal/xbacklight
+      format = <label>
+      label = %percentage%%
+      format-prefix = "🌞 "
+      format-underline = #9f78e1
+    #+END_SRC
+
+*** ACPI backlight
+    :PROPERTIES:
+    :CUSTOM_ID: h-9adad94d-961c-44a7-aed1-91a8f22b4eef
+    :END:
+    This module  indicates the backlight  level of a  screen thanks to  the ACPI
+    Linux module. There isn’t much to tell about the module itself other than it
+    inherits the module  described above, [[#h-8c6dd375-381c-47c4-861d-fda6e7283e9e][xbacklight]]. It also  sets which driver
+    should be used, in this case the ~intel_backlight~ driver.
+    #+BEGIN_SRC conf-windows
+      [module/backlight-acpi]
+      inherit = module/xbacklight
+      type = internal/backlight
+      card = intel_backlight
+    #+END_SRC
+
+*** CPU
+    :PROPERTIES:
+    :CUSTOM_ID: h-058d538f-e361-44d5-ae0f-cb4e36109f5f
+    :END:
+    This module indicates how  much of the CPU is being used.  As shown below, I
+    made it so  we can see the  load on each core.  The first thing to  do is to
+    declare the module as an internal module dedicated to the CPU.
+    #+BEGIN_SRC conf-windows
+      [module/cpu]
+      type = internal/cpu
+    #+END_SRC
+
+    Now, we can set the refresh rate in  seconds of the module. I like it at two
+    seconds:
+    #+BEGIN_SRC conf-windows
+      interval = 2
+    #+END_SRC
+
+    Now, let’s  declare what will  be displayed. The  format will be  a computer
+    emoji followed by ramp characters.
+    #+BEGIN_SRC conf-windows
+      format = <label> <ramp-coreload>
+      format-prefix = "💻 "
+      label = %percentage%%
+      ramp-coreload-0 = ▁
+      ramp-coreload-1 = ▂
+      ramp-coreload-2 = ▃
+      ramp-coreload-3 = ▄
+      ramp-coreload-4 = ▅
+      ramp-coreload-5 = ▆
+      ramp-coreload-6 = ▇
+      ramp-coreload-7 = █
+    #+END_SRC
+
+    Finally, this module will be underlined in red.
+    #+BEGIN_SRC conf-windows
+      format-underline = #f90000
+    #+END_SRC
+
+*** Memory
+    :PROPERTIES:
+    :CUSTOM_ID: h-fd9cd09c-eed7-4fc3-8c10-aaa4364fea0f
+    :END:
+    Similarly to the CPU  module, it is possible for Polybar  to display the RAM
+    load of  the computer. As  above, let’s declare  this module as  an internal
+    module to Polybar:
+    #+BEGIN_SRC conf-windows
+      [module/memory]
+      type = internal/memory
+    #+END_SRC
+
+    As the CPU module still, the refresh rate will be of two seconds.
+    #+BEGIN_SRC conf-windows
+      interval = 2
+    #+END_SRC
+
+    Its format will be the percentage of used RAM, prefixed by a disk emoji.
+    #+BEGIN_SRC conf-windows
+      format = <label>
+      format-prefix = "💿 "
+      label = %gb_used%
+    #+END_SRC
+
+    Lastly, it will be underlined in green.
+    #+BEGIN_SRC conf-windows
+      format-underline = #4bffdc
+    #+END_SRC
+
+*** Wlan
+    :PROPERTIES:
+    :CUSTOM_ID: h-fc269c9f-4a4c-4260-aa20-cae93d5f377f
+    :END:
+    It is possible for  Polybar to display the name of  the current WiFi network
+    the computer is  connected to. For that,  we first need to  declare the Wlan
+    module as an internal module of Polybar.
+    #+BEGIN_SRC conf-windows
+      [module/wlan]
+      type = internal/network
+    #+END_SRC
+
+    Now,  we should  set the  name  of the  interface.  As this  depends on  the
+    hardware I  am using, I am  going to rely  on the machine’s hostname  and on
+    some Elisp code to get this setting right.
+    #+NAME: name-wlan-interface
+    #+BEGIN_SRC emacs-lisp :exports code :tangle no :cache yes
+      (cond ((string= system-name "Marpa") "wlp8s0")
+            ((string= system-name "Gampo") "wlp3s0"))
+    #+END_SRC
+
+    #+RESULTS[41ce3d07b3db680b9740aa0cd720a0b0c47ff771]: name-wlan-interface
+    : wlp8s0
+
+    #+BEGIN_SRC conf-windows
+      interface = <<name-wlan-interface()>>
+    #+END_SRC
+
+    The name of the current WiFi network will be refreshed every three seconds.
+    #+BEGIN_SRC conf-windows
+      interval = 3.0
+    #+END_SRC
+
+    The format of the module when connected to a network will the the display of
+    the antenna emoji,  followed by the name of the  network. When disconnected,
+    the module will simply be empty.
+    #+BEGIN_SRC conf-windows
+      format-connected = <label-connected>
+      format-connected-prefix = "📶 "
+      label-connected = %essid%
+    #+END_SRC
+
+*** Ethernet
+    :PROPERTIES:
+    :CUSTOM_ID: h-99a35d25-f49e-4261-9a93-981d67e289f6
+    :END:
+    Just like  any other module,  the ethernet module has  to be declared  as an
+    internal module.
+    #+BEGIN_SRC conf-windows
+      [module/eth]
+      type = internal/network
+    #+END_SRC
+
+    And  just like  the Wlan  module, it  requires an  interface which  can vary
+    depending on the machine I am using, hence this piece of Elisp:
+    #+NAME: name-eth-interface
+    #+BEGIN_SRC emacs-lisp :exports code :tangle no :cache yes
+      (cond ((string= system-name "Marpa") "enp9s0")
+            ((string= system-name "Gampo") "enp0s25"))
+    #+END_SRC
+
+    #+RESULTS[c39eb1698bae4be041f1378b290c4ae6d4dadf42]: name-eth-interface
+    : enp9s0
+
+    #+BEGIN_SRC conf-windows
+      interface = <<name-eth-interface()>>
+    #+END_SRC
+
+    The format of this  module will be the local address of  the computer on the
+    network, and  it will be  prefixed by  a desktop computer  emoji. Meanwhile,
+    when disconnected, the module won’t be visible.
+    #+BEGIN_SRC conf-windows
+      format-connected = <<label-connected>>
+      format-connected-prefix = "🖥 "
+      label-connected = %local_ip%
+      format-disconnected =
+    #+END_SRC
+
+    The module will be underlined in green.
+    #+BEGIN_SRC conf-windows
+      format-connected-underline = #55aa55
+    #+END_SRC
+
+*** Volume
+    :PROPERTIES:
+    :CUSTOM_ID: h-b93216f3-1a1b-438d-a82d-3b86796ff2d8
+    :END:
+    The volume  module in Polybar  is linked to  its internal bindings  to ALSA.
+    Let’s declare it accordingly.
+    #+BEGIN_SRC conf-windows
+      [module/volume]
+      type = internal/alsa
+    #+END_SRC
+
+    Its format is quite  simple: if the audio is not muted,  it is then prefixed
+    with a speaker emoji, followed by the volume percentage.
+    #+BEGIN_SRC conf-windows
+      format-volume = <label-volume>
+      format-volume-prefix = "🔈 "
+      label-volume = %percentage%%
+    #+END_SRC
+
+    If the audio is muted, then the only thing the user will see is the muted
+    speaker emoji followed by the text “muted”.
+    #+BEGIN_SRC conf-windows
+      format-muted-prefix = "🔇 "
+      label-muted = muted
+    #+END_SRC
+
+    In any case, it will be underlined in green.
+    #+BEGIN_SRC conf-windows
+      format-volume-underline = #55aa55
+    #+END_SRC
+
+*** Temperature
+    :PROPERTIES:
+    :CUSTOM_ID: h-dd6a6310-1841-4db8-a59f-7445b079060e
+    :END:
+    The temperature module checks the temperature of the CPU, and warns the user
+    above a certain threshold of heat, in my case if my CPU is above 60°C.
+    #+BEGIN_SRC conf-windows
+      [module/temperature]
+      type = internal/temperature
+      thermal-zone = 0
+      warn-temperature = 60
+    #+END_SRC
+
+    The  format  of  the  module  is  the  thermometer  emoji  followed  by  the
+    temperature of  the CPU. If  the CPU becomes too  hot, the text  will change
+    color for the secondary foreground color.
+    #+BEGIN_SRC conf-windows
+      format = <label>
+      format-underline = #f50a4d
+      format-warn = <label-warn>
+      format-warn-underline = ${self.format-underline}
+      format-prefix = "🌡 "
+      format-warn-prefix = "🌡 "
+
+      label = %temperature-c%
+      label-warn = %temperature-c%
+      label-warn-foreground = ${colors.secondary}
+    #+END_SRC
+
+** Software
+   :PROPERTIES:
+   :CUSTOM_ID: h-359b340e-e332-45b1-bb13-0d50baf1d9d2
+   :END:
+*** Window title
+    :PROPERTIES:
+    :CUSTOM_ID: h-7068e4d4-069b-46e8-946e-ed012329648a
+    :END:
+    This module’s  aim is to  simply provide the  name of the  currently focused
+    window given by Xorg. This module is  an internal module to polybar, that is
+    to say it is  built-in, and is of the type ~xwindow~.  So, let’s declare the
+    module  accordingly, including  the piece  of  common code  declared at  the
+    beginning of the chapter:
+    #+BEGIN_SRC conf-windows
+      [module/xwindow]
+      type = internal/xwindow
+      <<mod-prefix-col>>
+    #+END_SRC
+
+    Now we  can take care of  the label, which is  the actual text that  will be
+    displayed. In our case,  we want the label to be the title  of the current X
+    window, hence  the value of ~label~,  and we don’t  want it to be  too long,
+    though I’m not sure I’ve often seen window titles longer than 70 characters.
+    #+BEGIN_SRC conf-windows
+      label = %title%
+      label-maxlen = 70
+    #+END_SRC
+
+*** i3
+    :PROPERTIES:
+    :CUSTOM_ID: h-105fbca2-4f65-4e22-a663-5b0568f60016
+    :END:
+    Now  comes the  module for  i3  interaction. Thanks  to this  module, it  is
+    possible to show which workspaces are active and focused, and it is possible
+    to change  workspaces by clicking on  the ones displayed in  the bar. First,
+    let’s declare it; it is an internal module by the way.
+    #+BEGIN_SRC conf-windows
+      [module/i3]
+      type = internal/i3
+    #+END_SRC
+
+    Now, let’s display only the workspaces  that are on the current output. This
+    means if a workspace  is either inactive or on another  screen or output, it
+    won’t be displayed.
+    #+BEGIN_SRC conf-windows
+      pin-workspaces = true
+    #+END_SRC
+
+    We also want our workspaces to be sorted by number rather than by output.
+    #+BEGIN_SRC conf-windows
+      index-sort = true
+    #+END_SRC
+
+    I don’t want  to be able to  scroll through the workspaces when  my mouse is
+    hovering  the  module:  when it  happens,  most  of  the  time it  was  done
+    accidentally. So let’s  deactivate that. However, I sometimes  like to click
+    on them to switch from one another, so we’ll keep that activated.
+    #+BEGIN_SRC conf-windows
+      enable-scroll = false
+      wrapping-scroll = false
+      reverse-scroll = false
+      enable-click = true
+    #+END_SRC
+
+    This parameters splits the workspaces’ name on ~:~. Let’s deactivate that.
+    #+BEGIN_SRC conf-windows
+      strip-wsnumbers = false
+    #+END_SRC
+
+    An on  the topic of workspaces’  name, ~fuzzy-match~ allows the  user to use
+    fuzzy search  for workspaces’  name when  we will  be applying  custom names
+    below. Not really useful since I  only use the default workspaces’ name, but
+    it’s good to have it enabled by default.
+    #+BEGIN_SRC conf-windows
+      fuzzy-match = true
+    #+END_SRC
+
+    The label  format is described first  by its label,  but also by one  of its
+    three possible modes: focused, visible or unfocused. These will be discussed
+    later, but for now let’s simply set our format.
+    #+begin_src conf-windows
+      format = <label-state> <label-mode>
+    #+end_src
+
+    We  also wand  to set  the label  mode to  be whichever  mode the  workspace
+    described by polybar is in. This label will also have a padding of 2 pixels,
+    and the text will be written in white.
+    #+begin_src conf-windows
+      label-mode = %mode%
+      label-mode-padding = 2
+      label-mode-foreground = #000
+    #+end_src
+
+**** Workspace icons
+     :PROPERTIES:
+     :CUSTOM_ID: h-300a226b-1b3e-49aa-93c2-325ee26e8e1f
+     :END:
+     Now, let’s name our workspaces. We can give them whatever name we want them
+     to have, but I just like the aesthetics of Japanese characters, so let’s go
+     with the kanji equivalent of the number of the workspaces.
+     #+NAME: ws-names
+     | workspace number | name |
+     |------------------+------|
+     |                1 | 一   |
+     |                2 | 二   |
+     |                3 | 三   |
+     |                4 | 四   |
+     |                5 | 五   |
+     |                6 | 六   |
+     |                7 | 七   |
+     |                8 | 八   |
+     |                9 | 九   |
+     |                0 | 十   |
+
+     #+NAME: generate-ws-names
+     #+BEGIN_SRC python :var names=ws-names :exports none :cache yes
+       for i in range(0, len(names)):
+           print('ws-icon-{0} = {1};{2}'.format(i, names[i][0], names[i][1]))
+     #+END_SRC
+
+     #+RESULTS[e4cec50affbfc3c284504f1a0f3b6a8d78197c5d]: generate-ws-names
+     #+begin_example
+     ws-icon-0 = 1;一
+     ws-icon-1 = 2;二
+     ws-icon-2 = 3;三
+     ws-icon-3 = 4;四
+     ws-icon-4 = 5;五
+     ws-icon-5 = 6;六
+     ws-icon-6 = 7;七
+     ws-icon-7 = 8;八
+     ws-icon-8 = 9;九
+     ws-icon-9 = 0;十
+     #+end_example
+
+     Here are the corresponding configuration lines:
+     #+BEGIN_SRC conf-windows
+     <<generate-ws-names()>>
+     #+END_SRC
+
+     In case we create a workspace which isn’t  named from ~0~ to ~9~, I want it
+     to appear as is.
+     #+begin_src conf-windows
+       ws-icon-default = %index%
+     #+end_src
+
+**** Focused workspaces
+     :PROPERTIES:
+     :CUSTOM_ID: h-4bb8a657-021a-4d0a-b1e1-2e6b34c9f044
+     :END:
+     Now we can define the label itself. First, we will need to define the label
+     when the workspace is focused. We’ll simply take the alternative background
+     for the  focused label, and the  underline will be defined  from Xrdb’s 8th
+     color, with yellow  as the fallback color.  It will also have  a two pixels
+     padding. The text itself will be the dynamic icons declared above.
+     #+begin_src conf-windows
+       label-focused = %icon%
+       label-focused-background = ${colors.background-alt}
+       label-focused-underline = ${xrdb:color8:#ffff00}
+       label-focused-padding = 2
+     #+end_src
+
+**** Visible workspaces
+     :PROPERTIES:
+     :CUSTOM_ID: h-5fbaf3dc-f2f6-463d-9c8e-dd649af7c0a3
+     :END:
+     The  ~visible~  label is  related  to  the  ~focused~  labels since  it  is
+     describing workspaces that can be seen, but are not currently focused, i.e.
+     a workspace that  appears on another screen than the  one currently used so
+     it is  visible, but it isn’t  focused. The difference with  the ~unfocused~
+     workspaces is that  the latter are neither focused nor  visible. As you can
+     see, we are simply using all of the declarations from above for the focused
+     labels so we can ensure they appear the same way the focused labels do.
+     #+begin_src conf-windows
+       label-visible = ${self.label-focused}
+       label-visible-background = ${self.label-focused-background}
+       label-visible-underline = ${self.label-focused-underline}
+       label-visible-padding = ${self.label-focused-padding}
+     #+end_src
+
+**** Unfocused workspaces
+     :PROPERTIES:
+     :CUSTOM_ID: h-26d9b2a6-7d01-462e-b144-8ee533324596
+     :END:
+     When it comes to the unfocused  label, there won’t be any custom background
+     or underline, so  we’ll just copy the two remaining  lines from the focused
+     labels for unfocused labels.
+     #+begin_src conf-windows
+       label-unfocused = %icon%
+       label-unfocused-padding = 2
+     #+end_src
+
+**** Urgent workspaces
+     :PROPERTIES:
+     :CUSTOM_ID: h-86b42ade-e5e1-47d0-8436-9e072450ccc2
+     :END:
+     Lastly, we get our urgent workspaces:  workspaces in which most of the time
+     it’s just a popup that appeared  or a software that finally launched itself
+     while working on something else on another workspace. To make it a bit more
+     unique, let’s declare  its background as being the color  0 from xrdb, with
+     some dark red as the fallback color. And as the other labels, the text will
+     be the icon and it will have a two pixels padding.
+     #+begin_src conf-windows
+       label-urgent = %icon%
+       label-urgent-background = ${xrdb:color0:#bd2c40}
+       label-urgent-padding = 2
+     #+end_src
+
+*** Mpd
+    :PROPERTIES:
+    :CUSTOM_ID: h-e51852fe-5d09-4126-aec3-48c16aa9a093
+    :END:
+    Mpd is  a music server  for GNU/Linux  systems that interfaces  will several
+    front-ends, including ncmpcpp (the main one I use), ncmpcpp and mpc. It also
+    interfaces with polybar thanks to some built in commands.
+
+    First, let’s declare our module as an internal module.
+    #+BEGIN_SRC conf-windows
+      [module/mpd]
+      type = internal/mpd
+    #+END_SRC
+
+    The next  thing we  want to  do is  set the  label for  the module:  we will
+    display both the title  and the name of the artist of  the song playing. The
+    maximum length will be 70 characters.
+    #+BEGIN_SRC conf-windows
+      label-song = %title% - %artist%
+      label-song-maxlen = 70
+      label-song-ellipsis = true
+    #+END_SRC
+
+    While Mpd is  online, the format of  the module should be  the control icons
+    and then the song label.
+    #+BEGIN_SRC conf-windows
+      format-online = <icon-prev> <toggle> <icon-next> <label-song>
+      icon-prev = ⏭
+      icon-stop = ⏹
+      icon-play = ▶
+      icon-pause = ⏸
+      icon-next = ⏭
+    #+END_SRC
+
+    If Mpd is offline, then I would  like to display a short messages that tells
+    the user so.
+    #+BEGIN_SRC conf-windows
+      format-offline = <label-offline>
+      label-offline = 🎵 mpd is offline
+    #+END_SRC
+
+*** Date
+    :PROPERTIES:
+    :CUSTOM_ID: h-18354316-7e52-4e24-b4a0-961b6c959ace
+    :END:
+    This module is really  simple: it gives the current date.  It is an internal
+    module, and as declared below, it updates every second:
+    #+BEGIN_SRC conf-windows
+      [module/date]
+      type = internal/date
+      interval = 1
+    #+END_SRC
+
+    The main  date and time format  is the standard one,  following the ISO-8601
+    standard.
+    #+BEGIN_SRC conf-windows
+      date = %Y-%m-%d
+      time = %H-%M-%S
+    #+END_SRC
+
+    It also has  an alternative format which I occasionally  use, which displays
+    the date and time in the Japanese format.
+    #+BEGIN_SRC conf-windows
+      date-alt = %A %d, %B
+      time-alt = %H:%M:%S
+    #+END_SRC
+
+    The format is quite simple: a clock emoji preceding the date and time.
+    #+BEGIN_SRC conf-windows
+      format-prefix = "🕑 "
+      label = %date% %time%
+    #+END_SRC
+
+    This module is underlined in blue:
+    #+BEGIN_SRC conf-windows
+      format-underline = #0a6cf5
+    #+END_SRC
+
+* Footnotes
+  :PROPERTIES:
+  :CUSTOM_ID: h-6d9948e4-8a08-4245-929b-de1b52cecb64
+  :END:
+
+[fn:1] [[https://github.com/polybar/polybar/wiki/Fonts][https://github.com/polybar/polybar/wiki/Fonts]]
+
+
+#  LocalWords:  Siji pixelsize Fira Mincho IPAMincho Unifont unifont fontformat
+#  LocalWords:  truetype antialias xwindow wlan eth acpi cpu
