@@ -1,1 +1,326 @@
-/home/phundrak/org/config-website/index.org
+#+TITLE: Phundrak’s dotfiles
+#+INCLUDE: ~/org/config-website/headers.org
+#+OPTIONS: auto-id:t
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :END:
+- [[#presentation][Presentation]]
+- [[#screenshots][Screenshots]]
+- [[#features][Features]]
+  - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
+  - [[#emacs-configuration][Emacs configuration]]
+  - [[#email-signature][Email signature]]
+  - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
+  - [[#global-gitignore][Global gitignore]]
+  - [[#i3-configuration][i3 configuration]]
+  - [[#nano][Nano]]
+  - [[#rustfmt][Rustfmt]]
+  - [[#tmux-configuration][Tmux configuration]]
+  - [[#xresources][Xresources]]
+- [[#dependencies][Dependencies]]
+- [[#installation][Installation]]
+- [[#licence][Licence]]
+
+* Presentation
+  :PROPERTIES:
+  :CUSTOM_ID: h-536e69f5-c012-4b7d-8a45-3a340d3bc7ee
+  :END:
+  [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+
+  This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
+  to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
+  instructions below.
+
+  As you can see,  I personally use [[https://fishshell.com/][fish]] as my shell of  choice, and [[https://www.gnu.org/software/emacs/][Emacs]] using
+  [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding) as my main text editor.
+
+  I also  use [[https://github.com/resloved/i3][Resloved]]’s [[https://github.com/resloved/i3][fork]] of  [[https://github.com/Airblader/i3][i3-gaps]] with two [[https://github.com/jaagr/polybar][polybar]]  bars and [[https://github.com/tryone144][Tryone144]]’s
+  [[https://github.com/tryone144/compton][fork]] of [[https://github.com/chjj/compton][Compton]]. The colors scheme for [[https://github.com/davatorium/rofi][rofi]], Emacs and polybar are chosen from
+  the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
+
+* Screenshots
+  :PROPERTIES:
+  :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
+  :END:
+
+  #+ATTR_HTML: :width 100%
+  #+CAPTION: Desktop with Neofetch in the terminal
+  [[./img/neofetch.png]]
+
+  #+CAPTION: Desktop with Emacs opened
+  #+ATTR_HTML: :width 100%
+  [[./img/emacs.png]]
+
+  #+CAPTION: Desktop with Rofi
+  #+ATTR_HTML: :width 100%
+  [[./img/rofi.png]]
+
+* Features
+  :PROPERTIES:
+  :CUSTOM_ID: h-8539dd6f-4fcb-4dc7-a3ef-b8ad198c91d4
+  :END:
+  - Emacs configuration perfectly tailored for my own use
+  - Beautiful and comfy i3 and polybar configuration
+  - And enough information  below to get basically the same  distro install as I
+    have on my main computer and my travel laptop.
+
+  Most of the org  files you will find in this repos are  the actual source code
+  of  much   of  my  config  files.   For  instance,  the  bootstrap   found  in
+  [[file:installation.org][installation.org]]   exports    almost   all    of   its   code    snippets   to
+  [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]]  thanks to  =M-x org-babel-tangle=  from within  Emacs.
+  Below I will also  present and comment some of my short  config files which do
+  not deserve to have a full org file dedicated to them.
+
+** Custom scripts in =PATH=
+   :PROPERTIES:
+   :CUSTOM_ID: h-d582e107-fa66-4f79-869e-2b49116ed1ec
+   :END:
+   I have written some scripts that  help me daily accomplish some simple tasks,
+   like mounting  and unmounting a drive  or Android device, an  emoji picker, a
+   utility to  set up my Wacom  tablet, and so on.  You can find them  stored in
+   [[file:.local/bin/README.org][.local/bin]] along with their detailed explanation  in the README placed in the
+   same folder —which is actually their  source code once the org-mode file gets
+   tangled.
+
+** Emacs configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-f6d2561f-5c02-4540-8287-4acf3037b3d5
+   :END:
+   Emacs is my main text editor, which I use for almost everything. Because, you
+   know…
+   #+begin_quote
+   Emacs is a great operating system, it just lacks a good text editor.
+   #+end_quote
+   You can find my Emacs config, based  on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and
+   my user configuration in my [[file:~/org/config-website/spacemacs.org][spacemacs.org]] file.
+
+** Email signature
+   :PROPERTIES:
+   :CUSTOM_ID: h-f6c48286-a320-493f-b330-ee0a697e6d79
+   :HEADER-ARGS: :tangle ~/.signature
+   :END:
+   This file gets inserted automatically at the end of my emails.
+   #+BEGIN_SRC text
+     Lucien “Phundrak” Cartier-Tilet
+     https://phundrak.com (Français)
+     https://en.phundrak.com (English)
+
+     Pensez à notre planète, avez-vous vraiment besoin d’imprimer ce courriel ?
+     Please mind our planet, do you really need to print this email?
+   #+END_SRC
+
+** Fish configuration with useful abbreviations
+   :PROPERTIES:
+   :CUSTOM_ID: h-f35ed9a3-c9fc-458c-8a62-693f679f6992
+   :END:
+   You can also find  in my Fish shell configuration in  my [[file:~/org/config-website/fish.org][fish.org]] file, which
+   contains my usual abbreviations.
+
+** Global gitignore
+   :PROPERTIES:
+   :CUSTOM_ID: h-4f92eb29-7cfa-48ec-b39d-39037ace3682
+   :HEADER-ARGS: :tangle ~/.gitignore_global
+   :END:
+   Sometimes,  there are  some lines  that  always reappear  in gitignores.  So,
+   instead of  always adding  them, let  git now  that some  elements are  to be
+   ignored by default, hence the  [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want
+   nano’s backup files.
+   #+BEGIN_SRC text
+     ~*
+   #+END_SRC
+
+   And output binaries generated by =gcc= and the likes aren’t welcome either.
+   #+BEGIN_SRC text
+     ,*.out
+   #+END_SRC
+
+** i3 configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-c918e370-d867-412c-8b0e-078e4e3772e0
+   :END:
+   The i3  configuration is detailed in  its corresponding README which  you can
+   find at [[file:.config/i3/README.org][.config/i3/README.org]].
+
+** Nano
+  :PROPERTIES:
+  :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
+  :END:
+  Although  it  is  a very  simple  piece  of  software,  nano does  offer  some
+  customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file.
+
+** Rustfmt
+   :PROPERTIES:
+   :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
+   :HEADER-ARGS: :tangle ~/.rustfmt.toml
+   :END:
+   In my  [[file:.rustfmt.toml][.rustfmt.toml]], you  can find  some custom  rules on  how my  Rust code
+   should be formatted.
+
+   First, we are using the 2018 edition of Rust.
+   #+BEGIN_SRC toml
+   edition = "2018"
+   #+END_SRC
+
+   The maximum length of enum  variant having discriminant, that gets vertically
+   aligned with others. Variants without  discriminants would be ignored for the
+   purpose of alignment.
+
+   Note  that this  is not  how  much whitespace  is inserted,  but instead  the
+   longest variant name that doesn't get ignored when aligning.
+   #+BEGIN_SRC toml
+   enum_discrim_align_threshold = 20
+   #+END_SRC
+
+   Put single-expression functions on a single line.
+   #+BEGIN_SRC toml
+   fn_single_line = true
+   #+END_SRC
+
+   Format code snippet included in doc comments.
+   #+BEGIN_SRC toml
+   format_code_in_doc_comments = true
+   #+END_SRC
+
+   Format string literals where necessary.
+   #+BEGIN_SRC toml
+   format_strings = true
+   #+END_SRC
+
+   Use tab characters for indentation, spaces for alignment.
+   #+BEGIN_SRC toml
+   hard_tabs = true
+   #+END_SRC
+
+   Maximum width of each line
+   #+BEGIN_SRC toml
+   max_width = 80
+   #+END_SRC
+
+   Merge multiple imports into a single nested import.
+   #+BEGIN_SRC toml
+   merge_imports = true
+   #+END_SRC
+
+   My newline style will always be Unix.
+   #+BEGIN_SRC toml
+   newline_style = Unix
+   #+END_SRC
+
+   Convert =/* */= comments to =//= comments where possible.
+   #+BEGIN_SRC toml
+   normalize_comments = true
+   #+END_SRC
+
+   Convert =#![doc]= and =#[doc]= attributes to =//!= and =///= doc comments.
+   #+BEGIN_SRC toml
+   normalize_doc_attributes = true
+   #+END_SRC
+
+   Reorder  impl items.  =type=  and  =const= are  put  first,  then macros  and
+   methods.
+   #+BEGIN_SRC toml
+   reorder_impl_items = true
+   #+END_SRC
+
+   Report =FIXME= items in comments.
+   #+BEGIN_SRC toml
+   report_fixme = "Always"
+   #+END_SRC
+
+   Report =TODO= items in comments.
+   #+BEGIN_SRC toml
+   todo = "Always"
+   #+END_SRC
+
+   The  maximum diff  of width  between struct  fields to  be aligned  with each
+   other.
+   #+BEGIN_SRC toml
+   struct_field_align_threshold = 20
+   #+END_SRC
+
+   Number of spaces per tab.
+   #+BEGIN_SRC toml
+   tab_spaces = 2
+   #+END_SRC
+
+   Break comments to fit on the line.
+   #+BEGIN_SRC toml
+   wrap_comments = true
+   #+END_SRC
+
+** Tmux configuration
+   :PROPERTIES:
+   :CUSTOM_ID: h-4f48b912-b67b-4549-a671-802e76221f46
+   :END:
+   You can find  my tmux configuration in [[file:tmux.org][tmux.org]]. It  depends on the submodule
+   [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
+
+** Xresources
+   :PROPERTIES:
+   :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
+   :HEADER-ARGS: :tangle ~/.Xresources :exports code
+   :END:
+   My Xresources file is very short. Indeed, it only contains two lines which
+   are dedicated to my =st= terminal to set its font and shell. The font is set
+   as follows.
+   #+BEGIN_SRC conf
+     st.font: Source Code Pro for Powerline:style=book
+   #+END_SRC
+   And I will set my shell like this:
+   #+BEGIN_SRC conf
+     st.shell: /usr/bin/fish
+   #+END_SRC
+
+   I used to have lines dedicated to UXTerm and URxvt, but I cast them out of my
+   system.
+
+* Dependencies
+  :PROPERTIES:
+  :CUSTOM_ID: h-5849dbcf-a650-4323-9a90-bec549a7b982
+  :END:
+  Of course, some dependencies are needed for  my dotfiles to work well. Here is
+  a non-exhaustive list of software needed by these configuration files:
+  - [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
+    - [[http://spacemacs.org][Spacemacs]] (develop branch)
+    - My [[https://labs.phundrak.com/phundrak/conlang-layer][conlanging layer]]
+    - [[https://github.com/venmos/w3m-layer][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]]
+  - The [[https://fishshell.com/][Fish shell]], using [[https://github.com/jorgebucaran/fisher][fisher]]
+  - [[https://lukesmith.xyz/][Luke Smith]]’s [[https://github.com/LukeSmithxyz/st][fork]] of [[https://st.suckless.org/][st]]
+  - [[https://resloved.info/][Resloved]]’s [[https://github.com/resloved/i3][i3-gaps-rounded]] fork of [[https://github.com/Airblader/i3][Airblader]]’s [[https://github.com/Airblader/i3][i3-gaps]], itself a fork of [[https://i3wm.org/][i3]]
+  - [[https://github.com/yshui/compton][Compton]], more specificaly [[https://github.com/tryone144/compton][Tryone]]’s [[https://github.com/tryone144/compton][fork]]
+  - [[https://github.com/dylanaraps/pywal/][pywal]]
+  - [[https://tools.suckless.org/dmenu/][dmenu]]
+  - [[https://github.com/enkore/j4-dmenu-desktop][j4-dmenu-desktop]]
+  - [[https://github.com/davatorium/rofi][Rofi]]
+  - [[https://github.com/gpoore/minted][minted]]
+  - [[https://www.rust-lang.org/][Rust]] (stable and nightly)
+  - [[https://www.latex-project.org/][LaTeX]] and [[http://xetex.sourceforge.net/][XeTeX]] (=texlive= packages on Arch Linux)
+  - [[https://github.com/tmux/tmux][tmux]], based on [[https://github.com/gpakosz/.tmux][this repo]]’s configuration by [[https://pempek.net/][Grégory Pakosz]].
+  - And a bunch of other stuff, see below
+  And some other stuff scattered around in my dotfiles.
+
+  BTW, I use Arch.
+
+* Installation
+  :PROPERTIES:
+  :CUSTOM_ID: h-bfb2e09b-d5d7-4d6f-8b29-763c49b3fd09
+  :END:
+  For an  installation walkthrough of my  Arch Linux installation, check  out my
+  [[file:installation.org][installation.org]] file  where I  walk you  through the  first manual  steps and
+  through the bootstrap you  can execute to automatically take care  of a lot of
+  elements.
+
+* Licence
+  :PROPERTIES:
+  :CUSTOM_ID: h-a3438126-ee60-4f11-a2f6-f52e49dade59
+  :END:
+  All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
+  Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you
+  are free to  access, edit and redistribute  all of my dotfiles  under the same
+  licence and as allowed by the licence, and if you fuck up something, it’s your
+  own responsibility.
