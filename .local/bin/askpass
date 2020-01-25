@@ -1,3 +1,0 @@
-#!/usr/bin/env fish
-rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
--p (printf $argv[1] | sed s/://)

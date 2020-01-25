@@ -1,2 +1,0 @@
-#!/usr/bin/env fish
-/usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp

@@ -1,2 +1,0 @@
-#!/usr/bin/fish
-ls -ahlX --group-directories-first $argv | bat
