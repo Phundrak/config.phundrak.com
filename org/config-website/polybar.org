@@ -272,7 +272,7 @@
     | Fira Sans    | Fira Sans Book:style=Book:pixelsize=10             |               1 | Text display          |
     | IPA Mincho   | IPAMincho:style=regular:pixelsize=6                |               0 | Japanese text display |
     | Unifont      | unifont:fontformat=truetype:size=6:antialias=false |               0 | Fallback font         |
-    | NotoEmoji    | NotoEmoji:scale=12:style=Book                      |               0 | Emoji display         |
+    | NotoEmoji    | NotoEmoji:style=Book:scale=16                      |               0 | Emoji display         |
     | Siji         | Siji:pixelsize=8                                   |               0 | Symbol display        |
     | Default font | fixed:pixelsize=8                                  |               0 | Fallback font         |
 
@@ -525,13 +525,10 @@
     the computer it is running whether or  not the second mount point to my home
     partition should be included.
     #+NAME: include-home-partition
-    #+BEGIN_SRC emacs-lisp :tangle no :cache yes :exports code
+    #+BEGIN_SRC emacs-lisp :tangle no :exports code
       (if (string= system-name "Marpa")
           "mount-1 = /home")
     #+END_SRC
-
-    #+RESULTS[3eb35c69438ba3b982ebe442fa64f8879b7b727b]: include-home-partition
-    : mount-1 = /home
 
     #+BEGIN_SRC conf-windows
       mount-0 = /
@@ -679,13 +676,10 @@
     hardware I  am using, I am  going to rely  on the machine’s hostname  and on
     some Elisp code to get this setting right.
     #+NAME: name-wlan-interface
-    #+BEGIN_SRC emacs-lisp :exports code :tangle no :cache yes
+    #+BEGIN_SRC emacs-lisp :exports code :tangle no
       (cond ((string= system-name "Marpa") "wlp8s0")
             ((string= system-name "Gampo") "wlp3s0"))
     #+END_SRC
-
-    #+RESULTS[41ce3d07b3db680b9740aa0cd720a0b0c47ff771]: name-wlan-interface
-    : wlp8s0
 
     #+BEGIN_SRC conf-windows
       interface = <<name-wlan-interface()>>
@@ -719,13 +713,10 @@
     And  just like  the Wlan  module, it  requires an  interface which  can vary
     depending on the machine I am using, hence this piece of Elisp:
     #+NAME: name-eth-interface
-    #+BEGIN_SRC emacs-lisp :exports code :tangle no :cache yes
+    #+BEGIN_SRC emacs-lisp :exports code :tangle no
       (cond ((string= system-name "Marpa") "enp9s0")
             ((string= system-name "Gampo") "enp0s25"))
     #+END_SRC
-
-    #+RESULTS[c39eb1698bae4be041f1378b290c4ae6d4dadf42]: name-eth-interface
-    : enp9s0
 
     #+BEGIN_SRC conf-windows
       interface = <<name-eth-interface()>>
