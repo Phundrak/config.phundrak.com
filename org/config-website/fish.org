@@ -7,7 +7,7 @@
 #+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code
 #+PROPERTY: header-args :exports code
 
-* Table of Contents                                        :TOC_4_gh:noexport:
+* Table of Contents :TOC:noexport:
   :PROPERTIES:
   :CUSTOM_ID: h-c7ab05d0-4c5f-4a4c-8603-4c79e264141c
   :END:
@@ -409,10 +409,10 @@
      abbr ln 'ln -i'
      abbr lns 'ln -si'
      abbr mv 'mv -i'
-     abbr rm 'rm -I'
-     abbr rmd 'rm --preserve-root -Ir'
-     abbr rmdf 'rm --preserve-root -Irf'
-     abbr rmf 'rm --preserve-root -If'
+     abbr rm 'rm -Iv'
+     abbr rmd 'rm --preserve-root -Irv'
+     abbr rmdf 'rm --preserve-root -Irfv'
+     abbr rmf 'rm --preserve-root -Ifv'
    #+END_SRC
    The =-i= and =-I= add prompts in case  we might not want to do what we asked
    the shell  to do. Notice =lns=  which creates symlinks, =rmd=  which removes
@@ -421,9 +421,9 @@
    prevent me  from accidentally  removing the  root folder.  I added  the same
    option to =chgrp=, =chmod=, and =chown=.
    #+BEGIN_SRC fish
-     abbr chgrp 'chgrp --preserve-root'
-     abbr chmod 'chmod --preserve-root'
-     abbr chown 'chown --preserve-root'
+     abbr chgrp 'chgrp --preserve-root -v'
+     abbr chmod 'chmod --preserve-root -v'
+     abbr chown 'chown --preserve-root -v'
    #+END_SRC
 
 ** Typos
