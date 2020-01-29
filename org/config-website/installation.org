@@ -1,5 +1,5 @@
 #+TITLE: Install a Phundrak-flavored Arch Linux
-#+INCLUDE: ~/org/config-website/headers.org
+#+INCLUDE: headers.org
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
@@ -39,9 +39,6 @@
     - [[#acpilight][Acpilight]]
     - [[#nordvpn][NordVPN]]
   - [[#symlink-some-system-config-files][Symlink some system config files]]
-  - [[#set-up-our-fish-shell][Set up our fish shell]]
-    - [[#install-fisher][Install =fisher=]]
-    - [[#install-our-extensions][Install our extensions]]
   - [[#install-packages-from-git][Install packages from git]]
     - [[#i3-gaps-rounded][i3-gaps rounded]]
     - [[#polybar-battery][Polybar Battery]]
@@ -53,6 +50,9 @@
   - [[#install-go-packages][Install go packages]]
   - [[#set-up-chicken-scheme-interpretercompiler][Set up Chicken (Scheme interpreter/compiler)]]
   - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
+  - [[#set-up-our-fish-shell][Set up our fish shell]]
+    - [[#install-fisher][Install =fisher=]]
+    - [[#install-our-extensions][Install our extensions]]
 
 * Introduction
   :PROPERTIES:
@@ -290,7 +290,7 @@
      emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox \
      flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-     golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
+     golangci-lint-bin graphviz htop i3-gaps-rounded i3lock-blur i3status igdm-bin \
      inetutils j4-dmenu-desktop javascript-typescript-langserver js-beautify \
      jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
      meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
@@ -530,64 +530,11 @@
      end
    #+END_SRC
 
-** Set up our fish shell
-   :PROPERTIES:
-   :CUSTOM_ID: h-f6f4df67-b0de-40bf-95fb-888d42169088
-   :END:
-*** Install =fisher=
-    :PROPERTIES:
-    :CUSTOM_ID: h-d6490ddc-c909-4713-b36a-19c25a79c7ac
-    :END:
-    We will be using =fisher= as  our extensions manager for Fish. Let’s install
-    it.
-    #+BEGIN_SRC fish
-      printf "\n# Installing fisher ###########################################################\n\n"
-      curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
-    #+END_SRC
-
-*** Install our extensions
-    :PROPERTIES:
-    :CUSTOM_ID: h-3d540273-bdfb-4c63-a05f-2374a010dc29
-    :END:
-    I generally use the following extensions in my Fish shell.
-    #+BEGIN_SRC fish
-      set FISHEXTENSIONS \
-      edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
-      jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish \
-      tuvistavie/fish-ssh-agent
-    #+END_SRC
-    Let’s install these:
-    #+BEGIN_SRC fish
-      fisher add $FISHEXTENSIONS
-    #+END_SRC
-
 ** Install packages from git
    :PROPERTIES:
    :CUSTOM_ID: h-e79da7b2-9286-4b66-812e-453e3b2505c7
    :END:
    Now, let’s install some packages from git directly.
-
-*** i3-gaps rounded
-    :PROPERTIES:
-    :CUSTOM_ID: h-10e229f7-9a45-4401-a9c0-3f974482bb9f
-    :END:
-    I know we already installed =i3-gaps=  from the AUR, why reinstall it? Well,
-    that is  certainly bad practices,  but this allowed  me to already  have the
-    needed dependencies for building =i3=  installed. Now, let’s clone it, build
-    it, and  install it. Doing  this is probably  very bad practices  though, be
-    warned.
-    #+BEGIN_SRC fish
-      printf "\n# Install i3-gaps-rounded #####################################################\n\n"
-      cd ~/fromGIT
-      git clone https://github.com/resloved/i3.git i3-gaps-rounded
-      cd i3-gaps-rounded
-      rm -rf build
-      autoreconf --force --install
-      mkdir build && cd build
-      ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
-      make -j
-      sudo make install
-    #+END_SRC
 
 *** Polybar Battery
     :PROPERTIES:
@@ -669,6 +616,7 @@
    Some  packages will  be needed  from  pip in  order  to get  our Emacs  setup
    correctly working. Let’s install them locally for our user:
    #+BEGIN_SRC fish
+     printf "\n# Installing Python packages ##################################################\n\n"
      pip install --user pyls-isort pyls-mypy
    #+END_SRC
 
@@ -679,6 +627,7 @@
    For go development from Emacs, the  Spacemacs go and lsp layers requires some
    packages to be installed.
    #+BEGIN_SRC fish
+     printf "\n# Installing Go packages ######################################################\n\n"
      go get -v golang.org/x/tools/gopls@latest
      go get -u -v golang.org/x/tools/cmd/godoc
      go get -u -v golang.org/x/tools/cmd/goimports
@@ -704,6 +653,7 @@
    Chicken needs to be  set up before being used. First, we  need to install its
    documentation.
    #+BEGIN_SRC fish
+     printf "\n# Setting up Chicken ##########################################################\n\n"
      chicken-install -s apropos chicken-doc
    #+END_SRC
 
@@ -722,5 +672,69 @@
      printf "\n# Clean the pacman and yay cache ##############################################\n\n"
      yay -Sc --noconfirm
    #+END_SRC
-   You  should now  run a  system pretty  close to  the one  I have  on my  main
-   computer and my thinkpad.
+
+** Export configuration file from org files
+   As I strive to write most of my configuration file as literary programming
+   files through org-mode, they are not versioned nor downloaded by git when
+   cloning my dotfiles. This is why 
+
+** Set up our fish shell
+   :PROPERTIES:
+   :CUSTOM_ID: h-f6f4df67-b0de-40bf-95fb-888d42169088
+   :END:
+   The last thing we want to do is to set up our fish shell with some extensions
+   in order to improve the user experience.
+
+*** Install =fisher=
+    :PROPERTIES:
+    :CUSTOM_ID: h-d6490ddc-c909-4713-b36a-19c25a79c7ac
+    :END:
+    We will be using =fisher= as  our extensions manager for Fish. Let’s install
+    it.
+    #+BEGIN_SRC fish
+      printf "\n# Installing fisher ###########################################################\n\n"
+      curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+    #+END_SRC
+
+*** Install our extensions
+    :PROPERTIES:
+    :CUSTOM_ID: h-3d540273-bdfb-4c63-a05f-2374a010dc29
+    :END:
+    I generally use the following extensions in my Fish shell.
+    #+NAME: fish-extensions
+    #+CAPTION: Fish extensions managed by Fisher
+    | Package name                | Description                                                      |
+    |-----------------------------+------------------------------------------------------------------|
+    | oh-my-fish/theme-bobthefish | Robust, git-aware, powerline prompt                              |
+    | jorgebucaran/fish-bax       | Run bash scripts, replaying environment changes in fish          |
+    | franciscolourenco/done      | Automatically receive notifications when a long process finishes |
+    | jethrokuan/fzf              | Improved key bindings for [[https://github.com/junegunn/fzf][junegunn/fzf]]                           |
+    | jethrokuan/z                | Pure-fish [[https://github.com/rupa/z][rupa/z]]-like directory jumping                          |
+    | jorgebucaran/fish-getopts   | CLI options parser; alternative to the [[https://fishshell.com/docs/current/commands.html#argparse][argparse]] fish builtin     |
+    | laughedelic/pisces          | Autoclose parentheses, braces, quotes and other paired symbols   |
+    | tuvistavie/fish-ssh-agent   | Utility functions to start your ssh agent                        |
+    | acomagu/fish-async-prompt   | Make your prompt asynchronous to increase it reactivity          |
+
+    #+NAME: fish-ext-py
+    #+BEGIN_SRC python :exports none :tangle no :var extensions=fish-extensions :cache yes
+      results = ''
+      for extension in extensions:
+          results += "fisher add {0}\n".format(extension[0])
+      return results
+    #+END_SRC
+
+    #+RESULTS[e82c7269c09b1d43a1a335a13c422b22b59079b1]: fish-ext-py
+    : fisher add oh-my-fish/theme-bobthefish
+    : fisher add jorgebucaran/fish-bax
+    : fisher add franciscolourenco/done
+    : fisher add jethrokuan/fzf
+    : fisher add jethrokuan/z
+    : fisher add jorgebucaran/fish-getopts
+    : fisher add laughedelic/pisces
+    : fisher add tuvistavie/fish-ssh-agent
+    : fisher add acomagu/fish-async-prompt
+
+    #+BEGIN_SRC fish :noweb yes
+      printf "\n# Installing Fisher Extensions ################################################\n\n"
+      <<fish-ext-py()>>
+    #+END_SRC

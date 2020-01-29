@@ -73,7 +73,7 @@ docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
 emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox \
 flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
 gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-golangci-lint-bin graphviz htop i3-gaps i3lock-blur i3status igdm-bin \
+golangci-lint-bin graphviz htop i3-gaps-rounded i3lock-blur i3status igdm-bin \
 inetutils j4-dmenu-desktop javascript-typescript-langserver js-beautify \
 jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
 meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
@@ -167,27 +167,6 @@ if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
     sudo ln -s $HOME/.nanorc /root/.nanorc
 end
 
-printf "\n# Installing fisher ###########################################################\n\n"
-curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
-
-set FISHEXTENSIONS \
-edc/bass franciscolourenco/done jethrokuan/fzf jethrokuan/z \
-jorgebucaran/fish-getopts laughedelic/pisces matchai/spacefish \
-tuvistavie/fish-ssh-agent
-
-fisher add $FISHEXTENSIONS
-
-printf "\n# Install i3-gaps-rounded #####################################################\n\n"
-cd ~/fromGIT
-git clone https://github.com/resloved/i3.git i3-gaps-rounded
-cd i3-gaps-rounded
-rm -rf build
-autoreconf --force --install
-mkdir build && cd build
-../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
-make -j
-sudo make install
-
 printf "\n# Install polybar-battery #####################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/drdeimos/polybar_another_battery.git
@@ -212,8 +191,10 @@ cargo install rustfmt racer
 rustup component add src
 rustup component add rls
 
+printf "\n# Installing Python packages ##################################################\n\n"
 pip install --user pyls-isort pyls-mypy
 
+printf "\n# Installing Go packages ######################################################\n\n"
 go get -v golang.org/x/tools/gopls@latest
 go get -u -v golang.org/x/tools/cmd/godoc
 go get -u -v golang.org/x/tools/cmd/goimports
@@ -231,6 +212,7 @@ go get -u -v github.com/rogpeppe/godef
 go get -u -v github.com/zmb3/gogetdoc
 go get -u -v golang.org/x/tools/gopls
 
+printf "\n# Setting up Chicken ##########################################################\n\n"
 chicken-install -s apropos chicken-doc
 
 cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
@@ -238,3 +220,17 @@ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 
 printf "\n# Clean the pacman and yay cache ##############################################\n\n"
 yay -Sc --noconfirm
+
+printf "\n# Installing fisher ###########################################################\n\n"
+curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+
+printf "\n# Installing Fisher Extensions ################################################\n\n"
+fisher add oh-my-fish/theme-bobthefish
+fisher add jorgebucaran/fish-bax
+fisher add franciscolourenco/done
+fisher add jethrokuan/fzf
+fisher add jethrokuan/z
+fisher add jorgebucaran/fish-getopts
+fisher add laughedelic/pisces
+fisher add tuvistavie/fish-ssh-agent
+fisher add acomagu/fish-async-prompt
