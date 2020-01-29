@@ -1,12 +1,13 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 #+TITLE: Phundrak’s i3 config
-#+INCLUDE: ~/org/config-website/headers.org
+#+INCLUDE: headers.org
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config
 #+PROPERTY: header-args:python :exports none :tangle no
+#+PROPERTY: header-args:emacs-lisp :exports code :tangle no
 
 * Table of Contents :TOC:noexport:
   :PROPERTIES:
@@ -331,7 +332,7 @@
   different configuration file  from this org file depending on  the name of the
   machine.
   #+NAME: ws10-output-edp1
-  #+BEGIN_SRC emacs-lisp :tangle no :exports code
+  #+BEGIN_SRC emacs-lisp
     (if (string= system-name "Marpa")
         "workspace 10 output eDP-1")
   #+END_SRC
@@ -884,7 +885,7 @@
     Emacs Lisp to determine on the configuration file export which screens names
     to use.
     #+NAME: hostname-screen-management
-    #+BEGIN_SRC emacs-lisp :tangle no :exports code
+    #+BEGIN_SRC emacs-lisp
       (cond ((string= system-name "Marpa") "bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1")
             ((string= system-name "Gampo") "bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1"))
     #+END_SRC
@@ -930,7 +931,7 @@
   authentification  method when  the root  password is  asked. Let’s  launch our
   policy kit manager if that is the case:
   #+NAME: fingerprint-thinkpad
-  #+BEGIN_SRC emacs-lisp :exports code
+  #+BEGIN_SRC emacs-lisp
     (if (string= system-name "Gampo")
         "exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
       "")
