@@ -1,12 +1,12 @@
 #+TITLE: Phundrak’s executable scripts
-#+INCLUDE: ~/org/config-website/headers.org
+#+INCLUDE: headers.org
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :exports code
 
-* Table of Contents                                        :TOC_4_gh:noexport:
+* Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
   :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
   :END:
@@ -39,6 +39,7 @@
   - [[#unmount-cd-drive][Unmount CD drive]]
   - [[#ask-what-type-of-drive-to-unmount][Ask what type of drive to unmount]]
   - [[#launch-the-unmounting-functions][Launch the unmounting functions]]
+- [[#set-screens][set-screens]]
 - [[#starwars][Starwars]]
 - [[#updateflutter][UpdateFlutter]]
 - [[#wacom-setup][Wacom setup]]
@@ -145,8 +146,7 @@
   we ignore the initial shebang. This executable is pointed at by the
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    rofi -dmenu -font 'DejaVu Sans 10' -password -no-fixed-num-lines \
-    -p (printf $argv[1] | sed s/://)
+    rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
   #+END_SRC
 
 * Backup
@@ -805,11 +805,7 @@
   #+BEGIN_SRC fish
     for arg in $argv
         switch $arg
-            case '--type'
-                set -g TYPE "yes"
-            case '-t'
-                set -g TYPE "yes"
-            case 'type'
+            case '--type' '-t' 'type'
                 set -g TYPE "yes"
             case '*'
                 printf 'Unknown argument: %s\n.' $arg
@@ -1108,6 +1104,41 @@
    #+BEGIN_SRC fish
    rm -f $undrivefile
    #+END_SRC
+
+* set-screens
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.local/bin/set-screens
+  :CUSTOM_ID: h-74ec5080-51f4-408f-a65c-6e1f5e8e8163
+  :END:
+  ~set-screens~ is a small script that allows the user to automatically set up
+  an external monitor
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+  #+END_SRC
+
+  First, let’s set some variables so we don’t have to type in hidden places some
+  values that should be easily modifiable.
+  #+BEGIN_SRC fish
+    set internal "eDP1"
+    set external "HDMI1"
+  #+END_SRC
+
+  Now, let’s  set the  ~DETECTEDSCREEN~ variable  with a  simple ~grep~.  If the
+  variable  turns out  to be  empty, this  means the  display was  not detected.
+  However, if  it’s not, then  it will  be an array  with its second  value that
+  holds the  maximum resolution the  display can handle.  It needs to  be passed
+  through ~awk~ in order  to get only the resolution itself  and not the refresh
+  rate, but  once we’ve got that,  we can set  our external monitor as  the main
+  monitor with its maximum resolution. i3 is also restarted in order to properly
+  display the wallpaper and Polybar on the new screen.
+  #+BEGIN_SRC fish
+    set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
+    if test -n "$externaldisplay"
+        set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
+        xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
+        i3-msg restart
+    end
+  #+END_SRC
 
 * Starwars
   :PROPERTIES:
