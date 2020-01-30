@@ -5,9 +5,8 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
-#+PROPERTY: header-args:emacs-lisp :results silent
 
-* Table of Contents                                        :TOC_4_gh:noexport:
+* Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
   :CUSTOM_ID: h-f61204c4-beb8-4008-b02e-55eae4e8f163
   :END:
