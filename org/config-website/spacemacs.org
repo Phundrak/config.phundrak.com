@@ -1,5 +1,6 @@
+# -*- org-confirm-babel-evaluate: nil -*-
 #+title: Phundrak’s Spacemacs Configuration
-#+INCLUDE: ~/org/config-website/headers.org
+#+INCLUDE: headers.org
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
@@ -9,6 +10,7 @@
   :PROPERTIES:
   :CUSTOM_ID: h-f61204c4-beb8-4008-b02e-55eae4e8f163
   :END:
+- [[#introduction][Introduction]]
 - [[#spacemacs-layers-and-packages][Spacemacs layers and packages]]
   - [[#general-configuration][General configuration]]
   - [[#package-management][Package management]]
@@ -91,6 +93,7 @@
     - [[#org-variables][Org variables]]
       - [[#user-information][User information]]
       - [[#visual-settings][Visual settings]]
+      - [[#org-behavior][Org behavior]]
       - [[#miscellaneous-2][Miscellaneous]]
     - [[#org-files-exports][Org files exports]]
     - [[#custom-latex-formats][Custom LaTeX formats]]
@@ -102,6 +105,20 @@
   - [[#rust][Rust]]
   - [[#scheme][Scheme]]
   - [[#shortcuts-1][Shortcuts]]
+- [[#footnotes][Footnotes]]
+
+* Introduction
+  :PROPERTIES:
+  :CUSTOM_ID: h-ff1cbbaa-6ab0-49ab-8945-7e25706ead8e
+  :END:
+  This file  is the main source  file for my Emacs  configuration which contains
+  most of the user code. It is  exported thanks to Emacs’ code tangling from the
+  original Org file  which you can find on my  dotfiles’ repository[fn:1] if you
+  are  reading   the  web   version  of   it.  You  can   also  find   there  my
+  ~.spacemacs~[fn:2] and its  code which isn’t part of the  present file. As you
+  can  see in  my  ~.spacemacs~,  at init-time,  if  Emacs  detects the  tangled
+  configuration  files are  older than  the Org  file, then  Emacs tangles  them
+  again, and then loads them.
 
 * Spacemacs layers and packages
   :PROPERTIES:
@@ -168,27 +185,37 @@
    #+BEGIN_SRC emacs-lisp :tangle no
      '(your-package :location "~/path/to/your-package/")
    #+END_SRC
-   Alos include the dependencies as they will not be resolved automatically:
-   #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-additional-packages '(atomic-chrome
-                                                      dired-du
-                                                      doom-themes
-                                                      edit-indirect
-                                                      elcord
-                                                      eshell-git-prompt
-                                                      flycheck-golangci-lint
-                                                      kaolin-themes
-                                                      magit-gitflow
-                                                      meson-mode
-                                                      modern-cpp-font-lock
-                                                      multiple-cursors
-                                                      org-sidebar
-                                                      outorg
-                                                      pinentry
-                                                      visual-fill-column
-                                                      wttrin
-                                                      xresources-theme
-                                                      yasnippet-snippets))
+
+   With  the  variable  ~dotspacemacs-additional-packages~, it  is  possible  to
+   install  extra  packages  which  are  not already  included  in  any  layers.
+   Dependencies  should  be  explicitly  included  as  they  won’t  be  resolved
+   automatically. Here is a table of all the extra packages I use:
+   #+NAME: extra-packages
+   | name of the package    | why is it installed                                  |
+   |------------------------+------------------------------------------------------|
+   | dired-du               | alternative to ~ncdu~ with Dired                     |
+   | doom-themes            | some cool themes                                     |
+   | edit-indirect          | edit region in separate buffer                       |
+   | elcord                 | rich integration of Emacs in Discord                 |
+   | eshell-git-prompt      | pimp my Eshell                                       |
+   | kaolin-themes          | some cool themes                                     |
+   | magit-gitflow          | integrate gitflow in Magit                           |
+   | meson-mode             | major mode for Meson build files                     |
+   | multiple-cursors       | I don’t like the layer, I prefer this package alone  |
+   | org-sidebar            | display on the side the outline of an Org buffer     |
+   | outorg                 | edit comments as Org-mode buffers                    |
+   | pinentry               | enter a GPG password from Emacs                      |
+   | visual-fill-column     | allow the use of ~fill-column~ in ~visual-line-mode~ |
+   | wttrin                 | weather in Emacs                                     |
+   | yasnippet-snippets     | snippets for YaSnippet                               |
+
+   #+NAME: make-extra-packages
+   #+BEGIN_SRC emacs-lisp :tangle no :var packages=extra-packages[,0] :exports none
+     (mapcar 'make-symbol packages)
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp :noweb yes :exports none
+     (setq-default dotspacemacs-additional-packages (quote <<make-extra-packages()>>))
    #+END_SRC
 
    It is possible to also list packages that cannot be updated:
@@ -559,7 +586,7 @@
     Prettier, Systemd,  Imenu-list, Web-beautify,  Dap, Helpful, and  LSP layers
     enabled.
     #+BEGIN_SRC emacs-lisp
-    docker imenu-list nginx pass prettier systemd web-beautify helpful dap lsp
+      docker imenu-list nginx pass prettier systemd web-beautify helpful dap lsp
     #+END_SRC
 
     We  also have  the RestClient  layer  enabled for  which I  enabled the  Org
@@ -575,7 +602,7 @@
     #+BEGIN_SRC emacs-lisp
       (shell :variables
              shell-default-height 40
-             shell-default-position 'bottom
+             shell-default-position 'right
              shell-default-shell 'eshell)
     #+END_SRC
 
@@ -2116,6 +2143,22 @@
        (setq org-hide-macro-markers t)
      #+END_SRC
 
+**** Org behavior
+     :PROPERTIES:
+     :CUSTOM_ID: h-81bcc367-4b2a-4a10-b42c-7b3cb7fd2d60
+     :END:
+     Here is one behavior that I really want to see modified: the ability to use
+     ~M-RET~ without slicing the text the marker is on.
+     #+BEGIN_SRC emacs-lisp
+       (setq org-M-RET-may-split-line nil)
+     #+END_SRC
+
+     I also have added  a couple of custom structure templates  for Org mode (>=
+     9.3), mainly for source code blocks.
+     #+begin_src emacs-lisp
+       (add-to-list 'org-structure-template-alist '("L" . "src emacs-lisp"))
+     #+end_src
+
 **** Miscellaneous
      :PROPERTIES:
      :CUSTOM_ID: h-42ccf90a-f507-4fab-ae42-3fd815a34ef0
@@ -2328,7 +2371,6 @@
         :language "fr"
         :publishing-function org-html-publish-to-html
         :headline-levels 5
-        :auto-sitemap t
         :auto-preamble t)
      #+END_SRC
 
@@ -2565,3 +2607,12 @@
    like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
    key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
    o a c~.
+
+* Footnotes
+  :PROPERTIES:
+  :CUSTOM_ID: h-a471c99d-e731-4196-9e69-beb0359962bd
+  :END:
+
+[fn:2] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs]]
+
+[fn:1] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config-website/spacemacs.org][labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config-website/spacemacs.org]]
