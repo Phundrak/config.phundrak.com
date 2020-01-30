@@ -102,6 +102,26 @@ printf "\n# Installing needed packages #########################################
 sudo pacman -Syu
 yay -S --needed $PACKAGES
 
+printf "\n# Tangling org files ##########################################################\n\n"
+printf "\n\n==== Tangling bin.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
+printf "\n\n==== Tangling fish.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
+printf "\n\n==== Tangling i3.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
+printf "\n\n==== Tangling index.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
+printf "\n\n==== Tangling nano.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
+printf "\n\n==== Tangling polybar.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
+printf "\n\n==== Tangling spacemacs.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
+printf "\n\n==== Tangling tmux.org\n\n"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+
+find ~/.local/bin -type f -exec chmod +x {} +
+
 printf "\n# Installing Spacemacs ########################################################\n\n"
 rm -rf ~/.emacs.d
 
@@ -234,3 +254,11 @@ fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
 fisher add tuvistavie/fish-ssh-agent
 fisher add acomagu/fish-async-prompt
+
+files=["bin.org", "fish.org", "i3.org", "index.org", "nano.org", "polybar.org", "spacemacs.org", "tmux.org"]
+result = ''
+commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
+commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
+for file in files:
+    result += commandPrintf.format(file) + commandEmacs.format(file)
+return result

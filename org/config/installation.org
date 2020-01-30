@@ -1,3 +1,4 @@
+# -*- org-confirm-babel-evaluate: nil -*-
 #+TITLE: Install a Phundrak-flavored Arch Linux
 #+INCLUDE: headers.org
 #+OPTIONS: auto-id:t
@@ -24,6 +25,7 @@
   - [[#set-users-shell-to-fish][Set user’s shell to fish]]
   - [[#install-yay-if-it-isnt-already-installed][Install =yay= if it isn’t already installed]]
   - [[#install-basic-packages-1][Install basic packages]]
+  - [[#tangle-configuration-files-from-org-files][Tangle configuration files from Org files]]
   - [[#setting-up-emacs-installing-spacemacs][Setting up Emacs: Installing Spacemacs]]
   - [[#set-up-dotfiles][Set up dotfiles]]
     - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
@@ -40,7 +42,6 @@
     - [[#nordvpn][NordVPN]]
   - [[#symlink-some-system-config-files][Symlink some system config files]]
   - [[#install-packages-from-git][Install packages from git]]
-    - [[#i3-gaps-rounded][i3-gaps rounded]]
     - [[#polybar-battery][Polybar Battery]]
     - [[#revealjs][Reveal.JS]]
   - [[#install-rust][Install Rust]]
@@ -50,6 +51,7 @@
   - [[#install-go-packages][Install go packages]]
   - [[#set-up-chicken-scheme-interpretercompiler][Set up Chicken (Scheme interpreter/compiler)]]
   - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
+  - [[#export-configuration-file-from-org-files][Export configuration file from org files]]
   - [[#set-up-our-fish-shell][Set up our fish shell]]
     - [[#install-fisher][Install =fisher=]]
     - [[#install-our-extensions][Install our extensions]]
@@ -321,6 +323,65 @@
      printf "\n# Installing needed packages ##################################################\n\n"
      sudo pacman -Syu
      yay -S --needed $PACKAGES
+   #+END_SRC
+
+** Tangle configuration files from Org files
+   :PROPERTIES:
+   :CUSTOM_ID: h-2e4fe0f5-a507-44c5-b69f-1935868b909d
+   :END:
+   The next step is  to tangle all the Org files. Here is the list of files that
+   are to be tangled:
+   #+NAME: tangled-files
+   | filename      |
+   |---------------|
+   | bin.org       |
+   | fish.org      |
+   | i3.org        |
+   | index.org     |
+   | nano.org      |
+   | polybar.org   |
+   | spacemacs.org |
+   | tmux.org      |
+
+   #+NAME: generate-tangle
+   #+BEGIN_SRC python :exports none :var files=tangled-files[,0] :cache yes
+     result = ''
+     commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
+     commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
+     for file in files:
+         result += commandPrintf.format(file) + commandEmacs.format(file)
+     return result
+   #+END_SRC
+
+   #+RESULTS[9de2e89515335bfbcc2c0974c81bf8b7d3b4c182]: generate-tangle
+   #+begin_example
+   printf "\n\n==== Tangling bin.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"bin.org\")"
+   printf "\n\n==== Tangling fish.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"fish.org\")"
+   printf "\n\n==== Tangling i3.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"i3.org\")"
+   printf "\n\n==== Tangling index.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"index.org\")"
+   printf "\n\n==== Tangling nano.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"nano.org\")"
+   printf "\n\n==== Tangling polybar.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"polybar.org\")"
+   printf "\n\n==== Tangling spacemacs.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"spacemacs.org\")"
+   printf "\n\n==== Tangling tmux.org\n\n"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"tmux.org\")"
+   #+end_example
+
+   #+BEGIN_SRC fish :noweb yes
+     printf "\n# Tangling org files ##########################################################\n\n"
+     <<generate-tangle()>>
+   #+END_SRC
+
+   Let’s also make  sure the exported files that are  supposed to be executables
+   are indeed executables.
+   #+BEGIN_SRC fish
+     find ~/.local/bin -type f -exec chmod +x {} +
    #+END_SRC
 
 ** Setting up Emacs: Installing Spacemacs
@@ -674,9 +735,12 @@
    #+END_SRC
 
 ** Export configuration file from org files
+   :PROPERTIES:
+   :CUSTOM_ID: h-a4fb171a-3121-46f2-8c3c-2e65500ebdbe
+   :END:
    As I strive to write most of my configuration file as literary programming
    files through org-mode, they are not versioned nor downloaded by git when
-   cloning my dotfiles. This is why 
+   cloning my dotfiles. This is why
 
 ** Set up our fish shell
    :PROPERTIES:
