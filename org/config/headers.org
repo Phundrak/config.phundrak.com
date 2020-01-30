@@ -1,26 +1,12 @@
 #+AUTHOR: Lucien Cartier-Tilet
 #+EMAIL: lucien@phundrak.com
 #+CREATOR: Lucien Cartier-Tilet
-#+LANGUAGE: fr
+#+LANGUAGE: en
 
 # ### ORG OPTIONS ##############################################################
 
-#+OPTIONS: H:4 broken_links:mark email:t ^:{} tex:dvisvgm
+#+OPTIONS: H:4 broken_links:mark email:t ^:{}
 #+KEYWORDS: dotfiles linux emacs configuration phundrak drakpa
-
-# ### LaTeX ####################################################################
-
-#+LATEX_CLASS: conlang
-#+LaTeX_CLASS_OPTIONS: [a4paper,twoside]
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
-#+LATEX_HEADER_EXTRA: \usepackage[total={17cm,24cm}]{geometry}
-#+LATEX_HEADER_EXTRA: \setmainfont{Charis SIL}
-#+LATEX_HEADER_EXTRA: \usepackage{newunicodechar}
-#+LATEX_HEADER_EXTRA: \newunicodechar{’}{'}
-#+LATEX_HEADER_EXTRA: \usepackage{xcolor}
-#+LATEX_HEADER_EXTRA: \usepackage{hyperref}
-#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks=true,linkbordercolor=red,linkcolor=blue,pdfborderstyle={/S/U/W 1}}
-#+LATEX_HEADER_EXTRA: \usepackage{indentfirst}
 
 # ### HTML #####################################################################
 
@@ -41,9 +27,3 @@
 
 # ### MACROS ###################################################################
 #+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@
-#+MACRO: newpage @@latex:\newpage@@
-#+MACRO: latex-html @@latex:$1@@@@html:$2@@
-#+MACRO: phon @@latex:/$1/@@@@html:/$1/@@@@ascii:/$1/@@
-#+MACRO: v @@latex:\rotatebox[origin=c]{270}{$1}@@@@html:<span class=vertical>$1</span>@@
-#+MACRO: begin-largetable @@html:<div class="largetable">@@
-#+MACRO: end-largetable @@html:</div>@@

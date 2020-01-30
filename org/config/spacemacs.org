@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
+#+PROPERTY: header-args:emacs-lisp :results silent
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -2375,7 +2376,7 @@
      #+NAME: org-proj-config-html
      #+BEGIN_SRC emacs-lisp :tangle no
        ("config-website-org"
-        :base-directory "~/org/config-website/"
+        :base-directory "~/org/config/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
@@ -2391,8 +2392,8 @@
      #+NAME: org-proj-config-static
      #+BEGIN_SRC emacs-lisp :tangle no
        ("config-website-static"
-        :base-directory "~/org/config-website/"
-        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|html"
+        :base-directory "~/org/config/"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
         :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
         :recursive t
         :language "fr"
@@ -2550,6 +2551,7 @@
      (spacemacs/declare-prefix "ofe" "spacemacs.org")
      (spacemacs/declare-prefix "off" "fish.org")
      (spacemacs/declare-prefix "ofi" "i3.org")
+     (spacemacs/declare-prefix "ofI" "index.org")
      (spacemacs/declare-prefix "ofp" "polybar.org")
      (spacemacs/declare-prefix "ofr" "yadm README")
      (spacemacs/declare-prefix "oi" "insert")
@@ -2568,8 +2570,6 @@
      (spacemacs/declare-prefix "ox" "text")
    #+END_SRC
 
-   #+RESULTS:
-
    Now, onto the shortcuts:
    #+BEGIN_SRC emacs-lisp
      (spacemacs/set-leader-keys
@@ -2584,12 +2584,13 @@
        "oco"  'outline-minor-mode
        "od"   'elcord-mode
        "oF"   'flycheck-mode
-       "ofb"  (lambda () (interactive) (find-file "~/org/config-website/bin.org"))
-       "ofe"  (lambda () (interactive) (find-file "~/org/config-website/spacemacs.org"))
-       "off"  (lambda () (interactive) (find-file "~/org/config-website/fish.org"))
-       "ofi"  (lambda () (interactive) (find-file "~/org/config-website/i3.org"))
-       "ofp"  (lambda () (interactive) (find-file "~/org/config-website/polybar.org"))
-       "ofr"  (lambda () (interactive) (find-file "~/org/config-website/index.org"))
+       "ofb"  (lambda () (interactive) (find-file "~/org/config/bin.org"))
+       "ofe"  (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
+       "off"  (lambda () (interactive) (find-file "~/org/config/fish.org"))
+       "ofi"  (lambda () (interactive) (find-file "~/org/config/i3.org"))
+       "ofI"  (lambda () (interactive) (find-file "~/org/config/index.org"))
+       "ofp"  (lambda () (interactive) (find-file "~/org/config/polybar.org"))
+       "ofr"  (lambda () (interactive) (find-file "~/README.org"))
        "ofo"  'find-file-at-point
        "oii"  (lambda () (interactive) (insert "​"))
        "ome"  'mc/edit-lines
@@ -2612,8 +2613,6 @@
        "oxf"  'phundrak/fill-paragraph)
    #+END_SRC
 
-   #+RESULTS:
-
    You can notice they  all begin with ~o~. This is actually  a userspace, and I
    know these shortcuts won’t conflict with any other packages. These shortcuts,
    like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
@@ -2627,4 +2626,4 @@
 
 [fn:2] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs]]
 
-[fn:1] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config-website/spacemacs.org][labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config-website/spacemacs.org]]
+[fn:1] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config/spacemacs.org][labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/config/spacemacs.org]]
