@@ -193,7 +193,17 @@
 
    Use tab characters for indentation, spaces for alignment.
    #+BEGIN_SRC toml
-   hard_tabs = true
+   hard_tabs = false
+   #+END_SRC
+
+   Number of spaces per tab.
+   #+BEGIN_SRC toml
+   tab_spaces = 4
+   #+END_SRC
+
+   I want newlines to always be Unix style.
+   #+BEGIN_SRC toml
+   newline_style = "Unix"
    #+END_SRC
 
    Maximum width of each line
@@ -204,11 +214,6 @@
    Merge multiple imports into a single nested import.
    #+BEGIN_SRC toml
    merge_imports = true
-   #+END_SRC
-
-   My newline style will always be Unix.
-   #+BEGIN_SRC toml
-   newline_style = Unix
    #+END_SRC
 
    Convert =/* */= comments to =//= comments where possible.
@@ -241,11 +246,6 @@
    other.
    #+BEGIN_SRC toml
    struct_field_align_threshold = 20
-   #+END_SRC
-
-   Number of spaces per tab.
-   #+BEGIN_SRC toml
-   tab_spaces = 2
    #+END_SRC
 
    Break comments to fit on the line.
