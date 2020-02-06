@@ -21,7 +21,7 @@
 - [[#dart-language-server][Dart Language Server]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
-- [[#lsl][lsl]]
+- [[#lsl][Lsl]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
@@ -47,6 +47,7 @@
   - [[#select-our-screen][Select our screen]]
   - [[#adjust-the-tablet][Adjust the tablet]]
   - [[#lauch-the-functions][Lauch the functions]]
+- [[#weather][Weather]]
 
 * Presentation
   :PROPERTIES:
@@ -339,7 +340,7 @@
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
 
-* lsl
+* Lsl
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/lsl
   :CUSTOM_ID: h-6bcdad54-20ce-40cc-8a4b-8d9c20fc5c95
@@ -1333,3 +1334,22 @@
      set_screen
      adjust_device
    #+END_SRC
+
+* Weather
+  :PROPERTIES:
+  :CUSTOM_ID: h-5de0e820-d9d7-4c36-941c-e716acbb49cd
+  :HEADER-ARGS: :tangle ~/.local/bin/we
+  :END:
+  A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get
+  a weather forecast in the terminal. By default, I want the request to be about
+  the city I  live in, but it is  also possible for the script to  accept as its
+  arguments a search inquiry.
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    if count $argv > /dev/null
+        set -l SEARCH (string join '+' $argv)
+        curl http://v2.wttr.in/~$SEARCH
+    else
+        curl http://v2.wttr.in/Aubervilliers
+    end
+  #+END_SRC
