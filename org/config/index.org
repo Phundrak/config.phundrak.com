@@ -20,6 +20,10 @@
   - [[#i3-configuration][i3 configuration]]
   - [[#nano][Nano]]
   - [[#rustfmt][Rustfmt]]
+    - [[#structs-and-enums][Structs and Enums]]
+    - [[#comments][Comments]]
+    - [[#documentation][Documentation]]
+    - [[#whitespace][Whitespace]]
   - [[#tmux-configuration][Tmux configuration]]
   - [[#xresources][Xresources]]
 - [[#dependencies][Dependencies]]
@@ -163,95 +167,112 @@
 
    First, we are using the 2018 edition of Rust.
    #+BEGIN_SRC toml
-   edition = "2018"
-   #+END_SRC
-
-   The maximum length of enum  variant having discriminant, that gets vertically
-   aligned with others. Variants without  discriminants would be ignored for the
-   purpose of alignment.
-
-   Note  that this  is not  how  much whitespace  is inserted,  but instead  the
-   longest variant name that doesn't get ignored when aligning.
-   #+BEGIN_SRC toml
-   enum_discrim_align_threshold = 20
+     edition = "2018"
    #+END_SRC
 
    Put single-expression functions on a single line.
    #+BEGIN_SRC toml
-   fn_single_line = true
-   #+END_SRC
-
-   Format code snippet included in doc comments.
-   #+BEGIN_SRC toml
-   format_code_in_doc_comments = true
+     fn_single_line = true
    #+END_SRC
 
    Format string literals where necessary.
    #+BEGIN_SRC toml
-   format_strings = true
-   #+END_SRC
-
-   Use tab characters for indentation, spaces for alignment.
-   #+BEGIN_SRC toml
-   hard_tabs = false
-   #+END_SRC
-
-   Number of spaces per tab.
-   #+BEGIN_SRC toml
-   tab_spaces = 4
-   #+END_SRC
-
-   I want newlines to always be Unix style.
-   #+BEGIN_SRC toml
-   newline_style = "Unix"
+     format_strings = true
    #+END_SRC
 
    Maximum width of each line
    #+BEGIN_SRC toml
-   max_width = 80
+     max_width = 80
    #+END_SRC
 
    Merge multiple imports into a single nested import.
    #+BEGIN_SRC toml
-   merge_imports = true
+     merge_imports = true
    #+END_SRC
 
-   Convert =/* */= comments to =//= comments where possible.
+*** Structs and Enums
+    :PROPERTIES:
+    :CUSTOM_ID: h-a6ec06c9-be62-464e-8b52-59019bbe5f7f
+    :END:
+    The maximum length of enum variant having discriminant, that gets vertically
+    aligned with others. Variants without discriminants would be ignored for the
+    purpose of alignment.
+
+    Note  that this  is not  how much  whitespace is  inserted, but  instead the
+    longest variant name that doesn't get ignored when aligning.
+    #+BEGIN_SRC toml
+      enum_discrim_align_threshold = 20
+    #+END_SRC
+
+    The maximum  diff of  width between  struct fields to  be aligned  with each
+    other.
+    #+BEGIN_SRC toml
+      struct_field_align_threshold = 20
+    #+END_SRC
+
+    Reorder  impl items.  ~type~  and ~const~  are put  first,  then macros  and
+    methods.
+    #+BEGIN_SRC toml
+      reorder_impl_items = true
+    #+END_SRC
+
+*** Comments
+    :PROPERTIES:
+    :CUSTOM_ID: h-d3f4dcf6-c910-4716-a531-a628a53c2858
+    :END:
+    Convert ~/* */~ comments to ~//~ comments where possible.
+    #+BEGIN_SRC toml
+      normalize_comments = true
+    #+END_SRC
+
+    Break comments to fit on the line.
+    #+BEGIN_SRC toml
+      wrap_comments = true
+    #+END_SRC
+
+    Report ~FIXME~ items in comments.
+    #+BEGIN_SRC toml
+      report_fixme = "Always"
+    #+END_SRC
+
+    Report ~TODO~ items in comments.
+    #+BEGIN_SRC toml
+      todo = "Always"
+    #+END_SRC
+
+*** Documentation
+    :PROPERTIES:
+    :CUSTOM_ID: h-24aa1f8c-02f5-4add-b1af-d406eecfef25
+    :END:
+    Format code snippet included in doc comments.
+    #+BEGIN_SRC toml
+      format_code_in_doc_comments = true
+    #+END_SRC
+
+   Convert ~#![doc]~ and ~#[doc]~ attributes to ~//!~ and ~///~ doc comments.
    #+BEGIN_SRC toml
-   normalize_comments = true
+     normalize_doc_attributes = true
    #+END_SRC
 
-   Convert =#![doc]= and =#[doc]= attributes to =//!= and =///= doc comments.
-   #+BEGIN_SRC toml
-   normalize_doc_attributes = true
-   #+END_SRC
+*** Whitespace
+    :PROPERTIES:
+    :CUSTOM_ID: h-ad416728-7920-49fa-abdc-92cd5ceebc5a
+    :END:
 
-   Reorder  impl items.  =type=  and  =const= are  put  first,  then macros  and
-   methods.
-   #+BEGIN_SRC toml
-   reorder_impl_items = true
-   #+END_SRC
+    Use tab characters for indentation, spaces for alignment.
+    #+BEGIN_SRC toml
+      hard_tabs = false
+    #+END_SRC
 
-   Report =FIXME= items in comments.
-   #+BEGIN_SRC toml
-   report_fixme = "Always"
-   #+END_SRC
+    Number of spaces per tab.
+    #+BEGIN_SRC toml
+      tab_spaces = 4
+    #+END_SRC
 
-   Report =TODO= items in comments.
-   #+BEGIN_SRC toml
-   todo = "Always"
-   #+END_SRC
-
-   The  maximum diff  of width  between struct  fields to  be aligned  with each
-   other.
-   #+BEGIN_SRC toml
-   struct_field_align_threshold = 20
-   #+END_SRC
-
-   Break comments to fit on the line.
-   #+BEGIN_SRC toml
-   wrap_comments = true
-   #+END_SRC
+    I want newlines to always be Unix style.
+    #+BEGIN_SRC toml
+      newline_style = "Unix"
+    #+END_SRC
 
 ** Tmux configuration
    :PROPERTIES:
