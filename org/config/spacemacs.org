@@ -2161,14 +2161,15 @@
 
      Since Org 9.3,  Org no longer attempts to restore  the window configuration
      in the frame  to which the user  returns after editing a  source block with
-     =org-edit-src-code=.   This    means   with    the   original    value   of
+     ~org-edit-src-code~.   This    means   with    the   original    value   of
      ~org-src-window-setup~  (~reorganize-frame~),  the  current frame  will  be
      split in  two between the  original org window  and the source  window, and
-     then only the org  window will remain once we quit  the source window. This
-     is  not a  desired behavior  for me,  so I  chose to  set this  variable to
-     ~other-window~ in order to keep my windows organization.
+     once we quit  the source window only  the org window will remain  . This is
+     not  a  desired behavior  for  me,  so I  chose  to  set this  variable  to
+     ~split-window-right~ in  order to keep  my windows organization and  have a
+     similar behavior to the old one.
      #+BEGIN_SRC emacs-lisp
-       (setq org-src-window-setup 'other-window)
+       (setq org-src-window-setup 'split-window-right)
      #+END_SRC
 
 **** Miscellaneous
