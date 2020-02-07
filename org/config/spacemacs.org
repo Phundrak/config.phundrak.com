@@ -65,7 +65,12 @@
   - [[#eshell][Eshell]]
     - [[#environment-variables][Environment variables]]
     - [[#custom-functions-1][Custom functions]]
+      - [[#redirect-text-editors-to-emacs][Redirect text editors to Emacs]]
     - [[#aliases][Aliases]]
+      - [[#system-monitoring][System monitoring]]
+      - [[#system-management-packages-and-services][System management (packages and services)]]
+      - [[#other][Other]]
+      - [[#typos][Typos]]
     - [[#visual-commands][Visual commands]]
     - [[#eshell-theme][Eshell theme]]
   - [[#file-extensions][File extensions]]
@@ -1498,6 +1503,12 @@
                                  (getenv "PKG_CONFIG_PATH")))
     #+END_SRC
 
+    The ~EDITOR~ variable also needs to  be set for git commands, especially the
+    ~yadm~ commands.
+    #+BEGIN_SRC emacs-lisp
+      (setenv "EDITOR" "emacsclient -c")
+    #+END_SRC
+
 *** Custom functions
     :PROPERTIES:
     :CUSTOM_ID: h-8c921fc7-6b55-4829-92cd-133131f1e5f8
@@ -1522,10 +1533,40 @@
         (eshell 'N))
     #+END_SRC
 
+**** Redirect text editors to Emacs
+     :PROPERTIES:
+     :CUSTOM_ID: h-a003cd6c-8e80-43a0-ac64-d21774c334b1
+     :END:
+     I still have  some muscle memory telling  me to open nano, ed,  or vim, and
+     sometimes I even try to type ~emacs~  in the terminal, which is stupid with
+     Eshell since I’m already inside Emacs.  So, for each of these text editors,
+     let’s make the command open the files in Emacs.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/emacs (&rest files)
+         "Open a file in a new buffer. Old habits die hard"
+         (if (null files)
+             (bury-buffer)
+           (mapc #'find-file
+                 (mapcar #'expand-file-name
+                         (eshell-flatten-list (reverse files))))))
+       (defalias 'eshell/vi 'eshell/emacs)
+       (defalias 'eshell/vim 'eshell/emacs)
+       (defalias 'eshell/ed 'eshell/emacs)
+       (defalias 'eshell/nano 'eshell/emacs)
+     #+END_SRC
+
 *** Aliases
     :PROPERTIES:
     :CUSTOM_ID: h-7e11a04b-4387-4a62-af00-5d402814acac
     :END:
+    This  function  is a  function  that  will come  in  very  handy for  Eshell
+    functions  that call  shell processes.  It concatenates  the initial  string
+    ~command~ with all the arguments ~args~, each separated with a space.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak/concatenate-shell-command (command &rest args)
+        (string-join (cons command args) " "))
+    #+END_SRC
+
     Just like most shells, it is possible to declare in Eshell aliases. First, I
     would like to be able to use ~open~ to open files in Emacs:
     #+BEGIN_SRC emacs-lisp
@@ -1549,6 +1590,133 @@
     #+BEGIN_SRC emacs-lisp
       (defalias 'list-buffers 'ibuffer)
     #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell/mkdir (directory)
+        (make-directory directory t))
+    #+END_SRC
+
+**** System monitoring
+     :PROPERTIES:
+     :CUSTOM_ID: h-a2873e6b-2b71-499e-a113-341df334e4bd
+     :END:
+     Similar to ~meminfo~, we also have ~gpumeminfo~  so we can get a quick look
+     at the memory-related logs of our X session.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/gpumeminfo (&rest args)
+         (eshell/grep "-i" "--color" "memory" "/var/log/Xorg.0.log"))
+       (defun eshell/diskspace ()
+         (shell-command "sudo df -h | grep -E \"sd|lv|Size\" | sort"))
+     #+END_SRC
+
+     I also declared  ~cpuinfo~ an alias of ~lscpu~ in  order to keep consistent
+     with ~meminfo~.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/meminfo ()
+         (shell-command "free -m -l -t"))
+     #+END_SRC
+
+     ~pscpu~ gives  us information  on what  the CPU is  running right  now, and
+     I also declared  ~cpuinfo~ an alias of ~lscpu~ in  order to keep consistent
+     with ~meminfo~.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/cpuinfo ()
+         (shell-command "lscpu"))
+     #+END_SRC
+
+     ~pscpu10~ limits that to the top 10 threads.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/pscpu ()
+         (shell-command "ps auxf | sort -nr -k 3"))
+       (defun eshell/pscpu10 ()
+         (shell-command "ps auxf | sort -nr -k 3 | head -10"))
+     #+END_SRC
+
+     Similarly, ~psmem~ gives us information on  the memory usage of the current
+     threads, and  ~psmem10~ only  the ten  most important  threads in  terms of
+     memory usage.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/pscpu ()
+         (shell-command "ps auxf | sort -nr -k 4"))
+       (defun eshell/pscpu10 ()
+         (shell-command "ps auxf | sort -nr -k 4 | head -10"))
+     #+END_SRC
+
+**** System management (packages and services)
+     :PROPERTIES:
+     :CUSTOM_ID: h-b46ba273-f212-45bb-8500-f82c168232f0
+     :END:
+     The first command is ~remove~ which removes a package and its dependencies
+     from the system.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/remove (&rest args)
+         (phundrak/concatenate-shell-command "sudo pacman -Rscnd"
+                                             args))
+     #+END_SRC
+
+     But if I just  want to run ~pacman~ as sudo, then I  could always just type
+     ~p~.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/p (&rest args)
+         (phundrak/concatenate-shell-command "sudo pacman" args))
+     #+END_SRC
+
+     Sometimes,  I  just  want  to  purge my  package  manager’s  cache,  be  it
+     ~pacman~'s or ~yay~'s. This is why I simply type ~purge~.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/purge ()
+         (shell-command "yay -Sc"))
+     #+END_SRC
+
+     #+RESULTS:
+     : eshell/purge
+
+**** Other
+     :PROPERTIES:
+     :CUSTOM_ID: h-4c235c5b-e61b-4a0e-8046-7e957e9dac13
+     :END:
+     ~mkcd~ is a function that allows me to create a directory and ~cd~ into it
+     at the same time.
+     #+begin_src emacs-lisp
+       (defun eshell/mkcd (directory)
+         (eshell/mkdir "-p" directory)
+         (cd directory))
+     #+end_src
+
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/lsl (&rest args)
+         (eshell/ls "-aHl" args))
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/ll (&rest args)
+         (eshell/ls "-ahl" args))
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/la (&rest args)
+         (eshell/ls "-A" args))
+     #+END_SRC
+
+**** Typos
+     :PROPERTIES:
+     :CUSTOM_ID: h-4da87dd0-18b3-46ae-8251-8a829288210f
+     :END:
+     ~q~ is a shorthand for ~exit~. ~exti~ and ~exi~ are for typos when I type ~exit~.
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/q (&rest args)
+         (eshell/exit args))
+       (defun eshell/exti (&rest args)
+         (eshell/exit args))
+       (defun eshell/exi (&rest args)
+         (eshell/exit args))
+     #+END_SRC
+
+     ~clean~ is also a typo of ~clear~ I often make. Let’s fix this:
+     #+BEGIN_SRC emacs-lisp
+       (defun eshell/clean (&rest args)
+         (eshell/clear args))
+     #+END_SRC
 
 *** Visual commands
     :PROPERTIES:
