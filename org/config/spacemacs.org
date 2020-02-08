@@ -110,6 +110,7 @@
   - [[#rust][Rust]]
   - [[#scheme][Scheme]]
   - [[#shortcuts-1][Shortcuts]]
+  - [[#yadm][Yadm]]
 - [[#footnotes][Footnotes]]
 
 * Introduction
@@ -2786,6 +2787,31 @@
    like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
    key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
    o a c~.
+
+** Yadm
+   :PROPERTIES:
+   :CUSTOM_ID: h-fb5284ed-9862-4ba5-9d92-78b466ab65f8
+   :END:
+   yadm is  the utility  I use  for managing my  dotfiles, and  it is  a wrapper
+   around ~git~.  Logically, it means  Magit could theoretically manage  my yadm
+   repo. And it is  indeed possible, according to [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][this page]]  using TRAMP. I just
+   need to add the following code snippet:
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'tramp-methods
+                  '("yadm"
+                    (tramp-login-program "yadm")
+                    (tramp-login-args (("enter")))
+                    (tramp-login-env (("SHELL") ("/bin/sh")))
+                    (tramp-remote-shell "/bin/sh")
+                    (tramp-remote-shell-args ("-c"))))
+   #+END_SRC
+
+   In order to manage my dotfiles, I use the following shortcut to launch Magit
+   Status for yadm:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "oy" "yadm status")
+     (spacemacs/set-leader-keys "oy" (lambda () (interactive) (magit-status "/yadm::")))
+   #+END_SRC
 
 * Footnotes
   :PROPERTIES:
