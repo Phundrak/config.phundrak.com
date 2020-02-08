@@ -6,7 +6,7 @@ before layer configuration.
 It should only modify the values of Spacemacs settings."
   (setq phundrak/src-dir (concat (getenv "HOME") "/.emacs.d/private/")
         phundrak/gnus-uc (concat (getenv "HOME") "/.gnus.el")
-        phundrak/src (concat (getenv "HOME") "/org/config-website/spacemacs.org")
+        phundrak/src (concat (getenv "HOME") "/org/config/spacemacs.org")
         phundrak/si (concat phundrak/src-dir "spacemacs-init.el")
         phundrak/sl (concat phundrak/src-dir "spacemacs-layers.el")
         phundrak/uc (concat phundrak/src-dir "user-config.el")
