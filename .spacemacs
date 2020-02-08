@@ -6,7 +6,7 @@ before layer configuration.
 It should only modify the values of Spacemacs settings."
   (setq phundrak/src-dir (concat (getenv "HOME") "/.emacs.d/private/")
         phundrak/gnus-uc (concat (getenv "HOME") "/.gnus.el")
-        phundrak/src (concat (getenv "HOME") "/org/config-website/spacemacs.org")
+        phundrak/src (concat (getenv "HOME") "/org/config/spacemacs.org")
         phundrak/si (concat phundrak/src-dir "spacemacs-init.el")
         phundrak/sl (concat phundrak/src-dir "spacemacs-layers.el")
         phundrak/uc (concat phundrak/src-dir "user-config.el")
@@ -16,12 +16,13 @@ It should only modify the values of Spacemacs settings."
             (file-newer-than-file-p phundrak/src phundrak/ui)
             (file-newer-than-file-p phundrak/src phundrak/uc)
             (file-newer-than-file-p phundrak/src phundrak/gnus-uc))
-    (message "Exporting new Emacs configuration from spacemacs.org through Org-babel")
+    (princ "Exporting new Emacs configuration from spacemacs.org through org-babel...")
     (call-process
      (concat invocation-directory invocation-name)
      nil nil t
      "-q" "--batch" "--eval" "(require 'ob-tangle)"
-     "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak/src)))
+     "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak/src))
+    (princ "done"))
   (load-file phundrak/si))
 
 (defun dotspacemacs/layers ()
