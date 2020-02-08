@@ -1278,6 +1278,7 @@
     (require 'package)
     (require 'ox-latex)
     (require 'ox-publish)
+    (require 'tramp)
   #+END_SRC
 
   I also want to load what’s in ~icons-in-terminal~ so I can use them in various
@@ -2918,6 +2919,13 @@
    :CUSTOM_ID: h-fb5284ed-9862-4ba5-9d92-78b466ab65f8
    :END:
    yadm is  the utility  I use  for managing my  dotfiles, and  it is  a wrapper
+   In order to manage my dotfiles, I use the following shortcut to launch Magit
+   Status for yadm:
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "oy" "yadm status")
+     (spacemacs/set-leader-keys "oy" (lambda () (interactive) (magit-status "/yadm::")))
+   #+END_SRC
+
    around ~git~.  Logically, it means  Magit could theoretically manage  my yadm
    repo. And it is  indeed possible, according to [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][this page]]  using TRAMP. I just
    need to add the following code snippet:
@@ -2926,16 +2934,10 @@
                   '("yadm"
                     (tramp-login-program "yadm")
                     (tramp-login-args (("enter")))
-                    (tramp-login-env (("SHELL") ("/bin/sh")))
+                    (tramp-login-env (("SHELL")
+                                      ("/bin/sh")))
                     (tramp-remote-shell "/bin/sh")
                     (tramp-remote-shell-args ("-c"))))
-   #+END_SRC
-
-   In order to manage my dotfiles, I use the following shortcut to launch Magit
-   Status for yadm:
-   #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "oy" "yadm status")
-     (spacemacs/set-leader-keys "oy" (lambda () (interactive) (magit-status "/yadm::")))
    #+END_SRC
 
 * Footnotes
