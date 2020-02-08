@@ -110,6 +110,13 @@
   - [[#rust][Rust]]
   - [[#scheme][Scheme]]
   - [[#shortcuts-1][Shortcuts]]
+    - [[#applications][Applications]]
+    - [[#comments][Comments]]
+    - [[#files][Files]]
+    - [[#multiple-cursors][Multiple cursors]]
+    - [[#org-mode-1][Org-mode]]
+    - [[#toggle][Toggle]]
+    - [[#text][Text]]
   - [[#yadm][Yadm]]
 - [[#footnotes][Footnotes]]
 
@@ -2680,113 +2687,231 @@
    :PROPERTIES:
    :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
    :END:
-   As you  will see, I  defined A  LOT of custom  shortcuts. First, I  have some
-   shortcuts defined the vanilla Emacs way:
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x C-b") 'ibuffer)
-     (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-     (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-     (global-set-key (kbd "S-C-<down>") 'shrink-window)
-     (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-     (global-set-key (kbd "C-x <up>") 'windmove-up)
-     (global-set-key (kbd "C-x <down>") 'windmove-down)
-     (global-set-key (kbd "C-x <right>") 'windmove-right)
-     (global-set-key (kbd "C-x <left>") 'windmove-left)
-     (global-set-key (kbd "C-<prior>") 'previous-buffer)
-     (global-set-key (kbd "C-<next>") 'next-buffer)
-     (global-set-key (kbd "M-»") 'end-of-buffer)
-     (global-set-key (kbd "M-«") 'beginning-of-buffer)
-     (global-set-key (kbd "<XF86HomePage>") 'spacemacs/home)
-     (global-set-key (kbd "<XF86Open>") 'helm-find-files)
-     (global-set-key (kbd "<XF86Close>") 'kill-this-buffer)
-     (global-set-key (kbd "<XF86Save>") 'save-buffer)
-     (global-set-key (kbd "<C-tab>") 'evil-close-fold)
-     (global-set-key (kbd "<S-C-tab>") 'evil-close-folds)
-     (global-set-key (kbd "<C-iso-lefttab>") 'evil-open-fold)
-   #+END_SRC
-   These shortcuts  can be  called as-is,  that is, typing  ~C-x C-b~  will call
-   ~ibuffer~.
-
-   Now, I also have some Spacemacs shortcuts,  defined in a way they can be used
-   seamlessly with  Evil. First, let’s declare  some prefixes in order  to avoid
-   seeing lots of ~custom~ in helm:
+   As  you will  see, I  defined A  LOT  of custom  shortcuts. All  of them  are
+   Spacemacs shortcuts, defined in a way  they can be used seamlessly with Evil.
+   First of all, these shortcuts all begin  with ~o~, which is a prefix reserved
+   for user-defined  shortcuts so  they won’t conflict  with any  package. Let’s
+   declare it like so.
    #+BEGIN_SRC emacs-lisp
      (spacemacs/declare-prefix "o" "custom")
-     (spacemacs/declare-prefix "oa" "applications")
-     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
-     (spacemacs/declare-prefix "oc" "comments")
-     (spacemacs/declare-prefix "of" "files")
-     (spacemacs/declare-prefix "ofb" "bin.org")
-     (spacemacs/declare-prefix "ofe" "spacemacs.org")
-     (spacemacs/declare-prefix "off" "fish.org")
-     (spacemacs/declare-prefix "ofi" "i3.org")
-     (spacemacs/declare-prefix "ofI" "index.org")
-     (spacemacs/declare-prefix "ofp" "polybar.org")
-     (spacemacs/declare-prefix "ofr" "yadm README")
-     (spacemacs/declare-prefix "oi" "insert")
-     (spacemacs/declare-prefix "oii" "invisible space")
-     (spacemacs/declare-prefix "om" "multiple-cursors")
-     (spacemacs/declare-prefix "oo" "org-mode")
-     (spacemacs/declare-prefix "ooi" "custom IDs")
-     (spacemacs/declare-prefix "oos" "structure")
-     (spacemacs/declare-prefix "oot" "tables")
-     (spacemacs/declare-prefix "oott" "toggle width")
-     (spacemacs/declare-prefix "oote" "expand")
-     (spacemacs/declare-prefix "oots" "shrink")
-     (spacemacs/declare-prefix "or" "external command")
-     (spacemacs/declare-prefix "ot" "toggle")
-     (spacemacs/declare-prefix "ow" "writeroom")
-     (spacemacs/declare-prefix "ox" "text")
    #+END_SRC
 
-   Now, onto the shortcuts:
+   Now, all  shortcuts that will be  defined can be invoked  in Normal-mode with
+   the  src_emacs-lisp[:exports  results]{(princ  dotspacemacs-leader-key)}  key
+   followed by the sequence assigned to each shortcut.
+
+   Before some more specialized categories, I have two commands which don’t fit
+   into any other category that I sometime use:
    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
+     (spacemacs/declare-prefix "or" "external command")
      (spacemacs/set-leader-keys
-       "oac"  'calc
-       "oaC"  'calendar
-       "oae"  'eww
-       "oaw"  'wttrin
        "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
-       "ob"   'fancy-battery-mode
-       "occ"  'outorg-copy-edits-and-exit
-       "oce"  'outorg-edit-as-org
-       "oco"  'outline-minor-mode
-       "od"   'elcord-mode
-       "oF"   'flycheck-mode
-       "ofb"  (lambda () (interactive) (find-file "~/org/config/bin.org"))
-       "ofe"  (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
-       "off"  (lambda () (interactive) (find-file "~/org/config/fish.org"))
-       "ofi"  (lambda () (interactive) (find-file "~/org/config/i3.org"))
-       "ofI"  (lambda () (interactive) (find-file "~/org/config/index.org"))
-       "ofp"  (lambda () (interactive) (find-file "~/org/config/polybar.org"))
-       "ofr"  (lambda () (interactive) (find-file "~/README.org"))
-       "ofo"  'find-file-at-point
-       "oii"  (lambda () (interactive) (insert "​"))
-       "ome"  'mc/edit-lines
-       "omn"  'mc/mark-next-like-this
-       "omp"  'mc/mark-previous-like-this
-       "oma"  'mc/mark-all-like-this
-       "ooi"  'eos/org-add-ids-to-headlines-in-file
-       "oos"  'org-insert-structure-template
-       "ooT"  'org-sidebar-tree
-       "oott" 'org-table-toggle-column-width
-       "oote" 'org-table-expand
-       "oots" 'org-table-shrink
-       "oow"  'org-pomodoro
-       "owi"  'writeroom-increase-width
-       "or"   'helm-run-external-command
-       "os"   'prettify-symbols-mode
-       "oti"  'toggle-input-method
-       "otI"  'set-input-method
-       "owd"  'writeroom-decrease-width
-       "oxf"  'phundrak/fill-paragraph)
+       "or"   'helm-run-external-command)
    #+END_SRC
 
-   You can notice they  all begin with ~o~. This is actually  a userspace, and I
-   know these shortcuts won’t conflict with any other packages. These shortcuts,
-   like a lot of  Spacemacs shortcuts, can be called with the  use of the leader
-   key, in my case ~SPC~. So, if I want to call the calculator, I will type ~SPC
-   o a c~.
+   ~oB~ byte-compiles every ~.el~ file  located in the =~/.emacs.d/= directory —
+   it can  be useful in  case of  package upgrade and  an old ~.elc~  file still
+   loads instead of an uncompiled but newer ~.el~ file.
+
+   ~or~ on the other hand invokes an external comand the same way [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]] would.
+
+*** Applications
+    :PROPERTIES:
+    :CUSTOM_ID: h-928236e4-66e6-4d15-acd9-2748b90fdc70
+    :END:
+    As this is a new category, let’s declare its prefix:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "oa" "applications")
+    #+END_SRC
+
+    Now, let’s also declare the shortcuts in this category:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "oac" 'calc
+        "oaC" 'calendar
+        "oae" 'eww
+        "oaw" 'wttrin)
+    #+END_SRC
+
+    ~oac~ will invoke Emacs’ calculator, while ~oac~ invokes the calendar, ~oae~
+    invokes the Eww navigator and ~oaw~ invokes the weather forecast.
+
+*** Comments
+    :PROPERTIES:
+    :CUSTOM_ID: h-f91ff790-3511-471a-83ce-4071a6e33420
+    :END:
+    Some  shortcuts are  also related  to comment  editing, in  particular using
+    outorg. Let’s first declare the dedicated prefix:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "oc" "comments")
+    #+END_SRC
+
+    Now, let’s declare the following shortcuts:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "occ" 'outorg-copy-edits-and-exit
+        "oce" 'outorg-edit-as-org
+        "oco" 'outline-minor-mode)
+    #+END_SRC
+
+    ~oco~ enables the  outline minor mode, which then allows  for the edition of
+    comments in  org buffers with ~oce~  and saving them to  the original source
+    file with ~occ~.
+
+*** Files
+    :PROPERTIES:
+    :CUSTOM_ID: h-37877887-e6d0-4e05-a2eb-566f349b76f6
+    :END:
+    This category is mainly used for opening configuration files, but it is also
+    more generally for files-related commands. Let’s declare the category:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "of" "files")
+    #+END_SRC
+
+    If a file is designated in a buffer, it is possible to open it with the
+    following shortcut:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys "ofo" 'find-file-at-point)
+    #+END_SRC
+
+    Now, Let’s declare shortcuts related to my configuration files. Here is the
+    list of them:
+    - [[file:bin.org][bin.org]] :: contains the source code of my custom scripts in my ~$PATH~
+    - [[file:spacemacs.org][spacemacs.org]] :: this file, configuration of Emacs
+    - [[file:fish.org][fish.org]] :: configuration of my fish shell
+    - [[file:i3.org][i3.org]] :: configuration of my i3 installation
+    - [[file:index.org][index.org]] :: some various configuration files and index of this website
+    - [[file:polybar.org][polybar.org]] :: configuration polybar
+    - [[https://labs.phundrak.com/phundrak/dotfiles][README.org]] :: README of the yadm repo
+    Each of these  files are accessible through a simple  shortcut, and each one
+    of them has a  description so the shortcut doesn’t show  up as ~lambda~ with
+    ~which-keys~.
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "ofb" "bin.org")
+      (spacemacs/declare-prefix "ofe" "spacemacs.org")
+      (spacemacs/declare-prefix "off" "fish.org")
+      (spacemacs/declare-prefix "ofi" "i3.org")
+      (spacemacs/declare-prefix "ofI" "index.org")
+      (spacemacs/declare-prefix "ofp" "polybar.org")
+      (spacemacs/declare-prefix "ofr" "yadm README")
+      (spacemacs/set-leader-keys
+        "ofb" (lambda () (interactive) (find-file "~/org/config/bin.org"))
+        "ofe" (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
+        "off" (lambda () (interactive) (find-file "~/org/config/fish.org"))
+        "ofi" (lambda () (interactive) (find-file "~/org/config/i3.org"))
+        "ofI" (lambda () (interactive) (find-file "~/org/config/index.org"))
+        "ofp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
+        "ofr" (lambda () (interactive) (find-file "~/README.org")))
+    #+END_SRC
+
+*** Multiple cursors
+    :PROPERTIES:
+    :CUSTOM_ID: h-de40bea1-4301-4ad3-b3f1-c4c8ed029feb
+    :END:
+    I don’t  really like Spacemacs’  layer for  MultipleCursors, so I  prefer to
+    simply install the  package and create shortcuts for it  myself. Let’s first
+    declare category:
+    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "om" "multiple-cursors")
+    #+END_SRC
+
+    Now, let’s declare the shortcuts related to multiple-cursors:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "ome" 'mc/edit-lines
+        "omn" 'mc/mark-next-like-this
+        "omp" 'mc/mark-previous-like-this
+        "oma" 'mc/mark-all-like-this)
+    #+END_SRC
+
+*** Org-mode
+    :PROPERTIES:
+    :CUSTOM_ID: h-beb15231-9718-4581-95dd-444c57190ee8
+    :END:
+    Now, onto some shortcuts related to org-mode. Let’s first declare the
+    category:
+    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "oo" "org-mode")
+    #+END_SRC
+
+    Now, I have a couple of shortcuts I use regularly:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "oop" 'org-pomodoro
+        "oos" 'org-insert-structure-template
+        "ooT" 'org-sidebar-tree)
+    #+END_SRC
+
+    ~oss~  allows   me  to   insert  an  org   structure  template   defined  in
+    ~org-structure-template-alist~    (see    [[#h-81bcc367-4b2a-4a10-b42c-7b3cb7fd2d60][User    Configuration/Org-mode/Org
+    Variables/Org behavior]]), while ~ooT~ displays the outline of the current org
+    file.
+
+    ~oot~ is the prefix for tree-related operations:
+    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "oot" "tables")
+    #+END_SRC
+
+    These shortcuts  allow to manipulate the  width of the column  the cursor is
+    currently in,  by either shrinking it,  expanding it, or toggling  its state
+    between shrunk or expanded. A prefix for all of these commands has been also
+    added in order to make the purpose of the shortcuts clearer.
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "oott" 'org-table-toggle-column-width
+        "oote" 'org-table-expand
+        "oots" 'org-table-shrink)
+      (spacemacs/declare-prefix "oott" "toggle width")
+      (spacemacs/declare-prefix "oote" "expand")
+      (spacemacs/declare-prefix "oots" "shrink")
+    #+END_SRC
+
+*** Toggle
+    :PROPERTIES:
+    :CUSTOM_ID: h-25a07df0-02b5-4e6e-a8a3-94a00dbbc54f
+    :END:
+    This category allows to toggle some modes and options.
+    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "ot" "toggle")
+    #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "otb" 'fancy-battery-mode
+        "otd" 'elcord-mode
+        "otf" 'flycheck-mode
+        "ots" 'prettify-symbols-mode)
+    #+END_SRC
+
+    We also have some input methods-related shortcuts in a sub-category:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "oti" "input methods")
+    #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "otii"  'toggle-input-method
+        "otis"  'set-input-method)
+    #+END_SRC
+
+*** Text
+    :PROPERTIES:
+    :CUSTOM_ID: h-1852f9ec-e2ca-495b-a72e-c3258add8033
+    :END:
+    The last category is a text-related category. Let’s declare it:
+    #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "ox" "text")
+    #+END_SRC
+
+    The only command for now is a command  that allows the use of ~C-u M-q~ with
+    the simple shortcut ~oxf~:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys
+        "oxf" 'phundrak/fill-paragraph)
+    #+END_SRC
+
+    #+RESULTS:
 
 ** Yadm
    :PROPERTIES:
