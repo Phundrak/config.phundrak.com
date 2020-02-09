@@ -20,10 +20,6 @@
   - [[#i3-configuration][i3 configuration]]
   - [[#nano][Nano]]
   - [[#rustfmt][Rustfmt]]
-    - [[#structs-and-enums][Structs and Enums]]
-    - [[#comments][Comments]]
-    - [[#documentation][Documentation]]
-    - [[#whitespace][Whitespace]]
   - [[#tmux-configuration][Tmux configuration]]
   - [[#xresources][Xresources]]
 - [[#dependencies][Dependencies]]
@@ -160,119 +156,8 @@
 ** Rustfmt
    :PROPERTIES:
    :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
-   :HEADER-ARGS: :tangle ~/.rustfmt.toml
    :END:
-   In my  [[file:.rustfmt.toml][.rustfmt.toml]], you  can find  some custom  rules on  how my  Rust code
-   should be formatted.
-
-   First, we are using the 2018 edition of Rust.
-   #+BEGIN_SRC toml
-     edition = "2018"
-   #+END_SRC
-
-   Put single-expression functions on a single line.
-   #+BEGIN_SRC toml
-     fn_single_line = true
-   #+END_SRC
-
-   Format string literals where necessary.
-   #+BEGIN_SRC toml
-     format_strings = true
-   #+END_SRC
-
-   Maximum width of each line
-   #+BEGIN_SRC toml
-     max_width = 80
-   #+END_SRC
-
-   Merge multiple imports into a single nested import.
-   #+BEGIN_SRC toml
-     merge_imports = true
-   #+END_SRC
-
-*** Structs and Enums
-    :PROPERTIES:
-    :CUSTOM_ID: h-a6ec06c9-be62-464e-8b52-59019bbe5f7f
-    :END:
-    The maximum length of enum variant having discriminant, that gets vertically
-    aligned with others. Variants without discriminants would be ignored for the
-    purpose of alignment.
-
-    Note  that this  is not  how much  whitespace is  inserted, but  instead the
-    longest variant name that doesn't get ignored when aligning.
-    #+BEGIN_SRC toml
-      enum_discrim_align_threshold = 20
-    #+END_SRC
-
-    The maximum  diff of  width between  struct fields to  be aligned  with each
-    other.
-    #+BEGIN_SRC toml
-      struct_field_align_threshold = 20
-    #+END_SRC
-
-    Reorder  impl items.  ~type~  and ~const~  are put  first,  then macros  and
-    methods.
-    #+BEGIN_SRC toml
-      reorder_impl_items = true
-    #+END_SRC
-
-*** Comments
-    :PROPERTIES:
-    :CUSTOM_ID: h-d3f4dcf6-c910-4716-a531-a628a53c2858
-    :END:
-    Convert ~/* */~ comments to ~//~ comments where possible.
-    #+BEGIN_SRC toml
-      normalize_comments = true
-    #+END_SRC
-
-    Break comments to fit on the line.
-    #+BEGIN_SRC toml
-      wrap_comments = true
-    #+END_SRC
-
-    Report ~FIXME~ items in comments.
-    #+BEGIN_SRC toml
-      report_fixme = "Always"
-    #+END_SRC
-
-    Report ~TODO~ items in comments.
-    #+BEGIN_SRC toml
-      todo = "Always"
-    #+END_SRC
-
-*** Documentation
-    :PROPERTIES:
-    :CUSTOM_ID: h-24aa1f8c-02f5-4add-b1af-d406eecfef25
-    :END:
-    Format code snippet included in doc comments.
-    #+BEGIN_SRC toml
-      format_code_in_doc_comments = true
-    #+END_SRC
-
-   Convert ~#![doc]~ and ~#[doc]~ attributes to ~//!~ and ~///~ doc comments.
-   #+BEGIN_SRC toml
-     normalize_doc_attributes = true
-   #+END_SRC
-
-*** Whitespace
-    :PROPERTIES:
-    :CUSTOM_ID: h-ad416728-7920-49fa-abdc-92cd5ceebc5a
-    :END:
-
-    Use tab characters for indentation, spaces for alignment.
-    #+BEGIN_SRC toml
-      hard_tabs = false
-    #+END_SRC
-
-    Number of spaces per tab.
-    #+BEGIN_SRC toml
-      tab_spaces = 4
-    #+END_SRC
-
-    I want newlines to always be Unix style.
-    #+BEGIN_SRC toml
-      newline_style = "Unix"
-    #+END_SRC
+   You can find my Rustfmt configuration [[file:rustfmt.org][here]].
 
 ** Tmux configuration
    :PROPERTIES:
@@ -286,8 +171,8 @@
    :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
    :HEADER-ARGS: :tangle ~/.Xresources :exports code
    :END:
-   My Xresources file is very short. Indeed, it only contains two lines which
-   are dedicated to my =st= terminal to set its font and shell. The font is set
+   My Xresources  file is very short.  Indeed, it only contains  two lines which
+   are dedicated to my =st= terminal to set  its font and shell. The font is set
    as follows.
    #+BEGIN_SRC conf
      st.font: Source Code Pro for Powerline:style=book
