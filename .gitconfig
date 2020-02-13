@@ -52,6 +52,12 @@
 	rmrf = rm -r -f
 	####
 	s = status
+	sm = submodule
+	sms = submodule status
+	sma = submodule add
+	smu = submodule update
+	smui = submodule update --init
+	smuir = submodule update --init --recursive
 	####
 	staged = diff --cached
 	####
