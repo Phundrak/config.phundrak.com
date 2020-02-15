@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: phon
+# key: <ph
+# --
+\{\{\{phon($1)\}\}\}$0
