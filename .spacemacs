@@ -4,31 +4,31 @@
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
-  (setq phundrak/src-dir (concat (getenv "HOME") "/.emacs.d/private/")
-        phundrak/gnus-uc (concat (getenv "HOME") "/.gnus.el")
-        phundrak/src (concat (getenv "HOME") "/org/config/spacemacs.org")
-        phundrak/si (concat phundrak/src-dir "spacemacs-init.el")
-        phundrak/sl (concat phundrak/src-dir "spacemacs-layers.el")
-        phundrak/uc (concat phundrak/src-dir "user-config.el")
-        phundrak/ui (concat phundrak/src-dir "user-init.el"))
-  (when (or (file-newer-than-file-p phundrak/src phundrak/si)
-            (file-newer-than-file-p phundrak/src phundrak/sl)
-            (file-newer-than-file-p phundrak/src phundrak/ui)
-            (file-newer-than-file-p phundrak/src phundrak/uc)
-            (file-newer-than-file-p phundrak/src phundrak/gnus-uc))
+  (setq phundrak//dotspacemacs-src-dir (concat (getenv "HOME") "/.config/emacs/private/")
+        phundrak//dotspacemacs-gc (concat (getenv "HOME") "/.gnus.el")
+        phundrak//dotspacemacs-src (concat (getenv "HOME") "/org/config/spacemacs.org")
+        phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init.el")
+        phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers.el")
+        phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config.el")
+        phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init.el"))
+  (when (or (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-si)
+            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-sl)
+            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-ui)
+            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-uc)
+            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-gc))
     (princ "Exporting new Emacs configuration from spacemacs.org through org-babel...")
     (call-process
      (concat invocation-directory invocation-name)
      nil nil t
      "-q" "--batch" "--eval" "(require 'ob-tangle)"
-     "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak/src))
+     "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak//dotspacemacs-src))
     (princ "done"))
-  (load-file phundrak/si))
+  (load-file phundrak//dotspacemacs-si))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
-  (load-file phundrak/sl))
+  (load-file phundrak//dotspacemacs-sl))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -44,7 +44,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (load-file phundrak/ui))
+  (load-file phundrak//dotspacemacs-ui))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -59,7 +59,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (load-file phundrak/uc))
+  (load-file phundrak//dotspacemacs-uc))
 
 
 ;; Do not write anything past this comment. This is where Emacs will

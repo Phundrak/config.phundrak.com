@@ -135,7 +135,7 @@
 
 * Spacemacs layers and packages
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/spacemacs-layers.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code
   :CUSTOM_ID: h-9d9869e0-4672-419c-bf37-3d3ae1b7c0aa
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
@@ -646,7 +646,7 @@
 * Init
   :PROPERTIES:
   :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/spacemacs-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
   Spacemacs  startup, before  any  kind of  configuration,  including the  layer
@@ -687,7 +687,7 @@
    should be  added when invoking Emacs  27.1 executable from the  command line,
    for instance:
    #+BEGIN_SRC sh :tangle no :exports code
-     ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
+     ./emacs --dump-file=~/.config/emacs/.cache/dumps/spacemacs.pdmp
    #+END_SRC
    The default value of this variable is ="spacemacs.pdmp"=.
    #+BEGIN_SRC emacs-lisp
@@ -1202,7 +1202,7 @@
 
    You can  also set  a custom  emacs server  socket location.  If the  value is
    ~nil~, Emacs  will use whatever the  Emacs default is, otherwise  a directory
-   path     like    ="~/.emacs.d/server"=.     It    has     no    effect     if
+   path    like    ="~/.config/emacs/server"=.    It   has    no    effect    if
    ~dotspacemacs-enable-server~ is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-server-socket-dir nil)
@@ -1263,13 +1263,13 @@
 * User Initialization
   :PROPERTIES:
   :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
   Emacs config file:
   #+BEGIN_SRC emacs-lisp
-  (load "~/.emacs.d/private/private_emacs.el")
+  (load "~/.config/emacs/private/private_emacs.el")
   #+END_SRC
 
   Then, I want a couple of requires:
@@ -1308,7 +1308,7 @@
 * User Configuration
   :PROPERTIES:
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
-  :header-args:emacs-lisp: :comments link :tangle ~/.emacs.d/private/user-config.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code
   :END:
 ** ASM configuration
    :PROPERTIES:
@@ -2688,11 +2688,17 @@
    :PROPERTIES:
    :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
    :END:
-   As  you will  see, I  defined A  LOT  of custom  shortcuts. All  of them  are
+   As  you will  see, I  defined a  LOT of  custom shortcuts.  Most of  them are
    Spacemacs shortcuts, defined in a way  they can be used seamlessly with Evil.
-   First of all, these shortcuts all begin  with ~o~, which is a prefix reserved
-   for user-defined  shortcuts so  they won’t conflict  with any  package. Let’s
-   declare it like so.
+   Only two shortcuts are defined the vanilla way for Emacs:
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-»") 'end-of-buffer)
+     (global-set-key (kbd "M-«") 'beginning-of-buffer)
+   #+END_SRC
+
+   Spacemacs  shortcuts all  begin  with ~o~,  which is  a  prefix reserved  for
+   user-defined shortcuts so they won’t conflict with any package. Let’s declare
+   it like so.
    #+BEGIN_SRC emacs-lisp
      (spacemacs/declare-prefix "o" "custom")
    #+END_SRC
@@ -2704,16 +2710,16 @@
    Before some more specialized categories, I have two commands which don’t fit
    into any other category that I sometime use:
    #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "oB" "byte-compile .emacs.d")
+     (spacemacs/declare-prefix "oB" "byte-compile ~/.config/emacs")
      (spacemacs/declare-prefix "or" "external command")
      (spacemacs/set-leader-keys
-       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.config/emacs") 0))
        "or"   'helm-run-external-command)
    #+END_SRC
 
-   ~oB~ byte-compiles every ~.el~ file  located in the =~/.emacs.d/= directory —
-   it can  be useful in  case of  package upgrade and  an old ~.elc~  file still
-   loads instead of an uncompiled but newer ~.el~ file.
+   ~oB~  byte-compiles  every  ~.el~  file  located  in  the  =~/.config/emacs/=
+   directory —  it can be useful  in case of  package upgrade and an  old ~.elc~
+   file still loads instead of an uncompiled but newer ~.el~ file.
 
    ~or~ on the other hand invokes an external comand the same way [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]] would.
 
