@@ -5,7 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="How to install a Phundrak-flavored Arch Linux" />
-#+PROPERTY: header-args :exports code
+#+PROPERTY: header-args :exports code :comments link
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -133,7 +133,7 @@
 * Execute bootstrap
   :PROPERTIES:
   :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
-  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap
+  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap :comments link
   :END:
   =yadm= comes with  a very handy feature: its bootstrap  script. We can execute
   it by running the following command:
@@ -389,23 +389,24 @@
    :CUSTOM_ID: h-bd5a92c4-1a4f-49ea-a447-050a4ff0301c
    :END:
    Now,  the first  thing we  want to  do with  Emacs is  install its  Spacemacs
-   distribution. We’ll clone its =develop=  branch into =~/.emacs.d=. We need to
-   do this  prior to our dotfiles’  cloning because of some  submodules that are
-   cloned  within  our  =~/.emacs.d=  directory,  and git  won’t  let  us  clone
-   Spacemacs in  an already existing  and non-empty  directory. To make  sure it
-   isn’t one, let’s delete any potentially existing =~/.emacs.d= directory:
+   distribution.  We’ll clone  its =develop=  branch into  =~/.config/emacs=. We
+   need to  do this prior  to our dotfiles’  cloning because of  some submodules
+   that are cloned within our =~/.config/emacs=  directory, and git won’t let us
+   clone Spacemacs in an already existing  and non-empty directory. To make sure
+   it  isn’t  one,  let’s  delete  any  potentially  existing  =~/.config/emacs=
+   directory:
    #+BEGIN_SRC fish
      printf "\n# Installing Spacemacs ########################################################\n\n"
-     rm -rf ~/.emacs.d
+     rm -rf ~/.config/emacs
    #+END_SRC
    Now we can clone Spacemacs:
    #+BEGIN_SRC fish
-     git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
+     git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
    #+END_SRC
    And we can  restore what might have been deleted  in our =~/.emacs.d/private=
    directory:
    #+BEGIN_SRC fish
-     yadm checkout -- ~/.emacs.d/private/
+     yadm checkout -- ~/.config/emacs/private/
    #+END_SRC
 
 ** Set up dotfiles

@@ -1,8 +1,13 @@
+# [[file:~/org/config/installation.org::*Execute bootstrap][Execute bootstrap:2]]
 #!/usr/bin/fish
 # -*- mode: fish -*-
+# Execute bootstrap:2 ends here
 
+# [[file:~/org/config/installation.org::*Decrypt private yadm files][Decrypt private yadm files:1]]
 yadm decrypt
+# Decrypt private yadm files:1 ends here
 
+# [[file:~/org/config/installation.org::*Get a correct keyboard layout][Get a correct keyboard layout:1]]
 set keyboardconf \
 'Section "InputClass"
         Identifier "system-keyboard"
@@ -12,19 +17,27 @@ set keyboardconf \
         Option "XkbVariant" "bepo,,"
         Option "XkbOptions" "grp:menu_toggle"
 EndSection'
+# Get a correct keyboard layout:1 ends here
 
+# [[file:~/org/config/installation.org::*Get a correct keyboard layout][Get a correct keyboard layout:2]]
 printf "\n# Set keyboard layout #########################################################\n\n"
 echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+# Get a correct keyboard layout:2 ends here
 
+# [[file:~/org/config/installation.org::*Set our locale][Set our locale:1]]
 set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
+# Set our locale:1 ends here
 
+# [[file:~/org/config/installation.org::*Set our locale][Set our locale:2]]
 printf "\n# Set our locale ##############################################################\n\n"
 for item in $mylocales
     if test (grep -e "#$item" /etc/locale.gen)
         sudo sed -i "/$item/s/^#//g" /etc/locale.gen
     end
 end
+# Set our locale:2 ends here
 
+# [[file:~/org/config/installation.org::*Set our locale][Set our locale:3]]
 set localeconf "LANG=en_US.UTF-8
 LC_COLLATE=C
 LC_NAME=fr_FR.UTF-8
@@ -36,21 +49,33 @@ LC_PAPER=fr_FR.UTF-8
 LC_ADDRESS=fr_FR.UTF-8
 LC_TIME=fr_FR.UTF-8
 LC_MEASUREMENT=fr_FR.UTF-8"
+# Set our locale:3 ends here
 
+# [[file:~/org/config/installation.org::*Set our locale][Set our locale:4]]
 echo $localeconf | sudo tee /etc/locale.conf
+# Set our locale:4 ends here
 
+# [[file:~/org/config/installation.org::*Set our locale][Set our locale:5]]
 printf "\n# Generate locale #############################################################\n\n"
 sudo locale-gen
+# Set our locale:5 ends here
 
+# [[file:~/org/config/installation.org::*Create some folders][Create some folders:1]]
 printf "\n# Create directories for mounting #############################################\n\n"
 sudo mkdir -p /mnt/{USB,CD,Android}
 sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+# Create some folders:1 ends here
 
+# [[file:~/org/config/installation.org::*Create some folders][Create some folders:2]]
 mkdir -p $HOME/.cache/nano/backups
+# Create some folders:2 ends here
 
+# [[file:~/org/config/installation.org::*Set user’s shell to fish][Set user’s shell to fish:1]]
 printf "\n# Set fish as the default shell ###############################################\n\n"
 chsh -s /usr/bin/fish
+# Set user’s shell to fish:1 ends here
 
+# [[file:~/org/config/installation.org::*Install =yay= if it isn’t already installed][Install =yay= if it isn’t already installed:1]]
 if ! test (which yay)
     printf "\n# Installing yay ##############################################################\n\n"
     cd
@@ -62,7 +87,9 @@ if ! test (which yay)
 else
     printf "\n# yay already installed #######################################################\n\n"
 end
+# Install =yay= if it isn’t already installed:1 ends here
 
+# [[file:~/org/config/installation.org::*Install basic packages][Install basic packages:1]]
 set PACKAGES \
 acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
 awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
@@ -97,11 +124,15 @@ typescript-language-server-bin unicode unicode-emoji unrar usbutils valgrind \
 vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
 x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers \
 xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
+# Install basic packages:1 ends here
 
+# [[file:~/org/config/installation.org::*Install basic packages][Install basic packages:2]]
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
 yay -S --needed $PACKAGES
+# Install basic packages:2 ends here
 
+# [[file:~/org/config/installation.org::*Tangle configuration files from Org files][Tangle configuration files from Org files:2]]
 printf "\n# Tangling org files ##########################################################\n\n"
 printf "\n\n==== Tangling bin.org\n\n"
 emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
@@ -119,101 +150,161 @@ printf "\n\n==== Tangling spacemacs.org\n\n"
 emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
 printf "\n\n==== Tangling tmux.org\n\n"
 emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+# Tangle configuration files from Org files:2 ends here
 
+# [[file:~/org/config/installation.org::*Tangle configuration files from Org files][Tangle configuration files from Org files:3]]
 find ~/.local/bin -type f -exec chmod +x {} +
+# Tangle configuration files from Org files:3 ends here
 
+# [[file:~/org/config/installation.org::*Setting up Emacs: Installing Spacemacs][Setting up Emacs: Installing Spacemacs:1]]
 printf "\n# Installing Spacemacs ########################################################\n\n"
-rm -rf ~/.emacs.d
+rm -rf ~/.config/emacs
+# Setting up Emacs: Installing Spacemacs:1 ends here
 
-git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
+# [[file:~/org/config/installation.org::*Setting up Emacs: Installing Spacemacs][Setting up Emacs: Installing Spacemacs:2]]
+git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
+# Setting up Emacs: Installing Spacemacs:2 ends here
 
-yadm checkout -- ~/.emacs.d/private/
+# [[file:~/org/config/installation.org::*Setting up Emacs: Installing Spacemacs][Setting up Emacs: Installing Spacemacs:3]]
+yadm checkout -- ~/.config/emacs/private/
+# Setting up Emacs: Installing Spacemacs:3 ends here
 
+# [[file:~/org/config/installation.org::*Update our dotfiles’ remotes][Update our dotfiles’ remotes:1]]
 if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
+# Update our dotfiles’ remotes:1 ends here
 
+# [[file:~/org/config/installation.org::*Update our dotfiles’ remotes][Update our dotfiles’ remotes:2]]
 printf "\n# Update yadm’s remotes #######################################################\n\n"
 yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
 yadm remote add github git@github.com:phundrak/dotfiles.git
+# Update our dotfiles’ remotes:2 ends here
 
+# [[file:~/org/config/installation.org::*Update our dotfiles’ remotes][Update our dotfiles’ remotes:3]]
 printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
 yadm decrypt
+# Update our dotfiles’ remotes:3 ends here
 
+# [[file:~/org/config/installation.org::*Update our dotfiles’ remotes][Update our dotfiles’ remotes:4]]
 end
+# Update our dotfiles’ remotes:4 ends here
 
+# [[file:~/org/config/installation.org::*Get =envtpl=][Get =envtpl=:1]]
 printf '\n# Install envtpl ##############################################################\n\n'
 yay -Syu python-envtpl-git
+# Get =envtpl=:1 ends here
 
+# [[file:~/org/config/installation.org::*Update our submodules][Update our submodules:1]]
 printf "\n# Getting yadm susbmodules ####################################################\n\n"
 yadm submodule update --init --recursive
+# Update our submodules:1 ends here
 
+# [[file:~/org/config/installation.org::*Generate our alt files][Generate our alt files:1]]
 printf "\n# Generating alt files ########################################################\n\n"
 yadm alt
+# Generate our alt files:1 ends here
 
+# [[file:~/org/config/installation.org::*Installing Tryone’s Compton fork][Installing Tryone’s Compton fork:1]]
 printf "\n# Installing tryone’s compton fork ############################################\n\n"
 yay -S compton-tryone-git
+# Installing Tryone’s Compton fork:1 ends here
 
+# [[file:~/org/config/installation.org::*Docker][Docker:1]]
 printf "\n# Enabling and starting Docker ################################################\n\n"
 sudo systemctl enable --now docker
+# Docker:1 ends here
 
+# [[file:~/org/config/installation.org::*Docker][Docker:2]]
 read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
 if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
     sudo usermod -aG docker $USER
 end
+# Docker:2 ends here
 
+# [[file:~/org/config/installation.org::*Emacs][Emacs:1]]
 printf "\n# Enabling Emacs as user service ##############################################\n\n"
 systemctl --user enable --now emacs
+# Emacs:1 ends here
 
+# [[file:~/org/config/installation.org::*SSH server][SSH server:1]]
 read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
 if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
     printf "\n# Enabling ssh server #########################################################\n\n"
     sudo systemctl enable --now sshd
 end
+# SSH server:1 ends here
 
+# [[file:~/org/config/installation.org::*Ly][Ly:1]]
 sudo systemctl enable --now ly
 sudo systemctl disable getty@tty2
+# Ly:1 ends here
 
+# [[file:~/org/config/installation.org::*Acpilight][Acpilight:1]]
 sudo usermod -aG video $USER
+# Acpilight:1 ends here
 
+# [[file:~/org/config/installation.org::*NordVPN][NordVPN:1]]
 sudo systemctl enable --now nordvpnd
+# NordVPN:1 ends here
 
+# [[file:~/org/config/installation.org::*Symlink some system config files][Symlink some system config files:1]]
 for f in (find ~/.etc -type f)
     set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
     sudo ln -s $f $dest
 end
+# Symlink some system config files:1 ends here
 
+# [[file:~/org/config/installation.org::*Symlink some system config files][Symlink some system config files:2]]
 read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
 if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
     printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
     sudo ln -s $HOME/.nanorc /root/.nanorc
 end
+# Symlink some system config files:2 ends here
 
+# [[file:~/org/config/installation.org::*Polybar Battery][Polybar Battery:1]]
 printf "\n# Install polybar-battery #####################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/drdeimos/polybar_another_battery.git
 cd polybar_another_battery
 go get -u github.com/distatus/battery/cmd/battery
 make build
+# Polybar Battery:1 ends here
 
+# [[file:~/org/config/installation.org::*Polybar Battery][Polybar Battery:2]]
 ln -s polybar-ab ~/.local/bin/polybar-ab
+# Polybar Battery:2 ends here
 
+# [[file:~/org/config/installation.org::*Reveal.JS][Reveal.JS:1]]
 printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/hakimel/reveal.js.git
+# Reveal.JS:1 ends here
 
+# [[file:~/org/config/installation.org::*Install the toolchains][Install the toolchains:1]]
 printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
 rustup default nightly
+# Install the toolchains:1 ends here
 
+# [[file:~/org/config/installation.org::*Install the toolchains][Install the toolchains:2]]
 rustup toolchain install stable
+# Install the toolchains:2 ends here
 
+# [[file:~/org/config/installation.org::*Install some utilities][Install some utilities:1]]
 printf "\n# Add rust utilities ##########################################################\n\n"
 cargo install rustfmt racer
+# Install some utilities:1 ends here
 
+# [[file:~/org/config/installation.org::*Install some utilities][Install some utilities:2]]
 rustup component add src
 rustup component add rls
+# Install some utilities:2 ends here
 
+# [[file:~/org/config/installation.org::*Install some python packages][Install some python packages:1]]
 printf "\n# Installing Python packages ##################################################\n\n"
 pip install --user pyls-isort pyls-mypy
+# Install some python packages:1 ends here
 
+# [[file:~/org/config/installation.org::*Install go packages][Install go packages:1]]
 printf "\n# Installing Go packages ######################################################\n\n"
 go get -v golang.org/x/tools/gopls@latest
 go get -u -v golang.org/x/tools/cmd/godoc
@@ -231,19 +322,29 @@ go get -u -v github.com/mdempsky/gocode
 go get -u -v github.com/rogpeppe/godef
 go get -u -v github.com/zmb3/gogetdoc
 go get -u -v golang.org/x/tools/gopls
+# Install go packages:1 ends here
 
+# [[file:~/org/config/installation.org::*Set up Chicken (Scheme interpreter/compiler)][Set up Chicken (Scheme interpreter/compiler):1]]
 printf "\n# Setting up Chicken ##########################################################\n\n"
 chicken-install -s apropos chicken-doc
+# Set up Chicken (Scheme interpreter/compiler):1 ends here
 
+# [[file:~/org/config/installation.org::*Set up Chicken (Scheme interpreter/compiler)][Set up Chicken (Scheme interpreter/compiler):2]]
 cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
 curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+# Set up Chicken (Scheme interpreter/compiler):2 ends here
 
+# [[file:~/org/config/installation.org::*Clean the =pacman= and =yay= cache][Clean the =pacman= and =yay= cache:1]]
 printf "\n# Clean the pacman and yay cache ##############################################\n\n"
 yay -Sc --noconfirm
+# Clean the =pacman= and =yay= cache:1 ends here
 
+# [[file:~/org/config/installation.org::*Install =fisher=][Install =fisher=:1]]
 printf "\n# Installing fisher ###########################################################\n\n"
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+# Install =fisher=:1 ends here
 
+# [[file:~/org/config/installation.org::*Install our extensions][Install our extensions:2]]
 printf "\n# Installing Fisher Extensions ################################################\n\n"
 fisher add oh-my-fish/theme-bobthefish
 fisher add jorgebucaran/fish-bax
@@ -254,7 +355,9 @@ fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
 fisher add tuvistavie/fish-ssh-agent
 fisher add acomagu/fish-async-prompt
+# Install our extensions:2 ends here
 
+# [[file:~/org/config/installation.org::generate-tangle][generate-tangle]]
 files=["bin.org", "fish.org", "i3.org", "index.org", "nano.org", "polybar.org", "spacemacs.org", "tmux.org"]
 result = ''
 commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
@@ -262,3 +365,4 @@ commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(org-bab
 for file in files:
     result += commandPrintf.format(file) + commandEmacs.format(file)
 return result
+# generate-tangle ends here
