@@ -352,30 +352,30 @@
    #+BEGIN_SRC python :exports none :var files=tangled-files[,0] :cache yes
      result = ''
      commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
-     commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
+     commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
      for file in files:
          result += commandPrintf.format(file) + commandEmacs.format(file)
      return result
    #+END_SRC
 
-   #+RESULTS[b0c4a37ee56736c4bf650ea05baefa84bc4f8bb1]: generate-tangle
+   #+RESULTS[5f4c0ff55361ff7899541accb58b11496124e376]: generate-tangle
    #+begin_example
    printf "\n\n==== Tangling bin.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
    printf "\n\n==== Tangling fish.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
    printf "\n\n==== Tangling i3.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
    printf "\n\n==== Tangling index.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
    printf "\n\n==== Tangling nano.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
    printf "\n\n==== Tangling polybar.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
    printf "\n\n==== Tangling spacemacs.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
    printf "\n\n==== Tangling tmux.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
    #+end_example
 
    #+BEGIN_SRC fish :noweb yes

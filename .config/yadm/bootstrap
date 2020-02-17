@@ -72,14 +72,14 @@ bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
 cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
 diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
 docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
-emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox \
-flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox flake8 \
+font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
 gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
 golangci-lint-bin graphviz htop i3-gaps-rounded i3lock-blur i3status igdm-bin \
 inetutils j4-dmenu-desktop javascript-typescript-langserver js-beautify \
-jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
-meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
-ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
+jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly meson \
+minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
 networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs nordvpn-bin \
 noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
 pacman-contrib pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
@@ -106,21 +106,21 @@ yay -S --needed $PACKAGES
 
 printf "\n# Tangling org files ##########################################################\n\n"
 printf "\n\n==== Tangling bin.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
 printf "\n\n==== Tangling fish.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
 printf "\n\n==== Tangling i3.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
 printf "\n\n==== Tangling index.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
 printf "\n\n==== Tangling nano.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
 printf "\n\n==== Tangling polybar.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
 printf "\n\n==== Tangling spacemacs.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
 printf "\n\n==== Tangling tmux.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
 
 find ~/.local/bin -type f -exec chmod +x {} +
 
@@ -143,16 +143,13 @@ yadm decrypt
 end
 
 printf '\n# Install envtpl ##############################################################\n\n'
-yay -Syu python-envtpl-git
+yay -Syu --needed python-envtpl-git
 
 printf "\n# Getting yadm susbmodules ####################################################\n\n"
 yadm submodule update --init --recursive
 
-printf "\n# Generating alt files ########################################################\n\n"
-yadm alt
-
 printf "\n# Installing tryone’s compton fork ############################################\n\n"
-yay -S compton-tryone-git
+yay -S --needed compton-tryone-git
 
 printf "\n# Enabling and starting Docker ################################################\n\n"
 sudo systemctl enable --now docker
