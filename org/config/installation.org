@@ -601,6 +601,9 @@
    :CUSTOM_ID: h-e79da7b2-9286-4b66-812e-453e3b2505c7
    :END:
    Now, let’s install some packages from git directly.
+   #+BEGIN_SRC fish
+     mkdir -p ~/fromGIT
+   #+END_SRC
 
 *** Polybar Battery
     :PROPERTIES:

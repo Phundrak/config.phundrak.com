@@ -187,6 +187,8 @@ if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
     sudo ln -s $HOME/.nanorc /root/.nanorc
 end
 
+mkdir -p ~/fromGIT
+
 printf "\n# Install polybar-battery #####################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/drdeimos/polybar_another_battery.git
