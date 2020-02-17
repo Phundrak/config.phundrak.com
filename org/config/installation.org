@@ -32,7 +32,6 @@
     - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
     - [[#get-envtpl][Get =envtpl=]]
     - [[#update-our-submodules][Update our submodules]]
-    - [[#generate-our-alt-files][Generate our alt files]]
   - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
   - [[#enable-some-of-our-services][Enable some of our services]]
     - [[#docker][Docker]]
@@ -256,7 +255,9 @@
    First of all, the bootstrap shell will set the user’s shell to fish.
    #+BEGIN_SRC fish
      printf "\n# Set fish as the default shell ###############################################\n\n"
-     chsh -s /usr/bin/fish
+     if not test "$SHELL" = "/usr/bin/fish"
+         chsh -s /usr/bin/fish
+     end
    #+END_SRC
 
 ** Install =yay= if it isn’t already installed
@@ -293,14 +294,14 @@
      cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
      diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
      docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
-     emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox \
-     flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+     emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox flake8 \
+     font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
      gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
      golangci-lint-bin graphviz htop i3-gaps-rounded i3lock-blur i3status igdm-bin \
      inetutils j4-dmenu-desktop javascript-typescript-langserver js-beautify \
-     jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly-git \
-     meson minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
-     ncmpcpp nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
+     jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate lvm2 ly meson \
+     minted mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+     nemo-fileroller nemo-preview neofetch neovim netctl networkmanager \
      networkmanager-openvpn nm-connection-editor nnn nodejs-vmd nomacs nordvpn-bin \
      noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
      pacman-contrib pandoc-bin pavucontrol pciutils pcurses pdfpc polybar prettier \
@@ -351,30 +352,30 @@
    #+BEGIN_SRC python :exports none :var files=tangled-files[,0] :cache yes
      result = ''
      commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
-     commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
+     commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
      for file in files:
          result += commandPrintf.format(file) + commandEmacs.format(file)
      return result
    #+END_SRC
 
-   #+RESULTS[9de2e89515335bfbcc2c0974c81bf8b7d3b4c182]: generate-tangle
+   #+RESULTS[b0c4a37ee56736c4bf650ea05baefa84bc4f8bb1]: generate-tangle
    #+begin_example
    printf "\n\n==== Tangling bin.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"bin.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
    printf "\n\n==== Tangling fish.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"fish.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
    printf "\n\n==== Tangling i3.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"i3.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
    printf "\n\n==== Tangling index.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"index.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
    printf "\n\n==== Tangling nano.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"nano.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
    printf "\n\n==== Tangling polybar.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"polybar.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
    printf "\n\n==== Tangling spacemacs.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"spacemacs.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
    printf "\n\n==== Tangling tmux.org\n\n"
-   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"tmux.org\")"
+   emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
    #+end_example
 
    #+BEGIN_SRC fish :noweb yes
@@ -451,7 +452,7 @@
     installed. This package will be needed for generating our alt dotfiles.
     #+BEGIN_SRC fish
       printf '\n# Install envtpl ##############################################################\n\n'
-      yay -Syu python-envtpl-git
+      yay -Syu --needed python-envtpl-git
     #+END_SRC
 
 *** Update our submodules
@@ -465,17 +466,6 @@
       yadm submodule update --init --recursive
     #+END_SRC
 
-*** Generate our alt files
-    :PROPERTIES:
-    :CUSTOM_ID: h-f924c003-a15c-4132-891f-36cd3948a7c1
-    :END:
-    Now this should  be the last manipulation on our  dotfiles: let’s create our
-    alternate files:
-    #+BEGIN_SRC fish
-      printf "\n# Generating alt files ########################################################\n\n"
-      yadm alt
-    #+END_SRC
-
 ** Installing Tryone’s Compton fork
    :PROPERTIES:
    :CUSTOM_ID: h-aecf9f01-268c-40cd-8fc3-622c6ce822e4
@@ -485,7 +475,7 @@
    =compton-tryone-git= will replace =compton= which will be removed.
    #+BEGIN_SRC fish
      printf "\n# Installing tryone’s compton fork ############################################\n\n"
-     yay -S compton-tryone-git
+     yay -S --needed compton-tryone-git
    #+END_SRC
 
 ** Enable some of our services

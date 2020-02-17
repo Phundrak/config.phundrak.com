@@ -49,7 +49,9 @@ sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 mkdir -p $HOME/.cache/nano/backups
 
 printf "\n# Set fish as the default shell ###############################################\n\n"
-chsh -s /usr/bin/fish
+if not test "$SHELL" = "/usr/bin/fish"
+    chsh -s /usr/bin/fish
+end
 
 if ! test (which yay)
     printf "\n# Installing yay ##############################################################\n\n"
@@ -104,21 +106,21 @@ yay -S --needed $PACKAGES
 
 printf "\n# Tangling org files ##########################################################\n\n"
 printf "\n\n==== Tangling bin.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
 printf "\n\n==== Tangling fish.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
 printf "\n\n==== Tangling i3.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
 printf "\n\n==== Tangling index.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
 printf "\n\n==== Tangling nano.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
 printf "\n\n==== Tangling polybar.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
 printf "\n\n==== Tangling spacemacs.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
 printf "\n\n==== Tangling tmux.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
 
 find ~/.local/bin -type f -exec chmod +x {} +
 
