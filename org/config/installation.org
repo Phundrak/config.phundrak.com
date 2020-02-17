@@ -301,7 +301,7 @@
      igdm-bin inetutils j4-dmenu-desktop javascript-typescript-langserver \
      js-beautify jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate \
      lvm2 ly meson minted man-db man-pages mpc mpd mpd-rich-presence-discord-git \
-     mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch neovim \
+     mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch \
      netctl networkmanager networkmanager-openvpn nm-connection-editor nnn \
      nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx openssh \
      otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
@@ -323,12 +323,15 @@
      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers \
      xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
    #+END_SRC
+
    These are the  minimum I would have  in my own installation. You  can edit it
    however you want. Let’s install those.
    #+BEGIN_SRC fish
      printf "\n# Installing needed packages ##################################################\n\n"
      sudo pacman -Syu
-     yay -S --needed $PACKAGES
+     for pkg in $PACKAGES
+         yay -S --needed $pkg
+     end
    #+END_SRC
 
 ** Tangle configuration files from Org files
@@ -615,7 +618,7 @@
     Now, we  have our binary,  let’s symlink it  in our local  binary directory,
     =~/.local/bin=.
     #+BEGIN_SRC fish
-      ln -s polybar-ab ~/.local/bin/polybar-ab
+      ln -s ~/fromGIT/polybar_another_battery/polybar-ab ~/.local/bin/polybar-ab
     #+END_SRC
 
 *** Reveal.JS

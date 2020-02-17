@@ -5,7 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
-#+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config
+#+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config :comments link
 #+PROPERTY: header-args:python :exports none :tangle no
 #+PROPERTY: header-args:emacs-lisp :exports code :tangle no
 
@@ -313,12 +313,23 @@
   #+END_SRC
 
   #+NAME: generate-workspaces
-  #+BEGIN_SRC python :var workspaces=assignment-table
+  #+BEGIN_SRC python :var workspaces=assignment-table :cache yes
     results = ''
     for line in workspaces:
         results += 'assign [class="{0}"] {1}\n'.format(line[1],line[2])
     return results
   #+END_SRC
+
+  #+RESULTS[bf7a728d0284d143edef023333680052cf1ff328]: generate-workspaces
+  : assign [class="Emacs"] 2
+  : assign [class="Chromium"] 3
+  : assign [class="firefox"] 3
+  : assign [class="Nemo"] 4
+  : assign [class="Godot"] 5
+  : assign [class="Gimp*"] 6
+  : assign [class="gnome-boxes"] 8
+  : assign [class="Steam"] 9
+  : assign [class="discord"] 10
 
   Here is the configuration:
   #+BEGIN_SRC conf :noweb yes
@@ -334,7 +345,8 @@
   #+NAME: ws10-output-edp1
   #+BEGIN_SRC emacs-lisp
     (if (string= system-name "Marpa")
-        "workspace 10 output eDP-1")
+        "workspace 10 output eDP-1"
+      "")
   #+END_SRC
 
   Now I’ll call the above code as a noweb reference that should be executed.
@@ -887,7 +899,7 @@
     #+NAME: hostname-screen-management
     #+BEGIN_SRC emacs-lisp
       (cond ((string= system-name "Marpa") "bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1")
-            ((string= system-name "Gampo") "bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1"))
+            ((string= system-name "gampo") "bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1"))
     #+END_SRC
 
     Now, we just have to call this Emacs Lisp code as a noweb reference and
@@ -920,7 +932,7 @@
   | no                 | redshift-gtk -O 3200 -t 1.0:0.8                          | Blue light filter                      |
 
   #+NAME: generate-autolaunch
-  #+BEGIN_SRC python :exports none :tangle no :var table=autolaunch
+  #+BEGIN_SRC python :var table=autolaunch
     results = ''
     for line in table:
         results += 'exec_always ' if line[0] == 'yes' else 'exec '
@@ -933,7 +945,7 @@
   policy kit manager if that is the case:
   #+NAME: fingerprint-thinkpad
   #+BEGIN_SRC emacs-lisp
-    (if (string= system-name "Gampo")
+    (if (string= system-name "gampo")
         "exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
       "")
   #+END_SRC

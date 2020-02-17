@@ -79,7 +79,7 @@ golangci-lint-bin graphviz htop i3-gaps-rounded-git i3lock-blur i3status \
 igdm-bin inetutils j4-dmenu-desktop javascript-typescript-langserver \
 js-beautify jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate \
 lvm2 ly meson minted man-db man-pages mpc mpd mpd-rich-presence-discord-git \
-mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch neovim \
+mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch \
 netctl networkmanager networkmanager-openvpn nm-connection-editor nnn \
 nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx openssh \
 otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
@@ -103,7 +103,9 @@ xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
-yay -S --needed $PACKAGES
+for pkg in $PACKAGES
+    yay -S --needed $pkg
+end
 
 printf "\n# Tangling org files ##########################################################\n\n"
 printf "\n\n==== Tangling bin.org\n\n"
@@ -196,7 +198,7 @@ cd polybar_another_battery
 go get -u github.com/distatus/battery/cmd/battery
 make build
 
-ln -s polybar-ab ~/.local/bin/polybar-ab
+ln -s ~/fromGIT/polybar_another_battery/polybar-ab ~/.local/bin/polybar-ab
 
 printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT
