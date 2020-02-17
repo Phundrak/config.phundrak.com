@@ -127,18 +127,20 @@
   We will need some basic packages in order to run the bootstrap file. So, let’s
   install =fish= (our shell running the script) and =git=.
   #+BEGIN_SRC sh
-    sudo pacman -Sy fish git yadm
+    yay -Sy fish git yadm
   #+END_SRC
 
 * Execute bootstrap
   :PROPERTIES:
   :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
-  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap :comments link
+  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap
   :END:
-  =yadm= comes with  a very handy feature: its bootstrap  script. We can execute
-  it by running the following command:
+  =yadm=  comes with  a very  handy  feature: its  bootstrap script.  It can  be
+  executed automatically once the dotfiles are cloned with yadm:
   #+BEGIN_SRC fish :tangle no
-    yadm bootstrap
+    yadm clone https://labs.phundrak.com/phundrak/dotfiles
+    # or if labs.phundrak.com is down or too slow for you
+    yadm clone https://github.com/phundrak/dotfiles
   #+END_SRC
 
   Notice these two header files, we can see  this is a fish script, hence why we
