@@ -270,8 +270,8 @@
      if ! test (which yay)
          printf "\n# Installing yay ##############################################################\n\n"
          cd
-         mkdir -p fromGIT
-         cd fromGIT
+         mkdir -p ~/fromGIT
+         cd ~/fromGIT
          git clone https://aur.archlinux.org/yay.git
          cd yay
          makepkg -si --noconfirm
