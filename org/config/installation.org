@@ -6,6 +6,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="How to install a Phundrak-flavored Arch Linux" />
 #+PROPERTY: header-args :exports code :comments link
+#+PROPERTY: header-args:python :tangle no
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
@@ -134,6 +135,7 @@
   :PROPERTIES:
   :CUSTOM_ID: h-c13d132f-9e69-4bb0-838b-29c7c5611f11
   :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap
+  :HEADER-ARGS:python: :tangle no
   :END:
   =yadm=  comes with  a very  handy  feature: its  bootstrap script.  It can  be
   executed automatically once the dotfiles are cloned with yadm:

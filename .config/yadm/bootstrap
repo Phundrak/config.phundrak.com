@@ -254,11 +254,3 @@ fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
 fisher add tuvistavie/fish-ssh-agent
 fisher add acomagu/fish-async-prompt
-
-files=["bin.org", "fish.org", "i3.org", "index.org", "nano.org", "polybar.org", "spacemacs.org", "tmux.org"]
-result = ''
-commandPrintf = 'printf "\\n\\n==== Tangling {0}\\n\\n"\n'
-commandEmacs = 'emacs -q --batch --eval "(require \'ob-tangle)" --eval "(org-babel-tangle-file \\"~/org/config/{0}\\")"\n'
-for file in files:
-    result += commandPrintf.format(file) + commandEmacs.format(file)
-return result
