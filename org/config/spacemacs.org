@@ -1909,6 +1909,14 @@
       (setq gnus-use-cache t)
     #+END_SRC
 
+    The following allows  the user to read  in a group all the  messages in this
+    group, whether they are read or unread.
+    #+BEGIN_SRC emacs-lisp
+      (setq gnus-fetch-old-headers t)
+      (setq gnus-parameters '(("nnimap.*"
+                               (display . all))))
+    #+END_SRC
+
     Let’s set a quick organization of the Gnus folders, the format in which sent
     messages should be saved, and the typology of Gnus’ topics:
     #+BEGIN_SRC emacs-lisp
