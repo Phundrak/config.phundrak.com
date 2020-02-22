@@ -618,7 +618,8 @@
     Now, we  have our binary,  let’s symlink it  in our local  binary directory,
     =~/.local/bin=.
     #+BEGIN_SRC fish
-      ln -s ~/fromGIT/polybar_another_battery/polybar-ab ~/.local/bin/polybar-ab
+      cd ~/.local/bin
+      ln -s ~/fromGIT/polybar_another_battery/polybar-ab polybar-ab
     #+END_SRC
 
 *** Reveal.JS
