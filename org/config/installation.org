@@ -199,7 +199,7 @@
    #+END_SRC
    Let’s enable these.
    #+BEGIN_SRC fish
-     printf "\n# Set our locale ##############################################################\n\n"
+     printf "\n# Set locale ##################################################################\n\n"
      for item in $mylocales
          if test (grep -e "#$item" /etc/locale.gen)
              sudo sed -i "/$item/s/^#//g" /etc/locale.gen
