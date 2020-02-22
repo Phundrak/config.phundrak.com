@@ -154,6 +154,11 @@ yadm submodule update --init --recursive
 printf "\n# Installing tryone’s compton fork ############################################\n\n"
 yay -S --needed compton-tryone-git
 
+printf "\n# Enabling timesync ###########################################################\n\n"
+sudo systemctl enable --now systemd-timesyncd
+
+sudo timedatectl set-ntp true
+
 printf "\n# Enabling and starting Docker ################################################\n\n"
 sudo systemctl enable --now docker
 

@@ -33,7 +33,8 @@
     - [[#get-envtpl][Get =envtpl=]]
     - [[#update-our-submodules][Update our submodules]]
   - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
-  - [[#enable-some-of-our-services][Enable some of our services]]
+  - [[#enable-some-services][Enable some services]]
+    - [[#systemd-timesyncd][Systemd-timesyncd]]
     - [[#docker][Docker]]
     - [[#emacs][Emacs]]
     - [[#ssh-server][SSH server]]
@@ -483,12 +484,29 @@
      yay -S --needed compton-tryone-git
    #+END_SRC
 
-** Enable some of our services
+** Enable some services
    :PROPERTIES:
    :CUSTOM_ID: h-1044da09-e992-4dcb-90ff-513725e1d450
    :END:
    We have  installed some packages  which require  some services to  run. Let’s
    enable them.
+
+*** Systemd-timesyncd
+    :PROPERTIES:
+    :CUSTOM_ID: h-4f80c250-db6d-4a2b-93bd-5b8a9bb3f4ed
+    :END:
+    This service enables time syncing with the NTP protocol, so I can be sure my
+    computer’s time is correct. The service first needs to be enabled:
+    #+BEGIN_SRC fish
+      printf "\n# Enabling timesync ###########################################################\n\n"
+      sudo systemctl enable --now systemd-timesyncd
+    #+END_SRC
+
+    Now, let systemd know  I want to use the NTP protocol  to keep my computer’s
+    time synced.
+    #+BEGIN_SRC fish
+      sudo timedatectl set-ntp true
+    #+END_SRC
 
 *** Docker
     :PROPERTIES:
