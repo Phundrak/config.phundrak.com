@@ -44,6 +44,7 @@
   - [[#install-packages-from-git][Install packages from git]]
     - [[#polybar-battery][Polybar Battery]]
     - [[#revealjs][Reveal.JS]]
+    - [[#install-powerline-fonts][Install powerline fonts]]
   - [[#install-rust][Install Rust]]
     - [[#install-the-toolchains][Install the toolchains]]
     - [[#install-some-utilities][Install some utilities]]
@@ -632,6 +633,20 @@
       printf "\n# Install Reveal.JS ###########################################################\n\n"
       cd ~/fromGIT
       git clone https://github.com/hakimel/reveal.js.git
+    #+END_SRC
+
+*** Install powerline fonts
+    :PROPERTIES:
+    :CUSTOM_ID: h-b1414f66-76fa-4287-848a-6facbc09381f
+    :END:
+    I also need some powerline fonts for my terminal theme.
+    #+BEGIN_SRC fish
+      printf "\n# Install powerline fonts #####################################################\n\n"
+      cd ~/fromGIT
+      git clone https://github.com/powerline/fonts.git --depth=1
+      cd fonts
+      ./install.sh
+      fc-cache -vf
     #+END_SRC
 
 ** Install Rust
