@@ -2532,53 +2532,45 @@
     It will then ask which template I  wish to use. Said templates are described
     below:
     #+BEGIN_SRC emacs-lisp
-      (defvar org-capture-templates-location "~/org/capture/"
-        "Directory in which org-capture templates are stored.")
       (setq
        org-default-notes-file "~/org/notes.org"
        org-capture-templates
        '(("e" "Emails")
          ("ew" "Write Email" entry
           (file+headline org-default-notes-file "Emails")
-          (file ,(concat org-capture-templates-location "emails.orgcaptmpl")))
+          (file "~/org/capture/emails.orgcaptmpl"))
          ("j" "Journal" entry
           (file+datetree "~/org/journal.org")
-          (file ,(concat org-capture-templates-location "journal.orgcaptmpl")))
+          (file "~/org/capture/journal.orgcaptmpl"))
          ("l" "Links")
          ("ly" "YouTube" entry
           (file+headline org-default-notes-file "YouTube")
-          (file ,(concat org-capture-templates-location "youtube.orgcaptmpl")))
-         ;; ("L" "Protocol Link" entry
-         ;;  (file+headline org-default-notes-file "Link")
-         ;;  (file ,(concat org-capture-templates-location "protocol-link.orgcaptmpl")))
+          (file "~/org/capture/youtube.orgcaptmpl"))
          ("L" "Protocol Link" entry
           (file+headline org-default-notes-file "Link")
-          "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:LINK: %:link\n:END:\n%?\n")
+          (file "~/org/capture/protocol-link.orgcaptmpl"))
          ("n" "Note"
           entry (file+headline org-default-notes-file "Note")
-          (file ,(concat org-capture-templates-location "notes.orgcaptmpl")))
-         ;; ("p" "Protocol" entry
-         ;;  (file+headline org-default-notes-file "Link")
-         ;;  (file ,(concat org-capture-templates-location "protocol.orgcaptmpl")))
+          (file "~/org/capture/notes.orgcaptmpl"))
          ("p" "Protocol" entry
           (file+headline org-default-notes-file "Link")
-          "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:LINK: %:link\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?\n")
+          (file "~/org/capture/protocol.orgcaptmpl"))
          ("r" "Resources")
          ("rc" "Conlanging" entry
           (file+headline org-default-notes-file "Conlanging")
-          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+          (file "~/org/capture/resource.orgcaptmpl"))
          ("re" "Emacs" entry
           (file+headline org-default-notes-file "Emacs")
-          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+          (file "~/org/capture/resource.orgcaptmpl"))
          ("ri" "Informatique général" entry
           (file+headline org-default-notes-file "Informatique")
-          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+          (file "~/org/capture/resource.orgcaptmpl"))
          ("rl" "Linguistics" entry
           (file+headline org-default-notes-file "Linguistics")
-          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+          (file "~/org/capture/resource.orgcaptmpl"))
          ("rw" "Worldbuilding" entry
           (file+headline org-default-notes-file "Worldbuilding")
-          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))))
+          (file "~/org/capture/resource.orgcaptmpl"))))
     #+END_SRC
 
     You may notice a capture entry for my journal, and this is due to the fact I
@@ -2678,6 +2670,16 @@
      #+END_SRC
 
      For the next
+     #+BEGIN_SRC org :tangle ~/org/capture/protocol-link.orgcaptmpl
+       ,* TODO [#C] Link: %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %:link
+         :TITLE:    %(transform-square-brackets-to-round-ones \"%:description\")
+         :END:
+         %?
+     #+END_SRC
+
      #+BEGIN_SRC emacs-lisp
        (defun transform-square-brackets-to-round-ones (string-to-transform)
          "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -2689,16 +2691,6 @@
                            ?\)
                         c)))
                   string-to-transform)))
-     #+END_SRC
-
-     #+BEGIN_SRC org :tangle ~/org/capture/protocol-link.orgcaptmpl
-       ,* TODO [#C] Link: %^{Title}
-         :PROPERTIES:
-         :CAPTURED: %U
-         :LINK:     %:link
-         :TITLE:    %(transform-square-brackets-to-round-ones \"%:description\")
-         :END:
-         %?
      #+END_SRC
 
 **** Resources
