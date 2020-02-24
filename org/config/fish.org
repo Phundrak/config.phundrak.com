@@ -215,8 +215,8 @@
   #+BEGIN_SRC python :var table=[] :exports none
     result = ''
     for abbr in table:
-        result += "abbr {0} '{1}'\n".format(abbr[0], abbr[1].replace("\\vert{}", "|").replace("\\vert", "|"))
-    return result
+        result += "abbr {0} '{1}'\n".format(abbr[0], abbr[1])
+    return result.replace("\\vert{}", "|").replace("\\vert", "|")
   #+END_SRC
 
 ** System monitoring
