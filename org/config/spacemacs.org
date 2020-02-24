@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
+#+PROPERTY: header-args: :mkdirp yes
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
@@ -103,7 +104,13 @@
     - [[#org-files-exports][Org files exports]]
     - [[#custom-latex-formats][Custom LaTeX formats]]
     - [[#org-agenda][Org agenda]]
-    - [[#org-journal][Org journal]]
+    - [[#org-capture][Org capture]]
+      - [[#emails][Emails]]
+      - [[#journal][Journal]]
+      - [[#notes][Notes]]
+      - [[#protocol][Protocol]]
+      - [[#resources][Resources]]
+      - [[#youtube][YouTube]]
     - [[#org-projects][Org projects]]
       - [[#configuration-website][Configuration website]]
       - [[#linguistics-website][Linguistics website]]
@@ -359,7 +366,6 @@
            org-enable-github-support t
            org-enable-reveal-js-support t
            org-enable-sticky-header t
-           org-enable-org-journal-support t
            spaceline-org-clock-p t
            org-projectile-file "TODOs.org"
            org-download-image-dir "~/Pictures/org/"
@@ -1275,6 +1281,7 @@
   Then, I want a couple of requires:
   #+BEGIN_SRC emacs-lisp
     (require 'org-id)
+    (require 'org-protocol)
     (require 'package)
     (require 'ox-latex)
     (require 'ox-publish)
@@ -2515,25 +2522,218 @@
                 (org-projectile-todo-files)))
     #+END_SRC
 
-*** Org journal
+*** Org capture
     :PROPERTIES:
-    :CUSTOM_ID: h-d679ae6c-3096-4933-8e06-9848ad35adb0
+    :CUSTOM_ID: h-9a070bbb-5b57-4abd-9d61-51f2070eb47b
     :END:
-    I  also  occasionally   use  Org  journal.  All  my  files   are  stored  in
-    =~/org/journal=, as set below:
+    Org-capture is  an amazing feature  of Org-mode  which allows me  to quickly
+    save links, resources,  reminders and notes in a neatly  organized org file.
+    With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~.
+    It will then ask which template I  wish to use. Said templates are described
+    below:
     #+BEGIN_SRC emacs-lisp
-      (setq org-journal-dir "~/org/journal/")
+      (defvar org-capture-templates-location "~/org/capture/"
+        "Directory in which org-capture templates are stored.")
+      (setq
+       org-default-notes-file "~/org/notes.org"
+       org-capture-templates
+       '(("e" "Emails")
+         ("ew" "Write Email" entry
+          (file+headline org-default-notes-file "Emails")
+          (file ,(concat org-capture-templates-location "emails.orgcaptmpl")))
+         ("j" "Journal" entry
+          (file+datetree "~/org/journal.org")
+          (file ,(concat org-capture-templates-location "journal.orgcaptmpl")))
+         ("l" "Links")
+         ("ly" "YouTube" entry
+          (file+headline org-default-notes-file "YouTube")
+          (file ,(concat org-capture-templates-location "youtube.orgcaptmpl")))
+         ;; ("L" "Protocol Link" entry
+         ;;  (file+headline org-default-notes-file "Link")
+         ;;  (file ,(concat org-capture-templates-location "protocol-link.orgcaptmpl")))
+         ("L" "Protocol Link" entry
+          (file+headline org-default-notes-file "Link")
+          "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:LINK: %:link\n:END:\n%?\n")
+         ("n" "Note"
+          entry (file+headline org-default-notes-file "Note")
+          (file ,(concat org-capture-templates-location "notes.orgcaptmpl")))
+         ;; ("p" "Protocol" entry
+         ;;  (file+headline org-default-notes-file "Link")
+         ;;  (file ,(concat org-capture-templates-location "protocol.orgcaptmpl")))
+         ("p" "Protocol" entry
+          (file+headline org-default-notes-file "Link")
+          "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:LINK: %:link\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?\n")
+         ("r" "Resources")
+         ("rc" "Conlanging" entry
+          (file+headline org-default-notes-file "Conlanging")
+          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+         ("re" "Emacs" entry
+          (file+headline org-default-notes-file "Emacs")
+          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+         ("ri" "Informatique général" entry
+          (file+headline org-default-notes-file "Informatique")
+          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+         ("rl" "Linguistics" entry
+          (file+headline org-default-notes-file "Linguistics")
+          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))
+         ("rw" "Worldbuilding" entry
+          (file+headline org-default-notes-file "Worldbuilding")
+          (file ,(concat org-capture-templates-location "resource.orgcaptmpl")))))
     #+END_SRC
 
-    The default prefix for org journals is the following:
-    #+BEGIN_SRC emacs-lisp
-      (setq org-journal-date-prefix "#+TITLE: ")
-    #+END_SRC
+    You may notice a capture entry for my journal, and this is due to the fact I
+    do  not use  ~org-journal~ anymore:  it was  too overpowered  for me,  and I
+    prefer to keep it simple with a single  file. And as you can see, and unlike
+    a lot of other Emacs configurations, the  content of the template is not set
+    in  the variable,  but in  external files  which can  be modified  freely as
+    actual Org buffers instead of trying to  get a proper one with loads of ~\n~
+    characters and such. All these templates are declared below.
 
-    The timestamp will be set following the ISO 8601 format:
-    #+BEGIN_SRC emacs-lisp
-      (setq org-journal-file-format "%Y-%m-%d")
-    #+END_SRC
+**** Emails
+     :PROPERTIES:
+     :CUSTOM_ID: h-9012599e-c143-4df0-b63c-7c60ddb4a081
+     :END:
+     This is my template for a new Email:
+     #+BEGIN_SRC org :tangle ~/org/capture/email.orgcaptmpl
+       ,** TODO [#A] Write Email
+          :PROPERTIES:
+          :CAPTURED: %U
+          :END:
+       From: Lucien Cartier-Tilet <lucien@phundrak.com>
+       To: %^{Recipient}
+       Subject: %^{Object}
+       --text follows this line--
+       %?
+       --
+       Lucien “Phundrak” Cartier-Tilet
+       https://phundrak.com (Français)
+       https://en.phundrak.com (English)
+
+       Sent from a Free and Open-Source Linux operating system with GNU/Emacs
+     #+END_SRC
+
+     I use  it in case my  computer is not yet  connected to the internet  and I
+     need to already write the email so I  can send it later. All I will need to
+     to afterwards will be to copy and  paste my capture in a new message buffer
+     and   send   it   once   I   am  back   online.   This   is   exported   to
+     =~/org/capture/email.orgcaptmpl=.
+
+**** Journal
+     :PROPERTIES:
+     :CUSTOM_ID: h-ab1b21af-e887-41a7-be7a-c08825d16339
+     :END:
+     This template  is quite  simple: it  creates a new  entry with  the current
+     timestamp as its title, a brief title  of my choosing, and then I can write
+     whatever     I     wish    to     write.     This     is    exported     to
+     =~/org/capture/journal.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/journal.orgcaptmpl
+       ,* %U %^{Title}
+         %?
+     #+END_SRC
+
+**** Notes
+     :PROPERTIES:
+     :CUSTOM_ID: h-2b5e7efc-4a9d-4a92-b75f-4ec75e2fb48d
+     :END:
+     This template  is used for taking  note about various subjects  that can go
+     from conlanging to  development. I wrote it  so I can know  from where this
+     capture was made  and when, and it even supports  text that was highlighted
+     in  Emacs that  will be  inserted in  a quote  block. This  is exported  to
+     =~/org/capture/notes.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/notes.orgcaptmpl
+       ,* Note
+         :PROPERTIES:
+         :CAPTURED: %U
+         :FROM:     %f
+         :END:
+         Possible inspiration:
+         ,#+begin_quote
+         %i
+         ,#+end_quote
+
+         %?
+     #+END_SRC
+
+**** Protocol
+     :PROPERTIES:
+     :CUSTOM_ID: h-6fa10246-26bf-4ab3-a3b0-1f58bc79350e
+     :END:
+     This  capture  is  used  when   received  through  org-protocol,  with  the
+     Org-protocol Extension for  Firefox. It allows me to save  in a quote block
+     what I’ve highlighted, as well as the link of the webpage on which my saved
+     content     was    highlighted.     This     file     is    exported     to
+     =~/org/capture/protocol.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/protocol.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %:link
+         :TITLE:    %:(transform-square-brackets-to-round-ones \"%:description\")
+         :END:
+         ,#+begin_quote
+         %i
+         ,#+end_quote
+
+         %?
+     #+END_SRC
+
+     For the next
+     #+BEGIN_SRC emacs-lisp
+       (defun transform-square-brackets-to-round-ones (string-to-transform)
+         "Transforms [ into ( and ] into ), other chars left unchanged."
+         (concat
+          (mapcar #'(lambda (c)
+                      (if (equal c ?[)
+                          ?\(
+                       (if (equal c ?])
+                           ?\)
+                        c)))
+                  string-to-transform)))
+     #+END_SRC
+
+     #+BEGIN_SRC org :tangle ~/org/capture/protocol-link.orgcaptmpl
+       ,* TODO [#C] Link: %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %:link
+         :TITLE:    %(transform-square-brackets-to-round-ones \"%:description\")
+         :END:
+         %?
+     #+END_SRC
+
+**** Resources
+     :PROPERTIES:
+     :CUSTOM_ID: h-001eb681-1725-442d-91ef-b6a46c1784dc
+     :END:
+     This is the default template for  resources, which generally are located on
+     the Internet. By default, I give them the lowest priority, because although
+     this is something for me to remember later, it is not by default important.
+     You can see in the properties I  record when the capture happened, and what
+     the link is. The  title of the capture is a summary of  what this is, while
+     the body of the  capture is a more detailed explanation  of what I capture,
+     why, and how it could be useful to me.
+     #+BEGIN_SRC org :tangle ~/org/capture/resource.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %^{Link}
+         :END:
+         %?
+     #+END_SRC
+
+**** YouTube
+     :PROPERTIES:
+     :CUSTOM_ID: h-4b962a95-47d9-4410-8365-7d09e19530eb
+     :END:
+     #+BEGIN_SRC org :tangle ~/org/capture/youtube.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :AUTHOR:   %^{Author}
+         :LINK:     %^{Link}
+         :END:
+         %?
+     #+END_SRC
 
 *** Org projects
     :PROPERTIES:
@@ -2818,6 +3018,15 @@
         "ofI" (lambda () (interactive) (find-file "~/org/config/index.org"))
         "ofp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
         "ofr" (lambda () (interactive) (find-file "~/README.org")))
+    #+END_SRC
+
+    I also want a quick access to my notes and my journal.
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "ofj" "journal.org")
+      (spacemacs/declare-prefix "ofn" "notes.org")
+      (spacemacs/set-leader-keys
+        "ofj" (lambda () (interactive) (find-file "~/org/journal.org"))
+        "ofn" (lambda () (interactive) (find-file "~/org/notes.org")))
     #+END_SRC
 
 *** Multiple cursors
