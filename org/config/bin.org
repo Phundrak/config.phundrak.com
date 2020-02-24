@@ -22,6 +22,7 @@
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
 - [[#lsl][Lsl]]
+- [[#mp42webm][mp42webm]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
@@ -59,10 +60,16 @@
 
   Please do not forget to run the following before tangling files from this file
   to make sure the tangled files will be executables.
-  #+begin_src emacs-lisp  :results silent
+  #+begin_src emacs-lisp :results silent
     (defun phundrak/make-tangled-files-executable ()
       (set-file-modes (buffer-file-name) #o755))
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
+  #+end_src
+
+  #+begin_src emacs-lisp :results silent
+    (defun phundrak/make-tangled-files-not-executable ()
+      (set-file-modes (buffer-file-name) #o644))
+    (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-not-executable)
   #+end_src
 
 * 4chandl
@@ -352,6 +359,16 @@
   #+BEGIN_SRC fish
     #!/usr/bin/fish
     ls -ahlX --group-directories-first $argv | bat
+  #+END_SRC
+
+* mp42webm
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.local/bin/mp42webm
+  :CUSTOM_ID: h-29b8a01c-7499-4a35-be25-f5a593bf40ea
+  :END:
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
   #+END_SRC
 
 * Polybar-launch
