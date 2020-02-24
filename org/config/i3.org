@@ -92,15 +92,15 @@
    will just have to change the name of the executable here.
 
    #+NAME: variable-table
-   | variable    | value                                                                    |
-   |-------------+--------------------------------------------------------------------------|
-   | $mod        | Mod4                                                                     |
-   | $alt        | Mod1                                                                     |
-   | $up         | Up                                                                       |
-   | $down       | Down                                                                     |
-   | $left       | Left                                                                     |
-   | $right      | Right                                                                    |
-   | $term       | st                                                                       |
+   | variable | value |
+   |----------+-------|
+   | $mod     | Mod4  |
+   | $alt     | Mod1  |
+   | $up      | Up    |
+   | $down    | Down  |
+   | $left    | Left  |
+   | $right   | Right |
+   | $term    | st    |
 
    #+NAME: variable-sh
    | variable    | value                                                                    |
@@ -125,7 +125,7 @@
      return result
    #+END_SRC
 
-   #+RESULTS[58c517fe29b63f631ff0ba754d5d9ec4ea673388]: generate-variables
+   #+RESULTS[187d9be7907abf05492d27a454685b424b933b7d]: generate-variables
    : set $mod    Mod4
    : set $alt    Mod1
    : set $up    Up
