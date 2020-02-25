@@ -206,23 +206,22 @@
    Dependencies  should  be  explicitly  included  as  they  won’t  be  resolved
    automatically. Here is a table of all the extra packages I use:
    #+NAME: extra-packages
-   | name of the package    | why is it installed                                  |
-   |------------------------+------------------------------------------------------|
-   | dired-du               | alternative to ~ncdu~ with Dired                     |
-   | doom-themes            | some cool themes                                     |
-   | edit-indirect          | edit region in separate buffer                       |
-   | elcord                 | rich integration of Emacs in Discord                 |
-   | eshell-git-prompt      | pimp my Eshell                                       |
-   | kaolin-themes          | some cool themes                                     |
-   | magit-gitflow          | integrate gitflow in Magit                           |
-   | meson-mode             | major mode for Meson build files                     |
-   | multiple-cursors       | I don’t like the layer, I prefer this package alone  |
-   | org-sidebar            | display on the side the outline of an Org buffer     |
-   | outorg                 | edit comments as Org-mode buffers                    |
-   | pinentry               | enter a GPG password from Emacs                      |
-   | visual-fill-column     | allow the use of ~fill-column~ in ~visual-line-mode~ |
-   | wttrin                 | weather in Emacs                                     |
-   | yasnippet-snippets     | snippets for YaSnippet                               |
+   | name of the package | why is it installed                                  |
+   |---------------------+------------------------------------------------------|
+   | dired-du            | alternative to ~ncdu~ with Dired                     |
+   | doom-themes         | some cool themes                                     |
+   | edit-indirect       | edit region in separate buffer                       |
+   | elcord              | rich integration of Emacs in Discord                 |
+   | kaolin-themes       | some cool themes                                     |
+   | magit-gitflow       | integrate gitflow in Magit                           |
+   | meson-mode          | major mode for Meson build files                     |
+   | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
+   | org-sidebar         | display on the side the outline of an Org buffer     |
+   | outorg              | edit comments as Org-mode buffers                    |
+   | pinentry            | enter a GPG password from Emacs                      |
+   | visual-fill-column  | allow the use of ~fill-column~ in ~visual-line-mode~ |
+   | wttrin              | weather in Emacs                                     |
+   | yasnippet-snippets  | snippets for YaSnippet                               |
 
    #+NAME: make-extra-packages
    #+BEGIN_SRC emacs-lisp :tangle no :var packages=extra-packages[,0] :exports none
@@ -1788,11 +1787,6 @@
     #+BEGIN_SRC emacs-lisp
       (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
             eshell-prompt-function 'eshell/my-prompt)
-    #+END_SRC
-
-    Finally, let’s declare the theme of our shell:
-    #+BEGIN_SRC emacs-lisp
-      (eshell-git-prompt-use-theme 'powerline)
     #+END_SRC
 
 ** File extensions
