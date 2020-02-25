@@ -75,18 +75,12 @@
     - [[#visual-commands][Visual commands]]
     - [[#eshell-theme][Eshell theme]]
   - [[#file-extensions][File extensions]]
-  - [[#gnus][Gnus]]
-    - [[#shortcuts][Shortcuts]]
-    - [[#hooks][Hooks]]
-    - [[#mail-account-configuration][Mail account configuration]]
-    - [[#general-options][General options]]
-    - [[#visual-configuration-1][Visual configuration]]
   - [[#lsp][LSP]]
   - [[#mu4e][Mu4e]]
   - [[#miscellaneous-1][Miscellaneous]]
     - [[#evil][Evil]]
     - [[#default-modes][Default modes]]
-    - [[#hooks-1][Hooks]]
+    - [[#hooks][Hooks]]
     - [[#pinentry][Pinentry]]
     - [[#prettified-symbols][Prettified symbols]]
     - [[#twittering-mode][Twittering mode]]
@@ -117,7 +111,7 @@
       - [[#linguistics-website][Linguistics website]]
   - [[#rust][Rust]]
   - [[#scheme][Scheme]]
-  - [[#shortcuts-1][Shortcuts]]
+  - [[#shortcuts][Shortcuts]]
     - [[#applications][Applications]]
     - [[#comments][Comments]]
     - [[#files][Files]]
@@ -329,15 +323,9 @@
     :PROPERTIES:
     :CUSTOM_ID: h-0db2333c-86bf-4b41-8226-da66885fce36
     :END:
-    As described below,  I use Gnus as  my main email client.  Therefore, I have
-    the gnus layer enabled:
-    #+BEGIN_SRC emacs-lisp
-      gnus
-    #+END_SRC
-
-    I am also currently testing ~mu4e~, so  let’s enable it and tell Emacs where
-    mu4e is  installed. I also tell  mu4e to use maildirs  extensions, use async
-    operations, where to keep attachments, and enable the mu4e modeline.
+    I use  as my daily Email  client ~mu4e~, so  let’s enable it and  tell Emacs
+    where mu4e  is installed. I also  tell mu4e to use  maildirs extensions, use
+    async operations, where to keep attachments, and enable the mu4e modeline.
     #+BEGIN_SRC emacs-lisp
       (mu4e :variables
             mu4e-installation-path "/usr/share/emacs/site-lisp"
@@ -1843,132 +1831,6 @@
              auto-mode-alist))
    #+END_SRC
 
-** Gnus
-   :PROPERTIES:
-   :CUSTOM_ID: h-fb05a405-110f-4e7e-a21d-b768615754cc
-   :END:
-   Here comes  my Gnus  configuration. Gnus is  an email client  I use  daily to
-   read, manage, answer to and forward messages I receive by email.
-
-*** Shortcuts
-    :PROPERTIES:
-    :CUSTOM_ID: h-4715e44d-b95b-40d4-b79a-c7873d972b39
-    :END:
-    Some shortcuts needed  to be redefined in  order for Evil to  work well with
-    Gnus. Here is first the declaration of a prefix:
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "og" "gnus")
-    #+END_SRC
-    And here  are said shortcuts. As  described above in the  [[#h-f193126f-abc1-4287-aa70-4f2080d2ef8f][shortcuts]] chapter,
-    these Spacemacs shortcuts are invoked with the ~SPC~ leader key.
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/set-leader-keys
-        "ogD" 'turn-on-gnus-dired-mode
-        "ogd" 'gnus-summary-delete-article
-        "ogf" 'gnus-summary-mail-forward
-        "ogm" 'gnus-group-mail
-        "ogo" 'my-gnus-group-list-subscribed-groups
-        "ogr" 'gnus-summary-insert-new-articles
-        "ogs" 'message-send-and-exit)
-    #+END_SRC
-
-    #+RESULTS:
-
-*** Hooks
-    :PROPERTIES:
-    :CUSTOM_ID: h-5208e53f-d2e7-4dc1-a081-964ac1c90d4b
-    :END:
-    To  sort  by   topics  my  different  mailboxes  and  folders,   I  use  the
-    ~gnus-topic-mode~  minor mode.  To  get  it active  by  default,  I use  the
-    following hook to activate it:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
-    #+END_SRC
-
-*** Mail account configuration
-    :PROPERTIES:
-    :CUSTOM_ID: h-eb1a12b5-38ef-4c81-9d6c-01c1e066feaa
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I only use one email account with Gnus: ~lucien@phundrak.com~. Here is how I
-    configured it:
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-secondary-select-methods '((nnimap "lucien@phundrak.com"
-                                                    (nnimap-address "mail.phundrak.com")
-                                                    (nnimap-server-port 143)
-                                                    (nnimap-stream starttls)))
-            message-send-mail-function 'smtpmail-send-it
-            smtpmail-smtp-server "mail.phundrak.com"
-            smtpmail-stream-type 'starttls
-            smtpmail-smtp-service 587
-            gnus-message-archive-method '(nnimap "mail.phundrak.com")
-            gnus-message-archive-group "Sent"
-            nnml-directory "~/Mails"
-            message-directory "~/Mails"
-            gnus-fetch-old-headers 'some
-            mm-discouraged-alternatives '("text/html" "text/richtext"))
-    #+END_SRC
-
-*** General options
-    :PROPERTIES:
-    :CUSTOM_ID: h-336a2c1c-ed8d-4a90-b4a3-6422a0199ba0
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I want to use  at one point the [[https://www.emacswiki.org/emacs/EmacsApplicationFramework][Emacs Application Framework]]  which is set to
-    be able one day to render Gnus emails,  but for now I am using w3m to render
-    HTML emails I receive.
-    #+BEGIN_SRC emacs-lisp
-      (setq mm-text-html-renderer 'w3m)
-    #+END_SRC
-
-    I also  want Gnus  to use the  cache in  case I need  to navigate  my emails
-    offline:
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-use-cache t)
-    #+END_SRC
-
-    The following allows  the user to read  in a group all the  messages in this
-    group, whether they are read or unread.
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-fetch-old-headers t)
-      (setq gnus-parameters '(("nnimap.*"
-                               (display . all))))
-    #+END_SRC
-
-    Let’s set a quick organization of the Gnus folders, the format in which sent
-    messages should be saved, and the typology of Gnus’ topics:
-    #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'gnus-topic
-        '(progn
-           (setq gnus-message-archive-group '((format-time-string "sent.%Y")))
-           (setq gnus-topic-topology '(("Gnus" visible)
-                                       (("lucien@phundrak.com" visible nil nil))))
-           (setq gnus-topic-alist '(("lucien@phundrak.com" ; the key of the topic
-                                     "nnimap+lucien@phundrak.com:INBOX"
-                                     "nnimap+lucien@phundrak.com:Sent"
-                                     "nnimap+lucien@phundrak.com:Drafts")
-                                    ("Gnus")))))
-    #+END_SRC
-
-*** Visual configuration
-    :PROPERTIES:
-    :CUSTOM_ID: h-8ccda149-c755-4c80-8643-7a9b99ee85b2
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I get  it that it  used to be  a good option  with 4/3 screens,  but frankly
-    opening an email at the bottom of the frame instead of the side of the frame
-    does not look good anymore. So, let’s fix that:
-    #+BEGIN_SRC emacs-lisp
-      (gnus-add-configuration
-       '(article (horizontal 1.0 (summary .4 point) (article 1.0))))
-    #+END_SRC
-
 ** LSP
    :PROPERTIES:
    :CUSTOM_ID: h-4d0272c3-df5e-4f6b-a6e6-f769add4e603
@@ -1999,20 +1861,57 @@
    :PROPERTIES:
    :CUSTOM_ID: h-ba4a69ff-38a6-498a-b076-a514bbf0701f
    :END:
+   Mu4e is a frontend  for mu, an email analyzer which sits on  top of a Maildir
+   which gets updated with  ~isync~. It has a lot of neat  features, but I guess
+   my favorite ones are:
+   1. the search query feature
+   2. being able to send an HTML email either to the browser or
+   3. to compile it to a PDF for a better output
+   This  last feature  can only  be enabled  manually with  Arch Linux.  We need
+   ~webkitgtk~ installed,  and unfortunately,  it is  by default  only available
+   through the  AUR and  has to be  compiled. Thing is,  ~webkitgtk~ is  a *BIG*
+   piece of software, and compiling it can be very time consuming. So, I decided
+   to add ArchLinuxCN’s  servers to my pacman config (instructions  on how to do
+   so [[https://github.com/archlinuxcn/repo][here]]) so I could install a compiled version from their repos. Next, when I
+   installed ~mu~ from the AUR, I modified the PKGBUILD like so:
+   #+BEGIN_SRC diff :tangle no
+     <       ./configure --prefix=/usr --disable-webkit --disable-gtk --enable-mu4e --enable-guile
+     ---
+     >       ./configure --prefix=/usr --enable-mu4e --enable-guile
+   #+END_SRC
 
+   This enables the  installation of ~msg2pdf~, which in turn  enables the email
+   compilation to PDF with the shortcut ~a  v~ when an email is opened, and this
+   opens the PDF in a new Emacs buffer.
+
+   Due to mu sitting on top of a Maildir, I need to tell mu4e where said maildir
+   is, and point it the trash, archive,  and sent folders as well as the refresh
+   command and how frequently I want my emails to be refreshed.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-maildir "~/.mail"
            mu4e-trash-folder "/Trash"
            mu4e-refile-folder "/Archive"
            mu4e-sent-folder "/Sent"
            mu4e-get-mail-command "mbsync -a"
-           mu4e-update-interval 60
-           mu4e-compose-signature-auto-include t
+           mu4e-update-interval 60)
+   #+END_SRC
+
+   The following  also allows  me to  automatically include  my signature  in my
+   Emails, to view images  in my Emacs buffers and to show me  the address of my
+   contacts and not just their names.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-compose-signature-auto-include t
            mu4e-view-show-images t
            mu4e-view-show-addresses t)
    #+END_SRC
 
-   Bookmarks
+   This source block  is an example of  the search queries in mu4e,  and part of
+   the reason why I very much like mu4e: these bookmarks are actually defined by
+   search queries, but act as if they were just yet another type of custom inbox
+   you get  with modern Email  client (and often you  don’t even get  them). All
+   these bookmarks can  be accessed through a shortcut on  the main mu4e buffer,
+   prefixed by  ~b~. So, for instance,  my unread messages are  accessed through
+   ~bu~.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-bookmarks
            `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
@@ -2027,21 +1926,74 @@
               "All inboxes" ?i)))
    #+END_SRC
 
-   Enable OS notifications.
+   On new email arrival, Emacs can send  the system a notification which will be
+   handled as any other notification received by the system and will display the
+   number of unread emails to the user; in my case, notifications are handled by
+   [[https://dunst-project.org/][dunst]].
    #+BEGIN_SRC emacs-lisp
-     (setq mu4e-enable-notifications t)
+     (setq mu4e-enable-notifications t
+           mu4e-alert-email-notification-types '(count))
      (with-eval-after-load 'mu4e-alert
-       (mu4e-alert-set-default-style 'notifications))
+       (mu4e-alert-set-default-style 'libnotify))
    #+END_SRC
 
+   Now this  hook is  added so  I can  get a maximal  width for  the text  of my
+   emails, I really don’t  like it when lines are kilometers  long. I would like
+   instead to hook ~visual-line-mode~ and ~auto-fill-mode~, but for some reasons
+   Emacs throws an error when I add them, So I go with ~visual-fill-column-mode~
+   instead.
    #+BEGIN_SRC emacs-lisp
      (add-hook 'mu4e-view-mode-hook 'visual-fill-column-mode)
    #+END_SRC
 
-   Vertical split
+   On modern-day  computers, with  wide screens almost  everywhere, there  is no
+   reason for the email buffer to open  below the email directory and not on its
+   right,  which  is  why I  set  the  split  view  to be  vertical  instead  of
+   horizontal.  I also  set the  width  the email  directory should  keep to  80
+   characters  (and   I  could  go  to   120,  but  that’s  only   good  for  my
+   ultra-widescreen), because 30 characters is way too f-ing low.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-split-view 'vertical
            mu4e-headers-visible-columns 80)
+   #+END_SRC
+
+   I want to add myself as a hidden recipient to all of my messages so I can get
+   them in the  email thread in my inbox  and not just get a  thread of messages
+   not sent by me –the thread could  kinda lack some context if the other people
+   do not insert  my email in their answer. But  unfortunately, for some obscure
+   reason, mu4e does not use the  following variable for its email templates, so
+   I am keeping this  as a reminder I should find how to  fix that. It does work
+   when I’m exporting an org file to and HTML buffer to be sent by email through
+   ~, e m~.
+   #+BEGIN_SRC emacs-lisp
+     (setq message-default-headers "Bcc: Lucien Cartier-Tilet <lucien@phundrak.com>\n")
+   #+END_SRC
+
+   Finally but  very importantly,  this is  the setup  I have  for my  SMTP mail
+   server: I point  Emacs’ SMTP services to  my private mail server  on its SMTP
+   port, which should be  used with a STARTTLS stream. And I  tell Emacs this is
+   the default way to send an email.
+   #+BEGIN_SRC emacs-lisp
+     (setq smtpmail-smtp-server "mail.phundrak.com"
+           smtpmail-smtp-service 587
+           smtpmail-stream-type 'starttls
+           message-send-mail-function 'smtpmail-send-it)
+   #+END_SRC
+
+   I am  unsure yet if  this has  any effect on  mu4e, but this  variable should
+   discourage mu4e from reading rich text  emails and instead open them as plain
+   text. However, I  do not wish to  discourage opening HTML emails  since I can
+   compile them to PDF or open them in the browser.
+   #+BEGIN_SRC emacs-lisp
+     (setq mm-discouraged-alternatives '("text/richtext"))
+   #+END_SRC
+
+   I am still unsure about this variable and  if it has an effect on mu4e, but I
+   wish to  set a default  web viewer for  my HTML emails:  w3m. This is  not as
+   effective as sending the email in the  browser or rendering it as a PDF file,
+   but it can be effective enough for some emails.
+   #+BEGIN_SRC emacs-lisp
+     (setq mm-text-html-renderer 'w3m)
    #+END_SRC
 
 ** Miscellaneous

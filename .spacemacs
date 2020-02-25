@@ -5,7 +5,6 @@ This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
   (setq phundrak//dotspacemacs-src-dir (concat (getenv "HOME") "/.config/emacs/private/")
-        phundrak//dotspacemacs-gc (concat (getenv "HOME") "/.gnus.el")
         phundrak//dotspacemacs-src (concat (getenv "HOME") "/org/config/spacemacs.org")
         phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init.el")
         phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers.el")
@@ -14,8 +13,7 @@ It should only modify the values of Spacemacs settings."
   (when (or (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-si)
             (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-sl)
             (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-ui)
-            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-uc)
-            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-gc))
+            (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-uc))
     (princ "Exporting new Emacs configuration from spacemacs.org through org-babel...")
     (call-process
      (concat invocation-directory invocation-name)
