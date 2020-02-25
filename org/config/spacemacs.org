@@ -914,7 +914,7 @@
     variable sets in seconds the time  Spacemacs should wait between a key press
     and the moment =which-key= should be shown.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-which-key-delay 0.4)
+      (setq-default dotspacemacs-which-key-delay 3)
     #+END_SRC
 
     This variable sets =which-key='s frame position. Possible values are:
@@ -2885,7 +2885,7 @@
    The Scheme configuration  will be very short,  I just need to  tell Emacs the
    name of the interpreter since it is not the default one:
    #+BEGIN_SRC emacs-lisp
-   (setq geiser-chicken-binary "chicken-csi")
+     (setq geiser-chicken-binary "chicken-csi")
    #+END_SRC
 
 ** Shortcuts
