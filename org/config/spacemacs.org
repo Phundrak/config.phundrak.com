@@ -137,7 +137,7 @@
 
 * Spacemacs layers and packages
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
   :CUSTOM_ID: h-9d9869e0-4672-419c-bf37-3d3ae1b7c0aa
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
@@ -652,7 +652,7 @@
 * Init
   :PROPERTIES:
   :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
   Spacemacs  startup, before  any  kind of  configuration,  including the  layer
@@ -1269,7 +1269,7 @@
 * User Initialization
   :PROPERTIES:
   :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
@@ -1315,7 +1315,7 @@
 * User Configuration
   :PROPERTIES:
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :END:
 ** ASM configuration
    :PROPERTIES:
