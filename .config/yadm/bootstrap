@@ -18,7 +18,7 @@ echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
 
 set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 
-printf "\n# Set our locale ##############################################################\n\n"
+printf "\n# Set locale ##################################################################\n\n"
 for item in $mylocales
     if test (grep -e "#$item" /etc/locale.gen)
         sudo sed -i "/$item/s/^#//g" /etc/locale.gen
@@ -72,18 +72,18 @@ bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
 cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
 diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
 docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
-emacs exfat-utils farbfeld feh ffmpegthumbnailer findutils firefox flake8 \
-font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
+emacs emacs-org-mode exfat-utils farbfeld feh ffmpegthumbnailer findutils \
+firefox flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
 gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
 golangci-lint-bin graphviz htop i3-gaps-rounded-git i3lock-blur i3status \
 igdm-bin inetutils j4-dmenu-desktop javascript-typescript-langserver \
 js-beautify jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate \
 lvm2 ly meson minted man-db man-pages mpc mpd mpd-rich-presence-discord-git \
-mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch \
-netctl networkmanager networkmanager-openvpn nm-connection-editor nnn \
-nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx openssh \
-otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pavucontrol pciutils \
-pcurses pdfpc polybar prettier pulseaudio-bluetooth python-autoflake \
+mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
+networkmanager networkmanager-openvpn nm-connection-editor nnn nodejs-vmd \
+nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol \
+otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pciutils pcurses \
+pdfpc polybar powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
 python-envtpl-git python-epc python-importmagic python-language-server \
 python-nose python-pip python-ptvsd python-pytest python-pywal \
 qt5-imageformats qemu r raw-thumbnailer redshift reflector rofi \
@@ -198,11 +198,19 @@ cd polybar_another_battery
 go get -u github.com/distatus/battery/cmd/battery
 make build
 
-ln -s ~/fromGIT/polybar_another_battery/polybar-ab ~/.local/bin/polybar-ab
+cd ~/.local/bin
+ln -s ~/fromGIT/polybar_another_battery/polybar-ab polybar-ab
 
 printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/hakimel/reveal.js.git
+
+printf "\n# Install powerline fonts #####################################################\n\n"
+cd ~/fromGIT
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+fc-cache -vf
 
 printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
 rustup default nightly
