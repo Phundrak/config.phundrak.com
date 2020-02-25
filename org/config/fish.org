@@ -5,7 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
-#+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code
+#+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code :noweb yes
 #+PROPERTY: header-args :exports code :tangle no
 
 * Table of Contents :TOC:noexport:
@@ -21,7 +21,7 @@
 - [[#abbreviations][Abbreviations]]
   - [[#system-monitoring][System monitoring]]
   - [[#system-management-packages-and-services][System management (packages and services)]]
-    - [[#package-mangaement][Package mangaement]]
+    - [[#package-management][Package management]]
     - [[#service-management][Service management]]
   - [[#development][Development]]
     - [[#cmake][CMake]]
@@ -44,6 +44,7 @@
     - [[#compression][Compression]]
     - [[#feh][Feh]]
     - [[#network-management][Network Management]]
+    - [[#nordvpn][NordVPN]]
     - [[#wget][Wget]]
 
 * Presentation
@@ -210,48 +211,44 @@
   :PROPERTIES:
   :CUSTOM_ID: h-740bd904-3e32-4c09-b0a4-bde16ae2e116
   :END:
+  #+NAME: generate-abbr
+  #+BEGIN_SRC python :var table=[] :exports none
+    result = ''
+    for abbr in table:
+        result += "abbr {0} '{1}'\n".format(abbr[0], abbr[1])
+    return result.replace("\\vert{}", "|").replace("\\vert", "|")
+  #+END_SRC
+
 ** System monitoring
    :PROPERTIES:
    :CUSTOM_ID: h-ec910a8c-9154-48a4-b4cd-df28cb4e54d9
    :END:
-   Here I have  some abbreviations which are quite useful  when performing some
-   system  monitoring. With  =df=, we  can get  an overview  of our  filesystem
-   usage, while with =diskspace= we get some more precise information.
-   #+BEGIN_SRC fish
-     abbr df 'df -H'
-     abbr diskspace 'sudo df -h | grep -E "sd|lv|Size"'
-   #+END_SRC
+   Here I  have some abbreviations which  are quite useful when  performing some
+   system monitoring. With =df=, we can get an overview of our filesystem usage,
+   while with =diskspace=  we get some more precise information.  =meminfo= is a
+   call to  =free= with sane  defaults, and similar  to =meminfo=, we  also have
+   =gpumeminfo= so we can  get a quick look at the memory-related  logs of our X
+   session.  I also  declared =cpuinfo=  an alias  of =lscpu=  in order  to keep
+   consistent with  =meminfo=. =pscpu= gives us  information on what the  CPU is
+   running  right  now,  and  =pscpu10=  limits that  to  the  top  10  threads.
+   Similarly, =psmem=  gives us information on  the memory usage of  the current
+   threads, and =psmem10= only the ten most important threads in terms of memory
+   usage.
+   #+NAME: mgmt-abbr
+   | abbreviation | command                                           |
+   |--------------+---------------------------------------------------|
+   | df           | df -H                                             |
+   | diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size" |
+   | meminfo      | free -m -l -t                                     |
+   | gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log        |
+   | cpuinfo      | lscpu                                             |
+   | pscpu        | ps auxf \vert sort -nr -k 3                       |
+   | pscpu10      | ps auxf \vert sort -nr -k 3 \vert head -10        |
+   | psmem        | ps auxf \vert sort -nr -k 4                       |
+   | psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10        |
 
-   =meminfo= is a call to =free= with sane defaults.
-   #+BEGIN_SRC fish
-     abbr meminfo 'free -m -l -t'
-   #+END_SRC
-
-   Similar to =meminfo=, we  also have =gpumeminfo= so we can  get a quick look
-   at the memory-related logs of our X session.
-   #+BEGIN_SRC fish
-     abbr gpumeminfo 'grep -i --color memory /var/log/Xorg.0.log'
-   #+END_SRC
-
-   I also  declared =cpuinfo= an alias  of =lscpu= in order  to keep consistent
-   with =meminfo=.
-   #+BEGIN_SRC fish
-     abbr cpuinfo lscpu
-   #+END_SRC
-
-   =pscpu=  gives us  information on  what the  CPU is  running right  now, and
-   =pscpu10= limits that to the top 10 threads.
-   #+BEGIN_SRC fish
-     abbr pscpu 'ps auxf | sort -nr -k 3'
-     abbr pscpu10 'ps auxf | sort -nr -k 3 | head -10'
-   #+END_SRC
-
-   Similarly, =psmem= gives  us information on the memory usage  of the current
-   threads,  and =psmem10=  only the  ten most  important threads  in terms  of
-   memory usage.
-   #+BEGIN_SRC fish
-     abbr psmem 'ps auxf | sort -nr -k 4'
-     abbr psmem10 'ps auxf | sort -nr -k 4 | head -10'
+   #+begin_SRC fish
+     <<generate-abbr(table=mgmt-abbr)>>
    #+END_SRC
 
 ** System management (packages and services)
@@ -261,38 +258,26 @@
    I added  some of these abbreviations  due to how  often I have to  write the
    whole thing.
 
-*** Package mangaement
+*** Package management
     :PROPERTIES:
     :CUSTOM_ID: h-281a59aa-4ea0-47ab-a4cc-33fff8d38165
     :END:
-    The first  command is =remove= which  removes a package from  my system, as
-    well as its dependencies no longer needed.
-    #+BEGIN_SRC fish
-      abbr remove 'sudo pacman -Rscnd'
-    #+END_SRC
+    The first  command is =remove=  which removes a  package from my  system, as
+    well as its dependencies no longer  needed. =p=. =pacman='s or =yay='s. This
+    is  why I  simply type  =purge=. And  if I  want to  simply seach  among the
+    =pacman= repos,  I can type  =search=. Otherwise, if  I want to  include AUR
+    results, I’ll use =yay=.
 
-    But if I just  want to run =pacman= as sudo, then I  could always just type
-    =p=.
-    #+BEGIN_SRC fish
-      abbr p 'sudo -A pacman'
-    #+END_SRC
+    #+NAME: pm-abbr
+    | abbreviation | command            |
+    |--------------+--------------------|
+    | remove       | sudo pacman -Rscnd |
+    | p            | sudo pacman        |
+    | purge        | yay -Sc            |
+    | search       | yay -Ss            |
 
-    Sometimes,  I  just  want  to  purge my  package  manager’s  cache,  be  it
-    =pacman='s or =yay='s. This is why I simply type =purge=.
     #+BEGIN_SRC fish
-      abbr purge 'yay -Sc'
-    #+END_SRC
-
-    And  if I  want  to simply  seach  among  the =pacman=  repos,  I can  type
-    =search=. Otherwise, if I want to include AUR results, I’ll use =yay=.
-    #+BEGIN_SRC fish
-      abbr search 'pacman -Ss'
-    #+END_SRC
-
-    To update everything from the  official repos, I’ll sometimes type =update=
-    instead of the full command.
-    #+BEGIN_SRC fish
-      abbr update 'sudo pacman -Syu'
+      <<generate-abbr(table=pm-abbr)>>
     #+END_SRC
 
 *** Service management
@@ -301,14 +286,16 @@
     :END:
     I don’t have the muscle memory of =systemctl=. So instead, I simply type
     =c= when I want to do something user service related.
-    #+BEGIN_SRC fish
-      abbr s 'systemctl --user'
-    #+END_SRC
-
     And if I  want to manipulate system  services, I can instead  type a simple
     capital =S=.
+    #+NAME: service-abbr
+    | abbreviation | command          |
+    |--------------+------------------|
+    | s            | systemctl --user |
+    | S            | sudo systemctl   |
+
     #+BEGIN_SRC fish
-      abbr S 'sudo systemctl'
+      <<generate-abbr(table=service-abbr)>>
     #+END_SRC
 
 ** Development
@@ -324,9 +311,15 @@
     :END:
     I have the following abbreviations so I  can quickly run CMake and create a
     configuration for debug or release profiles.
+    #+NAME: abbr-cmake
+    | abbreviation | command                          |
+    |--------------+----------------------------------|
+    | cdebug       | cmake -DCMAKE_BUILD_TYPE=Debug   |
+    | crelease     | cmake -DCMAKE_BUILD_TYPE=Release |
+
+    Here is the corresponding fish configuration:
     #+BEGIN_SRC fish
-      abbr cdebug 'cmake -DCMAKE_BUILD_TYPE=Debug'
-      abbr crelease 'cmake -DCMAKE_BUILD_TYPE=Release'
+      <<generate-abbr(table=abbr-cmake)>>
     #+END_SRC
 
 *** Compilation
@@ -335,11 +328,17 @@
     :END:
     By  default, I  set  =clang=,  =clang++=, =gcc=  and  =g++=  to the  latest
     standard and with the =-Wall= flag activated.
+    #+NAME: abbr-comp
+    | abbreviation | command              |
+    |--------------+----------------------|
+    | clang        | clang -Wall          |
+    | clang++      | clang++ -Wall        |
+    | g++          | g++ -Wall -std=c++17 |
+    | gcc          | gcc -Wall -std=c18   |
+
+    Here is the corresponding fish configuration:
     #+BEGIN_SRC fish :tangle
-      abbr clang 'clang -Wall'
-      abbr clang++ 'clang++ -Wall'
-      abbr g++ 'g++ -Wall -std=c++17'
-      abbr gcc 'gcc -Wall -std=c18'
+      <<generate-abbr(table=abbr-comp)>>
     #+END_SRC
 
 *** Docker
@@ -348,12 +347,18 @@
     :END:
     And of course, when it comes to  Docker Compose, I don’t have time to write
     the full command, so I use these instead.
+    #+NAME: abbr-docker
+    | abbreviation | command                   |
+    |--------------+---------------------------|
+    | dc           | docker-compose            |
+    | dcd          | docker-compose down       |
+    | dcr          | docker-compose run --rm   |
+    | dcu          | docker-compose up         |
+    | dcub         | docker-compose up --build |
+
+    Here is the corresponding fish configuration:
     #+BEGIN_SRC fish
-      abbr dc docker-compose
-      abbr dcd 'docker-compose down'
-      abbr dcr 'docker-compose run --rm'
-      abbr dcu 'docker-compose up'
-      abbr dcub 'docker-compose up --build'
+      <<generate-abbr(table=abbr-docker)>>
     #+END_SRC
 
 *** Git
@@ -363,8 +368,14 @@
     And let’s  face it:  we all  at one point  just wanted  to commit  our code
     without thinking about the message, to  just get over with it. Don’t worry,
     I got you covered.
+    #+NAME: abbr-git
+    | abbreviation | command                                             |
+    |--------------+-----------------------------------------------------|
+    | randcommit   | git commit -m (curl -s whatthecommit.com/index.txt) |
+
+    Here is the corresponding fish configuration:
     #+BEGIN_SRC fish :tangle
-      abbr randcommit 'git commit -m (curl -s whatthecommit.com/index.txt)'
+      <<generate-abbr(table=abbr-git)>>
     #+END_SRC
 
 *** Prolog
@@ -373,31 +384,41 @@
     :END:
     When I  launch =swipl=,  I prefer  to have my  terminal cleaned  before and
     after it runs, I find it more clean.
+    #+NAME: abbr-prolog
+    | abbreviation | command                    |
+    |--------------+----------------------------|
+    | swipl        | clear && swipl -q && clear |
+
+    Here is the corresponding fish configuration:
     #+BEGIN_SRC fish
-      abbr swipl 'clear && swipl -q && clear'
+      <<generate-abbr(table=abbr-prolog)>>
     #+END_SRC
 
 *** Text editors
     :PROPERTIES:
     :CUSTOM_ID: h-51155e06-872d-4a12-9bf7-ae5eabc256ad
     :END:
-    I greatly prefer to use Emacsclient as my main text editor; Emacs has
-    basically all I need. So, it’s only normal I have an abbreviation to launch
-    a new instance of it.
-    #+BEGIN_SRC fish
-      abbr e 'emacsclient -c'
-    #+END_SRC
-    However,  in a  graphical environment,  this  will launch  a new  graphical
-    window of Emacs. To launch a terminal instance, I’ll use =enw= (=nw= stands
-    for the option “nowindow” =-nw= of Emacs).
-    #+BEGIN_SRC fish
-      abbr enw 'emacsclient -c -nw'
-    #+END_SRC
+    I  greatly prefer  to use  Emacsclient  as my  main text  editor; Emacs  has
+    basically all I need. So, it’s only  normal I have an abbreviation to launch
+    a new instance of it. However,  in a graphical environment, this will launch
+    a new  graphical window of  Emacs. To launch  a terminal instance,  I’ll use
+    =enw= (=nw= stands for the option “nowindow” =-nw= of Emacs). I also wish to
+    completely stop  using other text editors,  such as =vi=, =vim=,  =nano= and
+    =ed=, so let’s all add their command as an abbreviation for Emacs.
 
-    I also  have the abbreviation =vi=  which refers to =vim=.  I really should
-    learn =vi=, but I also really don’t feel like it.
-    #+BEGIN_SRC fish
-      abbr vi vim
+    #+NAME: abbr-text-ed
+    | abbreviation | command            |
+    |--------------+--------------------|
+    | e            | emacsclient -c     |
+    | enw          | emacsclient -c -nw |
+    | vi           | emacsclient -c     |
+    | vim          | emacsclient -c     |
+    | nano         | emacsclient -c     |
+    | ed           | emacsclient -c     |
+
+    Here is the corresponding fish configuration:
+    #+BEGIN_SRC fish :noweb yes
+      <<generate-abbr(table=abbr-text-ed)>>
     #+END_SRC
 
 ** LaTeX
@@ -408,68 +429,71 @@
    when it  comes to PDF  exports of my  org files. Hence  why I use  the LaTeX
    package manager. It  is recommended to use =tllocalmgr=  instead of =tlmgr=,
    but I can never  remember the command, and the latter is  faster to type, so
-   time for an abbreviation.
-   #+BEGIN_SRC fish
-   abbr tlmgr tllocalmgr
-   #+END_SRC
+   time for an abbreviation. Same goes for =texhash= which must be run as sudo.
+   #+NAME: latex-abbr
+   | abbreviation | command      |
+   |--------------+--------------|
+   | tlmgr        | tllocalmgr   |
+   | texhash      | sudo texhash |
 
+   Here is the corresponding fish configuration:
    #+BEGIN_SRC fish
-   abbr texhash 'sudo texhash'
+     <<generate-abbr(table=latex-abbr)>>
    #+END_SRC
 
 ** Some security measures
    :PROPERTIES:
    :CUSTOM_ID: h-dd97ea71-c43f-4b79-8bb7-1f857284b1b4
    :END:
-   Some commands can be quite dangerous when  not used properly, which is why I
-   added default  flags and  options so  I can get  warnings before  things get
-   ugly.
+   Some commands can be  quite dangerous when not used properly,  which is why I
+   added default flags and options so I can get warnings before things get ugly.
+   The =-i= and =-I=  add prompts in case we might not want  to do what we asked
+   the shell  to do. Notice  =lns= which  creates symlinks, =rmd=  which removes
+   directories,  =rmf=  which  forces  deletion, and  =rmdf=  which  forces  the
+   delition of a directory. Notice also the =--preserve-root= which will prevent
+   me from  accidentally removing the  root folder. I  added the same  option to
+   =chgrp=, =chmod=, and =chown=.
+   #+NAME: sec-abbr
+   | abbreviation | command                  |
+   |--------------+--------------------------|
+   | cp           | cp -i                    |
+   | ln           | ln -i                    |
+   | lns          | ln -si                   |
+   | mv           | mv -i                    |
+   | rm           | rm -Iv                   |
+   | rmd          | rm --preserve-root -Irv  |
+   | rmdf         | rm --preserve-root -Irfv |
+   | rmf          | rm --preserve-root -Ifv  |
+   | chgrp        | chgrp --preserve-root -v |
+   | chmod        | chmod --preserve-root -v |
+   | chown        | chown --preserve-root -v |
+
+   Here is the corresponding fish configuration:
    #+BEGIN_SRC fish
-     abbr cp 'cp -i'
-     abbr ln 'ln -i'
-     abbr lns 'ln -si'
-     abbr mv 'mv -i'
-     abbr rm 'rm -Iv'
-     abbr rmd 'rm --preserve-root -Irv'
-     abbr rmdf 'rm --preserve-root -Irfv'
-     abbr rmf 'rm --preserve-root -Ifv'
-   #+END_SRC
-   The =-i= and =-I= add prompts in case  we might not want to do what we asked
-   the shell  to do. Notice =lns=  which creates symlinks, =rmd=  which removes
-   directories,  =rmf=  which forces  deletion,  and  =rmdf= which  forces  the
-   delition  of  a directory.  Notice  also  the =--preserve-root=  which  will
-   prevent me  from accidentally  removing the  root folder.  I added  the same
-   option to =chgrp=, =chmod=, and =chown=.
-   #+BEGIN_SRC fish
-     abbr chgrp 'chgrp --preserve-root -v'
-     abbr chmod 'chmod --preserve-root -v'
-     abbr chown 'chown --preserve-root -v'
+     <<generate-abbr(table=sec-abbr)>>
    #+END_SRC
 
 ** Typos
    :PROPERTIES:
    :CUSTOM_ID: h-4c5a03cd-20a8-437e-87b7-af990780084e
    :END:
-   Let’s admit it, we  all make typos from time to time in  the shell, and some
-   are  recurrent  enough we  make  abbreviations  or  aliases of  the  correct
-   command.  Well, I  have some  of my  abbreviations which  were make  exactly
-   because of this.
+   Let’s admit it,  we all make typos from  time to time in the  shell, and some
+   are recurrent enough we make abbreviations or aliases of the correct command.
+   Well, I  have some  of my  abbreviations which were  make exactly  because of
+   this. Sometimes for some reasons, my  brain makes me write =clean= instead of
+   =clear=. So, let’s just  replace the former by the latter.  I’m also very bad
+   at typing =exit=. And sometimes I suck at typing =htop=.
+   #+NAME: typo-abbr
+   | abbreviation | command |
+   |--------------+---------|
+   | clean        | clear   |
+   | exi          | exit    |
+   | exti         | exit    |
+   | hotp         | htop    |
 
-   Sometimes  for some  reasons, my  brain makes  me write  =clean= instead  of
-   =clear=. So, let’s just replace the former by the latter.
+   Here is the corresponding fish configuration:
    #+BEGIN_SRC fish
-   abbr clean clear
-   #+END_SRC
-
-   I’m also very bad at typing =exit=.
-   #+BEGIN_SRC fish
-     abbr exi exit
-     abbr exti exit
-   #+END_SRC
-
-   And sometimes I suck at typing =htop=.
-   #+BEGIN_SRC fish
-     abbr hotp htop
+     <<generate-abbr(table=typo-abbr)>>
    #+END_SRC
 
 ** Misc
@@ -557,9 +581,14 @@
     one day hopefully, after seeing  the abbreviations’ expansion over and over
     I’ll remember the command like I  did for the abbreviation of =remove= (see
     [[#h-281a59aa-4ea0-47ab-a4cc-33fff8d38165][Package management]]).
+    #+NAME: tar-abbr
+    | abbreviation | command   |
+    |--------------+-----------|
+    | compress     | tar -czf  |
+    | untar        | tar -xvzf |
+
     #+BEGIN_SRC fish
-      abbr compress 'tar -czf'
-      abbr untar 'tar -xvzf'
+      <<generate-abbr(table=tar-abbr)>>
     #+END_SRC
 
 *** Feh
@@ -583,22 +612,28 @@
       abbr nmcli 'nmcli -p -c auto'
     #+END_SRC
 
+*** NordVPN
+    :PROPERTIES:
+    :CUSTOM_ID: h-f35e00a2-ec5b-416d-821f-56040ad1d6b4
+    :END:
     Next, we  have some  NordVPN-related shortcuts.  The first  one is  a simple
     abbreviation to  =nordvpn=. The  second one  is a shortcut  to connect  to a
-    server, and to disconnect from the current server.
-    #+BEGIN_SRC fish
-      abbr n 'nordvpn'
-      abbr nc 'nordvpn c'
-      abbr nd 'nordvpn d'
-    #+END_SRC
+    server, and to disconnect  from the current server. I also  have a couple of
+    shortcuts to quickly  connect to some preselected  countries, mainly France,
+    Germany, Japan and the US.
+    #+NAME: nordvpn-abbr
+    | abbreviation | command                 |
+    |--------------+-------------------------|
+    | n            | nordvpn                 |
+    | nc           | nordvpn c               |
+    | nd           | nordvpn d               |
+    | ncf          | nordvpn c France        |
+    | ncg          | nordvpn c Germany       |
+    | ncj          | nordvpn c Japan         |
+    | ncu          | nordvpn c United_States |
 
-    I also  have a couple  of shortcuts to  quickly connect to  some preselected
-    countries, mainly France, Germany, Japan and the US.
     #+BEGIN_SRC fish
-      abbr ncf 'nordvpn c France'
-      abbr ncg 'nordvpn c Germany'
-      abbr ncj 'nordvpn c Japan'
-      abbr ncu 'nordvpn c United_States'
+      <<generate-abbr(table=nordvpn-abbr)>>
     #+END_SRC
 
 *** Wget

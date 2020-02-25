@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
+#+PROPERTY: header-args: :mkdirp yes
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
@@ -74,17 +75,12 @@
     - [[#visual-commands][Visual commands]]
     - [[#eshell-theme][Eshell theme]]
   - [[#file-extensions][File extensions]]
-  - [[#gnus][Gnus]]
-    - [[#shortcuts][Shortcuts]]
-    - [[#hooks][Hooks]]
-    - [[#mail-account-configuration][Mail account configuration]]
-    - [[#general-options][General options]]
-    - [[#visual-configuration-1][Visual configuration]]
   - [[#lsp][LSP]]
+  - [[#mu4e][Mu4e]]
   - [[#miscellaneous-1][Miscellaneous]]
     - [[#evil][Evil]]
     - [[#default-modes][Default modes]]
-    - [[#hooks-1][Hooks]]
+    - [[#hooks][Hooks]]
     - [[#pinentry][Pinentry]]
     - [[#prettified-symbols][Prettified symbols]]
     - [[#twittering-mode][Twittering mode]]
@@ -103,13 +99,19 @@
     - [[#org-files-exports][Org files exports]]
     - [[#custom-latex-formats][Custom LaTeX formats]]
     - [[#org-agenda][Org agenda]]
-    - [[#org-journal][Org journal]]
+    - [[#org-capture][Org capture]]
+      - [[#emails][Emails]]
+      - [[#journal][Journal]]
+      - [[#notes][Notes]]
+      - [[#protocol][Protocol]]
+      - [[#resources][Resources]]
+      - [[#youtube][YouTube]]
     - [[#org-projects][Org projects]]
       - [[#configuration-website][Configuration website]]
       - [[#linguistics-website][Linguistics website]]
   - [[#rust][Rust]]
   - [[#scheme][Scheme]]
-  - [[#shortcuts-1][Shortcuts]]
+  - [[#shortcuts][Shortcuts]]
     - [[#applications][Applications]]
     - [[#comments][Comments]]
     - [[#files][Files]]
@@ -135,7 +137,7 @@
 
 * Spacemacs layers and packages
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
   :CUSTOM_ID: h-9d9869e0-4672-419c-bf37-3d3ae1b7c0aa
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
@@ -204,23 +206,22 @@
    Dependencies  should  be  explicitly  included  as  they  won’t  be  resolved
    automatically. Here is a table of all the extra packages I use:
    #+NAME: extra-packages
-   | name of the package    | why is it installed                                  |
-   |------------------------+------------------------------------------------------|
-   | dired-du               | alternative to ~ncdu~ with Dired                     |
-   | doom-themes            | some cool themes                                     |
-   | edit-indirect          | edit region in separate buffer                       |
-   | elcord                 | rich integration of Emacs in Discord                 |
-   | eshell-git-prompt      | pimp my Eshell                                       |
-   | kaolin-themes          | some cool themes                                     |
-   | magit-gitflow          | integrate gitflow in Magit                           |
-   | meson-mode             | major mode for Meson build files                     |
-   | multiple-cursors       | I don’t like the layer, I prefer this package alone  |
-   | org-sidebar            | display on the side the outline of an Org buffer     |
-   | outorg                 | edit comments as Org-mode buffers                    |
-   | pinentry               | enter a GPG password from Emacs                      |
-   | visual-fill-column     | allow the use of ~fill-column~ in ~visual-line-mode~ |
-   | wttrin                 | weather in Emacs                                     |
-   | yasnippet-snippets     | snippets for YaSnippet                               |
+   | name of the package | why is it installed                                  |
+   |---------------------+------------------------------------------------------|
+   | dired-du            | alternative to ~ncdu~ with Dired                     |
+   | doom-themes         | some cool themes                                     |
+   | edit-indirect       | edit region in separate buffer                       |
+   | elcord              | rich integration of Emacs in Discord                 |
+   | kaolin-themes       | some cool themes                                     |
+   | magit-gitflow       | integrate gitflow in Magit                           |
+   | meson-mode          | major mode for Meson build files                     |
+   | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
+   | org-sidebar         | display on the side the outline of an Org buffer     |
+   | outorg              | edit comments as Org-mode buffers                    |
+   | pinentry            | enter a GPG password from Emacs                      |
+   | visual-fill-column  | allow the use of ~fill-column~ in ~visual-line-mode~ |
+   | wttrin              | weather in Emacs                                     |
+   | yasnippet-snippets  | snippets for YaSnippet                               |
 
    #+NAME: make-extra-packages
    #+BEGIN_SRC emacs-lisp :tangle no :var packages=extra-packages[,0] :exports none
@@ -321,10 +322,15 @@
     :PROPERTIES:
     :CUSTOM_ID: h-0db2333c-86bf-4b41-8226-da66885fce36
     :END:
-    As described below,  I use Gnus as  my main email client.  Therefore, I have
-    the gnus layer enabled:
+    I use  as my daily Email  client ~mu4e~, so  let’s enable it and  tell Emacs
+    where mu4e  is installed. I also  tell mu4e to use  maildirs extensions, use
+    async operations, where to keep attachments, and enable the mu4e modeline.
     #+BEGIN_SRC emacs-lisp
-    gnus
+      (mu4e :variables
+            mu4e-installation-path "/usr/share/emacs/site-lisp"
+            mu4e-use-maildirs-extension t
+            mu4e-enable-mode-line t
+            mu4e-attachment-dir "~/Documents")
     #+END_SRC
 
 *** Emacs
@@ -359,7 +365,6 @@
            org-enable-github-support t
            org-enable-reveal-js-support t
            org-enable-sticky-header t
-           org-enable-org-journal-support t
            spaceline-org-clock-p t
            org-projectile-file "TODOs.org"
            org-download-image-dir "~/Pictures/org/"
@@ -646,7 +651,7 @@
 * Init
   :PROPERTIES:
   :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
   Spacemacs  startup, before  any  kind of  configuration,  including the  layer
@@ -908,7 +913,7 @@
     variable sets in seconds the time  Spacemacs should wait between a key press
     and the moment =which-key= should be shown.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-which-key-delay 0.4)
+      (setq-default dotspacemacs-which-key-delay 3)
     #+END_SRC
 
     This variable sets =which-key='s frame position. Possible values are:
@@ -1263,7 +1268,7 @@
 * User Initialization
   :PROPERTIES:
   :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
@@ -1275,6 +1280,7 @@
   Then, I want a couple of requires:
   #+BEGIN_SRC emacs-lisp
     (require 'org-id)
+    (require 'org-protocol)
     (require 'package)
     (require 'ox-latex)
     (require 'ox-publish)
@@ -1308,7 +1314,7 @@
 * User Configuration
   :PROPERTIES:
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code
+  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :END:
 ** ASM configuration
    :PROPERTIES:
@@ -1783,11 +1789,6 @@
             eshell-prompt-function 'eshell/my-prompt)
     #+END_SRC
 
-    Finally, let’s declare the theme of our shell:
-    #+BEGIN_SRC emacs-lisp
-      (eshell-git-prompt-use-theme 'powerline)
-    #+END_SRC
-
 ** File extensions
    :PROPERTIES:
    :CUSTOM_ID: h-beb67a88-d7d3-4d58-bbc7-7a7be67f64aa
@@ -1824,129 +1825,6 @@
              auto-mode-alist))
    #+END_SRC
 
-** Gnus
-   :PROPERTIES:
-   :CUSTOM_ID: h-fb05a405-110f-4e7e-a21d-b768615754cc
-   :END:
-   Here comes  my Gnus  configuration. Gnus is  an email client  I use  daily to
-   read, manage, answer to and forward messages I receive by email.
-
-*** Shortcuts
-    :PROPERTIES:
-    :CUSTOM_ID: h-4715e44d-b95b-40d4-b79a-c7873d972b39
-    :END:
-    Some shortcuts needed  to be redefined in  order for Evil to  work well with
-    Gnus. Here is first the declaration of a prefix:
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "og" "gnus")
-    #+END_SRC
-    And here  are said shortcuts. As  described above in the  [[#h-f193126f-abc1-4287-aa70-4f2080d2ef8f][shortcuts]] chapter,
-    these Spacemacs shortcuts are invoked with the ~SPC~ leader key.
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/set-leader-keys
-        "ogD" 'turn-on-gnus-dired-mode
-        "ogd" 'gnus-summary-delete-article
-        "ogf" 'gnus-summary-mail-forward
-        "ogo" 'my-gnus-group-list-subscribed-groups
-        "ogr" 'gnus-summary-insert-new-articles
-        "ogs" 'message-send-and-exit)
-    #+END_SRC
-
-*** Hooks
-    :PROPERTIES:
-    :CUSTOM_ID: h-5208e53f-d2e7-4dc1-a081-964ac1c90d4b
-    :END:
-    To  sort  by   topics  my  different  mailboxes  and  folders,   I  use  the
-    ~gnus-topic-mode~  minor mode.  To  get  it active  by  default,  I use  the
-    following hook to activate it:
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
-    #+END_SRC
-
-*** Mail account configuration
-    :PROPERTIES:
-    :CUSTOM_ID: h-eb1a12b5-38ef-4c81-9d6c-01c1e066feaa
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I only use one email account with Gnus: ~lucien@phundrak.com~. Here is how I
-    configured it:
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-secondary-select-methods '((nnimap "lucien@phundrak.com"
-                                                    (nnimap-address "mail.phundrak.com")
-                                                    (nnimap-server-port 143)
-                                                    (nnimap-stream starttls)))
-            message-send-mail-function 'smtpmail-send-it
-            smtpmail-smtp-server "mail.phundrak.com"
-            smtpmail-stream-type 'starttls
-            smtpmail-smtp-service 587
-            gnus-message-archive-method '(nnimap "mail.phundrak.com")
-            gnus-message-archive-group "Sent"
-            nnml-directory "~/Mails"
-            message-directory "~/Mails"
-            gnus-fetch-old-headers 'some
-            mm-discouraged-alternatives '("text/html" "text/richtext"))
-    #+END_SRC
-
-*** General options
-    :PROPERTIES:
-    :CUSTOM_ID: h-336a2c1c-ed8d-4a90-b4a3-6422a0199ba0
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I want to use  at one point the [[https://www.emacswiki.org/emacs/EmacsApplicationFramework][Emacs Application Framework]]  which is set to
-    be able one day to render Gnus emails,  but for now I am using w3m to render
-    HTML emails I receive.
-    #+BEGIN_SRC emacs-lisp
-      (setq mm-text-html-renderer 'w3m)
-    #+END_SRC
-
-    I also  want Gnus  to use the  cache in  case I need  to navigate  my emails
-    offline:
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-use-cache t)
-    #+END_SRC
-
-    The following allows  the user to read  in a group all the  messages in this
-    group, whether they are read or unread.
-    #+BEGIN_SRC emacs-lisp
-      (setq gnus-fetch-old-headers t)
-      (setq gnus-parameters '(("nnimap.*"
-                               (display . all))))
-    #+END_SRC
-
-    Let’s set a quick organization of the Gnus folders, the format in which sent
-    messages should be saved, and the typology of Gnus’ topics:
-    #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'gnus-topic
-        '(progn
-           (setq gnus-message-archive-group '((format-time-string "sent.%Y")))
-           (setq gnus-topic-topology '(("Gnus" visible)
-                                       (("lucien@phundrak.com" visible nil nil))))
-           (setq gnus-topic-alist '(("lucien@phundrak.com" ; the key of the topic
-                                     "nnimap+lucien@phundrak.com:INBOX"
-                                     "nnimap+lucien@phundrak.com:Sent"
-                                     "nnimap+lucien@phundrak.com:Drafts")
-                                    ("Gnus")))))
-    #+END_SRC
-
-*** Visual configuration
-    :PROPERTIES:
-    :CUSTOM_ID: h-8ccda149-c755-4c80-8643-7a9b99ee85b2
-    :header-args:emacs-lisp: :comments link :tangle ~/.gnus.el
-    :END:
-    This section will be tangled in =~/.gnus.el=.
-
-    I get  it that it  used to be  a good option  with 4/3 screens,  but frankly
-    opening an email at the bottom of the frame instead of the side of the frame
-    does not look good anymore. So, let’s fix that:
-    #+BEGIN_SRC emacs-lisp
-      (gnus-add-configuration
-       '(article (horizontal 1.0 (summary .4 point) (article 1.0))))
-    #+END_SRC
-
 ** LSP
    :PROPERTIES:
    :CUSTOM_ID: h-4d0272c3-df5e-4f6b-a6e6-f769add4e603
@@ -1971,6 +1849,145 @@
    above a documented piece of code or symbol. Let’s enable that too:
    #+BEGIN_SRC emacs-lisp
      (tooltip-mode 1)
+   #+END_SRC
+
+** Mu4e
+   :PROPERTIES:
+   :CUSTOM_ID: h-ba4a69ff-38a6-498a-b076-a514bbf0701f
+   :END:
+   Mu4e is a frontend  for mu, an email analyzer which sits on  top of a Maildir
+   which gets updated with  ~isync~. It has a lot of neat  features, but I guess
+   my favorite ones are:
+   1. the search query feature
+   2. being able to send an HTML email either to the browser or
+   3. to compile it to a PDF for a better output
+   This  last feature  can only  be enabled  manually with  Arch Linux.  We need
+   ~webkitgtk~ installed,  and unfortunately,  it is  by default  only available
+   through the  AUR and  has to be  compiled. Thing is,  ~webkitgtk~ is  a *BIG*
+   piece of software, and compiling it can be very time consuming. So, I decided
+   to add ArchLinuxCN’s  servers to my pacman config (instructions  on how to do
+   so [[https://github.com/archlinuxcn/repo][here]]) so I could install a compiled version from their repos. Next, when I
+   installed ~mu~ from the AUR, I modified the PKGBUILD like so:
+   #+BEGIN_SRC diff :tangle no
+     <       ./configure --prefix=/usr --disable-webkit --disable-gtk --enable-mu4e --enable-guile
+     ---
+     >       ./configure --prefix=/usr --enable-mu4e --enable-guile
+   #+END_SRC
+
+   This enables the  installation of ~msg2pdf~, which in turn  enables the email
+   compilation to PDF with the shortcut ~a  v~ when an email is opened, and this
+   opens the PDF in a new Emacs buffer.
+
+   Due to mu sitting on top of a Maildir, I need to tell mu4e where said maildir
+   is, and point it the trash, archive,  and sent folders as well as the refresh
+   command and how frequently I want my emails to be refreshed.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-maildir "~/.mail"
+           mu4e-trash-folder "/Trash"
+           mu4e-refile-folder "/Archive"
+           mu4e-sent-folder "/Sent"
+           mu4e-get-mail-command "mbsync -a"
+           mu4e-update-interval 60)
+   #+END_SRC
+
+   The following  also allows  me to  automatically include  my signature  in my
+   Emails, to view images  in my Emacs buffers and to show me  the address of my
+   contacts and not just their names.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-compose-signature-auto-include t
+           mu4e-view-show-images t
+           mu4e-view-show-addresses t)
+   #+END_SRC
+
+   This source block  is an example of  the search queries in mu4e,  and part of
+   the reason why I very much like mu4e: these bookmarks are actually defined by
+   search queries, but act as if they were just yet another type of custom inbox
+   you get  with modern Email  client (and often you  don’t even get  them). All
+   these bookmarks can  be accessed through a shortcut on  the main mu4e buffer,
+   prefixed by  ~b~. So, for instance,  my unread messages are  accessed through
+   ~bu~.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-bookmarks
+           `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+             ("date:today..now" "Today's messages" ?t)
+             ("date:7d..now" "Last 7 days" ?w)
+             ("mime:image/*" "Messages with images" ?p)
+             (,(mapconcat 'identity
+                          (mapcar
+                           (lambda (maildir)
+                             (concat "maildir:" (car maildir)))
+                           mu4e-maildir-shortcuts) " OR ")
+              "All inboxes" ?i)))
+   #+END_SRC
+
+   On new email arrival, Emacs can send  the system a notification which will be
+   handled as any other notification received by the system and will display the
+   number of unread emails to the user; in my case, notifications are handled by
+   [[https://dunst-project.org/][dunst]].
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-enable-notifications t
+           mu4e-alert-email-notification-types '(count))
+     (with-eval-after-load 'mu4e-alert
+       (mu4e-alert-set-default-style 'libnotify))
+   #+END_SRC
+
+   Now this  hook is  added so  I can  get a maximal  width for  the text  of my
+   emails, I really don’t  like it when lines are kilometers  long. I would like
+   instead to hook ~visual-line-mode~ and ~auto-fill-mode~, but for some reasons
+   Emacs throws an error when I add them, So I go with ~visual-fill-column-mode~
+   instead.
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'mu4e-view-mode-hook 'visual-fill-column-mode)
+   #+END_SRC
+
+   On modern-day  computers, with  wide screens almost  everywhere, there  is no
+   reason for the email buffer to open  below the email directory and not on its
+   right,  which  is  why I  set  the  split  view  to be  vertical  instead  of
+   horizontal.  I also  set the  width  the email  directory should  keep to  80
+   characters  (and   I  could  go  to   120,  but  that’s  only   good  for  my
+   ultra-widescreen), because 30 characters is way too f-ing low.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-split-view 'vertical
+           mu4e-headers-visible-columns 80)
+   #+END_SRC
+
+   I want to add myself as a hidden recipient to all of my messages so I can get
+   them in the  email thread in my inbox  and not just get a  thread of messages
+   not sent by me –the thread could  kinda lack some context if the other people
+   do not insert  my email in their answer. But  unfortunately, for some obscure
+   reason, mu4e does not use the  following variable for its email templates, so
+   I am keeping this  as a reminder I should find how to  fix that. It does work
+   when I’m exporting an org file to and HTML buffer to be sent by email through
+   ~, e m~.
+   #+BEGIN_SRC emacs-lisp
+     (setq message-default-headers "Bcc: Lucien Cartier-Tilet <lucien@phundrak.com>\n")
+   #+END_SRC
+
+   Finally but  very importantly,  this is  the setup  I have  for my  SMTP mail
+   server: I point  Emacs’ SMTP services to  my private mail server  on its SMTP
+   port, which should be  used with a STARTTLS stream. And I  tell Emacs this is
+   the default way to send an email.
+   #+BEGIN_SRC emacs-lisp
+     (setq smtpmail-smtp-server "mail.phundrak.com"
+           smtpmail-smtp-service 587
+           smtpmail-stream-type 'starttls
+           message-send-mail-function 'smtpmail-send-it)
+   #+END_SRC
+
+   I am  unsure yet if  this has  any effect on  mu4e, but this  variable should
+   discourage mu4e from reading rich text  emails and instead open them as plain
+   text. However, I  do not wish to  discourage opening HTML emails  since I can
+   compile them to PDF or open them in the browser.
+   #+BEGIN_SRC emacs-lisp
+     (setq mm-discouraged-alternatives '("text/richtext"))
+   #+END_SRC
+
+   I am still unsure about this variable and  if it has an effect on mu4e, but I
+   wish to  set a default  web viewer for  my HTML emails:  w3m. This is  not as
+   effective as sending the email in the  browser or rendering it as a PDF file,
+   but it can be effective enough for some emails.
+   #+BEGIN_SRC emacs-lisp
+     (setq mm-text-html-renderer 'w3m)
    #+END_SRC
 
 ** Miscellaneous
@@ -2488,7 +2505,7 @@
     One awesome feature  of Org mode is  the agenda. By default,  my agendas are
     stored in =~/org/agenda=.
     #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-files (list "~/org/agenda"))
+      (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
     #+END_SRC
 
     I also  have a  custom command  in Org agenda  to mark  some tasks  as daily
@@ -2515,25 +2532,198 @@
                 (org-projectile-todo-files)))
     #+END_SRC
 
-*** Org journal
+*** Org capture
     :PROPERTIES:
-    :CUSTOM_ID: h-d679ae6c-3096-4933-8e06-9848ad35adb0
+    :CUSTOM_ID: h-9a070bbb-5b57-4abd-9d61-51f2070eb47b
     :END:
-    I  also  occasionally   use  Org  journal.  All  my  files   are  stored  in
-    =~/org/journal=, as set below:
+    Org-capture is  an amazing feature  of Org-mode  which allows me  to quickly
+    save links, resources,  reminders and notes in a neatly  organized org file.
+    With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~.
+    It will then ask which template I  wish to use. Said templates are described
+    below:
     #+BEGIN_SRC emacs-lisp
-      (setq org-journal-dir "~/org/journal/")
+      (setq
+       org-default-notes-file "~/org/notes.org"
+       org-capture-templates
+       '(("e" "Emails")
+         ("ew" "Write Email" entry
+          (file+headline org-default-notes-file "Emails")
+          (file "~/org/capture/emails.orgcaptmpl"))
+         ("j" "Journal" entry
+          (file+datetree "~/org/journal.org")
+          (file "~/org/capture/journal.orgcaptmpl"))
+         ("l" "Links")
+         ("ly" "YouTube" entry
+          (file+headline org-default-notes-file "YouTube")
+          (file "~/org/capture/youtube.orgcaptmpl"))
+         ("L" "Protocol Link" entry
+          (file+headline org-default-notes-file "Link")
+          (file "~/org/capture/protocol-link.orgcaptmpl"))
+         ("n" "Note"
+          entry (file+headline org-default-notes-file "Note")
+          (file "~/org/capture/notes.orgcaptmpl"))
+         ("p" "Protocol" entry
+          (file+headline org-default-notes-file "Link")
+          (file "~/org/capture/protocol.orgcaptmpl"))
+         ("r" "Resources")
+         ("rc" "Conlanging" entry
+          (file+headline org-default-notes-file "Conlanging")
+          (file "~/org/capture/resource.orgcaptmpl"))
+         ("re" "Emacs" entry
+          (file+headline org-default-notes-file "Emacs")
+          (file "~/org/capture/resource.orgcaptmpl"))
+         ("ri" "Informatique général" entry
+          (file+headline org-default-notes-file "Informatique")
+          (file "~/org/capture/resource.orgcaptmpl"))
+         ("rl" "Linguistics" entry
+          (file+headline org-default-notes-file "Linguistics")
+          (file "~/org/capture/resource.orgcaptmpl"))
+         ("rw" "Worldbuilding" entry
+          (file+headline org-default-notes-file "Worldbuilding")
+          (file "~/org/capture/resource.orgcaptmpl"))))
     #+END_SRC
 
-    The default prefix for org journals is the following:
-    #+BEGIN_SRC emacs-lisp
-      (setq org-journal-date-prefix "#+TITLE: ")
-    #+END_SRC
+    You may notice a capture entry for my journal, and this is due to the fact I
+    do  not use  ~org-journal~ anymore:  it was  too overpowered  for me,  and I
+    prefer to keep it simple with a single  file. And as you can see, and unlike
+    a lot of other Emacs configurations, the  content of the template is not set
+    in  the variable,  but in  external files  which can  be modified  freely as
+    actual Org buffers instead of trying to  get a proper one with loads of ~\n~
+    characters and such. All these templates are declared below.
 
-    The timestamp will be set following the ISO 8601 format:
-    #+BEGIN_SRC emacs-lisp
-      (setq org-journal-file-format "%Y-%m-%d")
-    #+END_SRC
+**** Emails
+     :PROPERTIES:
+     :CUSTOM_ID: h-9012599e-c143-4df0-b63c-7c60ddb4a081
+     :END:
+     This is my template for a new Email:
+     #+BEGIN_SRC org :tangle ~/org/capture/email.orgcaptmpl
+       ,** TODO [#A] Write Email
+          :PROPERTIES:
+          :CAPTURED: %U
+          :END:
+       From: Lucien Cartier-Tilet <lucien@phundrak.com>
+       To: %^{Recipient}
+       Subject: %^{Object}
+       --text follows this line--
+       %?
+       --
+       Lucien “Phundrak” Cartier-Tilet
+       https://phundrak.com (Français)
+       https://en.phundrak.com (English)
+
+       Sent from a Free and Open-Source Linux operating system with GNU/Emacs
+     #+END_SRC
+
+     I use  it in case my  computer is not yet  connected to the internet  and I
+     need to already write the email so I  can send it later. All I will need to
+     to afterwards will be to copy and  paste my capture in a new message buffer
+     and   send   it   once   I   am  back   online.   This   is   exported   to
+     =~/org/capture/email.orgcaptmpl=.
+
+**** Journal
+     :PROPERTIES:
+     :CUSTOM_ID: h-ab1b21af-e887-41a7-be7a-c08825d16339
+     :END:
+     This template  is quite  simple: it  creates a new  entry with  the current
+     timestamp as its title, a brief title  of my choosing, and then I can write
+     whatever     I     wish    to     write.     This     is    exported     to
+     =~/org/capture/journal.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/journal.orgcaptmpl
+       ,* %U %^{Title}
+         %?
+     #+END_SRC
+
+**** Notes
+     :PROPERTIES:
+     :CUSTOM_ID: h-2b5e7efc-4a9d-4a92-b75f-4ec75e2fb48d
+     :END:
+     This template  is used for taking  note about various subjects  that can go
+     from conlanging to  development. I wrote it  so I can know  from where this
+     capture was made  and when, and it even supports  text that was highlighted
+     in  Emacs that  will be  inserted in  a quote  block. This  is exported  to
+     =~/org/capture/notes.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/notes.orgcaptmpl
+       ,* Note
+         :PROPERTIES:
+         :CAPTURED: %U
+         :FROM:     %f
+         :END:
+         Possible inspiration:
+         ,#+begin_quote
+         %i
+         ,#+end_quote
+
+         %?
+     #+END_SRC
+
+**** Protocol
+     :PROPERTIES:
+     :CUSTOM_ID: h-6fa10246-26bf-4ab3-a3b0-1f58bc79350e
+     :END:
+     This  capture  is  used  when   received  through  org-protocol,  with  the
+     Org-protocol Extension for  Firefox. It allows me to save  in a quote block
+     what I’ve highlighted, as well as the link of the webpage on which my saved
+     content     was    highlighted.     This     file     is    exported     to
+     =~/org/capture/protocol.orgcaptmpl=.
+     #+BEGIN_SRC org :tangle ~/org/capture/protocol.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %:link
+         :TITLE:    %:description
+         :END:
+         ,#+begin_quote
+         %i
+         ,#+end_quote
+
+         %?
+     #+END_SRC
+
+     This next capture template is used only when a link is sent to Emacs and no
+     content was highlighted.
+     #+BEGIN_SRC org :tangle ~/org/capture/protocol-link.orgcaptmpl
+       ,* TODO [#C] Link: %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %:link
+         :TITLE:    %:description
+         :END:
+         %?
+     #+END_SRC
+
+**** Resources
+     :PROPERTIES:
+     :CUSTOM_ID: h-001eb681-1725-442d-91ef-b6a46c1784dc
+     :END:
+     This is the default template for  resources, which generally are located on
+     the Internet. By default, I give them the lowest priority, because although
+     this is something for me to remember later, it is not by default important.
+     You can see in the properties I  record when the capture happened, and what
+     the link is. The  title of the capture is a summary of  what this is, while
+     the body of the  capture is a more detailed explanation  of what I capture,
+     why, and how it could be useful to me.
+     #+BEGIN_SRC org :tangle ~/org/capture/resource.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :LINK:     %^{Link}
+         :END:
+         %?
+     #+END_SRC
+
+**** YouTube
+     :PROPERTIES:
+     :CUSTOM_ID: h-4b962a95-47d9-4410-8365-7d09e19530eb
+     :END:
+     #+BEGIN_SRC org :tangle ~/org/capture/youtube.orgcaptmpl
+       ,* TODO [#C] %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :AUTHOR:   %^{Author}
+         :LINK:     %^{Link}
+         :END:
+         %?
+     #+END_SRC
 
 *** Org projects
     :PROPERTIES:
@@ -2689,7 +2879,7 @@
    The Scheme configuration  will be very short,  I just need to  tell Emacs the
    name of the interpreter since it is not the default one:
    #+BEGIN_SRC emacs-lisp
-   (setq geiser-chicken-binary "chicken-csi")
+     (setq geiser-chicken-binary "chicken-csi")
    #+END_SRC
 
 ** Shortcuts
@@ -2818,6 +3008,15 @@
         "ofI" (lambda () (interactive) (find-file "~/org/config/index.org"))
         "ofp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
         "ofr" (lambda () (interactive) (find-file "~/README.org")))
+    #+END_SRC
+
+    I also want a quick access to my notes and my journal.
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "ofj" "journal.org")
+      (spacemacs/declare-prefix "ofn" "notes.org")
+      (spacemacs/set-leader-keys
+        "ofj" (lambda () (interactive) (find-file "~/org/journal.org"))
+        "ofn" (lambda () (interactive) (find-file "~/org/notes.org")))
     #+END_SRC
 
 *** Multiple cursors

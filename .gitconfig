@@ -72,8 +72,6 @@
 	####
 	u = reset --
 	unstage = reset --
-	####
-	webui = !/home/phundrak/.git-webui/release/libexec/git-core/git-webui
 [magithub]
 	online = true
 [magithub "status"]
@@ -82,8 +80,6 @@
 	includeIssuesSection = true
 [gpg]
 	program = gpg2
-[webui]
-	autoupdate = true
 [mergetool.ediff]
 	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
 [merge]
