@@ -2511,7 +2511,7 @@
     One awesome feature  of Org mode is  the agenda. By default,  my agendas are
     stored in =~/org/agenda=.
     #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-files (list "~/org/agenda"))
+      (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
     #+END_SRC
 
     I also  have a  custom command  in Org agenda  to mark  some tasks  as daily
@@ -2676,7 +2676,7 @@
          :PROPERTIES:
          :CAPTURED: %U
          :LINK:     %:link
-         :TITLE:    %:(transform-square-brackets-to-round-ones \"%:description\")
+         :TITLE:    %:description
          :END:
          ,#+begin_quote
          %i
@@ -2685,28 +2685,16 @@
          %?
      #+END_SRC
 
-     For the next
+     This next capture template is used only when a link is sent to Emacs and no
+     content was highlighted.
      #+BEGIN_SRC org :tangle ~/org/capture/protocol-link.orgcaptmpl
        ,* TODO [#C] Link: %^{Title}
          :PROPERTIES:
          :CAPTURED: %U
          :LINK:     %:link
-         :TITLE:    %(transform-square-brackets-to-round-ones \"%:description\")
+         :TITLE:    %:description
          :END:
          %?
-     #+END_SRC
-
-     #+BEGIN_SRC emacs-lisp
-       (defun transform-square-brackets-to-round-ones (string-to-transform)
-         "Transforms [ into ( and ] into ), other chars left unchanged."
-         (concat
-          (mapcar #'(lambda (c)
-                      (if (equal c ?[)
-                          ?\(
-                       (if (equal c ?])
-                           ?\)
-                        c)))
-                  string-to-transform)))
      #+END_SRC
 
 **** Resources
