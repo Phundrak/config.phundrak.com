@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=Gnus
-GenericName=Gnus
-Comment=Emacs' email client
+Name=Mu4e
+GenericName=Mu4e
+Comment=Maildir Utils for Emacs
 MimeType=x-scheme-handler/mailto;
-Exec=emacs --eval "(gnus)" %F
+Exec=emacs --eval "(mu4e)" %F
 Icon=emacs
 Type=Application
 Terminal=false
