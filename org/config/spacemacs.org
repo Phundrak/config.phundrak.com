@@ -1893,6 +1893,7 @@
            mu4e-trash-folder "/Trash"
            mu4e-refile-folder "/Archive"
            mu4e-sent-folder "/Sent"
+           mu4e-drafts-folder "/Drafts"
            mu4e-get-mail-command "mbsync -a"
            mu4e-update-interval 60)
    #+END_SRC
@@ -1955,7 +1956,7 @@
    ultra-widescreen), because 30 characters is way too f-ing low.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-split-view 'vertical
-           mu4e-headers-visible-columns 80)
+           mu4e-headers-visible-columns 140)
    #+END_SRC
 
    I want to add myself as a hidden recipient to all of my messages so I can get
