@@ -620,7 +620,7 @@
     #+BEGIN_SRC emacs-lisp
       (shell :variables
              shell-default-height 40
-             shell-default-position 'right
+             shell-default-position 'bottom
              shell-default-shell 'eshell)
     #+END_SRC
 
