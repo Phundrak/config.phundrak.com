@@ -925,7 +925,7 @@
   | no                 | mpc stop                                                 | Stop music from mpd                    |
   | no                 | mpd_discord_richpresence --no-idle --fork                | Launch mpd status sharing with Discord |
   | no                 | nm-applet                                                | NetworkManager system tray             |
-  | no                 | redshift-gtk -O 3200 -t 1.0:0.8                          | Blue light filter                      |
+  | no                 | numlockx on                                              | Activate NumLock                       |
 
   #+NAME: generate-autolaunch
   #+BEGIN_SRC emacs-lisp :exports none :cache yes :var table=autolaunch
