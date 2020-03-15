@@ -46,6 +46,7 @@
     - [[#feh][Feh]]
     - [[#network-management][Network Management]]
     - [[#nordvpn][NordVPN]]
+    - [[#webcam][Webcam]]
     - [[#wget][Wget]]
 
 * Presentation
@@ -635,6 +636,19 @@
 
     #+BEGIN_SRC fish
       <<generate-abbr(table=nordvpn-abbr)>>
+    #+END_SRC
+
+*** Webcam
+    :PROPERTIES:
+    :CUSTOM_ID: h-465adbc6-cad0-441a-9e54-f5e389e7362d
+    :END:
+    #+NAME: webcam-abbr
+    | abbreviation | command                                                                                                          |
+    |--------------+------------------------------------------------------------------------------------------------------------------|
+    | webcam       | mpv --no-border --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0 |
+
+    #+BEGIN_SRC fish
+      <<generate-abbr(table=webcam-abbr)>>
     #+END_SRC
 
 *** Wget
