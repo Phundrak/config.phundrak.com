@@ -106,6 +106,10 @@
       - [[#notes][Notes]]
       - [[#protocol][Protocol]]
       - [[#resources][Resources]]
+      - [[#tasks][Tasks]]
+        - [[#computers-and-stuff][Computers and stuff]]
+        - [[#health][Health]]
+        - [[#birthdays][Birthdays]]
       - [[#youtube][YouTube]]
     - [[#org-projects][Org projects]]
       - [[#configuration-website][Configuration website]]
@@ -1876,10 +1880,52 @@
    to add ArchLinuxCN’s  servers to my pacman config (instructions  on how to do
    so [[https://github.com/archlinuxcn/repo][here]]) so I could install a compiled version from their repos. Next, when I
    installed ~mu~ from the AUR, I modified the PKGBUILD like so:
-   #+BEGIN_SRC diff :tangle no
-     <       ./configure --prefix=/usr --disable-webkit --disable-gtk --enable-mu4e --enable-guile
-     ---
-     >       ./configure --prefix=/usr --enable-mu4e --enable-guile
+   #+BEGIN_SRC text :tangle no
+     # Maintainer: Marcel Röthke <marcel@roethke.info>
+     # Contributor: Pierre Neidhardt <ambrevar@gmail.com>
+     # Contributor: csllbr; Popsch <popsch@gmx.net>
+
+     pkgname=mu
+     pkgver=1.2
+     pkgrel=3
+     pkgdesc="Maildir indexer/searcher and Emacs client (mu4e)"
+     arch=("x86_64")
+     url="http://www.djcbsoftware.nl/code/mu"
+     license=("GPL")
+     depends=("gmime3" "xapian-core" "guile2.0")
+     makedepends=("emacs")
+     optdepends=("guile: guile support"
+       "emacs: mu4e support")
+     source=("mu-$pkgver.tar.gz::https://github.com/djcb/mu/archive/$pkgver.tar.gz")
+     md5sums=('5e7d7c3549b9428ec0b5ea7d374b6d0d')
+
+     prepare() {
+       cd "$pkgname-$pkgver"
+       autoreconf -i
+     }
+
+
+     build() {
+       cd "$pkgname-$pkgver"
+       ./configure --prefix=/usr --enable-mu4e --enable-guile
+       make
+     }
+
+     package() {
+       cd "$pkgname-$pkgver"
+       make DESTDIR="$pkgdir" install
+       # if msg2pdf and mug were built, install them
+       # if not, remove the unneeded mug manpage
+       if [ -f toys/msg2pdf/msg2pdf ]; then
+         install -m755 toys/msg2pdf/msg2pdf "${pkgdir}"/usr/bin/msg2pdf
+       fi
+       if [ -f toys/mug/mug ]; then
+         install -m755 toys/mug/mug "${pkgdir}"/usr/bin/mug
+         install -Dm644 toys/mug/mug.svg "${pkgdir}"/usr/share/pixmaps/mug.svg
+       else
+         rm "${pkgdir}"/usr/share/man/man1/mug.1
+       fi
+     }
    #+END_SRC
 
    This enables the  installation of ~msg2pdf~, which in turn  enables the email
@@ -2518,16 +2564,24 @@
     #+END_SRC
 
     I also  have a  custom command  in Org agenda  to mark  some tasks  as daily
-    tasks, with the =:DAILY:= tag:
+    tasks with the =:DAILY:= tag,:
     #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-custom-commands '(("h" "Daily habits"
-                                          ((agenda ""))
-                                          ((org-agenda-show-log t)
-                                           (org-agenda-ndays 7)
-                                           (org-agenda-log-mode-items '(state))
-                                           (org-agenda-skip-function
-                                            '(org-agenda-skip-entry-if 'notregexp
-                                                                       ":DAILY:"))))))
+      (setq org-agenda-custom-commands
+            '(("h" "Daily habits"
+               ((agenda ""))
+               ((org-agenda-show-log t)
+                (org-agenda-ndays 7)
+                (org-agenda-log-mode-items '(state))
+                (org-agenda-skip-function
+                 '(org-agenda-skip-entry-if 'notregexp
+                                            ":DAILY:"))))
+              ("Y" "Yearly events"
+               ((agenda ""))
+               ((org-agenda-show-log t)
+                (org-agenda-ndays 365)
+                (org-agenda-log-mode-items '(state))
+                (org-agenda-skip-entry-if 'notregexp
+                                          ":YEARLY:")))))
     #+END_SRC
 
     By  the  way,  let’s  also  add   all  TODO.org  files  in  Org-agenda  with
@@ -2568,7 +2622,11 @@
          ("L" "Protocol Link" entry
           (file+headline org-default-notes-file "Link")
           (file "~/org/capture/protocol-link.orgcaptmpl"))
-         ("n" "Note"
+         ("n" "Note")
+         ("nq" "Quote"
+          entry (file+headline org-default-notes-file "Note")
+          (file "~/org/capture/notes-quote.orgcaptmpl"))
+         ("nn" "Note"
           entry (file+headline org-default-notes-file "Note")
           (file "~/org/capture/notes.orgcaptmpl"))
          ("p" "Protocol" entry
@@ -2589,7 +2647,20 @@
           (file "~/org/capture/resource.orgcaptmpl"))
          ("rw" "Worldbuilding" entry
           (file+headline org-default-notes-file "Worldbuilding")
-          (file "~/org/capture/resource.orgcaptmpl"))))
+          (file "~/org/capture/resource.orgcaptmpl"))
+         ("t" "Tasks")
+         ("ti" "Informatique" entry
+          (file+headline "~/org/agenda/private.org" "Informatique")
+          (file "~/org/capture/informatique.orgcaptmpl"))
+         ("th" "Health" entry
+          (file+headline "~/org/agenda/private.org" "Health")
+          (file "~/org/capture/health.orgcaptmpl"))
+         ("tb" "Birthday" entry
+          (file+headline "~/org/agenda/private.org" "Birthdays")
+          (file "~/org/capture/birthday.orgcaptmpl"))
+         ("te" "Birthday event" entry
+          (file+headline "~/org/agenda/private.org" "Burthdays")
+          (file "~/org/capture/birthday-event.orgcaptmpl"))))
     #+END_SRC
 
     You may notice a capture entry for my journal, and this is due to the fact I
@@ -2607,6 +2678,7 @@
      This is my template for a new Email:
      #+BEGIN_SRC org :tangle ~/org/capture/email.orgcaptmpl
        ,** TODO [#A] Write Email
+          SCHEDULED: %^t
           :PROPERTIES:
           :CAPTURED: %U
           :END:
@@ -2652,7 +2724,17 @@
      in  Emacs that  will be  inserted in  a quote  block. This  is exported  to
      =~/org/capture/notes.orgcaptmpl=.
      #+BEGIN_SRC org :tangle ~/org/capture/notes.orgcaptmpl
-       ,* Note
+       ,* %^{Title}
+         :PROPERTIES:
+         :CAPTURED: %U
+         :FROM:     %f
+         :END:
+         %?
+     #+END_SRC
+
+
+     #+BEGIN_SRC org :tangle ~/org/capture/notes-quote.orgcaptmpl
+       ,* %^{Title}
          :PROPERTIES:
          :CAPTURED: %U
          :FROM:     %f
@@ -2719,6 +2801,63 @@
          :END:
          %?
      #+END_SRC
+
+**** Tasks
+     :PROPERTIES:
+     :CUSTOM_ID: h-e8190e80-e2d5-4f68-84df-a760b00727e7
+     :END:
+
+***** Computers and stuff
+      :PROPERTIES:
+      :CUSTOM_ID: h-96f1bf32-ff88-498f-920b-0a583f5782eb
+      :END:
+      One type of task  I often capture is related to my  servers or thing about
+      computers in  general. With this,  I can capture a  task for which  I will
+      either set a schedule or a deadline.
+      #+BEGIN_SRC org :tangle ~/org/capture/informatique.orgcaptmpl
+        ,* TODO %^{Title}
+          %^{Scheduled or Deadline?||SCHEDULED||DEADLINE}: %^t
+          :PROPERTIES:
+          :CATEGORY: %^{Category}
+          :END:
+          %?
+      #+END_SRC
+
+***** Health
+      :PROPERTIES:
+      :CUSTOM_ID: h-99c15553-4298-4d15-a0a1-1335ebc83cc2
+      :END:
+      This capture is rarely used (I’m lucky to have a good health), but it can
+      be useful.
+      #+BEGIN_SRC org :tangle ~/org/capture/health.orgcaptmpl
+        ,* %^{Title}
+          SCHEDULED: %^t
+
+          %?
+      #+END_SRC
+
+***** Birthdays
+      :PROPERTIES:
+      :CUSTOM_ID: h-e0d32ee1-cdf8-4d9e-aac6-55de262bb45e
+      :END:
+      This capture is used  to store new birthdays I have  to remember. They are
+      set to be repeated yearly.
+      #+BEGIN_SRC org :tangle ~/org/capture/birthday.orgcaptmpl
+        ,* %^{Name}
+          SCHEDULED: %^t
+      #+END_SRC
+
+      Sometimes I will have a special event for one birthday, and I need to
+      store it in the same header as birthdays in general, they don’t need
+      to be repeated but they might need some more information.
+      #+BEGIN_SRC org :tangle ~/org/capture/birthday-event.orgcaptmpl
+        ,* %^{Title}
+          %^{Scheduled or deadline?||SCHEDULED||DEADLINE}: %^t
+          :PROPERTIES:
+          :WHOM:     %^{Whom’s birthday?}
+          :END:
+          %?
+      #+END_SRC
 
 **** YouTube
      :PROPERTIES:
