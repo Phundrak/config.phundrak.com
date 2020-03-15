@@ -837,17 +837,16 @@
     I generally use the following extensions in my Fish shell.
     #+NAME: fish-extensions
     #+CAPTION: Fish extensions managed by Fisher
-    | Package name                | Description                                                      |
-    |-----------------------------+------------------------------------------------------------------|
-    | oh-my-fish/theme-bobthefish | Robust, git-aware, powerline prompt                              |
-    | jorgebucaran/fish-bax       | Run bash scripts, replaying environment changes in fish          |
-    | franciscolourenco/done      | Automatically receive notifications when a long process finishes |
-    | jethrokuan/fzf              | Improved key bindings for [[https://github.com/junegunn/fzf][junegunn/fzf]]                           |
-    | jethrokuan/z                | Pure-fish [[https://github.com/rupa/z][rupa/z]]-like directory jumping                          |
-    | jorgebucaran/fish-getopts   | CLI options parser; alternative to the [[https://fishshell.com/docs/current/commands.html#argparse][argparse]] fish builtin     |
-    | laughedelic/pisces          | Autoclose parentheses, braces, quotes and other paired symbols   |
-    | tuvistavie/fish-ssh-agent   | Utility functions to start your ssh agent                        |
-    | acomagu/fish-async-prompt   | Make your prompt asynchronous to increase it reactivity          |
+    | Package name              | Description                                                      |
+    |---------------------------+------------------------------------------------------------------|
+    | fishpkg/fish-prompt-metro | Fast, git-aware, space-conscious, Powerline prompt               |
+    | jorgebucaran/fish-bax     | Run bash scripts, replaying environment changes in fish          |
+    | franciscolourenco/done    | Automatically receive notifications when a long process finishes |
+    | jethrokuan/fzf            | Improved key bindings for [[https://github.com/junegunn/fzf][junegunn/fzf]]                           |
+    | jethrokuan/z              | Pure-fish [[https://github.com/rupa/z][rupa/z]]-like directory jumping                          |
+    | jorgebucaran/fish-getopts | CLI options parser; alternative to the [[https://fishshell.com/docs/current/commands.html#argparse][argparse]] fish builtin     |
+    | laughedelic/pisces        | Autoclose parentheses, braces, quotes and other paired symbols   |
+    | acomagu/fish-async-prompt | Make your prompt asynchronous to increase it reactivity          |
 
     #+NAME: fish-ext-py
     #+BEGIN_SRC emacs-lisp :exports none :tangle no :var extensions=fish-extensions[,0] :cache yes
@@ -856,15 +855,14 @@
                  "\n")
     #+END_SRC
 
-    #+RESULTS[e82c7269c09b1d43a1a335a13c422b22b59079b1]: fish-ext-py
-    : fisher add oh-my-fish/theme-bobthefish
+    #+RESULTS[e8afa907b582d6c8c9cb206a5a6be9a3f0f5f657]: fish-ext-py
+    : fisher add fishpkg/fish-prompt-metro
     : fisher add jorgebucaran/fish-bax
     : fisher add franciscolourenco/done
     : fisher add jethrokuan/fzf
     : fisher add jethrokuan/z
     : fisher add jorgebucaran/fish-getopts
     : fisher add laughedelic/pisces
-    : fisher add tuvistavie/fish-ssh-agent
     : fisher add acomagu/fish-async-prompt
 
     #+BEGIN_SRC fish :noweb yes

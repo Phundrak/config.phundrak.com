@@ -108,22 +108,53 @@ for pkg in $PACKAGES
 end
 
 printf "\n# Tangling org files ##########################################################\n\n"
-printf "\n\n==== Tangling bin.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/bin.org\")"
-printf "\n\n==== Tangling fish.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/fish.org\")"
-printf "\n\n==== Tangling i3.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/i3.org\")"
-printf "\n\n==== Tangling index.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/index.org\")"
-printf "\n\n==== Tangling nano.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/nano.org\")"
-printf "\n\n==== Tangling polybar.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/polybar.org\")"
-printf "\n\n==== Tangling spacemacs.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/spacemacs.org\")"
-printf "\n\n==== Tangling tmux.org\n\n"
-emacs -q --batch --eval "(require 'ob-tangle)" --eval "(setq org-confirm-babel-evaluate nil)" --eval "(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))" --eval "(org-babel-tangle-file \"~/org/config/tmux.org\")"
+printf '\n\n==== Tangling bin.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/bin.org")'
+
+printf '\n\n==== Tangling fish.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/fish.org")'
+
+printf '\n\n==== Tangling i3.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/i3.org")'
+
+printf '\n\n==== Tangling index.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/index.org")'
+
+printf '\n\n==== Tangling nano.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/nano.org")'
+
+printf '\n\n==== Tangling polybar.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/polybar.org")'
+
+printf '\n\n==== Tangling spacemacs.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/spacemacs.org")'
+
+printf '\n\n==== Tangling tmux.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/tmux.org")'
 
 find ~/.local/bin -type f -exec chmod +x {} +
 
@@ -262,12 +293,11 @@ printf "\n# Installing fisher ##################################################
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
 
 printf "\n# Installing Fisher Extensions ################################################\n\n"
-fisher add oh-my-fish/theme-bobthefish
+fisher add fishpkg/fish-prompt-metro
 fisher add jorgebucaran/fish-bax
 fisher add franciscolourenco/done
 fisher add jethrokuan/fzf
 fisher add jethrokuan/z
 fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
-fisher add tuvistavie/fish-ssh-agent
 fisher add acomagu/fish-async-prompt
