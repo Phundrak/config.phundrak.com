@@ -3194,15 +3194,16 @@
     Now, onto some shortcuts related to org-mode. Let’s first declare the
     category:
     #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "oo" "org-mode")
+      (spacemacs/declare-prefix "oo" "org-mode")
+      (spacemacs/declare-prefix-for-mode 'org-mode "o" "custom" "User-defined keybindings")
     #+END_SRC
 
     Now, I have a couple of shortcuts I use regularly:
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/set-leader-keys
-        "oop" 'org-pomodoro
-        "oos" 'org-insert-structure-template
-        "ooT" 'org-sidebar-tree)
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "op" 'org-pomodoro
+        "os" 'org-insert-structure-template
+        "oT" 'org-sidebar-tree)
     #+END_SRC
 
     ~oss~  allows   me  to   insert  an  org   structure  template   defined  in
@@ -3220,13 +3221,20 @@
     between shrunk or expanded. A prefix for all of these commands has been also
     added in order to make the purpose of the shortcuts clearer.
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/set-leader-keys
-        "oott" 'org-table-toggle-column-width
-        "oote" 'org-table-expand
-        "oots" 'org-table-shrink)
-      (spacemacs/declare-prefix "oott" "toggle width")
-      (spacemacs/declare-prefix "oote" "expand")
-      (spacemacs/declare-prefix "oots" "shrink")
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "ott" 'org-table-toggle-column-width
+        "ote" 'org-table-expand
+        "ots" 'org-table-shrink)
+      (spacemacs/declare-prefix-for-mode 'org-mode "oott" "toggle width")
+      (spacemacs/declare-prefix-for-mode 'org-mode "oote" "expand")
+      (spacemacs/declare-prefix-for-mode 'org-mode "oots" "shrink")
+    #+END_SRC
+
+    Finaly, I  set the following  shortcut in  order to easily  remove ~RESULTS~
+    blocks from org source code blocks:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "or" 'org-babel-remove-result-one-or-many)
     #+END_SRC
 
 *** Toggle
@@ -3238,6 +3246,18 @@
      (spacemacs/declare-prefix "ot" "toggle")
     #+END_SRC
 
+    As you can see, I have here four shortcuts for toggling various elements in
+    Emacs:
+    - ~otb~ :: toggles ~fancy-battery-mode~. This comes  in very handy when I am
+      on a laptop that is not pluged in or which is charging.
+    - ~otd~ :: toggles ~elcord-mode~. This mode  is used to create an Emacs rich
+      integration in Discord.
+    - ~otf~ :: toggles  the activation of FlyCheck, Emacs’ spell  checker. It is
+      by default  disabled, and I  can turn it on  with this shortcut  only when
+      needed.
+    - ~ots~  :: toggles  ~prettify-symbols-mode~. This  allows Emacs  to replace
+      some symbols  by some others,  like for  example by replacing  ~lambda~ in
+      Emacs Lisp buffers with an actual λ.
     #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys
         "otb" 'fancy-battery-mode
@@ -3246,15 +3266,28 @@
         "ots" 'prettify-symbols-mode)
     #+END_SRC
 
-    We also have some input methods-related shortcuts in a sub-category:
+    We also have some input  methods-related shortcuts in a sub-category: ~oti~.
+    The first shortcuts below are used  to either toggle between no input method
+    or the last one  used (~otit~), or choose an input  method among the various
+    available ones from Emacs (~otis~).
     #+BEGIN_SRC emacs-lisp
       (spacemacs/declare-prefix "oti" "input methods")
+      (spacemacs/set-leader-keys
+        "otit"  'toggle-input-method
+        "otis"  'set-input-method)
     #+END_SRC
 
+    The shortcuts below though allow me to directly switch to one of these three
+    known input methods  I sometimes or often use, namely  Japanese, Tibetan and
+    IPA (by typing in X-SAMPA).
     #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "otij" "Japanese")
+      (spacemacs/declare-prefix "otix" "IPA (X-SAMPA)")
+      (spacemacs/declare-prefix "otiT" "Tibetan")
       (spacemacs/set-leader-keys
-        "otii"  'toggle-input-method
-        "otis"  'set-input-method)
+        "otij" (lambda () (interactive) (set-input-method 'japanese))
+        "otix" (lambda () (interactive) (set-input-method 'ipa-x-sampa))
+        "otiT" (lambda () (interactive) (set-input-method 'tibetan-wylie)))
     #+END_SRC
 
 *** Text
