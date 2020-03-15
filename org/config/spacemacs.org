@@ -6,6 +6,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
 #+PROPERTY: header-args: :mkdirp yes
+#+STARTUP: content
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:

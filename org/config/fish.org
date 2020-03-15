@@ -7,6 +7,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
 #+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code :noweb yes
 #+PROPERTY: header-args :exports code :tangle no
+#+STARTUP: content
 
 * Table of Contents :TOC:noexport:
   :PROPERTIES:
@@ -125,14 +126,12 @@
   | $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
 
   #+NAME: generate-extra-paths
-  #+BEGIN_SRC python :var paths=extra-paths :exports none :cache yes
-    results = ''
-    for path in paths:
-        results += "{0} ".format(path[0])
-    return results.strip()
+  #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
+    (mapconcat (lambda (x) x)
+               paths " ")
   #+END_SRC
 
-  #+RESULTS[36e9cabf867423f29b621d8dac765fad154bd2b1]: generate-extra-paths
+  #+RESULTS[d6cf1e9d562d644db1bc6458eca1fc165b065f0c]: generate-extra-paths
   : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin
 
   #+BEGIN_SRC fish :noweb yes
@@ -212,11 +211,13 @@
   :CUSTOM_ID: h-740bd904-3e32-4c09-b0a4-bde16ae2e116
   :END:
   #+NAME: generate-abbr
-  #+BEGIN_SRC python :var table=[] :exports none
-    result = ''
-    for abbr in table:
-        result += "abbr {0} '{1}'\n".format(abbr[0], abbr[1])
-    return result.replace("\\vert{}", "|").replace("\\vert", "|")
+  #+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
+    (replace-regexp-in-string "\\\\vert[{}]*"
+                              "|"
+                              (mapconcat (lambda (x) (format "abbr %s '%s'" (car x) (cadr x)))
+                                         table
+                                         "\n")
+                              t t)
   #+END_SRC
 
 ** System monitoring

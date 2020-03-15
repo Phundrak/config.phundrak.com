@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :exports code
+#+STARTUP: content
 
 * Table of Contents                                            :TOC:noexport:
   :PROPERTIES:

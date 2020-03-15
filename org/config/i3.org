@@ -6,8 +6,8 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config :comments link
-#+PROPERTY: header-args:python :exports none :tangle no
-#+PROPERTY: header-args:emacs-lisp :exports code :tangle no
+#+PROPERTY: header-args:emacs-lisp :exports none :tangle no
+#+STARTUP: content
 
 * Table of Contents :TOC:noexport:
   :PROPERTIES:
@@ -118,44 +118,42 @@
    #+END_SRC
 
    #+NAME: generate-variables
-   #+BEGIN_SRC python :var variables=variable-table :cache yes
-     result = ''
-     for line in variables:
-         result += "set {0}    {1}\n".format(line[0], line[1])
-     return result
+   #+BEGIN_SRC emacs-lisp :var variables=variable-table :cache yes
+     (mapconcat (lambda (x) (format "set %s %s" (car x) (cadr x)))
+                variables
+                "\n")
    #+END_SRC
 
-   #+RESULTS[187d9be7907abf05492d27a454685b424b933b7d]: generate-variables
-   : set $mod    Mod4
-   : set $alt    Mod1
-   : set $up    Up
-   : set $down    Down
-   : set $left    Left
-   : set $right    Right
-   : set $term    st
+   #+RESULTS[2cd58c10c766632b4e8838fcb1b148d28a7daa60]: generate-variables
+   : set $mod	Mod4
+   : set $alt	Mod1
+   : set $up	Up
+   : set $down	Down
+   : set $left	Left
+   : set $right	Right
+   : set $term	st
 
    Finally, some variables  hold some long strings for commands  I don’t want to
    have to type multiple times.
    #+NAME: generate-variables2
-   #+BEGIN_SRC python :var variables=variable-sh :cache yes
-     result = ''
-     for line in variables:
-         result += "set {0}    \"{1}\"\n".format(line[0], line[1])
-     return result
+   #+BEGIN_SRC emacs-lisp :var variables=variable-sh :cache yes
+     (mapconcat (lambda (x) (format "set %s \"%s\"" (car x) (cadr x)))
+                variables
+                "\n")
    #+END_SRC
 
-   #+RESULTS[13a3244099ec9233a8b7003c1874b3c92cb19e34]: generate-variables2
-   : set $exiti3    "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
-   : set $lockscreen    "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-   : set $rofiexec    "rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
-   : set $gnus    "emacsclient --create-frame --eval '(gnus)' -n"
-   : set $ec    "emacsclient --create-frame -n"
-   : set $walset    "wal -i ~/Pictures/Wallpapers -o wal-set"
+   #+RESULTS[43d22c264f7972e7c2ab35ada0fb45aeb0bd17af]: generate-variables2
+   : set $exiti3	"i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
+   : set $lockscreen	"Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
+   : set $rofiexec	"rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
+   : set $gnus	"emacsclient --create-frame --eval '(gnus)' -n"
+   : set $ec	"emacsclient --create-frame -n"
+   : set $walset	"wal -i ~/Pictures/Wallpapers -o wal-set"
 
    Here is the configuration:
    #+BEGIN_SRC conf :noweb yes
-   <<generate-variables()>>
-   <<generate-variables2()>>
+     <<generate-variables()>>
+     <<generate-variables2()>>
    #+END_SRC
 
    Now comes  the font for the  window tiles. Honestly, this  setting is useless
@@ -313,14 +311,13 @@
   #+END_SRC
 
   #+NAME: generate-workspaces
-  #+BEGIN_SRC python :var workspaces=assignment-table :cache yes
-    results = ''
-    for line in workspaces:
-        results += 'assign [class="{0}"] {1}\n'.format(line[1],line[2])
-    return results
+  #+BEGIN_SRC emacs-lisp :var workspaces=assignment-table :cache yes
+    (mapconcat (lambda (x) (format "assign [class=\"%s\"] %s" (cadr x) (caddr x)))
+               workspaces
+               "\n")
   #+END_SRC
 
-  #+RESULTS[bf7a728d0284d143edef023333680052cf1ff328]: generate-workspaces
+  #+RESULTS[0995341b013e50227edf78257ab502e46a30bc9a]: generate-workspaces
   : assign [class="Emacs"] 2
   : assign [class="Chromium"] 3
   : assign [class="firefox"] 3
@@ -368,11 +365,10 @@
   #+END_SRC
 
   #+NAME: generate-shortcuts
-  #+BEGIN_SRC python :exports none :var table=[] :eval yes :tangle no
-    results = ''
-    for line in table:
-        results += "bindsym {0}    {1}\n".format(line[0], line[1])
-    return results
+  #+BEGIN_SRC emacs-lisp :exports none :var table=[] :tangle no
+    (mapconcat (lambda (x) (format "bindsym %s %s" (car x) (cadr x)))
+               table
+               "\n")
   #+END_SRC
 
 ** Terminal shortcuts
@@ -932,13 +928,34 @@
   | no                 | redshift-gtk -O 3200 -t 1.0:0.8                          | Blue light filter                      |
 
   #+NAME: generate-autolaunch
-  #+BEGIN_SRC python :var table=autolaunch
-    results = ''
-    for line in table:
-        results += 'exec_always ' if line[0] == 'yes' else 'exec '
-        results += '--no-startup-id ' + line[1] + '\n'
-    return results
+  #+BEGIN_SRC emacs-lisp :exports none :cache yes :var table=autolaunch
+    (mapconcat (lambda (x)
+                 (format (concat (if (string= (car x)
+                                              "yes")
+                                     "exec_always"
+                                   "exec")
+                                 " --no-startup-id %s")
+                         (cadr x)))
+               table
+               "\n")
   #+END_SRC
+
+  #+RESULTS[689797f24db25bc308e242006eacc1e1e6de6652]: generate-autolaunch
+  #+begin_example
+  exec_always --no-startup-id wal -i "$(< "${HOME}/.cache/wal/wal")"
+  exec --no-startup-id xss-lock -- i3lock -fol
+  exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+  exec --no-startup-id xrdb $HOME/.Xresources
+  exec --no-startup-id compton -F --opengl --config ~/.config/compton.conf -e 1
+  exec_always --no-startup-id polybar-launch
+  exec_always --no-startup-id enable_touch
+  exec --no-startup-id syndaemon -i 1.0 -t -k
+  exec --no-startup-id mpd
+  exec --no-startup-id mpc stop
+  exec --no-startup-id mpd_discord_richpresence --no-idle --fork
+  exec --no-startup-id nm-applet
+  exec --no-startup-id redshift-gtk -O 3200 -t 1.0:0.8
+  #+end_example
 
   My  travel  laptop  has  a  fingerprint   reader  which  can  be  used  as  an
   authentification  method when  the root  password is  asked. Let’s  launch our

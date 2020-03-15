@@ -4,6 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
+#+STARTUP: content
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
@@ -97,7 +98,7 @@
    Emacs is a great operating system, it just lacks a good text editor.
    #+end_quote
    You can find my Emacs config, based  on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and
-   my user configuration in my [[file:~/org/config-website/spacemacs.org][spacemacs.org]] file.
+   my user configuration in my [[file:spacemacs.org][spacemacs.org]] file.
 
 ** Email signature
    :PROPERTIES:

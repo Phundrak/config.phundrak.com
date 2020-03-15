@@ -7,7 +7,9 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the polybar config file of Phundrak" />
 #+PROPERTY: header-args :exports none
 #+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:emacs-lisp :tangle no :exports none
 #+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code
+#+STARTUP: content
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:

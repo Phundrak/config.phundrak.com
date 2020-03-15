@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's tmux config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the tmux config file of Phundrak" />
 #+PROPERTY: header-args :tangle ~/.tmux.conf.local
+#+STARTUP: content
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
