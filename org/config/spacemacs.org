@@ -2904,7 +2904,7 @@
         :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
         :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
         :recursive t
-        :language "fr"
+        :language "en"
         :publishing-function org-html-publish-to-html
         :headline-levels 5
         :auto-preamble t)
@@ -2919,7 +2919,7 @@
         :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
         :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
         :recursive t
-        :language "fr"
+        :language "en"
         :publishing-function org-publish-attachment)
      #+END_SRC
 
