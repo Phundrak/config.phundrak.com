@@ -369,6 +369,7 @@
            org-enable-epub-support t
            org-enable-github-support t
            org-enable-reveal-js-support t
+           org-enable-trello-support t
            org-enable-sticky-header t
            spaceline-org-clock-p t
            org-projectile-file "TODOs.org"
@@ -565,6 +566,16 @@
                    node-add-modules-path t)
      #+END_SRC
 
+     I am also currently testing the Awesome window manager which requires the
+     Lua programming language, so here it is.
+     #+BEGIN_SRC emacs-lisp
+       (lua :variables
+            lua-backend 'lsp-emmy
+            lua-lsp-emmy-jar-path "~/.config/awesome/EmmyLua-LS-all.jar"
+            lua-lsp-emmy-java-path "java"
+            lua-lsp-emmy-enable-file-watchers t)
+     #+END_SRC
+
 *** Readers
     :PROPERTIES:
     :CUSTOM_ID: h-02099754-7102-4251-9e2e-a3ee33f4b469
@@ -591,7 +602,7 @@
     Here, the ~colors~  layer is the only one enabled.  It activates support for
     identifiers colorization, and strings representing colors.
     #+BEGIN_SRC emacs-lisp
-    colors
+      colors
     #+END_SRC
 
 *** Tools
