@@ -138,6 +138,12 @@
     set -gx PATH <<generate-extra-paths()>> $PATH
   #+END_SRC
 
+  In order  to keep some other  code clean, I  set the ~$BROWSER~ variable  so I
+  don’t have to call my web browser directly but rather with this variable.
+  #+BEGIN_SRC fish
+    set -gx BROWSER firefox
+  #+END_SRC
+
   Sometimes, software  will rely on =SUDO_ASKPASS=  to get a GUI  from which it
   can get the sudo password. So, let’s declare it.
   #+BEGIN_SRC fish
