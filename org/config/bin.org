@@ -67,6 +67,8 @@
     (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
   #+end_src
 
+  This code block can  be evaluated once this file has been  tangled in order to
+  produce again non-executable files.
   #+begin_src emacs-lisp :results silent
     (defun phundrak/make-tangled-files-not-executable ()
       (set-file-modes (buffer-file-name) #o644))
