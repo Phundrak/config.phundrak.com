@@ -1977,6 +1977,8 @@
            `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
              ("date:today..now" "Today's messages" ?t)
              ("date:7d..now" "Last 7 days" ?w)
+             ("date:1m..now" "Last month" ?m)
+             ("date:1y..now" "Last year" ?y)
              ("mime:image/*" "Messages with images" ?p)
              (,(mapconcat 'identity
                           (mapcar
