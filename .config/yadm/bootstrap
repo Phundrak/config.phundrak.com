@@ -66,40 +66,35 @@ else
 end
 
 set PACKAGES \
-acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr assimp \
-awesome-terminal-fonts base-devel bat biber bleachbit bluez-firmware \
-bluez-utils bookworm boost bzip2 ccls chicken chromium clisp compton cppcheck \
-cppreference cppreference-devhelp cpupower cronie cryptsetup device-mapper \
-diffutils discord-canary discount ditaa dmenu dmenu-lpass docker \
-docker-compose dockerfile-language-server-bin doxygen dunst dwarffortress \
-emacs emacs-org-mode exfat-utils farbfeld feh ffmpegthumbnailer findutils \
-firefox flake8 font-mathematica fontforge freeglut fzf gcc-libs gdb gimp glibc \
-gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools \
-golangci-lint-bin graphviz htop i3-gaps-rounded-git i3lock-blur i3status \
-igdm-bin inetutils j4-dmenu-desktop javascript-typescript-langserver \
-js-beautify jfsutils jmtpfs lastpass-cli less linux-headers lldb logrotate \
-lvm2 ly meson minted man-db man-pages mpc mpd mpd-rich-presence-discord-git \
-mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
-networkmanager networkmanager-openvpn nm-connection-editor nnn nodejs-vmd \
-nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol \
-otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pciutils pcurses \
-pdfpc polybar powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
-python-envtpl-git python-epc python-importmagic python-language-server \
-python-nose python-pip python-ptvsd python-pytest python-pywal \
-qt5-imageformats qemu r raw-thumbnailer redshift reflector rofi \
-rofi-wifi-menu-git rsync rtv rustup s-nail samba scrot sent shadow siji-git \
-simplescreenrecorder speedcrunch sshfs st-luke-git swi-prolog texlive-bin \
-texlive-langchinese texlive-langcyrillic texlive-langgreek \
-texlive-langjapanese texlive-langkorean texlive-latexextra \
+acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr \
+awesome-terminal-fonts base-devel bat biber bluez-firmware bluez-utils bookworm \
+bzip2 ccls chicken chromium clisp compton cppcheck cppreference \
+cppreference-devhelp cpupower discord-canary discount dmenu-lpass docker \
+docker-compose dockerfile-language-server-bin doxygen dunst emacs \
+emacs-org-mode exfat-utils farbfeld ffmpegthumbnailer findutils firefox flake8 \
+freeglut fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer \
+gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop \
+i3-gaps-rounded-git i3lock-blur igdm-bin inetutils j4-dmenu-desktop \
+javascript-typescript-langserver js-beautify jfsutils jmtpfs less \
+linux-headers lldb logrotate lvm2 ly meson minted man-db man-pages mpc mpd \
+mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+nemo-fileroller nemo-preview neofetch netctl networkmanager \
+networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
+noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
+pacman-contrib pandoc-bin pass pavucontrol pdfpc polybar powerline-fonts \
+prettier pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
+python-importmagic python-language-server python-nose python-pip python-ptvsd \
+python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
+rofi rsync rtv rustup samba scrot sent shadow siji-git simplescreenrecorder \
+sshfs st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
+texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
 texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
-ttf-bitstream-vera ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono \
-ttf-joypixels ttf-koruri ttf-liberation ttf-material-design-icons-git \
-ttf-monapo ttf-mplus ttf-ms-fonts ttf-sazanami ttf-symbola ttf-tibetan-machine \
-ttf-twemoji-color ttf-unifont ttf-vlgothic typescript \
-typescript-language-server-bin unicode unicode-emoji unrar usbutils valgrind \
-vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-apps xorg-drivers \
-xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
+ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
+ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
+typescript typescript-language-server-bin unicode-emoji unrar usbutils \
+valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
+xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
@@ -200,6 +195,10 @@ end
 
 printf "\n# Enabling Emacs as user service ##############################################\n\n"
 systemctl --user enable --now emacs
+
+printf "\n# Enabling Mpd as a user service ##############################################\n\n"
+mkdir -p ~/.config/mpd/playlists
+systemctl --user enable --now mpd
 
 read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
 if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
