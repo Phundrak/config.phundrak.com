@@ -181,6 +181,10 @@
    #+BEGIN_SRC conf
      st.shell: /usr/bin/fish
    #+END_SRC
+   I can also set the transparency of st like so:
+   #+BEGIN_SRC conf
+     st.alpha: 0.7
+   #+END_SRC
 
    I used to have lines dedicated to UXTerm and URxvt, but I cast them out of my
    system.
