@@ -42,7 +42,8 @@
       - [[#videos-download-from-youtube][Videos download from YouTube]]
     - [[#mpv][MPV]]
     - [[#compression][Compression]]
-    - [[#feh][Feh]]
+    - [[#sxiv][Sxiv]]
+    - [[#exa][exa]]
     - [[#network-management][Network Management]]
     - [[#nordvpn][NordVPN]]
     - [[#webcam][Webcam]]
@@ -559,15 +560,25 @@
       <<generate-abbr(table=tar-abbr)>>
     #+END_SRC
 
-*** Feh
+*** Sxiv
     :PROPERTIES:
     :CUSTOM_ID: h-41cfc583-14ba-4f15-9578-bc37b432a3ce
     :END:
-    Some sane default options for =feh=, including auto-zoom to fit the picture
-    to the window,  a borderless window, and  again scale the image  to fit the
-    window geometry.
+    Some sane default options for =sxiv=, a simple X image Viewer. This includes
+    playing GIFs and  not displaying the filename below. Sxiv  will also open in
+    fullscreen and will fit the displayed image to the frame. I also abbreviated
+    ~feh~ to sxiv, old habits die hard.
     #+BEGIN_SRC fish
-      abbr feh 'feh -Zx.'
+      abbr sxiv 'sxiv -abfs f'
+      abbr feh 'sxiv -abfs f'
+    #+END_SRC
+
+*** exa
+    :PROPERTIES:
+    :CUSTOM_ID: h-9c015cdd-30c0-4464-8e1a-b67a98eaf036
+    :END:
+    #+BEGIN_SRC fish
+      abbr exa 'exa -halg@ --group-directories-first --git'
     #+END_SRC
 
 *** Network Management
