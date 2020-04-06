@@ -101,11 +101,73 @@
   :PROPERTIES:
   :CUSTOM_ID: h-a8434b29-c146-4141-b8f8-1b446c791907
   :END:
-  Now, there is only  one function I modify when it comes  to the appearance of
-  fish  when I’m  the  one  using it:  I  simply  “delete” the  =fish_greeting=
-  function.
+  Now, there is  only one function I  modify when it comes to  the appearance of
+  fish when I’m the one using it: the ~fish_greeting~ function. I use it to give
+  me an overview of my computer’s  status, including its hostname, uptime, disks
+  usage, ram usage, swap usage, and networking.
   #+BEGIN_SRC fish
-    function fish_greeting; end
+    set RED '\033[0;31m'
+    set GREEN '\033[0;32m'
+    set NC '\033[0m'
+
+    function display_slider # used total
+     set -l slider_length 39
+     set -l used $argv[1]
+     set -l total $argv[2]
+     set -l used_slider (math -s0 "($used * $slider_length) / $total")
+     set -l unused_slider (math -s0 "$slider_length - $used_slider")
+     echo -en "["
+     echo -en $RED
+     echo -en (string repeat -n $used_slider '=')
+     echo -en $GREEN
+     echo -en (string repeat -n $unused_slider '=')
+     echo -en $NC
+     echo -en "]"
+    end
+
+    function fish_greeting
+     set -l ruler_length 79
+     set -l ruler (string repeat -n $ruler_length "=")
+
+     set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
+
+     set -l uptime (uptime | awk '{print $1}' | string split ':')
+     set -l uptime_days (uptime | awk '{print $3}')
+
+     set -l root (df -Ph | grep -E "/\$")
+     set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
+     set -l root_used (echo $root | awk '{print $3}')
+     set -l root_total (echo $root | awk '{print $2}')
+     set -l home (df -Ph | grep -E "/home\$")
+     set -l home_p (echo $home | awk '{print $5}' | tr -d '%')
+     set -l home_used (echo $home | awk '{print $3}')
+     set -l home_total (echo $home | awk '{print $2}')
+
+     set -l ram (free -tm | grep Mem)
+     set -l ram_total (echo $ram | awk '{print $2}')
+     set -l ram_used (echo $ram | awk '{print $3}')
+     set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
+
+     set -l swap (free -tm | grep Swap)
+     set -l swap_total (echo $swap | awk '{print $2}')
+     set -l swap_used (echo $swap | awk '{print $3}')
+     set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
+
+     set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
+     set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
+     set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
+     set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
+
+     echo $ruler
+     printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
+     printf "Hostname: %-30sUptime: %d days, %d hours, %d minutes\n" (hostname) $uptime_days $uptime[1] $uptime[2]
+     printf "Ethernet: %-41sWifi: %s\n" $ethernet $wifi
+     printf "Disks...: %-5s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
+     printf "          %-5s %s %6s / %6s (%2d%%)\n" "/home" (display_slider $home_p 100) $home_used $home_total $home_p
+     printf "Ram.....:       %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
+     printf "Swap....:       %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
+     echo $ruler
+    end
   #+END_SRC
 
 * Global variables
