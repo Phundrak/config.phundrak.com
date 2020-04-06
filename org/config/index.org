@@ -21,6 +21,7 @@
   - [[#i3-configuration][i3 configuration]]
   - [[#nano][Nano]]
   - [[#rustfmt][Rustfmt]]
+  - [[#picom][Picom]]
   - [[#tmux-configuration][Tmux configuration]]
   - [[#xresources][Xresources]]
 - [[#dependencies][Dependencies]]
@@ -158,6 +159,12 @@
    :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
    :END:
    You can find my Rustfmt configuration [[file:rustfmt.org][here]].
+
+** Picom
+   :PROPERTIES:
+   :CUSTOM_ID: h-c539fde3-3f1a-4855-8d63-28729ed806a5
+   :END:
+   You can find my Picom configuration [[file:picom.org][here]].
 
 ** Tmux configuration
    :PROPERTIES:
