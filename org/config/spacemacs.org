@@ -1962,6 +1962,7 @@
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-compose-signature-auto-include t
            mu4e-view-show-images t
+           mu4e-view-prefer-html t
            mu4e-view-show-addresses t)
    #+END_SRC
 
@@ -1997,6 +1998,7 @@
            mu4e-alert-email-notification-types '(count))
      (with-eval-after-load 'mu4e-alert
        (mu4e-alert-set-default-style 'libnotify))
+     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
    #+END_SRC
 
    Now this  hook is  added so  I can  get a maximal  width for  the text  of my
@@ -2440,6 +2442,7 @@
      similar behavior to the old one.
      #+BEGIN_SRC emacs-lisp
        (setq org-src-window-setup 'split-window-right)
+       ;; (setq org-src-window-setup 'split-window-below)
      #+END_SRC
 
 **** Miscellaneous
