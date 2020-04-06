@@ -1485,7 +1485,7 @@
     I was  very surprised when  I discovered no  such function exists  in Elisp.
     This  function basically  writes  a  string into  a  buffer, and  optionally
     switches the user to the buffer. Here is the code for that function:
-    #+BEGIN_SRC elisp
+    #+BEGIN_SRC elisp :results silent
       (defun write-to-buffer (input-string outputbuf &optional switchbuf)
         "Writes `input-string' to the specified `output-buffer'. If
       `switch-buffer' is non-nil, the active buffer will switch to the
