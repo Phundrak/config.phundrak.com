@@ -2094,17 +2094,6 @@
       (setq edit-server-default-major-mode 'org-mode)
     #+END_SRC
 
-    I also  want to  have by  default some aggressive  indentation in  my source
-    files. Let’s enable that:
-    #+BEGIN_SRC emacs-lisp
-      (global-aggressive-indent-mode 1)
-    #+END_SRC
-    However, I do not  wish to see it activated for Dart  mode, so let’s exclude
-    it:
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'aggressive-indent-excluded-modes 'dart-mode)
-    #+END_SRC
-
 *** Hooks
     :PROPERTIES:
     :CUSTOM_ID: h-a895c541-505f-4dc2-8eac-d1fbc45e2512
