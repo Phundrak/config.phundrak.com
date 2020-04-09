@@ -22,6 +22,7 @@
 - [[#dart-language-server][Dart Language Server]]
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
+- [[#lock][Lock]]
 - [[#lsl][Lsl]]
 - [[#mp42webm][mp42webm]]
 - [[#polybar-launch][Polybar-launch]]
@@ -349,6 +350,23 @@
   #+END_SRC
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
+
+* Lock
+  :PROPERTIES:
+  :CUSTOM_ID: h-320c559f-b8a3-4ce2-956c-90987b4c224c
+  :HEADER-ARGS: :tangle ~/.local/bin/lock
+  :END:
+  ~lock~ is a simple script that locks the screen with ~i3lock~ while setting as
+  the background image of the locked screen a corrupted screenshot of the screen
+  before it was locked.
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    set TMPBG /tmp/screen.png
+    scrot $TMPBG
+    corrupter -add 0 $TMPBG $TMPBG
+    i3lock -t -e -f -i $TMPBG
+    rm $TMPBG
+  #+END_SRC
 
 * Lsl
   :PROPERTIES:

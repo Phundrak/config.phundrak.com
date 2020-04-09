@@ -915,7 +915,7 @@
   |--------------------+-------------------------------------------+----------------------------------------|
   | no                 | /usr/lib/xfce-polkit/xfce-polkit          | Launch the XFCE Polkit                 |
   | no                 | picom --experimental-backends -e 1        | Launch picom                           |
-  | no                 | xss-lock -- i3lock -fol                   | Launch power management                |
+  | no                 | xss-lock -- lock                          | Launch power management                |
   | no                 | numlockx on                               | Activate NumLock                       |
   | no                 | dunst -config ~/.config/dunst/dunstrc     | Launch notification manager            |
   | no                 | nm-applet                                 | NetworkManager system tray             |
