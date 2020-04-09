@@ -15,6 +15,7 @@
 - [[#introduction][Introduction]]
 - [[#shadows][Shadows]]
   - [[#deprecated-options][Deprecated options]]
+- [[#rounded-corners][Rounded corners]]
 - [[#fading][Fading]]
 - [[#transparency-and-opacity][Transparency and opacity]]
 - [[#background-blurring][Background blurring]]
@@ -36,7 +37,8 @@
   :END:
   The following  enables client-side  shadows on  windows. Note  desktop windows
   (windows   with  ~_NET_WM_WINDOW_TYPE_DESKTOP~)   never  get   shadow,  unless
-  explicitly requested using the wintypes option.
+  explicitly  requested  using the  wintypes  option.  I personally  deactivated
+  shadows because they don’t work out too well with rounded corners.
   #+BEGIN_SRC conf
     shadow = false;
   #+END_SRC
@@ -143,6 +145,24 @@
    #+BEGIN_SRC conf :tangle no
      shadow-ignore-shaped = ""
    #+END_SRC
+
+
+* Rounded corners
+  :PROPERTIES:
+  :CUSTOM_ID: h-c4fd6ef1-d22e-40a1-af15-dc6e83f6c899
+  :END:
+  A great feature added by ibhagwan’s fork of compton is the addition of rounded
+  corners  from  sdhand’s  fork,  and  the Kawase  blur  (described  [[#h-e40a644d-b594-41f0-9aca-307f77c456ba][here]])  from
+  tryone144’s fork. Here we can see the declaration of the corners’ radius:
+  #+BEGIN_SRC conf
+    corner-radius = 9.0;
+  #+END_SRC
+
+  It  is also  possible  to  exclude some  windows  from  getting their  corners
+  rounded:
+  #+BEGIN_SRC conf
+    rounded-corners-exclude = [];
+  #+END_SRC
 
 * Fading
   :PROPERTIES:
@@ -285,9 +305,13 @@
   The following  are the  parameters for background  blurring, see  the \*BLUR\*
   section for more information.
   #+BEGIN_SRC conf
-    blur-method = "kawase";
-    blur-size = 5;
-    blur-deviation = false;
+    blur: {
+      method = "dual_kawase";
+      strength = 7;
+      background = false;
+      background-frame = false;
+      background-fixed = false;
+    }
   #+END_SRC
 
   This value enables or disables the blur for the background of semi-transparent
@@ -624,16 +648,4 @@
    - Default value :: ~''~
    #+BEGIN_SRC conf :tangle no
      glx-fshader-win = '';
-   #+END_SRC
-
-   #+BEGIN_SRC conf
-     corner-radius = 9.0;
-     rounded-corners-exclude = [];
-     blur: {
-       method = "dual_kawase";
-       strength = 7;
-       background = false;
-       background-frame = false;
-       background-fixed = false;
-     }
    #+END_SRC
