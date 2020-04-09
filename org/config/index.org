@@ -38,11 +38,12 @@
   to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
   instructions below.
 
-  As you can see,  I personally use [[https://fishshell.com/][fish]] as my shell of  choice, and [[https://www.gnu.org/software/emacs/][Emacs]] using
-  [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding) as my main text editor.
+  As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] 27.0.90
+  (custom build) using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in Insert mode but
+  with Evil in Normal mode) as my main text editor.
 
-  I also  use [[https://github.com/resloved/i3][Resloved]]’s [[https://github.com/resloved/i3][fork]] of  [[https://github.com/Airblader/i3][i3-gaps]] with two [[https://github.com/jaagr/polybar][polybar]]  bars and [[https://github.com/tryone144][Tryone144]]’s
-  [[https://github.com/tryone144/compton][fork]] of [[https://github.com/chjj/compton][Compton]]. The colors scheme for [[https://github.com/davatorium/rofi][rofi]], Emacs and polybar are chosen from
+  I also  use [[https://github.com/resloved/i3][Resloved]]’s [[https://github.com/resloved/i3][fork]]  of [[https://github.com/Airblader/i3][i3-gaps]] with  two [[https://github.com/jaagr/polybar][polybar]] bars  and [[https://github.com/ibhagwan/picom][ibhagwan’s
+  fork of compton]]. The colors scheme for [[https://github.com/davatorium/rofi][rofi]], Emacs and polybar are chosen from
   the wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
 
 * Screenshots
