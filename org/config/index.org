@@ -13,17 +13,22 @@
 - [[#presentation][Presentation]]
 - [[#screenshots][Screenshots]]
 - [[#features][Features]]
+  - [[#tiling-window-managers][Tiling Window Managers]]
+    - [[#awesomewm][AwesomeWM]]
+    - [[#i3-configuration][i3 configuration]]
+  - [[#graphical-tweaks][Graphical tweaks]]
+    - [[#picom][Picom]]
+    - [[#xresources][Xresources]]
+  - [[#text-and-source-code-editing][Text and source code editing]]
+    - [[#emacs-configuration][Emacs configuration]]
+    - [[#nano][Nano]]
+    - [[#rustfmt][Rustfmt]]
   - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
-  - [[#emacs-configuration][Emacs configuration]]
-  - [[#email-signature][Email signature]]
   - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
-  - [[#global-gitignore][Global gitignore]]
-  - [[#i3-configuration][i3 configuration]]
-  - [[#nano][Nano]]
-  - [[#rustfmt][Rustfmt]]
-  - [[#picom][Picom]]
+  - [[#and-some-minor-configuration-files][And some minor configuration files]]
+    - [[#email-signature][Email signature]]
+    - [[#global-gitignore][Global gitignore]]
   - [[#tmux-configuration][Tmux configuration]]
-  - [[#xresources][Xresources]]
 - [[#dependencies][Dependencies]]
 - [[#installation][Installation]]
 - [[#licence][Licence]]
@@ -42,9 +47,12 @@
   (custom build) using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in Insert mode but
   with Evil in Normal mode) as my main text editor.
 
-  I also use [[https://github.com/Airblader][Airblader]]’s [[https://github.com/Airblader/i3][fork]] of [[https://github.com/i3/i3][i3]] with two [[https://github.com/jaagr/polybar][polybar]] bars and [[https://github.com/ibhagwan/picom][ibhagwan’s fork of
-  compton]]. The  colors scheme for  [[https://github.com/davatorium/rofi][rofi]], Emacs and  polybar are chosen  from the
-  wallpapers using [[https://github.com/dylanaraps/pywal][pywal]].
+  When it  comes to  my graphical  UI, I  do not  have any  desktop environment.
+  Instead,  I have  two  tiling  window managers.  The  historical  first on  my
+  configuration is [[https://github.com/Airblader/i3][i3-gaps]],  an [[https://i3wm.org/][i3]] fork by  [[https://github.com/Airblader/i3][Airblader]] with which I  use two bars
+  generated  by  [[https://polybar.github.io/][Polybar]]. My  other  TWM,  and the  one  I  use most  often,  is
+  [[https://awesomewm.org/][AwesomeWM]]. Both TWMs use [[https://github.com/dylanaraps/pywal][pywal]] to define their color scheme, as well as [[https://github.com/davatorium/rofi][rofi]]’s
+  color scheme.
 
   Finally, you  can find my  configuration for my  Ergodox keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]].  It is
   optimized for  usage with the  Bépo layout set as  a software layout,  and for
@@ -83,6 +91,90 @@
   Below I will also  present and comment some of my short  config files which do
   not deserve to have a full org file dedicated to them.
 
+** Tiling Window Managers
+   :PROPERTIES:
+   :CUSTOM_ID: h-b70d9b3b-4259-4311-aa23-4792656220bb
+   :END:
+*** AwesomeWM
+    :PROPERTIES:
+    :CUSTOM_ID: h-dbfc71a0-9d96-4f53-a064-f8d6f9567813
+    :END:
+    AwesomeWM is the TWM I use the most on my computer between itself and i3. My
+    configuration for it is documented  in detail in its corresponding document,
+    which you can find [[file:awesome.org][here]].
+
+*** i3 configuration
+    :PROPERTIES:
+    :CUSTOM_ID: h-c918e370-d867-412c-8b0e-078e4e3772e0
+    :END:
+    The i3 configuration  is detailed in its corresponding README  which you can
+    find [[file:i3.org][here]].
+
+** Graphical tweaks
+   :PROPERTIES:
+   :CUSTOM_ID: h-08018a9b-f0c8-4bff-b18d-834ec0dc11a8
+   :END:
+*** Picom
+    :PROPERTIES:
+    :CUSTOM_ID: h-c539fde3-3f1a-4855-8d63-28729ed806a5
+    :END:
+    Picom is  a standalone compositor  for Xorg,  and the successor  to Compton,
+    itself successor to  xcompmgr-dana, itself a fork of xcompmgr.  You can find
+    my Picom configuration [[file:picom.org][here]].
+
+*** Xresources
+    :PROPERTIES:
+    :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
+    :HEADER-ARGS: :tangle ~/.Xresources :exports code
+    :END:
+    My Xresources file  is very short. Indeed, it only  contains two lines which
+    are dedicated to my =st= terminal to set its font and shell. The font is set
+    as follows.
+    #+BEGIN_SRC conf
+      st.font: Source Code Pro for Powerline:style=book
+    #+END_SRC
+    And I will set my shell like this:
+    #+BEGIN_SRC conf
+      st.shell: /usr/bin/fish
+    #+END_SRC
+    I can also set the transparency of st (my terminal emulator) like so:
+    #+BEGIN_SRC conf
+      st.alpha: 0.7
+    #+END_SRC
+
+    I used to have  lines dedicated to UXTerm and URxvt, but I  cast them out of
+    my system.
+
+** Text and source code editing
+   :PROPERTIES:
+   :CUSTOM_ID: h-2730f882-e775-41a3-b169-5049c142cc54
+   :END:
+*** Emacs configuration
+    :PROPERTIES:
+    :CUSTOM_ID: h-f6d2561f-5c02-4540-8287-4acf3037b3d5
+    :END:
+    Emacs is  my main text editor,  which I use for  almost everything. Because,
+    you know…
+    #+begin_quote
+    Emacs is a great operating system, it just lacks a good text editor.
+    #+end_quote
+
+    You can find my Emacs config, based on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and
+    my user configuration in my [[file:spacemacs.org][spacemacs.org]] file.
+
+*** Nano
+    :PROPERTIES:
+    :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
+    :END:
+    Although  it is  a  very simple  piece  of software,  nano  does offer  some
+    customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file.
+
+*** Rustfmt
+    :PROPERTIES:
+    :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
+    :END:
+    You can find my Rustfmt configuration [[file:rustfmt.org][here]].
+
 ** Custom scripts in =PATH=
    :PROPERTIES:
    :CUSTOM_ID: h-d582e107-fa66-4f79-869e-2b49116ed1ec
@@ -94,32 +186,6 @@
    same folder —which is actually their  source code once the org-mode file gets
    tangled.
 
-** Emacs configuration
-   :PROPERTIES:
-   :CUSTOM_ID: h-f6d2561f-5c02-4540-8287-4acf3037b3d5
-   :END:
-   Emacs is my main text editor, which I use for almost everything. Because, you
-   know…
-   #+begin_quote
-   Emacs is a great operating system, it just lacks a good text editor.
-   #+end_quote
-   You can find my Emacs config, based  on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and
-   my user configuration in my [[file:spacemacs.org][spacemacs.org]] file.
-
-** Email signature
-   :PROPERTIES:
-   :CUSTOM_ID: h-f6c48286-a320-493f-b330-ee0a697e6d79
-   :HEADER-ARGS: :tangle ~/.signature
-   :END:
-   This file gets inserted automatically at the end of my emails.
-   #+BEGIN_SRC text
-     Lucien “Phundrak” Cartier-Tilet
-     https://phundrak.com (Français)
-     https://en.phundrak.com (English)
-
-     Sent from a Free and Open-Source Linux operating system with GNU/Emacs
-   #+END_SRC
-
 ** Fish configuration with useful abbreviations
    :PROPERTIES:
    :CUSTOM_ID: h-f35ed9a3-c9fc-458c-8a62-693f679f6992
@@ -127,49 +193,43 @@
    You can also find  in my Fish shell configuration in  my [[file:~/org/config-website/fish.org][fish.org]] file, which
    contains my usual abbreviations.
 
-** Global gitignore
+** And some minor configuration files
    :PROPERTIES:
-   :CUSTOM_ID: h-4f92eb29-7cfa-48ec-b39d-39037ace3682
-   :HEADER-ARGS: :tangle ~/.gitignore_global
+   :CUSTOM_ID: h-1a819f94-ab79-41e6-9509-a2781ab10b79
    :END:
-   Sometimes,  there are  some lines  that  always reappear  in gitignores.  So,
-   instead of  always adding  them, let  git now  that some  elements are  to be
-   ignored by default, hence the  [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want
-   nano’s backup files.
-   #+BEGIN_SRC text
-     ~*
-   #+END_SRC
+*** Email signature
+    :PROPERTIES:
+    :CUSTOM_ID: h-f6c48286-a320-493f-b330-ee0a697e6d79
+    :HEADER-ARGS: :tangle ~/.signature
+    :END:
+    This file gets inserted automatically at the end of my emails.
+    #+BEGIN_SRC text
+      Lucien “Phundrak” Cartier-Tilet
+      https://phundrak.com (Français)
+      https://en.phundrak.com (English)
 
-   And output binaries generated by =gcc= and the likes aren’t welcome either.
-   #+BEGIN_SRC text
-     ,*.out
-   #+END_SRC
+      Sent from a Free and Open-Source Linux operating system with GNU/Emacs
+    #+END_SRC
 
-** i3 configuration
-   :PROPERTIES:
-   :CUSTOM_ID: h-c918e370-d867-412c-8b0e-078e4e3772e0
-   :END:
-   The i3  configuration is detailed in  its corresponding README which  you can
-   find at [[file:.config/i3/README.org][.config/i3/README.org]].
+*** Global gitignore
+    :PROPERTIES:
+    :CUSTOM_ID: h-4f92eb29-7cfa-48ec-b39d-39037ace3682
+    :HEADER-ARGS: :tangle ~/.gitignore_global
+    :END:
+    Sometimes,  there are  some lines  that always  reappear in  gitignores. So,
+    instead of  always adding  them, let git  now that some  elements are  to be
+    ignored by default, hence the [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want
+    nano’s backup files.
+    #+BEGIN_SRC text
+      ~*
+    #+END_SRC
 
-** Nano
-  :PROPERTIES:
-  :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
-  :END:
-  Although  it  is  a very  simple  piece  of  software,  nano does  offer  some
-  customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file.
-
-** Rustfmt
-   :PROPERTIES:
-   :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
-   :END:
-   You can find my Rustfmt configuration [[file:rustfmt.org][here]].
-
-** Picom
-   :PROPERTIES:
-   :CUSTOM_ID: h-c539fde3-3f1a-4855-8d63-28729ed806a5
-   :END:
-   You can find my Picom configuration [[file:picom.org][here]].
+    And object files and output binaries generated by =gcc= and the likes aren’t
+    welcome either.
+    #+BEGIN_SRC text
+      ,*.out
+      ,*.o
+    #+END_SRC
 
 ** Tmux configuration
    :PROPERTIES:
@@ -177,29 +237,6 @@
    :END:
    You can find  my tmux configuration in [[file:tmux.org][tmux.org]]. It  depends on the submodule
    [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
-
-** Xresources
-   :PROPERTIES:
-   :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
-   :HEADER-ARGS: :tangle ~/.Xresources :exports code
-   :END:
-   My Xresources  file is very short.  Indeed, it only contains  two lines which
-   are dedicated to my =st= terminal to set  its font and shell. The font is set
-   as follows.
-   #+BEGIN_SRC conf
-     st.font: Source Code Pro for Powerline:style=book
-   #+END_SRC
-   And I will set my shell like this:
-   #+BEGIN_SRC conf
-     st.shell: /usr/bin/fish
-   #+END_SRC
-   I can also set the transparency of st like so:
-   #+BEGIN_SRC conf
-     st.alpha: 0.7
-   #+END_SRC
-
-   I used to have lines dedicated to UXTerm and URxvt, but I cast them out of my
-   system.
 
 * Dependencies
   :PROPERTIES:
