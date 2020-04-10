@@ -58,9 +58,8 @@
   as  which  software allowed  where,  autostart,  and launching  software  with
   shortcuts.
 
-  It is to  be noted I am  using [[https://github.com/resloved/i3][resloved’s fork of  i3]], =i3-gaps-rounded=. Some
-  configuration  will not  work  with =i3-gaps=,  and some  will  not work  with
-  vanilla =i3= either.
+  It  is  to be  noted  I  am using  [[https://github.com/Airblader/i3][Airblader’s  fork  of i3]],  =i3-gaps=.  Some
+  configuration will not work with =i3=.
 
   #+BEGIN_SRC conf :exports none
     # -*- mode: conf -*-
@@ -234,9 +233,8 @@
    :PROPERTIES:
    :CUSTOM_ID: h-52a82bb4-42b0-4740-aae6-79636072dc62
    :END:
-   As  mentioned   in  at   the  beginning   of  this   document,  I   am  using
-   i3-gaps-rounded, which brings rounded corners to  i3-gaps, a fork of i3 which
-   brings spacing (gaps) between tiled windows.
+   As mentioned in at the beginning of  this document, I am using i3-gaps, which
+   brings spacing (gaps) between windows to i3.
 
    First, I want space around my  windows only when there are several containers
    on the same screen, otherwise they will be maximized.
@@ -261,12 +259,6 @@
    #+BEGIN_SRC conf
      gaps inner 20
      gaps outer -10
-   #+END_SRC
-
-   And I  am not using i3-gaps-rounded  for nothing: my containers  that are not
-   tiled will get their corners rounded with a radius of five pixels.
-   #+BEGIN_SRC conf
-   border_radius 5
    #+END_SRC
 
    Some  parameters are  also available  when it  comes to  the colors  i3 uses.
