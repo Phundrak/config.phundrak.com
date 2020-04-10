@@ -904,34 +904,40 @@
   - Clientkey ::  whether this should  be a global  shortcut or a  shortcut only
     aimed at clients (value is ~yes~ or ~no~)
 
+  #+NAME: gen-sc-text
+  #+BEGIN_SRC emacs-lisp
+    (lambda (x)
+      (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
+              (nth 1 x) (nth 0 x)
+              (cond
+               ((string= "yes" (nth 2 x))
+                (format "function() %s end" (nth 3 x)))
+               ((string= "shell" (nth 2 x))
+                (format "awful.spawn.with_shell(\"%s\")" (nth 3 x)))
+               (t (nth 3 x)))
+              (nth 4 x) (nth 5 x)))
+
+  #+END_SRC
+
   #+NAME: gen-sc-glob
   #+BEGIN_SRC emacs-lisp :var table=sc-client
-    (mapconcat (lambda (x)
-                 (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
-                         (nth 1 x) (nth 0 x)
-                         (if (string= "yes" (nth 2 x))
-                             (format "function() %s end" (nth 3 x))
-                           (nth 3 x))
-                         (nth 4 x) (nth 5 x)))
-               (seq-filter (lambda (x)
-                             (not (string= "yes" (nth 6 x))))
-                           table)
-               ",\n")
+    (mapconcat
+     <<gen-sc-text>>
+     (seq-filter (lambda (x)
+                   (or (not (nth 6 x))
+                       (string= "no" (nth 6 x))))
+                 table)
+     ",\n")
   #+END_SRC
 
   #+NAME: gen-sc-client
   #+BEGIN_SRC emacs-lisp :var table=sc-client
-    (mapconcat (lambda (x)
-                 (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
-                         (nth 1 x) (nth 0 x)
-                         (if (string= "yes" (nth 2 x))
-                             (format "function(c) %s end" (nth 3 x))
-                           (nth 3 x))
-                         (nth 4 x) (nth 5 x)))
-               (seq-filter (lambda (x)
-                             (string= "yes" (nth 6 x)))
-                           table)
-               ",\n")
+    (mapconcat
+     <<gen-sc-text>>
+     (seq-filter (lambda (x)
+                   (string= "yes" (nth 6 x)))
+                 table)
+     ",\n")
   #+END_SRC
 
   #+NAME: sc-tag-num-gen
@@ -940,11 +946,13 @@
       (dotimes (i 10 result)
         (let* ((j (+ 1 i)))
           (setq result
-                (cons (mapconcat (lambda (line)
-                                   (format "awful.key({%s},\"#%d\",function() %s%d) end,\n\t{description=\"%s%d\",tag=\"%s\"})"
-                                           (nth 1 line) (+ j 9) (nth 2 line) j (nth 3 line) j (nth 4 line)))
-                                 input
-                                 ",\n")
+                (cons (mapconcat
+                       (lambda (line)
+                         (format
+                          "awful.key({%s},\"#%d\",function() %s%d) end,\n\t{description=\"%s%d\",tag=\"%s\"})"
+                          (nth 1 line) (+ j 9) (nth 2 line) j (nth 3 line) j (nth 4 line)))
+                       input
+                       ",\n")
                       result))))
       (mapconcat (lambda (x) x)
                  result
