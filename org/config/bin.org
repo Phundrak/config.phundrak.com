@@ -23,7 +23,6 @@
 - [[#dmenu][Dmenu]]
 - [[#emoji-picker][Emoji picker]]
 - [[#lock][Lock]]
-- [[#lsl][Lsl]]
 - [[#mp42webm][mp42webm]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
@@ -366,20 +365,6 @@
     corrupter -add 0 $TMPBG $TMPBG
     i3lock -t -e -f -i $TMPBG
     rm $TMPBG
-  #+END_SRC
-
-* Lsl
-  :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/lsl
-  :CUSTOM_ID: h-6bcdad54-20ce-40cc-8a4b-8d9c20fc5c95
-  :END:
-  ~lsl~ is a former abbreviation I used to use in fish. However, a recent update
-  of this  abbreviation made it harder  to use as  is, and I believe  a function
-  will better fulfil its role than an  abbreviation. As you’ll see, it is a very
-  simple script:
-  #+BEGIN_SRC fish
-    #!/usr/bin/fish
-    ls -ahlX --group-directories-first $argv | bat
   #+END_SRC
 
 * mp42webm
