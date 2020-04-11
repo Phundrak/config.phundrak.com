@@ -1551,3 +1551,14 @@
   #+BEGIN_SRC lua
     <<autostart()>>
   #+END_SRC
+
+* What to do now                                                   :noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-4668503f-07ec-4781-a4d1-671f7e6b5821
+  :END:
+
+** TODO Error on S-q
+   :PROPERTIES:
+   :CUSTOM_ID: h-828e67df-7fba-4524-95d5-9e505023cb4a
+   :END:
+   ~attempt to index a nil value (global 'c')~
