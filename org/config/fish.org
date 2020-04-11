@@ -273,6 +273,7 @@
    |--------------+---------------------------------------------------|
    | df           | df -H                                             |
    | diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size" |
+   | du           | du -ch                                            |
    | meminfo      | free -m -l -t                                     |
    | gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log        |
    | cpuinfo      | lscpu                                             |
@@ -323,10 +324,9 @@
     And if I  want to manipulate system  services, I can instead  type a simple
     capital =S=.
     #+NAME: service-abbr
-    | abbreviation | command          |
-    |--------------+------------------|
-    | s            | systemctl --user |
-    | S            | sudo systemctl   |
+    | abbreviation | command   |
+    |--------------+-----------|
+    | s            | systemctl |
 
     #+BEGIN_SRC fish
       <<generate-abbr(table=service-abbr)>>
@@ -382,13 +382,16 @@
     And of course, when it comes to  Docker Compose, I don’t have time to write
     the full command, so I use these instead.
     #+NAME: abbr-docker
-    | abbreviation | command                   |
-    |--------------+---------------------------|
-    | dc           | docker-compose            |
-    | dcd          | docker-compose down       |
-    | dcr          | docker-compose run --rm   |
-    | dcu          | docker-compose up         |
-    | dcub         | docker-compose up --build |
+    | abbreviation | command                      |
+    |--------------+------------------------------|
+    | dc           | docker-compose               |
+    | dcd          | docker-compose down          |
+    | dcp          | docker-compose pull          |
+    | dcr          | docker-compose run --rm      |
+    | dcu          | docker-compose up            |
+    | dcub         | docker-compose up --build    |
+    | dcud         | docker-compose up -d         |
+    | dcudb        | docker-compose up -d --build |
 
     Here is the corresponding fish configuration:
     #+BEGIN_SRC fish
@@ -642,8 +645,15 @@
     :PROPERTIES:
     :CUSTOM_ID: h-9c015cdd-30c0-4464-8e1a-b67a98eaf036
     :END:
+    #+NAME: exa-abbr
+    | abbreviation | command                                    |
+    |--------------+--------------------------------------------|
+    | exa          | exa -halg@ --group-directories-first --git |
+    | ls           | exa -halg@ --group-directories-first --git |
+    | lsl          | exa -halg@ --group-directories-first --git |
+
     #+BEGIN_SRC fish
-      abbr exa 'exa -halg@ --group-directories-first --git'
+      <<generate-abbr(table=exa-abbr)>>
     #+END_SRC
 
 *** Network Management
