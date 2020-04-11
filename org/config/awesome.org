@@ -224,6 +224,7 @@
      shift = "Shift"
      control = "Control"
      meta = "Mod1"
+     alt = "Mod1" -- Just in case
    #+END_SRC
 
 ** Wallpapers directory
@@ -1147,15 +1148,15 @@
    | XF86AudioMute        |                 | shell    | amixer -q set master 1+ toggle  | toggle mute audio        | media |
    | Prior                | modkey, control | shell    | amixer -q set master 1+ toggle  | toggle mute audio        | media |
    | XF86AudioPrev        |                 | shell    | mpc prev                        | previous mpd track       | media |
-   | XF86AudioLowerVolume | alt             | shell    | mpc prev                        | prevous mpd track        | media |
+   | XF86AudioLowerVolume | meta            | shell    | mpc prev                        | prevous mpd track        | media |
    | Prev                 | modkey          | shell    | mpc prev                        | previous mpd track       | media |
    | XF86AudioNext        |                 | shell    | mpc next                        | next mpd track           | media |
-   | XF86AudioRaiseVolume | alt             | shell    | mpc next                        | next mpd track           | media |
+   | XF86AudioRaiseVolume | meta            | shell    | mpc next                        | next mpd track           | media |
    | Next                 | modkey          | shell    | mpc next                        | next mpd track           | media |
    | XF86AudioPlay        |                 | shell    | mpc toggle                      | toggle mpd playback      | media |
    | p                    | modkey          | shell    | mpc toggle                      | toggle mpd playback      | media |
    | XF86AudioStop        |                 | shell    | mpc stop                        | stop playback            | media |
-   | XF86AudioPlay        | alt             | shell    | mpc stop                        | stop playback            | media |
+   | XF86AudioPlay        | meta            | shell    | mpc stop                        | stop playback            | media |
    | p                    | modkey, meta    | shell    | mpc stop                        | stop playback            | media |
 
 ** Screen
