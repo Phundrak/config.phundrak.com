@@ -41,6 +41,10 @@
 - [[#mouse-bindings][Mouse bindings]]
 - [[#keybindings][Keybindings]]
   - [[#applications][Applications]]
+    - [[#internet-apps][Internet apps]]
+    - [[#screenshots][Screenshots]]
+    - [[#emacs][Emacs]]
+    - [[#rofi][Rofi]]
   - [[#awesome][Awesome]]
   - [[#clients][Clients]]
   - [[#layout-manipulation-1][Layout manipulation]]
@@ -219,6 +223,7 @@
      modkey = "Mod4"
      shift = "Shift"
      control = "Control"
+     meta = "Mod1"
    #+END_SRC
 
 ** Wallpapers directory
@@ -896,8 +901,14 @@
   Here is a description of the tables displayed below:
   - Key :: key which toggles the shortcut
   - Modifiers :: modifier keys that are required to toggle the shortcut
-  - Function  :: whether  or  not the  ~Action~  should be  nested  in a  lambda
-    function (value is ~yes~ or ~no~)
+  - Lambda? :: whether  or  not the  ~Action~  should be  nested  in a  lambda
+    function. Possible values are:
+    - ~no~ :: The value is a Lua function to be executed as is
+    - ~yes~ :: The value is to be inserted into a lambda
+    - ~spawn~ ::  The value  is to  be inserted  in an  ~awful.spawn~ call  in a
+      lambda
+    - ~shell~ :: The value is to be inserted in an ~awful.spawn.with_shell~ call
+      in a lambda
   - Action :: code to be executed by the shortcut
   - What it does :: short description of the shortcut’s action
   - Group :: group in which the shortcut will appear in Awesome’s help window
@@ -913,10 +924,13 @@
                ((string= "yes" (nth 2 x))
                 (format "function() %s end" (nth 3 x)))
                ((string= "shell" (nth 2 x))
-                (format "awful.spawn.with_shell(\"%s\")" (nth 3 x)))
+                (format "function() awful.spawn.with_shell(\"%s\") end" (nth 3 x)))
+               ((string= "terminal" (nth 2 x))
+                (format "function() awful.spawn(terminal..\" -e %s\") end" (nth 3 x)))
+               ((string= "spawn" (nth 2 x))
+                (format "function() awful.spawn(\"%s\") end" (nth 3 x)))
                (t (nth 3 x)))
               (nth 4 x) (nth 5 x)))
-
   #+END_SRC
 
   #+NAME: gen-sc-glob
@@ -946,14 +960,16 @@
       (dotimes (i 10 result)
         (let* ((j (+ 1 i)))
           (setq result
-                (cons (mapconcat
-                       (lambda (line)
-                         (format
-                          "awful.key({%s},\"#%d\",function() %s%d) end,\n\t{description=\"%s%d\",tag=\"%s\"})"
-                          (nth 1 line) (+ j 9) (nth 2 line) j (nth 3 line) j (nth 4 line)))
-                       input
-                       ",\n")
-                      result))))
+                (cons
+                 (mapconcat
+                  (lambda (line)
+                    (format
+                     "awful.key({%s},\"#%d\",function() %s%d) end,
+    \t{description=\"%s%d\",group=\"%s\"})"
+                     (nth 1 line) (+ j 9) (nth 2 line) j
+                     (nth 3 line) j (nth 4 line)))
+                  input
+                  ",\n") result))))
       (mapconcat (lambda (x) x)
                  result
                  ",\n\n"))
@@ -963,12 +979,16 @@
   declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
   (see [[https://awesomewm.org/doc/api/libraries/root.html#keys]]).
 
-  #+BEGIN_SRC lua
+  #+BEGIN_SRC lua :cache yes
     globalkeys = gears.table.join(
       -- Awesome
       <<gen-sc-glob(sc-awesome)>>,
       -- App
       <<gen-sc-glob(sc-app)>>,
+      <<gen-sc-glob(sc-app-internet)>>,
+      <<gen-sc-glob(sc-app-screenshot)>>,
+      <<gen-sc-glob(sc-app-emacs)>>,
+      <<gen-sc-glob(sc-app-rofi)>>,
       -- Client
       <<gen-sc-glob(sc-client)>>,
       -- Layout
@@ -994,13 +1014,57 @@
    :CUSTOM_ID: h-58cc4798-5686-41bb-8c1a-f9e15368255a
    :END:
    #+NAME: sc-app
-   | Key    | Modifiers | Function? | Action                            | What it does         | Group |
-   |--------+-----------+-----------+-----------------------------------+----------------------+-------|
-   | d      | modkey    | yes       | awful.spawn("j4-dmenu-desktop")   | invoke rofi          | app   |
-   | e      | modkey    | yes       | awful.spawn("emacsclient -c")     | invoke Emacs         | app   |
-   | b      | modkey    | yes       | awful.spawn(os.getenv("BROWSER")) | invoke web browser   | app   |
-   | w      | modkey    | yes       | set_random_pape()                 | set random wallpaper | app   |
-   | Return | modkey    | yes       | awful.spawn(terminal)             | open a terminal      | app   |
+   | Key    | Modifiers | Lambda? | Action                | What it does      | Group |
+   |--------+-----------+---------+-----------------------+-------------------+-------|
+   | Return | modkey    | yes     | awful.spawn(terminal) | open a terminal   | app   |
+   | d      | modkey    | spawn   | j4-dmenu-desktop      | invoke rofi       | app   |
+   | n      | modkey    | spawn   | nemo                  | open file manager | app   |
+
+*** Internet apps
+    :PROPERTIES:
+    :CUSTOM_ID: h-20b7c7c4-3d5e-49b3-b00c-2d0969cb66cc
+    :END:
+    #+NAME: sc-app-internet
+    | Key | Modifiers      | Lambda? | Action                            | What it does       | Group    |
+    |-----+----------------+---------+-----------------------------------+--------------------+----------|
+    | b   | modkey         | yes     | awful.spawn(os.getenv("BROWSER")) | invoke web browser | internet |
+    | d   | control, shift | spawn   | discord-canary                    | launch Discord     | internet |
+
+*** Screenshots
+    :PROPERTIES:
+    :CUSTOM_ID: h-9c8faf06-1cb1-4d4f-a5d7-ebbf661d8783
+    :END:
+    #+NAME: sc-app-screenshot
+    | Key   | Modifiers | Lambda? | Action     | What it does                | Group      |
+    |-------+-----------+---------+------------+-----------------------------+------------|
+    | Print |           | spawn   | scrot      | Screenshot                  | screenshot |
+    | Print | control   | spawn   | scrot -s   | Screenshot (area selection) | screenshot |
+    | Print | shift     | spawn   | scrot -d 3 | Screenshot (3s delay)       | screenshot |
+
+*** Emacs
+    :PROPERTIES:
+    :CUSTOM_ID: h-88b6af65-a26e-4ea9-8077-7bcc4a81cec0
+    :END:
+    #+NAME: sc-app-emacs
+    | Key | Modifiers     | Lambda? | Action                        | What it does             | Group |
+    |-----+---------------+---------+-------------------------------+--------------------------+-------|
+    | e   | modkey        | spawn   | emacsclient -c -n             | invoke Emacs             | emacs |
+    | e   | modkey, shift | spawn   | emacsclient -c -n -e '(mu4e)' | invoke Emacs mail client | emacs |
+
+*** Rofi
+    :PROPERTIES:
+    :CUSTOM_ID: h-68e809b7-83a9-4570-a6f5-e368b47c5619
+    :END:
+    #+NAME: sc-app-rofi
+    | Key | Modifiers              | Lambda? | Action         | What it does                    | Group |
+    |-----+------------------------+---------+----------------+---------------------------------+-------|
+    | p   | modkey, shift          | shell   | rofi-pass -t   | types password from ~pass~      | rofi  |
+    | p   | modkey, control, shift | shell   | rofi-pass      | copy password from ~pass~       | rofi  |
+    | e   | modkey, meta           | shell   | rofi-emoji     | select and copy emoji from list | rofi  |
+    | m   | modkey, meta           | shell   | rofi-mount     | volume mounting helper          | rofi  |
+    | u   | modkey, meta           | shell   | rofi-umount    | volume unmounting helper        | rofi  |
+    | w   | modkey, control        | shell   | wacom-setup    | set up my wacom tablet          | rofi  |
+    | w   | modkey, shift          | shell   | rofi-wifi-menu | connect to available wifi       | rofi  |
 
 ** Awesome
    :PROPERTIES:
@@ -1008,13 +1072,18 @@
    :END:
    Here will be declared some shortcuts directly related to Awesome itself.
    #+NAME: sc-awesome
-   | Key | Modifiers       | Function? | Action                      | What it does       | Group   | Clientkey |
-   |-----+-----------------+-----------+-----------------------------+--------------------+---------+-----------|
-   | h   | modkey          | no        | hotkeys_popup.show_help     | show help          | awesome | no        |
-   | h   | modkey, shift   | yes       | mainmenu:show()             | show main menu     | awesome | no        |
-   | r   | modkey, control | no        | awesome.restart             | reload awesome     | awesome | no        |
-   | q   | modkey, shift   | no        | awesome.quit                | quit awesome       | awesome | no        |
-   | x   | modkey          | yes       | invoke_lua_execute_prompt() | lua execute prompt | awesome | no        |
+   | Key | Modifiers              | Lambda? | Action                    | What it does            | Group   |
+   |-----+------------------------+---------+---------------------------+-------------------------+---------|
+   | h   | modkey                 | no      | hotkeys_popup.show_help   | show help               | awesome |
+   | h   | modkey, shift          | yes     | mainmenu:show()           | show main menu          | awesome |
+   | l   | modkey                 | spawn   | lock                      | lock screen             | awesome |
+   | q   | modkey, shift          | no      | awesome.quit              | quit awesome            | awesome |
+   | r   | modkey, shift, control | no      | awesome.restart           | reload awesome          | awesome |
+   | w   | modkey                 | no      | set_random_pape           | set random wallpaper    | awesome |
+   | x   | modkey                 | no      | invoke_lua_execute_prompt | lua execute prompt      | awesome |
+   | F4  | modkey, control        | spawn   | systemctl hibernate       | hibernate computer      | awesome |
+   | F4  | modkey, shift          | spawn   | systemctl suspend         | suspend to RAM computer | awesome |
+   | F4  | modkey, shift, control | spawn   | poweroff                  | power off computer      | awesome |
 
 ** Clients
    :PROPERTIES:
@@ -1022,72 +1091,98 @@
    :END:
    These shortcuts are related to clients (aka windows) management.
    #+NAME: sc-client
-   | Key    | Modifiers       | Function? | Action                           | What it does                       | Group  | Clientkey |
-   |--------+-----------------+-----------+----------------------------------+------------------------------------+--------+-----------|
-   | Left   | modkey          | yes       | awful.client.focus.byidx(1)      | view previous                      | client | no        |
-   | Right  | modkey          | yes       | awful.client.focus.byidx(-1)     | view next                          | client | no        |
-   | t      | modkey, shift   | yes       | awful.client.swap.byidx(1)       | swap with next client by index     | client | no        |
-   | s      | modkey, shift   | yes       | awful.client.swap.byidx(-1)      | swap with previous client by index | client | no        |
-   | u      | modkey          | no        | awful.client.urgent.jumpto       | jump to urgent client              | client | no        |
-   | Tab    | modkey          | yes       | client_go_back()                 | go back                            | client | no        |
-   | n      | modkey, control | yes       | restore_minimized_clients()      | restore minimized                  | client | no        |
-   | f      | modkey          | yes       | toggle_fullscreen_client(c)      | toggle fullscreen                  | client | yes       |
-   | q      | modkey          | yes       | c:kill()                         | close client                       | client | yes       |
-   | space  | modkey, control | no        | awful.client.floating.toggle     | toggle floating                    | client | yes       |
-   | Return | modkey, control | yes       | c:swap(awful.client.getmaster()) | move to master                     | client | yes       |
-   | o      | modkey          | yes       | c:move_to_screen()               | move to screen                     | client | yes       |
-   | v      | modkey          | yes       | c.ontop = not c.ontop            | toggle keep on top                 | client | yes       |
-   | n      | modkey          | yes       | c.minimized = true               | minimize                           | client | yes       |
-   | m      | modkey          | yes       | toggle_maximized(c)              | toggle maximized                   | client | yes       |
-   | m      | modkey, control | yes       | toggle_vertical_maximized(c)     | toggle vertically maximized        | client | yes       |
-   | m      | modkey, shift   | yes       | toggle_horizontal_maximized(c)   | toggle horizontally maximized      | client | yes       |
+   | Key    | Modifiers       | Lambda? | Action                           | What it does                       | Group  |     |
+   |--------+-----------------+---------+----------------------------------+------------------------------------+--------+-----|
+   | f      | modkey          | yes     | toggle_fullscreen_client(c)      | toggle fullscreen                  | client | yes |
+   | m      | modkey          | yes     | toggle_maximized(c)              | toggle maximized                   | client | yes |
+   | m      | modkey, control | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized        | client | yes |
+   | m      | modkey, shift   | yes     | toggle_horizontal_maximized(c)   | toggle horizontally maximized      | client | yes |
+   | n      | modkey, shift   | yes     | c.minimized = true               | minimize                           | client | yes |
+   | n      | modkey, control | yes     | restore_minimized_clients()      | restore minimized                  | client | no  |
+   | o      | modkey          | yes     | c:move_to_screen()               | move to screen                     | client | yes |
+   | q      | modkey          | yes     | c:kill()                         | close client                       | client | yes |
+   | s      | modkey          | yes     | awful.client.focus.byidx(-1)     | focus previous client by index     | client | no  |
+   | t      | modkey          | yes     | awful.client.focus.byidx(1)      | focus next client by index         | client | no  |
+   | s      | modkey, shift   | yes     | awful.client.swap.byidx(-1)      | swap with previous client by index | client | no  |
+   | t      | modkey, shift   | yes     | awful.client.swap.byidx(1)       | swap with next client by index     | client | no  |
+   | u      | modkey          | no      | awful.client.urgent.jumpto       | jump to urgent client              | client | no  |
+   | v      | modkey          | yes     | c.ontop = not c.ontop            | toggle keep on top                 | client | yes |
+   | space  | modkey, control | no      | awful.client.floating.toggle     | toggle floating                    | client | yes |
+   | Left   | modkey          | yes     | awful.client.focus.byidx(1)      | view previous                      | client | no  |
+   | Return | modkey, control | yes     | c:swap(awful.client.getmaster()) | move to master                     | client | yes |
+   | Right  | modkey          | yes     | awful.client.focus.byidx(-1)     | view next                          | client | no  |
+   | Tab    | modkey          | yes     | client_go_back()                 | go back                            | client | no  |
 
 ** Layout manipulation
    :PROPERTIES:
    :CUSTOM_ID: h-4197bf08-bf4f-4f24-9d9d-333416bec7ef
    :END:
    #+NAME: sc-layout
-   | Key   | Modifiers       | Function? | Action                              | What it does                      | Group  |
-   |-------+-----------------+-----------+-------------------------------------+-----------------------------------+--------|
-   | r     | modkey          | yes       | awful.tag.incmwfact(0.05)           | increase master width factor      | layout |
-   | c     | modkey          | yes       | awful.tag.incmwfact(-0.05)          | decrease master width factor      | layout |
-   | r     | modkey, shift   | yes       | awful.tag.incnmaster(1, nil, true)  | increase number of master clients | layout |
-   | c     | modkey, shift   | yes       | awful.tag.incnmaster(-1, nil, true) | decrease number of master clients | layout |
-   | r     | modkey, control | yes       | awful.tag.incncol(1, nil, true)     | increase number of colums         | layout |
-   | c     | modkey, control | yes       | awful.tag.incncol(-1, nil, true)    | decrease number of colums         | layout |
-   | space | modkey          | yes       | awful.layout.inc(1)                 | next layout                       | layout |
-   | space | modkey, shift   | yes       | awful.layout.inc(-1)                | previous layout                   | layout |
+   | Key   | Modifiers       | Lambda? | Action                              | What it does                      | Group  |
+   |-------+-----------------+---------+-------------------------------------+-----------------------------------+--------|
+   | r     | modkey          | yes     | awful.tag.incmwfact(0.05)           | increase master width factor      | layout |
+   | c     | modkey          | yes     | awful.tag.incmwfact(-0.05)          | decrease master width factor      | layout |
+   | r     | modkey, shift   | yes     | awful.tag.incnmaster(1, nil, true)  | increase number of master clients | layout |
+   |       | modkey, shift   | yes     | awful.tag.incnmaster(-1, nil, true) | decrease number of master clients | layout |
+   | r     | modkey, control | yes     | awful.tag.incncol(1, nil, true)     | increase number of colums         | layout |
+   | c     | modkey, control | yes     | awful.tag.incncol(-1, nil, true)    | decrease number of colums         | layout |
+   | space | modkey          | yes     | awful.layout.inc(1)                 | next layout                       | layout |
+   | space | modkey, meta    | yes     | awful.layout.inc(-1)                | previous layout                   | layout |
 
 ** Media
    :PROPERTIES:
    :CUSTOM_ID: h-78ca2ce5-3d6b-4361-8613-1a7b1695c851
    :END:
    #+NAME: sc-media
-   | Key           | Modifiers | Function? | Action                               | What it does        | Group |
-   |---------------+-----------+-----------+--------------------------------------+---------------------+-------|
-   | p             | modkey    | yes       | awful.spawn.with_shell("mpc toggle") | toggle mpd playback | media |
-   | XF86AudioPlay |           | yes       | awful.spawn.with_shell("mpc toggle") | toggle mpd playback | media |
+   | Key                  | Modifiers       | Lambda?  | Action                          | What it does             | Group |
+   |----------------------+-----------------+----------+---------------------------------+--------------------------+-------|
+   | +                    | modkey, alt     | shell    | mpc volume +5                   | increase mpd volume      | media |
+   | -                    | modkey, alt     | shell    | mpc volume -5                   | decrease mpd volume      | media |
+   | n                    | modkey, shift   | terminal | ncmpcpp -q                      | spawn ncmpcpp            | media |
+   | v                    | modkey, shift   | terminal | ncmpcpp -qs visualizer          | spawn ncmpcpp visualizer | media |
+   | XF86AudioLowerVolume |                 | shell    | amixer -q set Master 2%- unmute | lower volume             | media |
+   | Prior                | modkey, control | shell    | amixer -q set Master 2%- unmute | lower volume             | media |
+   | XF86AudioRaiseVolume |                 | shell    | amixer -q set Master 2%+ unmute | raise volume             | media |
+   | Next                 | modkey, control | shell    | amixer -q set Master 2%+ unmute | lower volume             | media |
+   | XF86AudioMute        |                 | shell    | amixer -q set master 1+ toggle  | toggle mute audio        | media |
+   | Prior                | modkey, control | shell    | amixer -q set master 1+ toggle  | toggle mute audio        | media |
+   | XF86AudioPrev        |                 | shell    | mpc prev                        | previous mpd track       | media |
+   | XF86AudioLowerVolume | alt             | shell    | mpc prev                        | prevous mpd track        | media |
+   | Prev                 | modkey          | shell    | mpc prev                        | previous mpd track       | media |
+   | XF86AudioNext        |                 | shell    | mpc next                        | next mpd track           | media |
+   | XF86AudioRaiseVolume | alt             | shell    | mpc next                        | next mpd track           | media |
+   | Next                 | modkey          | shell    | mpc next                        | next mpd track           | media |
+   | XF86AudioPlay        |                 | shell    | mpc toggle                      | toggle mpd playback      | media |
+   | p                    | modkey          | shell    | mpc toggle                      | toggle mpd playback      | media |
+   | XF86AudioStop        |                 | shell    | mpc stop                        | stop playback            | media |
+   | XF86AudioPlay        | alt             | shell    | mpc stop                        | stop playback            | media |
+   | p                    | modkey, meta    | shell    | mpc stop                        | stop playback            | media |
 
 ** Screen
    :PROPERTIES:
    :CUSTOM_ID: h-f47d70cd-c9d3-41f1-89d1-e7dcbf593e97
    :END:
    #+NAME: sc-screen
-   | Key | Modifiers       | Function? | Action                          | What it does          | Group  |
-   |-----+-----------------+-----------+---------------------------------+-----------------------+--------|
-   | t   | modkey, control | yes       | awful.screen.focus_relative(1)  | focus next screen     | screen |
-   | s   | modkey, control | yes       | awful.screen.focus_relative(-1) | focus previous screen | screen |
+   | Key                   | Modifiers       | Lambda? | Action                          | What it does               | Group  |
+   |-----------------------+-----------------+---------+---------------------------------+----------------------------+--------|
+   | t                     | modkey, control | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
+   | s                     | modkey, control | yes     | awful.screen.focus_relative(-1) | focus previous screen      | screen |
+   | XF86MonBrightnessDown |                 | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
+   | Next                  | modkey, meta    | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
+   | XF86MonBrightnessUp   |                 | shell   | xbacklight -inc 5               | increase screen brightness | screen |
+   | Prev                  | modkey, meta    | shell   | xbacklight -inc 5               | increase screen brightness | screen |
+   | F3                    | modkey          | spawn   | arandr                          | randr graphical frontend   | screen |
 
 ** Tags
    :PROPERTIES:
    :CUSTOM_ID: h-cf656040-b21a-4c11-a6ed-e99ea73c861c
    :END:
    #+NAME: sc-tag
-   | Key    | Modifiers | Function? | Action                    | What it does | Group |
-   |--------+-----------+-----------+---------------------------+--------------+-------|
-   | Escape | modkey    | no        | awful.tag.history.restore | go back      | tag   |
-   | t      | modkey    | no        | awful.tag.viewprev        | view prev    | tag   |
-   | s      | modkey    | no        | awful.tag.viewnext        | view next    | tag   |
+   | Key    | Modifiers       | Lambda?   | Action                    | What it does | Group |
+   |--------+-----------------+-----------+---------------------------+--------------+-------|
+   | Escape | modkey          | no        | awful.tag.history.restore | go back      | tag   |
+   | t      | modkey, control | no        | awful.tag.viewprev        | view prev    | tag   |
+   | s      | modkey, control | no        | awful.tag.viewnext        | view next    | tag   |
 
    Another set  of shortcuts is  linked to the number  row on the  keyboard that
    allow the manipulation of  the default tags that range from  ~1~ to ~10~ (the
@@ -1424,7 +1519,7 @@
   |-----------------------------------------------------+----------------------------------------|
   | pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit | Launch or relaunch Polkit              |
   | pkill picom; compton --experimental-backends        | Launch or relaunch Picom               |
-  | xss-lock -- i3lock -fol                             | Enable lockscreen after a blank screen |
+  | xss-lock -- lock                                    | Enable lockscreen after a blank screen |
   | nm-applet                                           | Launch NetworkManager applet           |
   | numlockx on                                         | Enable numlock                         |
   | mpc stop                                            | Stop music                             |
@@ -1440,10 +1535,10 @@
                "\n")
   #+END_SRC
 
-  #+RESULTS[40820b365b792a3979427935b1f36790f6ec253d]: autostart
+  #+RESULTS[4f7ae21b2d44878b44a0aaea4a0f2ed030d9e9bf]: autostart
   : awful.spawn.with_shell("pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit")
   : awful.spawn.with_shell("pkill picom; compton --experimental-backends")
-  : awful.spawn.with_shell("xss-lock -- i3lock -fol")
+  : awful.spawn.with_shell("xss-lock -- lock")
   : awful.spawn.with_shell("nm-applet")
   : awful.spawn.with_shell("numlockx on")
   : awful.spawn.with_shell("mpc stop")

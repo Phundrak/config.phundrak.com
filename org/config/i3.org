@@ -107,8 +107,8 @@
    | $exiti3     | i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'               |
    | $lockscreen | Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89           |
    | $rofiexec   | rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons |
-   | $gnus       | emacsclient --create-frame --eval '(gnus)' -n                            |
-   | $ec         | emacsclient --create-frame -n                                            |
+   | $mail       | emacsclient -c -e '(mu4e)' -n                                            |
+   | $ec         | emacsclient -c -n                                                        |
    | $walset     | wal -i ~/Pictures/Wallpapers -o wal-set                                  |
 
    Variables will be set like so.
@@ -123,14 +123,14 @@
                 "\n")
    #+END_SRC
 
-   #+RESULTS[2cd58c10c766632b4e8838fcb1b148d28a7daa60]: generate-variables
-   : set $mod	Mod4
-   : set $alt	Mod1
-   : set $up	Up
-   : set $down	Down
-   : set $left	Left
-   : set $right	Right
-   : set $term	st
+   #+RESULTS[48079cbd7e6dbf2003fe5ae87216bd38f638b6f8]: generate-variables
+   : set $mod Mod4
+   : set $alt Mod1
+   : set $up Up
+   : set $down Down
+   : set $left Left
+   : set $right Right
+   : set $term st
 
    Finally, some variables  hold some long strings for commands  I don’t want to
    have to type multiple times.
@@ -141,13 +141,13 @@
                 "\n")
    #+END_SRC
 
-   #+RESULTS[43d22c264f7972e7c2ab35ada0fb45aeb0bd17af]: generate-variables2
-   : set $exiti3	"i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
-   : set $lockscreen	"Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-   : set $rofiexec	"rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
-   : set $gnus	"emacsclient --create-frame --eval '(gnus)' -n"
-   : set $ec	"emacsclient --create-frame -n"
-   : set $walset	"wal -i ~/Pictures/Wallpapers -o wal-set"
+   #+RESULTS[c901e3e31c500859661650e86a6b63aef286acbe]: generate-variables2
+   : set $exiti3 "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
+   : set $lockscreen "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
+   : set $rofiexec "rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
+   : set $mail "emacsclient -c -e '(mu4e)' -n"
+   : set $ec "emacsclient -c -n"
+   : set $walset "wal -i ~/Pictures/Wallpapers -o wal-set"
 
    Here is the configuration:
    #+BEGIN_SRC conf :noweb yes
@@ -737,7 +737,7 @@
     | shortcut     | command             | what it does                |
     |--------------+---------------------+-----------------------------|
     | $mod+b       | exec firefox        | Launch browser              |
-    | $mod+m       | exec $gnus          | Launch Gnus, my mail client |
+    | $mod+m       | exec $mail          | Launch Gnus, my mail client |
     | Ctrl+Shift+d | exec discord-canary | Launch Discord              |
 
     Hence this configuration:
