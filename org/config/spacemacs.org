@@ -3146,6 +3146,7 @@
     of them has a  description so the shortcut doesn’t show  up as ~lambda~ with
     ~which-keys~.
     #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "ofa" "awesome.org")
       (spacemacs/declare-prefix "ofb" "bin.org")
       (spacemacs/declare-prefix "ofe" "spacemacs.org")
       (spacemacs/declare-prefix "off" "fish.org")
@@ -3155,6 +3156,7 @@
       (spacemacs/declare-prefix "ofP" "picom.org")
       (spacemacs/declare-prefix "ofr" "yadm README")
       (spacemacs/set-leader-keys
+        "ofa" (lambda () (interactive) (find-file "~/org/config/awesome.org"))
         "ofb" (lambda () (interactive) (find-file "~/org/config/bin.org"))
         "ofe" (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
         "off" (lambda () (interactive) (find-file "~/org/config/fish.org"))
