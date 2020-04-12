@@ -923,13 +923,21 @@
               (nth 1 x) (nth 0 x)
               (cond
                ((string= "yes" (nth 2 x))
-                (format "function() %s end" (nth 3 x)))
+                (format "function(%s) %s end"
+                        (if (string= (nth 6 x) "yes") "c" "")
+                        (nth 3 x)))
                ((string= "shell" (nth 2 x))
-                (format "function() awful.spawn.with_shell(\"%s\") end" (nth 3 x)))
+                (format "function(%s) awful.spawn.with_shell(\"%s\") end"
+                        (if (string= (nth 6 x) "yes") "c" "")
+                        (nth 3 x)))
                ((string= "terminal" (nth 2 x))
-                (format "function() awful.spawn(terminal..\" -e %s\") end" (nth 3 x)))
+                (format "function(%s) awful.spawn(terminal..\" -e %s\") end"
+                        (if (string= (nth 6 x) "yes") "c" "")
+                        (nth 3 x)))
                ((string= "spawn" (nth 2 x))
-                (format "function() awful.spawn(\"%s\") end" (nth 3 x)))
+                (format "function(%s) awful.spawn(\"%s\") end"
+                        (if (string= (nth 6 x) "yes") "c" "")
+                        (nth 3 x)))
                (t (nth 3 x)))
               (nth 4 x) (nth 5 x)))
   #+END_SRC
@@ -946,7 +954,7 @@
   #+END_SRC
 
   #+NAME: gen-sc-client
-  #+BEGIN_SRC emacs-lisp :var table=sc-client
+  #+BEGIN_SRC emacs-lisp :var table=sc-client :cache yes
     (mapconcat
      <<gen-sc-text>>
      (seq-filter (lambda (x)
@@ -954,6 +962,30 @@
                  table)
      ",\n")
   #+END_SRC
+
+  #+RESULTS[5a0293b89fe106cb2b71ba10d9548b29aa2f9543]: gen-sc-client
+  #+begin_example
+  awful.key({modkey},"f",function(c) toggle_fullscreen_client(c) end,
+    {description="toggle fullscreen",group="client"}),
+  awful.key({modkey},"m",function(c) toggle_maximized(c) end,
+    {description="toggle maximized",group="client"}),
+  awful.key({modkey, control},"m",function(c) toggle_vertical_maximized(c) end,
+    {description="toggle vertically maximized",group="client"}),
+  awful.key({modkey, shift},"m",function(c) toggle_horizontal_maximized(c) end,
+    {description="toggle horizontally maximized",group="client"}),
+  awful.key({modkey, shift},"n",function(c) c.minimized = true end,
+    {description="minimize",group="client"}),
+  awful.key({modkey},"o",function(c) c:move_to_screen() end,
+    {description="move to screen",group="client"}),
+  awful.key({modkey},"q",function(c) c:kill() end,
+    {description="close client",group="client"}),
+  awful.key({modkey},"v",function(c) c.ontop = not c.ontop end,
+    {description="toggle keep on top",group="client"}),
+  awful.key({modkey, control},"space",awful.client.floating.toggle,
+    {description="toggle floating",group="client"}),
+  awful.key({modkey, control},"Return",function(c) c:swap(awful.client.getmaster()) end,
+    {description="move to master",group="client"})
+  #+end_example
 
   #+NAME: sc-tag-num-gen
   #+BEGIN_SRC emacs-lisp :var input=sc-tag-num :results drawer
@@ -1096,8 +1128,8 @@
    |--------+-----------------+---------+----------------------------------+------------------------------------+--------+-----|
    | f      | modkey          | yes     | toggle_fullscreen_client(c)      | toggle fullscreen                  | client | yes |
    | m      | modkey          | yes     | toggle_maximized(c)              | toggle maximized                   | client | yes |
-   | m      | modkey, control | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized        | client | yes |
    | m      | modkey, shift   | yes     | toggle_horizontal_maximized(c)   | toggle horizontally maximized      | client | yes |
+   | m      | modkey, control | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized        | client | yes |
    | n      | modkey, shift   | yes     | c.minimized = true               | minimize                           | client | yes |
    | n      | modkey, control | yes     | restore_minimized_clients()      | restore minimized                  | client | no  |
    | o      | modkey          | yes     | c:move_to_screen()               | move to screen                     | client | yes |
@@ -1137,10 +1169,10 @@
    #+NAME: sc-media
    | Key                  | Modifiers       | Lambda?  | Action                          | What it does             | Group |
    |----------------------+-----------------+----------+---------------------------------+--------------------------+-------|
-   | +                    | modkey, alt     | shell    | mpc volume +5                   | increase mpd volume      | media |
-   | -                    | modkey, alt     | shell    | mpc volume -5                   | decrease mpd volume      | media |
-   | n                    | modkey, shift   | terminal | ncmpcpp -q                      | spawn ncmpcpp            | media |
-   | v                    | modkey, shift   | terminal | ncmpcpp -qs visualizer          | spawn ncmpcpp visualizer | media |
+   | +                    | modkey, meta    | shell    | mpc volume +5                   | increase mpd volume      | media |
+   | -                    | modkey, meta    | shell    | mpc volume -5                   | decrease mpd volume      | media |
+   | n                    | modkey, meta    | terminal | ncmpcpp -q                      | spawn ncmpcpp            | media |
+   | v                    | modkey, meta    | terminal | ncmpcpp -qs visualizer          | spawn ncmpcpp visualizer | media |
    | XF86AudioLowerVolume |                 | shell    | amixer -q set Master 2%- unmute | lower volume             | media |
    | Prior                | modkey, control | shell    | amixer -q set Master 2%- unmute | lower volume             | media |
    | XF86AudioRaiseVolume |                 | shell    | amixer -q set Master 2%+ unmute | raise volume             | media |
@@ -1557,7 +1589,8 @@
   :CUSTOM_ID: h-4668503f-07ec-4781-a4d1-671f7e6b5821
   :END:
 
-** TODO Error on S-q
+** DONE Error on S-q
+   CLOSED: [2020-04-12 dim. 15:47]
    :PROPERTIES:
    :CUSTOM_ID: h-828e67df-7fba-4524-95d5-9e505023cb4a
    :END:
