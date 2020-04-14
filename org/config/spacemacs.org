@@ -30,6 +30,8 @@
       - [[#frameworks][Frameworks]]
       - [[#general-purpose][General-purpose]]
     - [[#readers][Readers]]
+      - [[#epub-and-pdf-readers][Epub and Pdf readers]]
+      - [[#elfeed][Elfeed]]
     - [[#version-control][Version control]]
     - [[#themes][Themes]]
     - [[#tools][Tools]]
@@ -566,8 +568,8 @@
                    node-add-modules-path t)
      #+END_SRC
 
-     I am also currently testing the Awesome window manager which requires the
-     Lua programming language, so here it is.
+     I am also currently using the Awesome window manager which requires the Lua
+     programming language, so here it is.
      #+BEGIN_SRC emacs-lisp
        (lua :variables
             lua-backend 'lsp-emmy
@@ -580,11 +582,27 @@
     :PROPERTIES:
     :CUSTOM_ID: h-02099754-7102-4251-9e2e-a3ee33f4b469
     :END:
-    In this category, only the ~epub~ and ~pdf~ layers are enabled so I can read
-    these files from Emacs directly.
-    #+BEGIN_SRC emacs-lisp
-    epub pdf
-    #+END_SRC
+**** Epub and Pdf readers
+     :PROPERTIES:
+     :CUSTOM_ID: h-687183a4-280d-4027-bc7e-8f436a7cbaad
+     :END:
+     In this category, only the ~epub~  and ~pdf~ layers are enabled without any
+     special configuration, so I can read these files from Emacs directly.
+     #+BEGIN_SRC emacs-lisp
+     epub pdf
+     #+END_SRC
+
+**** Elfeed
+     :PROPERTIES:
+     :CUSTOM_ID: h-1f99b28e-2b9c-4d4e-b526-25f99dc59951
+     :END:
+     Elfeed is an  Emacs feeed and RSS  reader which can be  managed through org
+     files. Actually,  through only one file  in my case, located  in my =~/org=
+     directory.
+     #+BEGIN_SRC emacs-lisp
+       (elfeed :variables
+               rmh-elfeed-org-files '("~/org/elfeed.org"))
+     #+END_SRC
 
 *** Version control
     :PROPERTIES:
@@ -2106,9 +2124,11 @@
     #+END_SRC
 
     I also  want to always  be in  ~visual-line-mode~ so Emacs  soft-wraps lines
-    that are too long for the buffer they are displayed in.
+    that are too  long for the buffer  they are displayed in. This  will also be
+    enabled for Elfeed.
     #+BEGIN_SRC emacs-lisp
       (add-hook 'prog-mode-hook 'visual-line-mode)
+      (add-hook 'elfeed-read-mode-hook 'visual-line-mode)
     #+END_SRC
 
     I also want  for some non-programming modes to enable  a hard-limit in terms
