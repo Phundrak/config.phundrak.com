@@ -1993,24 +1993,20 @@
    ~bu~.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-bookmarks
-           `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+           `(("maildir:/Inbox" "Inbox" ?i)
+             ("maildir:/Sent" "Sent messages" ?s)
+             ("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
              ("date:today..now" "Today's messages" ?t)
              ("date:7d..now" "Last 7 days" ?w)
              ("date:1m..now" "Last month" ?m)
              ("date:1y..now" "Last year" ?y)
-             ("mime:image/*" "Messages with images" ?p)
-             (,(mapconcat 'identity
-                          (mapcar
-                           (lambda (maildir)
-                             (concat "maildir:" (car maildir)))
-                           mu4e-maildir-shortcuts) " OR ")
-              "All inboxes" ?i)))
+             ("mime:image/*" "Messages with images" ?p)))
    #+END_SRC
 
    On new email arrival, Emacs can send  the system a notification which will be
    handled as any other notification received by the system and will display the
    number of unread emails to the user; in my case, notifications are handled by
-   [[https://dunst-project.org/][dunst]].
+   [[https://dunst-project.org/][dunst]] under i3, or AwesomeWM itself.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-enable-notifications t
            mu4e-alert-email-notification-types '(count))
@@ -3024,13 +3020,9 @@
    :PROPERTIES:
    :CUSTOM_ID: h-4f572b65-92eb-4ecd-beb3-75aa5c260e37
    :END:
-   The first thing I need to set for my Rust setup is the path to ~racer~.
-   #+BEGIN_SRC emacs-lisp
-     (setq racer-cmd "~/.cargo/bin/racer")
-   #+END_SRC
-
-   Now, I also need  to point to racer where the source code  of Rust is located
-   so I can get some documentation.
+   I need to  point to racer where the  source code of Rust is located  so I can
+   get some documentation.  This is installed with the  ~rust-src~ component you
+   can get through ~rustup~.
    #+BEGIN_SRC emacs-lisp
      (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
    #+END_SRC
