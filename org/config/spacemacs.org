@@ -1328,12 +1328,6 @@
     (require 'tramp)
   #+END_SRC
 
-  I also want to load what’s in ~icons-in-terminal~ so I can use them in various
-  packages in Emacs:
-  #+BEGIN_SRC emacs-lisp
-    (add-to-list 'load-path "~/.local/share/icons-in-terminal/")
-  #+END_SRC
-
   I would also like to enable the setup of flycheck for Rust when Flycheck is
   loaded:
   #+BEGIN_SRC emacs-lisp
@@ -1357,6 +1351,7 @@
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :END:
+
 ** ASM configuration
    :PROPERTIES:
    :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
@@ -2603,17 +2598,6 @@
                 (org-agenda-log-mode-items '(state))
                 (org-agenda-skip-entry-if 'notregexp
                                           ":YEARLY:")))))
-    #+END_SRC
-
-    By  the  way,  let’s  also  add   all  TODO.org  files  in  Org-agenda  with
-    Org-projectile:
-    #+BEGIN_SRC emacs-lisp
-      (with-eval-after-load 'org-agenda
-        (require 'org-projectile)
-        (mapcar #'(lambda (file)
-                    (when (file-exists-p file)
-                      (push file org-agenda-files)))
-                (org-projectile-todo-files)))
     #+END_SRC
 
 *** Org capture
