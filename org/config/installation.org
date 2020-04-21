@@ -33,7 +33,6 @@
     - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
     - [[#get-envtpl][Get =envtpl=]]
     - [[#update-our-submodules][Update our submodules]]
-  - [[#installing-tryones-compton-fork][Installing Tryone’s Compton fork]]
   - [[#enable-some-services][Enable some services]]
     - [[#systemd-timesyncd][Systemd-timesyncd]]
     - [[#docker][Docker]]
@@ -293,22 +292,22 @@
    #+BEGIN_SRC fish
      set PACKAGES \
      acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr \
-     awesome-terminal-fonts base-devel bat biber bluez-firmware bluez-utils bookworm \
-     bzip2 ccls chicken chromium clisp compton cppcheck cppreference \
-     cppreference-devhelp cpupower discord-canary discount dmenu-lpass docker \
-     docker-compose dockerfile-language-server-bin doxygen dunst emacs \
+     awesome awesome-terminal-fonts awesome-freedesktop-git base-devel bat biber \
+     bluez-firmware bluez-utils bookworm bzip2 ccls chicken chromium clisp cppcheck \
+     cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
+     docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
      emacs-org-mode exfat-utils farbfeld ffmpegthumbnailer findutils firefox flake8 \
      freeglut fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer \
      gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop \
      i3-gaps-rounded-git i3lock-blur igdm-bin inetutils j4-dmenu-desktop \
-     javascript-typescript-langserver js-beautify jfsutils jmtpfs less \
+     javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
      linux-headers lldb logrotate lvm2 ly meson minted man-db man-pages mpc mpd \
-     mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-     nemo-fileroller nemo-preview neofetch netctl networkmanager \
-     networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
-     noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
-     pacman-contrib pandoc-bin pass pavucontrol pdfpc polybar powerline-fonts \
-     prettier pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
+     mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller \
+     nemo-preview neofetch netctl networkmanager networkmanager-openvpn \
+     nm-connection-editor nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g \
+     numlockx openssh otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass \
+     pavucontrol pdfpc picom-ibhagwan-git polybar powerline-fonts prettier \
+     pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
      python-importmagic python-language-server python-nose python-pip python-ptvsd \
      python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
      rofi rsync rtv rustup samba scrot sent shadow siji-git simplescreenrecorder \
@@ -317,8 +316,8 @@
      texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
      ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
      ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-     typescript typescript-language-server-bin unicode-emoji unrar usbutils \
-     valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+     typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
+     vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
      xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
    #+END_SRC
@@ -501,18 +500,6 @@
       printf "\n# Getting yadm susbmodules ####################################################\n\n"
       yadm submodule update --init --recursive
     #+END_SRC
-
-** Installing Tryone’s Compton fork
-   :PROPERTIES:
-   :CUSTOM_ID: h-aecf9f01-268c-40cd-8fc3-622c6ce822e4
-   :END:
-   For some reason, I  found installing directly this fork does  not work, and I
-   need  to  install  it  after   I  installed  the  regular  compton  packages.
-   =compton-tryone-git= will replace =compton= which will be removed.
-   #+BEGIN_SRC fish
-     printf "\n# Installing tryone’s compton fork ############################################\n\n"
-     yay -S --needed compton-tryone-git
-   #+END_SRC
 
 ** Enable some services
    :PROPERTIES:
