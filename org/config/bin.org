@@ -21,6 +21,7 @@
 - [[#cnew][Cnew]]
 - [[#dart-language-server][Dart Language Server]]
 - [[#dmenu][Dmenu]]
+- [[#emacsmail][Emacsmail]]
 - [[#emoji-picker][Emoji picker]]
 - [[#lock][Lock]]
 - [[#mp42webm][mp42webm]]
@@ -325,6 +326,18 @@
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
     rofi -dmenu $argv
+  #+END_SRC
+
+* Emacsmail
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.local/bin/emacsmail
+  :CUSTOM_ID: h-38a20359-28fb-412d-bf83-e2202d04f75f
+  :END:
+  This  short script  is used  in my  =~/.local/share/applications/mu4e.desktop=
+  file in order to send to Emacs any ~mailto:~ requests made in my system.
+  #+BEGIN_SRC bash
+    #!/bin/bash
+    emacsclient -c --eval "(browse-url-mail \"$@\")"
   #+END_SRC
 
 * Emoji picker
