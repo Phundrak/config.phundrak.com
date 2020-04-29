@@ -746,6 +746,15 @@
      pip install --user pyls-isort pyls-mypy
    #+END_SRC
 
+   For some  reason, the version  of ~jedi~  installed with the  Python language
+   server is too recent, it is required by ~pyls~. So, let’s replace it:
+   #+BEGIN_SRC fish
+     sudo pip uninstall jedi
+     sudo pip install 'jedi<0.16,>=0.14.1'
+   #+END_SRC
+
+   Hopefully this will be fixed soon.
+
 ** Install go packages
    :PROPERTIES:
    :CUSTOM_ID: h-8c6e2311-eb84-4bf4-8e0b-948f89bc9664
