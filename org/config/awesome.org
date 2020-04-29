@@ -424,17 +424,17 @@
   | Layout          | Enabled? |
   |-----------------+----------|
   | magnifier       | yes      |
-  | fair            | yes      |
-  | fair.horizontal | yes      |
-  | floating        | yes      |
   | tile            | yes      |
   | tile.left       | yes      |
+  | max             | yes      |
+  | max.fullscreen  | yes      |
+  | floating        | yes      |
+  | fair            | yes      |
+  | fair.horizontal | yes      |
   | tile.bottom     | yes      |
   | tile.top        | yes      |
   | spiral          | yes      |
-  | max             | yes      |
-  | spiral.dwindle  | no       |
-  | max.fullscreen  | no       |
+  | spiral.dwindle  | yes      |
   | corner.nw       | no       |
   | corner.ne       | no       |
   | corner.sw       | no       |
@@ -448,18 +448,20 @@
                "")
   #+END_SRC
 
-  #+RESULTS[cda51a1db4af80af635cc4205a4077055b7b157f]: list-layouts
+  #+RESULTS[b2574a8a87e61600a7d1b328f394b394fd69bf09]: list-layouts
   #+begin_example
   awful.layout.suit.magnifier,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
+  awful.layout.suit.max,
+  awful.layout.suit.max.fullscreen,
+  awful.layout.suit.floating,
   awful.layout.suit.fair,
   awful.layout.suit.fair.horizontal,
   awful.layout.suit.tile.bottom,
   awful.layout.suit.tile.top,
   awful.layout.suit.spiral,
-  awful.layout.suit.floating,
-  awful.layout.suit.max,
+  awful.layout.suit.spiral.dwindle,
   #+end_example
 
   Here is the code that activates these layouts:
@@ -863,9 +865,11 @@
   I will  also set three mouse  bindings for when  the mouse is above  a client:
   - A simple click on a client will focus and raise it.
   - A click on a client combined with a modkey press will allow the user to move
-    a floating window after focusing it.
+    a client after focusing it and making it floating.
+  - A middle  click on  a client combined  with a modkey  press will  toggle the
+    floating status of the client.
   - A right  click combined  with the  modkey will  allow the  user to  resize a
-    floating window after focusing it.
+    after focusing it and making it a floating client.
 
   #+BEGIN_SRC lua
     clientbuttons = gears.table.join(
@@ -874,12 +878,15 @@
       end),
       awful.button({ modkey }, 1, function (c)
           c:emit_signal("request::activate", "mouse_click", {raise = true})
-          awful.client.floating.toggle(c)
+          c.floating = true
           awful.mouse.client.move(c)
+      end),
+      awful.button({ modkey }, 2, function (c)
+            awful.client.floating.toggle(c)
       end),
       awful.button({ modkey }, 3, function (c)
           c:emit_signal("request::activate", "mouse_click", {raise = true})
-          awful.client.floating.toggle(c)
+          c.floating = true
           awful.mouse.client.resize(c)
       end)
     )
