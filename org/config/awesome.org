@@ -424,8 +424,8 @@
   | Layout          | Enabled? |
   |-----------------+----------|
   | magnifier       | yes      |
-  | tile            | yes      |
   | tile.left       | yes      |
+  | tile            | yes      |
   | max             | yes      |
   | max.fullscreen  | yes      |
   | floating        | yes      |
