@@ -220,6 +220,7 @@
    | edit-indirect       | edit region in separate buffer                       |
    | elcord              | rich integration of Emacs in Discord                 |
    | kaolin-themes       | some cool themes                                     |
+   | lsp-dart            | apparently, it isn’t included in the Dart layer      |
    | magit-gitflow       | integrate gitflow in Magit                           |
    | meson-mode          | major mode for Meson build files                     |
    | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
@@ -246,7 +247,7 @@
 
    And to list packages which won’t be installed nor loaded:
    #+BEGIN_SRC emacs-lisp
-   (setq-default dotspacemacs-excluded-packages '())
+   (setq-default dotspacemacs-excluded-packages '(company-tern))
    #+END_SRC
 
    Finally, it is possible to define  the behaviour of Spacemacs when installing
@@ -490,6 +491,17 @@
                                           ("elisp" "emacs-lisp")))
      #+END_SRC
 
+     #+BEGIN_SRC emacs-lisp
+       (bibtex :variables
+               org-ref-default-bibliography '("~/Documents/Papers/references.bib")
+               org-ref-pdf-directory "~/Documents/Papers"
+               org-ref-bibliography-notes "~/Documents/Papers/notes.org")
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+       csv
+     #+END_SRC
+
 **** Frameworks
      :PROPERTIES:
      :CUSTOM_ID: h-ac43dd9a-5a2f-4a80-bb35-535ec6e31e72
@@ -533,7 +545,7 @@
      server, and to the LSP server of Dart.
      #+BEGIN_SRC emacs-lisp
        (dart :variables
-             dart-server-sdk-path "/opt/flutter/bin/cache/dart-sdk/"
+             lsp-dart-project-sdk-dir "/opt/flutter/bin/cache/dart-sdk/"
              lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/")
      #+END_SRC
 
@@ -934,9 +946,8 @@
     The below  variable sets either  the default font  or a prioritized  list of
     fonts to be used by Emacs.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-default-font '("FiraCode Nerd Font Mono" :size 8.0
-                                                :weight normal
-                                                :width normal))
+      (setq-default dotspacemacs-default-font '("Fantasque Sans Mono"
+                                                :size 10.0))
     #+END_SRC
 
 *** Other on-screen elements
@@ -1351,7 +1362,6 @@
   :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :END:
-
 ** ASM configuration
    :PROPERTIES:
    :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
@@ -2166,6 +2176,11 @@
                                      (">>" . 187)     ; »
                                      ("<<" . 171)     ; «
                                      ))
+    #+END_SRC
+
+    Let’s enable this mode globally.
+    #+BEGIN_SRC emacs-lisp
+      (prettify-symbols-mode 1)
     #+END_SRC
 
 *** Twittering mode
