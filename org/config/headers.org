@@ -23,7 +23,7 @@
 #+HTML_HEAD_EXTRA: <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 #+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/dart/main.dart.js"></script>
 #+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+INFOJS_OPT: view:info home:https://phundrak.com/config toc:t
+#+INFOJS_OPT: view:info home:https://phundrak.com/config toc:t ltoc:t mouse:underline
 
 # ### MACROS ###################################################################
 #+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@
