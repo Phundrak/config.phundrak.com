@@ -9,7 +9,7 @@ set keyboardconf \
         MatchIsKeyboard "on"
         Option "XkbLayout" "fr,fr,us"
         Option "XkbModel" "pc104"
-        Option "XkbVariant" "bepo,,"
+        Option "XkbVariant" "bepo_afnor,,"
         Option "XkbOptions" "grp:menu_toggle"
 EndSection'
 
