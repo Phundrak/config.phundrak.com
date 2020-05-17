@@ -71,29 +71,29 @@ awesome awesome-terminal-fonts awesome-freedesktop-git base-devel bat biber \
 bluez-firmware bluez-utils bookworm bzip2 ccls chicken chromium clisp cppcheck \
 cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
 docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
-emacs-org-mode exfat-utils farbfeld ffmpegthumbnailer findutils firefox flake8 \
-freeglut fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer \
-gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop \
-i3-gaps-rounded-git i3lock-blur igdm-bin inetutils j4-dmenu-desktop \
-javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
-linux-headers lldb logrotate lvm2 ly meson minted man-db man-pages mpc mpd \
-mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller \
-nemo-preview neofetch netctl networkmanager networkmanager-openvpn \
-nm-connection-editor nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g \
-numlockx openssh otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass \
-pavucontrol pdfpc picom-ibhagwan-git polybar powerline-fonts prettier \
-pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
-python-importmagic python-language-server python-nose python-pip python-ptvsd \
-python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
-rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow \
-siji-git simplescreenrecorder sshfs st-luke-git sxiv texlive-bin \
-texlive-langchinese texlive-langcyrillic texlive-langgreek \
-texlive-langjapanese texlive-langkorean texlive-latexextra \
+emacs-org-mode exa exfat-utils farbfeld ffmpegthumbnailer findutils firefox \
+flake8 freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
+gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools golangci-lint-bin \
+graphviz htop i3-gaps-rounded-git i3lock-blur igdm-bin inetutils \
+j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
+lain-git less linux-headers lldb logrotate ly meson minted man-db man-pages mpc \
+mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+nemo-fileroller nemo-preview neofetch netctl networkmanager \
+networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
+noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
+pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-ibhagwan-git polybar \
+powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
+python-envtpl-git python-epc python-importmagic python-language-server \
+python-nose python-pip python-ptvsd python-pytest python-pywal qt5-imageformats \
+qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv ruby-rb-fsevent \
+ruby-sass rustup samba scrot sent shadow siji-git simplescreenrecorder sshfs \
+st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
+texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
 texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
 ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
 ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-typescript typescript-language-server-bin unicode-emoji unrar usbutils \
-valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
+vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
 x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
 xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
 
@@ -104,6 +104,12 @@ for pkg in $PACKAGES
 end
 
 printf "\n# Tangling org files ##########################################################\n\n"
+printf '\n\n==== Tangling awesome.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/awesome.org")'
+
 printf '\n\n==== Tangling bin.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -134,11 +140,23 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
 --eval '(org-babel-tangle-file "~/org/config/nano.org")'
 
+printf '\n\n==== Tangling picom.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/picom.org")'
+
 printf '\n\n==== Tangling polybar.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
 --eval '(org-babel-tangle-file "~/org/config/polybar.org")'
+
+printf '\n\n==== Tangling rustfmt.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
+--eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
 
 printf '\n\n==== Tangling spacemacs.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \

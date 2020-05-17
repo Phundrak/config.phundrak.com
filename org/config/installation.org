@@ -296,29 +296,29 @@
      bluez-firmware bluez-utils bookworm bzip2 ccls chicken chromium clisp cppcheck \
      cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
      docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
-     emacs-org-mode exfat-utils farbfeld ffmpegthumbnailer findutils firefox flake8 \
-     freeglut fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer \
-     gnu-free-fonts gnuplot go-tools golangci-lint-bin graphviz htop \
-     i3-gaps-rounded-git i3lock-blur igdm-bin inetutils j4-dmenu-desktop \
-     javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
-     linux-headers lldb logrotate lvm2 ly meson minted man-db man-pages mpc mpd \
-     mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp nemo-fileroller \
-     nemo-preview neofetch netctl networkmanager networkmanager-openvpn \
-     nm-connection-editor nodejs-vmd nomacs nordvpn-bin noto-fonts-emoji npm ntfs-3g \
-     numlockx openssh otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass \
-     pavucontrol pdfpc picom-ibhagwan-git polybar powerline-fonts prettier \
-     pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
-     python-importmagic python-language-server python-nose python-pip python-ptvsd \
-     python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
-     rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow \
-     siji-git simplescreenrecorder sshfs st-luke-git sxiv texlive-bin \
-     texlive-langchinese texlive-langcyrillic texlive-langgreek \
-     texlive-langjapanese texlive-langkorean texlive-latexextra \
+     emacs-org-mode exa exfat-utils farbfeld ffmpegthumbnailer findutils firefox \
+     flake8 freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
+     gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools golangci-lint-bin \
+     graphviz htop i3-gaps-rounded-git i3lock-blur igdm-bin inetutils \
+     j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
+     lain-git less linux-headers lldb logrotate ly meson minted man-db man-pages mpc \
+     mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+     nemo-fileroller nemo-preview neofetch netctl networkmanager \
+     networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
+     noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
+     pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-ibhagwan-git polybar \
+     powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
+     python-envtpl-git python-epc python-importmagic python-language-server \
+     python-nose python-pip python-ptvsd python-pytest python-pywal qt5-imageformats \
+     qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv ruby-rb-fsevent \
+     ruby-sass rustup samba scrot sent shadow siji-git simplescreenrecorder sshfs \
+     st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
+     texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
      texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
      ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
      ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-     typescript typescript-language-server-bin unicode-emoji unrar usbutils \
-     valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+     typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
+     vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
      xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
    #+END_SRC
@@ -337,17 +337,66 @@
    :PROPERTIES:
    :CUSTOM_ID: h-2e4fe0f5-a507-44c5-b69f-1935868b909d
    :END:
+   Before tangling our  configuration files, we need to  create some directories
+   first so our files can be properly tangled. Here’s the list of directories we
+   need to create:
+   #+NAME: dirs-tangled-files
+   | $HOME/.config/awesome       |
+   | $HOME/.config/awesome/theme |
+   | $HOME/.config/emacs/private |
+   | $HOME/.config/fish          |
+   | $HOME/.config/gtk-2.0       |
+   | $HOME/.config/gtk-3.0       |
+   | $HOME/.config/i3            |
+   | $HOME/.config/nano          |
+   | $HOME/.config/ncmpcpp       |
+   | $HOME/.config/neofetch      |
+   | $HOME/.config/picom         |
+   | $HOME/.config/polybar       |
+   | $HOME/.config/yadm          |
+   | $HOME/.local/bin            |
+   | $HOME/org/capture           |
+
+   #+NAME: gen-dir-tangle
+   #+BEGIN_SRC emacs-lisp :exports none :var dirs=dirs-tangled-files :cache yes
+     (mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
+                dirs
+                "\n")
+   #+END_SRC
+
+   #+RESULTS[776d0e1f47d7a00ba1cf1b777e346ba41a1064a6]: gen-dir-tangle
+   #+begin_example
+   mkdir -p $HOME/.config/awesome
+   mkdir -p $HOME/.config/awesome/theme
+   mkdir -p $HOME/.config/emacs/private
+   mkdir -p $HOME/.config/fish
+   mkdir -p $HOME/.config/gtk-2.0
+   mkdir -p $HOME/.config/gtk-3.0
+   mkdir -p $HOME/.config/i3
+   mkdir -p $HOME/.config/nano
+   mkdir -p $HOME/.config/ncmpcpp
+   mkdir -p $HOME/.config/neofetch
+   mkdir -p $HOME/.config/picom
+   mkdir -p $HOME/.config/polybar
+   mkdir -p $HOME/.config/yadm
+   mkdir -p $HOME/.local/bin
+   mkdir -p $HOME/org/capture
+   #+end_example
+
    The next step is  to tangle all the Org files. Here is the list of files that
    are to be tangled:
    #+NAME: tangled-files
    | filename      |
    |---------------|
+   | awesome.org   |
    | bin.org       |
    | fish.org      |
    | i3.org        |
    | index.org     |
    | nano.org      |
+   | picom.org     |
    | polybar.org   |
+   | rustfmt.org   |
    | spacemacs.org |
    | tmux.org      |
 
