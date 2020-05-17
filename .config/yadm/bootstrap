@@ -103,6 +103,22 @@ for pkg in $PACKAGES
     yay -S --needed $pkg
 end
 
+mkdir -p $HOME/.config/awesome
+mkdir -p $HOME/.config/awesome/theme
+mkdir -p $HOME/.config/emacs/private
+mkdir -p $HOME/.config/fish
+mkdir -p $HOME/.config/gtk-2.0
+mkdir -p $HOME/.config/gtk-3.0
+mkdir -p $HOME/.config/i3
+mkdir -p $HOME/.config/nano
+mkdir -p $HOME/.config/ncmpcpp
+mkdir -p $HOME/.config/neofetch
+mkdir -p $HOME/.config/picom
+mkdir -p $HOME/.config/polybar
+mkdir -p $HOME/.config/yadm
+mkdir -p $HOME/.local/bin
+mkdir -p $HOME/org/capture
+
 printf "\n# Tangling org files ##########################################################\n\n"
 printf '\n\n==== Tangling awesome.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \

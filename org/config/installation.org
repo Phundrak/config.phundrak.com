@@ -357,31 +357,17 @@
    | $HOME/.local/bin            |
    | $HOME/org/capture           |
 
-   #+NAME: gen-dir-tangle
+   #+NAME: gen-dirs-tangle
    #+BEGIN_SRC emacs-lisp :exports none :var dirs=dirs-tangled-files :cache yes
      (mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
                 dirs
                 "\n")
    #+END_SRC
 
-   #+RESULTS[776d0e1f47d7a00ba1cf1b777e346ba41a1064a6]: gen-dir-tangle
-   #+begin_example
-   mkdir -p $HOME/.config/awesome
-   mkdir -p $HOME/.config/awesome/theme
-   mkdir -p $HOME/.config/emacs/private
-   mkdir -p $HOME/.config/fish
-   mkdir -p $HOME/.config/gtk-2.0
-   mkdir -p $HOME/.config/gtk-3.0
-   mkdir -p $HOME/.config/i3
-   mkdir -p $HOME/.config/nano
-   mkdir -p $HOME/.config/ncmpcpp
-   mkdir -p $HOME/.config/neofetch
-   mkdir -p $HOME/.config/picom
-   mkdir -p $HOME/.config/polybar
-   mkdir -p $HOME/.config/yadm
-   mkdir -p $HOME/.local/bin
-   mkdir -p $HOME/org/capture
-   #+end_example
+   Our code to generate such directories looks like this:
+   #+BEGIN_SRC fish :noweb yes
+     <<gen-dirs-tangle()>>
+   #+END_SRC
 
    The next step is  to tangle all the Org files. Here is the list of files that
    are to be tangled:
