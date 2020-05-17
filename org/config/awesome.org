@@ -6,7 +6,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's AwesomeWM config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the AwesomeWM config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle no :exports none
-#+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :comments link :exports code :noweb yes
+#+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes
 #+STARTUP: content
 
 * Table of Contents :TOC:noexport:
@@ -733,7 +733,7 @@
    #+END_SRC
 
    So, here’s the actual configuration code for the taglist:
-   #+BEGIN_SRC lua :comments link
+   #+BEGIN_SRC lua
      local taglist_buttons = gears.table.join(
        <<tag-simple-left-click>>,
        <<tag-mod-left-click>>,
@@ -803,7 +803,7 @@
    #+END_SRC
 
    So, here’s the actual code for the tasklist:
-   #+BEGIN_SRC lua :comments link
+   #+BEGIN_SRC lua
      local tasklist_buttons = gears.table.join(
        <<task-simple-left-click>>,
        <<task-simple-right-click>>,
@@ -825,7 +825,7 @@
    wallpaper  should be  redisplayed  since  it won’t  necessarily  fit the  new
    geometry of  the screen. And  remember, I have  a [[#h-39816309-d36d-4fb1-9c76-942a85b7407b][function that  does exactly
    that]]! Let’s connect this function to the geometry change signal:
-   #+BEGIN_SRC lua :comments link
+   #+BEGIN_SRC lua
      screen.connect_signal("property::geometry", set_wallpaper)
    #+END_SRC
 
@@ -934,7 +934,7 @@
    #+END_SRC
 
    In the end, our code looks like this:
-   #+BEGIN_SRC lua :comments link
+   #+BEGIN_SRC lua
      awful.screen.connect_for_each_screen(function(s)
            <<screen-set-pape>>
            <<screen-taglist>>
