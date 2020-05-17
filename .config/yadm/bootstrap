@@ -73,7 +73,7 @@ cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
 docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
 emacs-org-mode exa exfat-utils farbfeld ffmpegthumbnailer findutils firefox \
 flake8 freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
-gnome-epub-thumbnailer gnu-free-fonts gnuplot go-tools golangci-lint-bin \
+gnome-epub-thumbnailer gnu-free-fonts gnuplot go go-tools golangci-lint-bin \
 graphviz htop i3-gaps-rounded-git i3lock-blur igdm-bin inetutils \
 j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
 lain-git less linux-headers lldb logrotate ly meson minted man-db man-pages mpc \
@@ -335,3 +335,20 @@ fisher add jethrokuan/z
 fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
 fisher add acomagu/fish-async-prompt
+
+(let ((dirs (quote (("$HOME/.config/awesome") ("$HOME/.config/awesome/theme") ("$HOME/.config/emacs/private") ("$HOME/.config/fish") ("$HOME/.config/gtk-2.0") ("$HOME/.config/gtk-3.0") ("$HOME/.config/i3") ("$HOME/.config/nano") ("$HOME/.config/ncmpcpp") ("$HOME/.config/neofetch") ("$HOME/.config/picom") ("$HOME/.config/polybar") ("$HOME/.config/yadm") ("$HOME/.local/bin") ("$HOME/org/capture")))))
+(mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
+           dirs
+           "\n")
+)
+
+(let ((files (quote ("awesome.org" "bin.org" "fish.org" "i3.org" "index.org" "nano.org" "picom.org" "polybar.org" "rustfmt.org" "spacemacs.org" "tmux.org"))))
+(mapconcat (lambda (x) (concat
+                        (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
+                        (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
+                                "--eval '(setq org-confirm-babel-evaluate nil)' \\\n"
+                                "--eval '(org-babel-do-load-languages \\'org-babel-load-languages \\'((python . t)))' \\\n"
+                                (format "--eval '(org-babel-tangle-file \"~/org/config/%s\")'\n" x))))
+           files
+           "\n")
+)
