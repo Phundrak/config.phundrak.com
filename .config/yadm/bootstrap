@@ -287,7 +287,7 @@ rustup toolchain install stable
 printf "\n# Add rust utilities ##########################################################\n\n"
 cargo install rustfmt racer
 
-rustup component add src
+rustup component add rust-src
 rustup component add rls
 
 printf "\n# Installing Python packages ##################################################\n\n"

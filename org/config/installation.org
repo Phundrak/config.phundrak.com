@@ -767,7 +767,7 @@
 
     We will also need some components for development purposes:
     #+BEGIN_SRC fish
-      rustup component add src
+      rustup component add rust-src
       rustup component add rls
     #+END_SRC
 
