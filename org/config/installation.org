@@ -5,8 +5,8 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="How to install a Phundrak-flavored Arch Linux" />
-#+PROPERTY: header-args :exports code :comments link
-#+PROPERTY: header-args:emacs-lisp :tangle no :exports none
+#+PROPERTY: header-args :tangle no :exports none
+#+PROPERTY: header-args:fish :exports code :noweb yes
 #+STARTUP: content
 
 * Table of Contents                                        :TOC_4_gh:noexport:

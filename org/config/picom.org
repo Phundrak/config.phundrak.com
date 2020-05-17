@@ -4,7 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Picom Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Picom Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Picom configuration of Phundrak" />
-#+PROPERTY: header-args:conf :comments link :exports code :tangle ~/.config/picom/picom.conf
+#+PROPERTY: header-args:conf :exports code :tangle ~/.config/picom/picom.conf
 #+STARTUP: content
 
 * Table of Contents                                        :TOC:noexport:
