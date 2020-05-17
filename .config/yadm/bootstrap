@@ -66,36 +66,38 @@ else
 end
 
 set PACKAGES \
-acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr \
-awesome awesome-terminal-fonts awesome-freedesktop-git base-devel bat biber \
-bluez-firmware bluez-utils bookworm bzip2 ccls chicken chromium clisp cppcheck \
-cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
-docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
-emacs-org-mode exa exfat-utils farbfeld ffmpegthumbnailer findutils firefox \
-flake8 freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
+acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii aspell-en \
+aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git base-devel \
+bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bookworm bzip2 ccls \
+chicken chromium clisp cppcheck cppreference cppreference-devhelp cpupower \
+discord-canary discount dmenu-lpass docker docker-compose \
+dockerfile-language-server-bin doxygen dunst emacs emacs-org-mode exa \
+exfat-utils farbfeld fd ffmpegthumbnailer findutils firefox flake8 \
+flat-remix-gtk freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
 gnome-epub-thumbnailer gnu-free-fonts gnuplot go go-tools golangci-lint-bin \
-graphviz htop i3-gaps-rounded-git i3lock-blur igdm-bin inetutils \
-j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
-lain-git less linux-headers lldb logrotate ly meson minted man-db man-pages mpc \
-mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+graphviz htop i3-gaps-rounded-git i3lock-blur inetutils j4-dmenu-desktop \
+javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
+linux-headers lldb logrotate ly meson minted man-db man-pages mpc mpd \
+mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
 nemo-fileroller nemo-preview neofetch netctl networkmanager \
-networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
-noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
-pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-ibhagwan-git polybar \
-powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
-python-envtpl-git python-epc python-importmagic python-language-server \
-python-nose python-pip python-ptvsd python-pytest python-pywal qt5-imageformats \
-qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv ruby-rb-fsevent \
-ruby-sass rustup samba scrot sent shadow siji-git simplescreenrecorder sshfs \
-st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
-texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
-texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
-ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
-ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
-vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
-xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
+networkmanager-openvpn nitrogen nm-connection-editor nodejs-vmd nomacs \
+nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh \
+otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
+picom-ibhagwan-git polybar powerline-fonts prettier pulseaudio-bluetooth \
+python-autoflake python-envtpl-git python-epc python-importmagic \
+python-language-server python-nose python-pip python-ptvsd python-pytest \
+python-pywal qt5-imageformats qemu r raw-thumbnailer reflector ripgrep rofi \
+rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
+simplescreenrecorder sshfs st-luke-git sxiv texlive-bin texlive-langchinese \
+texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean \
+texlive-latexextra texlive-localmanager-git texlive-most tmux tree \
+ttf-arphic-uming ttf-baekmuk ttf-dejavu ttf-google-fonts-opinionated-git \
+ttf-hanazono ttf-joypixels ttf-koruri ttf-liberation ttf-monapo ttf-sazanami \
+ttf-tibetan-machine typescript typescript-language-server-bin unicode-emoji \
+unrar usbutils valgrind vscode-css-languageserver-bin \
+vscode-html-languageserver-bin w3m wget x11-ssh-askpass xclip \
+xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server xorg-xinit xss-lock xvkbd \
+yaml-language-server-bin yapf zeal
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
@@ -292,9 +294,6 @@ rustup component add rls
 
 printf "\n# Installing Python packages ##################################################\n\n"
 pip install --user pyls-isort pyls-mypy
-
-sudo pip uninstall jedi
-sudo pip install 'jedi<0.16,>=0.14.1'
 
 printf "\n# Installing Go packages ######################################################\n\n"
 go get -v golang.org/x/tools/gopls@latest

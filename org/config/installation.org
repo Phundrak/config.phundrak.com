@@ -54,7 +54,6 @@
   - [[#install-go-packages][Install go packages]]
   - [[#set-up-chicken-scheme-interpretercompiler][Set up Chicken (Scheme interpreter/compiler)]]
   - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
-  - [[#export-configuration-file-from-org-files][Export configuration file from org files]]
   - [[#set-up-our-fish-shell][Set up our fish shell]]
     - [[#install-fisher][Install =fisher=]]
     - [[#install-our-extensions][Install our extensions]]
@@ -291,37 +290,41 @@
    Let’s set in a custom varible what packages we’ll be needing.
    #+BEGIN_SRC fish
      set PACKAGES \
-     acpilight adobe-source-han-sans-jp-fonts asar ascii aspell-en aspell-fr \
-     awesome awesome-terminal-fonts awesome-freedesktop-git base-devel bat biber \
-     bluez-firmware bluez-utils bookworm bzip2 ccls chicken chromium clisp cppcheck \
-     cppreference cppreference-devhelp cpupower discord-canary discount dmenu-lpass \
-     docker docker-compose dockerfile-language-server-bin doxygen dunst emacs \
-     emacs-org-mode exa exfat-utils farbfeld ffmpegthumbnailer findutils firefox \
-     flake8 freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
+     acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii aspell-en \
+     aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git base-devel \
+     bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bookworm bzip2 ccls \
+     chicken chromium clisp cppcheck cppreference cppreference-devhelp cpupower \
+     discord-canary discount dmenu-lpass docker docker-compose \
+     dockerfile-language-server-bin doxygen dunst emacs emacs-org-mode exa \
+     exfat-utils farbfeld fd ffmpegthumbnailer findutils firefox flake8 \
+     flat-remix-gtk freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
      gnome-epub-thumbnailer gnu-free-fonts gnuplot go go-tools golangci-lint-bin \
-     graphviz htop i3-gaps-rounded-git i3lock-blur igdm-bin inetutils \
-     j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
-     lain-git less linux-headers lldb logrotate ly meson minted man-db man-pages mpc \
-     mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
+     graphviz htop i3-gaps-rounded-git i3lock-blur inetutils j4-dmenu-desktop \
+     javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
+     linux-headers lldb logrotate ly meson minted man-db man-pages mpc mpd \
+     mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
      nemo-fileroller nemo-preview neofetch netctl networkmanager \
-     networkmanager-openvpn nm-connection-editor nodejs-vmd nomacs nordvpn-bin \
-     noto-fonts-emoji npm ntfs-3g numlockx openssh otf-fandol otf-ipafont p7zip \
-     pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-ibhagwan-git polybar \
-     powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
-     python-envtpl-git python-epc python-importmagic python-language-server \
-     python-nose python-pip python-ptvsd python-pytest python-pywal qt5-imageformats \
-     qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv ruby-rb-fsevent \
-     ruby-sass rustup samba scrot sent shadow siji-git simplescreenrecorder sshfs \
-     st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
-     texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
-     texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
-     ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
-     ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-     typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
-     vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-     x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
-     xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
+     networkmanager-openvpn nitrogen nm-connection-editor nodejs-vmd nomacs \
+     nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh \
+     otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
+     picom-ibhagwan-git polybar powerline-fonts prettier pulseaudio-bluetooth \
+     python-autoflake python-envtpl-git python-epc python-importmagic \
+     python-language-server python-nose python-pip python-ptvsd python-pytest \
+     python-pywal qt5-imageformats qemu r raw-thumbnailer reflector ripgrep rofi \
+     rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
+     simplescreenrecorder sshfs st-luke-git sxiv texlive-bin texlive-langchinese \
+     texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean \
+     texlive-latexextra texlive-localmanager-git texlive-most tmux tree \
+     ttf-arphic-uming ttf-baekmuk ttf-dejavu ttf-google-fonts-opinionated-git \
+     ttf-hanazono ttf-joypixels ttf-koruri ttf-liberation ttf-monapo ttf-sazanami \
+     ttf-tibetan-machine typescript typescript-language-server-bin unicode-emoji \
+     unrar usbutils valgrind vscode-css-languageserver-bin \
+     vscode-html-languageserver-bin w3m wget x11-ssh-askpass xclip \
+     xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server xorg-xinit xss-lock xvkbd \
+     yaml-language-server-bin yapf zeal
    #+END_SRC
+
+   #+RESULTS:
 
    These are the  minimum I would have  in my own installation. You  can edit it
    however you want. Let’s install those.
@@ -782,15 +785,6 @@
      pip install --user pyls-isort pyls-mypy
    #+END_SRC
 
-   For some  reason, the version  of ~jedi~  installed with the  Python language
-   server is too recent, it is required by ~pyls~. So, let’s replace it:
-   #+BEGIN_SRC fish
-     sudo pip uninstall jedi
-     sudo pip install 'jedi<0.16,>=0.14.1'
-   #+END_SRC
-
-   Hopefully this will be fixed soon.
-
 ** Install go packages
    :PROPERTIES:
    :CUSTOM_ID: h-8c6e2311-eb84-4bf4-8e0b-948f89bc9664
@@ -843,14 +837,6 @@
      printf "\n# Clean the pacman and yay cache ##############################################\n\n"
      yay -Sc --noconfirm
    #+END_SRC
-
-** Export configuration file from org files
-   :PROPERTIES:
-   :CUSTOM_ID: h-a4fb171a-3121-46f2-8c3c-2e65500ebdbe
-   :END:
-   As I strive to write most of my configuration file as literary programming
-   files through org-mode, they are not versioned nor downloaded by git when
-   cloning my dotfiles. This is why
 
 ** Set up our fish shell
    :PROPERTIES:
