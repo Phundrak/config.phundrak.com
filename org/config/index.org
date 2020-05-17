@@ -1,34 +1,5 @@
 #+TITLE: Phundrak’s dotfiles
-#+INCLUDE: headers.org
-#+OPTIONS: auto-id:t
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
-#+STARTUP: content
-
-* Table of Contents                                        :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
-  :END:
-- [[#presentation][Presentation]]
-- [[#screenshots][Screenshots]]
-- [[#features][Features]]
-  - [[#tiling-window-managers][Tiling Window Managers]]
-    - [[#awesomewm][AwesomeWM]]
-    - [[#i3-configuration][i3 configuration]]
-  - [[#graphical-tweaks][Graphical tweaks]]
-    - [[#gtk-settings][GTK Settings]]
-      - [[#gtk2][GTK2]]
-      - [[#gtk3][GTK3]]
-    - [[#picom][Picom]]
-    - [[#xresources][Xresources]]
-  - [[#text-and-source-code-editing][Text and source code editing]]
-    - [[#emacs-configuration][Emacs configuration]]
-    - [[#nano][Nano]]
-    - [[#rustfmt][Rustfmt]]
-  - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
-  - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
-  - [[#and-some-minor-configuration-files][And some minor configuration files]]
+#+INCLUDE:-some-minor-configuration-files][And some minor configuration files]]
     - [[#email-signature][Email signature]]
     - [[#global-gitignore][Global gitignore]]
   - [[#tmux-configuration][Tmux configuration]]
@@ -40,8 +11,6 @@
   :PROPERTIES:
   :CUSTOM_ID: h-536e69f5-c012-4b7d-8a45-3a340d3bc7ee
   :END:
-  [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
-
   This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
   to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
   instructions below.
@@ -66,17 +35,14 @@
   :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
   :END:
 
-  #+ATTR_HTML: :width 100%
   #+CAPTION: Desktop with Neofetch in the terminal
-  [[./img/neofetch.png]]
+  [[./img/neofetch.png.webp]]
 
   #+CAPTION: Desktop with Emacs opened
-  #+ATTR_HTML: :width 100%
-  [[./img/emacs.png]]
+  [[./img/emacs.png.webp]]
 
   #+CAPTION: Desktop with Rofi
-  #+ATTR_HTML: :width 100%
-  [[./img/rofi.png]]
+  [[./img/rofi.png.webp]]
 
 * Features
   :PROPERTIES:
@@ -322,7 +288,7 @@
     #+BEGIN_SRC text
       Lucien “Phundrak” Cartier-Tilet
       https://phundrak.com (Français)
-      https://en.phundrak.com (English)
+      https://phundrak.com/en (English)
 
       Sent from a Free and Open-Source Linux operating system with GNU/Emacs
     #+END_SRC

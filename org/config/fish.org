@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-#+TITLE: Phundrak’s fish config
-#+INCLUDE: headers.org
+#+TITLE: Fish config
+#+INCLUDE: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's fish config" />
@@ -18,12 +18,14 @@
 - [[#tramp-remote-access][Tramp remote access]]
 - [[#regular-fish-shell-appearance][Regular fish shell appearance]]
 - [[#global-variables][Global variables]]
+  - [[#development][Development]]
+  - [[#path][$PATH]]
 - [[#abbreviations][Abbreviations]]
   - [[#system-monitoring][System monitoring]]
   - [[#system-management-packages-and-services][System management (packages and services)]]
     - [[#package-management][Package management]]
     - [[#service-management][Service management]]
-  - [[#development][Development]]
+  - [[#development-1][Development]]
     - [[#cmake][CMake]]
     - [[#compilation][Compilation]]
     - [[#docker][Docker]]
@@ -177,32 +179,6 @@
   :PROPERTIES:
   :CUSTOM_ID: h-0eff37da-af9f-4546-8ad3-201961a2200f
   :END:
-  Some global variables might sometimes be needed and need to be modified. This
-  is for example the case with my =PATH= variable in which I add Rust’s Cargo’s
-  binaries, Go’s binaries  and my own executables. And of  course, don’t forget
-  to add the already existing =PATH=.
-
-  #+NAME: extra-paths
-  | additional path           | what it leads to                     |
-  |---------------------------+--------------------------------------|
-  | $HOME/.pub-cache/bin      | Dart binaries and executables        |
-  | $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
-  | $HOME/go/bin              | Go binaries and executables          |
-  | $HOME/.cargo/bin          | Rust binaries and executables        |
-  | $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
-
-  #+NAME: generate-extra-paths
-  #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-    (mapconcat (lambda (x) x)
-               paths " ")
-  #+END_SRC
-
-  #+RESULTS[d6cf1e9d562d644db1bc6458eca1fc165b065f0c]: generate-extra-paths
-  : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin
-
-  #+BEGIN_SRC fish :noweb yes
-    set -gx PATH <<generate-extra-paths()>> $PATH
-  #+END_SRC
 
   In order  to keep some other  code clean, I  set the ~$BROWSER~ variable  so I
   don’t have to call my web browser directly but rather with this variable.
@@ -216,28 +192,72 @@
     set -gx SUDO_ASKPASS ~/.local/bin/askpass
   #+END_SRC
 
-  Now, let’s declare  our editor of choice, EmacsClient; not  Emacs itself since
-  it will  most often be just  quick edits, nothing  too heavy, if it  is called
-  from the =EDITOR= variable (from Git, for example).
-  #+BEGIN_SRC fish
-    set -gx EDITOR emacsclient -c
-  #+END_SRC
+** Development
+   :PROPERTIES:
+   :CUSTOM_ID: h-6e86740b-c7f1-49e0-a4f8-73e870c69324
+   :END:
+   Now, let’s declare our editor of  choice, EmacsClient; not Emacs itself since
+   it will most  often be just quick  edits, nothing too heavy, if  it is called
+   from the =EDITOR= variable (from Git, for example).
+   #+BEGIN_SRC fish
+     set -gx EDITOR emacsclient -c
+   #+END_SRC
 
-  We also need to set the path to the Dart SDK.
-  #+BEGIN_SRC fish
-  set -gx DART_SDK /opt/dart-sdk/bin
-  #+END_SRC
+   We also need to set the path to the Dart SDK.
+   #+BEGIN_SRC fish
+   set -gx DART_SDK /opt/dart-sdk/bin
+   #+END_SRC
 
-  And we also need to specify where the Android SDK it located.
-  #+BEGIN_SRC fish
-  set -gx ANDROID_HOME $HOME/Android/Sdk
-  #+END_SRC
+   And we also need to specify where the Android SDK it located.
+   #+BEGIN_SRC fish
+   set -gx ANDROID_HOME $HOME/Android/Sdk
+   #+END_SRC
 
-  Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
-  so let’s do so.
-  #+BEGIN_SRC fish
-    set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
-  #+END_SRC
+   Next,  we have  two  variables from  Deno, the  Node.js  destroyer. Its  base
+   directory will be  set in my XDG  config directory, and its  binaries will be
+   located in my local binaries directory (see below).
+   #+BEGIN_SRC fish
+     set -gx DENO_DIR $HOME/.config/deno
+     set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
+   #+END_SRC
+
+   Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
+   so let’s do so.
+   #+BEGIN_SRC fish
+     set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
+   #+END_SRC
+
+** $PATH
+   :PROPERTIES:
+   :CUSTOM_ID: h-a9c79e7c-29ea-49e0-959e-0983e886f346
+   :END:
+   Some global variables might sometimes be needed and need to be modified. This
+   is for example the case with my =PATH= variable in which I add Rust’s Cargo’s
+   binaries, Go’s binaries  and my own executables. And of  course, don’t forget
+   to add the already existing =PATH=.
+
+   #+NAME: extra-paths
+   | additional path           | what it leads to                     |
+   |---------------------------+--------------------------------------|
+   | $HOME/.pub-cache/bin      | Dart binaries and executables        |
+   | $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
+   | $HOME/go/bin              | Go binaries and executables          |
+   | $HOME/.cargo/bin          | Rust binaries and executables        |
+   | $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
+   | $HOME/.cabal/bin          | Haskel binaries                      |
+
+   #+NAME: generate-extra-paths
+   #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
+     (mapconcat (lambda (x) x)
+                paths " ")
+   #+END_SRC
+
+   #+RESULTS[d6cf1e9d562d644db1bc6458eca1fc165b065f0c]: generate-extra-paths
+   : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin
+
+   #+BEGIN_SRC fish :noweb yes
+     set -gx PATH <<generate-extra-paths()>> $PATH
+   #+END_SRC
 
 * Abbreviations
   :PROPERTIES:
@@ -367,7 +387,7 @@
     |--------------+----------------------|
     | clang        | clang -Wall          |
     | clang++      | clang++ -Wall        |
-    | g++          | g++ -Wall -std=c++17 |
+    | g++          | g++ -Wall -std=c++20 |
     | gcc          | gcc -Wall -std=c18   |
 
     Here is the corresponding fish configuration:
@@ -385,7 +405,9 @@
     | abbreviation | command                      |
     |--------------+------------------------------|
     | dc           | docker-compose               |
+    | dcb          | docker-compose build         |
     | dcd          | docker-compose down          |
+    | dcl          | docker-compose logs          |
     | dcp          | docker-compose pull          |
     | dcr          | docker-compose run --rm      |
     | dcu          | docker-compose up            |

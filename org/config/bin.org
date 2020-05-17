@@ -1,5 +1,5 @@
-#+TITLE: Phundrak’s executable scripts
-#+INCLUDE: headers.org
+#+TITLE: Executable scripts
+#+INCLUDE: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
@@ -13,6 +13,7 @@
   :END:
 - [[#presentation][Presentation]]
 - [[#4chandl][4chandl]]
+- [[#awiki][awiki]]
 - [[#askpass][Askpass]]
 - [[#backup][Backup]]
 - [[#connectwifi][ConnectWifi]]
@@ -25,6 +26,7 @@
 - [[#emoji-picker][Emoji picker]]
 - [[#lock][Lock]]
 - [[#mp42webm][mp42webm]]
+- [[#pinfo][Pinfo]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
   - [[#get-the-mountable-elements][Get the mountable elements]]
@@ -147,12 +149,45 @@
   end
   #+END_SRC
 
+* awiki
+  :PROPERTIES:
+  :CUSTOM_ID: h-340e487c-152a-459a-8da5-6f597e67abd3
+  :HEADER-ARGS: :tangle ~/.local/bin/awiki
+  :END:
+  ~awiki~  is   a  simple   script  used   with  ~rofi~   that  relies   on  the
+  ~arch-wiki-docs~ package  in order to provide  the user a way  to quickly find
+  and display any English page from the Arch Wiki in a browser. The advantage of
+  using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is
+  you get  instant suggestion in rofi  using fuzzy-search. The downside  is rofi
+  will only help  you find pages by their  title, and it will not  help you find
+  keywords in the content of said pages.
+
+  The first  step is  to create  the list of  all the  pages that  are currently
+  stored      on      disk.       ~arch-wiki-docs~      stores      them      in
+  ~/usr/share/doc/arch-wiki/html/en~. A  simple ~ls~  piped in three  ~sed~ will
+  give us a  list of page titles. We  then pipe that into rofi in  dmenu mode in
+  order to choose the page we want  to display. By the way, setting the location
+  of the HTML files will come in handy later.
+  #+BEGIN_SRC fish
+    #!/usr/bin/env fish
+    set WLOCATION /usr/share/doc/arch-wiki/html/en/
+    set WPAGE (/bin/ls $WLOCATION | \
+    sed 's/_/ /g' | sed 's/\.html$//' | sed 's/.*\/\(.*\)/\1/' | \
+    rofi -dmenu -p "Arch Wiki" -i)
+  #+END_SRC
+
+  Now, all I need to  do is to send this list into rofi and  tell it to open the
+  result with our favorite browser with ~xdg-open~.
+  #+BEGIN_SRC fish
+    xdg-open $WLOCATION$WPAGE.html
+  #+END_SRC
+
 * Askpass
   :PROPERTIES:
   :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
   :HEADER-ARGS: :tangle ~/.local/bin/askpass
   :END:
-  Askpass is a simple script that invokes =rofi=  as a way to get from a GUI the
+  Askpass is a simple script that invokes ~rofi~  as a way to get from a GUI the
   user’s sudo password. It is inspired  by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
   and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
   we ignore the initial shebang. This executable is pointed at by the
@@ -166,7 +201,7 @@
   :CUSTOM_ID: h-30cb6655-382f-492a-a005-df15512ab7a5
   :HEADER-ARGS: :tangle ~/.local/bin/backup
   :END:
-  =backup= is a very simple, oneliner script  that will create a local copy of a
+  ~backup~ is a very simple, oneliner script  that will create a local copy of a
   file and add the date at which it  was copied in the filename. You can see its
   source code here:
   #+BEGIN_SRC fish
@@ -179,13 +214,16 @@
   :HEADER-ARGS: :tangle ~/.local/bin/connect-wifi
   :CUSTOM_ID: h-7a958906-1f79-448f-95b3-7226bc80e88c
   :END:
-  =connect-wifi= is  a small  utility tool  that allows the  user to  connect to
+  ~connect-wifi~ is  a small  utility tool  that allows the  user to  connect to
   available WiFi networks. The  first thing to do is to select  the WiFi we want
-  to connect  to. We’ll  use the  =nmcli c  s= command  to get  the list  of the
-  available networks, and we’ll chose one with =rofi=.
+  to connect  to. We’ll  use the  ~nmcli c  s~ command  to get  the list  of the
+  available networks, and we’ll chose one with ~rofi~.
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    set SELECTEDWIFI (nmcli d w l | egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | rofi -dmenu -p "Select your WiFi network")
+    set SELECTEDWIFI (nmcli d w l | \
+    egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
+    egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
+    rofi -dmenu -p "Select your WiFi network")
   #+END_SRC
   Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
   let’s just send a notification no network was selected.
@@ -350,7 +388,8 @@
   emoji is selected, it is copied to the clipboard using =xclipboard=.
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
+    awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
   #+END_SRC
 
   Also, let’s send a notification telling the user the emoji has been copied!
@@ -358,7 +397,7 @@
     set emoji (xclip -o -selection clipboard | tr -d '\n')
     test -z "$emoji" && notify-send "No emoji copied" -u low && exit
     set -a emoji "copied to clipboard"
-    pgrep -x dunst >/dev/null && notify-send -u low $emoji
+    notify-send -u low $emoji
   #+END_SRC
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
@@ -385,10 +424,19 @@
   :HEADER-ARGS: :tangle ~/.local/bin/mp42webm
   :CUSTOM_ID: h-29b8a01c-7499-4a35-be25-f5a593bf40ea
   :END:
+  This function  allows me to  convert easily an mp4  video to the  webm format.
+  Nothing too fancy here.
   #+BEGIN_SRC fish
     #!/usr/bin/fish
     ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
   #+END_SRC
+
+* Pinfo
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.local/bin/pinfo
+  :CUSTOM_ID: h-da11c9a4-732c-40f8-b98f-2bcfe297a6aa
+  :END:
+  ~pinfo~ is a utility that shows system information
 
 * Polybar-launch
   :PROPERTIES:

@@ -2,7 +2,7 @@
 Version=1.5
 Name=FlowScape
 Comment=Create gorgeous 3D landscapes with ease.
-Exec=/home/phundrak/FlowScape/FlowScape.x86_64
+Exec=/usr/bin/prime-run /home/phundrak/FlowScape/FlowScape.x86_64
 Path=/home/phundrak/FlowScape
 Icon=/home/phundrak/FlowScape/icon.jpg
 Terminal=false

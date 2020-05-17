@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 #+title: AwesomeWM configuration
-#+INCLUDE: headers.org
+#+INCLUDE: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's AwesomeWM config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's AwesomeWM config" />
@@ -19,6 +19,11 @@
 - [[#error-handling][Error handling]]
 - [[#variable-definitions][Variable definitions]]
   - [[#themes][Themes]]
+    - [[#creating-my-own-theme-wip-not-yet-used][Creating my own theme (WIP, not yet used)]]
+      - [[#loading-assets][Loading assets]]
+      - [[#inherit-the-default-theme][Inherit the default theme]]
+      - [[#loading-default-fonts-and-colors][Loading default fonts and colors]]
+    - [[#loading-the-theme][Loading the theme]]
   - [[#default-terminal-and-text-editor][Default terminal and text editor]]
   - [[#keys][Keys]]
   - [[#wallpapers-directory][Wallpapers directory]]
@@ -191,12 +196,105 @@
    :PROPERTIES:
    :CUSTOM_ID: h-b2f0f248-68ba-4bdd-a63d-98ee640b071c
    :END:
-   The following line will load the default colors, icons, fonts and wallpapers.
-   It is possible to write a custom theme for Awesome by loading a different Lua
-   file.
-   #+BEGIN_SRC lua
-     beautiful.init("/home/phundrak/.config/awesome/xresources/theme.lua")
-   #+END_SRC
+   With Awesome, it is possible to load  or write custom themes in order to give
+   Awesome a special look  that fits the user. I used to  load the default theme
+   from Xresources,  but now I  would like  to use my  own theme, tweaked  to my
+   liking.
+
+*** Creating my own theme (WIP, not yet used)
+    :PROPERTIES:
+    :CUSTOM_ID: h-45318187-d57c-4f40-a8c6-fad9d90333eb
+    :HEADER-ARGS:lua: :tangle ~/.config/awesome/theme/theme.lua :exports code
+    :HEADER-ARGS:emacs-lisp: :exports none :cache yes
+    :END:
+    Here   I  will   create   my  own   theme,  which   will   be  exported   to
+    =~/.config/awesome/theme/theme.lua=.  It is  based on  my former  Xresources
+    theme, but also  on some other themes I found  on the internet, particularly
+    on Github. Here are a few I would like to mention:
+    - [[https://github.com/lcpz/awesome-copycats/tree/master/themes/powerarrow-dark][Powerarrow-dark]]
+    - DistroTube’s Qtile theme, which you can see [[https://lbry.tv/@DistroTube:2/reactos-is-an-open-source-windows:9?r=4LXiLPA3uQN6Ekx8Rnu9oNVUVArqsbPf][here]]
+
+    My theme  has two main dependencies:  [[https://github.com/lcpz/lain][lain]] and [[https://github.com/lcpz/awesome-freedesktop][freedesktop]] for  Awesome. The
+    former is a framework for Awesome theming while the second enables its users
+    to add ~.desktop~ entries to the Awesome menu.
+
+**** Loading assets
+     :PROPERTIES:
+     :CUSTOM_ID: h-34db58ad-011d-4ebb-892a-6f481ba460aa
+     :END:
+     So first off, let’s load our libraries  or anything I might need to import.
+     First, let's import the ~theme_assets~  module of ~beautiful~, a collection
+     of functions  for theming, as well  as the ~xresources~ library  which will
+     let  us interact  with the  Xresources  theme. The  ~filesystem~ module  of
+     ~gears~  will also  enable us  to  interact with  the system’s  filesystem,
+     getting paths  and files. I  will also  import ~lain~, the  above described
+     dependency, so I get some useful functions and constructs.
+     #+NAME: theme-modules-import-table
+     | Module                 | Import as    | What it is               |
+     |------------------------+--------------+--------------------------|
+     | beautiful.theme_assets | theme_assets | theming library          |
+     | beautiful.xresources   | xresources   | Xresources interactivity |
+     | gears.filesystem       | gfs          | filesystem interactivity |
+     | lain                   | lain         | theming framework        |
+
+     #+NAME: theme-modules-import-gen
+     #+BEGIN_SRC emacs-lisp :var table=theme-modules-import-table formstr="local %s = require(\"%s\")"
+       (mapconcat (lambda (x)
+                    (format formstr
+                            (cadr x) (car x)))
+                  table "\n")
+     #+END_SRC
+
+     Here is what the code looks like:
+     #+BEGIN_SRC lua
+       <<theme-modules-import-gen()>>
+     #+END_SRC
+
+     Let’s also import some functions and values!
+     #+NAME: theme-modules-variables-table
+     | What to import                 | Import as   | What it is                         |
+     |--------------------------------+-------------+------------------------------------|
+     | xresources.apply_dpi           | dpi         | Apply screen’s DPI ([[https://awesomewm.org/doc/api/libraries/beautiful.html#lib_beautiful_xresources_Functions][documentation]]) |
+     | xresources.get_current_theme() | xrdb        | Get current Xresources theme       |
+     | gfs.get_themes_dir()           | themes_path | Get path to default Awesome themes |
+
+     Here is what the code looks like:
+     #+BEGIN_SRC lua
+       <<theme-modules-import-gen(table=theme-modules-variables-table, formstr="local %s = %s")>>
+     #+END_SRC
+
+**** Inherit the default theme
+     :PROPERTIES:
+     :CUSTOM_ID: h-bcb7fef1-009d-418d-8903-9196881da791
+     :END:
+     Now that I imported what I need, I can get a default theme which I will
+     later modify:
+     #+BEGIN_SRC lua
+       local theme = dofile(themes_path.."default/theme.lua")
+     #+END_SRC
+
+**** Loading default fonts and colors
+     :PROPERTIES:
+     :CUSTOM_ID: h-f95c53b3-42fc-410b-b836-482b10075be3
+     :END:
+     With the default theme loaded, let's modify it! The theme’s font will be
+     the same as the one I use for st: Source Code Pro for Powerline
+     #+BEGIN_SRC lua
+       theme.font = "Source Code Pro for Powerline 8"
+     #+END_SRC
+
+*** Loading the theme
+    :PROPERTIES:
+    :CUSTOM_ID: h-27548575-a623-4478-8406-ff23f9d1dce4
+    :END:
+    Finally, let’s load our theme.
+    #+BEGIN_SRC lua
+      beautiful.init("/home/phundrak/.config/awesome/xresources/theme.lua")
+    #+END_SRC
+
+    On top of that, I would like to edit some settings. First of all, let’s set
+    some default transparency for Awesome, with an alpha background. By default,
+    it is completely opaque with a max value of ~256~ and a minimal value of ~0~.
 
 ** Default terminal and text editor
    :PROPERTIES:
@@ -274,7 +372,7 @@
         papes = get_papes()
         pape = papes[math.random(#papes)]
         awful.spawn.with_shell("nitrogen --set-scaled "..pape.." && wal -o wal-set -i "..pape)
-        naughty.notify({ prest = naughty.config.presets.normal,
+        naughty.notify({ preset = naughty.config.presets.normal,
                          title = "Wallpaper change",
                          text = "Done!"})
       end
@@ -1099,6 +1197,7 @@
     #+NAME: sc-app-rofi
     | Key | Modifiers              | Lambda? | Action                                | What it does                    | Group |
     |-----+------------------------+---------+---------------------------------------+---------------------------------+-------|
+    | a   | modkey                 | shell   | awiki                                 | find and open an ArchWiki page  | rofi  |
     | d   | modkey                 | spawn   | rofi -show combi                      | invoke rofi                     | rofi  |
     | d   | modkey, shift          | spawn   | rofi -combi-modi drun,run -show combi | invoke j4-dmenu-desktop         | rofi  |
     | p   | modkey, shift          | shell   | rofi-pass -t                          | types password from ~pass~      | rofi  |
@@ -1384,27 +1483,27 @@
    :CUSTOM_ID: h-5d846dc4-bbdc-4270-b0fc-44c9dbdaf35f
    :END:
    With  the use  of some  rules,  it is  possible  to define  which client  are
-   assigned to which tag by default. Here is the list of my defaults:
+   assigned to  which tag  by default.
    #+NAME: rules-default-tags-table
-   | Client Property | Value   | Screen | Tag |
-   |-----------------+---------+--------+-----|
-   | class           | Emacs   |      1 |   2 |
-   | class           | firefox |      1 |   3 |
-   | class           | Nemo    |      1 |   4 |
-   | class           | Gimp*   |      1 |   5 |
-   | class           | discord |      1 |   0 |
-   | class           | Steam   |      1 |   9 |
+   | Client Property | Value   | Tag |
+   |-----------------+---------+-----|
+   | class           | Emacs   |   2 |
+   | class           | firefox |   3 |
+   | class           | Nemo    |   4 |
+   | class           | Gimp*   |   5 |
+   | class           | discord |   0 |
+   | class           | Steam   |   9 |
 
    #+NAME: rules-default-tags-generate
    #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var tags=rules-default-tags-table
      (mapconcat (lambda (x)
-                  (format "{rule = {%s = \"%s\"}, properties = {screen = %d, tag = \"%d\"} }"
-                          (nth 0 x) (nth 1 x) (nth 2 x) (nth 3 x)))
+                  (format "{rule = {%s = \"%s\"}, properties = {screen = 1, tag = \"%d\"} }"
+                          (nth 0 x) (nth 1 x) (nth 2 x)))
                 tags
                 ",\n")
    #+END_SRC
 
-   #+RESULTS[c916cbccf08bf765657e11de26e9840a5319486e]: rules-default-tags-generate
+   #+RESULTS[2b9fe1774ebfde3fc2cfadb24a32dee9b2639144]: rules-default-tags-generate
    : {rule = {class = "Emacs"}, properties = {screen = 1, tag = "2"} },
    : {rule = {class = "firefox"}, properties = {screen = 1, tag = "3"} },
    : {rule = {class = "Nemo"}, properties = {screen = 1, tag = "4"} },
@@ -1431,14 +1530,16 @@
    :END:
    When a  new client is  created, the ~manage~ signal  is emited. When  so, the
    following snippet ensures  this new client is not off  the screen, unless its
-   position was deliberately set by a program or by the user.
+   position was deliberately set by a program or by the user. It will also spawn
+   the new client where the mouse currently is.
    #+BEGIN_SRC lua
      client.connect_signal("manage", function (c)
-                             if awesome.startup
-                                 and not c.size_hints.user_position
-                                 and not c.size_hints.program_position then
-                               awful.placement.no_offscreen(c)
-                             end
+       awful.client.movetoscreen(c, mouse.screen)
+       if awesome.startup
+           and not c.size_hints.user_position
+           and not c.size_hints.program_position then
+         awful.placement.no_offscreen(c)
+       end
      end)
    #+END_SRC
 
@@ -1456,7 +1557,6 @@
                                <<signal-titlebar-button1>>,
                                <<signal-titlebar-button3>>
                              )
-
                              <<signal-titlebar-create>>
      end)
    #+END_SRC
@@ -1608,3 +1708,8 @@
    :CUSTOM_ID: h-828e67df-7fba-4524-95d5-9e505023cb4a
    :END:
    ~attempt to index a nil value (global 'c')~
+
+** TODO Make custom theme
+   :PROPERTIES:
+   :CUSTOM_ID: h-9f6ad3d4-2581-43f1-ab0a-8903479e26e2
+   :END:

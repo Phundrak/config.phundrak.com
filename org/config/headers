@@ -1,3 +1,4 @@
+# -*- mode: org -*-
 #+AUTHOR: Lucien Cartier-Tilet
 #+EMAIL: lucien@phundrak.com
 #+CREATOR: Lucien Cartier-Tilet
@@ -15,15 +16,11 @@
 #+HTML_HEAD_EXTRA: <meta name="twitter:card" content="summary" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:site" content="@phundrak" />
 #+HTML_HEAD_EXTRA: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/main.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://langue.phundrak.com/css/htmlize.min.css"/>
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" id="theme" href="https://langue.phundrak.com/css/dark.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="/style/style.css"/>
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD_EXTRA: <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://langue.phundrak.com/dart/main.dart.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js"></script>
-#+INFOJS_OPT: view:info home:https://phundrak.com/config toc:t ltoc:t mouse:underline
+#+HTML_HEAD_EXTRA: <script defer src="/dart/main.dart.js"></script>
+#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js" crossorigin="anonymous"></script>
 
 # ### MACROS ###################################################################
 #+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@

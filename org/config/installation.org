@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-#+TITLE: Install a Phundrak-flavored Arch Linux
-#+INCLUDE: headers.org
+#+TITLE: Phundrak-flavored Arch Linux
+#+INCLUDE: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
@@ -310,14 +310,15 @@
      pulseaudio-bluetooth python-autoflake python-envtpl-git python-epc \
      python-importmagic python-language-server python-nose python-pip python-ptvsd \
      python-pytest python-pywal qt5-imageformats qemu r raw-thumbnailer reflector \
-     rofi rsync rtv rustup samba scrot sent shadow siji-git simplescreenrecorder \
-     sshfs st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
-     texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
+     rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow \
+     siji-git simplescreenrecorder sshfs st-luke-git sxiv texlive-bin \
+     texlive-langchinese texlive-langcyrillic texlive-langgreek \
+     texlive-langjapanese texlive-langkorean texlive-latexextra \
      texlive-localmanager-git texlive-most tmux tree ttf-arphic-uming ttf-baekmuk \
      ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
      ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-     typescript typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
-     vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+     typescript typescript-language-server-bin unicode-emoji unrar usbutils \
+     valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
      xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf
    #+END_SRC

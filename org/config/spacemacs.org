@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-#+title: Phundrak’s Spacemacs Configuration
-#+INCLUDE: headers.org
+#+title: Spacemacs Configuration
+#+INCLUDE: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
@@ -215,6 +215,7 @@
    #+NAME: extra-packages
    | name of the package | why is it installed                                  |
    |---------------------+------------------------------------------------------|
+   | caddyfile-mode      | Major mode for editing Caddyfiles                    |
    | dired-du            | alternative to ~ncdu~ with Dired                     |
    | doom-themes         | some cool themes                                     |
    | edit-indirect       | edit region in separate buffer                       |
@@ -314,7 +315,6 @@
       (auto-completion :variables
                     auto-completion-complete-with-key-sequence-delay 0.2
                     auto-completion-enable-help-tooltip 'manual
-                    auto-completion-enable-snippets-in-popup t
                     auto-completion-enable-sort-by-usage t
                     :disabled-for
                     org
@@ -580,6 +580,13 @@
                    node-add-modules-path t)
      #+END_SRC
 
+     Alternatively, I also  use Typescript which is a sort  of better Javascript
+     as it should have been, with the LSP backend.
+     #+BEGIN_SRC emacs-lisp
+       (typescript :variables
+                   typescript-backend 'lsp)
+     #+END_SRC
+
      I am also currently using the Awesome window manager which requires the Lua
      programming language, so here it is.
      #+BEGIN_SRC emacs-lisp
@@ -588,6 +595,10 @@
             lua-lsp-emmy-jar-path "~/.config/awesome/EmmyLua-LS-all.jar"
             lua-lsp-emmy-java-path "java"
             lua-lsp-emmy-enable-file-watchers t)
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+haskell
      #+END_SRC
 
 *** Readers
@@ -948,6 +959,12 @@
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-default-font '("Fantasque Sans Mono"
                                                 :size 10.0))
+    #+END_SRC
+
+    I also added the following code in order to define a fallback font for
+    emojis, defined only on their unicode range:
+    #+BEGIN_SRC emacs-lisp
+      (set-fontset-font "fontset-default" '(#x1f600 . #x1f64f) "NotoEmoji Nerd Font")
     #+END_SRC
 
 *** Other on-screen elements
@@ -2016,7 +2033,7 @@
      (setq mu4e-enable-notifications t
            mu4e-alert-email-notification-types '(count))
      (with-eval-after-load 'mu4e-alert
-       (mu4e-alert-set-default-style 'libnotify))
+       (mu4e-alert-set-default-style 'notifications))
      (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
    #+END_SRC
 
@@ -2922,11 +2939,12 @@
         :base-directory "~/org/config/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/config"
         :recursive t
         :language "en"
         :publishing-function org-html-publish-to-html
         :headline-levels 5
+        :auto-sitemap t
         :auto-preamble t)
      #+END_SRC
 
@@ -2936,8 +2954,8 @@
      #+BEGIN_SRC emacs-lisp :tangle no
        ("config-website-static"
         :base-directory "~/org/config/"
-        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/www/config"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/config"
         :recursive t
         :language "en"
         :publishing-function org-publish-attachment)
@@ -2961,10 +2979,10 @@
      #+NAME: org-proj-lang-html
      #+BEGIN_SRC emacs-lisp :tangle no
        ("langue-phundrak-com-org"
-        :base-directory "~/Documents/conlanging/web/"
+        :base-directory "~/Documents/conlanging/content/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-html-publish-to-html
@@ -2977,10 +2995,10 @@
      #+NAME: org-proj-lang-pdf
      #+BEGIN_SRC emacs-lisp :tangle no
        ("langue-phundrak-com-pdf"
-        :base-directory "~/Documents/conlanging/web/"
+        :base-directory "~/Documents/conlanging/content/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-latex-publish-to-pdf
@@ -2993,9 +3011,9 @@
      #+NAME: org-proj-lang-static
      #+BEGIN_SRC emacs-lisp :tangle no
        ("langue-phundrak-com-static"
-        :base-directory "~/Documents/conlanging/web/"
-        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue-phundrak-com/web"
+        :base-directory "~/Documents/conlanging/content/"
+        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
+        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-publish-attachment)
