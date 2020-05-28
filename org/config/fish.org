@@ -232,9 +232,9 @@
    :CUSTOM_ID: h-a9c79e7c-29ea-49e0-959e-0983e886f346
    :END:
    Some global variables might sometimes be needed and need to be modified. This
-   is for example the case with my =PATH= variable in which I add Rust’s Cargo’s
+   is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s
    binaries, Go’s binaries  and my own executables. And of  course, don’t forget
-   to add the already existing =PATH=.
+   to add the already existing ~PATH~.
 
    #+NAME: extra-paths
    | additional path           | what it leads to                     |
@@ -252,11 +252,17 @@
                 paths " ")
    #+END_SRC
 
-   #+RESULTS[d6cf1e9d562d644db1bc6458eca1fc165b065f0c]: generate-extra-paths
-   : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin
+   #+RESULTS[f1fff053cb9e2239f35571249763683a4a62e643]: generate-extra-paths
+   : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin $HOME/.cabal/bin
 
+   The  code below  ensures  the ~PATH~  is  updated only  at  login, and  every
+   location is addded only once.
    #+BEGIN_SRC fish :noweb yes
-     set -gx PATH <<generate-extra-paths()>> $PATH
+     for p in <<generate-extra-paths()>>
+         if status is-login
+             contains $p $PATH || set PATH $PATH $p
+         end
+     end
    #+END_SRC
 
 * Abbreviations
