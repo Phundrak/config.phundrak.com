@@ -2939,7 +2939,7 @@ haskell
         :base-directory "~/org/config/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/config"
+        :publishing-directory "/ssh:Tilo:~/www/phundrak.com/config"
         :recursive t
         :language "en"
         :publishing-function org-html-publish-to-html
@@ -2954,8 +2954,8 @@ haskell
      #+BEGIN_SRC emacs-lisp :tangle no
        ("config-website-static"
         :base-directory "~/org/config/"
-        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/config"
+        :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
+        :publishing-directory "/ssh:Tilo:~/www/phundrak.com/config"
         :recursive t
         :language "en"
         :publishing-function org-publish-attachment)
@@ -2982,7 +2982,7 @@ haskell
         :base-directory "~/Documents/conlanging/content/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
+        :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-html-publish-to-html
@@ -2998,7 +2998,7 @@ haskell
         :base-directory "~/Documents/conlanging/content/"
         :base-extension "org"
         :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
+        :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-latex-publish-to-pdf
@@ -3012,8 +3012,8 @@ haskell
      #+BEGIN_SRC emacs-lisp :tangle no
        ("langue-phundrak-com-static"
         :base-directory "~/Documents/conlanging/content/"
-        :base-extension "css\\|scss\\|dart\\|js\\|png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
-        :publishing-directory "/ssh:Naro:~/www/phundrak.com/langue/"
+        :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
+        :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
         :recursive t
         :language "fr"
         :publishing-function org-publish-attachment)
