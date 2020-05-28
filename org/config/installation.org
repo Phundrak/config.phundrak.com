@@ -7,6 +7,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="How to install a Phundrak-flavored Arch Linux" />
 #+PROPERTY: header-args :tangle no :exports none
 #+PROPERTY: header-args:fish :exports code :noweb yes
+#+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
 #+STARTUP: content
 
 * Table of Contents                                        :TOC_4_gh:noexport:
@@ -293,17 +294,17 @@
      acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii aspell-en \
      aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git base-devel \
      bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bookworm bzip2 ccls \
-     chicken chromium clisp cppcheck cppreference cppreference-devhelp cpupower \
-     discord-canary discount dmenu-lpass docker docker-compose \
-     dockerfile-language-server-bin doxygen dunst emacs emacs-org-mode exa \
-     exfat-utils farbfeld fd ffmpegthumbnailer findutils firefox flake8 \
-     flat-remix-gtk freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
+     chicken chromium clisp corrupter-git cppcheck cppreference \
+     cppreference-devhelp cpupower discord-canary discount dmenu-lpass docker \
+     docker-compose dockerfile-language-server-bin doxygen dunst emacs \
+     emacs-org-mode exa exfat-utils farbfeld fd ffmpegthumbnailer findutils firefox \
+     flake8 flat-remix-gtk freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
      gnome-epub-thumbnailer gnu-free-fonts gnuplot go go-tools golangci-lint-bin \
-     graphviz htop i3-gaps-rounded-git i3lock-blur inetutils j4-dmenu-desktop \
-     javascript-typescript-langserver js-beautify jfsutils jmtpfs lain-git less \
-     linux-headers lldb logrotate ly meson minted man-db man-pages mpc mpd \
-     mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu ncmpcpp \
-     nemo-fileroller nemo-preview neofetch netctl networkmanager \
+     graphviz htop i3-gaps-rounded-git i3lock-color inetutils isync \
+     j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
+     lain-git less libxft-bgra linux-headers lldb logrotate ly meson minted man-db \
+     man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
+     ncmpcpp nemo-fileroller nemo-preview neofetch netctl networkmanager \
      networkmanager-openvpn nitrogen nm-connection-editor nodejs-vmd nomacs \
      nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh \
      otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
@@ -315,13 +316,13 @@
      simplescreenrecorder sshfs st-luke-git sxiv texlive-bin texlive-langchinese \
      texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean \
      texlive-latexextra texlive-localmanager-git texlive-most tmux tree \
-     ttf-arphic-uming ttf-baekmuk ttf-dejavu ttf-google-fonts-opinionated-git \
-     ttf-hanazono ttf-joypixels ttf-koruri ttf-liberation ttf-monapo ttf-sazanami \
-     ttf-tibetan-machine typescript typescript-language-server-bin unicode-emoji \
-     unrar usbutils valgrind vscode-css-languageserver-bin \
-     vscode-html-languageserver-bin w3m wget x11-ssh-askpass xclip \
-     xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server xorg-xinit xss-lock xvkbd \
-     yaml-language-server-bin yapf zeal
+     ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
+     ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels ttf-koruri \
+     ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
+     typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
+     vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+     x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
+     xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf zeal
    #+END_SRC
 
    #+RESULTS:
@@ -361,7 +362,7 @@
    | $HOME/org/capture           |
 
    #+NAME: gen-dirs-tangle
-   #+BEGIN_SRC emacs-lisp :exports none :var dirs=dirs-tangled-files :cache yes
+   #+BEGIN_SRC emacs-lisp :var dirs=dirs-tangled-files
      (mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
                 dirs
                 "\n")
@@ -390,7 +391,7 @@
    | tmux.org      |
 
    #+NAME: generate-tangle
-   #+BEGIN_SRC emacs-lisp :exports none :var files=tangled-files[,0] :cache yes
+   #+BEGIN_SRC emacs-lisp :var files=tangled-files[,0]
      (mapconcat (lambda (x) (concat
                              (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
                              (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
@@ -875,7 +876,7 @@
     | acomagu/fish-async-prompt | Make your prompt asynchronous to increase it reactivity          |
 
     #+NAME: fish-ext-py
-    #+BEGIN_SRC emacs-lisp :exports none :tangle no :var extensions=fish-extensions[,0] :cache yes
+    #+BEGIN_SRC emacs-lisp :exports none :tangle no :var extensions=fish-extensions[,0]
       (mapconcat (lambda (x) (format "fisher add %s" x))
                  extensions
                  "\n")
