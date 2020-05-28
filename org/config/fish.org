@@ -113,7 +113,7 @@
     set NC '\033[0m'
 
     function display_slider # used total
-        set -l slider_length 39
+        set -l slider_length 38
         set -l used $argv[1]
         set -l total $argv[2]
         set -l used_slider (math -s0 "($used * $slider_length) / $total")
@@ -158,7 +158,7 @@
         printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
         printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
         printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
-        printf "Disks...: %-5s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
+        printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
 
         # loop other mountpoints
         for mp in (df -Ph 2> /dev/null | egrep "sd|tank" | egrep -v "boot|/\$")
@@ -166,11 +166,11 @@
             set -l mp_used (echo $mp | awk '{print $3}')
             set -l mp_total (echo $mp | awk '{print $2}')
             set -l mp_name (echo $mp | awk '{print $6}')
-            printf "          %-5s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
+            printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
         end
 
-        printf "Ram.....:       %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
-        printf "Swap....:       %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
+        printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
+        printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
         echo $ruler
     end
   #+END_SRC
