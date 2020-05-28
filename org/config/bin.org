@@ -206,7 +206,7 @@
   source code here:
   #+BEGIN_SRC fish
     #!/usr/bin/env fish
-    cp $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
+    cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
   #+END_SRC
 
 * ConnectWifi
