@@ -10,7 +10,7 @@ function rainymood
     end
     if [ "$volume" != "" ]
         set FILE (math (random) % 4)
-        set URL "https://rainymood.com/audio1110/$FILE.ogg"
+        set URL "https://rainymood.com/audio1112/$FILE.ogg"
         mpv $URL --force-window=no --volume=$volume; and rainymood
     else
         echo "Missing value after -v/--volume option."
