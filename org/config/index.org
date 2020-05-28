@@ -1,5 +1,34 @@
 #+TITLE: Phundrak’s dotfiles
-#+INCLUDE:-some-minor-configuration-files][And some minor configuration files]]
+#+INCLUDE: headers
+#+OPTIONS: auto-id:t
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
+#+STARTUP: content
+
+* Table of Contents                                        :TOC:noexport:
+  :PROPERTIES:
+  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :END:
+- [[#presentation][Presentation]]
+- [[#screenshots][Screenshots]]
+- [[#features][Features]]
+  - [[#tiling-window-managers][Tiling Window Managers]]
+    - [[#awesomewm][AwesomeWM]]
+    - [[#i3-configuration][i3 configuration]]
+  - [[#graphical-tweaks][Graphical tweaks]]
+    - [[#gtk-settings][GTK Settings]]
+      - [[#gtk2][GTK2]]
+      - [[#gtk3][GTK3]]
+    - [[#picom][Picom]]
+    - [[#xresources][Xresources]]
+  - [[#text-and-source-code-editing][Text and source code editing]]
+    - [[#emacs-configuration][Emacs configuration]]
+    - [[#nano][Nano]]
+    - [[#rustfmt][Rustfmt]]
+  - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
+  - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
+  - [[#and-some-minor-configuration-files][And some minor configuration files]]
     - [[#email-signature][Email signature]]
     - [[#global-gitignore][Global gitignore]]
   - [[#tmux-configuration][Tmux configuration]]
@@ -290,7 +319,7 @@
       https://phundrak.com (Français)
       https://phundrak.com/en (English)
 
-      Sent from a Free and Open-Source Linux operating system with GNU/Emacs
+      Sent from GNU/Emacs
     #+END_SRC
 
 *** Global gitignore
