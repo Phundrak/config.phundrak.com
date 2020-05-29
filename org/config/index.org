@@ -242,11 +242,7 @@
     are dedicated to my =st= terminal to set its font and shell. The font is set
     as follows.
     #+BEGIN_SRC conf
-      st.font: Source Code Pro for Powerline:style=book
-    #+END_SRC
-    And I will set my shell like this:
-    #+BEGIN_SRC conf
-      st.shell: /usr/bin/fish
+      st.font: Fantasque Sans Mono:size=10:antialias=true
     #+END_SRC
     I can also set the transparency of st (my terminal emulator) like so:
     #+BEGIN_SRC conf
