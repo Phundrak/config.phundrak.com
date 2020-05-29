@@ -2468,13 +2468,34 @@ haskell
      ~org-edit-src-code~.   This    means   with    the   original    value   of
      ~org-src-window-setup~  (~reorganize-frame~),  the  current frame  will  be
      split in  two between the  original org window  and the source  window, and
-     once we quit  the source window only  the org window will remain  . This is
-     not  a  desired behavior  for  me,  so I  chose  to  set this  variable  to
+     once we quit the source window only the org window will remain. This is not
+     a  desired  behavior   for  me,  so  I  chose  to   set  this  variable  to
      ~split-window-right~ in  order to keep  my windows organization and  have a
      similar behavior to the old one.
      #+BEGIN_SRC emacs-lisp
        (setq org-src-window-setup 'split-window-right)
        ;; (setq org-src-window-setup 'split-window-below)
+     #+END_SRC
+
+     However, it is not rare that I want to change that for an horizontal split,
+     which can  be achieved  with the value  ~split-window-below~. Thus,  I have
+     made this function that allows me  to switch between the (default) vertical
+     split and the horizontal split.
+     #+BEGIN_SRC emacs-lisp
+       (defun phundrak/toggle-org-src-window-split ()
+         "This function allows the user to toggle the behavior of
+       `org-edit-src-code'. If the variable `org-src-window-setup' has
+       the value `split-window-right', then it will be changed to
+       `split-window-below'. Otherwise, it will be set back to
+       `split-window-right'"
+         (interactive)
+         (if (equal org-src-window-setup 'split-window-right)
+             (setq org-src-window-setup 'split-window-below)
+           (setq org-src-window-setup 'split-window-right))
+         (message "Org-src buffers will now split %s"
+                  (if (equal org-src-window-setup 'split-window-right)
+                      "vertically"
+                    "horizontally")))
      #+END_SRC
 
 **** Miscellaneous
@@ -3234,14 +3255,19 @@ haskell
     #+BEGIN_SRC emacs-lisp
       (spacemacs/declare-prefix "oo" "org-mode")
       (spacemacs/declare-prefix-for-mode 'org-mode "o" "custom" "User-defined keybindings")
+      (spacemacs/declare-prefix-for-mode 'org-mode "oT" "toggle" "Toggle org elements")
     #+END_SRC
 
     Now, I have a couple of shortcuts I use regularly:
     #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "ooT" "toggle")
+    #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        "op" 'org-pomodoro
-        "os" 'org-insert-structure-template
-        "oT" 'org-sidebar-tree)
+        "oS" 'org-insert-structure-template
+        "oTs" 'phundrak/toggle-org-src-window-split
+        "oTt" 'org-sidebar-tree)
     #+END_SRC
 
     ~oss~  allows   me  to   insert  an  org   structure  template   defined  in
