@@ -545,8 +545,8 @@
      server, and to the LSP server of Dart.
      #+BEGIN_SRC emacs-lisp
        (dart :variables
-             lsp-dart-project-sdk-dir "/opt/flutter/bin/cache/dart-sdk/"
-             lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/")
+             lsp-dart-project-sdk-dir "/opt/dart-sdk/"
+             lsp-dart-sdk-dir "/opt/dart-sdk/")
      #+END_SRC
 
      When it comes  to the Python layer,  I set its backend and  formatter to be
