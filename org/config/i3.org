@@ -644,7 +644,7 @@
     | $mod+space       | focus mode_toggle    | Toggles the focus between tiled and floating windows |
     | $mod+Ctrl+c      | move position center | Centers the focused floating window                  |
     If you  want to move around  your floating window,  you can do it  with your
-    mouse while holding down the floating modifier declared [[#h-944b65df-c5c6-4f9a-9824-08e063ba20dd][here]].
+    mouse while holding down the floating modifier declared [[#Variables_declaration-Floating_windows-897d0c3b][here]].
 
     Here is the configuration:
     #+BEGIN_SRC conf

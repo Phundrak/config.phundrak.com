@@ -348,8 +348,8 @@
     :END:
     The  following  function allows  the  user  to  get  the list  of  available
     wallpapers I have  in my wallpapers directory. This depends  on the variable
-    described in [[#h-027a8758-fa96-473f-8ad3-44e07a5e7f4b]]. By the way, the assert
-    on line 3 allows Lua to wait for ~popen~ to run.
+    described  in  [[#Variable_definitions-Wallpapers_directory-23b54f4f]].  By  the
+    way, the assert on line 3 allows Lua to wait for ~popen~ to run.
     #+BEGIN_SRC lua -n
       local function get_papes()
         local i, papes, popen = 0, {}, io.popen
@@ -396,7 +396,7 @@
    :CUSTOM_ID: Custom_functions-Layout_manipulation-6bc7db06
    :END:
    The  following   function  is   used  by  a   shortcut  described   below  in
-   [[#h-521b02ca-0ad3-44e8-8d5b-1e75401490da]].
+   [[#Keybindings-Clients-f9f96d60]].
    #+BEGIN_SRC lua
      local function client_go_back()
        awful.client.focus.history.previous()
@@ -822,7 +822,7 @@
    When  a  screen’s geometry  changes  (e.g.  when  a different  resolution  is
    applied), the signal ~property::geometry~ is sent. When this is the case, the
    wallpaper  should be  redisplayed  since  it won’t  necessarily  fit the  new
-   geometry of  the screen. And  remember, I have  a [[#h-39816309-d36d-4fb1-9c76-942a85b7407b][function that  does exactly
+   geometry of  the screen. And  remember, I have  a [[#Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c][function that  does exactly
    that]]! Let’s connect this function to the geometry change signal:
    #+BEGIN_SRC lua
      screen.connect_signal("property::geometry", set_wallpaper)
@@ -848,14 +848,14 @@
 
    Next, let’s build a  list of tags for the screen. *Be  aware that each screen
    has its own  tag table!* The default  layout will be the first  refered to in
-   [[#h-97ec07e5-68de-4c7e-bdf2-84255c09b552][the layouts list described above]].
+   [[#Layouts-be55a7fd][the layouts list described above]].
    #+NAME: screen-taglist
    #+BEGIN_SRC lua :tangle no
      awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }, s, awful.layout.layouts[1])
    #+END_SRC
 
    Next,  let’s create  the taglist  widget. It  will use  the ~taglist_buttons~
-   [[#h-2113b6d4-9160-4d7f-a00e-fcae82c032f1][declared above]] in order to handle clicks  on tags, and due to the filter, all
+   [[#Top_bar-Tag_list-d43dbb62][declared above]] in order to handle clicks  on tags, and due to the filter, all
    tags will be displayed in the tagbar ([[https://awesomewm.org/apidoc/widgets/awful.widget.taglist.html#List_filters][more about tag filters]]).
    #+NAME: screen-taglist-widget
    #+BEGIN_SRC lua :tangle no
@@ -867,7 +867,7 @@
    #+END_SRC
 
    A tasklist  widget will  also get created  thanks with  the ~tasklist_button~
-   [[#h-2113b6d4-9160-4d7f-a00e-fcae82c032f1][declared above]]  that will handle clicks  on tasks. Contrarily to  the taglist
+   [[#Top_bar-Tag_list-d43dbb62][declared above]]  that will handle clicks  on tasks. Contrarily to  the taglist
    widget above, the tasklist will only display the screen’s current tags thanks
    to its filter.
    #+NAME: screen-tasklist-widget
@@ -1232,6 +1232,7 @@
    :END:
    These shortcuts are related to clients (aka windows) management.
    #+NAME: sc-client
+   |        | <5>             |         | <5>                              | <5>                                |        |            |
    | Key    | Modifiers       | Lambda? | Action                           | What it does                       | Group  | Clientkey? |
    |--------+-----------------+---------+----------------------------------+------------------------------------+--------+------------|
    | c      | modkey, meta    | yes     | awful.placement.centered(c)      | center client                      | client | yes        |
@@ -1381,17 +1382,18 @@
    Here is the list of properties with  their value to apply to all clients, and
    a short explanation as to what they do.
    #+NAME: rules-universal-properties-table
-   | Property      | Value                                                   | What it does                                                        |
-   |---------------+---------------------------------------------------------+---------------------------------------------------------------------|
-   | border_width  | beautiful.border_width                                  | Set the width of the window’s border                                |
-   | border_color  | beautiful.border_normal                                 | Set the color of the window’s border                                |
-   | focus         | awful.client.focus.filter                               | Set focus on the new window, except filtered out windows            |
-   | raise         | true                                                    | Set it as raised window                                             |
-   | keys          | clientkeys                                              | Set the client’s shortcuts set in [[#h-521b02ca-0ad3-44e8-8d5b-1e75401490da][Shortcuts/Clients]]                 |
-   | buttons       | clientbuttons                                           | Set the client’s mouse shortcuts from [[#h-8932afa5-64fe-4549-ac57-ef698dcb7e6c][Mouse bindings]]                |
-   | screen        | awful.screen.preferred                                  | Spawn the client on the main screen                                 |
+   | <5>           | <10>                                                    |                                                                         |
+   | Property      | Value                                                   | What it does                                                            |
+   |---------------+---------------------------------------------------------+-------------------------------------------------------------------------|
+   | border_width  | beautiful.border_width                                  | Set the width of the window’s border                                    |
+   | border_color  | beautiful.border_normal                                 | Set the color of the window’s border                                    |
+   | focus         | awful.client.focus.filter                               | Set focus on the new window, except filtered out windows                |
+   | raise         | true                                                    | Set it as raised window                                                 |
+   | keys          | clientkeys                                              | Set the client’s shortcuts set in [[*Clients][Shortcuts/Clients]]                     |
+   | buttons       | clientbuttons                                           | Set the client’s mouse shortcuts from [[#Mouse_bindings-eb4a69a8][Mouse bindings]]                    |
+   | screen        | awful.screen.preferred                                  | Spawn the client on the main screen                                     |
    | placement     | awful.placement.no_overlap+awful.placement.no_offscreen | Avoid the client to appear off the screen and overlaping another client |
-   | round_corners | true                                                    | Enable rounded corners for client                                   |
+   | round_corners | true                                                    | Enable rounded corners for client                                       |
 
    #+NAME: rules-universal-properties
    #+BEGIN_SRC emacs-lisp :tangle no :exports none :var properties=rules-universal-properties-table :cache yes
@@ -1548,7 +1550,7 @@
    :END:
    It is possible  for Awesome to send  request signals, such as  the request to
    create titlebar  (generally for new  clients). The following  snippet handles
-   this titlebar creation if titlebar creation was set to ~true~ in the [[#h-972e7966-6adf-41bc-9ab3-e58725b93f7c][rules]].
+   this titlebar creation if titlebar creation was set to ~true~ in the [[#Rules-c6142cdf][rules]].
    For a detailed explanation of the code, see below.
    #+BEGIN_SRC lua
      client.connect_signal("request::titlebars", function(c)

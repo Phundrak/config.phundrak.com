@@ -150,7 +150,7 @@
   :CUSTOM_ID: Rounded_corners-33bfcd20
   :END:
   A great feature added by ibhagwan’s fork of compton is the addition of rounded
-  corners  from  sdhand’s  fork,  and  the Kawase  blur  (described  [[#h-e40a644d-b594-41f0-9aca-307f77c456ba][here]])  from
+  corners  from  sdhand’s  fork,  and  the Kawase  blur  (described  [[#Background_blurring-55835066][here]])  from
   tryone144’s fork. Here we can see the declaration of the corners’ radius:
   #+BEGIN_SRC conf
     corner-radius = 9.0;

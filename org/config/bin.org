@@ -631,7 +631,7 @@
    #+END_SRC
 
    Now, let’s select  the mount point of our partition.  We’ll call the function
-   =getmount= described in [[#h-a17825bd-96e2-4c90-99ef-b0f2895cffb6][Get the mount point]] to select it.
+   =getmount= described in [[#Rofi-mount-Get_the_mount_point-6c4bac06][Get the mount point]] to select it.
    #+BEGIN_SRC fish
    getmount
    #+END_SRC
@@ -819,7 +819,7 @@
    :CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
    :END:
    Now that we have declared our functions and set our variables, we’ll read the
-   temporary file described  in [[#h-2307005f-385e-4149-b885-55e699c822bb][Get the mountable elements]]. The  amount of lines
+   temporary file described  in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The  amount of lines
    is passed in a switch statement.
    #+BEGIN_SRC fish
    switch (wc -l < $TMPDRIVES)
@@ -1111,7 +1111,7 @@
    :END:
    If several  types of  unmountable drives  are available,  let’s ask  the user
    which type to unmount based on the  content of the temporary file declared in
-   [[#h-dab41471-4f69-4be8-8d77-58ccc604e4e2][Get the unmountable drives]]. First, let’s declare the function.
+   [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
    #+BEGIN_SRC fish
    function asktype
    #+END_SRC

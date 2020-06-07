@@ -394,7 +394,7 @@
     :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82
     :END:
     Nothing  changes from  the top  bar, all  the variables  stay with  the same
-    values. See [[#h-9f83a6fd-652a-45ca-894b-0a0e0d3f0084][Colors and display]] of the top bar for more information.
+    values. See [[#Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82][Colors and display]] of the top bar for more information.
     #+BEGIN_SRC conf-windows
       <<bar-colors>>
       <<line-border-color>>
@@ -406,7 +406,7 @@
     :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Fonts_and_locale-67459d62
     :END:
     Again, nothing changes  from the top bar,  so for more info  on what’s going
-    on, see [[#h-c5660945-4785-40f7-b89e-f9f31b85a062][Fonts and locale]] of the top bar.
+    on, see [[#Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466][Fonts and locale]] of the top bar.
     #+BEGIN_SRC conf-windows
       <<locale-bar>>
       <<font-config()>>
@@ -566,7 +566,7 @@
     :CUSTOM_ID: Modules-Hardware-Xbacklight-2901c504
     :END:
     This module is used in order to display the level of brightness of a screen.
-    It  is not  used  by itself,  but  rather  by other  modules,  such as  [[#h-9adad94d-961c-44a7-aed1-91a8f22b4eef][ACPI
+    It  is not  used  by itself,  but  rather  by other  modules,  such as  [[#Modules-Hardware-ACPI_backlight-9eaeaa79][ACPI
     backlight]]. First of  all, this module is an internal  module for xbacklight.
     It will  also display the  brightness percentage,  prefixed by a  sun emoji.
     Lastly, it will be underlined by a green line.
@@ -585,7 +585,7 @@
     :END:
     This module  indicates the backlight  level of a  screen thanks to  the ACPI
     Linux module. There isn’t much to tell about the module itself other than it
-    inherits the module  described above, [[#h-8c6dd375-381c-47c4-861d-fda6e7283e9e][xbacklight]]. It also  sets which driver
+    inherits the module  described above, [[#Modules-Hardware-Xbacklight-2901c504][xbacklight]]. It also  sets which driver
     should be used, in this case the ~intel_backlight~ driver.
     #+BEGIN_SRC conf-windows
       [module/backlight-acpi]
