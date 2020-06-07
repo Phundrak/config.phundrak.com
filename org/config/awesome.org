@@ -9,11 +9,10 @@
 #+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes
 #+STARTUP: content
 
-* Table of Contents :TOC:noexport:
+* Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-fd4262b7-b9e1-49c8-83fd-02207a6388c0
+  :CUSTOM_ID: Table_of_Contents-1d688dc5
   :END:
-
 - [[#introduction][Introduction]]
 - [[#loading-libraries][Loading libraries]]
 - [[#error-handling][Error handling]]
@@ -69,7 +68,7 @@
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: h-a4b01b3e-dc01-489d-9abc-f2f7f25978c4
+  :CUSTOM_ID: Introduction-4c41360e
   :END:
   From  the  Arch  Wiki:  awesome  is a  highly  configurable,  next  generation
   framework  window manager  for Xorg.  It is  very fast  and extensible.  It is
@@ -88,7 +87,7 @@
 
 * Loading libraries
   :PROPERTIES:
-  :CUSTOM_ID: h-bbe91e08-98a8-4ef3-acfb-def01ba1fb4d
+  :CUSTOM_ID: Loading_libraries-4df76999
   :END:
   First of all, some initialization is  needed, and this initialization is about
   math  randomness. So,  let’s  initialize  the ~random~  method  of the  ~math~
@@ -159,7 +158,7 @@
 
 * Error handling
   :PROPERTIES:
-  :CUSTOM_ID: h-6c9ab69b-433d-4c99-92a6-0cdc84e7d23f
+  :CUSTOM_ID: Error_handling-f6a6668f
   :END:
   This code checks if Awesome encountered  an error during startup and fell back
   to another config. This code will only ever execute for the fallback config.
@@ -190,11 +189,11 @@
 
 * Variable definitions
   :PROPERTIES:
-  :CUSTOM_ID: h-85fcc156-5baf-4c8c-b771-7d7ae0466518
+  :CUSTOM_ID: Variable_definitions-06b2bcbf
   :END:
 ** Themes
    :PROPERTIES:
-   :CUSTOM_ID: h-b2f0f248-68ba-4bdd-a63d-98ee640b071c
+   :CUSTOM_ID: Variable_definitions-Themes-591886b4
    :END:
    With Awesome, it is possible to load  or write custom themes in order to give
    Awesome a special look  that fits the user. I used to  load the default theme
@@ -203,9 +202,9 @@
 
 *** Creating my own theme (WIP, not yet used)
     :PROPERTIES:
-    :CUSTOM_ID: h-45318187-d57c-4f40-a8c6-fad9d90333eb
     :HEADER-ARGS:lua: :tangle ~/.config/awesome/theme/theme.lua :exports code
     :HEADER-ARGS:emacs-lisp: :exports none :cache yes
+    :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-6b2dd694
     :END:
     Here   I  will   create   my  own   theme,  which   will   be  exported   to
     =~/.config/awesome/theme/theme.lua=.  It is  based on  my former  Xresources
@@ -220,7 +219,7 @@
 
 **** Loading assets
      :PROPERTIES:
-     :CUSTOM_ID: h-34db58ad-011d-4ebb-892a-6f481ba460aa
+     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Loading_assets-aacbcb76
      :END:
      So first off, let’s load our libraries  or anything I might need to import.
      First, let's import the ~theme_assets~  module of ~beautiful~, a collection
@@ -265,7 +264,7 @@
 
 **** Inherit the default theme
      :PROPERTIES:
-     :CUSTOM_ID: h-bcb7fef1-009d-418d-8903-9196881da791
+     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Inherit_the_default_theme-7ab9fbf2
      :END:
      Now that I imported what I need, I can get a default theme which I will
      later modify:
@@ -275,7 +274,7 @@
 
 **** Loading default fonts and colors
      :PROPERTIES:
-     :CUSTOM_ID: h-f95c53b3-42fc-410b-b836-482b10075be3
+     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Loading_default_fonts_and_colors-2c3cd836
      :END:
      With the default theme loaded, let's modify it! The theme’s font will be
      the same as the one I use for st: Source Code Pro for Powerline
@@ -285,7 +284,7 @@
 
 *** Loading the theme
     :PROPERTIES:
-    :CUSTOM_ID: h-27548575-a623-4478-8406-ff23f9d1dce4
+    :CUSTOM_ID: Variable_definitions-Themes-Loading_the_theme-2f28973c
     :END:
     Finally, let’s load our theme.
     #+BEGIN_SRC lua
@@ -298,7 +297,7 @@
 
 ** Default terminal and text editor
    :PROPERTIES:
-   :CUSTOM_ID: h-a57e91b3-fd2a-4fc4-ac2c-2c8362882163
+   :CUSTOM_ID: Variable_definitions-Default_terminal_and_text_editor-44b84e20
    :END:
    The two following variables are set so that  I don’t need to go over my whole
    config file in order to modify which  terminal or text editor I use, not that
@@ -310,7 +309,7 @@
 
 ** Keys
    :PROPERTIES:
-   :CUSTOM_ID: h-d615bb11-b35d-4b7b-af6c-1f8e2fa4c647
+   :CUSTOM_ID: Variable_definitions-Keys-b8def4ac
    :END:
    The following declares the default Modkey.  Usually, ~Mod4~ is the Super key,
    situated between the Ctrl key and the Alt key with a logo (usually Windows’).
@@ -327,7 +326,7 @@
 
 ** Wallpapers directory
    :PROPERTIES:
-   :CUSTOM_ID: h-027a8758-fa96-473f-8ad3-44e07a5e7f4b
+   :CUSTOM_ID: Variable_definitions-Wallpapers_directory-23b54f4f
    :END:
    This variable is  a variable I personally set for  a function described below
    in order to have a variable pointing to my wallpaper directory.
@@ -337,15 +336,15 @@
 
 * Custom functions
   :PROPERTIES:
-  :CUSTOM_ID: h-7f60dc78-b63b-4523-9c01-331aa78720f2
+  :CUSTOM_ID: Custom_functions-ed54dbe2
   :END:
 ** Wallpaper-related functions
    :PROPERTIES:
-   :CUSTOM_ID: h-f961557b-1db6-4acd-90dc-0666316bebdb
+   :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-5912f7dd
    :END:
 *** Set a random wallpaper
     :PROPERTIES:
-    :CUSTOM_ID: h-9983ae6b-e372-41b7-8cce-08f62781fa81
+    :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
     :END:
     The  following  function allows  the  user  to  get  the list  of  available
     wallpapers I have  in my wallpapers directory. This depends  on the variable
@@ -380,7 +379,7 @@
 
 *** Restore previous wallpaper
     :PROPERTIES:
-    :CUSTOM_ID: h-39816309-d36d-4fb1-9c76-942a85b7407b
+    :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c
     :END:
     I also  wrote the following  function that  will restore the  previously set
     wallpaper:
@@ -394,7 +393,7 @@
 
 ** Layout manipulation
    :PROPERTIES:
-   :CUSTOM_ID: h-08050731-281d-4ab8-902e-bcd2e3b3d452
+   :CUSTOM_ID: Custom_functions-Layout_manipulation-6bc7db06
    :END:
    The  following   function  is   used  by  a   shortcut  described   below  in
    [[#h-521b02ca-0ad3-44e8-8d5b-1e75401490da]].
@@ -409,7 +408,7 @@
 
 ** Clients manipulation
    :PROPERTIES:
-   :CUSTOM_ID: h-37850b12-d82e-4657-b13e-42cc1d4fc2dd
+   :CUSTOM_ID: Custom_functions-Clients_manipulation-7e958fed
    :END:
    #+BEGIN_SRC lua
      local function restore_minimized_clients()
@@ -453,7 +452,7 @@
 
 ** Tag manipulation
    :PROPERTIES:
-   :CUSTOM_ID: h-8d449633-cba8-43c3-9000-25d8fbe9204e
+   :CUSTOM_ID: Custom_functions-Tag_manipulation-5fc67669
    :END:
    #+BEGIN_SRC lua
      local function view_tag_n(i)
@@ -499,7 +498,7 @@
 
 ** Awesome prompt
    :PROPERTIES:
-   :CUSTOM_ID: h-e2eb6c6f-1efb-451e-90d1-cc6dc217498b
+   :CUSTOM_ID: Custom_functions-Awesome_prompt-de4fde50
    :END:
    #+BEGIN_SRC lua
      local function invoke_lua_execute_prompt()
@@ -514,7 +513,7 @@
 
 * Layouts
   :PROPERTIES:
-  :CUSTOM_ID: h-97ec07e5-68de-4c7e-bdf2-84255c09b552
+  :CUSTOM_ID: Layouts-be55a7fd
   :END:
   The following is a list of available windows layouts. I only enable some of
   them, and their order in the table is their order in Awesome.
@@ -571,7 +570,7 @@
 
 * Top bar
   :PROPERTIES:
-  :CUSTOM_ID: h-cc08d2b1-ac99-4174-9af0-8bdf1f8a3491
+  :CUSTOM_ID: Top_bar-d3117294
   :END:
   The top bar in Awesome is declared  thanks to a ~wibar~ widget fro the ~awful~
   library. It is comprised of several  buttons and widgets that will be declared
@@ -579,7 +578,7 @@
 
 ** Menus
    :PROPERTIES:
-   :CUSTOM_ID: h-1ac72dd7-b8ea-45e6-b220-4462783eb87d
+   :CUSTOM_ID: Top_bar-Menus-cf468ca8
    :END:
    #+NAME: make-menu
    #+BEGIN_SRC emacs-lisp :var menu=table-awesome-menu
@@ -648,7 +647,7 @@
 
 ** Other widgets
    :PROPERTIES:
-   :CUSTOM_ID: h-303c5e0d-6afa-45fe-91aa-e0c43e48040d
+   :CUSTOM_ID: Top_bar-Other_widgets-0b255378
    :END:
    Let’s declare the keyboard map indicator and switcher for the top bar:
    #+BEGIN_SRC lua
@@ -662,7 +661,7 @@
 
 ** Tag list
    :PROPERTIES:
-   :CUSTOM_ID: h-2113b6d4-9160-4d7f-a00e-fcae82c032f1
+   :CUSTOM_ID: Top_bar-Tag_list-d43dbb62
    :END:
    In order to create the taglist (an equivalent to workspaces, but better), we
    need to create first a local variable that will hold the widget. It will be
@@ -746,7 +745,7 @@
 
 ** Tasks list
    :PROPERTIES:
-   :CUSTOM_ID: h-b27681ce-499f-49da-b6b9-03443d479626
+   :CUSTOM_ID: Top_bar-Tasks_list-fb7c9b20
    :END:
    Similarly to the tag list, the task list can display some special behavior
    depending on the clicks it receives. These clicks are set like so:
@@ -814,11 +813,11 @@
 
 * Theme and display
   :PROPERTIES:
-  :CUSTOM_ID: h-ffa1d827-89a4-4699-b8a4-830d4bdbc5fe
+  :CUSTOM_ID: Theme_and_display-6f94bad4
   :END:
 ** Screen update
    :PROPERTIES:
-   :CUSTOM_ID: h-d2d98621-0450-4038-8754-8aae999b1c9d
+   :CUSTOM_ID: Theme_and_display-Screen_update-e162a27a
    :END:
    When  a  screen’s geometry  changes  (e.g.  when  a different  resolution  is
    applied), the signal ~property::geometry~ is sent. When this is the case, the
@@ -949,7 +948,7 @@
 
 * Mouse bindings
   :PROPERTIES:
-  :CUSTOM_ID: h-8932afa5-64fe-4549-ac57-ef698dcb7e6c
+  :CUSTOM_ID: Mouse_bindings-eb4a69a8
   :END:
   It is possible  with Awesome to bind  some shortcuts to mouse  events when the
   mouse is above  Awesome itself (not above  some client). Only one  is set: the
@@ -992,7 +991,7 @@
 
 * Keybindings
   :PROPERTIES:
-  :CUSTOM_ID: h-c44e17f7-ef46-4ec1-bd26-ff6bbcd02c65
+  :CUSTOM_ID: Keybindings-a4e415b3
   :END:
   Keybindings allow the  user to execute some Lua code  all across Awesome. They
   all bear at least  a list of modifier keys, the actual key  to be pressed, the
@@ -1151,7 +1150,7 @@
 
 ** Applications
    :PROPERTIES:
-   :CUSTOM_ID: h-58cc4798-5686-41bb-8c1a-f9e15368255a
+   :CUSTOM_ID: Keybindings-Applications-8321c6c9
    :END:
    #+NAME: sc-app
    | Key    | Modifiers | Lambda? | Action                | What it does      | Group |
@@ -1161,7 +1160,7 @@
 
 *** Internet apps
     :PROPERTIES:
-    :CUSTOM_ID: h-20b7c7c4-3d5e-49b3-b00c-2d0969cb66cc
+    :CUSTOM_ID: Keybindings-Applications-Internet_apps-87e80705
     :END:
     #+NAME: sc-app-internet
     | Key | Modifiers      | Lambda? | Action                            | What it does       | Group    |
@@ -1171,7 +1170,7 @@
 
 *** Screenshots
     :PROPERTIES:
-    :CUSTOM_ID: h-9c8faf06-1cb1-4d4f-a5d7-ebbf661d8783
+    :CUSTOM_ID: Keybindings-Applications-Screenshots-fa63a5a5
     :END:
     #+NAME: sc-app-screenshot
     | Key   | Modifiers | Lambda? | Action     | What it does                | Group      |
@@ -1182,7 +1181,7 @@
 
 *** Emacs
     :PROPERTIES:
-    :CUSTOM_ID: h-88b6af65-a26e-4ea9-8077-7bcc4a81cec0
+    :CUSTOM_ID: Keybindings-Applications-Emacs-95f8f6a4
     :END:
     #+NAME: sc-app-emacs
     | Key | Modifiers     | Lambda? | Action                        | What it does             | Group |
@@ -1192,7 +1191,7 @@
 
 *** Rofi
     :PROPERTIES:
-    :CUSTOM_ID: h-68e809b7-83a9-4570-a6f5-e368b47c5619
+    :CUSTOM_ID: Keybindings-Applications-Rofi-ca998c87
     :END:
     #+NAME: sc-app-rofi
     | Key | Modifiers              | Lambda? | Action                                | What it does                    | Group |
@@ -1210,7 +1209,7 @@
 
 ** Awesome
    :PROPERTIES:
-   :CUSTOM_ID: h-e1dbf76d-7c55-4d7d-9bc6-9d95ea9531b2
+   :CUSTOM_ID: Keybindings-Awesome-7b691e10
    :END:
    Here will be declared some shortcuts directly related to Awesome itself.
    #+NAME: sc-awesome
@@ -1229,7 +1228,7 @@
 
 ** Clients
    :PROPERTIES:
-   :CUSTOM_ID: h-521b02ca-0ad3-44e8-8d5b-1e75401490da
+   :CUSTOM_ID: Keybindings-Clients-f9f96d60
    :END:
    These shortcuts are related to clients (aka windows) management.
    #+NAME: sc-client
@@ -1258,7 +1257,7 @@
 
 ** Layout manipulation
    :PROPERTIES:
-   :CUSTOM_ID: h-4197bf08-bf4f-4f24-9d9d-333416bec7ef
+   :CUSTOM_ID: Keybindings-Layout_manipulation-648b4581
    :END:
    #+NAME: sc-layout
    | Key   | Modifiers       | Lambda? | Action                              | What it does                      | Group  |
@@ -1274,7 +1273,7 @@
 
 ** Media
    :PROPERTIES:
-   :CUSTOM_ID: h-78ca2ce5-3d6b-4361-8613-1a7b1695c851
+   :CUSTOM_ID: Keybindings-Media-f2cc1324
    :END:
    #+NAME: sc-media
    | Key                  | Modifiers       | Lambda?  | Action                          | What it does             | Group |
@@ -1303,7 +1302,7 @@
 
 ** Screen
    :PROPERTIES:
-   :CUSTOM_ID: h-f47d70cd-c9d3-41f1-89d1-e7dcbf593e97
+   :CUSTOM_ID: Keybindings-Screen-b73991f0
    :END:
    #+NAME: sc-screen
    | Key                   | Modifiers       | Lambda? | Action                          | What it does               | Group  |
@@ -1318,7 +1317,7 @@
 
 ** Tags
    :PROPERTIES:
-   :CUSTOM_ID: h-cf656040-b21a-4c11-a6ed-e99ea73c861c
+   :CUSTOM_ID: Keybindings-Tags-3424b757
    :END:
    #+NAME: sc-tag
    | Key    | Modifiers       | Lambda?   | Action                    | What it does | Group |
@@ -1340,7 +1339,7 @@
 
 * Rules
   :PROPERTIES:
-  :CUSTOM_ID: h-972e7966-6adf-41bc-9ab3-e58725b93f7c
+  :CUSTOM_ID: Rules-c6142cdf
   :END:
   With ~awful.rules~, users  are able to describe some rules  for window clients
   when  the latter  spawn, such  as their  placement, their  properties or  even
@@ -1367,7 +1366,7 @@
 
 ** Universal rules
    :PROPERTIES:
-   :CUSTOM_ID: h-7311bbcd-c169-4b70-bf09-d1870afe1aa4
+   :CUSTOM_ID: Rules-Universal_rules-50aad2ce
    :END:
    The first rule is  a universal rule which will match all  clients, as you can
    see with its syntax below:
@@ -1427,7 +1426,7 @@
 
 ** Floating clients
    :PROPERTIES:
-   :CUSTOM_ID: h-9ba9a5a6-d98a-4c9c-8a7d-62e4ab546424
+   :CUSTOM_ID: Rules-Floating_clients-49ab582e
    :END:
    Some clients  will be declared by  default as floating windows.  For this, we
    will declare a rule that will match any of the provided conditions:
@@ -1468,7 +1467,7 @@
 
 ** Titlebars
    :PROPERTIES:
-   :CUSTOM_ID: h-c6ae6b03-92c0-428d-9b0f-831cec7257d9
+   :CUSTOM_ID: Rules-Titlebars-b532fdba
    :END:
    Any normal or dialog client will get a titlebar. This is enabled like so:
    #+NAME: rules-titlebars
@@ -1480,7 +1479,7 @@
 
 ** Default tag for clients
    :PROPERTIES:
-   :CUSTOM_ID: h-5d846dc4-bbdc-4270-b0fc-44c9dbdaf35f
+   :CUSTOM_ID: Rules-Default_tag_for_clients-6ded2a47
    :END:
    With  the use  of some  rules,  it is  possible  to define  which client  are
    assigned to  which tag  by default.
@@ -1519,14 +1518,14 @@
 
 * Signals
   :PROPERTIES:
-  :CUSTOM_ID: h-a7ab2551-7c6f-498f-926c-b6f8c5564d68
+  :CUSTOM_ID: Signals-e32971d6
   :END:
   Signals are  a way for  Awesome to handle events,  such as client  creation or
   deletion.
 
 ** Client creation
    :PROPERTIES:
-   :CUSTOM_ID: h-9eead015-e1f3-4594-b0fa-d5275a502a87
+   :CUSTOM_ID: Signals-Client_creation-8048ac12
    :END:
    When a  new client is  created, the ~manage~ signal  is emited. When  so, the
    following snippet ensures  this new client is not off  the screen, unless its
@@ -1545,7 +1544,7 @@
 
 ** Titlebar creation
    :PROPERTIES:
-   :CUSTOM_ID: h-506d0716-ffba-4b16-9bac-6aede468b642
+   :CUSTOM_ID: Signals-Titlebar_creation-3b1aaa14
    :END:
    It is possible  for Awesome to send  request signals, such as  the request to
    create titlebar  (generally for new  clients). The following  snippet handles
@@ -1632,7 +1631,7 @@
 
 ** Changes of focus
    :PROPERTIES:
-   :CUSTOM_ID: h-b86fa83c-0266-4b7a-a77b-42ad50efbd1f
+   :CUSTOM_ID: Signals-Changes_of_focus-1b73902c
    :END:
    The default Awesome configuration enables  the following snippet of code that
    makes windows  hovered by  the user’s mouse  focused. Just  for completeness’
@@ -1655,7 +1654,7 @@
 
 * Autostart
   :PROPERTIES:
-  :CUSTOM_ID: h-62e6ce88-26c9-4aca-9578-aaa06cd69e2e
+  :CUSTOM_ID: Autostart-f2cf42fe
   :END:
   By simply  adding a  line requesting  to spawn  a command,  it is  possible to
   create some  autolaunch. All of  my autolaunched  apps are launch  through the
@@ -1699,17 +1698,17 @@
 
 * What to do now                                                   :noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-4668503f-07ec-4781-a4d1-671f7e6b5821
+  :CUSTOM_ID: What_to_do_now-bce61fe1
   :END:
 
 ** DONE Error on S-q
    CLOSED: [2020-04-12 dim. 15:47]
    :PROPERTIES:
-   :CUSTOM_ID: h-828e67df-7fba-4524-95d5-9e505023cb4a
+   :CUSTOM_ID: What_to_do_now-Error_on_S-q-beea9b99
    :END:
    ~attempt to index a nil value (global 'c')~
 
 ** TODO Make custom theme
    :PROPERTIES:
-   :CUSTOM_ID: h-9f6ad3d4-2581-43f1-ab0a-8903479e26e2
+   :CUSTOM_ID: What_to_do_now-Make_custom_theme-5837307e
    :END:

@@ -7,9 +7,9 @@
 #+PROPERTY: header-args:toml :tangle ~/.rustfmt.toml
 #+STARTUP: content
 
-* Table of Contents :TOC:noexport:
+* Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-0871ece1-3315-4853-88ee-26b83530b95a
+  :CUSTOM_ID: Table_of_Contents-1f5472ca
   :END:
 - [[#introduction][Introduction]]
 - [[#general-settings][General settings]]
@@ -20,7 +20,7 @@
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: h-c2854002-b43e-4d65-83a2-e7cbb96af409
+  :CUSTOM_ID: Introduction-465e99fe
   :END:
   The  ~.rustfmt.toml~  file  located  in  the ~$HOME~  directory  is  a  global
   configuration  file for  Rust’s code  formatters, such  as ~rustfmt~.  In this
@@ -28,7 +28,7 @@
 
 * General settings
   :PROPERTIES:
-  :CUSTOM_ID: h-3d97602e-1562-44eb-b673-55b677eda1c2
+  :CUSTOM_ID: General_settings-7f5cb2f6
   :END:
   First, we are using the 2018 edition of Rust.
   #+BEGIN_SRC toml
@@ -57,7 +57,7 @@
 
 * Structs and Enums
   :PROPERTIES:
-  :CUSTOM_ID: h-a6ec06c9-be62-464e-8b52-59019bbe5f7f
+  :CUSTOM_ID: Structs_and_Enums-6a2a856d
   :END:
   The maximum length  of enum variant having discriminant,  that gets vertically
   aligned with others.  Variants without discriminants would be  ignored for the
@@ -81,7 +81,7 @@
 
 * Comments
   :PROPERTIES:
-  :CUSTOM_ID: h-d3f4dcf6-c910-4716-a531-a628a53c2858
+  :CUSTOM_ID: Comments-b1904bb0
   :END:
   Convert ~/* */~ comments to ~//~ comments where possible.
   #+BEGIN_SRC toml
@@ -105,7 +105,7 @@
 
 * Documentation
   :PROPERTIES:
-  :CUSTOM_ID: h-24aa1f8c-02f5-4add-b1af-d406eecfef25
+  :CUSTOM_ID: Documentation-0c7981c7
   :END:
   Format code snippet included in doc comments.
   #+BEGIN_SRC toml
@@ -119,7 +119,7 @@
 
 * Whitespace
   :PROPERTIES:
-  :CUSTOM_ID: h-ad416728-7920-49fa-abdc-92cd5ceebc5a
+  :CUSTOM_ID: Whitespace-e8792b44
   :END:
 
   Use tab characters for indentation, spaces for alignment.

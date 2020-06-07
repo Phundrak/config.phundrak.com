@@ -8,7 +8,7 @@
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :CUSTOM_ID: Table_of_Contents-2444603f
   :END:
 - [[#presentation][Presentation]]
 - [[#screenshots][Screenshots]]
@@ -38,7 +38,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-536e69f5-c012-4b7d-8a45-3a340d3bc7ee
+  :CUSTOM_ID: Presentation-981f2f04
   :END:
   This is my collection of dotfiles  for my daily GNU/Linux environment, tweaked
   to  my  liking. If  you  wish  to  get the  same  setup  as mine,  follow  the
@@ -61,7 +61,7 @@
 
 * Screenshots
   :PROPERTIES:
-  :CUSTOM_ID: h-ee37502b-09a4-4668-88e2-1d4406252bd2
+  :CUSTOM_ID: Screenshots-51f1cef3
   :END:
 
   #+CAPTION: Desktop with Neofetch in the terminal
@@ -75,7 +75,7 @@
 
 * Features
   :PROPERTIES:
-  :CUSTOM_ID: h-8539dd6f-4fcb-4dc7-a3ef-b8ad198c91d4
+  :CUSTOM_ID: Features-5ab2a2c0
   :END:
   - Emacs configuration perfectly tailored for my own use
   - Beautiful and comfy i3 and polybar configuration
@@ -91,11 +91,11 @@
 
 ** Tiling Window Managers
    :PROPERTIES:
-   :CUSTOM_ID: h-b70d9b3b-4259-4311-aa23-4792656220bb
+   :CUSTOM_ID: Features-Tiling_Window_Managers-da221e37
    :END:
 *** AwesomeWM
     :PROPERTIES:
-    :CUSTOM_ID: h-dbfc71a0-9d96-4f53-a064-f8d6f9567813
+    :CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
     :END:
     AwesomeWM is the TWM I use the most on my computer between itself and i3. My
     configuration for it is documented  in detail in its corresponding document,
@@ -103,23 +103,23 @@
 
 *** i3 configuration
     :PROPERTIES:
-    :CUSTOM_ID: h-c918e370-d867-412c-8b0e-078e4e3772e0
+    :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
     :END:
     The i3 configuration  is detailed in its corresponding README  which you can
     find [[file:i3.org][here]].
 
 ** Graphical tweaks
    :PROPERTIES:
-   :CUSTOM_ID: h-08018a9b-f0c8-4bff-b18d-834ec0dc11a8
+   :CUSTOM_ID: Features-Graphical_tweaks-9879f6b0
    :END:
 *** GTK Settings
     :PROPERTIES:
-    :CUSTOM_ID: h-1e9b2c5f-9ce4-4706-af5b-fb3b423cdb82
+    :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-752e9916
     :END:
 **** GTK2
      :PROPERTIES:
-     :CUSTOM_ID: h-6b46d7ef-3015-46e6-b9f4-58be449ff9b6
      :HEADER-ARGS: :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
+     :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-74c9de24
      :END:
      Regarding  GTK2, I  have  only one  configuration  file: the  filechooser’s
      configuration file.
@@ -182,8 +182,8 @@
 
 **** GTK3
      :PROPERTIES:
-     :CUSTOM_ID: h-0de8173e-2c28-4ac2-811e-e6c1a437ef51
      :HEADER-ARGS: :tangle ~/.config/gtk-3.0/settings.ini
+     :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK3-3d6cba86
      :END:
      The following file helps me choosing the aspect of various GTK+ 3 software,
      including their theme and icons. First, let’s declare the header:
@@ -227,7 +227,7 @@
 
 *** Picom
     :PROPERTIES:
-    :CUSTOM_ID: h-c539fde3-3f1a-4855-8d63-28729ed806a5
+    :CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
     :END:
     Picom is  a standalone compositor  for Xorg,  and the successor  to Compton,
     itself successor to  xcompmgr-dana, itself a fork of xcompmgr.  You can find
@@ -235,8 +235,8 @@
 
 *** Xresources
     :PROPERTIES:
-    :CUSTOM_ID: h-e6f48975-3b86-4a75-a7e5-5cc9edbd9869
     :HEADER-ARGS: :tangle ~/.Xresources :exports code
+    :CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
     :END:
     My Xresources file  is very short. Indeed, it only  contains two lines which
     are dedicated to my =st= terminal to set its font and shell. The font is set
@@ -254,11 +254,11 @@
 
 ** Text and source code editing
    :PROPERTIES:
-   :CUSTOM_ID: h-2730f882-e775-41a3-b169-5049c142cc54
+   :CUSTOM_ID: Features-Text_and_source_code_editing-63cc66d5
    :END:
 *** Emacs configuration
     :PROPERTIES:
-    :CUSTOM_ID: h-f6d2561f-5c02-4540-8287-4acf3037b3d5
+    :CUSTOM_ID: Features-Text_and_source_code_editing-Emacs_configuration-ef937102
     :END:
     Emacs is  my main text editor,  which I use for  almost everything. Because,
     you know…
@@ -271,20 +271,20 @@
 
 *** Nano
     :PROPERTIES:
-    :CUSTOM_ID: h-1724166b-55b7-4a64-9ff1-47c2a9e76f46
+    :CUSTOM_ID: Features-Text_and_source_code_editing-Nano-a9d4839f
     :END:
     Although  it is  a  very simple  piece  of software,  nano  does offer  some
     customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file.
 
 *** Rustfmt
     :PROPERTIES:
-    :CUSTOM_ID: h-0ae9005c-76a6-49f6-947c-0c8464616e10
+    :CUSTOM_ID: Features-Text_and_source_code_editing-Rustfmt-2c4ac0b3
     :END:
     You can find my Rustfmt configuration [[file:rustfmt.org][here]].
 
 ** Custom scripts in =PATH=
    :PROPERTIES:
-   :CUSTOM_ID: h-d582e107-fa66-4f79-869e-2b49116ed1ec
+   :CUSTOM_ID: Features-Custom_scripts_in_=PATH=-043e8c8e
    :END:
    I have written some scripts that  help me daily accomplish some simple tasks,
    like mounting  and unmounting a drive  or Android device, an  emoji picker, a
@@ -295,19 +295,19 @@
 
 ** Fish configuration with useful abbreviations
    :PROPERTIES:
-   :CUSTOM_ID: h-f35ed9a3-c9fc-458c-8a62-693f679f6992
+   :CUSTOM_ID: Features-Fish_configuration_with_useful_abbreviations-c71ffba0
    :END:
    You can also find  in my Fish shell configuration in  my [[file:~/org/config-website/fish.org][fish.org]] file, which
    contains my usual abbreviations.
 
 ** And some minor configuration files
    :PROPERTIES:
-   :CUSTOM_ID: h-1a819f94-ab79-41e6-9509-a2781ab10b79
+   :CUSTOM_ID: Features-And_some_minor_configuration_files-d5cec319
    :END:
 *** Email signature
     :PROPERTIES:
-    :CUSTOM_ID: h-f6c48286-a320-493f-b330-ee0a697e6d79
     :HEADER-ARGS: :tangle ~/.signature
+    :CUSTOM_ID: Features-And_some_minor_configuration_files-Email_signature-8c5f2218
     :END:
     This file gets inserted automatically at the end of my emails.
     #+BEGIN_SRC text
@@ -320,8 +320,8 @@
 
 *** Global gitignore
     :PROPERTIES:
-    :CUSTOM_ID: h-4f92eb29-7cfa-48ec-b39d-39037ace3682
     :HEADER-ARGS: :tangle ~/.gitignore_global
+    :CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
     :END:
     Sometimes,  there are  some lines  that always  reappear in  gitignores. So,
     instead of  always adding  them, let git  now that some  elements are  to be
@@ -340,14 +340,14 @@
 
 ** Tmux configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-4f48b912-b67b-4549-a671-802e76221f46
+   :CUSTOM_ID: Features-Tmux_configuration-ce76e030
    :END:
    You can find  my tmux configuration in [[file:tmux.org][tmux.org]]. It  depends on the submodule
    [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
 
 * Dependencies
   :PROPERTIES:
-  :CUSTOM_ID: h-5849dbcf-a650-4323-9a90-bec549a7b982
+  :CUSTOM_ID: Dependencies-ef5057dd
   :END:
   Of course, some dependencies are needed for  my dotfiles to work well. Here is
   a non-exhaustive list of software needed by these configuration files:
@@ -374,7 +374,7 @@
 
 * Installation
   :PROPERTIES:
-  :CUSTOM_ID: h-bfb2e09b-d5d7-4d6f-8b29-763c49b3fd09
+  :CUSTOM_ID: Installation-9ec2ae86
   :END:
   For an  installation walkthrough of my  Arch Linux installation, check  out my
   [[file:installation.org][installation.org]] file  where I  walk you  through the  first manual  steps and
@@ -383,7 +383,7 @@
 
 * Licence
   :PROPERTIES:
-  :CUSTOM_ID: h-a3438126-ee60-4f11-a2f6-f52e49dade59
+  :CUSTOM_ID: Licence-48911096
   :END:
   All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
   Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you

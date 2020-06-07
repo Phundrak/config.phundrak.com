@@ -9,7 +9,7 @@
 
 * Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :CUSTOM_ID: Table_of_Contents-0e46298a
   :END:
 - [[#presentation][Presentation]]
 - [[#4chandl][4chandl]]
@@ -56,7 +56,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-309d8596-c35e-4700-a174-13f40884940d
+  :CUSTOM_ID: Presentation-721f3cc4
   :END:
   This file will  present all the executable  scripts I wrote. It  is also their
   original source code, all the following code snippets are exported and tangled
@@ -80,8 +80,8 @@
 
 * 4chandl
   :PROPERTIES:
-  :CUSTOM_ID: h-39e14885-9da7-4cba-b24e-c3b181ef5f6b
   :HEADER-ARGS: :tangle ~/.local/bin/4chandl
+  :CUSTOM_ID: 4chandl-21ff428f
   :END:
   Usage: =4chandl [ URL TO THREAD ]=
 
@@ -151,8 +151,8 @@
 
 * awiki
   :PROPERTIES:
-  :CUSTOM_ID: h-340e487c-152a-459a-8da5-6f597e67abd3
   :HEADER-ARGS: :tangle ~/.local/bin/awiki
+  :CUSTOM_ID: awiki-7ac5e1d5
   :END:
   ~awiki~  is   a  simple   script  used   with  ~rofi~   that  relies   on  the
   ~arch-wiki-docs~ package  in order to provide  the user a way  to quickly find
@@ -184,8 +184,8 @@
 
 * Askpass
   :PROPERTIES:
-  :CUSTOM_ID: h-b2bef089-69e3-4efb-ac2f-a5eb6a3a80e8
   :HEADER-ARGS: :tangle ~/.local/bin/askpass
+  :CUSTOM_ID: Askpass-d0d7a8c0
   :END:
   Askpass is a simple script that invokes ~rofi~  as a way to get from a GUI the
   user’s sudo password. It is inspired  by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
@@ -198,8 +198,8 @@
 
 * Backup
   :PROPERTIES:
-  :CUSTOM_ID: h-30cb6655-382f-492a-a005-df15512ab7a5
   :HEADER-ARGS: :tangle ~/.local/bin/backup
+  :CUSTOM_ID: Backup-68c7c63e
   :END:
   ~backup~ is a very simple, oneliner script  that will create a local copy of a
   file and add the date at which it  was copied in the filename. You can see its
@@ -212,7 +212,7 @@
 * ConnectWifi
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/connect-wifi
-  :CUSTOM_ID: h-7a958906-1f79-448f-95b3-7226bc80e88c
+  :CUSTOM_ID: ConnectWifi-16e5e24a
   :END:
   ~connect-wifi~ is  a small  utility tool  that allows the  user to  connect to
   available WiFi networks. The  first thing to do is to select  the WiFi we want
@@ -236,13 +236,13 @@
 
 ** TODO fix it
    :PROPERTIES:
-   :CUSTOM_ID: h-15c1dbea-fb23-405e-9a73-1039412ebd97
+   :CUSTOM_ID: ConnectWifi-fix_it-a4b11503
    :END:
 
 * Cppnew
   :PROPERTIES:
-  :CUSTOM_ID: h-264945df-fe7a-4f9d-845a-9cc26c196f4b
   :HEADER-ARGS: :tangle ~/.local/bin/cppnew
+  :CUSTOM_ID: Cppnew-964e697b
   :END:
   =cppnew= is a small utility that helps you create a new C++ project. Several
   templates are available, the default one using CMake, and three others that
@@ -273,8 +273,8 @@
 
 * Cnew
   :PROPERTIES:
-  :CUSTOM_ID: h-a4ccdc0f-6813-4207-9479-4d68296f5fdb
   :HEADER-ARGS: :tangle ~/.local/bin/cnew
+  :CUSTOM_ID: Cnew-d9ec9cc4
   :END:
   =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
   creates a  CMake template C project  from the template that  already exists in
@@ -340,8 +340,8 @@
 
 * Dart Language Server
   :PROPERTIES:
-  :CUSTOM_ID: h-771896e9-ab96-4158-af0b-1fcbef9ab969
   :HEADER-ARGS: :tangle ~/.local/bin/dart_language_server
+  :CUSTOM_ID: Dart_Language_Server-18c256b1
   :END:
   Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
   [[https://github.com/natebosch/dart_language_server][=dart_language_server=]]  is obsolete.  As  recommended by  the  repo owner,  we
@@ -355,8 +355,8 @@
 
 * Dmenu
   :PROPERTIES:
-  :CUSTOM_ID: h-50623ecd-b633-4af7-9cc4-5a032f01d1ee
   :HEADER-ARGS: :tangle ~/.local/bin/dmenu
+  :CUSTOM_ID: Dmenu-527edf04
   :END:
   I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
   emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
@@ -369,7 +369,7 @@
 * Emacsmail
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/emacsmail
-  :CUSTOM_ID: h-38a20359-28fb-412d-bf83-e2202d04f75f
+  :CUSTOM_ID: Emacsmail-afffb7cd
   :END:
   This  short script  is used  in my  =~/.local/share/applications/mu4e.desktop=
   file in order to send to Emacs any ~mailto:~ requests made in my system.
@@ -380,8 +380,8 @@
 
 * Emoji picker
   :PROPERTIES:
-  :CUSTOM_ID: h-477cd486-c9a6-4d59-bd9d-62d8f08ee62d
   :HEADER-ARGS: :tangle ~/.local/bin/rofi-emoji
+  :CUSTOM_ID: Emoji_picker-a1c374ec
   :END:
   The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
   [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
@@ -404,8 +404,8 @@
 
 * Lock
   :PROPERTIES:
-  :CUSTOM_ID: h-320c559f-b8a3-4ce2-956c-90987b4c224c
   :HEADER-ARGS: :tangle ~/.local/bin/lock
+  :CUSTOM_ID: Lock-635fcb38
   :END:
   ~lock~ is a simple script that locks the screen with ~i3lock~ while setting as
   the background image of the locked screen a corrupted screenshot of the screen
@@ -422,7 +422,7 @@
 * mp42webm
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/mp42webm
-  :CUSTOM_ID: h-29b8a01c-7499-4a35-be25-f5a593bf40ea
+  :CUSTOM_ID: mp42webm-aeacca58
   :END:
   This function  allows me to  convert easily an mp4  video to the  webm format.
   Nothing too fancy here.
@@ -434,14 +434,14 @@
 * Pinfo
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/pinfo
-  :CUSTOM_ID: h-da11c9a4-732c-40f8-b98f-2bcfe297a6aa
+  :CUSTOM_ID: Pinfo-f3644596
   :END:
   ~pinfo~ is a utility that shows system information
 
 * Polybar-launch
   :PROPERTIES:
-  :CUSTOM_ID: h-68587918-879b-42db-b304-901d01233f95
   :HEADER-ARGS: :tangle ~/.local/bin/polybar-launch
+  :CUSTOM_ID: Polybar-launch-36789edc
   :END:
   This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
   launch it  if polybar  isn’t launched yet.  This script is  a bash  script, so
@@ -483,7 +483,7 @@
 * Rofi-mount
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/rofi-mount
-  :CUSTOM_ID: h-32ee4a66-e7fb-4abf-a168-fa259efdb1f4
+  :CUSTOM_ID: Rofi-mount-ebbebf68
   :END:
   =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
   interactively asks the user  what to mount, and where to mount  it. What I did
@@ -496,7 +496,7 @@
 
 ** Get the mountable elements
    :PROPERTIES:
-   :CUSTOM_ID: h-2307005f-385e-4149-b885-55e699c822bb
+   :CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
    :END:
    #+BEGIN_SRC fish
      begin
@@ -558,7 +558,7 @@
 
 ** Get the mount point
    :PROPERTIES:
-   :CUSTOM_ID: h-a17825bd-96e2-4c90-99ef-b0f2895cffb6
+   :CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
    :END:
    Now, let’s declare a function that will allow us to chose the drive we want
    to mount.
@@ -606,7 +606,7 @@
 
 ** Mount a USB drive, hard drive or partition
    :PROPERTIES:
-   :CUSTOM_ID: h-72781187-ebf2-418c-99b3-bba44922fc60
+   :CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
    :END:
    Alright,  we  want  to  mount  a  partition  that  answers  by  the  name  of
    =/dev/sdXX=, how  do we do that?  Let’s create first the  function =mountusb=
@@ -686,7 +686,7 @@
 
 ** Mount an Android device
    :PROPERTIES:
-   :CUSTOM_ID: h-af36260f-2c00-43b7-9383-5235ebac9b51
+   :CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
    :END:
    The function  that manages  to mount  Android filesystems  is =mountandroid=.
    Let’s declare it.
@@ -741,7 +741,7 @@
 
 ** Mount a CD drive
    :PROPERTIES:
-   :CUSTOM_ID: h-73ff10ea-10aa-4044-9315-2321fff73c3f
+   :CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
    :END:
    This part  is way  easier than the  previous functions. As  we will  see, the
    function =mountcd='s body is only three  lines long. First, let’s declare the
@@ -774,7 +774,7 @@
 
 ** Ask what type of drive we want to mount
    :PROPERTIES:
-   :CUSTOM_ID: h-0bc6ffba-5c45-44e5-a3d3-039a8ea43905
+   :CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
    :END:
    The first thing we will be asked if different types of drives are detected is
    which of these types the user wishes to mount. This is done with the function
@@ -816,7 +816,7 @@
 
 ** Launch the mounting functions
    :PROPERTIES:
-   :CUSTOM_ID: h-646dc678-4d87-4fec-8130-5d7d0fc16756
+   :CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
    :END:
    Now that we have declared our functions and set our variables, we’ll read the
    temporary file described  in [[#h-2307005f-385e-4149-b885-55e699c822bb][Get the mountable elements]]. The  amount of lines
@@ -875,7 +875,7 @@
 * Rofi-pass
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/rofi-pass
-  :CUSTOM_ID: h-a52876ed-351b-400a-b250-d93aab27e0c8
+  :CUSTOM_ID: Rofi-pass-8335357f
   :END:
   =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
   password manager with  rofi as its interface, and then  stores the password in
@@ -957,8 +957,8 @@
 
 * Rofi-umount
   :PROPERTIES:
-  :CUSTOM_ID: h-68a1f671-5dc6-4120-81c8-c94fffa7d7a3
   :HEADER-ARGS: :tangle ~/.local/bin/rofi-umount
+  :CUSTOM_ID: Rofi-umount-ddde1667
   :END:
   =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
   partitions. It is a fish script, so let’s declare it as that with its shebang.
@@ -968,7 +968,7 @@
 
 ** Get the unmountable drives
    :PROPERTIES:
-   :CUSTOM_ID: h-dab41471-4f69-4be8-8d77-58ccc604e4e2
+   :CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
    :END:
    First, we will need to list all the drives that can be safely unmounted.
    Let’s run this.
@@ -1008,7 +1008,7 @@
 
 ** Unmount disk partitions
    :PROPERTIES:
-   :CUSTOM_ID: h-01c37335-5ae8-484f-911a-a08cc4679398
+   :CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
    :END:
    The  function =unmountusb=  will take  care of  unmounting any  drive we  can
    safely unmount. First, let’s declare the function.
@@ -1043,7 +1043,7 @@
 
 ** Unmount Android device
    :PROPERTIES:
-   :CUSTOM_ID: h-d7d2a12e-c759-4dbe-a17b-bb90c514dca2
+   :CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
    :END:
    The  function  =unmountandroid= will  take  care  of unmounting  any  mounted
    Android device. First, let’s declare our function.
@@ -1075,7 +1075,7 @@
 
 ** Unmount CD drive
    :PROPERTIES:
-   :CUSTOM_ID: h-ae7a8a83-f022-493c-8410-ad99abf42b89
+   :CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
    :END:
    =unmountcd= will take care of unmounting any mounted CD drive. Let’s declare
    this function.
@@ -1107,7 +1107,7 @@
 
 ** Ask what type of drive to unmount
    :PROPERTIES:
-   :CUSTOM_ID: h-4320a68b-8369-4ac5-a049-cfb12435e45e
+   :CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
    :END:
    If several  types of  unmountable drives  are available,  let’s ask  the user
    which type to unmount based on the  content of the temporary file declared in
@@ -1145,7 +1145,7 @@
 
 ** Launch the unmounting functions
    :PROPERTIES:
-   :CUSTOM_ID: h-5880963f-1403-41dc-ae7a-3958e2013fa9
+   :CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
    :END:
    Now back to the  body of our script, let’s input in a  switch case the number
    of lines contained in our temporary file.
@@ -1193,7 +1193,7 @@
 * set-screens
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/set-screens
-  :CUSTOM_ID: h-74ec5080-51f4-408f-a65c-6e1f5e8e8163
+  :CUSTOM_ID: set-screens-01bd989a
   :END:
   ~set-screens~ is a small script that allows the user to automatically set up
   an external monitor
@@ -1227,8 +1227,8 @@
 
 * Starwars
   :PROPERTIES:
-  :CUSTOM_ID: h-127de2b2-d84b-4508-89d2-b4577e8dbece
   :HEADER-ARGS: :tangle ~/.local/bin/starwars
+  :CUSTOM_ID: Starwars-654f8637
   :END:
   This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
   in your terminal. Here is the code:
@@ -1240,7 +1240,7 @@
 * UpdateFlutter
   :PROPERTIES:
   :header-args: :tangle ~/.local/bin/UpdateFlutter
-  :CUSTOM_ID: h-1005db1f-aecc-4fca-be2d-98fd33c1461a
+  :CUSTOM_ID: UpdateFlutter-1e8fbeb7
   :END:
   This is a simple utility to be ran when the ~flutter~ package is updated.
   #+BEGIN_SRC fish
@@ -1253,8 +1253,8 @@
 
 * Wacom setup
   :PROPERTIES:
-  :CUSTOM_ID: h-e407ceef-2f14-4474-916b-6b687cf9f2e9
   :HEADER-ARGS: :tangle ~/.local/bin/wacom-setup
+  :CUSTOM_ID: Wacom_setup-331fb024
   :END:
   I made a small and quick utility to set up my Wacom tablet so it is only bound
   to one screen. This is a fish script, so let’s insert the sheband.
@@ -1264,7 +1264,7 @@
 
 ** Set our variables
    :PROPERTIES:
-   :CUSTOM_ID: h-c46f0eaf-ae46-4595-8d7a-944bc789cc06
+   :CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
    :END:
    Let’s first declare our function that will be called to set our variables.
    #+BEGIN_SRC fish
@@ -1305,7 +1305,7 @@
 
 ** Select our screen
    :PROPERTIES:
-   :CUSTOM_ID: h-c81850ec-b2dd-4c57-8570-aca14ca4061b
+   :CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
    :END:
    This function will allow us to select  the screen on which the tablet will be
    active.  We can  also select  the option  “desktop” so  that all  screens are
@@ -1355,7 +1355,7 @@
 
 ** Adjust the tablet
    :PROPERTIES:
-   :CUSTOM_ID: h-7e7bcdd1-dce8-43aa-b26e-cc4f38be2a1b
+   :CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
    :END:
    This function  will take care  of adjusting our  tablet to our  screen. Let’s
    declare our function.
@@ -1409,7 +1409,7 @@
 
 ** Lauch the functions
    :PROPERTIES:
-   :CUSTOM_ID: h-e8699018-acf1-42f9-9ce7-4f7bd1a83f9c
+   :CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
    :END:
    Back  to the  main  body of  the  script,  we can  now  launch the  functions
    sequencially.
@@ -1421,8 +1421,8 @@
 
 * Weather
   :PROPERTIES:
-  :CUSTOM_ID: h-5de0e820-d9d7-4c36-941c-e716acbb49cd
   :HEADER-ARGS: :tangle ~/.local/bin/we
+  :CUSTOM_ID: Weather-4ed00bb0
   :END:
   A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get
   a weather forecast in the terminal. By default, I want the request to be about

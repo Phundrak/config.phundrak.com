@@ -9,9 +9,9 @@
 #+PROPERTY: header-args :exports code :tangle no
 #+STARTUP: content
 
-* Table of Contents :TOC:noexport:
+* Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-c7ab05d0-4c5f-4a4c-8603-4c79e264141c
+  :CUSTOM_ID: Table_of_Contents-06250a87
   :END:
 - [[#presentation][Presentation]]
 - [[#fish-from-within-emacs][Fish from within Emacs]]
@@ -53,7 +53,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-c2560b46-7f97-472f-b898-5ab483832228
+  :CUSTOM_ID: Presentation-340195eb
   :END:
   The file present in =~/.config/fish/config.fish= is the configuration file for
   the  [[https://fishshell.com/][fish  shell]]. It  contains  custom  functions, environment  variables  and
@@ -69,7 +69,7 @@
 
 * Fish from within Emacs
   :PROPERTIES:
-  :CUSTOM_ID: h-97d738f4-1ea0-4f64-a31d-19643486a951
+  :CUSTOM_ID: Fish_from_within_Emacs-360c0a74
   :END:
   I sometimes call fish from within  emacs, with =M-x ansi-term=. In this case,
   the variable =TERM= needs to have the value =eterm-color=.
@@ -81,7 +81,7 @@
 
 * Tramp remote access
   :PROPERTIES:
-  :CUSTOM_ID: h-6cad2cc9-aef6-4df4-90f9-97053e82072a
+  :CUSTOM_ID: Tramp_remote_access-72aedec2
   :END:
   When accessing from  a remote machine our computer from  Emacs, tramp needs a
   precise shell appearance: a simple =$= followed by a space after which to put
@@ -101,7 +101,7 @@
 
 * Regular fish shell appearance
   :PROPERTIES:
-  :CUSTOM_ID: h-a8434b29-c146-4141-b8f8-1b446c791907
+  :CUSTOM_ID: Regular_fish_shell_appearance-c3e532e1
   :END:
   Now, there is  only one function I  modify when it comes to  the appearance of
   fish when I’m the one using it: the ~fish_greeting~ function. I use it to give
@@ -177,7 +177,7 @@
 
 * Global variables
   :PROPERTIES:
-  :CUSTOM_ID: h-0eff37da-af9f-4546-8ad3-201961a2200f
+  :CUSTOM_ID: Global_variables-1c84df8b
   :END:
 
   In order  to keep some other  code clean, I  set the ~$BROWSER~ variable  so I
@@ -194,7 +194,7 @@
 
 ** Development
    :PROPERTIES:
-   :CUSTOM_ID: h-6e86740b-c7f1-49e0-a4f8-73e870c69324
+   :CUSTOM_ID: Global_variables-Development-76b3ff13
    :END:
    Now, let’s declare our editor of  choice, EmacsClient; not Emacs itself since
    it will most  often be just quick  edits, nothing too heavy, if  it is called
@@ -229,7 +229,7 @@
 
 ** $PATH
    :PROPERTIES:
-   :CUSTOM_ID: h-a9c79e7c-29ea-49e0-959e-0983e886f346
+   :CUSTOM_ID: Global_variables-$PATH-e1320303
    :END:
    Some global variables might sometimes be needed and need to be modified. This
    is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s
@@ -267,7 +267,7 @@
 
 * Abbreviations
   :PROPERTIES:
-  :CUSTOM_ID: h-740bd904-3e32-4c09-b0a4-bde16ae2e116
+  :CUSTOM_ID: Abbreviations-97537716
   :END:
   #+NAME: generate-abbr
   #+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
@@ -281,7 +281,7 @@
 
 ** System monitoring
    :PROPERTIES:
-   :CUSTOM_ID: h-ec910a8c-9154-48a4-b4cd-df28cb4e54d9
+   :CUSTOM_ID: Abbreviations-System_monitoring-bd909755
    :END:
    Here I  have some abbreviations which  are quite useful when  performing some
    system monitoring. With =df=, we can get an overview of our filesystem usage,
@@ -314,14 +314,14 @@
 
 ** System management (packages and services)
    :PROPERTIES:
-   :CUSTOM_ID: h-78ac23f0-960d-4f56-9cba-64413fd61885
+   :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-7249fbb7
    :END:
    I added  some of these abbreviations  due to how  often I have to  write the
    whole thing.
 
 *** Package management
     :PROPERTIES:
-    :CUSTOM_ID: h-281a59aa-4ea0-47ab-a4cc-33fff8d38165
+    :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f
     :END:
     The first  command is =remove=  which removes a  package from my  system, as
     well as its dependencies no longer  needed. =p=. =pacman='s or =yay='s. This
@@ -343,7 +343,7 @@
 
 *** Service management
     :PROPERTIES:
-    :CUSTOM_ID: h-3a734119-ccee-4cdf-b04c-d55a37dea571
+    :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Service_management-8c5ae482
     :END:
     I don’t have the muscle memory of =systemctl=. So instead, I simply type
     =c= when I want to do something user service related.
@@ -360,14 +360,14 @@
 
 ** Development
    :PROPERTIES:
-   :CUSTOM_ID: h-32ae38a2-41ad-438e-b619-220a63166115
+   :CUSTOM_ID: Abbreviations-Development-d6050ca4
    :END:
    A good amount of these commands  are development related, especially when it
    comes to compilation or Docker.
 
 *** CMake
     :PROPERTIES:
-    :CUSTOM_ID: h-887c87aa-b100-4b27-9006-778fd7e3329c
+    :CUSTOM_ID: Abbreviations-Development-CMake-f2951675
     :END:
     I have the following abbreviations so I  can quickly run CMake and create a
     configuration for debug or release profiles.
@@ -384,7 +384,7 @@
 
 *** Compilation
     :PROPERTIES:
-    :CUSTOM_ID: h-0beb47e5-d76a-4037-8f58-e8de141e3761
+    :CUSTOM_ID: Abbreviations-Development-Compilation-dd066050
     :END:
     By  default, I  set  =clang=,  =clang++=, =gcc=  and  =g++=  to the  latest
     standard and with the =-Wall= flag activated.
@@ -403,7 +403,7 @@
 
 *** Docker
     :PROPERTIES:
-    :CUSTOM_ID: h-91c7ff90-7b43-4802-be69-5d102281c6d3
+    :CUSTOM_ID: Abbreviations-Development-Docker-2d0a1288
     :END:
     And of course, when it comes to  Docker Compose, I don’t have time to write
     the full command, so I use these instead.
@@ -428,7 +428,7 @@
 
 *** Git
     :PROPERTIES:
-    :CUSTOM_ID: h-e72347d4-590e-448c-bc33-0a70fa8ab35b
+    :CUSTOM_ID: Abbreviations-Development-Git-5e5055c1
     :END:
     And let’s  face it:  we all  at one point  just wanted  to commit  our code
     without thinking about the message, to  just get over with it. Don’t worry,
@@ -445,7 +445,7 @@
 
 *** Prolog
     :PROPERTIES:
-    :CUSTOM_ID: h-cbb6c31e-faaa-48c3-a83a-d1f143fdcb8d
+    :CUSTOM_ID: Abbreviations-Development-Prolog-72c9d2ef
     :END:
     When I  launch =swipl=,  I prefer  to have my  terminal cleaned  before and
     after it runs, I find it more clean.
@@ -461,7 +461,7 @@
 
 *** Text editors
     :PROPERTIES:
-    :CUSTOM_ID: h-51155e06-872d-4a12-9bf7-ae5eabc256ad
+    :CUSTOM_ID: Abbreviations-Development-Text_editors-5a23df47
     :END:
     I  greatly prefer  to use  Emacsclient  as my  main text  editor; Emacs  has
     basically all I need. So, it’s only  normal I have an abbreviation to launch
@@ -488,7 +488,7 @@
 
 ** LaTeX
    :PROPERTIES:
-   :CUSTOM_ID: h-a8f8a707-90d7-4784-982d-d959b183148e
+   :CUSTOM_ID: Abbreviations-LaTeX-76865eb9
    :END:
    Yes, although  I use org-mode, I  still have some use  for LaTeX, especially
    when it  comes to PDF  exports of my  org files. Hence  why I use  the LaTeX
@@ -508,7 +508,7 @@
 
 ** Some security measures
    :PROPERTIES:
-   :CUSTOM_ID: h-dd97ea71-c43f-4b79-8bb7-1f857284b1b4
+   :CUSTOM_ID: Abbreviations-Some_security_measures-489cb521
    :END:
    Some commands can be  quite dangerous when not used properly,  which is why I
    added default flags and options so I can get warnings before things get ugly.
@@ -540,7 +540,7 @@
 
 ** Typos
    :PROPERTIES:
-   :CUSTOM_ID: h-4c5a03cd-20a8-437e-87b7-af990780084e
+   :CUSTOM_ID: Abbreviations-Typos-370bbb27
    :END:
    Let’s admit it,  we all make typos from  time to time in the  shell, and some
    are recurrent enough we make abbreviations or aliases of the correct command.
@@ -563,14 +563,14 @@
 
 ** Misc
    :PROPERTIES:
-   :CUSTOM_ID: h-3a237ec0-c535-42c7-9c60-3d083745b643
+   :CUSTOM_ID: Abbreviations-Misc-c2631eb6
    :END:
    Finally, some miscellaneous abbreviations that don’t really fit into any of
    the above categories.
 
 *** Sudo
     :PROPERTIES:
-    :CUSTOM_ID: h-0955e2fc-ec25-41b6-814a-929fa3718dda
+    :CUSTOM_ID: Abbreviations-Misc-Sudo-aef0214a
     :END:
     First, I make it so that =sudo= comes with the =-A= switch in order to call
     my    custom   graphical    script   for    getting   my    password   (see
@@ -582,7 +582,7 @@
 
 *** Exit
     :PROPERTIES:
-    :CUSTOM_ID: h-8cf0e895-b919-41a8-ad3d-c5294dc507fd
+    :CUSTOM_ID: Abbreviations-Misc-Exit-e3482f5c
     :END:
     Sometimes I find it easier to just type =q= instead of =exit=.
     #+BEGIN_SRC fish
@@ -591,7 +591,7 @@
 
 *** History
     :PROPERTIES:
-    :CUSTOM_ID: h-162052c5-63c4-435a-b973-422346522c69
+    :CUSTOM_ID: Abbreviations-Misc-History-a2124b23
     :END:
     I also find  it more intuitive and  faster to just write  =hist= instead of
     =history=, so let’s declare that.
@@ -601,11 +601,11 @@
 
 *** ~youtube-dl~ related commands
     :PROPERTIES:
-    :CUSTOM_ID: h-177d56dc-39a6-4f4c-a7ba-179dd5c6cac8
+    :CUSTOM_ID: Abbreviations-Misc-~youtube-dl~_related_commands-654caed1
     :END:
 **** Song download from YouTube
      :PROPERTIES:
-     :CUSTOM_ID: h-4bc663a9-b609-4c86-9a4d-a220013c67f9
+     :CUSTOM_ID: Abbreviations-Misc-~youtube-dl~_related_commands-Song_download_from_YouTube-ec2afa3c
      :END:
      When I  want to  download a song  from YouTube, I’ll  just use  the command
      =flac videoIdentifier= to get it through =youtube-dl=.
@@ -615,7 +615,7 @@
 
 **** Videos download from YouTube
      :PROPERTIES:
-     :CUSTOM_ID: h-e6e45b59-7620-4d17-ba32-67a33f39cc4b
+     :CUSTOM_ID: Abbreviations-Misc-~youtube-dl~_related_commands-Videos_download_from_YouTube-33910b0b
      :END:
      I download a LOT of videos  from YouTube, generally educative videos that I
      do not want to lose to YouTube one day who will decide that such channel is
@@ -628,7 +628,7 @@
 
 *** MPV
     :PROPERTIES:
-    :CUSTOM_ID: h-3fd5a7eb-4ed4-4b0b-87ca-28f36fb22793
+    :CUSTOM_ID: Abbreviations-Misc-MPV-f99dd400
     :END:
     When it comes to mpv, I do not  want to force it to open a graphical window
     if for example  I want to listen to  an audio file. I also do  not want any
@@ -639,7 +639,7 @@
 
 *** Compression
     :PROPERTIES:
-    :CUSTOM_ID: h-05919be3-360a-45c6-8c89-76836375d55b
+    :CUSTOM_ID: Abbreviations-Misc-Compression-4fd4ffef
     :END:
     It seems it’s just like many other people,  but I cannot for the life of me
     remember the syntax  of =tar=. So, I made the  following abbreviations, and
@@ -658,7 +658,7 @@
 
 *** Sxiv
     :PROPERTIES:
-    :CUSTOM_ID: h-41cfc583-14ba-4f15-9578-bc37b432a3ce
+    :CUSTOM_ID: Abbreviations-Misc-Sxiv-1c0cf845
     :END:
     Some sane default options for =sxiv=, a simple X image Viewer. This includes
     playing GIFs and  not displaying the filename below. Sxiv  will also open in
@@ -671,7 +671,7 @@
 
 *** exa
     :PROPERTIES:
-    :CUSTOM_ID: h-9c015cdd-30c0-4464-8e1a-b67a98eaf036
+    :CUSTOM_ID: Abbreviations-Misc-exa-e1b528b9
     :END:
     #+NAME: exa-abbr
     | abbreviation | command                                    |
@@ -686,7 +686,7 @@
 
 *** Network Management
     :PROPERTIES:
-    :CUSTOM_ID: h-5f9d4866-3086-4ed9-9ff3-d80a0af36593
+    :CUSTOM_ID: Abbreviations-Misc-Network_Management-0b7fc91d
     :END:
     First, we have just =nmcli= with  sane default options,  that is a  pretty output
     with colors.
@@ -696,7 +696,7 @@
 
 *** NordVPN
     :PROPERTIES:
-    :CUSTOM_ID: h-f35e00a2-ec5b-416d-821f-56040ad1d6b4
+    :CUSTOM_ID: Abbreviations-Misc-NordVPN-09438638
     :END:
     Next, we  have some  NordVPN-related shortcuts.  The first  one is  a simple
     abbreviation to  =nordvpn=. The  second one  is a shortcut  to connect  to a
@@ -720,7 +720,7 @@
 
 *** Webcam
     :PROPERTIES:
-    :CUSTOM_ID: h-465adbc6-cad0-441a-9e54-f5e389e7362d
+    :CUSTOM_ID: Abbreviations-Misc-Webcam-34eedb5a
     :END:
     #+NAME: webcam-abbr
     | abbreviation | command                                                                                                          |
@@ -733,7 +733,7 @@
 
 *** Wget
     :PROPERTIES:
-    :CUSTOM_ID: h-74f84f1c-433d-488a-88a7-89915c1a3bd5
+    :CUSTOM_ID: Abbreviations-Misc-Wget-27f4bebf
     :END:
     By default, continue a download that was interupted.
     #+BEGIN_SRC fish

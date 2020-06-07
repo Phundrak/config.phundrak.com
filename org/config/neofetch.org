@@ -13,7 +13,7 @@
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: h-1b7321bc-190e-41a7-a6e0-ff13e9a61b74
+  :CUSTOM_ID: Introduction-a7a859ac
   :END:
   [[https://github.com/dylanaraps/neofetch][Neofetch]] is a  CLI utility used to display system  information. It was written
   in Bash, and thus its configuration file is written as a Bash script too. This
@@ -27,7 +27,7 @@
 
 * The ~print_info~ functions
   :PROPERTIES:
-  :CUSTOM_ID: h-3a3a5ade-adab-4508-9aa9-17896126b169
+  :CUSTOM_ID: The_~print_info~_functions-afbafdc3
   :END:
   The ~print_info~ function is the function called by Neofetch in order to print
   the system information it could fetch.  In this function, we’ll choose what to
@@ -106,7 +106,7 @@
 
 * Information settings
   :PROPERTIES:
-  :CUSTOM_ID: h-d1ddb7fc-e87a-42d1-a71b-6fc7b10c9f78
+  :CUSTOM_ID: Information_settings-7d3a990e
   :END:
   Each  of  the following  variable  tunes  a function  that  can  be called  in
   ~print_info~ described  above. It is possible  to tune them by  modifying this
@@ -116,15 +116,15 @@
 
 ** Software
    :PROPERTIES:
-   :CUSTOM_ID: h-2f562a5c-3530-4b50-b553-a0cb801affea
+   :CUSTOM_ID: Information_settings-Software-7b13b829
    :END:
 *** OS
     :PROPERTIES:
-    :CUSTOM_ID: h-afe50abf-8988-48dd-9768-72eb0143b613
+    :CUSTOM_ID: Information_settings-Software-OS-7019c112
     :END:
 **** Kernel
      :PROPERTIES:
-     :CUSTOM_ID: h-be4b75c8-2612-4e40-933f-bd451bd6fc5e
+     :CUSTOM_ID: Information_settings-Software-OS-Kernel-df1062f0
      :END:
      The variable below can shorten the output ofh the ~kernel~ function.
      - Default value :: ~"on"~
@@ -142,7 +142,7 @@
 
 **** Distro
      :PROPERTIES:
-     :CUSTOM_ID: h-979a15ac-c2ac-41a4-91f2-5676feba6dd4
+     :CUSTOM_ID: Information_settings-Software-OS-Distro-3c8118d9
      :END:
      This variable can shorten the output of the ~distro~ function.
      - Default value :: ~"on"~
@@ -160,7 +160,7 @@
 
 **** OS Architecture
      :PROPERTIES:
-     :CUSTOM_ID: h-c621c645-f926-411f-852c-9b4508a0736a
+     :CUSTOM_ID: Information_settings-Software-OS-OS_Architecture-1164eea9
      :END:
      This variable can show or hide the OS architecture in the ~distro~ output.
      - Default value :: ~"off"~
@@ -177,7 +177,7 @@
 
 *** Uptime shorthand
     :PROPERTIES:
-    :CUSTOM_ID: h-41f62c23-4306-4828-a824-7a33e19deee5
+    :CUSTOM_ID: Information_settings-Software-Uptime_shorthand-70ff185a
     :END:
     This variable can shorten the output of the ~uptime~ function. ~on~ shortens
     it a bit, while ~tiny~ shortens it greatly.
@@ -197,11 +197,11 @@
 
 *** Shell
     :PROPERTIES:
-    :CUSTOM_ID: h-759202dd-43a9-477f-8d11-df1790870673
+    :CUSTOM_ID: Information_settings-Software-Shell-b958db2a
     :END:
 **** Shell path
      :PROPERTIES:
-     :CUSTOM_ID: h-dd92a375-1fa1-4e46-9427-503c03b83b83
+     :CUSTOM_ID: Information_settings-Software-Shell-Shell_path-fff91e35
      :END:
      This allows  to show  either the path  of the user’s  shell, or  simply its
      name.
@@ -219,7 +219,7 @@
 
 **** Shell version
      :PROPERTIES:
-     :CUSTOM_ID: h-636dfde0-f0d1-4166-870c-8f1ff31b6dc2
+     :CUSTOM_ID: Information_settings-Software-Shell-Shell_version-a1702748
      :END:
      This allows to show the shell’s version in the output of ~shell~.
     - Default value :: ~"on"~
@@ -236,7 +236,7 @@
 
 *** Theming
     :PROPERTIES:
-    :CUSTOM_ID: h-e2ee7a72-d852-436d-b610-946508597696
+    :CUSTOM_ID: Information_settings-Software-Theming-44dc624d
     :END:
     This section  will allow  the user  to modify what  Neofetch can  and cannot
     display about  the machine’s  theming —by  this, I mean  its GTK  theme, its
@@ -244,7 +244,7 @@
 
 **** Shorten output
      :PROPERTIES:
-     :CUSTOM_ID: h-19994d7e-908b-4e20-912c-a527eee19668
+     :CUSTOM_ID: Information_settings-Software-Theming-Shorten_output-bdb4af3f
      :END:
      With this  value, it is  possible to shorten  the output of  the computer’s
      theming.
@@ -262,7 +262,7 @@
 
 **** Enable or disable theming display for GTK2
      :PROPERTIES:
-     :CUSTOM_ID: h-c9bf1b93-ec7b-4c48-b9f8-5d44edbcb8bc
+     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-6bfd9cf8
      :END:
      It is possible to explicitely show or hide the computer’s theming with GTK2
      with this variable.
@@ -280,7 +280,7 @@
 
 **** Enable or disable theming display for GTK3
      :PROPERTIES:
-     :CUSTOM_ID: h-6d367bd6-bb5c-469c-bfd7-145ef0ecd6d9
+     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK3-7dde3690
      :END:
      The same variable as above is also available for GTK3.
      - Default value :: ~"on"~
@@ -296,7 +296,7 @@
 
 *** IP address
     :PROPERTIES:
-    :CUSTOM_ID: h-2ec1b0c8-1663-4afa-bf91-b2dc811ba95b
+    :CUSTOM_ID: Information_settings-Software-IP_address-66efe064
     :END:
     It is possible to display the  machine’s public IP address with the function
     ~ip~. The value  below allows the user  to change the website  used to fetch
@@ -322,16 +322,16 @@
 
 ** Hardware
    :PROPERTIES:
-   :CUSTOM_ID: h-d7f87860-5c1d-427b-9d2e-f7674d9fbab5
+   :CUSTOM_ID: Information_settings-Hardware-490075ce
    :END:
 *** CPU
     :PROPERTIES:
-    :CUSTOM_ID: h-b2183b8b-de13-4812-a7da-9f2d4d66e42d
+    :CUSTOM_ID: Information_settings-Hardware-CPU-dfa36b11
     :END:
 
 **** CPU brand
      :PROPERTIES:
-     :CUSTOM_ID: h-7300f2bb-e8d2-4ede-8765-a6e8883af99e
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-12ceb9ce
      :END:
      With this variables, it  is possible to show or hide the brand  of a CPU in
      the ~cpu~ output.
@@ -349,7 +349,7 @@
 
 **** CPU speed
      :PROPERTIES:
-     :CUSTOM_ID: h-5cd70ef6-4ba3-45a3-a46e-ec2d5b76d36a
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed-86e4ea04
      :END:
      With this variable, it is possible to show or hide the speed of the CPU.
      - Default value :: ~"on"~
@@ -366,7 +366,7 @@
 
 **** CPU speed type
      :PROPERTIES:
-     :CUSTOM_ID: h-61affc64-b69d-44f2-b950-1623cd908b6a
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-4380a471
      :END:
      This allows Neofetch to  know what type of speed it  has to fetch regarding
      the machine’s  CPU. Any file in  ~/sys/devices/system/cpu/cpu0/cpufreq~ can
@@ -385,7 +385,7 @@
 
 **** CPU speed shorthand
      :PROPERTIES:
-     :CUSTOM_ID: h-6138e3bd-937f-4604-b2c0-db0a49b869bc
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-8000dc1f
      :END:
      This value allows  to show sorter CPU  speed with less digits.  This flag is
      not supported in systems with CPU speed below 1GHz.
@@ -403,7 +403,7 @@
 
 **** CPU cores
      :PROPERTIES:
-     :CUSTOM_ID: h-eea09747-5334-49af-aef3-1a29f59ea40e
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-66e72a57
      :END:
      With this variable, it is possible to  display the number of cores that are
      available in the CPU.
@@ -424,7 +424,7 @@
 
 **** CPU temperature
      :PROPERTIES:
-     :CUSTOM_ID: h-66633b86-2427-4079-9e62-e72b3d458a21
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-c79fb1a1
      :END:
      This variable allows the user to hide or show the CPU’s temperature, and if
      shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD
@@ -447,7 +447,7 @@
 
 *** GPU
     :PROPERTIES:
-    :CUSTOM_ID: h-6138e3bd-937f-4604-b2c0-db0a49b869bc
+    :CUSTOM_ID: Information_settings-Hardware-GPU-f9450397
     :END:
     The function  responsible for displaying  information regarding the  GPUs is
     ~gpu~. It  will try  to list all  available GPUs and  display what  it knows
@@ -455,7 +455,7 @@
 
 **** GPU brand
      :PROPERTIES:
-     :CUSTOM_ID: h-d2a0a4dd-7dc4-4584-8093-ce417b4bb59b
+     :CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-c8d3c67d
      :END:
      This value allows  the user to hide or  show the brand of their  GPU in the
      output of ~gpu~.
@@ -474,7 +474,7 @@
 
 **** Which GPU to display
      :PROPERTIES:
-     :CUSTOM_ID: h-4309d902-fc80-48c9-be89-02b932d1f650
+     :CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-a6f72453
      :END:
      This allows  the user  to choose  which GPU  appears in  the output  of the
      function ~gpu~.
@@ -499,7 +499,7 @@
 
 *** Resolution
     :PROPERTIES:
-    :CUSTOM_ID: h-9803fa70-bf09-400a-800f-071de9f2d91d
+    :CUSTOM_ID: Information_settings-Hardware-Resolution-f8a0316b
     :END:
     This will try to list all the connected screens and display their resolution
     individually. It is possible to display the refresh rate or to hide it.
@@ -518,6 +518,6 @@
 
 *** Disks
     :PROPERTIES:
-    :CUSTOM_ID: h-87ce5b65-ae28-49a8-a91b-ed7a38ccc8b4
+    :CUSTOM_ID: Information_settings-Hardware-Disks-48e9e728
     :END:
     Neofetch can display the space available and the total space of disks

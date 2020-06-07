@@ -9,9 +9,8 @@
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-400070eb-725f-4416-a4c6-da3053df750b
+  :CUSTOM_ID: Table_of_Contents-6af11648
   :END:
-
 - [[#presentation][Presentation]]
 - [[#windows-and-pane-creation][Windows and pane creation]]
 - [[#display][Display]]
@@ -22,7 +21,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-d6e5eaf3-150c-4f3e-bc8e-fbbbb604640e
+  :CUSTOM_ID: Presentation-0b37c6c0
   :END:
   I don’t really use tmux often, but I certainly do like a nice presentation and
   useful features,  hence this  configuration. This config  file is  inspired by
@@ -30,7 +29,7 @@
 
 * Windows and pane creation
   :PROPERTIES:
-  :CUSTOM_ID: h-b7e4f3a6-ab16-47e8-aa72-b74b3a66893d
+  :CUSTOM_ID: Windows_and_pane_creation-66275518
   :END:
   Whether if a new *window* will retain the current path. Possible values are:
   - true
@@ -64,7 +63,7 @@
 
 * Display
   :PROPERTIES:
-  :CUSTOM_ID: h-a1b48bb1-40d8-4ffb-9ec0-b77e63f7ef84
+  :CUSTOM_ID: Display-d5ae1908
   :END:
   Whether to activate RGB 24-bit color  support (only available in tmux >= 2.2).
   Possible values are:
@@ -111,7 +110,7 @@
 
 ** Colors and style
    :PROPERTIES:
-   :CUSTOM_ID: h-3142ab15-458c-434b-99d6-1f89462a6f26
+   :CUSTOM_ID: Display-Colors_and_style-0994a014
    :END:
    Colors displayed in tmux can be chosen thanks to the following variables. Any
    color should be formatted as a hexadecimal RGB value preceded by a pound sign
@@ -174,7 +173,7 @@
 
 ** Window status bar
    :PROPERTIES:
-   :CUSTOM_ID: h-f6a802f9-3b1e-4c83-8ffc-a72a35a691e9
+   :CUSTOM_ID: Display-Window_status_bar-dff37ae7
    :END:
    The following variables are to set the window’s status style and format.
 
@@ -370,7 +369,7 @@
 
 * Clipboard
   :PROPERTIES:
-  :CUSTOM_ID: h-47a20d72-6406-4467-b833-a4bd33731487
+  :CUSTOM_ID: Clipboard-66d0d03a
   :END:
   Whether  if  in  copy mode,  copying  the  selection  also  copies to  the  OS
   clipboard. Possible values are:
@@ -382,7 +381,7 @@
 
 * User customizations
   :PROPERTIES:
-  :CUSTOM_ID: h-68bc0e1c-48d9-4b14-953d-875601d0edb7
+  :CUSTOM_ID: User_customizations-c913b5d7
   :END:
   Here we can override  or undo some setting from settings  from tmux. First, we
   can increase the history size.

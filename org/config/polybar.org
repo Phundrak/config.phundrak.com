@@ -13,7 +13,7 @@
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-c7ab05d0-4c5f-4a4c-8603-4c79e264141c
+  :CUSTOM_ID: Table_of_Contents-21ef28f2
   :END:
 - [[#presentation][Presentation]]
 - [[#general-settings][General settings]]
@@ -55,7 +55,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-03c830ff-e6a9-426c-8d98-8ffb8a79b1d1
+  :CUSTOM_ID: Presentation-4e723f32
   :END:
   Polybar is  a desktop utility  for displaying  various information in  form of
   bars for GNU/Linux systems. It is often  used as a replacement for native bars
@@ -75,7 +75,7 @@
 
 * General settings
   :PROPERTIES:
-  :CUSTOM_ID: h-c4387167-95ea-4349-a5d9-4ebdcffccc97
+  :CUSTOM_ID: General_settings-e02fb78c
   :END:
   Some general settings are available for Polybar, and they are declared under
   the ~[settings]~ section.
@@ -98,7 +98,7 @@
 
 * Colors declaration for polybar
   :PROPERTIES:
-  :CUSTOM_ID: h-7adb4647-995d-4f75-846c-6f7f3e15487a
+  :CUSTOM_ID: Colors_declaration_for_polybar-75ee0b65
   :END:
   #+BEGIN_SRC conf-windows :exports none
     ; -*- mode: conf-windows -*-
@@ -137,7 +137,7 @@
 
 * Declaration of the bars
   :PROPERTIES:
-  :CUSTOM_ID: h-9c14f550-d104-4b45-a7a4-04a6f2c32e00
+  :CUSTOM_ID: Declaration_of_the_bars-a95135a3
   :END:
   It is  possible in i3 to  declare as many bars  as we wish, and  each of these
   bars will be named. Naming the bar is done in its module declaration like so:
@@ -149,7 +149,7 @@
 
 ** Top bar declaration
    :PROPERTIES:
-   :CUSTOM_ID: h-ff6e9020-b3d9-4da9-b351-29a4b914d3c4
+   :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-fc0cd977
    :END:
    As unimaginative as it  might seem, I went for a rather  explicit name for my
    bars. The top one is simply named ~top~, as shown below.
@@ -159,7 +159,7 @@
 
 *** Positioning
     :PROPERTIES:
-    :CUSTOM_ID: h-6c670bf7-0904-4b5c-8551-540212f16e25
+    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Positioning-2505760c
     :END:
     We need  to set on which  screen the bar is  to be displayed. Indeed,  it is
     possible  to display  a bar  on  only one  specific  screen if  we wish  to.
@@ -217,7 +217,7 @@
 
 *** Colors and display
     :PROPERTIES:
-    :CUSTOM_ID: h-9f83a6fd-652a-45ca-894b-0a0e0d3f0084
+    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Colors_and_display-30f12652
     :END:
     As  explained above,  we declared  some global  variables when  it comes  to
     colors, and this is where they will be used. The bar’s background will be of
@@ -252,7 +252,7 @@
 
 *** Fonts and locale
     :PROPERTIES:
-    :CUSTOM_ID: h-c5660945-4785-40f7-b89e-f9f31b85a062
+    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466
     :END:
     Now we can  chose which font fill be  used in order to display  text in this
     bar, as well as the locale we want. The locale will be useful for displaying
@@ -302,7 +302,7 @@
 
 *** Modules
     :PROPERTIES:
-    :CUSTOM_ID: h-93f91f00-620c-4d09-846b-9e40c304fdaf
+    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Modules-18979638
     :END:
     Finally, arguably one of the most  important parts of our bar configuration:
     the module selection. Modules can be  positioned in three different parts of
@@ -340,7 +340,7 @@
 
 ** Bottom bar declaration
    :PROPERTIES:
-   :CUSTOM_ID: h-2478b0a6-1727-45fb-b8df-3f9aac2f0f5f
+   :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-8504b5ec
    :END:
    As  described above,  we will  once again  have to  declare our  bar with  an
    equally unimaginative but explicit name.
@@ -350,7 +350,7 @@
 
 *** Positioning
     :PROPERTIES:
-    :CUSTOM_ID: h-31291b7e-d1df-493a-bcb2-8decab434044
+    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Positioning-b1883756
     :END:
     The  variables are  the same  as above,  but two  of them  will be  slightly
     modified:
@@ -391,7 +391,7 @@
 
 *** Colors and display
     :PROPERTIES:
-    :CUSTOM_ID: h-3ec14c14-fd68-449a-b4a8-47d1c8279242
+    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82
     :END:
     Nothing  changes from  the top  bar, all  the variables  stay with  the same
     values. See [[#h-9f83a6fd-652a-45ca-894b-0a0e0d3f0084][Colors and display]] of the top bar for more information.
@@ -403,7 +403,7 @@
 
 *** Fonts and locale
     :PROPERTIES:
-    :CUSTOM_ID: h-518c6613-b0b0-4d5b-a854-a26b3feefaab
+    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Fonts_and_locale-67459d62
     :END:
     Again, nothing changes  from the top bar,  so for more info  on what’s going
     on, see [[#h-c5660945-4785-40f7-b89e-f9f31b85a062][Fonts and locale]] of the top bar.
@@ -414,7 +414,7 @@
 
 *** Modules
     :PROPERTIES:
-    :CUSTOM_ID: h-57e48e86-e468-4d71-b088-c9d31d36ec27
+    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Modules-702b21fc
     :END:
     Now, we can get to something interesting  again: modules. This bar has a lot
     more modules than  the top bar. Here is  the list of the modules  we have on
@@ -445,7 +445,7 @@
 
 * Modules
   :PROPERTIES:
-  :CUSTOM_ID: h-7b18b41a-e7d2-4028-8185-4ba732603392
+  :CUSTOM_ID: Modules-2e1a51bc
   :END:
   Before we begin to  describe the different modules, I would  like to point out
   something that will be repeated multiple times  if I don’t talk about it right
@@ -464,11 +464,11 @@
 
 ** Hardware
    :PROPERTIES:
-   :CUSTOM_ID: h-52212ebe-82c1-4663-9b36-61cfb990ac04
+   :CUSTOM_ID: Modules-Hardware-26426ebd
    :END:
 *** Battery
     :PROPERTIES:
-    :CUSTOM_ID: h-1a177975-be38-44c2-bac7-9743dae1ef69
+    :CUSTOM_ID: Modules-Hardware-Battery-299f2e42
     :END:
     This  module allows  the user  to  get a  battery widget  among the  polybar
     modules that will also send a notification  to the user if the battery level
@@ -502,7 +502,7 @@
 
 *** Filesystem
     :PROPERTIES:
-    :CUSTOM_ID: h-e007ebb2-bc1a-4e1d-84e7-1332a4682511
+    :CUSTOM_ID: Modules-Hardware-Filesystem-26f0a3c6
     :END:
     This module  allows to display  information about our  filesystem, including
     (and this  is what  I use  this module  for) displaying  the used  space and
@@ -563,7 +563,7 @@
 
 *** Xbacklight
     :PROPERTIES:
-    :CUSTOM_ID: h-8c6dd375-381c-47c4-861d-fda6e7283e9e
+    :CUSTOM_ID: Modules-Hardware-Xbacklight-2901c504
     :END:
     This module is used in order to display the level of brightness of a screen.
     It  is not  used  by itself,  but  rather  by other  modules,  such as  [[#h-9adad94d-961c-44a7-aed1-91a8f22b4eef][ACPI
@@ -581,7 +581,7 @@
 
 *** ACPI backlight
     :PROPERTIES:
-    :CUSTOM_ID: h-9adad94d-961c-44a7-aed1-91a8f22b4eef
+    :CUSTOM_ID: Modules-Hardware-ACPI_backlight-9eaeaa79
     :END:
     This module  indicates the backlight  level of a  screen thanks to  the ACPI
     Linux module. There isn’t much to tell about the module itself other than it
@@ -596,7 +596,7 @@
 
 *** CPU
     :PROPERTIES:
-    :CUSTOM_ID: h-058d538f-e361-44d5-ae0f-cb4e36109f5f
+    :CUSTOM_ID: Modules-Hardware-CPU-365dcb98
     :END:
     This module indicates how  much of the CPU is being used.  As shown below, I
     made it so  we can see the  load on each core.  The first thing to  do is to
@@ -635,7 +635,7 @@
 
 *** Memory
     :PROPERTIES:
-    :CUSTOM_ID: h-fd9cd09c-eed7-4fc3-8c10-aaa4364fea0f
+    :CUSTOM_ID: Modules-Hardware-Memory-2f2f9475
     :END:
     Similarly to the CPU  module, it is possible for Polybar  to display the RAM
     load of  the computer. As  above, let’s declare  this module as  an internal
@@ -664,7 +664,7 @@
 
 *** Wlan
     :PROPERTIES:
-    :CUSTOM_ID: h-fc269c9f-4a4c-4260-aa20-cae93d5f377f
+    :CUSTOM_ID: Modules-Hardware-Wlan-3457f36b
     :END:
     It is possible for  Polybar to display the name of  the current WiFi network
     the computer is  connected to. For that,  we first need to  declare the Wlan
@@ -703,7 +703,7 @@
 
 *** Ethernet
     :PROPERTIES:
-    :CUSTOM_ID: h-99a35d25-f49e-4261-9a93-981d67e289f6
+    :CUSTOM_ID: Modules-Hardware-Ethernet-dc749304
     :END:
     Just like  any other module,  the ethernet module has  to be declared  as an
     internal module.
@@ -741,7 +741,7 @@
 
 *** Volume
     :PROPERTIES:
-    :CUSTOM_ID: h-b93216f3-1a1b-438d-a82d-3b86796ff2d8
+    :CUSTOM_ID: Modules-Hardware-Volume-ebf9f7a4
     :END:
     The volume  module in Polybar  is linked to  its internal bindings  to ALSA.
     Let’s declare it accordingly.
@@ -772,7 +772,7 @@
 
 *** Temperature
     :PROPERTIES:
-    :CUSTOM_ID: h-dd6a6310-1841-4db8-a59f-7445b079060e
+    :CUSTOM_ID: Modules-Hardware-Temperature-a9f08cde
     :END:
     The temperature module checks the temperature of the CPU, and warns the user
     above a certain threshold of heat, in my case if my CPU is above 60°C.
@@ -801,11 +801,11 @@
 
 ** Software
    :PROPERTIES:
-   :CUSTOM_ID: h-359b340e-e332-45b1-bb13-0d50baf1d9d2
+   :CUSTOM_ID: Modules-Software-f6529189
    :END:
 *** Window title
     :PROPERTIES:
-    :CUSTOM_ID: h-7068e4d4-069b-46e8-946e-ed012329648a
+    :CUSTOM_ID: Modules-Software-Window_title-3f931641
     :END:
     This module’s  aim is to  simply provide the  name of the  currently focused
     window given by Xorg. This module is  an internal module to polybar, that is
@@ -829,7 +829,7 @@
 
 *** i3
     :PROPERTIES:
-    :CUSTOM_ID: h-105fbca2-4f65-4e22-a663-5b0568f60016
+    :CUSTOM_ID: Modules-Software-i3-db36ddfb
     :END:
     Now  comes the  module for  i3  interaction. Thanks  to this  module, it  is
     possible to show which workspaces are active and focused, and it is possible
@@ -894,7 +894,7 @@
 
 **** Workspace icons
      :PROPERTIES:
-     :CUSTOM_ID: h-300a226b-1b3e-49aa-93c2-325ee26e8e1f
+     :CUSTOM_ID: Modules-Software-i3-Workspace_icons-89237191
      :END:
      Now, let’s name our workspaces. We can give them whatever name we want them
      to have, but I just like the aesthetics of Japanese characters, so let’s go
@@ -946,7 +946,7 @@
 
 **** Focused workspaces
      :PROPERTIES:
-     :CUSTOM_ID: h-4bb8a657-021a-4d0a-b1e1-2e6b34c9f044
+     :CUSTOM_ID: Modules-Software-i3-Focused_workspaces-0ca3b93d
      :END:
      Now we can define the label itself. First, we will need to define the label
      when the workspace is focused. We’ll simply take the alternative background
@@ -962,7 +962,7 @@
 
 **** Visible workspaces
      :PROPERTIES:
-     :CUSTOM_ID: h-5fbaf3dc-f2f6-463d-9c8e-dd649af7c0a3
+     :CUSTOM_ID: Modules-Software-i3-Visible_workspaces-4be78e50
      :END:
      The  ~visible~  label is  related  to  the  ~focused~  labels since  it  is
      describing workspaces that can be seen, but are not currently focused, i.e.
@@ -980,7 +980,7 @@
 
 **** Unfocused workspaces
      :PROPERTIES:
-     :CUSTOM_ID: h-26d9b2a6-7d01-462e-b144-8ee533324596
+     :CUSTOM_ID: Modules-Software-i3-Unfocused_workspaces-13063042
      :END:
      When it comes to the unfocused  label, there won’t be any custom background
      or underline, so  we’ll just copy the two remaining  lines from the focused
@@ -992,7 +992,7 @@
 
 **** Urgent workspaces
      :PROPERTIES:
-     :CUSTOM_ID: h-86b42ade-e5e1-47d0-8436-9e072450ccc2
+     :CUSTOM_ID: Modules-Software-i3-Urgent_workspaces-ed2bd93c
      :END:
      Lastly, we get our urgent workspaces:  workspaces in which most of the time
      it’s just a popup that appeared  or a software that finally launched itself
@@ -1008,7 +1008,7 @@
 
 *** Mpd
     :PROPERTIES:
-    :CUSTOM_ID: h-e51852fe-5d09-4126-aec3-48c16aa9a093
+    :CUSTOM_ID: Modules-Software-Mpd-4b1ec78e
     :END:
     Mpd is  a music server  for GNU/Linux  systems that interfaces  will several
     front-ends, including ncmpcpp (the main one I use), ncmpcpp and mpc. It also
@@ -1049,7 +1049,7 @@
 
 *** Date
     :PROPERTIES:
-    :CUSTOM_ID: h-18354316-7e52-4e24-b4a0-961b6c959ace
+    :CUSTOM_ID: Modules-Software-Date-f7338626
     :END:
     This module is really  simple: it gives the current date.  It is an internal
     module, and as declared below, it updates every second:
@@ -1086,7 +1086,7 @@
 
 * Footnotes
   :PROPERTIES:
-  :CUSTOM_ID: h-6d9948e4-8a08-4245-929b-de1b52cecb64
+  :CUSTOM_ID: Footnotes-62d05520
   :END:
 
 [fn:1] [[https://github.com/polybar/polybar/wiki/Fonts][https://github.com/polybar/polybar/wiki/Fonts]]

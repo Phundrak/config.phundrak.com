@@ -9,7 +9,7 @@
 
 * Table of Contents                                        :TOC_4_gh:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-b2167b42-e88d-4308-abaf-d33eeec63fff
+  :CUSTOM_ID: Table_of_Contents-8c590c64
   :END:
 - [[#introduction][Introduction]]
 - [[#core-ncmpcpp-settings][Core Ncmpcpp settings]]
@@ -18,7 +18,7 @@
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: h-7ead0ad9-857d-4179-9e02-be0f8f8c02ef
+  :CUSTOM_ID: Introduction-3e61ecfc
   :END:
   Ncmpcpp is a TUI front-end for MPD, with  an UI very similar to Ncmpc. This is
   my  main  MPD  front-end after  my  i3  shortcuts.  You  can find  below  some
@@ -32,7 +32,7 @@
 
 * Core Ncmpcpp settings
   :PROPERTIES:
-  :CUSTOM_ID: h-02b8e820-d12d-479f-a856-86121eccab96
+  :CUSTOM_ID: Core_Ncmpcpp_settings-8cacae18
   :END:
   #+BEGIN_SRC conf :exports none
     # -*- mode: conf -*-
@@ -40,7 +40,7 @@
 
 ** Directories
    :PROPERTIES:
-   :CUSTOM_ID: h-0da83a89-b409-4e48-9bd7-3db9afed4945
+   :CUSTOM_ID: Core_Ncmpcpp_settings-Directories-28092c92
    :END:
    Ncmpcpp  has  two  vital  directories:  the lyrics  directory,  and  its  own
    configuration directory. The configuration for ncmpcpp is generally either in
@@ -57,7 +57,7 @@
 
 ** MPD
    :PROPERTIES:
-   :CUSTOM_ID: h-cc81e6db-7418-4823-b2b4-4c3f1e842eaa
+   :CUSTOM_ID: Core_Ncmpcpp_settings-MPD-a2a7452e
    :END:
    These settings tell ncmpcpp how to  communicate with Mpd. Once again, be sure
    to follow your own MPD settings. In my  case, I am connecting to my local MPD

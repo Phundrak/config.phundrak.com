@@ -9,9 +9,9 @@
 #+PROPERTY: header-args:emacs-lisp :exports none :tangle no
 #+STARTUP: content
 
-* Table of Contents :TOC:noexport:
+* Table of Contents                                            :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-c7ab05d0-4c5f-4a4c-8603-4c79e264141c
+  :CUSTOM_ID: Table_of_Contents-b6f56d3d
   :END:
 - [[#presentation][Presentation]]
 - [[#variables-declaration][Variables declaration]]
@@ -51,7 +51,7 @@
 
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-2b02cfba-4ada-4f75-b522-bfcb8512119c
+  :CUSTOM_ID: Presentation-9c7a53bf
   :END:
   =i3= is  a window manager for  GNU/Linux which automatically tiles  windows in
   workspaces. This configuration was ade to automatically handle some tasks such
@@ -67,11 +67,11 @@
 
 * Variables declaration
   :PROPERTIES:
-  :CUSTOM_ID: h-27f4474a-e037-4e40-b33a-7fe34ca012e3
+  :CUSTOM_ID: Variables_declaration-0ebc9a21
   :END:
 ** Global
    :PROPERTIES:
-   :CUSTOM_ID: h-dda00dd9-90e4-460b-b49c-8939c1ae11ce
+   :CUSTOM_ID: Variables_declaration-Global-1cf1bfe4
    :END:
    The first I  do is declaring the modifier  key and the alt key  —I don’t find
    the names =Mod1=  and =Mod4= to be  explicit enough. This will  map =$mod= to
@@ -163,7 +163,7 @@
 
 ** Floating windows
    :PROPERTIES:
-   :CUSTOM_ID: h-944b65df-c5c6-4f9a-9824-08e063ba20dd
+   :CUSTOM_ID: Variables_declaration-Floating_windows-897d0c3b
    :END:
    Floating  windows are  windows that  are not  tiled with  other windows,  but
    rather are free to go anywhere on your screen, with any size. A bit like what
@@ -182,14 +182,14 @@
 
 * i3 global settings
   :PROPERTIES:
-  :CUSTOM_ID: h-d9bc7729-d325-4071-8ad9-043ea5b80430
+  :CUSTOM_ID: i3_global_settings-1b863d93
   :END:
   Some settings affect i3 globally, such as its aspect or how it handles the
   mouse. Hence, here are some settings I set in my configuration.
 
 ** Mouse settings
    :PROPERTIES:
-   :CUSTOM_ID: h-3ab33a7a-6a31-4a76-a59f-baf7913279b4
+   :CUSTOM_ID: i3_global_settings-Mouse_settings-4630241d
    :END:
    First of all, I  do not want i3 to warp my mouse  each time I change windows;
    my mouse stays where it is.
@@ -206,7 +206,7 @@
 
 ** Popup handling
    :PROPERTIES:
-   :CUSTOM_ID: h-64ef3c3b-bc70-4839-9bee-e113df4ee848
+   :CUSTOM_ID: i3_global_settings-Popup_handling-51b6ed8d
    :END:
    While in  fullscreen, some software might  generate a popup. In  that case, I
    want to  be aware of  that, and  any popup will  make me leave  fullscreen in
@@ -217,7 +217,7 @@
 
 ** Behavior of workspace changes
    :PROPERTIES:
-   :CUSTOM_ID: h-192d7269-eba7-4684-80c7-cb01c32c5f38
+   :CUSTOM_ID: i3_global_settings-Behavior_of_workspace_changes-00202985
    :END:
    When changing workspace as  described below, we often want to  go back to the
    previous workspace we were working on,  but we might not remember immediately
@@ -231,7 +231,7 @@
 
 ** Gaps and window appearance
    :PROPERTIES:
-   :CUSTOM_ID: h-52a82bb4-42b0-4740-aae6-79636072dc62
+   :CUSTOM_ID: i3_global_settings-Gaps_and_window_appearance-749e9f7b
    :END:
    As mentioned in at the beginning of  this document, I am using i3-gaps, which
    brings spacing (gaps) between windows to i3.
@@ -278,7 +278,7 @@
 
 * Assigning windows to workspaces
   :PROPERTIES:
-  :CUSTOM_ID: h-21870449-7730-4164-8add-167cb4e75218
+  :CUSTOM_ID: Assigning_windows_to_workspaces-e59f61e5
   :END:
   I decided to bind some windows to some workspaces in order to have a better
   organization of my desktop.
@@ -345,7 +345,7 @@
 
 * Shortcuts
   :PROPERTIES:
-  :CUSTOM_ID: h-b364743d-2ff0-4548-805e-9a9e6efdaddd
+  :CUSTOM_ID: Shortcuts-9c7074d3
   :END:
   I use *A LOT*  of shortcuts when it comes to my workflow.  Like, all the time.
   So, expect  this chapter to be  a bit long, and  I’ll try to make  it readable
@@ -365,7 +365,7 @@
 
 ** Terminal shortcuts
    :PROPERTIES:
-   :CUSTOM_ID: h-7dbb2902-29ca-48a7-bfa3-a831b72549f3
+   :CUSTOM_ID: Shortcuts-Terminal_shortcuts-514ecdbe
    :END:
    I have a couple of shortcuts which  are related to my terminal. For instance,
    ~$mod+Return~ opens a regular terminal  instance while ~$mod+$alt+M~ opens an
@@ -387,7 +387,7 @@
 
 ** i3 shortcuts
    :PROPERTIES:
-   :CUSTOM_ID: h-22855720-e388-463a-a941-fa8bad2c89c0
+   :CUSTOM_ID: Shortcuts-i3_shortcuts-369039ae
    :END:
    A couple of shortcuts are dedicated to i3 itself.
    #+NAME: i3-sh
@@ -424,11 +424,11 @@
 
 ** Window and workspace management
    :PROPERTIES:
-   :CUSTOM_ID: h-cf3b4010-e937-473b-a0c9-9b25b2d3a0ec
+   :CUSTOM_ID: Shortcuts-Window_and_workspace_management-a384b8f8
    :END:
 *** Managing how windows will split
     :PROPERTIES:
-    :CUSTOM_ID: h-e4e57280-91d2-4140-9295-7117cf85ed04
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Managing_how_windows_will_split-5a22ae31
     :END:
     It is possible to indicate to i3 how windows interact with one another, and
     especially how they are organized by spawning new windows either to the
@@ -446,7 +446,7 @@
 
 *** Focus windows
     :PROPERTIES:
-    :CUSTOM_ID: h-570eda16-ed4b-4684-a54f-9202e8409ed9
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Focus_windows-69a00ae9
     :END:
     To change window focus, you can use one of the following shortcuts:
     #+NAME: window-focus-sh
@@ -464,7 +464,7 @@
 
 *** Focus workspaces
     :PROPERTIES:
-    :CUSTOM_ID: h-333da167-e91c-48a7-99ef-d45b2af4c220
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Focus_workspaces-9f4bee74
     :END:
     Just like windows,  it is also possible to change  focus between workspaces,
     because let’s be  honest, most people won’t have ten  screens to display all
@@ -490,7 +490,7 @@
 
 *** Moving windows
     :PROPERTIES:
-    :CUSTOM_ID: h-0322384a-6a23-48c9-989b-7ecae53a4e06
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_windows-d8c90ac2
     :END:
     To move windows, a couple of shortcuts are available:
     #+NAME: window-move-sh
@@ -508,7 +508,7 @@
 
 *** Moving containers
     :PROPERTIES:
-    :CUSTOM_ID: h-834b2b46-1684-478b-a4d3-1cff8ec2ad2d
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_containers-b97cf4ae
     :END:
     To move  containers between  the available screens,  you have  the following
     shortcuts:
@@ -543,7 +543,7 @@
 
 *** Moving workspaces
     :PROPERTIES:
-    :CUSTOM_ID: h-4f79905e-e8e2-4675-918b-1bbe9846b088
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_workspaces-a71d7b54
     :END:
 
     It is also possible to move workspaces. The related shortcuts available are
@@ -564,7 +564,7 @@
 
 *** Close windows
     :PROPERTIES:
-    :CUSTOM_ID: h-05e30514-86c2-42af-8712-dc0bdc30cd3d
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Close_windows-5e521a48
     :END:
     To close windows, we have two main shortcuts: Alt+F4 and mod+q. The first
     one is here due to habits, but I don’t really use it anymore due to my main
@@ -583,7 +583,7 @@
 
 *** Manage the size of the current window
     :PROPERTIES:
-    :CUSTOM_ID: h-f730b4c8-8602-426b-a2bc-7dfbbe42e711
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Manage_the_size_of_the_current_window-11afa914
     :END:
     It is  possible to change the  size of the current  window, even if it  is a
     floating one.  The first shortcut  that might  interest you is  $mod+f which
@@ -633,7 +633,7 @@
 
 *** Manage floating windows
     :PROPERTIES:
-    :CUSTOM_ID: h-08f738b7-3369-4dbd-98e6-df6d6aa381b8
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Manage_floating_windows-9206f4da
     :END:
     As said above,  your windows can be floating windows  instead of being tiled
     like they are by default. For this too we have a couple of shortcuts:
@@ -653,7 +653,7 @@
 
 *** Scratchpad and window display
     :PROPERTIES:
-    :CUSTOM_ID: h-92e67454-eccb-4465-8d47-947a1a5d55d9
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Scratchpad_and_window_display-10d8d1f4
     :END:
     You can think  of i3’s scratchpad as  some sort of extra  workspace in which
     you can hide your  windows you are not using, or as if  you want to reduce a
@@ -682,7 +682,7 @@
 
 *** Gaps management
     :PROPERTIES:
-    :CUSTOM_ID: h-20c6fc10-984e-411c-acc9-8bc057d2aaa6
+    :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Gaps_management-33979213
     :END:
     It is possible to dynamically change the gaps between containers if we want
     to change a bit the appearance of i3. For that, we obviously have some
@@ -703,7 +703,7 @@
 
 ** Launching software
    :PROPERTIES:
-   :CUSTOM_ID: h-4839dab5-1cd3-450b-8fb9-2992dd0c4d22
+   :CUSTOM_ID: Shortcuts-Launching_software-0e088e69
    :END:
    A  big part  of  my i3  shortcuts  though are  related  to launching  various
    software. I’ll try to sort them by category  here, but do take a look even at
@@ -712,7 +712,7 @@
 
 *** Software and command launcher
     :PROPERTIES:
-    :CUSTOM_ID: h-c5e8b03a-a46d-4eef-b514-96794c42621d
+    :CUSTOM_ID: Shortcuts-Launching_software-Software_and_command_launcher-a3f5863e
     :END:
     These commands will allow the user to launch applications which provide
     ~.desktop~ files or user-defined ~.desktop~ files, as well as commands with
@@ -730,7 +730,7 @@
 
 *** Internet software
     :PROPERTIES:
-    :CUSTOM_ID: h-e27be13a-4085-4f09-ae90-c48ceb1c4c6f
+    :CUSTOM_ID: Shortcuts-Launching_software-Internet_software-a0524cd8
     :END:
     I have a couple of Internet-related software I can launch easily.
     #+NAME: internet-sh
@@ -747,7 +747,7 @@
 
 *** Screenshots
     :PROPERTIES:
-    :CUSTOM_ID: h-3e87379d-8476-4d05-b756-b7ee68130390
+    :CUSTOM_ID: Shortcuts-Launching_software-Screenshots-41e41c88
     :END:
     A couple of shortcuts are available for taking screenshots.
     #+NAME: screenshot-sh
@@ -764,7 +764,7 @@
 
 *** Screen brightness
     :PROPERTIES:
-    :CUSTOM_ID: h-f583f796-c287-4e4f-a88a-205cc1837ff6
+    :CUSTOM_ID: Shortcuts-Launching_software-Screen_brightness-6855d53f
     :END:
     Here we  have four commands  for managing  our screen’s brightness  (this is
     useful for laptops, not so much with desktops), and two of them are actually
@@ -785,7 +785,7 @@
 
 *** Media control
     :PROPERTIES:
-    :CUSTOM_ID: h-4002e136-ffab-4819-ae93-1a72b9f995ae
+    :CUSTOM_ID: Shortcuts-Launching_software-Media_control-18ad2815
     :END:
     Some shortcuts are  dedicated to media control, especially when  it comes to
     controlling music.  All of these  media control  shortcuts will be  calls to
@@ -836,7 +836,7 @@
 
 *** Rofi utilities
     :PROPERTIES:
-    :CUSTOM_ID: h-15f2639e-52d2-467e-83e2-6ab085fa7710
+    :CUSTOM_ID: Shortcuts-Launching_software-Rofi_utilities-b8eb5b95
     :END:
     We also have some utilities I’ve written and which are interfaced with rofi.
     Here are said shortcuts.
@@ -858,7 +858,7 @@
 
 *** Miscellaneous
     :PROPERTIES:
-    :CUSTOM_ID: h-7f9ef1f7-da6b-4428-9d8c-f5a5f004c495
+    :CUSTOM_ID: Shortcuts-Launching_software-Miscellaneous-7ec80fea
     :END:
     And last  but not least, I  have some other shortcuts  for various software,
     some of them which I use quite a lot like the shortcut for launching Emacs.
@@ -877,7 +877,7 @@
 
 *** Screen management
     :PROPERTIES:
-    :CUSTOM_ID: h-ea5bab8e-cb7c-4ccb-8594-c2c319d1f7eb
+    :CUSTOM_ID: Shortcuts-Launching_software-Screen_management-f9b35bf2
     :END:
     Additionally,  we have  a shortcut  for  entering presentation  mode on  the
     additional screen of the computer; on my main computer, Mila, the additional
@@ -898,7 +898,7 @@
 
 * Software autolaunch
   :PROPERTIES:
-  :CUSTOM_ID: h-18769c14-2ec0-41a2-9450-dae71714d0f4
+  :CUSTOM_ID: Software_autolaunch-ccee82f6
   :END:
   When i3  is launched, I  want it to  also launch some  software automatically.
   Here is what we will launch:

@@ -10,7 +10,7 @@
 
 * Table of Contents                                        :TOC:noexport:
   :PROPERTIES:
-  :CUSTOM_ID: h-f61204c4-beb8-4008-b02e-55eae4e8f163
+  :CUSTOM_ID: Table_of_Contents-baac29af
   :END:
 - [[#introduction][Introduction]]
 - [[#spacemacs-layers-and-packages][Spacemacs layers and packages]]
@@ -131,7 +131,7 @@
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: h-ff1cbbaa-6ab0-49ab-8945-7e25706ead8e
+  :CUSTOM_ID: Introduction-f1cbb8bb
   :END:
   This file  is the main source  file for my Emacs  configuration which contains
   most of the user code. It is  exported thanks to Emacs’ code tangling from the
@@ -145,7 +145,7 @@
 * Spacemacs layers and packages
   :PROPERTIES:
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
-  :CUSTOM_ID: h-9d9869e0-4672-419c-bf37-3d3ae1b7c0aa
+  :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
   ~setq-default~ in the ~dotspacemacs/layers~ function like so:
@@ -158,7 +158,7 @@
 
 ** General configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-ecfe1909-18af-451d-b78f-0d7e5a1d45c0
+   :CUSTOM_ID: Spacemacs_layers_and_packages-General_configuration-66b4311e
    :END:
    First, we need  to tell Spacemacs which base distribution  we are using. This
    is a  layer contained  in the directory  ~+distribution~. For  now, available
@@ -189,7 +189,7 @@
 
 ** Package management
    :PROPERTIES:
-   :CUSTOM_ID: h-587fd3fb-5a99-4c19-af02-b1553c6acfae
+   :CUSTOM_ID: Spacemacs_layers_and_packages-Package_management-0add1a62
    :END:
    It is possible to  indicate to Spacemacs a list of  additional paths where to
    look  for  configuration layers.  Paths  must  have  a trailing  slash,  i.e.
@@ -266,7 +266,7 @@
 
 ** Layers
    :PROPERTIES:
-   :CUSTOM_ID: h-313bf79e-c24c-40a6-8bc0-eb608fda05d9
+   :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-36e1c90c
    :END:
    All layers are set one variable: ~dotspacemacs-configuration-layers~. This
    variable is a list of layers, some of them will have some custom variables.
@@ -289,7 +289,7 @@
 
 *** Checkers
     :PROPERTIES:
-    :CUSTOM_ID: h-04664b1a-8138-4566-8b63-8050437351a7
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Checkers-aefeae26
     :END:
     The  two  first   checkers  I  use  are  for  spell   and  syntax  checking.
     ~spell-checking~ is disabled  by default, however it  should auto-detect the
@@ -303,7 +303,7 @@
 
 *** Completion
     :PROPERTIES:
-    :CUSTOM_ID: h-fc18dd98-1411-4516-a87c-6c1047d2a13c
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Completion-883e2b83
     :END:
     ~auto-completion~ is a layer enabled  in order to provide auto-completion to
     all  supported language  layers. It  is set  so that  the =RET=  key has  no
@@ -328,7 +328,7 @@
 
 *** Email
     :PROPERTIES:
-    :CUSTOM_ID: h-0db2333c-86bf-4b41-8226-da66885fce36
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Email-67c16308
     :END:
     I use  as my daily Email  client ~mu4e~, so  let’s enable it and  tell Emacs
     where mu4e  is installed. I also  tell mu4e to use  maildirs extensions, use
@@ -343,7 +343,7 @@
 
 *** Emacs
     :PROPERTIES:
-    :CUSTOM_ID: h-ad6174a6-4056-420e-9620-3da5f00bd3fc
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Emacs-8e976e5c
     :END:
     The first layer  enabled in this category is ~better-defaults~.  I also made
     it so  that when  a command  equivalent to  ~C-a~ or  ~C-e~ is  pressed, the
@@ -387,7 +387,7 @@
 
 *** File trees
     :PROPERTIES:
-    :CUSTOM_ID: h-35f135ac-45cd-4e91-a23d-41700dc7495f
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-File_trees-5b6ed3e4
     :END:
     In this category, I only enabled one layer: ~treemacs~. In this layer, I set
     is  so that  treemacs syncs  with my  current buffer,  and it  automatically
@@ -401,7 +401,7 @@
 
 *** Fonts
     :PROPERTIES:
-    :CUSTOM_ID: h-7a0a7d6d-6caa-4504-acf6-f97c25436ef1
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Fonts-11de8977
     :END:
     In this category,  again, one layer is enabled:  ~unicode-fonts~. This layer
     addssupport for the ~unicode-fonts~ package.
@@ -411,7 +411,7 @@
 
 *** Fun
     :PROPERTIES:
-    :CUSTOM_ID: h-3aec0cda-50d5-4c31-a57e-4244a254a57f
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Fun-0728c04c
     :END:
     In this category, I only enabled two layers: ~selectric~ and ~xkcd~.
     #+BEGIN_SRC emacs-lisp
@@ -420,7 +420,7 @@
 
 *** Internationalization
     :PROPERTIES:
-    :CUSTOM_ID: h-0edb1ff3-15a1-46cd-b980-7fdd124020b6
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Internationalization-69601ff8
     :END:
     In  this  category,   I  enabled  the  ~keyboard-layout~   layer  to  enable
     compatibility with  the bépo  layout. This layer,  however, is  disabled for
@@ -433,11 +433,11 @@
 
 *** Programming languages
     :PROPERTIES:
-    :CUSTOM_ID: h-9dd88370-a959-4266-a01e-2231f9008a1f
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-4c318b81
     :END:
 **** Domain-specific (DSLs)
      :PROPERTIES:
-     :CUSTOM_ID: h-c212d89f-6854-48f3-84a5-8195811bfc4d
+     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-Domain-specific_(DSLs)-2c919937
      :END:
      In this  category, I enabled  support for  the R programming  language (the
      ~ess~ layer), the ~major-modes~ layer for the Arch Linux PKGBUILDs support,
@@ -504,7 +504,7 @@
 
 **** Frameworks
      :PROPERTIES:
-     :CUSTOM_ID: h-ac43dd9a-5a2f-4a80-bb35-535ec6e31e72
+     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-Frameworks-f7c21585
      :END:
      Only one  framework support  has been  enabled so  far, and  is is  for the
      Django framework.
@@ -514,7 +514,7 @@
 
 **** General-purpose
      :PROPERTIES:
-     :CUSTOM_ID: h-9d41427d-ec93-40c6-8c24-113c5b174fc3
+     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-General-purpose-1ed71a5b
      :END:
      Among  the  layers   I  activated,  the  only  one   without  any  specific
      configuration is the ~asm~ layer for the Assembly language.
@@ -603,11 +603,11 @@ haskell
 
 *** Readers
     :PROPERTIES:
-    :CUSTOM_ID: h-02099754-7102-4251-9e2e-a3ee33f4b469
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
     :END:
 **** Epub and Pdf readers
      :PROPERTIES:
-     :CUSTOM_ID: h-687183a4-280d-4027-bc7e-8f436a7cbaad
+     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Epub_and_Pdf_readers-0ef6688f
      :END:
      In this category, only the ~epub~  and ~pdf~ layers are enabled without any
      special configuration, so I can read these files from Emacs directly.
@@ -617,7 +617,7 @@ haskell
 
 **** Elfeed
      :PROPERTIES:
-     :CUSTOM_ID: h-1f99b28e-2b9c-4d4e-b526-25f99dc59951
+     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Elfeed-78877179
      :END:
      Elfeed is an  Emacs feeed and RSS  reader which can be  managed through org
      files. Actually,  through only one file  in my case, located  in my =~/org=
@@ -629,7 +629,7 @@ haskell
 
 *** Version control
     :PROPERTIES:
-    :CUSTOM_ID: h-53ebecc5-53da-4a0c-88f4-b031ff3b1952
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Version_control-bc8e286a
     :END:
     Only the ~git~ layer is enabled in this category.
     #+BEGIN_SRC emacs-lisp
@@ -638,7 +638,7 @@ haskell
 
 *** Themes
     :PROPERTIES:
-    :CUSTOM_ID: h-e593bbe4-d778-4b11-a450-4e6e418109fe
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Themes-d88d1225
     :END:
     Here, the ~colors~  layer is the only one enabled.  It activates support for
     identifiers colorization, and strings representing colors.
@@ -648,7 +648,7 @@ haskell
 
 *** Tools
     :PROPERTIES:
-    :CUSTOM_ID: h-51f1d8a6-5f52-486a-a16b-301429cf8313
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Tools-e57e405e
     :END:
     In this category, the first layer to be enabled is the CMake layer for which
     I enabled support for the ~cmake-ide~ package.
@@ -683,7 +683,7 @@ haskell
 
 *** Web Services
     :PROPERTIES:
-    :CUSTOM_ID: h-6ec58708-518c-44f4-8ad0-3fa3b58117d5
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Web_Services-c2888251
     :END:
     In this category, I have only enabled a layer for Twitter support.
     #+BEGIN_SRC emacs-lisp
@@ -692,7 +692,7 @@ haskell
 
 *** Custom layers
     :PROPERTIES:
-    :CUSTOM_ID: h-f9c6b261-f06b-4fd5-bf4e-161cb8744aeb
+    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Custom_layers-69473533
     :END:
     Lastly, three custom  layers have been enabled:  a w3m layer, and  two of my
     custom layers for Dired and for conlanging tools.
@@ -707,8 +707,8 @@ haskell
 
 * Init
   :PROPERTIES:
-  :CUSTOM_ID: h-3f3c8a0b-56cd-4be6-b019-3ba6f1e24f96
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
+  :CUSTOM_ID: Init-99a4b561
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
   Spacemacs  startup, before  any  kind of  configuration,  including the  layer
@@ -725,7 +725,7 @@ haskell
 
 ** Emacs with pdumper
    :PROPERTIES:
-   :CUSTOM_ID: h-bb7c391e-3d0c-4c3c-99d4-09a1cb20be43
+   :CUSTOM_ID: Init-Emacs_with_pdumper-f24ab30b
    :END:
    It is possible to compile Emacs 27  from source with support for the portable
    dumper, as  shown in Spacemacs’  =EXPERIMENTAL.org= file.  I do not  use this
@@ -758,7 +758,7 @@ haskell
 
 ** Package managment and updates
    :PROPERTIES:
-   :CUSTOM_ID: h-8573bacc-4372-49e3-a0ff-4520fe999c97
+   :CUSTOM_ID: Init-Package_managment_and_updates-79363da3
    :END:
    Spacemacs’ core  configuration can be  updated via git commands  using Github
    services. If Spacemacs  is not set to  the =develop= branch, it  can check by
@@ -786,7 +786,7 @@ haskell
 
 *** Elpa repository
     :PROPERTIES:
-    :CUSTOM_ID: h-ac64233a-5c7a-41f4-98b5-ce838b33ba44
+    :CUSTOM_ID: Init-Package_managment_and_updates-Elpa_repository-c07fb1c4
     :END:
     It is possible to  ask Emacs to use an HTTPS  connection when contacting the
     Elpa whenever possible. This value should be  set to =nil= when the user has
@@ -807,7 +807,7 @@ haskell
 
 *** Spacelpa repository
     :PROPERTIES:
-    :CUSTOM_ID: h-1f432881-39b2-4d60-862f-a1a95ebe4a58
+    :CUSTOM_ID: Init-Package_managment_and_updates-Spacelpa_repository-a431b288
     :END:
     The Spacelpa  repository is a  Spacemacs-specific package repository.  It is
     possible to use  it as the primary  source to install a locked  version of a
@@ -826,7 +826,7 @@ haskell
 
 ** Editing style
    :PROPERTIES:
-   :CUSTOM_ID: h-8a6bfe01-3e45-4189-9bde-70efbe9739ee
+   :CUSTOM_ID: Init-Editing_style-56d58a4b
    :END:
    By  default, Spacemacs  encourages the  use  of evil-mode,  which brings  vim
    keybinding in Emacs. Still, it has three different styles available:
@@ -849,7 +849,7 @@ haskell
 
 ** Spacemacs home configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-6a78794e-9c0b-4390-99d5-55c5b13c8c5a
+   :CUSTOM_ID: Init-Spacemacs_home_configuration-8375cdcc
    :END:
    The value below specifies the startup  banner of Spacemacs. The default value
    is =official=, it  displays the official Spacemacs logo. An  integer value is
@@ -887,7 +887,7 @@ haskell
 
 ** Default major modes
    :PROPERTIES:
-   :CUSTOM_ID: h-8318ee22-ffaf-419a-a76b-41f327c23970
+   :CUSTOM_ID: Init-Default_major_modes-37f4a891
    :END:
    The below variable sets a default major mode for a new empty buffer. Possible
    values are mode names such as  =text-mode=, or =nil= to use Fundamental mode.
@@ -911,11 +911,11 @@ haskell
 
 ** Visual configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-d7fe8e66-bfcd-43c4-81e5-fba433300b7b
+   :CUSTOM_ID: Init-Visual_configuration-c4116cc1
    :END:
 *** Themes
     :PROPERTIES:
-    :CUSTOM_ID: h-013f84c3-92c6-453f-9229-98f0ad6ba884
+    :CUSTOM_ID: Init-Visual_configuration-Themes-315992bb
     :END:
     Spacemacs makes  it quite easy  to use themes  and organize them.  The below
     value is a  list of themes, the  first of the list is  loaded when Spacemacs
@@ -969,7 +969,7 @@ haskell
 
 *** Other on-screen elements
     :PROPERTIES:
-    :CUSTOM_ID: h-fabead22-a4d0-4826-9ed1-37297810c30b
+    :CUSTOM_ID: Init-Visual_configuration-Other_on-screen_elements-7d334e09
     :END:
     =which-key= is  a helper which  displays available keyboard  shortcuts. This
     variable sets in seconds the time  Spacemacs should wait between a key press
@@ -1080,7 +1080,7 @@ haskell
 
 *** Appearance of Emacs frames
     :PROPERTIES:
-    :CUSTOM_ID: h-deae54d7-5790-4c11-8640-573cd3824dbd
+    :CUSTOM_ID: Init-Visual_configuration-Appearance_of_Emacs_frames-59700bb7
     :END:
     Starting from Emacs 24.4, it is  possible to make the Emacs frame fullscreen
     when Emacs starts up if the variable  is set to a non-nil value. The default
@@ -1158,7 +1158,7 @@ haskell
 
 ** Spacemacs leader keys and shortcuts
    :PROPERTIES:
-   :CUSTOM_ID: h-0bf00e10-d577-4133-91c6-39bdc96d847d
+   :CUSTOM_ID: Init-Spacemacs_leader_keys_and_shortcuts-ebf21abe
    :END:
    The below  setting sets  the Spacemacs  leader key. By  default, this  is the
    =SPC= key.
@@ -1208,7 +1208,7 @@ haskell
 
 ** Layouts
    :PROPERTIES:
-   :CUSTOM_ID: h-7b84a553-6c54-431e-ad23-dfa26c8a334f
+   :CUSTOM_ID: Init-Layouts-61c0374d
    :END:
    The variable belows sets the name of the default layout. Its default value is
    ="Default"=.
@@ -1237,7 +1237,7 @@ haskell
 
 ** Files-related settings
    :PROPERTIES:
-   :CUSTOM_ID: h-c3aa3e27-4c42-4607-98fa-6e4647247ed3
+   :CUSTOM_ID: Init-Files-related_settings-67fba383
    :END:
    The below value sets the size in MB above which Spacemacs will prompt to open
    the  file literally  in order  to avoid  preformance issues.  Opening a  file
@@ -1259,7 +1259,7 @@ haskell
 
 ** Emacs server
    :PROPERTIES:
-   :CUSTOM_ID: h-ca601390-7851-4c05-8021-18ca3eb48ac7
+   :CUSTOM_ID: Init-Emacs_server-d3947c28
    :END:
    Emacs can be  launched as a server  if the following value is  set to non-nil
    and if one isn’t already running. The default value is ~nil~.
@@ -1283,7 +1283,7 @@ haskell
 
 ** Miscellaneous
    :PROPERTIES:
-   :CUSTOM_ID: h-69b80cd3-dc0c-405b-bd02-315821105922
+   :CUSTOM_ID: Init-Miscellaneous-6b4f0b76
    :END:
    This value changes the folding method of code blocks. The possible values are
    either ~evil~, the default value, or ~origami~.
@@ -1329,8 +1329,8 @@ haskell
 
 * User Initialization
   :PROPERTIES:
-  :CUSTOM_ID: h-e297b9be-9b0d-4c2d-bb6e-402f0d00be0d
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
+  :CUSTOM_ID: User_Initialization-e0d21089
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
@@ -1376,12 +1376,12 @@ haskell
 
 * User Configuration
   :PROPERTIES:
-  :CUSTOM_ID: h-7a36d3a0-8bb6-4d9d-9402-eadbc49fef32
   :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
+  :CUSTOM_ID: User_Configuration-4a937fe5
   :END:
 ** ASM configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-73c92790-872d-404d-b3b7-7a94fba4ef34
+   :CUSTOM_ID: User_Configuration-ASM_configuration-f6dc7674
    :END:
    The first thing I  will set with my ASM configuration  is where the reference
    PDF is located.
@@ -1395,7 +1395,7 @@ haskell
 
 ** C/C++
    :PROPERTIES:
-   :CUSTOM_ID: h-c0ee6b96-db28-408e-872a-4c4347f807d8
+   :CUSTOM_ID: User_Configuration-C-C++-76c3f997
    :END:
    As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
    latest standard available, that is C++17 and C17, from Clang.
@@ -1410,7 +1410,7 @@ haskell
 
 ** Custom functions
    :PROPERTIES:
-   :CUSTOM_ID: h-e3766e6a-3b77-488d-8dfc-8489411b1c4f
+   :CUSTOM_ID: User_Configuration-Custom_functions-ceb4bc42
    :END:
    In this section,  I will put my  various custom functions that do  not fit in
    other sections and  which are more oriented towards  general usage throughout
@@ -1422,7 +1422,7 @@ haskell
 
 *** ~phundrak/fill-paragraph~
     :PROPERTIES:
-    :CUSTOM_ID: h-e87c6c3f-728d-4065-a886-70eb2c3cc579
+    :CUSTOM_ID: User_Configuration-Custom_functions-~phundrak-fill-paragraph~-ab4ef600
     :END:
     This function was created in order  to bind to another keyboard shortcut the
     already existing ~C-u M-q~ which I  cannot type with evil-mode unless I’m in
@@ -1436,7 +1436,7 @@ haskell
 
 *** ~terminal-here-default-terminal-command~
     :PROPERTIES:
-    :CUSTOM_ID: h-4e7c3229-4baa-47d5-8897-545a8b85800a
+    :CUSTOM_ID: User_Configuration-Custom_functions-~terminal-here-default-terminal-command~-1916a912
     :END:
     This function is  actually an overwrite of the default  one which apparently
     does   not   work   on   my    machine.   This   function   is   called   by
@@ -1450,7 +1450,7 @@ haskell
 
 ** Dart configuration
    :PROPERTIES:
-   :CUSTOM_ID: h-00537655-3c5f-4cc0-af90-4f357ba9350f
+   :CUSTOM_ID: User_Configuration-Dart_configuration-ecf24ebf
    :END:
    For  Dart, I  mainly  declared  some custom  shortcuts  bound to  ~dart-mode~
    related to flutter, so nothing too exciting here. Some prefix are declared in
@@ -1473,7 +1473,7 @@ haskell
 
 ** Dired
    :PROPERTIES:
-   :CUSTOM_ID: h-1214442f-4dc7-4855-90ba-bb23d59af2c9
+   :CUSTOM_ID: User_Configuration-Dired-ef8a7cac
    :END:
    When it  comes to dired, I  chose do modify  some elements on how  things are
    sorted and shown, but there isn’t much configuration. First, I want to always
@@ -1502,14 +1502,14 @@ haskell
 
 ** Emacs Lisp
    :PROPERTIES:
-   :CUSTOM_ID: h-f087976e-3350-46c7-a269-f90c83f60d64
+   :CUSTOM_ID: User_Configuration-Emacs_Lisp-59230f3c
    :END:
    Here  will  be  stored  my  configuration directly  related  to  Emacs  Lisp,
    including some functions or default modes.
 
 *** Enable ~eldoc-mode~ by default
     :PROPERTIES:
-    :CUSTOM_ID: h-ef91e851-f0f2-4fe6-a1ee-b1556a17761c
+    :CUSTOM_ID: User_Configuration-Emacs_Lisp-Enable_~eldoc-mode~_by_default-f131abde
     :END:
     By default, if some Elisp code is opened, I want to enable ~eldoc-mode~ so I
     can easily get some documentation on the symbols in the source code. This is
@@ -1520,7 +1520,7 @@ haskell
 
 *** ~phundrak/write-to-buffer~
     :PROPERTIES:
-    :CUSTOM_ID: h-3f3b771e-a4dd-42fd-bf97-8930d20c0a86
+    :CUSTOM_ID: User_Configuration-Emacs_Lisp-~phundrak-write-to-buffer~-2f192dd3
     :END:
     I was  very surprised when  I discovered no  such function exists  in Elisp.
     This  function basically  writes  a  string into  a  buffer, and  optionally
@@ -1543,14 +1543,14 @@ haskell
 
 ** Eshell
    :PROPERTIES:
-   :CUSTOM_ID: h-846478af-19e5-4e06-a97b-0886062d32c7
+   :CUSTOM_ID: User_Configuration-Eshell-3012e67e
    :END:
    Eshell is a built-in  shell available from Emacs which I  use almost as often
    as Fish. Some adjustments are necessary for making this shell usable for me.
 
 *** Environment variables
     :PROPERTIES:
-    :CUSTOM_ID: h-f88fac3c-5bf1-452b-93f2-1f68436f2302
+    :CUSTOM_ID: User_Configuration-Eshell-Environment_variables-8dac73e0
     :END:
     Some environment variables need to be  correctly set so Eshell can correctly
     work. The first  environment variable to be  set is the ~PATH~, as  I have a
@@ -1589,7 +1589,7 @@ haskell
 
 *** Custom functions
     :PROPERTIES:
-    :CUSTOM_ID: h-8c921fc7-6b55-4829-92cd-133131f1e5f8
+    :CUSTOM_ID: User_Configuration-Eshell-Custom_functions-79d98245
     :END:
     When I’m  in Eshell,  sometimes I  wish to  open multiple  files at  once in
     Emacs. For this, when I have several arguments for ~find-file~, I want to be
@@ -1613,7 +1613,7 @@ haskell
 
 **** Redirect text editors to Emacs
      :PROPERTIES:
-     :CUSTOM_ID: h-a003cd6c-8e80-43a0-ac64-d21774c334b1
+     :CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
      :END:
      I still have  some muscle memory telling  me to open nano, ed,  or vim, and
      sometimes I even try to type ~emacs~  in the terminal, which is stupid with
@@ -1635,7 +1635,7 @@ haskell
 
 *** Aliases
     :PROPERTIES:
-    :CUSTOM_ID: h-7e11a04b-4387-4a62-af00-5d402814acac
+    :CUSTOM_ID: User_Configuration-Eshell-Aliases-ef06615f
     :END:
     This  function  is a  function  that  will come  in  very  handy for  Eshell
     functions  that call  shell processes.  It concatenates  the initial  string
@@ -1676,7 +1676,7 @@ haskell
 
 **** System monitoring
      :PROPERTIES:
-     :CUSTOM_ID: h-a2873e6b-2b71-499e-a113-341df334e4bd
+     :CUSTOM_ID: User_Configuration-Eshell-Aliases-System_monitoring-ee01b070
      :END:
      Similar to ~meminfo~, we also have ~gpumeminfo~  so we can get a quick look
      at the memory-related logs of our X session.
@@ -1722,7 +1722,7 @@ haskell
 
 **** System management (packages and services)
      :PROPERTIES:
-     :CUSTOM_ID: h-b46ba273-f212-45bb-8500-f82c168232f0
+     :CUSTOM_ID: User_Configuration-Eshell-Aliases-System_management_(packages_and_services)-afb6d9d3
      :END:
      The first command is ~remove~ which removes a package and its dependencies
      from the system.
@@ -1751,7 +1751,7 @@ haskell
 
 **** Other
      :PROPERTIES:
-     :CUSTOM_ID: h-4c235c5b-e61b-4a0e-8046-7e957e9dac13
+     :CUSTOM_ID: User_Configuration-Eshell-Aliases-Other-bd88ca97
      :END:
      ~mkcd~ is a function that allows me to create a directory and ~cd~ into it
      at the same time.
@@ -1778,7 +1778,7 @@ haskell
 
 **** Typos
      :PROPERTIES:
-     :CUSTOM_ID: h-4da87dd0-18b3-46ae-8251-8a829288210f
+     :CUSTOM_ID: User_Configuration-Eshell-Aliases-Typos-c7bfe6eb
      :END:
      ~q~ is a shorthand for ~exit~. ~exti~ and ~exi~ are for typos when I type ~exit~.
      #+BEGIN_SRC emacs-lisp
@@ -1798,7 +1798,7 @@ haskell
 
 *** Visual commands
     :PROPERTIES:
-    :CUSTOM_ID: h-b276c491-58ba-43a2-898f-1d65aad0df89
+    :CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
     :END:
     With Eshell,  some commands don’t  work very well, especially  commands that
     create a TUI. So, let’s declare them as visual commands or subcommands:
@@ -1811,7 +1811,7 @@ haskell
 
 *** Eshell theme
     :PROPERTIES:
-    :CUSTOM_ID: h-83cff5d6-d77c-40af-ba49-80e5c84ff581
+    :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
     :END:
     As with  most shells, again, it  is possible to customize  the appearance of
     the Eshell prompt.  First, we need to declare  a macro so we can  set a face
@@ -1854,7 +1854,7 @@ haskell
 
 ** File extensions
    :PROPERTIES:
-   :CUSTOM_ID: h-beb67a88-d7d3-4d58-bbc7-7a7be67f64aa
+   :CUSTOM_ID: User_Configuration-File_extensions-f76fe752
    :END:
    Sometimes,  Emacs   doesn’t  recognize  or  misrecognizes   some  extensions,
    resulting in a  wrong mode set for  said file. Let’s fix  that by associating
@@ -1890,7 +1890,7 @@ haskell
 
 ** LSP
    :PROPERTIES:
-   :CUSTOM_ID: h-4d0272c3-df5e-4f6b-a6e6-f769add4e603
+   :CUSTOM_ID: User_Configuration-LSP-4f8aa691
    :END:
    When it comes to the LSP layer,  there are some options which are not enabled
    by default that I want to use, especially some modes I want to take advantage
@@ -1916,7 +1916,7 @@ haskell
 
 ** Mu4e
    :PROPERTIES:
-   :CUSTOM_ID: h-ba4a69ff-38a6-498a-b076-a514bbf0701f
+   :CUSTOM_ID: User_Configuration-Mu4e-f3df8e9e
    :END:
    Mu4e is a frontend  for mu, an email analyzer which sits on  top of a Maildir
    which gets updated with  ~isync~. It has a lot of neat  features, but I guess
@@ -2098,7 +2098,7 @@ haskell
 
 ** Miscellaneous
    :PROPERTIES:
-   :CUSTOM_ID: h-cee08965-745a-4a6f-b04e-bf1638342698
+   :CUSTOM_ID: User_Configuration-Miscellaneous-d230bc2f
    :END:
    I have  a lot of variables  that need to be  set but don’t fall  in any other
    category, so I’ll collect them here.
@@ -2110,7 +2110,7 @@ haskell
 
 *** Evil
     :PROPERTIES:
-    :CUSTOM_ID: h-1d889318-8b93-4e78-9fe4-9e751b0b1cbe
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Evil-ab8a36e3
     :END:
     As a user of Evil, I’m sometimes  pissed when I accidentally press ~C-u~ and
     it gets me to the top of the document. So, let’s disable it:
@@ -2120,7 +2120,7 @@ haskell
 
 *** Default modes
     :PROPERTIES:
-    :CUSTOM_ID: h-3ac59b6b-4ea3-4270-bdf2-07a68b867ebc
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Default_modes-b9e1522c
     :END:
     Some  buffers sometimes  won’t  have a  default  mode at  all,  such as  the
     ~*scratch*~ buffer. In any vanilla  configuration, they will then default to
@@ -2132,7 +2132,7 @@ haskell
 
 *** Hooks
     :PROPERTIES:
-    :CUSTOM_ID: h-a895c541-505f-4dc2-8eac-d1fbc45e2512
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Hooks-86da2da0
     :END:
     I also have  some hooks I use  for enabling some major and  minor modes. The
     first one here  allows the execution of the deletion  of trailing space each
@@ -2164,7 +2164,7 @@ haskell
 
 *** Pinentry
     :PROPERTIES:
-    :CUSTOM_ID: h-c69ca384-fb5b-49e9-9b0d-987da0df1d61
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Pinentry-95004d5a
     :END:
     Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s
     set it so:
@@ -2174,7 +2174,7 @@ haskell
 
 *** Prettified symbols
     :PROPERTIES:
-    :CUSTOM_ID: h-3b37d76b-8da4-4c06-adfc-0ccd04bbef18
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Prettified_symbols-da50f4a6
     :END:
     Just because  it is  pleasing to the  eye, some symbols  in source  code get
     prettified into simpler symbols. Here is the  list of symbols that are to be
@@ -2202,7 +2202,7 @@ haskell
 
 *** Twittering mode
     :PROPERTIES:
-    :CUSTOM_ID: h-fb99695a-99f9-4c30-a286-a9accbb8410f
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Twittering_mode-b97d9327
     :END:
     For ~twittering-mode~, a Twitter major mode  for Emacs, I want to encrypt my
     data using a master password, which I do thanks to this option:
@@ -2212,7 +2212,7 @@ haskell
 
 *** Wttr.in cities
     :PROPERTIES:
-    :CUSTOM_ID: h-9d0208e7-f88f-4bba-a48a-e306d3f00939
+    :CUSTOM_ID: User_Configuration-Miscellaneous-Wttr.in_cities-dd24f8c5
     :END:
     Thanks to the wttrin package, I can  get the weather forecast in Emacs for a
     couple of cities. I just need to specify them to Emacs like so:
@@ -2223,7 +2223,7 @@ haskell
 
 ** Nov-mode
    :PROPERTIES:
-   :CUSTOM_ID: h-fea5c178-425f-4e1d-a491-591a3dbb4f93
+   :CUSTOM_ID: User_Configuration-Nov-mode-6f10765d
    :END:
    ~nov-mode~ is the  mode used in the  Epub reader. Here I will  write a little
    function that  I will call through  a hook each  time I’m opening a  new EPUB
@@ -2248,7 +2248,7 @@ haskell
 
 ** Python
    :PROPERTIES:
-   :CUSTOM_ID: h-d26ce2ad-94b6-4e50-9803-d53e567f1206
+   :CUSTOM_ID: User_Configuration-Python-9cdd1b06
    :END:
    Emacs throws me an error about the python interpreter, let’s silence it:
    #+BEGIN_SRC emacs-lisp
@@ -2257,7 +2257,7 @@ haskell
 
 ** Org-mode
    :PROPERTIES:
-   :CUSTOM_ID: h-5534acb1-963d-4aec-874d-f1f66b02a597
+   :CUSTOM_ID: User_Configuration-Org-mode-04ab8ad3
    :END:
    Org-mode is  probably one of the  best if not  the best Emacs feature  I have
    ever  discovered. It  is awesome  for  writing documents,  regardless of  the
@@ -2276,13 +2276,13 @@ haskell
 
 *** Custom org-mode functions
     :PROPERTIES:
-    :CUSTOM_ID: h-e87fcf0c-2e3e-48e1-80aa-1d8f1a39842b
+    :CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-f1726995
     :END:
     We begin with a couple of custom functions that I use in my org-mode files.
 
 **** Custom and unique headings ID
      :PROPERTIES:
-     :CUSTOM_ID: h-c6950fac-82a2-49cd-86bb-8f72c0fe9f22
+     :CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-Custom_and_unique_headings_ID-44d2beaf
      :END:
      The  first ones  are dedicated  to provide  org-mode headings  a fixed  and
      unique  ID  that  won’t  change  over   time.  This  code  was  taken  from
@@ -2396,7 +2396,7 @@ haskell
 
 *** Org babel languages
     :PROPERTIES:
-    :CUSTOM_ID: h-e60e0cf5-55ec-401a-82ed-256baff90f0c
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_babel_languages-c062fc16
     :END:
     One  of  the  amazing  features  of org-mode  is  its  literary  programming
     capacities by running code blocks from within Org-mode itself. But for that,
@@ -2432,11 +2432,11 @@ haskell
 
 *** Org variables
     :PROPERTIES:
-    :CUSTOM_ID: h-8e86e8dc-5889-44ff-9d10-766fb3e8b873
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-97587637
     :END:
 **** User information
      :PROPERTIES:
-     :CUSTOM_ID: h-73307234-da02-4e61-8443-616213d5b004
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-User_information-6c7d5e3f
      :END:
      Some  variables  about  myself  need  to be  set  so  Org-mode  knows  what
      information to include in exported files.
@@ -2449,7 +2449,7 @@ haskell
 
 **** Visual settings
      :PROPERTIES:
-     :CUSTOM_ID: h-a88bf63a-5200-46a6-be6e-2e455c347e4a
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Visual_settings-5d02f4c0
      :END:
      Visually, I prefer to hide the markers of macros, so let’s do that:
      #+BEGIN_SRC emacs-lisp
@@ -2458,7 +2458,7 @@ haskell
 
 **** Org behavior
      :PROPERTIES:
-     :CUSTOM_ID: h-81bcc367-4b2a-4a10-b42c-7b3cb7fd2d60
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
      :END:
      Here is one behavior that I really want to see modified: the ability to use
      ~M-RET~ without slicing the text the marker is on.
@@ -2509,7 +2509,7 @@ haskell
 
 **** Miscellaneous
      :PROPERTIES:
-     :CUSTOM_ID: h-42ccf90a-f507-4fab-ae42-3fd815a34ef0
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Miscellaneous-ddcb568a
      :END:
      When creating  a link to an  Org flie, I want  to create an ID  only if the
      link is  created interactively, and only  if there is no  custom ID already
@@ -2520,7 +2520,7 @@ haskell
 
 *** Org files exports
     :PROPERTIES:
-    :CUSTOM_ID: h-65bba789-e7d5-4f60-9280-5c7d11d7f657
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_files_exports-1e194169
     :END:
     When it comes to  exports, I want the LaTeX and PDF exports  to be done with
     XeLaTeX only. This implies the modification of the following variable:
@@ -2590,7 +2590,7 @@ haskell
 
 *** Custom LaTeX formats
     :PROPERTIES:
-    :CUSTOM_ID: h-783545b6-04b8-4d16-8ab5-12a74c34cfba
+    :CUSTOM_ID: User_Configuration-Org-mode-Custom_LaTeX_formats-8e8dca1c
     :END:
     I currently have two custom formats for my Org-mode exports: one for general
     use (initialy for my conlanging files, hence its ~conlang~ name), and one
@@ -2633,7 +2633,7 @@ haskell
 
 *** Org agenda
     :PROPERTIES:
-    :CUSTOM_ID: h-1c4fb1d5-dfc9-4b1e-be8c-375e6d61f886
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_agenda-53f9d319
     :END:
     One awesome feature  of Org mode is  the agenda. By default,  my agendas are
     stored in =~/org/agenda=.
@@ -2664,7 +2664,7 @@ haskell
 
 *** Org capture
     :PROPERTIES:
-    :CUSTOM_ID: h-9a070bbb-5b57-4abd-9d61-51f2070eb47b
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
     :END:
     Org-capture is  an amazing feature  of Org-mode  which allows me  to quickly
     save links, resources,  reminders and notes in a neatly  organized org file.
@@ -2740,7 +2740,7 @@ haskell
 
 **** Emails
      :PROPERTIES:
-     :CUSTOM_ID: h-9012599e-c143-4df0-b63c-7c60ddb4a081
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Emails-d87336fe
      :END:
      This is my template for a new Email:
      #+BEGIN_SRC org :tangle ~/org/capture/email.orgcaptmpl
@@ -2770,7 +2770,7 @@ haskell
 
 **** Journal
      :PROPERTIES:
-     :CUSTOM_ID: h-ab1b21af-e887-41a7-be7a-c08825d16339
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Journal-9916f9bf
      :END:
      This template  is quite  simple: it  creates a new  entry with  the current
      timestamp as its title, a brief title  of my choosing, and then I can write
@@ -2783,7 +2783,7 @@ haskell
 
 **** Notes
      :PROPERTIES:
-     :CUSTOM_ID: h-2b5e7efc-4a9d-4a92-b75f-4ec75e2fb48d
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Notes-4b4c10aa
      :END:
      This template  is used for taking  note about various subjects  that can go
      from conlanging to  development. I wrote it  so I can know  from where this
@@ -2816,7 +2816,7 @@ haskell
 
 **** Protocol
      :PROPERTIES:
-     :CUSTOM_ID: h-6fa10246-26bf-4ab3-a3b0-1f58bc79350e
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Protocol-ec45ec49
      :END:
      This  capture  is  used  when   received  through  org-protocol,  with  the
      Org-protocol Extension for  Firefox. It allows me to save  in a quote block
@@ -2851,7 +2851,7 @@ haskell
 
 **** Resources
      :PROPERTIES:
-     :CUSTOM_ID: h-001eb681-1725-442d-91ef-b6a46c1784dc
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Resources-b23bfbd0
      :END:
      This is the default template for  resources, which generally are located on
      the Internet. By default, I give them the lowest priority, because although
@@ -2871,12 +2871,12 @@ haskell
 
 **** Tasks
      :PROPERTIES:
-     :CUSTOM_ID: h-e8190e80-e2d5-4f68-84df-a760b00727e7
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-3fcf382a
      :END:
 
 ***** Computers and stuff
       :PROPERTIES:
-      :CUSTOM_ID: h-96f1bf32-ff88-498f-920b-0a583f5782eb
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Computers_and_stuff-a4eef8e3
       :END:
       One type of task  I often capture is related to my  servers or thing about
       computers in  general. With this,  I can capture a  task for which  I will
@@ -2892,7 +2892,7 @@ haskell
 
 ***** Health
       :PROPERTIES:
-      :CUSTOM_ID: h-99c15553-4298-4d15-a0a1-1335ebc83cc2
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Health-74f8f338
       :END:
       This capture is rarely used (I’m lucky to have a good health), but it can
       be useful.
@@ -2905,7 +2905,7 @@ haskell
 
 ***** Birthdays
       :PROPERTIES:
-      :CUSTOM_ID: h-e0d32ee1-cdf8-4d9e-aac6-55de262bb45e
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Birthdays-ec3b27be
       :END:
       This capture is used  to store new birthdays I have  to remember. They are
       set to be repeated yearly.
@@ -2928,7 +2928,7 @@ haskell
 
 **** YouTube
      :PROPERTIES:
-     :CUSTOM_ID: h-4b962a95-47d9-4410-8365-7d09e19530eb
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-YouTube-827968ee
      :END:
      #+BEGIN_SRC org :tangle ~/org/capture/youtube.orgcaptmpl
        ,* TODO [#C] %^{Title}
@@ -2942,7 +2942,7 @@ haskell
 
 *** Org projects
     :PROPERTIES:
-    :CUSTOM_ID: h-a1d5b79e-a053-46b0-a5ea-d5457acd1f7e
+    :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-5be088cd
     :END:
     Another great features  of Org-mode is the Org projects  that allow the user
     to easily  publish a bunch of  org files to  a remote location. Here  is the
@@ -2961,7 +2961,7 @@ haskell
 
 **** Configuration website
      :PROPERTIES:
-     :CUSTOM_ID: h-7559d45e-a1e8-4755-8c34-a95c80a592c7
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Configuration_website-79bd0468
      :END:
      #+NAME: org-proj-config-html
      #+BEGIN_SRC emacs-lisp :tangle no
@@ -3001,7 +3001,7 @@ haskell
 
 **** Linguistics website
      :PROPERTIES:
-     :CUSTOM_ID: h-a54bbe09-960f-428e-9cbd-5dabb4bb8daa
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Linguistics_website-34b8d4e7
      :END:
      In my case, I only have my linguistics website, made out of three projects.
      The  first component  is the  one generating  the HTML  files from  the org
@@ -3065,7 +3065,7 @@ haskell
 
 ** Rust
    :PROPERTIES:
-   :CUSTOM_ID: h-4f572b65-92eb-4ecd-beb3-75aa5c260e37
+   :CUSTOM_ID: User_Configuration-Rust-ba633575
    :END:
    I need to  point to racer where the  source code of Rust is located  so I can
    get some documentation.  This is installed with the  ~rust-src~ component you
@@ -3086,7 +3086,7 @@ haskell
 
 ** Scheme
    :PROPERTIES:
-   :CUSTOM_ID: h-6b392c4b-9014-4dfa-802d-2bc0c85273b3
+   :CUSTOM_ID: User_Configuration-Scheme-e35aa50a
    :END:
    The Scheme configuration  will be very short,  I just need to  tell Emacs the
    name of the interpreter since it is not the default one:
@@ -3096,7 +3096,7 @@ haskell
 
 ** Shortcuts
    :PROPERTIES:
-   :CUSTOM_ID: h-f193126f-abc1-4287-aa70-4f2080d2ef8f
+   :CUSTOM_ID: User_Configuration-Shortcuts-aef3f7a7
    :END:
    As  you will  see, I  defined a  LOT of  custom shortcuts.  Most of  them are
    Spacemacs shortcuts, defined in a way  they can be used seamlessly with Evil.
@@ -3135,7 +3135,7 @@ haskell
 
 *** Applications
     :PROPERTIES:
-    :CUSTOM_ID: h-928236e4-66e6-4d15-acd9-2748b90fdc70
+    :CUSTOM_ID: User_Configuration-Shortcuts-Applications-af8730b1
     :END:
     As this is a new category, let’s declare its prefix:
     #+BEGIN_SRC emacs-lisp
@@ -3156,7 +3156,7 @@ haskell
 
 *** Comments
     :PROPERTIES:
-    :CUSTOM_ID: h-f91ff790-3511-471a-83ce-4071a6e33420
+    :CUSTOM_ID: User_Configuration-Shortcuts-Comments-508db33d
     :END:
     Some  shortcuts are  also related  to comment  editing, in  particular using
     outorg. Let’s first declare the dedicated prefix:
@@ -3178,7 +3178,7 @@ haskell
 
 *** Files
     :PROPERTIES:
-    :CUSTOM_ID: h-37877887-e6d0-4e05-a2eb-566f349b76f6
+    :CUSTOM_ID: User_Configuration-Shortcuts-Files-206c2126
     :END:
     This category is mainly used for opening configuration files, but it is also
     more generally for files-related commands. Let’s declare the category:
@@ -3237,7 +3237,7 @@ haskell
 
 *** Multiple cursors
     :PROPERTIES:
-    :CUSTOM_ID: h-de40bea1-4301-4ad3-b3f1-c4c8ed029feb
+    :CUSTOM_ID: User_Configuration-Shortcuts-Multiple_cursors-83db7c9c
     :END:
     I don’t  really like Spacemacs’  layer for  MultipleCursors, so I  prefer to
     simply install the  package and create shortcuts for it  myself. Let’s first
@@ -3257,7 +3257,7 @@ haskell
 
 *** Org-mode
     :PROPERTIES:
-    :CUSTOM_ID: h-beb15231-9718-4581-95dd-444c57190ee8
+    :CUSTOM_ID: User_Configuration-Shortcuts-Org-mode-a8938199
     :END:
     Now, onto some shortcuts related to org-mode. Let’s first declare the
     category:
@@ -3312,7 +3312,7 @@ haskell
 
 *** Toggle
     :PROPERTIES:
-    :CUSTOM_ID: h-25a07df0-02b5-4e6e-a8a3-94a00dbbc54f
+    :CUSTOM_ID: User_Configuration-Shortcuts-Toggle-d53c27ef
     :END:
     This category allows to toggle some modes and options.
     #+BEGIN_SRC emacs-lisp
@@ -3365,7 +3365,7 @@ haskell
 
 *** Text
     :PROPERTIES:
-    :CUSTOM_ID: h-1852f9ec-e2ca-495b-a72e-c3258add8033
+    :CUSTOM_ID: User_Configuration-Shortcuts-Text-8d877c4b
     :END:
     The last category is a text-related category. Let’s declare it:
     #+BEGIN_SRC emacs-lisp
@@ -3383,7 +3383,7 @@ haskell
 
 ** Yadm
    :PROPERTIES:
-   :CUSTOM_ID: h-fb5284ed-9862-4ba5-9d92-78b466ab65f8
+   :CUSTOM_ID: User_Configuration-Yadm-4344fec3
    :END:
    yadm is  the utility  I use  for managing my  dotfiles, and  it is  a wrapper
    In order to manage my dotfiles, I use the following shortcut to launch Magit
@@ -3409,7 +3409,7 @@ haskell
 
 * Footnotes
   :PROPERTIES:
-  :CUSTOM_ID: h-a471c99d-e731-4196-9e69-beb0359962bd
+  :CUSTOM_ID: Footnotes-5ffd05ee
   :END:
 
 [fn:2] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs]]
