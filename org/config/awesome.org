@@ -1232,7 +1232,6 @@
    :END:
    These shortcuts are related to clients (aka windows) management.
    #+NAME: sc-client
-   |        | <5>             |         | <5>                              | <5>                                |        |            |
    | Key    | Modifiers       | Lambda? | Action                           | What it does                       | Group  | Clientkey? |
    |--------+-----------------+---------+----------------------------------+------------------------------------+--------+------------|
    | c      | modkey, meta    | yes     | awful.placement.centered(c)      | center client                      | client | yes        |
@@ -1382,7 +1381,6 @@
    Here is the list of properties with  their value to apply to all clients, and
    a short explanation as to what they do.
    #+NAME: rules-universal-properties-table
-   | <5>           | <10>                                                    |                                                                         |
    | Property      | Value                                                   | What it does                                                            |
    |---------------+---------------------------------------------------------+-------------------------------------------------------------------------|
    | border_width  | beautiful.border_width                                  | Set the width of the window’s border                                    |
