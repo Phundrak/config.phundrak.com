@@ -433,19 +433,6 @@
     ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
   #+END_SRC
 
-* pape-update
-  :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/pape-update
-  :CUSTOM_ID: pape-update-bdecbadf
-  :END:
-  This little tool  updates my wallpaper using both pywal  and nitrogen (because
-  apparently pywal doesn’t like AwesomeWM). It depends on [[#pape-restore-981c39c2][~pape-restore~]].
-  #+BEGIN_SRC fish
-    #!/usr/bin/fish
-    wal -i ~/Pictures/Wallpapers
-    pape-restore
-  #+END_SRC
-
 * pape-restore
   :PROPERTIES:
   :HEADER-ARGS: :tangle ~/.local/bin/pape-restore
@@ -458,6 +445,19 @@
     for i in (seq (xrandr --current | grep ' connected' | wc -l))
         nitrogen --set-zoom-fill (cat ~/.cache/wal/wal) --head=(math "$i - 1")
     end
+  #+END_SRC
+
+* pape-update
+  :PROPERTIES:
+  :HEADER-ARGS: :tangle ~/.local/bin/pape-update
+  :CUSTOM_ID: pape-update-bdecbadf
+  :END:
+  This little tool  updates my wallpaper using both pywal  and nitrogen (because
+  apparently pywal doesn’t like AwesomeWM). It depends on [[#pape-restore-981c39c2][~pape-restore~]].
+  #+BEGIN_SRC fish
+    #!/usr/bin/fish
+    wal -i ~/Pictures/Wallpapers
+    pape-restore
   #+END_SRC
 
 * Pinfo
