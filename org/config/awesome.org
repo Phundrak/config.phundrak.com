@@ -368,9 +368,7 @@
     [[https://github.com/l3ib/nitrogen/][Nitrogen]] and [[https://github.com/dylanaraps/pywal][Pywal]].
     #+BEGIN_SRC lua
       local function set_random_pape()
-        papes = get_papes()
-        pape = papes[math.random(#papes)]
-        awful.spawn.with_shell("nitrogen --set-scaled "..pape.." && wal -o wal-set -i "..pape)
+        awful.spawn.with_shell("pape-update")
         naughty.notify({ preset = naughty.config.presets.normal,
                          title = "Wallpaper change",
                          text = "Done!"})
@@ -385,8 +383,7 @@
     wallpaper:
     #+BEGIN_SRC lua
       local function set_wallpaper(_)
-        awful.spawn.with_shell("nitrogen --set-scaled (cat $HOME/.cache/wal/wal)")
-        awful.spawn.with_shell("wal -i (cat $HOME/.cache/wal/wal)")
+        awful.spawn.with_shell("wal -i (cat $HOME/.cache/wal/wal) && pape-restore")
         awful.spawn.with_shell("xrdb $HOME/.Xresources")
       end
     #+END_SRC
