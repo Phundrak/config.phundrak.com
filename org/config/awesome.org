@@ -346,26 +346,9 @@
     :PROPERTIES:
     :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
     :END:
-    The  following  function allows  the  user  to  get  the list  of  available
-    wallpapers I have  in my wallpapers directory. This depends  on the variable
-    described  in  [[#Variable_definitions-Wallpapers_directory-23b54f4f]].  By  the
-    way, the assert on line 3 allows Lua to wait for ~popen~ to run.
-    #+BEGIN_SRC lua -n
-      local function get_papes()
-        local i, papes, popen = 0, {}, io.popen
-        local pfile = assert(popen('find '..papes_dir..' -type f'))
-        for filename in pfile:lines() do
-          i = i + 1
-          papes[i] = filename
-        end
-        pfile:close()
-        return papes
-      end
-    #+END_SRC
-
-    This function is another  one that sets a random wallpaper  from the list of
-    wallpapers  provided  by  ~get_papes()~  described above.  This  depends  on
-    [[https://github.com/l3ib/nitrogen/][Nitrogen]] and [[https://github.com/dylanaraps/pywal][Pywal]].
+    This    function   sets    a   random    wallpaper   from    the   directory
+    =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in  my custom scripts. This depends
+    on [[https://github.com/l3ib/nitrogen/][Nitrogen]] and [[https://github.com/dylanaraps/pywal][Pywal]].
     #+BEGIN_SRC lua
       local function set_random_pape()
         awful.spawn.with_shell("pape-update")
