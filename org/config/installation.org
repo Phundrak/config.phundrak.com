@@ -181,7 +181,7 @@
              Option "XkbLayout" "fr,fr,us"
              Option "XkbModel" "pc104"
              Option "XkbVariant" "bepo_afnor,,"
-             Option "XkbOptions" "grp:menu_toggle"
+             Option "XkbOptions" "grp:menu_toggle,caps:ctrl_modifier"
      EndSection'
    #+END_SRC
    So, let’s set it as our keyboard configuration.
