@@ -2279,7 +2279,7 @@
          (org-with-point-at pom
            (let* ((orgpath (mapconcat #'identity (org-get-outline-path) "-"))
                   (heading (replace-regexp-in-string
-                            "/" "-"
+                            "/\\|~" ""
                             (replace-regexp-in-string
                              " " "_" (if (string= orgpath "")
                                          (org-get-heading t t t t)
