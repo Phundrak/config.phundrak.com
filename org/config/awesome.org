@@ -1212,28 +1212,26 @@
    :END:
    These shortcuts are related to clients (aka windows) management.
    #+NAME: sc-client
-   | Key    | Modifiers       | Lambda? | Action                           | What it does                       | Group  | Clientkey? |
-   |--------+-----------------+---------+----------------------------------+------------------------------------+--------+------------|
-   | c      | modkey, meta    | yes     | awful.placement.centered(c)      | center client                      | client | yes        |
-   | f      | modkey          | yes     | toggle_fullscreen_client(c)      | toggle fullscreen                  | client | yes        |
-   | m      | modkey          | yes     | toggle_maximized(c)              | toggle maximized                   | client | yes        |
-   | m      | modkey, shift   | yes     | toggle_horizontal_maximized(c)   | toggle horizontally maximized      | client | yes        |
-   | m      | modkey, control | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized        | client | yes        |
-   | n      | modkey, shift   | yes     | c.minimized = true               | minimize                           | client | yes        |
-   | n      | modkey, control | yes     | restore_minimized_clients()      | restore minimized                  | client | no         |
-   | o      | modkey          | yes     | c:move_to_screen()               | move to screen                     | client | yes        |
-   | q      | modkey          | yes     | c:kill()                         | close client                       | client | yes        |
-   | s      | modkey          | yes     | awful.client.focus.byidx(-1)     | focus previous client by index     | client | no         |
-   | t      | modkey          | yes     | awful.client.focus.byidx(1)      | focus next client by index         | client | no         |
-   | s      | modkey, shift   | yes     | awful.client.swap.byidx(-1)      | swap with previous client by index | client | no         |
-   | t      | modkey, shift   | yes     | awful.client.swap.byidx(1)       | swap with next client by index     | client | no         |
-   | u      | modkey          | no      | awful.client.urgent.jumpto       | jump to urgent client              | client | no         |
-   | v      | modkey          | yes     | c.ontop = not c.ontop            | toggle keep on top                 | client | yes        |
-   | space  | modkey, control | no      | awful.client.floating.toggle     | toggle floating                    | client | yes        |
-   | Left   | modkey          | yes     | awful.client.focus.byidx(1)      | view previous                      | client | no         |
-   | Return | modkey, control | yes     | c:swap(awful.client.getmaster()) | move to master                     | client | yes        |
-   | Right  | modkey          | yes     | awful.client.focus.byidx(-1)     | view next                          | client | no         |
-   | Tab    | modkey          | yes     | client_go_back()                 | go back                            | client | no         |
+   | Key | Modifiers              | Lambda? | Action                           | What it does                  | Group  | Clientkey? |
+   |-----+------------------------+---------+----------------------------------+-------------------------------+--------+------------|
+   | c   | modkey, meta           | yes     | awful.placement.centered(c)      | center client                 | client | yes        |
+   | f   | modkey                 | yes     | toggle_fullscreen_client(c)      | toggle fullscreen             | client | yes        |
+   | m   | modkey                 | yes     | toggle_maximized(c)              | toggle maximized              | client | yes        |
+   | m   | modkey, shift          | yes     | toggle_horizontal_maximized(c)   | toggle horizontally maximized | client | yes        |
+   | m   | modkey, control        | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized   | client | yes        |
+   | n   | modkey, shift          | yes     | c.minimized = true               | minimize                      | client | yes        |
+   | n   | modkey, control        | no      | restore_minimized_clients        | restore minimized             | client | no         |
+   | o   | modkey                 | yes     | c:move_to_screen()               | move to screen                | client | yes        |
+   | q   | modkey                 | yes     | c:kill()                         | close client                  | client | yes        |
+   | s   | modkey                 | yes     | awful.client.focus.byidx(-1)     | focus previous client         | client | no         |
+   | t   | modkey                 | yes     | awful.client.focus.byidx(1)      | focus next client             | client | no         |
+   | s   | modkey, shift          | yes     | awful.client.swap.byidx(-1)      | swap with previous client     | client | no         |
+   | t   | modkey, shift          | yes     | awful.client.swap.byidx(1)       | swap with next client         | client | no         |
+   | m   | modkey, shift, control | yes     | c:swap(awful.client.getmaster()) | swap with master client       | client | yes        |
+   | u   | modkey                 | no      | awful.client.urgent.jumpto       | jump to urgent client         | client | no         |
+   | v   | modkey                 | yes     | c.ontop = not c.ontop            | toggle keep on top            | client | yes        |
+   | f   | modkey, control        | no      | awful.client.floating.toggle     | toggle floating               | client | yes        |
+   | Tab | modkey                 | no      | client_go_back                   | go back                       | client | no         |
 
 ** Layout manipulation
    :PROPERTIES:
@@ -1285,15 +1283,15 @@
    :CUSTOM_ID: Keybindings-Screen-b73991f0
    :END:
    #+NAME: sc-screen
-   | Key                   | Modifiers       | Lambda? | Action                          | What it does               | Group  |
-   |-----------------------+-----------------+---------+---------------------------------+----------------------------+--------|
-   | t                     | modkey, control | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
-   | s                     | modkey, control | yes     | awful.screen.focus_relative(-1) | focus previous screen      | screen |
-   | XF86MonBrightnessDown |                 | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
-   | Next                  | modkey, meta    | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
-   | XF86MonBrightnessUp   |                 | shell   | xbacklight -inc 5               | increase screen brightness | screen |
-   | Prev                  | modkey, meta    | shell   | xbacklight -inc 5               | increase screen brightness | screen |
-   | F3                    | modkey          | spawn   | arandr                          | randr graphical frontend   | screen |
+   | Key                   | Modifiers    | Lambda? | Action                          | What it does               | Group  |
+   |-----------------------+--------------+---------+---------------------------------+----------------------------+--------|
+   | t                     | modkey, meta | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
+   | s                     | modkey, meta | yes     | awful.screen.focus_relative(-1) | focus previous screen      | screen |
+   | XF86MonBrightnessDown |              | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
+   | Next                  | modkey, meta | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
+   | XF86MonBrightnessUp   |              | shell   | xbacklight -inc 5               | increase screen brightness | screen |
+   | Prev                  | modkey, meta | shell   | xbacklight -inc 5               | increase screen brightness | screen |
+   | F3                    | modkey       | spawn   | arandr                          | randr graphical frontend   | screen |
 
 ** Tags
    :PROPERTIES:
