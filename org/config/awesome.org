@@ -503,13 +503,13 @@
   | magnifier       | yes      |
   | tile.left       | yes      |
   | tile            | yes      |
+  | tile.bottom     | yes      |
+  | tile.top        | yes      |
   | max             | yes      |
   | max.fullscreen  | yes      |
   | floating        | yes      |
   | fair            | yes      |
   | fair.horizontal | yes      |
-  | tile.bottom     | yes      |
-  | tile.top        | yes      |
   | spiral          | yes      |
   | spiral.dwindle  | yes      |
   | corner.nw       | no       |
@@ -525,18 +525,18 @@
                "")
   #+END_SRC
 
-  #+RESULTS[b2574a8a87e61600a7d1b328f394b394fd69bf09]: list-layouts
+  #+RESULTS[0bd0312ff10526c8b24199453ff235cf71425fb5]: list-layouts
   #+begin_example
   awful.layout.suit.magnifier,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
+  awful.layout.suit.tile.bottom,
+  awful.layout.suit.tile.top,
   awful.layout.suit.max,
   awful.layout.suit.max.fullscreen,
   awful.layout.suit.floating,
   awful.layout.suit.fair,
   awful.layout.suit.fair.horizontal,
-  awful.layout.suit.tile.bottom,
-  awful.layout.suit.tile.top,
   awful.layout.suit.spiral,
   awful.layout.suit.spiral.dwindle,
   #+end_example
@@ -1640,16 +1640,17 @@
   create some  autolaunch. All of  my autolaunched  apps are launch  through the
   shell.
   #+NAME: autostart-table
-  | Command                                             | What it is for                         |
-  |-----------------------------------------------------+----------------------------------------|
-  | pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit | Launch or relaunch Polkit              |
-  | pkill picom; compton --experimental-backends        | Launch or relaunch Picom               |
-  | xss-lock -- lock                                    | Enable lockscreen after a blank screen |
-  | nm-applet                                           | Launch NetworkManager applet           |
-  | numlockx on                                         | Enable numlock                         |
-  | mpc stop                                            | Stop music                             |
-  | mpd_discord_richpresence --no-idle --fork           | Launch MPD rich presence for Discord   |
-  | sleep 3 && emacsclient -c -e \"(delete-frame)\"     | Launch blank EmacsClient               |
+  | Command                                             | What it is for                                 |
+  |-----------------------------------------------------+------------------------------------------------|
+  | pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit | Launch or relaunch Polkit                      |
+  | pkill picom; compton --experimental-backends        | Launch or relaunch Picom                       |
+  | xss-lock -- lock                                    | Enable lockscreen after a blank screen         |
+  | nm-applet                                           | Launch NetworkManager applet                   |
+  | numlockx on                                         | Enable numlock                                 |
+  | mpc stop                                            | Stop music                                     |
+  | mpd_discord_richpresence --no-idle --fork           | Launch MPD rich presence for Discord           |
+  | sleep 3 && emacsclient -c -e \"(delete-frame)\"     | Launch blank EmacsClient                       |
+  | setxkbmap -option caps:ctrl_modifier                | Caps lock is evil and takes the Ctrl key space |
 
   #+NAME: autostart
   #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var apps=autostart-table
@@ -1660,7 +1661,7 @@
                "\n")
   #+END_SRC
 
-  #+RESULTS[4f7ae21b2d44878b44a0aaea4a0f2ed030d9e9bf]: autostart
+  #+RESULTS[34ee2754183559bee9c86a527d7bcf961a0e93ec]: autostart
   : awful.spawn.with_shell("pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit")
   : awful.spawn.with_shell("pkill picom; compton --experimental-backends")
   : awful.spawn.with_shell("xss-lock -- lock")
@@ -1669,6 +1670,7 @@
   : awful.spawn.with_shell("mpc stop")
   : awful.spawn.with_shell("mpd_discord_richpresence --no-idle --fork")
   : awful.spawn.with_shell("sleep 3 && emacsclient -c -e \"(delete-frame)\"")
+  : awful.spawn.with_shell("setxkbmap -option caps:ctrl_modifier")
 
   Each of the command gets called with the call of ~awful.spawn.with_shell()~,
   as you can see below.
