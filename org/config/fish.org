@@ -132,7 +132,7 @@
         set -l ruler (string repeat -n $ruler_length "=")
 
         set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
-        set -l uptime (uptime | sed 's/\(.*\):\(.*\):\(.*\) up.*/\1 hours \2 minutes/' | sed 's/ *\(.*\)/\1/')
+        set -l uptime (uptime | sed 's/up \(.*\)/\1/')
 
         set -l root (df -Ph | grep -E "/\$")
         set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
@@ -211,6 +211,11 @@
    And we also need to specify where the Android SDK it located.
    #+BEGIN_SRC fish
    set -gx ANDROID_HOME $HOME/Android/Sdk
+   #+END_SRC
+
+   Still related to Dart and Flutter development,
+   #+BEGIN_SRC fish
+     set -gx CHROME_EXECUTABLE /usr/bin/chromium
    #+END_SRC
 
    Next,  we have  two  variables from  Deno, the  Node.js  destroyer. Its  base
