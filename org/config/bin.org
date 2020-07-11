@@ -26,8 +26,8 @@
 - [[#emoji-picker][Emoji picker]]
 - [[#lock][Lock]]
 - [[#mp42webm][mp42webm]]
-- [[#pape-update][pape-update]]
 - [[#pape-restore][pape-restore]]
+- [[#pape-update][pape-update]]
 - [[#pinfo][Pinfo]]
 - [[#polybar-launch][Polybar-launch]]
 - [[#rofi-mount][Rofi-mount]]
@@ -175,7 +175,7 @@
     set WLOCATION /usr/share/doc/arch-wiki/html/en/
     set WPAGE (/bin/ls $WLOCATION | \
     sed 's/_/ /g' | sed 's/\.html$//' | sed 's/.*\/\(.*\)/\1/' | \
-    rofi -dmenu -p "Arch Wiki" -i)
+    rofi -dmenu -p "Arch Wiki" -i | sed 's/ +/_/g')
   #+END_SRC
 
   Now, all I need to  do is to send this list into rofi and  tell it to open the
