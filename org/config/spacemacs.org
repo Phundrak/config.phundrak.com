@@ -223,7 +223,6 @@
    | kaolin-themes       | some cool themes                                     |
    | lsp-dart            | apparently, it isn’t included in the Dart layer      |
    | magit-gitflow       | integrate gitflow in Magit                           |
-   | meson-mode          | major mode for Meson build files                     |
    | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
    | org-sidebar         | display on the side the outline of an Org buffer     |
    | outorg              | edit comments as Org-mode buffers                    |
@@ -368,16 +367,16 @@
     org-download folder for images in =~/Pictures/org/=, and I set the =RET= key
     to follow org links if the cursor is on one.
     #+BEGIN_SRC emacs-lisp
-      (org :variables
-           org-enable-epub-support t
-           org-enable-github-support t
-           org-enable-reveal-js-support t
-           org-enable-trello-support t
-           org-enable-sticky-header t
-           spaceline-org-clock-p t
-           org-projectile-file "TODOs.org"
-           org-download-image-dir "~/Pictures/org/"
-           org-return-follows-link t)
+       (org :variables
+            org-enable-epub-support t
+            org-enable-github-support t
+            org-enable-hugo-support t
+            org-enable-reveal-js-support t
+            org-enable-sticky-header t
+            spaceline-org-clock-p t
+            org-projectile-file "TODOs.org"
+            org-download-image-dir "~/Pictures/org/"
+            org-return-follows-link t)
     #+END_SRC
 
     The ~semantic~ layer is also enabled.
@@ -534,8 +533,7 @@
               c-c++-adopt-subprojects t
               c-c++-enable-google-style t
               c-c++-enable-c++11 t
-              c-c++-backend 'lsp-ccls
-              c-c++-lsp-executable "/usr/bin/ccls"
+              c-c++-backend 'lsp-clangd
               c-c++-lsp-sem-highlight-method 'overlay
               c-c++-lsp-sem-highlight-rainbow t
               c++-enable-organize-includes-on-save t)
@@ -597,10 +595,6 @@
             lua-lsp-emmy-enable-file-watchers t)
      #+END_SRC
 
-     #+BEGIN_SRC emacs-lisp
-haskell
-     #+END_SRC
-
 *** Readers
     :PROPERTIES:
     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
@@ -658,10 +652,11 @@ haskell
     #+END_SRC
 
     Next, we have the Docker, Nginx,  Pass (the standard Unix password manager),
-    Prettier, Systemd,  Imenu-list, Web-beautify,  Dap, Helpful, and  LSP layers
-    enabled.
+    Prettier, Systemd,  Meson, Imenu-list,  Web-beautify, Dap, Helpful,  and LSP
+    layers enabled.
     #+BEGIN_SRC emacs-lisp
-      docker imenu-list nginx pass prettier systemd web-beautify helpful dap lsp
+      dap docker helpful imenu-list lsp meson nginx pass prettier systemd
+      web-beautify
     #+END_SRC
 
     We  also have  the RestClient  layer  enabled for  which I  enabled the  Org
@@ -1919,69 +1914,10 @@ haskell
    :CUSTOM_ID: User_Configuration-Mu4e-f3df8e9e
    :END:
    Mu4e is a frontend  for mu, an email analyzer which sits on  top of a Maildir
-   which gets updated with  ~isync~. It has a lot of neat  features, but I guess
-   my favorite ones are:
+   which gets updated  with the ~mbsync~ command  from ~isync~. It has  a lot of
+   neat features, but I guess my favorite ones are:
    1. the search query feature
    2. being able to send an HTML email either to the browser or
-   3. to compile it to a PDF for a better output
-   This  last feature  can only  be enabled  manually with  Arch Linux.  We need
-   ~webkitgtk~ installed,  and unfortunately,  it is  by default  only available
-   through the  AUR and  has to be  compiled. Thing is,  ~webkitgtk~ is  a *BIG*
-   piece of software, and compiling it can be very time consuming. So, I decided
-   to add ArchLinuxCN’s  servers to my pacman config (instructions  on how to do
-   so [[https://github.com/archlinuxcn/repo][here]]) so I could install a compiled version from their repos. Next, when I
-   installed ~mu~ from the AUR, I modified the PKGBUILD like so:
-   #+BEGIN_SRC text :tangle no
-     # Maintainer: Marcel Röthke <marcel@roethke.info>
-     # Contributor: Pierre Neidhardt <ambrevar@gmail.com>
-     # Contributor: csllbr; Popsch <popsch@gmx.net>
-
-     pkgname=mu
-     pkgver=1.2
-     pkgrel=3
-     pkgdesc="Maildir indexer/searcher and Emacs client (mu4e)"
-     arch=("x86_64")
-     url="http://www.djcbsoftware.nl/code/mu"
-     license=("GPL")
-     depends=("gmime3" "xapian-core" "guile2.0")
-     makedepends=("emacs")
-     optdepends=("guile: guile support"
-       "emacs: mu4e support")
-     source=("mu-$pkgver.tar.gz::https://github.com/djcb/mu/archive/$pkgver.tar.gz")
-     md5sums=('5e7d7c3549b9428ec0b5ea7d374b6d0d')
-
-     prepare() {
-       cd "$pkgname-$pkgver"
-       autoreconf -i
-     }
-
-
-     build() {
-       cd "$pkgname-$pkgver"
-       ./configure --prefix=/usr --enable-mu4e --enable-guile
-       make
-     }
-
-     package() {
-       cd "$pkgname-$pkgver"
-       make DESTDIR="$pkgdir" install
-       # if msg2pdf and mug were built, install them
-       # if not, remove the unneeded mug manpage
-       if [ -f toys/msg2pdf/msg2pdf ]; then
-         install -m755 toys/msg2pdf/msg2pdf "${pkgdir}"/usr/bin/msg2pdf
-       fi
-       if [ -f toys/mug/mug ]; then
-         install -m755 toys/mug/mug "${pkgdir}"/usr/bin/mug
-         install -Dm644 toys/mug/mug.svg "${pkgdir}"/usr/share/pixmaps/mug.svg
-       else
-         rm "${pkgdir}"/usr/share/man/man1/mug.1
-       fi
-     }
-   #+END_SRC
-
-   This enables the  installation of ~msg2pdf~, which in turn  enables the email
-   compilation to PDF with the shortcut ~a  v~ when an email is opened, and this
-   opens the PDF in a new Emacs buffer.
 
    Due to mu sitting on top of a Maildir, I need to tell mu4e where said maildir
    is, and point it the trash, archive,  and sent folders as well as the refresh
@@ -3069,9 +3005,31 @@ haskell
    :END:
    I need to  point to racer where the  source code of Rust is located  so I can
    get some documentation.  This is installed with the  ~rust-src~ component you
-   can get through ~rustup~.
+   can get through ~rustup~. To install it, simply run
+   #+BEGIN_SRC shell :tangle no :exports code
+     $ rustup component add rust-src
+   #+END_SRC
+
+   Now, the  source code  for Rust  should be included  in your  installation. I
+   personally prefer to develop with Rust  stable, so let’s indicate to Emacs to
+   search for documentation in the stable sources:
    #+BEGIN_SRC emacs-lisp
-     (setq racer-rust-src-path "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+     (setq racer-rust-src-path
+           "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+   #+END_SRC
+
+   Rust’s default  ~cargo check~ command  is already  very good, however  I also
+   enjoy getting  some more hints  while developping,  and ~clippy~ does  a very
+   good job at it. To get clippy, I need to run the following to install it:
+   #+BEGIN_SRC shell
+     $ rustup compontent add clippy
+   #+END_SRC
+
+   And this will get it installed with all  of my Rust toolchain, and it will be
+   updated with it. Now,  let’s indicate LSP that I want to  use that instead of
+   ~check~:
+   #+BEGIN_SRC emacs-lisp
+     (setq lsp-rust-analyzer-cargo-watch-command "clippy")
    #+END_SRC
 
    Finally, I  wish to  enable ~electric-pair-mode~ and  ~indent-guide-mode~ for
