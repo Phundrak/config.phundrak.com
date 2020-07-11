@@ -246,7 +246,7 @@
     #+END_SRC
     I can also set the transparency of st (my terminal emulator) like so:
     #+BEGIN_SRC conf
-      st.alpha: 0.9
+      st.alpha: 0.75
     #+END_SRC
 
     I used to have  lines dedicated to UXTerm and URxvt, but I  cast them out of
