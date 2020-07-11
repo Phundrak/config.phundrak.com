@@ -3056,17 +3056,10 @@
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Shortcuts-aef3f7a7
    :END:
-   As  you will  see, I  defined a  LOT of  custom shortcuts.  Most of  them are
+   As  you will  see, I  defined a  LOT  of custom  shortcuts. All  of them  are
    Spacemacs shortcuts, defined in a way  they can be used seamlessly with Evil.
-   Only two shortcuts are defined the vanilla way for Emacs:
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "M-»") 'end-of-buffer)
-     (global-set-key (kbd "M-«") 'beginning-of-buffer)
-   #+END_SRC
-
-   Spacemacs  shortcuts all  begin  with ~o~,  which is  a  prefix reserved  for
-   user-defined shortcuts so they won’t conflict with any package. Let’s declare
-   it like so.
+   They  all  begin with  ~o~,  which  is  a  prefix reserved  for  user-defined
+   shortcuts so they won’t conflict with any package. Let’s declare it like so.
    #+BEGIN_SRC emacs-lisp
      (spacemacs/declare-prefix "o" "custom")
    #+END_SRC
