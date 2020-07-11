@@ -25,6 +25,7 @@
 	cob = checkout -b
 	####
 	cl = clone
+	cl1 = clone --depth=1
 	####
 	d = diff -w
 	####
