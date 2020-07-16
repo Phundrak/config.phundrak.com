@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 #+title: AwesomeWM configuration
-#+INCLUDE: headers
+#+setupfile: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's AwesomeWM config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's AwesomeWM config" />
@@ -1648,6 +1648,7 @@
   | mpc stop                                            | Stop music                             |
   | mpd_discord_richpresence --no-idle --fork           | Launch MPD rich presence for Discord   |
   | sleep 3 && emacsclient -c -e \"(delete-frame)\"     | Launch blank EmacsClient               |
+  | set-screens                                         | Auto-organize screens                  |
 
   #+NAME: autostart
   #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var apps=autostart-table
