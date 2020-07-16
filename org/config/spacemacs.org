@@ -2650,8 +2650,8 @@
     | th       | Health        |        | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
     | ti       | Informatique  |        | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
     | w        | Worldbuilding |        |                |                         |                          |
-    | wn       | Note          |        | file+headline  | org-worldbuilding-file  | notes.orgcaptmpl         |
-    | wr       | Resource      |        | file+headline  | org-worldbuilding-file  | resource.orgcaptmpl      |
+    | wn       | Note          |        | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
+    | wr       | Resource      |        | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
 
     The following  code snipped is not  tangled into my configuration  file, but
     instead creates the equivalent to the  table above into EmacsLisp code found
@@ -2659,12 +2659,12 @@
     #+NAME: org-capture-shortcut-gen
     #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=org-capture-shortcuts-table :exports code :cache yes :results replace
       (mapconcat (lambda (entry)
-                   (let ((shortcut   (nth 0 entry))
-                         (name       (nth 1 entry))
-                         (title      (nth 2 entry))
-                         (insertmode (nth 3 entry))
-                         (fileinsert (nth 4 entry))
-                         (sourceorg  (nth 5 entry)))
+                   (let* ((shortcut   (nth 0 entry))
+                          (name       (nth 1 entry))
+                          (title      (nth 2 entry))
+                          (insertmode (nth 3 entry))
+                          (fileinsert (nth 4 entry))
+                          (sourceorg  (nth 5 entry)))
                      (if (string= "" insertmode)
                          (format "(\"%s\" \"%s\")" shortcut name)
                        (concat (format "(\"%s\" \"%s\" entry\n" shortcut name)
@@ -2675,7 +2675,7 @@
                  table "\n")
     #+END_SRC
 
-    #+RESULTS[2fcaa1f6411ca2238adb5f9bbe32d21e628f6798]: org-capture-shortcut-gen
+    #+RESULTS[c9888f3d14a3b5cd83d9626093d5b28806f6d8d2]: org-capture-shortcut-gen
     #+begin_example
     ("c" "Conlanging")
     ("cn" "Note" entry
@@ -2712,7 +2712,7 @@
     ("re" "Emacs" entry
       (file+headline org-default-notes-file "Emacs")
       (file "~/org/capture/resource.orgcaptmpl"))
-    ("ri" "Informatique Général" entry
+    ("ri" "Informatique" entry
       (file+headline org-default-notes-file "Informatique")
       (file "~/org/capture/resource.orgcaptmpl"))
     ("rl" "Linguistics" entry
@@ -2733,10 +2733,10 @@
       (file "~/org/capture/informatique.orgcaptmpl"))
     ("w" "Worldbuilding")
     ("wn" "Note" entry
-      (file+headline org-worldbuilding-file "Note")
+      (file+headline \"~/org/worldbuilding.org\" "Note")
       (file "~/org/capture/notes.orgcaptmpl"))
     ("wr" "Resource" entry
-      (file+headline org-worldbuilding-file "Resource")
+      (file+headline \"~/org/worldbuilding.org\" "Resource")
       (file "~/org/capture/resource.orgcaptmpl"))
     #+end_example
 
