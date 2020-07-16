@@ -7,7 +7,7 @@
 # ### ORG OPTIONS ##############################################################
 
 #+OPTIONS: H:4 broken_links:mark email:t ^:{}
-#+KEYWORDS: dotfiles linux emacs configuration phundrak drakpa
+#+KEYWORDS: dotfiles, linux, emacs, configuration, phundrak, drakpa
 
 # ### HTML #####################################################################
 
@@ -20,7 +20,6 @@
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
 #+HTML_HEAD_EXTRA: <script defer src="/dart/main.dart.js"></script>
-#+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js" crossorigin="anonymous"></script>
 #+html_head_extra: <!-- Matomo -->
 #+html_head_extra: <script type="text/javascript">
 #+html_head_extra:  var _paq = window._paq || [];
