@@ -145,7 +145,7 @@
 
 * Spacemacs layers and packages
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
+  :header-args:emacs-lisp: :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
   :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
@@ -703,7 +703,7 @@
 
 * Init
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
+  :header-args:emacs-lisp: :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
   :CUSTOM_ID: Init-99a4b561
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
@@ -1325,7 +1325,7 @@
 
 * User Initialization
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
+  :header-args:emacs-lisp: :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
   :CUSTOM_ID: User_Initialization-e0d21089
   :END:
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
@@ -1372,7 +1372,7 @@
 
 * User Configuration
   :PROPERTIES:
-  :header-args:emacs-lisp: :comments link :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
+  :header-args:emacs-lisp: :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :CUSTOM_ID: User_Configuration-4a937fe5
   :END:
 ** ASM configuration
