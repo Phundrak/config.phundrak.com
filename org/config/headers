@@ -21,6 +21,21 @@
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
 #+HTML_HEAD_EXTRA: <script defer src="/dart/main.dart.js"></script>
 #+HTML_HEAD_EXTRA: <script defer src="https://kit.fontawesome.com/4d42d0c8c5.js" crossorigin="anonymous"></script>
+#+html_head_extra: <!-- Matomo -->
+#+html_head_extra: <script type="text/javascript">
+#+html_head_extra:  var _paq = window._paq || [];
+#+html_head_extra:  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+#+html_head_extra:  _paq.push(['trackPageView']);
+#+html_head_extra:  _paq.push(['enableLinkTracking']);
+#+html_head_extra:  (function() {
+#+html_head_extra:      var u="//matomo.phundrak.com/";
+#+html_head_extra:      _paq.push(['setTrackerUrl', u+'matomo.php']);
+#+html_head_extra:      _paq.push(['setSiteId', '3']);
+#+html_head_extra:      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+#+html_head_extra:      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+#+html_head_extra:  })();
+#+html_head_extra: </script>
+#+html_head_extra: <!-- End Matomo Code -->
 
 # ### MACROS ###################################################################
 #+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@
