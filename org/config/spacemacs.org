@@ -112,6 +112,7 @@
         - [[#computers-and-stuff][Computers and stuff]]
         - [[#health][Health]]
         - [[#birthdays][Birthdays]]
+        - [[#events][Events]]
       - [[#youtube][YouTube]]
     - [[#org-projects][Org projects]]
       - [[#configuration-website][Configuration website]]
@@ -2603,67 +2604,149 @@
     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
     :END:
     Org-capture is  an amazing feature  of Org-mode  which allows me  to quickly
-    save links, resources,  reminders and notes in a neatly  organized org file.
-    With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~.
-    It will then ask which template I  wish to use. Said templates are described
-    below:
+    save links, resources,  reminders, and notes in neatly  organized org files.
+    Here they are described:
     #+BEGIN_SRC emacs-lisp
       (setq
        org-default-notes-file "~/org/notes.org"
+       org-wordbuilding-file "~/org/worldbuilding.org"
+       org-conlanging-file "~/org/conlanging.org"
+       org-journal-file "~/org/journal.org"
+       org-private-agenda-file "~/org/agenda/private.org"
+       org-school-agenda-file "~/org/agenda/school.org")
+    #+END_SRC
+
+    With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~.
+    It  will then  ask which  template I  wish to  use. In  the table  below are
+    described the shortcuts that are available after ~SPC a o c~ is invoked. The
+    /name/ will be the one displayed  in Org capture’s interface, the /title/ is
+    the headline  where to  save the  capture (if  it does  not differ  from the
+    capture’s name,  the cell will be  blank). The /insertion mode/  tells Emacs
+    how to add the capture to the /file/, using which /template/. A line with no
+    insertion mode, file, or template is just a category.
+    #+NAME: org-capture-shortcuts-table
+    | Shortcut | Name          | Title  | Insertion mode | file                    | template                 |
+    |----------+---------------+--------+----------------+-------------------------+--------------------------|
+    | c        | Conlanging    |        |                |                         |                          |
+    | cn       | Note          |        | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
+    | cr       | Resource      |        | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
+    | e        | Email         |        |                |                         |                          |
+    | ew       | Write Email   | Emails | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
+    | j        | Journal       |        | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
+    | l        | Link          |        |                |                         |                          |
+    | ly       | YouTube       |        | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
+    | L        | Protocol Link | Link   | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
+    | n        | Notes         |        |                |                         |                          |
+    | nn       | Note          |        | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+    | nq       | Quote         |        | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
+    | p        | Protocol      | Link   | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
+    | r        | Resources     |        |                |                         |                          |
+    | re       | Emacs         |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | ri       | Informatique  |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | rl       | Linguistics   |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | t        | Tasks         |        |                |                         |                          |
+    | tb       | Birthday      |        | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
+    | te       | Event         |        | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
+    | th       | Health        |        | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
+    | ti       | Informatique  |        | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
+    | w        | Worldbuilding |        |                |                         |                          |
+    | wn       | Note          |        | file+headline  | org-worldbuilding-file  | notes.orgcaptmpl         |
+    | wr       | Resource      |        | file+headline  | org-worldbuilding-file  | resource.orgcaptmpl      |
+
+    The following  code snipped is not  tangled into my configuration  file, but
+    instead creates the equivalent to the  table above into EmacsLisp code found
+    in the next code snippet.
+    #+NAME: org-capture-shortcut-gen
+    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=org-capture-shortcuts-table :exports code :cache yes :results replace
+      (mapconcat (lambda (entry)
+                   (let ((shortcut   (nth 0 entry))
+                         (name       (nth 1 entry))
+                         (title      (nth 2 entry))
+                         (insertmode (nth 3 entry))
+                         (fileinsert (nth 4 entry))
+                         (sourceorg  (nth 5 entry)))
+                     (if (string= "" insertmode)
+                         (format "(\"%s\" \"%s\")" shortcut name)
+                       (concat (format "(\"%s\" \"%s\" entry\n" shortcut name)
+                               (format "  (%s %s%s)\n" insertmode fileinsert
+                                       (if (string= "file+datetree" insertmode) ""
+                                         (format " \"%s\"" (if (string= "" title) name title))))
+                               (format "  (file \"~/org/capture/%s\"))" sourceorg)))) )
+                 table "\n")
+    #+END_SRC
+
+    #+RESULTS[2fcaa1f6411ca2238adb5f9bbe32d21e628f6798]: org-capture-shortcut-gen
+    #+begin_example
+    ("c" "Conlanging")
+    ("cn" "Note" entry
+      (file+headline org-conlanging-file "Note")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("cr" "Resource" entry
+      (file+headline org-conlanging-file "Resource")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    ("e" "Email")
+    ("ew" "Write Email" entry
+      (file+headline org-default-notes-file "Emails")
+      (file "~/org/capture/emails.orgcaptmpl"))
+    ("j" "Journal" entry
+      (file+datetree org-journal-file)
+      (file "~/org/capture/journal.orgcaptmpl"))
+    ("l" "Link")
+    ("ly" "YouTube" entry
+      (file+headline org-default-notes-file "YouTube")
+      (file "~/org/capture/youtube.orgcaptmpl"))
+    ("L" "Protocol Link" entry
+      (file+headline org-default-notes-file "Link")
+      (file "~/org/capture/protocol-link.orgcaptmpl"))
+    ("n" "Notes")
+    ("nn" "Note" entry
+      (file+headline org-default-notes-file "Note")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("nq" "Quote" entry
+      (file+headline org-default-notes-file "Quote")
+      (file "~/org/capture/notes-quote.orgcaptmpl"))
+    ("p" "Protocol" entry
+      (file+headline org-default-notes-file "Link")
+      (file "~/org/capture/protocol.orgcaptmpl"))
+    ("r" "Resources")
+    ("re" "Emacs" entry
+      (file+headline org-default-notes-file "Emacs")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    ("ri" "Informatique Général" entry
+      (file+headline org-default-notes-file "Informatique")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    ("rl" "Linguistics" entry
+      (file+headline org-default-notes-file "Linguistics")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    ("t" "Tasks")
+    ("tb" "Birthday" entry
+      (file+headline org-private-agenda-file "Birthday")
+      (file "~/org/capture/birthday.orgcaptmpl"))
+    ("te" "Event" entry
+      (file+headline org-private-agenda-file "Event")
+      (file "~/org/capture/event.orgcaptmpl"))
+    ("th" "Health" entry
+      (file+headline org-private-agenda-file "Health")
+      (file "~/org/capture/health.orgcaptmpl"))
+    ("ti" "Informatique" entry
+      (file+headline org-private-agenda-file "Informatique")
+      (file "~/org/capture/informatique.orgcaptmpl"))
+    ("w" "Worldbuilding")
+    ("wn" "Note" entry
+      (file+headline org-worldbuilding-file "Note")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("wr" "Resource" entry
+      (file+headline org-worldbuilding-file "Resource")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    #+end_example
+
+    Below you can find the equivalent code as described above.
+    #+BEGIN_SRC emacs-lisp :noweb yes
+      (setq
        org-capture-templates
-       '(("e" "Emails")
-         ("ew" "Write Email" entry
-          (file+headline org-default-notes-file "Emails")
-          (file "~/org/capture/emails.orgcaptmpl"))
-         ("j" "Journal" entry
-          (file+datetree "~/org/journal.org")
-          (file "~/org/capture/journal.orgcaptmpl"))
-         ("l" "Links")
-         ("ly" "YouTube" entry
-          (file+headline org-default-notes-file "YouTube")
-          (file "~/org/capture/youtube.orgcaptmpl"))
-         ("L" "Protocol Link" entry
-          (file+headline org-default-notes-file "Link")
-          (file "~/org/capture/protocol-link.orgcaptmpl"))
-         ("n" "Note")
-         ("nq" "Quote"
-          entry (file+headline org-default-notes-file "Note")
-          (file "~/org/capture/notes-quote.orgcaptmpl"))
-         ("nn" "Note"
-          entry (file+headline org-default-notes-file "Note")
-          (file "~/org/capture/notes.orgcaptmpl"))
-         ("p" "Protocol" entry
-          (file+headline org-default-notes-file "Link")
-          (file "~/org/capture/protocol.orgcaptmpl"))
-         ("r" "Resources")
-         ("rc" "Conlanging" entry
-          (file+headline org-default-notes-file "Conlanging")
-          (file "~/org/capture/resource.orgcaptmpl"))
-         ("re" "Emacs" entry
-          (file+headline org-default-notes-file "Emacs")
-          (file "~/org/capture/resource.orgcaptmpl"))
-         ("ri" "Informatique général" entry
-          (file+headline org-default-notes-file "Informatique")
-          (file "~/org/capture/resource.orgcaptmpl"))
-         ("rl" "Linguistics" entry
-          (file+headline org-default-notes-file "Linguistics")
-          (file "~/org/capture/resource.orgcaptmpl"))
-         ("rw" "Worldbuilding" entry
-          (file+headline org-default-notes-file "Worldbuilding")
-          (file "~/org/capture/resource.orgcaptmpl"))
-         ("t" "Tasks")
-         ("ti" "Informatique" entry
-          (file+headline "~/org/agenda/private.org" "Informatique")
-          (file "~/org/capture/informatique.orgcaptmpl"))
-         ("th" "Health" entry
-          (file+headline "~/org/agenda/private.org" "Health")
-          (file "~/org/capture/health.orgcaptmpl"))
-         ("tb" "Birthday" entry
-          (file+headline "~/org/agenda/private.org" "Birthdays")
-          (file "~/org/capture/birthday.orgcaptmpl"))
-         ("te" "Birthday event" entry
-          (file+headline "~/org/agenda/private.org" "Burthdays")
-          (file "~/org/capture/birthday-event.orgcaptmpl"))))
+       '(
+         <<org-capture-shortcut-gen()>>
+         ))
     #+END_SRC
 
     You may notice a capture entry for my journal, and this is due to the fact I
@@ -2673,6 +2756,10 @@
     in  the variable,  but in  external files  which can  be modified  freely as
     actual Org buffers instead of trying to  get a proper one with loads of ~\n~
     characters and such. All these templates are declared below.
+
+    In the next  sub-sections will be described my org  capture templates. These
+    are  not  tangled into  my  Emacs  configuration  files, but  into  separate
+    ~.orgcaptmpl~ files stored into =~/org/capture/=.
 
 **** Emails
      :PROPERTIES:
@@ -2850,15 +2937,13 @@
           SCHEDULED: %^t
       #+END_SRC
 
-      Sometimes I will have a special event for one birthday, and I need to
-      store it in the same header as birthdays in general, they don’t need
-      to be repeated but they might need some more information.
-      #+BEGIN_SRC org :tangle ~/org/capture/birthday-event.orgcaptmpl
+***** Events
+      :PROPERTIES:
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Events-7f0f8dee
+      :END:
+      #+BEGIN_SRC org :tangle ~/org/capture/event.orgcaptmpl
         ,* %^{Title}
           %^{Scheduled or deadline?||SCHEDULED||DEADLINE}: %^t
-          :PROPERTIES:
-          :WHOM:     %^{Whom’s birthday?}
-          :END:
           %?
       #+END_SRC
 
