@@ -2623,7 +2623,9 @@
     the headline  where to  save the  capture (if  it does  not differ  from the
     capture’s name,  the cell will be  blank). The /insertion mode/  tells Emacs
     how to add the capture to the /file/, using which /template/. A line with no
-    insertion mode, file, or template is just a category.
+    insertion mode, file,  or template is just a category.  All of the following
+    insert entries to  their org files, that  is a new org node  with a headline
+    and some content.
     #+NAME: org-capture-shortcuts-table
     | Shortcut | Name          | Title  | Insertion mode | file                    | template                 |
     |----------+---------------+--------+----------------+-------------------------+--------------------------|
@@ -3241,34 +3243,41 @@
     of them has a  description so the shortcut doesn’t show  up as ~lambda~ with
     ~which-keys~.
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "ofa" "awesome.org")
-      (spacemacs/declare-prefix "ofb" "bin.org")
-      (spacemacs/declare-prefix "ofe" "spacemacs.org")
-      (spacemacs/declare-prefix "off" "fish.org")
-      (spacemacs/declare-prefix "ofi" "i3.org")
-      (spacemacs/declare-prefix "ofI" "index.org")
-      (spacemacs/declare-prefix "ofp" "polybar.org")
-      (spacemacs/declare-prefix "ofP" "picom.org")
-      (spacemacs/declare-prefix "ofr" "yadm README")
+      (spacemacs/declare-prefix "of"  "files")
+      (spacemacs/declare-prefix "ofc" "config files")
+      (spacemacs/declare-prefix "ofca" "awesome.org")
+      (spacemacs/declare-prefix "ofcb" "bin.org")
+      (spacemacs/declare-prefix "ofce" "spacemacs.org")
+      (spacemacs/declare-prefix "ofcf" "fish.org")
+      (spacemacs/declare-prefix "ofci" "i3.org")
+      (spacemacs/declare-prefix "ofcI" "index.org")
+      (spacemacs/declare-prefix "ofcp" "polybar.org")
+      (spacemacs/declare-prefix "ofcP" "picom.org")
+      (spacemacs/declare-prefix "ofcr" "yadm README")
       (spacemacs/set-leader-keys
-        "ofa" (lambda () (interactive) (find-file "~/org/config/awesome.org"))
-        "ofb" (lambda () (interactive) (find-file "~/org/config/bin.org"))
-        "ofe" (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
-        "off" (lambda () (interactive) (find-file "~/org/config/fish.org"))
-        "ofi" (lambda () (interactive) (find-file "~/org/config/i3.org"))
-        "ofI" (lambda () (interactive) (find-file "~/org/config/index.org"))
-        "ofp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
-        "ofP" (lambda () (interactive) (find-file "~/org/config/picom.org"))
-        "ofr" (lambda () (interactive) (find-file "~/README.org")))
+        "ofca" (lambda () (interactive) (find-file "~/org/config/awesome.org"))
+        "ofcb" (lambda () (interactive) (find-file "~/org/config/bin.org"))
+        "ofce" (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
+        "ofcf" (lambda () (interactive) (find-file "~/org/config/fish.org"))
+        "ofci" (lambda () (interactive) (find-file "~/org/config/i3.org"))
+        "ofcI" (lambda () (interactive) (find-file "~/org/config/index.org"))
+        "ofcp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
+        "ofcP" (lambda () (interactive) (find-file "~/org/config/picom.org"))
+        "ofcr" (lambda () (interactive) (find-file "~/README.org")))
     #+END_SRC
 
     I also want a quick access to my notes and my journal.
     #+BEGIN_SRC emacs-lisp
       (spacemacs/declare-prefix "ofj" "journal.org")
+      (spacemacs/declare-prefix "ofC" "conlanging.org")
       (spacemacs/declare-prefix "ofn" "notes.org")
+      (spacemacs/declare-prefix "ofw" "worldbuilding.org")
       (spacemacs/set-leader-keys
+        "ofC" (lambda () (interactive) (find-file "~/org/conlanging.org"))
+        "ofe" (lambda () (interactive) (find-file "~/org/elfeed.org"))
         "ofj" (lambda () (interactive) (find-file "~/org/journal.org"))
-        "ofn" (lambda () (interactive) (find-file "~/org/notes.org")))
+        "ofn" (lambda () (interactive) (find-file "~/org/notes.org"))
+        "ofw" (lambda () (interactive) (find-file "~/org/worldbuilding.org")))
     #+END_SRC
 
 *** Multiple cursors
