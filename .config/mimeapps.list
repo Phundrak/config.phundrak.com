@@ -1,8 +1,7 @@
 [Added Associations]
 application/epub+zip=com.github.babluboy.bookworm.desktop;firefox.desktop;
-application/octet-stream=emacs.desktop;Wonderdraft.desktop;
+application/octet-stream=emacs.desktop;
 application/pdf=xreader.desktop;
-application/vnd.kde.kxmlguirc=emacs.desktop;
 application/vnd.rar=org.gnome.FileRoller.desktop;
 application/x-7z-compressed=org.gnome.FileRoller.desktop;
 application/x-alpm-package=org.gnome.FileRoller.desktop;
@@ -52,14 +51,13 @@ video/x-ms-wmv=mpv.desktop;
 video/x-msvideo=mpv.desktop;
 x-scheme-handler/https=firefox.desktop;
 x-scheme-handler/mailto=mu4e.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;
 
 [Default Applications]
 application/epub+zip=com.github.babluboy.bookworm.desktop
 application/lrf=com.github.babluboy.bookworm.desktop
 application/octet-stream=emacs.desktop
 application/pdf=xreader.desktop
-application/ppdf=FoxitReader.desktop
-application/x-cd-image=org.gnome.FileRoller.desktop
 application/x-mobipocket-ebook=com.github.babluboy.bookworm.desktop
 application/x-wine-extension-ini=emacs.desktop
 application/xhtml+xml=firefox.desktop
@@ -95,3 +93,4 @@ x-scheme-handler/lbry=lbry.desktop
 x-scheme-handler/magnet=qBittorrent.desktop
 x-scheme-handler/mailto=mu4e.desktop
 x-scheme-handler/unknown=firefox.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop
