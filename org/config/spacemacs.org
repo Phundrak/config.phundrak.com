@@ -3255,12 +3255,6 @@
       (spacemacs/declare-prefix "of" "files")
     #+END_SRC
 
-    If a file is designated in a buffer, it is possible to open it with the
-    following shortcut:
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/set-leader-keys "ofo" 'find-file-at-point)
-    #+END_SRC
-
     Now, Let’s declare shortcuts related to my configuration files. Here is the
     list of them:
     - [[file:bin.org][bin.org]] :: contains the source code of my custom scripts in my ~$PATH~
@@ -3274,8 +3268,9 @@
     of them has a  description so the shortcut doesn’t show  up as ~lambda~ with
     ~which-keys~.
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "of"  "files")
-      (spacemacs/declare-prefix "ofc" "config files")
+      (spacemacs/declare-prefix "of"   "files")
+      (spacemacs/declare-prefix "ofc"  "config files")
+      (spacemacs/declare-prefix "ofe"  "elfeed sources")
       (spacemacs/declare-prefix "ofca" "awesome.org")
       (spacemacs/declare-prefix "ofcb" "bin.org")
       (spacemacs/declare-prefix "ofce" "spacemacs.org")
