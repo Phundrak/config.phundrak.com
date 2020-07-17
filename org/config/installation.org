@@ -6,6 +6,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak-flavored Arch Linux" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="How to install a Phundrak-flavored Arch Linux" />
 #+PROPERTY: header-args :tangle no :exports none
+#+PROPERTY: header-args:sh :tangle no :exports code
 #+PROPERTY: header-args:fish :exports code :noweb yes
 #+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
 #+STARTUP: content
@@ -92,7 +93,7 @@
    :CUSTOM_ID: Install_Arch_Linux-Get_the_latest_live_system_with_fast_mirrors-59d2a90d
    :END:
    When you boot into the live ISO, execute the following command:
-   #+BEGIN_SRC sh
+   #+BEGIN_SRC sh :exports code
      pacman -Sy reflector
      reflector -c France -c Germany -l 200 -p http -p https --sort rate \
                --save /etc/pacman.d/mirrorlist --verbose
