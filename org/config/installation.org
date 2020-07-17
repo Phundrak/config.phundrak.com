@@ -179,10 +179,10 @@
      'Section "InputClass"
              Identifier "system-keyboard"
              MatchIsKeyboard "on"
-             Option "XkbLayout" "fr,fr,us"
+             Option "XkbLayout" "fr"
              Option "XkbModel" "pc104"
-             Option "XkbVariant" "bepo_afnor,,"
-             Option "XkbOptions" "grp:menu_toggle,caps:ctrl_modifier"
+             Option "XkbVariant" "bepo_afnor"
+             Option "XkbOptions" "caps:ctrl_modifier"
      EndSection'
    #+END_SRC
    So, let’s set it as our keyboard configuration.
