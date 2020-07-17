@@ -113,7 +113,9 @@
         - [[#health][Health]]
         - [[#birthdays][Birthdays]]
         - [[#events][Events]]
-      - [[#youtube][YouTube]]
+      - [[#links][Links]]
+        - [[#general][General]]
+        - [[#youtube][YouTube]]
     - [[#org-projects][Org projects]]
       - [[#configuration-website][Configuration website]]
       - [[#linguistics-website][Linguistics website]]
@@ -2608,12 +2610,14 @@
     Here they are described:
     #+BEGIN_SRC emacs-lisp
       (setq
-       org-default-notes-file "~/org/notes.org"
-       org-wordbuilding-file "~/org/worldbuilding.org"
        org-conlanging-file "~/org/conlanging.org"
+       org-default-notes-file "~/org/notes.org"
        org-journal-file "~/org/journal.org"
+       org-linguistics-notes-file "~/org/linguistics-notes.org"
+       org-novel-notes-file "~/org/novel-notes.org"
        org-private-agenda-file "~/org/agenda/private.org"
-       org-school-agenda-file "~/org/agenda/school.org")
+       org-school-agenda-file "~/org/agenda/school.org"
+       org-wordbuilding-file "~/org/worldbuilding.org")
     #+END_SRC
 
     With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~.
@@ -2629,31 +2633,33 @@
     #+NAME: org-capture-shortcuts-table
     | Shortcut | Name          | Title  | Insertion mode | file                    | template                 |
     |----------+---------------+--------+----------------+-------------------------+--------------------------|
-    | c        | Conlanging    |        |                |                         |                          |
-    | cn       | Note          |        | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
-    | cr       | Resource      |        | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
     | e        | Email         |        |                |                         |                          |
     | ew       | Write Email   | Emails | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
     | j        | Journal       |        | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
     | l        | Link          |        |                |                         |                          |
+    | ll       | General       |        | file+headline  | org-default-notes-file  |                          |
     | ly       | YouTube       |        | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
     | L        | Protocol Link | Link   | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
     | n        | Notes         |        |                |                         |                          |
-    | nn       | Note          |        | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+    | nc       | Note          |        | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
+    | nn       | General       |        | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+    | nN       | Note          |        | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
     | nq       | Quote         |        | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
+    | nw       | Note          |        | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
+    | N        | Novel         |        |                |                         |                          |
+    | Ni       | Ideas         |        | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
     | p        | Protocol      | Link   | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
     | r        | Resources     |        |                |                         |                          |
+    | rc       | Resource      |        | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
     | re       | Emacs         |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
     | ri       | Informatique  |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
     | rl       | Linguistics   |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | rw       | Worldbuilding |        | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
     | t        | Tasks         |        |                |                         |                          |
     | tb       | Birthday      |        | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
     | te       | Event         |        | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
     | th       | Health        |        | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
     | ti       | Informatique  |        | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
-    | w        | Worldbuilding |        |                |                         |                          |
-    | wn       | Note          |        | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
-    | wr       | Resource      |        | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
 
     The following  code snipped is not  tangled into my configuration  file, but
     instead creates the equivalent to the  table above into EmacsLisp code found
@@ -2677,15 +2683,8 @@
                  table "\n")
     #+END_SRC
 
-    #+RESULTS[c9888f3d14a3b5cd83d9626093d5b28806f6d8d2]: org-capture-shortcut-gen
+    #+RESULTS[5ee3da858cb0dc430b6ca3b09d2deea38609aa5f]: org-capture-shortcut-gen
     #+begin_example
-    ("c" "Conlanging")
-    ("cn" "Note" entry
-      (file+headline org-conlanging-file "Note")
-      (file "~/org/capture/notes.orgcaptmpl"))
-    ("cr" "Resource" entry
-      (file+headline org-conlanging-file "Resource")
-      (file "~/org/capture/resource.orgcaptmpl"))
     ("e" "Email")
     ("ew" "Write Email" entry
       (file+headline org-default-notes-file "Emails")
@@ -2694,6 +2693,9 @@
       (file+datetree org-journal-file)
       (file "~/org/capture/journal.orgcaptmpl"))
     ("l" "Link")
+    ("ll" "General" entry
+      (file+headline org-default-notes-file "General")
+      (file "~/org/capture/"))
     ("ly" "YouTube" entry
       (file+headline org-default-notes-file "YouTube")
       (file "~/org/capture/youtube.orgcaptmpl"))
@@ -2701,16 +2703,32 @@
       (file+headline org-default-notes-file "Link")
       (file "~/org/capture/protocol-link.orgcaptmpl"))
     ("n" "Notes")
-    ("nn" "Note" entry
-      (file+headline org-default-notes-file "Note")
+    ("nc" "Note" entry
+      (file+headline org-conlanging-file "Note")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("nn" "General" entry
+      (file+headline org-default-notes-file "General")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("nN" "Note" entry
+      (file+headline org-novel-notes-file "Note")
       (file "~/org/capture/notes.orgcaptmpl"))
     ("nq" "Quote" entry
       (file+headline org-default-notes-file "Quote")
       (file "~/org/capture/notes-quote.orgcaptmpl"))
+    ("nw" "Note" entry
+      (file+headline org-wordbuilding-file "Note")
+      (file "~/org/capture/notes.orgcaptmpl"))
+    ("N" "Novel")
+    ("Ni" "Ideas" entry
+      (file+headline org-novel-notes-file "Ideas")
+      (file "~/org/capture/notes.orgcaptmpl"))
     ("p" "Protocol" entry
       (file+headline org-default-notes-file "Link")
       (file "~/org/capture/protocol.orgcaptmpl"))
     ("r" "Resources")
+    ("rc" "Resource" entry
+      (file+headline org-conlanging-file "Resource")
+      (file "~/org/capture/resource.orgcaptmpl"))
     ("re" "Emacs" entry
       (file+headline org-default-notes-file "Emacs")
       (file "~/org/capture/resource.orgcaptmpl"))
@@ -2719,6 +2737,9 @@
       (file "~/org/capture/resource.orgcaptmpl"))
     ("rl" "Linguistics" entry
       (file+headline org-default-notes-file "Linguistics")
+      (file "~/org/capture/resource.orgcaptmpl"))
+    ("rw" "Worldbuilding" entry
+      (file+headline org-wordbuilding-file "Worldbuilding")
       (file "~/org/capture/resource.orgcaptmpl"))
     ("t" "Tasks")
     ("tb" "Birthday" entry
@@ -2733,13 +2754,6 @@
     ("ti" "Informatique" entry
       (file+headline org-private-agenda-file "Informatique")
       (file "~/org/capture/informatique.orgcaptmpl"))
-    ("w" "Worldbuilding")
-    ("wn" "Note" entry
-      (file+headline \"~/org/worldbuilding.org\" "Note")
-      (file "~/org/capture/notes.orgcaptmpl"))
-    ("wr" "Resource" entry
-      (file+headline \"~/org/worldbuilding.org\" "Resource")
-      (file "~/org/capture/resource.orgcaptmpl"))
     #+end_example
 
     Below you can find the equivalent code as described above.
@@ -2949,19 +2963,36 @@
           %?
       #+END_SRC
 
-**** YouTube
+**** Links
      :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-YouTube-827968ee
+     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-586a6b2a
      :END:
-     #+BEGIN_SRC org :tangle ~/org/capture/youtube.orgcaptmpl
-       ,* TODO [#C] %^{Title}
-         :PROPERTIES:
-         :CAPTURED: %U
-         :AUTHOR:   %^{Author}
-         :LINK:     %^{Link}
-         :END:
-         %?
-     #+END_SRC
+***** General
+      :PROPERTIES:
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-General-1f0732db
+      :END:
+      #+BEGIN_SRC org :tangle ~/org/capture/link.orgcaptmpl
+        ,* TODO [#C] %^{Title}
+          :PROPERTIES:
+          :CAPTURED: %U
+          :LINK:     %^{Link}
+          :END:
+          %?
+      #+END_SRC
+
+***** YouTube
+      :PROPERTIES:
+      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-YouTube-b89fe20e
+      :END:
+      #+BEGIN_SRC org :tangle ~/org/capture/youtube.orgcaptmpl
+        ,* TODO [#C] %^{Title}
+          :PROPERTIES:
+          :CAPTURED: %U
+          :AUTHOR:   %^{Author}
+          :LINK:     %^{Link}
+          :END:
+          %?
+      #+END_SRC
 
 *** Org projects
     :PROPERTIES:
