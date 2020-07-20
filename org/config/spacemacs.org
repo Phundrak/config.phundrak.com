@@ -56,11 +56,12 @@
   - [[#miscellaneous][Miscellaneous]]
 - [[#user-initialization][User Initialization]]
 - [[#user-configuration][User Configuration]]
-  - [[#asm-configuration][ASM configuration]]
-  - [[#cc][C/C++]]
   - [[#custom-functions][Custom functions]]
+    - [[#phundrakadd-all-to-list][~phundrak/add-all-to-list~]]
     - [[#phundrakfill-paragraph][~phundrak/fill-paragraph~]]
     - [[#terminal-here-default-terminal-command][~terminal-here-default-terminal-command~]]
+  - [[#asm-configuration][ASM configuration]]
+  - [[#cc][C/C++]]
   - [[#dart-configuration][Dart configuration]]
   - [[#dired][Dired]]
   - [[#emacs-lisp][Emacs Lisp]]
@@ -89,6 +90,7 @@
     - [[#twittering-mode][Twittering mode]]
     - [[#wttrin-cities][Wttr.in cities]]
   - [[#nov-mode][Nov-mode]]
+  - [[#projectile][Projectile]]
   - [[#python][Python]]
   - [[#org-mode][Org-mode]]
     - [[#custom-org-mode-functions][Custom org-mode functions]]
@@ -1377,35 +1379,6 @@
   :header-args:emacs-lisp: :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :CUSTOM_ID: User_Configuration-4a937fe5
   :END:
-** ASM configuration
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-ASM_configuration-f6dc7674
-   :END:
-   The first thing I  will set with my ASM configuration  is where the reference
-   PDF is located.
-   #+BEGIN_SRC emacs-lisp
-     (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
-   #+END_SRC
-   I will also modify what the comment character is, from a ~;~ to a ~#~:
-   #+BEGIN_SRC emacs-lisp
-     (setq asm-comment-char ?\#)
-   #+END_SRC
-
-** C/C++
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-C-C++-76c3f997
-   :END:
-   As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
-   latest standard available, that is C++17 and C17, from Clang.
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'c-mode-hook
-               (lambda ()
-                 (setq flycheck-clang-language-standard "c17")))
-     (add-hook 'c++-mode-hook
-               (lambda ()
-                 (setq flycheck-clang-language-standard "c++17")))
-   #+END_SRC
-
 ** Custom functions
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Custom_functions-ceb4bc42
@@ -1417,6 +1390,21 @@
    Almost all of my code snippets will be prefixed by either my name or the name
    of  the package  or layer  they  are part  of,  unless they  are an  explicit
    overwrite of a function that already exists.
+
+*** ~phundrak/add-all-to-list~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakadd-all-to-list-7e34472b
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak/add-all-to-list (list &rest elements)
+        "Add all elements from `elements' to the list `list'. If an
+      element from `elements' is already part of `list', it will be
+      ignored."
+        (dolist (e elements)
+          (if (not (member e list))
+              (add-to-list 'list e)))
+        list)
+    #+END_SRC
 
 *** ~phundrak/fill-paragraph~
     :PROPERTIES:
@@ -1445,6 +1433,35 @@
       (defun terminal-here-default-terminal-command (_dir)
         '("st"))
     #+END_SRC
+
+** ASM configuration
+   :PROPERTIES:
+   :CUSTOM_ID: User_Configuration-ASM_configuration-f6dc7674
+   :END:
+   The first thing I  will set with my ASM configuration  is where the reference
+   PDF is located.
+   #+BEGIN_SRC emacs-lisp
+     (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
+   #+END_SRC
+   I will also modify what the comment character is, from a ~;~ to a ~#~:
+   #+BEGIN_SRC emacs-lisp
+     (setq asm-comment-char ?\#)
+   #+END_SRC
+
+** C/C++
+   :PROPERTIES:
+   :CUSTOM_ID: User_Configuration-C-C++-76c3f997
+   :END:
+   As the C/C++ syntax is checked by  flycheck, let’s make sure we are using the
+   latest standard available, that is C++17 and C17, from Clang.
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'c-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c17")))
+     (add-hook 'c++-mode-hook
+               (lambda ()
+                 (setq flycheck-clang-language-standard "c++17")))
+   #+END_SRC
 
 ** Dart configuration
    :PROPERTIES:
@@ -2185,6 +2202,24 @@
      (setq nov-text-width 80)
    #+END_SRC
 
+** Projectile
+   :PROPERTIES:
+   :CUSTOM_ID: User_Configuration-Projectile-06e580f0
+   :END:
+   Projectile is an awesome utility  which helps managing projects within Emacs.
+   It  will automatically  detect version  controlled directories,  and will  by
+   default assume this is a project I can be working on. However, there are some
+   directories that are version controlled that I  do not want to see in my list
+   of projects,  namely all the cached  AUR packages from my  AUR helper, ~yay~.
+   They are  all stored in  the same parent directory,  so let’s ignore  that. I
+   will  also  make  Emacs  ignore   all  ~node_modules~  directories  it  could
+   encounter. And  for some reason,  =~/.config/emacs= is always in  my projects
+   list (I now use XDG-compliant directories), so let’s also ignore that.
+   #+BEGIN_SRC emacs-lisp
+     (phundrak/add-all-to-list projectile-globally-ignored-directories
+                               "~/.cache/yay/*" "node_modules" "~/.config/emacs")
+   #+END_SRC
+
 ** Python
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Python-9cdd1b06
@@ -2562,12 +2597,10 @@
     Both these classes have to be added to ~org-latex-classes~ like so:
     #+BEGIN_SRC emacs-lisp :noweb yes
       (eval-after-load "ox-latex"
-        ;; update the list of LaTeX classes and associated header (encoding, etc.)
-        ;; and structure
-        '(add-to-list 'org-latex-classes
-                      <<org-latex-class-conlang>>
-                      <<org-latex-class-beamer>>
-                      ))
+        '(phundrak/add-all-to-list org-latex-classes
+                                   <<org-latex-class-conlang>>
+                                   <<org-latex-class-beamer>>
+                                   ))
     #+END_SRC
 
 *** Org agenda
@@ -2631,35 +2664,35 @@
     insert entries to  their org files, that  is a new org node  with a headline
     and some content.
     #+NAME: org-capture-shortcuts-table
-    | Shortcut | Name          | Title  | Insertion mode | file                    | template                 |
-    |----------+---------------+--------+----------------+-------------------------+--------------------------|
-    | e        | Email         |        |                |                         |                          |
-    | ew       | Write Email   | Emails | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
-    | j        | Journal       |        | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
-    | l        | Link          |        |                |                         |                          |
-    | ll       | General       |        | file+headline  | org-default-notes-file  |                          |
-    | ly       | YouTube       |        | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
-    | L        | Protocol Link | Link   | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
-    | n        | Notes         |        |                |                         |                          |
-    | nc       | Note          |        | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
-    | nn       | General       |        | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
-    | nN       | Note          |        | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
-    | nq       | Quote         |        | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
-    | nw       | Note          |        | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
-    | N        | Novel         |        |                |                         |                          |
-    | Ni       | Ideas         |        | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
-    | p        | Protocol      | Link   | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
-    | r        | Resources     |        |                |                         |                          |
-    | rc       | Resource      |        | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
-    | re       | Emacs         |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-    | ri       | Informatique  |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-    | rl       | Linguistics   |        | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-    | rw       | Worldbuilding |        | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
-    | t        | Tasks         |        |                |                         |                          |
-    | tb       | Birthday      |        | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
-    | te       | Event         |        | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
-    | th       | Health        |        | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
-    | ti       | Informatique  |        | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
+    | Shortcut | Name          | Title    | Insertion mode | file                    | template                 |
+    |----------+---------------+----------+----------------+-------------------------+--------------------------|
+    | e        | Email         |          |                |                         |                          |
+    | ew       | Write Email   | Emails   | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
+    | j        | Journal       |          | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
+    | l        | Link          |          |                |                         |                          |
+    | ll       | General       |          | file+headline  | org-default-notes-file  |                          |
+    | ly       | YouTube       |          | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
+    | L        | Protocol Link | Link     | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
+    | n        | Notes         |          |                |                         |                          |
+    | nc       | Conlanging    | Note     | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
+    | nn       | General       |          | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+    | nN       | Novel         | Note     | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+    | nq       | Quote         |          | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
+    | nw       | Worldbuilding | Note     | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
+    | N        | Novel         |          |                |                         |                          |
+    | Ni       | Ideas         |          | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+    | p        | Protocol      | Link     | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
+    | r        | Resources     |          |                |                         |                          |
+    | rc       | Conlanging    | Resource | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
+    | re       | Emacs         |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | ri       | Informatique  |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | rl       | Linguistics   |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+    | rw       | Worldbuilding | Resource | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
+    | t        | Tasks         |          |                |                         |                          |
+    | tb       | Birthday      |          | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
+    | te       | Event         |          | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
+    | th       | Health        |          | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
+    | ti       | Informatique  |          | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
 
     The following  code snipped is not  tangled into my configuration  file, but
     instead creates the equivalent to the  table above into EmacsLisp code found
@@ -2683,7 +2716,7 @@
                  table "\n")
     #+END_SRC
 
-    #+RESULTS[5ee3da858cb0dc430b6ca3b09d2deea38609aa5f]: org-capture-shortcut-gen
+    #+RESULTS[5826faa0521c58664ddeedcf44b88910dbd344b6]: org-capture-shortcut-gen
     #+begin_example
     ("e" "Email")
     ("ew" "Write Email" entry
@@ -2703,19 +2736,19 @@
       (file+headline org-default-notes-file "Link")
       (file "~/org/capture/protocol-link.orgcaptmpl"))
     ("n" "Notes")
-    ("nc" "Note" entry
+    ("nc" "Conlanging" entry
       (file+headline org-conlanging-file "Note")
       (file "~/org/capture/notes.orgcaptmpl"))
     ("nn" "General" entry
       (file+headline org-default-notes-file "General")
       (file "~/org/capture/notes.orgcaptmpl"))
-    ("nN" "Note" entry
+    ("nN" "Novel" entry
       (file+headline org-novel-notes-file "Note")
       (file "~/org/capture/notes.orgcaptmpl"))
     ("nq" "Quote" entry
       (file+headline org-default-notes-file "Quote")
       (file "~/org/capture/notes-quote.orgcaptmpl"))
-    ("nw" "Note" entry
+    ("nw" "Worldbuilding" entry
       (file+headline org-wordbuilding-file "Note")
       (file "~/org/capture/notes.orgcaptmpl"))
     ("N" "Novel")
@@ -2726,7 +2759,7 @@
       (file+headline org-default-notes-file "Link")
       (file "~/org/capture/protocol.orgcaptmpl"))
     ("r" "Resources")
-    ("rc" "Resource" entry
+    ("rc" "Conlanging" entry
       (file+headline org-conlanging-file "Resource")
       (file "~/org/capture/resource.orgcaptmpl"))
     ("re" "Emacs" entry
@@ -2739,7 +2772,7 @@
       (file+headline org-default-notes-file "Linguistics")
       (file "~/org/capture/resource.orgcaptmpl"))
     ("rw" "Worldbuilding" entry
-      (file+headline org-wordbuilding-file "Worldbuilding")
+      (file+headline org-wordbuilding-file "Resource")
       (file "~/org/capture/resource.orgcaptmpl"))
     ("t" "Tasks")
     ("tb" "Birthday" entry
