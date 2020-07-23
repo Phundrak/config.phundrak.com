@@ -2013,18 +2013,6 @@
            mu4e-headers-visible-columns 140)
    #+END_SRC
 
-   I want to add myself as a hidden recipient to all of my messages so I can get
-   them in the  email thread in my inbox  and not just get a  thread of messages
-   not sent by me –the thread could  kinda lack some context if the other people
-   do not insert  my email in their answer. But  unfortunately, for some obscure
-   reason, mu4e does not use the  following variable for its email templates, so
-   I am keeping this  as a reminder I should find how to  fix that. It does work
-   when I’m exporting an org file to and HTML buffer to be sent by email through
-   ~, e m~.
-   #+BEGIN_SRC emacs-lisp
-     (setq message-default-headers "Bcc: Lucien Cartier-Tilet <lucien@phundrak.com>\n")
-   #+END_SRC
-
    Finally but  very importantly,  this is  the setup  I have  for my  SMTP mail
    server: I point  Emacs’ SMTP services to  my private mail server  on its SMTP
    port, which should be  used with a STARTTLS stream. And I  tell Emacs this is
@@ -3283,60 +3271,86 @@
     :CUSTOM_ID: User_Configuration-Shortcuts-Files-206c2126
     :END:
     This category is mainly used for opening configuration files, but it is also
-    more generally for files-related commands. Let’s declare the category:
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "of" "files")
-    #+END_SRC
-
-    Now, Let’s declare shortcuts related to my configuration files. Here is the
-    list of them:
+    more generally  for files-related commands. Let’s  declare shortcuts related
+    to my configuration files. Here is the list of them:
     - [[file:bin.org][bin.org]] :: contains the source code of my custom scripts in my ~$PATH~
     - [[file:spacemacs.org][spacemacs.org]] :: this file, configuration of Emacs
     - [[file:fish.org][fish.org]] :: configuration of my fish shell
     - [[file:i3.org][i3.org]] :: configuration of my i3 installation
     - [[file:index.org][index.org]] :: some various configuration files and index of this website
-    - [[file:polybar.org][polybar.org]] :: configuration polybar
+    - [[file:polybar.org][polybar.org]] :: configuration for polybar
+    - [[file:picom.org][picom.org]] :: configuration for picom
     - [[https://labs.phundrak.com/phundrak/dotfiles][README.org]] :: README of the yadm repo
+    I also have a shortcut for the following files:
+    - conlanging.org :: collection of ideas and references for conlanging
+    - elfeed.org :: where I store all the RSS sources for Elfeed
+    - journal.org :: my journal (which I don’t really use often tbh)
+    - notes.org :: to, well, take notes
+    - worldbuilding.org :: same as ~conlanging.org~ above.
     Each of these  files are accessible through a simple  shortcut, and each one
     of them has a  description so the shortcut doesn’t show  up as ~lambda~ with
-    ~which-keys~.
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "of"   "files")
-      (spacemacs/declare-prefix "ofc"  "config files")
-      (spacemacs/declare-prefix "ofe"  "elfeed sources")
-      (spacemacs/declare-prefix "ofca" "awesome.org")
-      (spacemacs/declare-prefix "ofcb" "bin.org")
-      (spacemacs/declare-prefix "ofce" "spacemacs.org")
-      (spacemacs/declare-prefix "ofcf" "fish.org")
-      (spacemacs/declare-prefix "ofci" "i3.org")
-      (spacemacs/declare-prefix "ofcI" "index.org")
-      (spacemacs/declare-prefix "ofcp" "polybar.org")
-      (spacemacs/declare-prefix "ofcP" "picom.org")
-      (spacemacs/declare-prefix "ofcr" "yadm README")
-      (spacemacs/set-leader-keys
-        "ofca" (lambda () (interactive) (find-file "~/org/config/awesome.org"))
-        "ofcb" (lambda () (interactive) (find-file "~/org/config/bin.org"))
-        "ofce" (lambda () (interactive) (find-file "~/org/config/spacemacs.org"))
-        "ofcf" (lambda () (interactive) (find-file "~/org/config/fish.org"))
-        "ofci" (lambda () (interactive) (find-file "~/org/config/i3.org"))
-        "ofcI" (lambda () (interactive) (find-file "~/org/config/index.org"))
-        "ofcp" (lambda () (interactive) (find-file "~/org/config/polybar.org"))
-        "ofcP" (lambda () (interactive) (find-file "~/org/config/picom.org"))
-        "ofcr" (lambda () (interactive) (find-file "~/README.org")))
+    ~which-keys~. So,  a custom name for  ~which-keys~ is specified in  the Name
+    column. If a file is not specified,  that means it is just a declaration for
+    a shortcut prefix.
+
+    First, here are my shortcuts for opening my private files described above:
+    #+NAME: private-files-open-shortcuts
+    | Shortcut | Name              | File                       |
+    |----------+-------------------+----------------------------|
+    | of       | files             |                            |
+    | ofC      | conlanging.org    | ~/org/conlanging.org       |
+    | ofe      | elfeed.org        | ~/org/elfeed.org           |
+    | ofj      | journal.org       | ~/org/journal.org          |
+    | ofn      | notes.org         | ~/org/notes.org            |
+    | ofw      | worldbuilding.org | ~/org/worldbuilding.org    |
+
+    And here are my shortcuts for opening config files:
+    #+NAME: config-files-open-shortcuts
+    | Shortcut | Name          | File                       |
+    |----------+---------------+----------------------------|
+    | ofc      | config files  |                            |
+    | ofca     | awesome.org   | ~/org/config/awesome.org   |
+    | ofcb     | bin.org       | ~/org/config/bin.org       |
+    | ofce     | spacemacs.org | ~/org/config/spacemacs.org |
+    | ofcf     | fish.org      | ~/org/config/fish.org      |
+    | ofci     | i3.org        | ~/org/config/i3.org        |
+    | ofcI     | index.org     | ~/org/config/index.org     |
+    | ofcp     | polybar.org   | ~/org/config/polybar.org   |
+    | ofcP     | picom.org     | ~/org/config/picom.org     |
+    | ofcr     | yadm README   | ~/README.org               |
+
+    *The following code is not tangled into my Spacemacs config.* However, it is
+    used to generate shortcuts and configuration code from the above table:
+    #+NAME: shortcuts-gen
+    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=private-files-open-shortcuts :exports code :cache yes :results replace
+      (concat (mapconcat (lambda (x)
+                           (let* ((shortcut (nth 0 x))
+                                  (name (nth 1 x)))
+                             (if (string= "" name)
+                                 ""
+                               (format "(spacemacs/declare-prefix \"%s\"\t\"%s\")"
+                                       shortcut name))))
+                         table
+                         "\n")
+              "\n"
+              (format "(spacemacs/set-leader-keys\n%s)"
+                      (mapconcat (lambda (x)
+                                   (let* ((shortcut (nth 0 x))
+                                          (name (nth 1 x))
+                                          (file (nth 2 x)))
+                                     (if (string= "" file)
+                                         (format "\t\;\; %s" name)
+                                       (format "\t%s (lambda () (interactive) (find-file \"%s\"))"
+                                               shortcut file))))
+                                 table
+                                 "\n")))
     #+END_SRC
 
-    I also want a quick access to my notes and my journal.
-    #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "ofj" "journal.org")
-      (spacemacs/declare-prefix "ofC" "conlanging.org")
-      (spacemacs/declare-prefix "ofn" "notes.org")
-      (spacemacs/declare-prefix "ofw" "worldbuilding.org")
-      (spacemacs/set-leader-keys
-        "ofC" (lambda () (interactive) (find-file "~/org/conlanging.org"))
-        "ofe" (lambda () (interactive) (find-file "~/org/elfeed.org"))
-        "ofj" (lambda () (interactive) (find-file "~/org/journal.org"))
-        "ofn" (lambda () (interactive) (find-file "~/org/notes.org"))
-        "ofw" (lambda () (interactive) (find-file "~/org/worldbuilding.org")))
+    Here is what the generated code — which will be actually tangled into my
+    Emacs config — looks like:
+    #+BEGIN_SRC emacs-lisp :noweb yes
+      <<shortcuts-gen(table=private-files-open-shortcuts)>>
+      <<shortcuts-gen(table=config-files-open-shortcuts)>>
     #+END_SRC
 
 *** Multiple cursors
