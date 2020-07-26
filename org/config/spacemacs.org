@@ -3322,7 +3322,7 @@
     *The following code is not tangled into my Spacemacs config.* However, it is
     used to generate shortcuts and configuration code from the above table:
     #+NAME: shortcuts-gen
-    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=private-files-open-shortcuts :exports code :cache yes :results replace
+    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=private-files-open-shortcuts :exports code :results replace
       (concat (mapconcat (lambda (x)
                            (let* ((shortcut (nth 0 x))
                                   (name (nth 1 x)))
@@ -3340,7 +3340,7 @@
                                           (file (nth 2 x)))
                                      (if (string= "" file)
                                          (format "\t\;\; %s" name)
-                                       (format "\t%s (lambda () (interactive) (find-file \"%s\"))"
+                                       (format "\t\"%s\" (lambda () (interactive) (find-file \"%s\"))"
                                                shortcut file))))
                                  table
                                  "\n")))
