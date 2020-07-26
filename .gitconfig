@@ -89,3 +89,5 @@
 	user = phundrak
 [commit]
 	gpgsign = true
+[pull]
+	rebase = false
