@@ -1937,7 +1937,7 @@
    which gets updated  with the ~mbsync~ command  from ~isync~. It has  a lot of
    neat features, but I guess my favorite ones are:
    1. the search query feature
-   2. being able to send an HTML email either to the browser or
+   2. being able to send an HTML email either to the browser
 
    Due to mu sitting on top of a Maildir, I need to tell mu4e where said maildir
    is, and point it the trash, archive,  and sent folders as well as the refresh
@@ -1971,14 +1971,25 @@
    ~bu~.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-bookmarks
-           `(("maildir:/Inbox" "Inbox" ?i)
+           `(("maildir:/Inbox AND NOT flag:trashed" "Inbox" ?i)
              ("maildir:/Sent" "Sent messages" ?s)
              ("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
              ("date:today..now" "Today's messages" ?t)
              ("date:7d..now" "Last 7 days" ?w)
              ("date:1m..now" "Last month" ?m)
              ("date:1y..now" "Last year" ?y)
+             ("flag:trashed" "Trash" ?T)
              ("mime:image/*" "Messages with images" ?p)))
+   #+END_SRC
+
+   In the header view,  I’d like the name of my mailing lists  to be clear. Mu4e
+   tries its best to provide them one, but it’s not always perfect, so let’s fix
+   that.
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-user-mailing-lists
+           '(("ateliers-emacs.framalistes.org" . "EmacsFR")
+             ("CONLANG@LISTSERV.BROWN.EDU" . "Conlang")
+             ("AUXLANG@LISTSERV.BROWN.EDU" . "Auxlang")))
    #+END_SRC
 
    On new email arrival, Emacs can send  the system a notification which will be
@@ -2013,10 +2024,10 @@
            mu4e-headers-visible-columns 140)
    #+END_SRC
 
-   Finally but  very importantly,  this is  the setup  I have  for my  SMTP mail
-   server: I point  Emacs’ SMTP services to  my private mail server  on its SMTP
-   port, which should be  used with a STARTTLS stream. And I  tell Emacs this is
-   the default way to send an email.
+   This  is the  setup I  have for  my  SMTP mail  server: I  point Emacs’  SMTP
+   services to  my private mail  server on its SMTP  port, which should  be used
+   with a STARTTLS stream.  And I tell Emacs this is the default  way to send an
+   email.
    #+BEGIN_SRC emacs-lisp
      (setq smtpmail-smtp-server "mail.phundrak.com"
            smtpmail-smtp-service 587
@@ -2049,7 +2060,16 @@
 
    I have this regexp for detecting paragraphs.
    #+BEGIN_SRC emacs-lisp
-   (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
+     (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
+   #+END_SRC
+
+   There is  currently [[https://github.com/syl20bnr/evil-iedit-state/issues/27][an open  issue]] with ~evil-iedit-state~ where  exiting the
+   iedit  state  calls  ~iedit-cleanup~  despite  this  function  being  renamed
+   ~iedit-lib-cleanup~. So,  waiting for  the fix to  be pushed  upstream, let’s
+   declare an alias so Spacemacs understands what  I want to do when I hit ~ESC~
+   while in iedit state.
+   #+BEGIN_SRC emacs-lisp
+     (defalias 'iedit-cleanup 'iedit-lib-cleanup)
    #+END_SRC
 
 *** Evil
@@ -2585,10 +2605,13 @@
     Both these classes have to be added to ~org-latex-classes~ like so:
     #+BEGIN_SRC emacs-lisp :noweb yes
       (eval-after-load "ox-latex"
-        '(phundrak/add-all-to-list org-latex-classes
-                                   <<org-latex-class-conlang>>
-                                   <<org-latex-class-beamer>>
-                                   ))
+        '(progn
+           (add-to-list 'org-latex-classes
+                        <<org-latex-class-conlang>>
+                        )
+           (add-to-list 'org-latex-classes
+                        <<org-latex-class-beamer>>
+                        )))
     #+END_SRC
 
 *** Org agenda
@@ -2854,7 +2877,6 @@
        ,* %^{Title}
          :PROPERTIES:
          :CAPTURED: %U
-         :FROM:     %f
          :END:
          %?
      #+END_SRC
@@ -2864,7 +2886,6 @@
        ,* %^{Title}
          :PROPERTIES:
          :CAPTURED: %U
-         :FROM:     %f
          :END:
          Possible inspiration:
          ,#+begin_quote
@@ -3295,14 +3316,15 @@
 
     First, here are my shortcuts for opening my private files described above:
     #+NAME: private-files-open-shortcuts
-    | Shortcut | Name              | File                       |
-    |----------+-------------------+----------------------------|
-    | of       | files             |                            |
-    | ofC      | conlanging.org    | ~/org/conlanging.org       |
-    | ofe      | elfeed.org        | ~/org/elfeed.org           |
-    | ofj      | journal.org       | ~/org/journal.org          |
-    | ofn      | notes.org         | ~/org/notes.org            |
-    | ofw      | worldbuilding.org | ~/org/worldbuilding.org    |
+    | Shortcut | Name              | File                            |
+    |----------+-------------------+---------------------------------|
+    | of       | files             |                                 |
+    | ofb      | blog.org          | ~/org/blog/content-org/blog.org |
+    | ofC      | conlanging.org    | ~/org/conlanging.org            |
+    | ofe      | elfeed.org        | ~/org/elfeed.org                |
+    | ofj      | journal.org       | ~/org/journal.org               |
+    | ofn      | notes.org         | ~/org/notes.org                 |
+    | ofw      | worldbuilding.org | ~/org/worldbuilding.org         |
 
     And here are my shortcuts for opening config files:
     #+NAME: config-files-open-shortcuts
@@ -3322,7 +3344,7 @@
     *The following code is not tangled into my Spacemacs config.* However, it is
     used to generate shortcuts and configuration code from the above table:
     #+NAME: shortcuts-gen
-    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=private-files-open-shortcuts :exports code :results replace
+    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=[] :exports code :results replace
       (concat (mapconcat (lambda (x)
                            (let* ((shortcut (nth 0 x))
                                   (name (nth 1 x)))
