@@ -7,49 +7,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
 #+PROPERTY: header-args:fish :tangle ~/.config/fish/config.fish :exports code :noweb yes
 #+PROPERTY: header-args :exports code :tangle no
-#+STARTUP: content
-
-* Table of Contents                                            :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-06250a87
-  :END:
-- [[#presentation][Presentation]]
-- [[#fish-from-within-emacs][Fish from within Emacs]]
-- [[#tramp-remote-access][Tramp remote access]]
-- [[#regular-fish-shell-appearance][Regular fish shell appearance]]
-- [[#global-variables][Global variables]]
-  - [[#development][Development]]
-  - [[#path][$PATH]]
-- [[#abbreviations][Abbreviations]]
-  - [[#system-monitoring][System monitoring]]
-  - [[#system-management-packages-and-services][System management (packages and services)]]
-    - [[#package-management][Package management]]
-    - [[#service-management][Service management]]
-  - [[#development-1][Development]]
-    - [[#cmake][CMake]]
-    - [[#compilation][Compilation]]
-    - [[#docker][Docker]]
-    - [[#git][Git]]
-    - [[#prolog][Prolog]]
-    - [[#text-editors][Text editors]]
-  - [[#latex][LaTeX]]
-  - [[#some-security-measures][Some security measures]]
-  - [[#typos][Typos]]
-  - [[#misc][Misc]]
-    - [[#sudo][Sudo]]
-    - [[#exit][Exit]]
-    - [[#history][History]]
-    - [[#youtube-dl-related-commands][~youtube-dl~ related commands]]
-      - [[#song-download-from-youtube][Song download from YouTube]]
-      - [[#videos-download-from-youtube][Videos download from YouTube]]
-    - [[#mpv][MPV]]
-    - [[#compression][Compression]]
-    - [[#sxiv][Sxiv]]
-    - [[#exa][exa]]
-    - [[#network-management][Network Management]]
-    - [[#nordvpn][NordVPN]]
-    - [[#webcam][Webcam]]
-    - [[#wget][Wget]]
 
 * Presentation
   :PROPERTIES:

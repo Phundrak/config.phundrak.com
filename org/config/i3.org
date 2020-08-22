@@ -1,5 +1,5 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-#+TITLE: i3 config
+#+TITLE: i3 config (Deprecated)
 #+setupfile: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
@@ -7,52 +7,15 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle ~/.config/i3/config
 #+PROPERTY: header-args:emacs-lisp :exports none :tangle no
-#+STARTUP: content
-
-* Table of Contents                                            :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-b6f56d3d
-  :END:
-- [[#presentation][Presentation]]
-- [[#variables-declaration][Variables declaration]]
-  - [[#global][Global]]
-  - [[#floating-windows][Floating windows]]
-- [[#i3-global-settings][i3 global settings]]
-  - [[#mouse-settings][Mouse settings]]
-  - [[#popup-handling][Popup handling]]
-  - [[#behavior-of-workspace-changes][Behavior of workspace changes]]
-  - [[#gaps-and-window-appearance][Gaps and window appearance]]
-- [[#assigning-windows-to-workspaces][Assigning windows to workspaces]]
-- [[#shortcuts][Shortcuts]]
-  - [[#terminal-shortcuts][Terminal shortcuts]]
-  - [[#i3-shortcuts][i3 shortcuts]]
-  - [[#window-and-workspace-management][Window and workspace management]]
-    - [[#managing-how-windows-will-split][Managing how windows will split]]
-    - [[#focus-windows][Focus windows]]
-    - [[#focus-workspaces][Focus workspaces]]
-    - [[#moving-windows][Moving windows]]
-    - [[#moving-containers][Moving containers]]
-    - [[#moving-workspaces][Moving workspaces]]
-    - [[#close-windows][Close windows]]
-    - [[#manage-the-size-of-the-current-window][Manage the size of the current window]]
-    - [[#manage-floating-windows][Manage floating windows]]
-    - [[#scratchpad-and-window-display][Scratchpad and window display]]
-    - [[#gaps-management][Gaps management]]
-  - [[#launching-software][Launching software]]
-    - [[#software-and-command-launcher][Software and command launcher]]
-    - [[#internet-software][Internet software]]
-    - [[#screenshots][Screenshots]]
-    - [[#screen-brightness][Screen brightness]]
-    - [[#media-control][Media control]]
-    - [[#rofi-utilities][Rofi utilities]]
-    - [[#miscellaneous][Miscellaneous]]
-    - [[#screen-management][Screen management]]
-- [[#software-autolaunch][Software autolaunch]]
 
 * Presentation
   :PROPERTIES:
   :CUSTOM_ID: Presentation-9c7a53bf
   :END:
+  *Before proceeding, be aware that I  deprecated this i3 config on August 22nd,
+  2020, meaning I won’t update it anymore unless  I use it again some day in the
+  future. I will keep it on my website though.*
+
   =i3= is  a window manager for  GNU/Linux which automatically tiles  windows in
   workspaces. This configuration was ade to automatically handle some tasks such
   as  which  software allowed  where,  autostart,  and launching  software  with

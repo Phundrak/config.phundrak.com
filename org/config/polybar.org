@@ -1,5 +1,5 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-#+TITLE: Polybar config
+#+TITLE: Polybar config (Deprecated)
 #+setupfile: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's polybar config" />
@@ -9,54 +9,15 @@
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:emacs-lisp :tangle no :exports none
 #+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code
-#+STARTUP: content
-
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-21ef28f2
-  :END:
-- [[#presentation][Presentation]]
-- [[#general-settings][General settings]]
-- [[#colors-declaration-for-polybar][Colors declaration for polybar]]
-- [[#declaration-of-the-bars][Declaration of the bars]]
-  - [[#top-bar-declaration][Top bar declaration]]
-    - [[#positioning][Positioning]]
-    - [[#colors-and-display][Colors and display]]
-    - [[#fonts-and-locale][Fonts and locale]]
-    - [[#modules][Modules]]
-  - [[#bottom-bar-declaration][Bottom bar declaration]]
-    - [[#positioning-1][Positioning]]
-    - [[#colors-and-display-1][Colors and display]]
-    - [[#fonts-and-locale-1][Fonts and locale]]
-    - [[#modules-1][Modules]]
-- [[#modules-2][Modules]]
-  - [[#hardware][Hardware]]
-    - [[#battery][Battery]]
-    - [[#filesystem][Filesystem]]
-    - [[#xbacklight][Xbacklight]]
-    - [[#acpi-backlight][ACPI backlight]]
-    - [[#cpu][CPU]]
-    - [[#memory][Memory]]
-    - [[#wlan][Wlan]]
-    - [[#ethernet][Ethernet]]
-    - [[#volume][Volume]]
-    - [[#temperature][Temperature]]
-  - [[#software][Software]]
-    - [[#window-title][Window title]]
-    - [[#i3][i3]]
-      - [[#workspace-icons][Workspace icons]]
-      - [[#focused-workspaces][Focused workspaces]]
-      - [[#visible-workspaces][Visible workspaces]]
-      - [[#unfocused-workspaces][Unfocused workspaces]]
-      - [[#urgent-workspaces][Urgent workspaces]]
-    - [[#mpd][Mpd]]
-    - [[#date][Date]]
-- [[#footnotes][Footnotes]]
 
 * Presentation
   :PROPERTIES:
   :CUSTOM_ID: Presentation-4e723f32
   :END:
+  *Before proceeding, be  aware that I deprecated this polybar  config on August
+  22nd, 2020, meaning I  won’t update it anymore unless I use  it again some day
+  in the future. I will keep it on my website though.*
+
   Polybar is  a desktop utility  for displaying  various information in  form of
   bars for GNU/Linux systems. It is often  used as a replacement for native bars
   available in window managers,  such as i3. In my case, I  use two instances of

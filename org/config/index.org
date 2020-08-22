@@ -4,37 +4,6 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's dotfiles" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
-#+STARTUP: content
-
-* Table of Contents                                        :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-2444603f
-  :END:
-- [[#presentation][Presentation]]
-- [[#screenshots][Screenshots]]
-- [[#features][Features]]
-  - [[#tiling-window-managers][Tiling Window Managers]]
-    - [[#awesomewm][AwesomeWM]]
-    - [[#i3-configuration][i3 configuration]]
-  - [[#graphical-tweaks][Graphical tweaks]]
-    - [[#gtk-settings][GTK Settings]]
-      - [[#gtk2][GTK2]]
-      - [[#gtk3][GTK3]]
-    - [[#picom][Picom]]
-    - [[#xresources][Xresources]]
-  - [[#text-and-source-code-editing][Text and source code editing]]
-    - [[#emacs-configuration][Emacs configuration]]
-    - [[#nano][Nano]]
-    - [[#rustfmt][Rustfmt]]
-  - [[#custom-scripts-in-path][Custom scripts in =PATH=]]
-  - [[#fish-configuration-with-useful-abbreviations][Fish configuration with useful abbreviations]]
-  - [[#and-some-minor-configuration-files][And some minor configuration files]]
-    - [[#email-signature][Email signature]]
-    - [[#global-gitignore][Global gitignore]]
-  - [[#tmux-configuration][Tmux configuration]]
-- [[#dependencies][Dependencies]]
-- [[#installation][Installation]]
-- [[#licence][Licence]]
 
 * Presentation
   :PROPERTIES:
@@ -101,12 +70,21 @@
     configuration for it is documented  in detail in its corresponding document,
     which you can find [[file:awesome.org][here]].
 
-*** i3 configuration
+*** i3 configuration (Deprecated)
     :PROPERTIES:
     :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
     :END:
     The i3 configuration  is detailed in its corresponding README  which you can
-    find [[file:i3.org][here]].
+    find [[file:i3.org][here]]. Be aware I do not use  i3 anymore, and I will not update it until
+    I may someday use it again. This was deprecated on August 22nd, 2020.
+
+** Polybar config (Deprecated)
+   :PROPERTIES:
+   :CUSTOM_ID: Features-Polybar_config_(Deprecated)-c8f95774
+   :END:
+   My annotated  polybar config can  be found  [[file:polybar.org][here]], if you  wish to use  it. Be
+   aware I  do not use  polybar anymore, and  I will not  update it until  I may
+   someday use it again. This was deprecated on August 22nd, 2020.
 
 ** Graphical tweaks
    :PROPERTIES:
@@ -225,7 +203,7 @@
        gtk-decoration-layout=
      #+END_SRC
 
-*** Picom
+*** Picom (Compton)
     :PROPERTIES:
     :CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
     :END:
@@ -246,11 +224,52 @@
     #+END_SRC
     I can also set the transparency of st (my terminal emulator) like so:
     #+BEGIN_SRC conf
-      st.alpha: 0.75
+      st.alpha: 0.65g
     #+END_SRC
 
-    I used to have  lines dedicated to UXTerm and URxvt, but I  cast them out of
-    my system.
+    Next is the  declaration of my color  theme. It is based on  the [[https://www.nordtheme.com/][Nord]] theme,
+    from their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
+    #+BEGIN_SRC conf
+      #define nord0 #2E3440
+      #define nord1 #3B4252
+      #define nord2 #434C5E
+      #define nord3 #4C566A
+      #define nord4 #D8DEE9
+      #define nord5 #E5E9F0
+      #define nord6 #ECEFF4
+      #define nord7 #8FBCBB
+      #define nord8 #88C0D0
+      #define nord9 #81A1C1
+      #define nord10 #5E81AC
+      #define nord11 #BF616A
+      #define nord12 #D08770
+      #define nord13 #EBCB8B
+      #define nord14 #A3BE8C
+      #define nord15 #B48EAD
+
+      ,*.foreground:   nord4
+      ,*.background:   nord0
+      ,*.cursorColor:  nord4
+      ,*fading: 35
+      ,*fadeColor: nord3
+
+      ,*.color0: nord1
+      ,*.color1: nord11
+      ,*.color2: nord14
+      ,*.color3: nord13
+      ,*.color4: nord9
+      ,*.color5: nord15
+      ,*.color6: nord8
+      ,*.color7: nord5
+      ,*.color8: nord3
+      ,*.color9: nord11
+      ,*.color10: nord14
+      ,*.color11: nord13
+      ,*.color12: nord9
+      ,*.color13: nord15
+      ,*.color14: nord7
+      ,*.color15: nord6
+    #+END_SRC
 
 ** Text and source code editing
    :PROPERTIES:

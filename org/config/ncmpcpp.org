@@ -5,16 +5,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s ncmpcpp Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the ncmpcpp configuration of Phundrak" />
 #+PROPERTY: header-args :tangle ~/.config/ncmpcpp/config2 :exports code
-#+STARTUP: content
-
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-8c590c64
-  :END:
-- [[#introduction][Introduction]]
-- [[#core-ncmpcpp-settings][Core Ncmpcpp settings]]
-  - [[#directories][Directories]]
-  - [[#mpd][MPD]]
 
 * Introduction
   :PROPERTIES:

@@ -9,55 +9,6 @@
 #+PROPERTY: header-args:sh :tangle no :exports code
 #+PROPERTY: header-args:fish :exports code :noweb yes
 #+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
-#+STARTUP: content
-
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-914af127
-  :END:
-- [[#introduction][Introduction]]
-- [[#install-arch-linux][Install Arch Linux]]
-  - [[#get-the-latest-live-system-with-fast-mirrors][Get the latest live system with fast mirrors]]
-  - [[#install-the-system][Install the system]]
-- [[#install-basic-packages][Install basic packages]]
-- [[#execute-bootstrap][Execute bootstrap]]
-  - [[#decrypt-private-yadm-files][Decrypt private yadm files]]
-  - [[#get-a-correct-keyboard-layout][Get a correct keyboard layout]]
-  - [[#set-our-locale][Set our locale]]
-  - [[#create-some-folders][Create some folders]]
-  - [[#set-users-shell-to-fish][Set user’s shell to fish]]
-  - [[#install-yay-if-it-isnt-already-installed][Install =yay= if it isn’t already installed]]
-  - [[#install-basic-packages-1][Install basic packages]]
-  - [[#tangle-configuration-files-from-org-files][Tangle configuration files from Org files]]
-  - [[#setting-up-emacs-installing-spacemacs][Setting up Emacs: Installing Spacemacs]]
-  - [[#set-up-dotfiles][Set up dotfiles]]
-    - [[#update-our-dotfiles-remotes][Update our dotfiles’ remotes]]
-    - [[#get-envtpl][Get =envtpl=]]
-    - [[#update-our-submodules][Update our submodules]]
-  - [[#enable-some-services][Enable some services]]
-    - [[#systemd-timesyncd][Systemd-timesyncd]]
-    - [[#docker][Docker]]
-    - [[#emacs][Emacs]]
-    - [[#mpd][Mpd]]
-    - [[#ssh-server][SSH server]]
-    - [[#ly][Ly]]
-    - [[#acpilight][Acpilight]]
-    - [[#nordvpn][NordVPN]]
-  - [[#symlink-some-system-config-files][Symlink some system config files]]
-  - [[#install-packages-from-git][Install packages from git]]
-    - [[#polybar-battery][Polybar Battery]]
-    - [[#revealjs][Reveal.JS]]
-    - [[#install-powerline-fonts][Install powerline fonts]]
-  - [[#install-rust][Install Rust]]
-    - [[#install-the-toolchains][Install the toolchains]]
-    - [[#install-some-utilities][Install some utilities]]
-  - [[#install-some-python-packages][Install some python packages]]
-  - [[#install-go-packages][Install go packages]]
-  - [[#set-up-chicken-scheme-interpretercompiler][Set up Chicken (Scheme interpreter/compiler)]]
-  - [[#clean-the-pacman-and-yay-cache][Clean the =pacman= and =yay= cache]]
-  - [[#set-up-our-fish-shell][Set up our fish shell]]
-    - [[#install-fisher][Install =fisher=]]
-    - [[#install-our-extensions][Install our extensions]]
 
 * Introduction
   :PROPERTIES:

@@ -13,3 +13,6 @@
 [submodule ".config/emacs/private/dired-phundrak"]
 	path = .config/emacs/private/dired-phundrak
 	url = https://labs.phundrak.com/phundrak/dired-phundrak
+[submodule ".mozilla/firefox/lruehqec.default/chrome"]
+	path = .mozilla/firefox/lruehqec.default/chrome
+	url = git@labs.phundrak.com:phundrak/blurredfox-nord.git

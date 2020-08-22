@@ -6,133 +6,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
 #+PROPERTY: header-args: :mkdirp yes
-#+STARTUP: content
-
-* Table of Contents                                        :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-baac29af
-  :END:
-- [[#introduction][Introduction]]
-- [[#spacemacs-layers-and-packages][Spacemacs layers and packages]]
-  - [[#general-configuration][General configuration]]
-  - [[#package-management][Package management]]
-  - [[#layers][Layers]]
-    - [[#checkers][Checkers]]
-    - [[#completion][Completion]]
-    - [[#email][Email]]
-    - [[#emacs][Emacs]]
-    - [[#file-trees][File trees]]
-    - [[#fonts][Fonts]]
-    - [[#fun][Fun]]
-    - [[#internationalization][Internationalization]]
-    - [[#programming-languages][Programming languages]]
-      - [[#domain-specific-dsls][Domain-specific (DSLs)]]
-      - [[#frameworks][Frameworks]]
-      - [[#general-purpose][General-purpose]]
-    - [[#readers][Readers]]
-      - [[#epub-and-pdf-readers][Epub and Pdf readers]]
-      - [[#elfeed][Elfeed]]
-    - [[#version-control][Version control]]
-    - [[#themes][Themes]]
-    - [[#tools][Tools]]
-    - [[#web-services][Web Services]]
-    - [[#custom-layers][Custom layers]]
-- [[#init][Init]]
-  - [[#emacs-with-pdumper][Emacs with pdumper]]
-  - [[#package-managment-and-updates][Package managment and updates]]
-    - [[#elpa-repository][Elpa repository]]
-    - [[#spacelpa-repository][Spacelpa repository]]
-  - [[#editing-style][Editing style]]
-  - [[#spacemacs-home-configuration][Spacemacs home configuration]]
-  - [[#default-major-modes][Default major modes]]
-  - [[#visual-configuration][Visual configuration]]
-    - [[#themes-1][Themes]]
-    - [[#other-on-screen-elements][Other on-screen elements]]
-    - [[#appearance-of-emacs-frames][Appearance of Emacs frames]]
-  - [[#spacemacs-leader-keys-and-shortcuts][Spacemacs leader keys and shortcuts]]
-  - [[#layouts][Layouts]]
-  - [[#files-related-settings][Files-related settings]]
-  - [[#emacs-server][Emacs server]]
-  - [[#miscellaneous][Miscellaneous]]
-- [[#user-initialization][User Initialization]]
-- [[#user-configuration][User Configuration]]
-  - [[#custom-functions][Custom functions]]
-    - [[#phundrakadd-all-to-list][~phundrak/add-all-to-list~]]
-    - [[#phundrakfill-paragraph][~phundrak/fill-paragraph~]]
-    - [[#terminal-here-default-terminal-command][~terminal-here-default-terminal-command~]]
-  - [[#asm-configuration][ASM configuration]]
-  - [[#cc][C/C++]]
-  - [[#dart-configuration][Dart configuration]]
-  - [[#dired][Dired]]
-  - [[#emacs-lisp][Emacs Lisp]]
-    - [[#enable-eldoc-mode-by-default][Enable ~eldoc-mode~ by default]]
-    - [[#phundrakwrite-to-buffer][~phundrak/write-to-buffer~]]
-  - [[#eshell][Eshell]]
-    - [[#environment-variables][Environment variables]]
-    - [[#custom-functions-1][Custom functions]]
-      - [[#redirect-text-editors-to-emacs][Redirect text editors to Emacs]]
-    - [[#aliases][Aliases]]
-      - [[#system-monitoring][System monitoring]]
-      - [[#system-management-packages-and-services][System management (packages and services)]]
-      - [[#other][Other]]
-      - [[#typos][Typos]]
-    - [[#visual-commands][Visual commands]]
-    - [[#eshell-theme][Eshell theme]]
-  - [[#file-extensions][File extensions]]
-  - [[#lsp][LSP]]
-  - [[#mu4e][Mu4e]]
-  - [[#miscellaneous-1][Miscellaneous]]
-    - [[#evil][Evil]]
-    - [[#default-modes][Default modes]]
-    - [[#hooks][Hooks]]
-    - [[#pinentry][Pinentry]]
-    - [[#prettified-symbols][Prettified symbols]]
-    - [[#twittering-mode][Twittering mode]]
-    - [[#wttrin-cities][Wttr.in cities]]
-  - [[#nov-mode][Nov-mode]]
-  - [[#projectile][Projectile]]
-  - [[#python][Python]]
-  - [[#org-mode][Org-mode]]
-    - [[#custom-org-mode-functions][Custom org-mode functions]]
-      - [[#custom-and-unique-headings-id][Custom and unique headings ID]]
-    - [[#org-babel-languages][Org babel languages]]
-    - [[#org-variables][Org variables]]
-      - [[#user-information][User information]]
-      - [[#visual-settings][Visual settings]]
-      - [[#org-behavior][Org behavior]]
-      - [[#miscellaneous-2][Miscellaneous]]
-    - [[#org-files-exports][Org files exports]]
-    - [[#custom-latex-formats][Custom LaTeX formats]]
-    - [[#org-agenda][Org agenda]]
-    - [[#org-capture][Org capture]]
-      - [[#emails][Emails]]
-      - [[#journal][Journal]]
-      - [[#notes][Notes]]
-      - [[#protocol][Protocol]]
-      - [[#resources][Resources]]
-      - [[#tasks][Tasks]]
-        - [[#computers-and-stuff][Computers and stuff]]
-        - [[#health][Health]]
-        - [[#birthdays][Birthdays]]
-        - [[#events][Events]]
-      - [[#links][Links]]
-        - [[#general][General]]
-        - [[#youtube][YouTube]]
-    - [[#org-projects][Org projects]]
-      - [[#configuration-website][Configuration website]]
-      - [[#linguistics-website][Linguistics website]]
-  - [[#rust][Rust]]
-  - [[#scheme][Scheme]]
-  - [[#shortcuts][Shortcuts]]
-    - [[#applications][Applications]]
-    - [[#comments][Comments]]
-    - [[#files][Files]]
-    - [[#multiple-cursors][Multiple cursors]]
-    - [[#org-mode-1][Org-mode]]
-    - [[#toggle][Toggle]]
-    - [[#text][Text]]
-  - [[#yadm][Yadm]]
-- [[#footnotes][Footnotes]]
 
 * Introduction
   :PROPERTIES:
@@ -921,11 +794,11 @@
     value is a  list of themes, the  first of the list is  loaded when Spacemacs
     starts. The user can press =SPC T n= to cycle to the next theme in the list.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-themes '(doom-vibrant doom-nord spacemacs-dark doom-one
-                                                       doom-opera doom-dracula doom-molokai doom-peacock
-                                                       doom-sourcerer doom-spacegrey kaolin-dark
-                                                       kaolin-aurora kaolin-bubblegum kaolin-galaxy
-                                                       kaolin-mono-dark kaolin-temple kaolin-valley-dark))
+      (setq-default dotspacemacs-themes '(doom-nord doom-vibrant spacemacs-dark doom-one
+                                                    doom-opera doom-dracula doom-molokai doom-peacock
+                                                    doom-sourcerer doom-spacegrey kaolin-dark
+                                                    kaolin-aurora kaolin-bubblegum kaolin-galaxy
+                                                    kaolin-mono-dark kaolin-temple kaolin-valley-dark))
     #+END_SRC
 
     Emacs also makes use  of themes for the Spaceline at  the bottom of buffers.
@@ -1118,7 +991,7 @@
     transparency level  of a  frame when  it’s active  or selected.  The default
     value is ~90~.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-active-transparency 95)
+      (setq-default dotspacemacs-active-transparency 80)
     #+END_SRC
 
     Similarly, you  can set a  value from 0 to  100 in increasing  opacity which
@@ -1332,6 +1205,7 @@
   :header-args:emacs-lisp: :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
   :CUSTOM_ID: User_Initialization-e0d21089
   :END:
+
   While  Emacs and  especially Spacemacs  loads, I  want it  to initialize  some
   elements and load  some packages. First of  all, I want it to  load my private
   Emacs config file:
@@ -2438,6 +2312,12 @@
        (setq org-hide-macro-markers t)
      #+END_SRC
 
+     I also have an issue where small dots precede my org headers. Let’s fix that:
+     #+BEGIN_SRC emacs-lisp
+       (setq org-hide-leading-stars nil
+             org-superstar-leading-bullet ?\s)
+     #+END_SRC
+
 **** Org behavior
      :PROPERTIES:
      :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
@@ -3328,18 +3208,18 @@
 
     And here are my shortcuts for opening config files:
     #+NAME: config-files-open-shortcuts
-    | Shortcut | Name          | File                       |
-    |----------+---------------+----------------------------|
-    | ofc      | config files  |                            |
-    | ofca     | awesome.org   | ~/org/config/awesome.org   |
-    | ofcb     | bin.org       | ~/org/config/bin.org       |
-    | ofce     | spacemacs.org | ~/org/config/spacemacs.org |
-    | ofcf     | fish.org      | ~/org/config/fish.org      |
-    | ofci     | i3.org        | ~/org/config/i3.org        |
-    | ofcI     | index.org     | ~/org/config/index.org     |
-    | ofcp     | polybar.org   | ~/org/config/polybar.org   |
-    | ofcP     | picom.org     | ~/org/config/picom.org     |
-    | ofcr     | yadm README   | ~/README.org               |
+    | Shortcut | Name             | File                          |
+    |----------+------------------+-------------------------------|
+    | ofc      | config files     |                               |
+    | ofca     | awesome.org      | ~/org/config/awesome.org      |
+    | ofcb     | bin.org          | ~/org/config/bin.org          |
+    | ofce     | spacemacs.org    | ~/org/config/spacemacs.org    |
+    | ofcf     | fish.org         | ~/org/config/fish.org         |
+    | ofci     | index.org        | ~/org/config/index.org        |
+    | ofcI     | installation.org | ~/org/config/installation.org |
+    | ofcp     | polybar.org      | ~/org/config/polybar.org      |
+    | ofcP     | picom.org        | ~/org/config/picom.org        |
+    | ofcr     | yadm README      | ~/README.org                  |
 
     *The following code is not tangled into my Spacemacs config.* However, it is
     used to generate shortcuts and configuration code from the above table:

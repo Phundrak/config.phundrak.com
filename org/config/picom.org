@@ -5,20 +5,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Picom configuration of Phundrak" />
 #+PROPERTY: header-args:conf :exports code :tangle ~/.config/picom/picom.conf
 
-* Table of Contents                                        :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-71903d94
-  :END:
-- [[#introduction][Introduction]]
-- [[#shadows][Shadows]]
-  - [[#deprecated-options][Deprecated options]]
-- [[#rounded-corners][Rounded corners]]
-- [[#fading][Fading]]
-- [[#transparency-and-opacity][Transparency and opacity]]
-- [[#background-blurring][Background blurring]]
-- [[#general-settings][General settings]]
-  - [[#glx-backend-specific-options][GLX backend-specific options]]
-
 * Introduction
   :PROPERTIES:
   :CUSTOM_ID: Introduction-a5320326
@@ -292,7 +278,6 @@
     opacity-rule = [
       "85:class_g = 'Polybar'",
       # "55:class_g *?= 'Rofi'",
-      "80:class_g = 'St'",
     ];
   #+END_SRC
 

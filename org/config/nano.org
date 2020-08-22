@@ -5,19 +5,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's nano configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the nano configuration of Phundrak" />
 #+PROPERTY: header-args :tangle ~/.config/nano/nanorc
-#+STARTUP: content
-
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-fcfed7b6
-  :END:
-- [[#introduction][Introduction]]
-- [[#configuration][Configuration]]
-  - [[#keys-behavior][Keys behavior]]
-  - [[#search][Search]]
-  - [[#visual-settings][Visual settings]]
-  - [[#whitespace-settings][Whitespace settings]]
-  - [[#included-configuration-file][Included configuration file]]
 
 * Introduction
   :PROPERTIES:

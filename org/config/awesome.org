@@ -7,64 +7,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the AwesomeWM config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :tangle no :exports none
 #+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes
-#+STARTUP: content
-
-* Table of Contents                                            :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-1d688dc5
-  :END:
-- [[#introduction][Introduction]]
-- [[#loading-libraries][Loading libraries]]
-- [[#error-handling][Error handling]]
-- [[#variable-definitions][Variable definitions]]
-  - [[#themes][Themes]]
-    - [[#creating-my-own-theme-wip-not-yet-used][Creating my own theme (WIP, not yet used)]]
-      - [[#loading-assets][Loading assets]]
-      - [[#inherit-the-default-theme][Inherit the default theme]]
-      - [[#loading-default-fonts-and-colors][Loading default fonts and colors]]
-    - [[#loading-the-theme][Loading the theme]]
-  - [[#default-terminal-and-text-editor][Default terminal and text editor]]
-  - [[#keys][Keys]]
-  - [[#wallpapers-directory][Wallpapers directory]]
-- [[#custom-functions][Custom functions]]
-  - [[#wallpaper-related-functions][Wallpaper-related functions]]
-    - [[#set-a-random-wallpaper][Set a random wallpaper]]
-    - [[#restore-previous-wallpaper][Restore previous wallpaper]]
-  - [[#layout-manipulation][Layout manipulation]]
-  - [[#clients-manipulation][Clients manipulation]]
-  - [[#tag-manipulation][Tag manipulation]]
-  - [[#awesome-prompt][Awesome prompt]]
-- [[#layouts][Layouts]]
-- [[#top-bar][Top bar]]
-  - [[#menus][Menus]]
-  - [[#other-widgets][Other widgets]]
-  - [[#tag-list][Tag list]]
-  - [[#tasks-list][Tasks list]]
-- [[#theme-and-display][Theme and display]]
-  - [[#screen-update][Screen update]]
-- [[#mouse-bindings][Mouse bindings]]
-- [[#keybindings][Keybindings]]
-  - [[#applications][Applications]]
-    - [[#internet-apps][Internet apps]]
-    - [[#screenshots][Screenshots]]
-    - [[#emacs][Emacs]]
-    - [[#rofi][Rofi]]
-  - [[#awesome][Awesome]]
-  - [[#clients][Clients]]
-  - [[#layout-manipulation-1][Layout manipulation]]
-  - [[#media][Media]]
-  - [[#screen][Screen]]
-  - [[#tags][Tags]]
-- [[#rules][Rules]]
-  - [[#universal-rules][Universal rules]]
-  - [[#floating-clients][Floating clients]]
-  - [[#titlebars][Titlebars]]
-  - [[#default-tag-for-clients][Default tag for clients]]
-- [[#signals][Signals]]
-  - [[#client-creation][Client creation]]
-  - [[#titlebar-creation][Titlebar creation]]
-  - [[#changes-of-focus][Changes of focus]]
-- [[#autostart][Autostart]]
 
 * Introduction
   :PROPERTIES:
@@ -196,104 +138,12 @@
    :CUSTOM_ID: Variable_definitions-Themes-591886b4
    :END:
    With Awesome, it is possible to load  or write custom themes in order to give
-   Awesome a special look  that fits the user. I used to  load the default theme
-   from Xresources,  but now I  would like  to use my  own theme, tweaked  to my
-   liking.
-
-*** Creating my own theme (WIP, not yet used)
-    :PROPERTIES:
-    :HEADER-ARGS:lua: :tangle ~/.config/awesome/theme/theme.lua :exports code
-    :HEADER-ARGS:emacs-lisp: :exports none :cache yes
-    :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-6b2dd694
-    :END:
-    Here   I  will   create   my  own   theme,  which   will   be  exported   to
-    =~/.config/awesome/theme/theme.lua=.  It is  based on  my former  Xresources
-    theme, but also  on some other themes I found  on the internet, particularly
-    on Github. Here are a few I would like to mention:
-    - [[https://github.com/lcpz/awesome-copycats/tree/master/themes/powerarrow-dark][Powerarrow-dark]]
-    - DistroTube’s Qtile theme, which you can see [[https://lbry.tv/@DistroTube:2/reactos-is-an-open-source-windows:9?r=4LXiLPA3uQN6Ekx8Rnu9oNVUVArqsbPf][here]]
-
-    My theme  has two main dependencies:  [[https://github.com/lcpz/lain][lain]] and [[https://github.com/lcpz/awesome-freedesktop][freedesktop]] for  Awesome. The
-    former is a framework for Awesome theming while the second enables its users
-    to add ~.desktop~ entries to the Awesome menu.
-
-**** Loading assets
-     :PROPERTIES:
-     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Loading_assets-aacbcb76
-     :END:
-     So first off, let’s load our libraries  or anything I might need to import.
-     First, let's import the ~theme_assets~  module of ~beautiful~, a collection
-     of functions  for theming, as well  as the ~xresources~ library  which will
-     let  us interact  with the  Xresources  theme. The  ~filesystem~ module  of
-     ~gears~  will also  enable us  to  interact with  the system’s  filesystem,
-     getting paths  and files. I  will also  import ~lain~, the  above described
-     dependency, so I get some useful functions and constructs.
-     #+NAME: theme-modules-import-table
-     | Module                 | Import as    | What it is               |
-     |------------------------+--------------+--------------------------|
-     | beautiful.theme_assets | theme_assets | theming library          |
-     | beautiful.xresources   | xresources   | Xresources interactivity |
-     | gears.filesystem       | gfs          | filesystem interactivity |
-     | lain                   | lain         | theming framework        |
-
-     #+NAME: theme-modules-import-gen
-     #+BEGIN_SRC emacs-lisp :var table=theme-modules-import-table formstr="local %s = require(\"%s\")"
-       (mapconcat (lambda (x)
-                    (format formstr
-                            (cadr x) (car x)))
-                  table "\n")
-     #+END_SRC
-
-     Here is what the code looks like:
-     #+BEGIN_SRC lua
-       <<theme-modules-import-gen()>>
-     #+END_SRC
-
-     Let’s also import some functions and values!
-     #+NAME: theme-modules-variables-table
-     | What to import                 | Import as   | What it is                         |
-     |--------------------------------+-------------+------------------------------------|
-     | xresources.apply_dpi           | dpi         | Apply screen’s DPI ([[https://awesomewm.org/doc/api/libraries/beautiful.html#lib_beautiful_xresources_Functions][documentation]]) |
-     | xresources.get_current_theme() | xrdb        | Get current Xresources theme       |
-     | gfs.get_themes_dir()           | themes_path | Get path to default Awesome themes |
-
-     Here is what the code looks like:
-     #+BEGIN_SRC lua
-       <<theme-modules-import-gen(table=theme-modules-variables-table, formstr="local %s = %s")>>
-     #+END_SRC
-
-**** Inherit the default theme
-     :PROPERTIES:
-     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Inherit_the_default_theme-7ab9fbf2
-     :END:
-     Now that I imported what I need, I can get a default theme which I will
-     later modify:
-     #+BEGIN_SRC lua
-       local theme = dofile(themes_path.."default/theme.lua")
-     #+END_SRC
-
-**** Loading default fonts and colors
-     :PROPERTIES:
-     :CUSTOM_ID: Variable_definitions-Themes-Creating_my_own_theme_(WIP,_not_yet_used)-Loading_default_fonts_and_colors-2c3cd836
-     :END:
-     With the default theme loaded, let's modify it! The theme’s font will be
-     the same as the one I use for st: Source Code Pro for Powerline
-     #+BEGIN_SRC lua
-       theme.font = "Source Code Pro for Powerline 8"
-     #+END_SRC
-
-*** Loading the theme
-    :PROPERTIES:
-    :CUSTOM_ID: Variable_definitions-Themes-Loading_the_theme-2f28973c
-    :END:
-    Finally, let’s load our theme.
-    #+BEGIN_SRC lua
-      beautiful.init("/home/phundrak/.config/awesome/xresources/theme.lua")
-    #+END_SRC
-
-    On top of that, I would like to edit some settings. First of all, let’s set
-    some default transparency for Awesome, with an alpha background. By default,
-    it is completely opaque with a max value of ~256~ and a minimal value of ~0~.
+   Awesome a  special look  that fits the  user. I am  currently using  a custom
+   theme that  is not yet included  in my dotfiles.  I will add it  later, along
+   with the images used for the theme.
+   #+BEGIN_SRC lua
+     beautiful.init("/home/phundrak/.config/awesome/nord/theme.lua")
+   #+END_SRC
 
 ** Default terminal and text editor
    :PROPERTIES:
@@ -324,16 +174,6 @@
      alt = "Mod1" -- Just in case
    #+END_SRC
 
-** Wallpapers directory
-   :PROPERTIES:
-   :CUSTOM_ID: Variable_definitions-Wallpapers_directory-23b54f4f
-   :END:
-   This variable is  a variable I personally set for  a function described below
-   in order to have a variable pointing to my wallpaper directory.
-   #+BEGIN_SRC lua
-     local papes_dir = "~/Pictures/Wallpapers"
-   #+END_SRC
-
 * Custom functions
   :PROPERTIES:
   :CUSTOM_ID: Custom_functions-ed54dbe2
@@ -348,7 +188,7 @@
     :END:
     This    function   sets    a   random    wallpaper   from    the   directory
     =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in  my custom scripts. This depends
-    on [[https://github.com/l3ib/nitrogen/][Nitrogen]] and [[https://github.com/dylanaraps/pywal][Pywal]].
+    on [[https://github.com/l3ib/nitrogen/][Nitrogen]].
     #+BEGIN_SRC lua
       local function set_random_pape()
         awful.spawn.with_shell("pape-update")
@@ -366,8 +206,7 @@
     wallpaper:
     #+BEGIN_SRC lua
       local function set_wallpaper(_)
-        awful.spawn.with_shell("wal -i (cat $HOME/.cache/wal/wal) && pape-restore")
-        awful.spawn.with_shell("xrdb $HOME/.Xresources")
+        awful.spawn.with_shell("nitrogen --restore")
       end
     #+END_SRC
 
@@ -1586,20 +1425,30 @@
    - The top or left elements of the titlebar (here the top)
    - The middle elements of the titlebar
    - The bottom or right elements of the titlebar (here the bottom)
-   You can notice in the setup’s code below that I haven’t included anything in
-   the middle or bottom elements, the only elements I am interested in are the
-   top elements. I have (top to bottom):
+   You can notice in the setup’s code  below that I haven’t included anything in
+   the middle  elements, the only  elements I am interested  in are the  top and
+   bottom elements. In the top elements, I have (top to bottom):
    - A close button
    - A maximize button
    - A minimize button
-   - A button for toggling client floating
    - And an indication to Awesome these elements should be vertically aligned
+   To make  Awesome happy,  I also  must indicate that  the middle  elements are
+   vertically aligned, and then I can declare my bottom elements:
+   - A button for toggling client floating
+   - And again  the indication  to Awesome these  elements should  be vertically
+     aligned
    #+NAME: signal-titlebar-setup
    #+BEGIN_SRC lua :tangle no
      { -- Top
        awful.titlebar.widget.closebutton(c),
        awful.titlebar.widget.maximizedbutton(c),
        awful.titlebar.widget.minimizebutton(c),
+       layout = wibox.layout.fixed.vertical()
+     },
+     {
+       layout = wibox.layout.fixed.vertical()
+     }, -- Middle
+     { -- Bottom
        awful.titlebar.widget.floatingbutton(c),
        layout = wibox.layout.fixed.vertical()
      },
@@ -1638,17 +1487,19 @@
   create some  autolaunch. All of  my autolaunched  apps are launch  through the
   shell.
   #+NAME: autostart-table
-  | Command                                             | What it is for                         |
-  |-----------------------------------------------------+----------------------------------------|
-  | pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit | Launch or relaunch Polkit              |
-  | pkill picom; compton --experimental-backends        | Launch or relaunch Picom               |
-  | xss-lock -- lock                                    | Enable lockscreen after a blank screen |
-  | nm-applet                                           | Launch NetworkManager applet           |
-  | numlockx on                                         | Enable numlock                         |
-  | mpc stop                                            | Stop music                             |
-  | mpd_discord_richpresence --no-idle --fork           | Launch MPD rich presence for Discord   |
-  | sleep 3 && emacsclient -c -e \"(delete-frame)\"     | Launch blank EmacsClient               |
-  | set-screens                                         | Auto-organize screens                  |
+  | Command                                         | What it is for                         |
+  |-------------------------------------------------+----------------------------------------|
+  | pumopm                                          | Power manager                          |
+  | /usr/lib/xfce-polkit/xfce-polkit                | Launch or relaunch Polkit              |
+  | sleep 1 && set-screens                          | Auto-organize screens                  |
+  | picom --experimental-backends                   | Launch or relaunch Picom               |
+  | nitrogen --restore                              | Restore background                     |
+  | xss-lock -- lock                                | Enable lockscreen after a blank screen |
+  | nm-applet                                       | Launch NetworkManager applet           |
+  | numlockx on                                     | Enable numlock                         |
+  | mpc stop                                        | Stop music                             |
+  | mpd_discord_richpresence --no-idle --fork       | Launch MPD rich presence for Discord   |
+  | sleep 3 && emacsclient -c -e \"(delete-frame)\" | Launch blank EmacsClient               |
 
   #+NAME: autostart
   #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var apps=autostart-table
@@ -1659,21 +1510,29 @@
                "\n")
   #+END_SRC
 
-  #+RESULTS[d6e417272b634c3a67185926e08725116dc98810]: autostart
-  : awful.spawn.with_shell("pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit")
-  : awful.spawn.with_shell("pkill picom; compton --experimental-backends")
-  : awful.spawn.with_shell("xss-lock -- lock")
-  : awful.spawn.with_shell("nm-applet")
-  : awful.spawn.with_shell("numlockx on")
-  : awful.spawn.with_shell("mpc stop")
-  : awful.spawn.with_shell("mpd_discord_richpresence --no-idle --fork")
-  : awful.spawn.with_shell("sleep 3 && emacsclient -c -e \"(delete-frame)\"")
+  #+RESULTS[e65349733980220944a79123e3ee0f4d638e5068]: autostart
+  #+begin_example
+  awful.spawn.with_shell("pumopm")
+  awful.spawn.with_shell("pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit")
+  awful.spawn.with_shell("sleep 1 && set-screens")
+  awful.spawn.with_shell("picom --experimental-backends")
+  awful.spawn.with_shell("nitrogen --restore")
+  awful.spawn.with_shell("xss-lock -- lock")
+  awful.spawn.with_shell("nm-applet")
+  awful.spawn.with_shell("numlockx on")
+  awful.spawn.with_shell("mpc stop")
+  awful.spawn.with_shell("mpd_discord_richpresence --no-idle --fork")
+  awful.spawn.with_shell("sleep 3 && emacsclient -c -e \"(delete-frame)\"")
+  #+end_example
 
   Each of the command gets called with the call of ~awful.spawn.with_shell()~,
   as you can see below.
   #+BEGIN_SRC lua
     <<autostart()>>
   #+END_SRC
+
+  PumoPM is a custom power manager I’ve written, because other power managers
+  didn’t fit my needs, so I wrote my own. You can find it [[https://labs.phundrak.com/phundrak/pumopm][here]].
 
 * What to do now                                                   :noexport:
   :PROPERTIES:

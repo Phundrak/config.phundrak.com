@@ -5,19 +5,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's tmux config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the tmux config file of Phundrak" />
 #+PROPERTY: header-args :tangle ~/.tmux.conf.local
-#+STARTUP: content
-
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-6af11648
-  :END:
-- [[#presentation][Presentation]]
-- [[#windows-and-pane-creation][Windows and pane creation]]
-- [[#display][Display]]
-  - [[#colors-and-style][Colors and style]]
-  - [[#window-status-bar][Window status bar]]
-- [[#clipboard][Clipboard]]
-- [[#user-customizations][User customizations]]
 
 * Presentation
   :PROPERTIES:

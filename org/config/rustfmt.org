@@ -5,18 +5,6 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's Rust format config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Rust format config file of Phundrak" />
 #+PROPERTY: header-args:toml :tangle ~/.rustfmt.toml
-#+STARTUP: content
-
-* Table of Contents                                            :TOC:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: Table_of_Contents-1f5472ca
-  :END:
-- [[#introduction][Introduction]]
-- [[#general-settings][General settings]]
-- [[#structs-and-enums][Structs and Enums]]
-- [[#comments][Comments]]
-- [[#documentation][Documentation]]
-- [[#whitespace][Whitespace]]
 
 * Introduction
   :PROPERTIES:
