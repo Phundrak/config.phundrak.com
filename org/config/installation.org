@@ -246,28 +246,27 @@
      aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git base-devel \
      bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bookworm bzip2 \
      chicken chromium clisp corrupter-git cppcheck cppreference \
-     cppreference-devhelp cpupower discord-canary discount dmenu-lpass docker \
-     docker-compose dockerfile-language-server-bin doxygen dunst emacs \
-     emacs-org-mode exa exfat-utils farbfeld fd ffmpegthumbnailer findutils firefox \
-     flake8 flat-remix-gtk freeglut fzf gcc-libs gdb gimp gnome-disk-utility \
-     gnome-epub-thumbnailer gnu-free-fonts gnuplot go go-tools golangci-lint-bin \
-     graphviz htop i3-gaps-rounded-git i3lock-color inetutils isync \
-     j4-dmenu-desktop javascript-typescript-langserver js-beautify jfsutils jmtpfs \
-     lain-git less libxft-bgra linux-headers lldb logrotate ly meson minted man-db \
+     cppreference-devhelp cpupower discord-canary discount docker docker-compose \
+     dockerfile-language-server-bin doxygen emacs emacs-org-mode exa exfat-utils \
+     farbfeld fd ffmpegthumbnailer findutils firefox flake8 flat-remix-gtk freeglut \
+     fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
+     gnuplot go go-tools golangci-lint-bin graphviz htop i3lock-color inetutils \
+     isync inter-font javascript-typescript-langserver js-beautify jfsutils jmtpfs \
+     lain-git libxft-bgra linux-headers lldb logrotate ly meson minted man-db \
      man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools nano ncdu \
      ncmpcpp nemo-fileroller nemo-preview neofetch netctl networkmanager \
      networkmanager-openvpn nitrogen nm-connection-editor nodejs-vmd nomacs \
      nordvpn-bin noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh \
      otf-fandol otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
-     picom-ibhagwan-git polybar powerline-fonts prettier pulseaudio-bluetooth \
+     picom-ibhagwan-git powerline-fonts prettier pulseaudio-bluetooth \
      python-autoflake python-envtpl-git python-epc python-importmagic \
      python-language-server python-nose python-pip python-ptvsd python-pytest \
-     python-pywal qt5-imageformats qemu r raw-thumbnailer reflector ripgrep rofi \
-     rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
+     qt5-imageformats qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv \
+     ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
      simplescreenrecorder sshfs st-luke-git sxiv texlive-bin texlive-langchinese \
-     texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean \
-     texlive-latexextra texlive-localmanager-git texlive-most tmux tree \
-     ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
+     texlive-langcyrillic texlive-langgreek texlive-langjapanese \
+     texlive-langkorean texlive-latexextra texlive-localmanager-git texlive-most \
+     tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
      ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels ttf-koruri \
      ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
      typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
@@ -275,8 +274,6 @@
      x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
      xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf zeal
    #+END_SRC
-
-   #+RESULTS:
 
    These are the  minimum I would have  in my own installation. You  can edit it
    however you want. Let’s install those.
