@@ -124,7 +124,7 @@
     #!/usr/bin/env fish
     set WLOCATION /usr/share/doc/arch-wiki/html/en/
     set WPAGE (/bin/ls $WLOCATION | \
-    sed 's/_/ /g' | sed 's/\.html$//' | sed 's/.*\/\(.*\)/\1/' | \
+    sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
     rofi -dmenu -p "Arch Wiki" -i | sed 's/ +/_/g')
   #+END_SRC
 
@@ -1189,7 +1189,6 @@
     if test -n "$externaldisplay"
         set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
         xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
-        i3-msg restart
     end
   #+END_SRC
 
