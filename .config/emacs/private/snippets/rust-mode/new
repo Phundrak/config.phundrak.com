@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: new
+# key: _new
+# --
+fn new(${1:args}) -> Self {
+  $0
+  Self {
+    ${1:$(phundrak/yas-rust-new-assignments yas-text)}
+  }
+}

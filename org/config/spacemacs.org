@@ -473,6 +473,12 @@
             lua-lsp-emmy-enable-file-watchers t)
      #+END_SRC
 
+     But that won’t stop me trying to use other window managers. I am currently
+     testing StumpWM, which requires the Common Lisp layer.
+     #+BEGIN_SRC emacs-lisp
+       common-lisp
+     #+END_SRC
+
 *** Readers
     :PROPERTIES:
     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
@@ -1264,6 +1270,38 @@
    Almost all of my code snippets will be prefixed by either my name or the name
    of  the package  or layer  they  are part  of,  unless they  are an  explicit
    overwrite of a function that already exists.
+*** ~phundrak/yas-rust-new-assignments~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456
+    :END:
+    The following  function is a  function that will  allow me to  easily create
+    ~new~    functions    for    Rust     structs.    Inspired    from    [[https://github.com/jorgenschaefer/elpy][elpy]]’s
+    ~elpy-snippet-init-assignments~  function,   it  will   automatically  write
+    assignments  to  my new  struct  as  I write  new  parameters  in the  ~new~
+    function. It  also comes with  a helper  function that parses  the arguments
+    given to the ~new~ function.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak//yas-snippet-split-args (arg-string)
+        "Split a Rust argument string into ((name, default)...) tuples"
+        (mapcar (lambda (x)
+                  (split-string x "[[:blank:]]*:[[:blank:]]*" t))
+                (split-string arg-string "[[:blank:]]*,[[:blank:]]*" t)))
+
+      (defun phundrak/yas-rust-new-assignments (arg-string)
+        "Return a typical new assignment for arguments.
+
+      Inspired from elpy’s functions https://github.com/jorgenschaefer/elpy"
+        (let ((identation (make-string (save-excursion
+                                         (goto-char start-point)
+                                         (current-indentation))
+                                       ?\s)))
+          (mapconcat (lambda (arg)
+                       (if (string-match "^\\*" (car arg))
+                           ""
+                         (format "%s,\n%s" (car arg) identation)))
+                     (phundrak//yas-snippet-split-args arg-string)
+                     "")))
+    #+END_SRC
 
 *** ~phundrak/add-all-to-list~
     :PROPERTIES:
