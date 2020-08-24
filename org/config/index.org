@@ -96,67 +96,98 @@
     :END:
 **** GTK2
      :PROPERTIES:
-     :HEADER-ARGS: :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-74c9de24
      :END:
-     Regarding  GTK2, I  have  only one  configuration  file: the  filechooser’s
-     configuration file.
-     #+BEGIN_SRC conf-unix
-       [Filechooser Settings]
-     #+END_SRC
+***** General configuration
+      :PROPERTIES:
+      :HEADER-ARGS: :tangle ~/.gtkrc-2.0
+      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-General_configuration-eb1f1f3c
+      :END:
+      This file is tangled at ~$HOME/.gtkrc-2.0~.  This is an equivalent for the
+      GTK3 configuration  file you  will see  below, and it  shares most  of its
+      settings. First,  let’s select the Nordic  theme for GTK2. Let’s  also set
+      the icon theme.
+      #+BEGIN_SRC conf-unix
+        # -*- mode: unix-config -*-
+        gtk-theme-name="Nordic"
+        gtk-icon-theme-name="Flat-Remix-Dark"
+      #+END_SRC
 
-     The first option alows  me to open the file chooser  in the current working
-     directory:
-     #+BEGIN_SRC conf-unix
-       StartupMode=cwd
-     #+END_SRC
+      #+BEGIN_SRC conf-unix
+        gtk-xft-antialias=1
+        gtk-xft-hinting=1
+        gtk-xft-hintstyle="hintslight"
+      #+END_SRC
 
-     Next, setting the location mode to ~path-bar~ will show the path as buttons
-     that can be clicked rather than the full path.
-     #+BEGIN_SRC conf-unix
-       LocationMode=path-bar
-     #+END_SRC
+      This changes the shortcuts in menu, let’s also make the menus snappier.
+      #+BEGIN_SRC conf-unix
+        gtk-can-change-accels=1
+        gtk-menu-bar-popup-delay=0
+        gtk-menu-popdown-delay=0
+        gtk-menu-popup-delay=0
+      #+END_SRC
 
-     With this configuration, by default we won’t see hidden files.
-     #+BEGIN_SRC conf-unix
-       ShowHidden=true
-     #+END_SRC
+***** Filechooser
+      :PROPERTIES:
+      :HEADER-ARGS: :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
+      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-Filechooser-389f040d
+      :END:
+      #+BEGIN_SRC conf-unix
+        [Filechooser Settings]
+      #+END_SRC
 
-     And we'll also see the size of the visible files.
-     #+BEGIN_SRC conf-unix
-       ShowSizeColumn=true
-     #+END_SRC
+      The first option alows  me to open the file chooser  in the current working
+      directory:
+      #+BEGIN_SRC conf-unix
+        StartupMode=cwd
+      #+END_SRC
 
-     Now, let’s  choose the geometry of  our file picker. These  two first lines
-     set where the file picker appears:
-     #+BEGIN_SRC conf-unix
-       GeometryX=566
-       GeometryY=202
-     #+END_SRC
+      Next, setting the location mode to ~path-bar~ will show the path as buttons
+      that can be clicked rather than the full path.
+      #+BEGIN_SRC conf-unix
+        LocationMode=path-bar
+      #+END_SRC
 
-     And these two describe the size of the window:
-     #+BEGIN_SRC conf-unix
-       GeometryWidth=800
-       GeometryHeight=400
-     #+END_SRC
+      With this configuration, by default we won’t see hidden files.
+      #+BEGIN_SRC conf-unix
+        ShowHidden=true
+      #+END_SRC
 
-     With these two lines, we set how our  files are sorted: by name, and in the
-     ascending order.
-     #+BEGIN_SRC conf-unix
-       SortColumn=name
-       SortOrder=ascending
-     #+END_SRC
+      And we'll also see the size of the visible files.
+      #+BEGIN_SRC conf-unix
+        ShowSizeColumn=true
+      #+END_SRC
 
-     Our default view mode is a list of files:
-     #+BEGIN_SRC conf-unix
-       ViewMode=list-view
-     #+END_SRC
+      Now, let’s  choose the geometry of  our file picker. These  two first lines
+      set where the file picker appears:
+      #+BEGIN_SRC conf-unix
+        GeometryX=566
+        GeometryY=202
+      #+END_SRC
 
-     And finally, setting our icon view scale  to ~-1~ sets the icon view to the
-     max size.
-     #+BEGIN_SRC conf-unix
-       IconViewScale=-1
-     #+END_SRC
+      And these two describe the size of the window:
+      #+BEGIN_SRC conf-unix
+        GeometryWidth=800
+        GeometryHeight=400
+      #+END_SRC
+
+      With these two lines, we set how our  files are sorted: by name, and in the
+      ascending order.
+      #+BEGIN_SRC conf-unix
+        SortColumn=name
+        SortOrder=ascending
+      #+END_SRC
+
+      Our default view mode is a list of files:
+      #+BEGIN_SRC conf-unix
+        ViewMode=list-view
+      #+END_SRC
+
+      And finally, setting our icon view scale  to ~-1~ sets the icon view to the
+      max size.
+      #+BEGIN_SRC conf-unix
+        IconViewScale=-1
+      #+END_SRC
 
 **** GTK3
      :PROPERTIES:
@@ -181,13 +212,16 @@
        gtk-icon-theme-name = Flat-Remix-Dark
      #+END_SRC
 
-     Now, the general theme for GTK3 is Arc Dark.
+     Now, the general theme for GTK3 is Nordic.
      #+BEGIN_SRC conf-unix
-       gtk-theme-name = Arc-Dark
+       gtk-theme-name = Nordic
      #+END_SRC
 
      #+BEGIN_SRC conf-unix
-       gtk-can-change-accels = 1
+       gtk-can-change-accels=1
+       gtk-menu-bar-popup-delay=0
+       gtk-menu-popdown-delay=0
+       gtk-menu-popup-delay=0
      #+END_SRC
 
      #+BEGIN_SRC conf-unix
