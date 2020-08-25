@@ -612,7 +612,7 @@
    repositories, so  I’ll disable  the Spacemacs support  for this  feature. The
    default value of this variable is =nil=.
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-enable-emacs-pdumper nil)
+     (setq-default dotspacemacs-enable-emacs-pdumper t)
    #+END_SRC
 
    In case the support for pdumper was enabled, Spacemacs needs to know the name
@@ -630,6 +630,7 @@
    #+BEGIN_SRC sh :tangle no :exports code
      ./emacs --dump-file=~/.config/emacs/.cache/dumps/spacemacs.pdmp
    #+END_SRC
+
    The default value of this variable is ="spacemacs.pdmp"=.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp")
@@ -726,6 +727,13 @@
                                                        hybrid-mode-default-state 'normal))
    #+END_SRC
 
+   If non-nil,  the paste transient-state  is enabled. While enabled,  after you
+   paste something,  pressing ~C-j~ and  ~C-k~ several times cycles  through the
+   elements in the ~kill-ring~. Default ~nil~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-enable-paste-transient-state t)
+   #+END_SRC
+
 ** Spacemacs home configuration
    :PROPERTIES:
    :CUSTOM_ID: Init-Spacemacs_home_configuration-8375cdcc
@@ -764,6 +772,12 @@
      (setq-default dotspacemacs-startup-buffer-responsive t)
    #+END_SRC
 
+   If non-nil show the version string in the Spacemacs buffer. It will appear as
+   ~(spacemacs version)@(emacs version)~. Default ~t~.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default dotspacemacs-startup-buffer-show-version t)
+   #+END_SRC
+
 ** Default major modes
    :PROPERTIES:
    :CUSTOM_ID: Init-Default_major_modes-37f4a891
@@ -781,6 +795,7 @@
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-scratch-mode 'org-mode)
    #+END_SRC
+
    By the way, it  is possible to set a default message  for the scratch buffer,
    such as “Welcome to Spacemacs!”. I prefer to keep it clean. The default value
    is =nil=.
@@ -1148,7 +1163,7 @@
 
    You can  also set  a custom  emacs server  socket location.  If the  value is
    ~nil~, Emacs  will use whatever the  Emacs default is, otherwise  a directory
-   path    like    ="~/.config/emacs/server"=.    It   has    no    effect    if
+   path   like    ="$HOME/.config/emacs/server"=.   It   has   no    effect   if
    ~dotspacemacs-enable-server~ is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-server-socket-dir nil)
@@ -1193,7 +1208,7 @@
    - ~grep~
    The default value is ~'("rg" "ag" "pt" "ack" "grep")~.
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep"))
+     (setq-default dotspacemacs-search-tools '("rg" "grep"))
    #+END_SRC
 
    Delete whitespace while saving buffer. Possible values are:
@@ -1205,6 +1220,41 @@
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-whitespace-cleanup nil)
    #+END_SRC
+
+  Set ~gc-cons-threshold~  and ~gc-cons-percentage~ when startup  finishes. This
+  is an advanced option and should not be changed unless you suspect performance
+  issues due to garbage collection operations. The default is ~'(100000000 0.1)~
+  #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-gc-cons '(100000000 0.1))
+  #+END_SRC
+
+  If  non  nil activate  ~clean-aindent-mode~  which  tries to  correct  virtual
+  indentation  of simple  modes. This  can  interfer with  mode specific  indent
+  handling like has been reported for  ~go-mode~. If it does deactivate it here.
+  Default ~t~.
+  #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-use-clean-aindent-mode t)
+  #+END_SRC
+
+  Text   of  shifted   values   from  your   keyboard's   number  row.   Default
+  ~'!@#$%^&*()'~. I adapted it to the bépo layout.
+  #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-snoopy-keyrow "\"«»()@+-/*")
+  #+END_SRC
+
+  If non-nil  activate ~snoopy-mode~ which shifts  your number row to  match the
+  set  of  signs  given  in ~dotspacemacs-snoopy-keyrow~  in  programming  modes
+  (~insert-mode~ only). Default ~nil~.
+  #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-use-snoopy-mode nil)
+  #+END_SRC
+
+  Set  ~read-process-output-max~ when  startup finishes.  This defines  how much
+  data is  read from  a foreign process.  Setting this >=  1 MB  should increase
+  performance for lsp servers in emacs 27.
+  #+BEGIN_SRC emacs-lisp
+    (setq-default dotspacemacs-read-process-output-max (* 1024 1024 8))
+  #+END_SRC
 
 * User Initialization
   :PROPERTIES:
@@ -1291,14 +1341,14 @@
         "Return a typical new assignment for arguments.
 
       Inspired from elpy’s functions https://github.com/jorgenschaefer/elpy"
-        (let ((identation (make-string (save-excursion
+        (let ((indentation (make-string (save-excursion
                                          (goto-char start-point)
                                          (current-indentation))
                                        ?\s)))
           (mapconcat (lambda (arg)
                        (if (string-match "^\\*" (car arg))
                            ""
-                         (format "%s,\n%s" (car arg) identation)))
+                         (format "%s,\n%s" (car arg) indentation)))
                      (phundrak//yas-snippet-split-args arg-string)
                      "")))
     #+END_SRC
