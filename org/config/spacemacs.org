@@ -1433,9 +1433,9 @@
    related to flutter, so nothing too exciting here. Some prefix are declared in
    order to avoid the shortcuts in helm to show up as just ~custom~.
    #+begin_src emacs-lisp
-     (spacemacs/declare-prefix-for-mode 'dart-mode "o" "user-defined")
-     (spacemacs/declare-prefix-for-mode 'dart-mode "of" "flutter")
-     (spacemacs/declare-prefix-for-mode 'dart-mode "ofr" "flutter-run")
+     (spacemacs/declare-prefix-for-mode 'dart-mode "mo" "user-defined")
+     (spacemacs/declare-prefix-for-mode 'dart-mode "mof" "flutter")
+     (spacemacs/declare-prefix-for-mode 'dart-mode "mofr" "flutter-run")
    #+end_src
 
    Now, for the shortcuts themselves:
@@ -3309,10 +3309,8 @@
     | ofcP     | picom.org        | ~/org/config/picom.org        |
     | ofcr     | yadm README      | ~/README.org                  |
 
-    *The following code is not tangled into my Spacemacs config.* However, it is
-    used to generate shortcuts and configuration code from the above table:
     #+NAME: shortcuts-gen
-    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=[] :exports code :results replace
+    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=[] :exports none :results replace
       (concat (mapconcat (lambda (x)
                            (let* ((shortcut (nth 0 x))
                                   (name (nth 1 x)))
@@ -3336,8 +3334,7 @@
                                  "\n")))
     #+END_SRC
 
-    Here is what the generated code — which will be actually tangled into my
-    Emacs config — looks like:
+    Here is the actual code for these keybindings:
     #+BEGIN_SRC emacs-lisp :noweb yes
       <<shortcuts-gen(table=private-files-open-shortcuts)>>
       <<shortcuts-gen(table=config-files-open-shortcuts)>>
@@ -3370,31 +3367,28 @@
     Now, onto some shortcuts related to org-mode. Let’s first declare the
     category:
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "oo" "org-mode")
-      (spacemacs/declare-prefix-for-mode 'org-mode "o" "custom" "User-defined keybindings")
-      (spacemacs/declare-prefix-for-mode 'org-mode "oT" "toggle" "Toggle org elements")
+      (spacemacs/declare-prefix-for-mode 'org-mode "mo" "custom" "User-defined keybindings")
+      (spacemacs/declare-prefix-for-mode 'org-mode "mot" "toggle" "Toggle org elements")
+      (spacemacs/declare-prefix-for-mode 'org-mode "moT" "tables")
     #+END_SRC
 
     Now, I have a couple of shortcuts I use regularly:
     #+BEGIN_SRC emacs-lisp
-      (spacemacs/declare-prefix "ooT" "toggle")
-    #+END_SRC
-
-    #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        "oS" 'org-insert-structure-template
-        "oTs" 'phundrak/toggle-org-src-window-split
-        "oTt" 'org-sidebar-tree)
+        "os" 'org-insert-structure-template
+        "ots" 'phundrak/toggle-org-src-window-split
+        "ott" 'org-sidebar-tree)
+      (spacemacs/declare-prefix-for-mode 'org-mode "moS" "insert template")
+      (spacemacs/declare-prefix-for-mode 'org-mode "mots" "toggle src split")
     #+END_SRC
 
-    ~oss~  allows   me  to   insert  an  org   structure  template   defined  in
-    ~org-structure-template-alist~    (see    [[#User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38][User    Configuration/Org-mode/Org
-    Variables/Org behavior]]), while ~ooT~ displays the outline of the current org
-    file.
+    ~os~   allows  me   to  insert   an  org   structure  template   defined  in
+    ~org-structure-template-alist~ (see [[#User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38][Org behavior]]),  while ~ott~ displays the
+    outline of the current org file.
 
-    ~oot~ is the prefix for tree-related operations:
+    ~oT~ is the prefix for tree-related operations:
     #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "oot" "tables")
+      (spacemacs/declare-prefix-for-mode 'org-mode "moT" "tables")
     #+END_SRC
 
     These shortcuts  allow to manipulate the  width of the column  the cursor is
@@ -3403,12 +3397,12 @@
     added in order to make the purpose of the shortcuts clearer.
     #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        "ott" 'org-table-toggle-column-width
-        "ote" 'org-table-expand
-        "ots" 'org-table-shrink)
-      (spacemacs/declare-prefix-for-mode 'org-mode "oott" "toggle width")
-      (spacemacs/declare-prefix-for-mode 'org-mode "oote" "expand")
-      (spacemacs/declare-prefix-for-mode 'org-mode "oots" "shrink")
+        "oTt" 'org-table-toggle-column-width
+        "oTe" 'org-table-expand
+        "oTs" 'org-table-shrink)
+      (spacemacs/declare-prefix-for-mode 'org-mode "moTt" "toggle width")
+      (spacemacs/declare-prefix-for-mode 'org-mode "moTe" "expand")
+      (spacemacs/declare-prefix-for-mode 'org-mode "moTs" "shrink")
     #+END_SRC
 
     Finaly, I  set the following  shortcut in  order to easily  remove ~RESULTS~
@@ -3416,6 +3410,7 @@
     #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "or" 'org-babel-remove-result-one-or-many)
+      (spacemacs/declare-prefix-for-mode 'org-mode "mor" "remove org result")
     #+END_SRC
 
 *** Toggle
