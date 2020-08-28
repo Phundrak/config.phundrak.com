@@ -1,4 +1,3 @@
-# -*- org-confirm-babel-evaluate: nil -*-
 #+title: Neofetch configuration (WIP)
 #+setupfile: headers
 #+OPTIONS: auto-id:t
@@ -6,30 +5,27 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's Neofetch config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Neofetch config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle no :exports none
-#+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf.bak :exports code :noweb yes
+#+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf :exports code :noweb yes :padline no :mkdir yes :shebang "#!/usr/bin/env sh"
 
 * Introduction
   :PROPERTIES:
-  :CUSTOM_ID: Introduction-a7a859ac
+  :CUSTOM_ID: Introduction-5942aea3
   :END:
   [[https://github.com/dylanaraps/neofetch][Neofetch]] is a  CLI utility used to display system  information. It was written
   in Bash, and thus its configuration file is written as a Bash script too. This
   document was written with org-mode, and  my configuration file is tangled from
-  the source blocks you will see below to =~/.config/neofetch/config.conf=.
-  First, let’s insert the Emacs config header in order to specify the mode to
-  open the file with.
-  #+BEGIN_SRC sh
-    # -*- mode: sh -*-
-  #+END_SRC
+  the  source blocks  you  will see  below to  ~~/.config/neofetch/config.conf~.
+  This configuration will only contain what I need. For any further information,
+  please refer to the [[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
 
 * The ~print_info~ functions
   :PROPERTIES:
-  :CUSTOM_ID: The_~print_info~_functions-afbafdc3
+  :CUSTOM_ID: The_print_info_functions-bb30763f
   :END:
   The ~print_info~ function is the function called by Neofetch in order to print
   the system information it could fetch.  In this function, we’ll choose what to
   display, and how. This function looks like this:
-  #+BEGIN_SRC sh
+  #+BEGIN_SRC sh :tangle no
     print_info() {
         # Print information here…
     }
@@ -43,23 +39,22 @@
   the   interesting   information;   ~info "Memory" memory~   will   look   like
   ~Memory: 5136MiB / 15873MiB~. Here is what we want to display:
   #+NAME: info-elements-table
-  | Prefix   | Information | What it does                 |
-  |----------+-------------+------------------------------|
-  |          | line_break  | Insert a blank line          |
-  |          | title       | Username and hostname        |
-  |          | line_break  | Insert a blank line          |
-  |          | cols        | System theme                 |
-  |          | line_break  | Insert a blank line          |
-  | OS       | distro      | Distribution name            |
-  | Kernel   | kernel      | Kernel version               |
-  | Uptime   | uptime      | Machine uptime               |
-  | Packages | packages    | Number of installed packages |
-  | Shell    | shell       | User’s default shell         |
-  | WM       | wm          | User’s Window Manager        |
-  | Terminal | term        | Default terminal             |
-  | CPU      | cpu         | CPU information              |
-  | GPU      | gpu         | GPU information              |
-  | Memory   | memory      | RAM information              |
+  | Prefix   | Information | What it does                      |
+  |----------+-------------+-----------------------------------|
+  |          | title       | Username and hostname             |
+  |          | line_break  | Insert a blank line               |
+  |          | cols        | System theme                      |
+  |          | line_break  | Insert a blank line               |
+  | OS       | distro      | Distribution name                 |
+  | Kernel   | kernel      | Kernel version                    |
+  | Uptime   | uptime      | Machine uptime                    |
+  | Packages | packages    | Number of installed packages      |
+  | Shell    | shell       | User’s default shell              |
+  | WM       | wm          | User’s Window Manager             |
+  | Terminal | term        | Default terminal                  |
+  | CPU      | cpu         | CPU information                   |
+  | GPU      | gpu         | GPU information                   |
+  | Memory   | memory      | RAM information                   |
 
   #+NAME: info-elements-gen
   #+BEGIN_SRC emacs-lisp :var table=info-elements-table :cache yes
@@ -73,7 +68,7 @@
                "\n")
   #+END_SRC
 
-  #+RESULTS[b674f32b66234a67929a0426ce187ce712d806f4]: info-elements-gen
+  #+RESULTS[1e66bf48472ad24006f0cb9dc9c86078764ba84e]: info-elements-gen
   #+begin_example
   info line_break
   info title
@@ -90,6 +85,7 @@
   info "CPU" cpu
   info "GPU" gpu
   info "Memory" memory
+  info "Disks" disks
   #+end_example
 
   Hence, the function looks like so:
@@ -103,7 +99,7 @@
 
 * Information settings
   :PROPERTIES:
-  :CUSTOM_ID: Information_settings-7d3a990e
+  :CUSTOM_ID: Information_settings-9d4cfe88
   :END:
   Each  of  the following  variable  tunes  a function  that  can  be called  in
   ~print_info~ described  above. It is possible  to tune them by  modifying this
@@ -113,40 +109,22 @@
 
 ** Software
    :PROPERTIES:
-   :CUSTOM_ID: Information_settings-Software-7b13b829
+   :CUSTOM_ID: Information_settings-Software-59f4cb0f
    :END:
 *** OS
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-OS-7019c112
+    :CUSTOM_ID: Information_settings-Software-OS-67908fc4
     :END:
-**** Kernel
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-Kernel-df1062f0
-     :END:
-     The variable below can shorten the output ofh the ~kernel~ function.
-     - Default value :: ~"on"~
-     - Values ::
-       - ~"on"~
-       - ~"off"~
-     - Flag :: ~"--kernel_shorthand"~
-     - Supports :: Everything except *BSDs (except PacBSD and PC-BSD)
-     - Examples ::
-       - on :: ~4.8.9-1-ARCH~
-       - off :: ~Linux 4.8.9-1-ARCH~
-     #+begin_src sh
-       kernel_shorthand="off"
-     #+end_src
-
 **** Distro
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-Distro-3c8118d9
+     :CUSTOM_ID: Information_settings-Software-OS-Distro-cd12bc4f
      :END:
      This variable can shorten the output of the ~distro~ function.
      - Default value :: ~"on"~
      - Values ::
        - ~"on"~
        - ~"off"~
-     - Flag :: ~"--distro_shorthand"~
+     - Flag :: ~--distro_shorthand~
      - Supports :: Everything except Windows and Haiku
      - Examples ::
        - on :: ~Arch Linux~
@@ -155,16 +133,36 @@
        distro_shorthand="off"
      #+end_src
 
+     It is possible to display when the distro has been installed on the computer.
+
+**** Kernel
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-OS-Kernel-658cedce
+     :END:
+     The variable below can shorten the output ofh the ~kernel~ function.
+     - Default value :: ~"on"~
+     - Values ::
+       - ~"on"~
+       - ~"off"~
+     - Flag :: ~--kernel_shorthand~
+     - Supports :: Everything except *BSDs (except PacBSD and PC-BSD)
+     - Examples ::
+       - on :: ~4.8.9-1-ARCH~
+       - off :: ~Linux 4.8.9-1-ARCH~
+     #+begin_src sh
+       kernel_shorthand="off"
+     #+end_src
+
 **** OS Architecture
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-OS_Architecture-1164eea9
+     :CUSTOM_ID: Information_settings-Software-OS-OS_Architecture-2f60c93c
      :END:
      This variable can show or hide the OS architecture in the ~distro~ output.
      - Default value :: ~"off"~
      - Values ::
        - ~"on"~
        - ~"off"~
-     - Flag :: ~"--os_arch"~
+     - Flag :: ~--os_arch~
      - Examples ::
        - on :: ~Arch Linux x86_64~
        - off :: ~Arch Linux~
@@ -172,9 +170,65 @@
        os_arch="off"
      #+end_src
 
-*** Uptime shorthand
+**** Packages
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-OS-Packages-f836a58d
+     :END:
+     It is possible to show or hide Package Manager names.
+
+     - Default :: ~'tiny'~
+     - Values :: ~'on'~ / ~'tiny'~ / ~'off'~
+     - Flag :: ~--package_managers~
+     - Example ::
+       - on :: ~'998 (pacman), 8 (flatpak), 4 (snap)'~
+       - tiny :: ~'908 (pacman, flatpak, snap)'~
+       - off :: ~'908'~
+     #+BEGIN_SRC sh
+       package_managers="on"
+     #+END_SRC
+
+**** Shell
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-Shell-76439406
+     :END:
+***** Shell path
+      :PROPERTIES:
+      :CUSTOM_ID: Information_settings-Software-Shell-Shell_path-9eda636d
+      :END:
+      This allows  to show  either the path  of the user’s  shell, or  simply its
+      name.
+      - Default value :: ~"off"~
+      - Values ::
+       - ~"on"~
+       - ~"off"~
+      - Flag :: ~--shell_path~
+      - Examples ::
+        - on :: ~/bin/bash~
+        - off :: ~bash~
+     #+begin_src sh
+       shell_path="off"
+     #+end_src
+
+***** Shell version
+      :PROPERTIES:
+      :CUSTOM_ID: Information_settings-Software-Shell-Shell_version-03964bb3
+      :END:
+      This allows to show the shell’s version in the output of ~shell~.
+     - Default value :: ~"on"~
+     - Values ::
+       - ~"on"~
+       - ~"off"~
+     - Flag :: ~--shell_version~
+     - Examples ::
+       - on :: ~bash 4.4.5~
+       - off :: ~bash~
+     #+begin_src sh
+       shell_version="off"
+     #+end_src
+
+*** Uptime
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-Uptime_shorthand-70ff185a
+    :CUSTOM_ID: Information_settings-Software-Uptime-a7b5361a
     :END:
     This variable can shorten the output of the ~uptime~ function. ~on~ shortens
     it a bit, while ~tiny~ shortens it greatly.
@@ -183,7 +237,7 @@
       - ~"on"~
       - ~"tiny"~
       - ~"off"~
-    - Flag :: ~"--uptime_shorthand"~
+    - Flag :: ~--uptime_shorthand~
     - Examples ::
       - on :: ~2 days, 10 hours, 3 mins~
       - off :: ~2 days, 10 hours, 3 minutes~
@@ -192,115 +246,16 @@
       uptime_shorthand="on"
     #+end_src
 
-*** Shell
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-Shell-b958db2a
-    :END:
-**** Shell path
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Shell-Shell_path-fff91e35
-     :END:
-     This allows  to show  either the path  of the user’s  shell, or  simply its
-     name.
-     - Default value :: ~"off"~
-     - Values ::
-      - ~"on"~
-      - ~"off"~
-     - Flag :: ~"--shell_path"~
-     - Examples ::
-       - on :: ~/bin/bash~
-       - off :: ~bash~
-    #+begin_src sh
-      shell_path="off"
-    #+end_src
-
-**** Shell version
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Shell-Shell_version-a1702748
-     :END:
-     This allows to show the shell’s version in the output of ~shell~.
-    - Default value :: ~"on"~
-    - Values ::
-      - ~"on"~
-      - ~"off"~
-    - Flag :: ~"--shell_version"~
-    - Examples ::
-      - on :: ~bash 4.4.5~
-      - off :: ~bash~
-    #+begin_src sh
-      shell_version="off"
-    #+end_src
-
-*** Theming
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-Theming-44dc624d
-    :END:
-    This section  will allow  the user  to modify what  Neofetch can  and cannot
-    display about  the machine’s  theming —by  this, I mean  its GTK  theme, its
-    icons and its default font.
-
-**** Shorten output
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Shorten_output-bdb4af3f
-     :END:
-     With this  value, it is  possible to shorten  the output of  the computer’s
-     theming.
-     - Default value :: ~"off"~
-     - Values ::
-       - ~"on"~
-       - ~"off"~
-     - Flag :: ~"--gtk_shorthand"~
-     - Examples ::
-       - on :: ~Numix, Adwaita~
-       - off :: ~Numix [GTK2], Adwaita [GTK3]~
-     #+begin_src sh
-       gtk_shorthand="on"
-     #+end_src
-
-**** Enable or disable theming display for GTK2
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-6bfd9cf8
-     :END:
-     It is possible to explicitely show or hide the computer’s theming with GTK2
-     with this variable.
-     - Default value :: ~"on"~
-     - Values ::
-       - ~"on"~
-       - ~"off"~
-     - Flag :: ~"--gtk2"~
-     - Examples ::
-       - on ::  ~Numix [GTK2], Adwaita [GTK3]~
-       - off :: ~Adwaita [GTK3]~
-     #+begin_src sh
-       gtk2="off"
-     #+end_src
-
-**** Enable or disable theming display for GTK3
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK3-7dde3690
-     :END:
-     The same variable as above is also available for GTK3.
-     - Default value :: ~"on"~
-     - Values ::
-       - ~"on"~
-       - ~"off"~
-     - Flag :: ~"--gtk3"~
-     - Examples ::
-       - on ::  ~Numix [GTK2], Adwaita [GTK3]~
-       - off :: ~Numix [GTK2]~
-     #+begin_src sh
-     #+end_src
-
 *** IP address
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-IP_address-66efe064
+    :CUSTOM_ID: Information_settings-Software-IP_address-26df5e1d
     :END:
     It is possible to display the  machine’s public IP address with the function
     ~ip~. The value  below allows the user  to change the website  used to fetch
     it.
     - Default value :: ~"http://ident.me"~
     - Value :: ~"url"~
-    - Flag :: ~"--ip_host"~
+    - Flag :: ~--ip_host~
     #+begin_src sh
       public_ip_host="http://ident.me"
     #+end_src
@@ -317,18 +272,78 @@
     #+begin_src sh
     #+end_src
 
+*** Theming
+    :PROPERTIES:
+    :CUSTOM_ID: Information_settings-Software-Theming-ba7f1ccd
+    :END:
+    This section  will allow  the user  to modify what  Neofetch can  and cannot
+    display about  the machine’s  theming —by  this, I mean  its GTK  theme, its
+    icons and its default font.
+
+**** Shorten output
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-Theming-Shorten_output-cbef1fa4
+     :END:
+     With this  value, it is  possible to shorten  the output of  the computer’s
+     theming.
+     - Default value :: ~"off"~
+     - Values ::
+       - ~"on"~
+       - ~"off"~
+     - Flag :: ~--gtk_shorthand~
+     - Examples ::
+       - on :: ~Numix, Adwaita~
+       - off :: ~Numix [GTK2], Adwaita [GTK3]~
+     #+begin_src sh
+       gtk_shorthand="on"
+     #+end_src
+
+**** Enable or disable theming display for GTK2
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-f4398571
+     :END:
+     It is possible to explicitely show or hide the computer’s theming with GTK2
+     with this variable.
+     - Default value :: ~"on"~
+     - Values ::
+       - ~"on"~
+       - ~"off"~
+     - Flag :: ~--gtk2~
+     - Examples ::
+       - on ::  ~Numix [GTK2], Adwaita [GTK3]~
+       - off :: ~Adwaita [GTK3]~
+     #+begin_src sh
+       gtk2="off"
+     #+end_src
+
+**** Enable or disable theming display for GTK3
+     :PROPERTIES:
+     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK3-c4070e66
+     :END:
+     The same variable as above is also available for GTK3.
+     - Default value :: ~"on"~
+     - Values ::
+       - ~"on"~
+       - ~"off"~
+     - Flag :: ~--gtk3~
+     - Examples ::
+       - on ::  ~Numix [GTK2], Adwaita [GTK3]~
+       - off :: ~Numix [GTK2]~
+     #+begin_src sh
+     #+end_src
+
 ** Hardware
    :PROPERTIES:
-   :CUSTOM_ID: Information_settings-Hardware-490075ce
+   :CUSTOM_ID: Information_settings-Hardware-de7ed990
    :END:
 *** CPU
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-CPU-dfa36b11
+    :CUSTOM_ID: Information_settings-Hardware-CPU-eb0bcd7d
     :END:
 
 **** CPU brand
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-12ceb9ce
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-5b25776b
      :END:
      With this variables, it  is possible to show or hide the brand  of a CPU in
      the ~cpu~ output.
@@ -336,7 +351,7 @@
      - Values ::
        - ~"on"~
        - ~"off"~
-     - Flag :: ~"--cpu_brand"~
+     - Flag :: ~--cpu_brand~
      - Examples ::
        - on :: ~Intel i7-6500U~
        - off :: ~i7-6500U~
@@ -346,14 +361,14 @@
 
 **** CPU speed
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed-86e4ea04
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed-2bf6e5f7
      :END:
      With this variable, it is possible to show or hide the speed of the CPU.
      - Default value :: ~"on"~
      - Values ::
        - ~"on"~
        - ~"off"~
-     - Flag :: ~"--cpu_speed"~
+     - Flag :: ~--cpu_speed~
      - Examples ::
        - on :: ~Intel i7-6500U (4) @ 3.1GHz~
        - off :: ~Intel i7-6500U (4)~
@@ -363,7 +378,7 @@
 
 **** CPU speed type
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-4380a471
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-a24de48f
      :END:
      This allows Neofetch to  know what type of speed it  has to fetch regarding
      the machine’s  CPU. Any file in  ~/sys/devices/system/cpu/cpu0/cpufreq~ can
@@ -374,7 +389,7 @@
       - ~"scaling_min_freq"~
       - ~"scaling_max_freq"~
       - ~"bios_limit"~
-    - Flag :: ~"--speed_type"~
+    - Flag :: ~--speed_type~
     - Supports :: Linux with ~cpufreq~
     #+begin_src sh
       speed_type="bios_limit"
@@ -382,7 +397,7 @@
 
 **** CPU speed shorthand
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-8000dc1f
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-0d15fe08
      :END:
      This value allows  to show sorter CPU  speed with less digits.  This flag is
      not supported in systems with CPU speed below 1GHz.
@@ -390,7 +405,7 @@
      - Values ::
        - ~"on"~
        - ~"on"~
-     - Flag :: ~"--speed_shorthand"~
+     - Flag :: ~--speed_shorthand~
      - Examples ::
        - on :: ~i7-6500U (4) @ 3.1GHz~
        - off :: ~i7-6500U (4) @ 3.100GHz~
@@ -400,7 +415,7 @@
 
 **** CPU cores
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-66e72a57
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-30177354
      :END:
      With this variable, it is possible to  display the number of cores that are
      available in the CPU.
@@ -409,7 +424,7 @@
        - ~"logical"~
        - ~"physical"~
        - ~"off"~
-     - Flag :: ~"--cpu_cores"~
+     - Flag :: ~--cpu_cores~
      - Supports :: ~physical~ does not work on BSD.
      - Examples ::
        - logical :: ~Intel i7-6500U (4) @ 3.1GHz~ (All virtual cores)
@@ -421,7 +436,7 @@
 
 **** CPU temperature
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-c79fb1a1
+     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-a22e522c
      :END:
      This variable allows the user to hide or show the CPU’s temperature, and if
      shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD
@@ -432,7 +447,7 @@
        - ~"C"~
        - ~"F"~
        - ~"off"~
-     - Flag :: ~"--cpu_temp"~
+     - Flag :: ~--cpu_temp~
      - Supports :: Linux, BSD
      - Examples ::
        - C :: ~Intel i7-6500U (4) @ 3.1GHz [27.2°C]~
@@ -444,7 +459,7 @@
 
 *** GPU
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-GPU-f9450397
+    :CUSTOM_ID: Information_settings-Hardware-GPU-2c842575
     :END:
     The function  responsible for displaying  information regarding the  GPUs is
     ~gpu~. It  will try  to list all  available GPUs and  display what  it knows
@@ -452,7 +467,7 @@
 
 **** GPU brand
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-c8d3c67d
+     :CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-6e2da615
      :END:
      This value allows  the user to hide or  show the brand of their  GPU in the
      output of ~gpu~.
@@ -460,7 +475,7 @@
      - Values ::
        - ~"on"~
        - ~"off"~
-     - Flag :: ~"--gpu_brand"~
+     - Flag :: ~--gpu_brand~
      - Supports ::
      - Examples ::
        - on :: ~AMD HD 7950~
@@ -471,7 +486,7 @@
 
 **** Which GPU to display
      :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-a6f72453
+     :CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-f40d3aac
      :END:
      This allows  the user  to choose  which GPU  appears in  the output  of the
      function ~gpu~.
@@ -480,7 +495,7 @@
        - ~"all"~
        - ~"dedicated"~
        - ~"integrated"~
-     - Flag :: ~"--gpu_type"~
+     - Flag :: ~--gpu_type~
      - Supports :: Linux
      - Examples ::
        - all ::
@@ -496,7 +511,7 @@
 
 *** Resolution
     :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-Resolution-f8a0316b
+    :CUSTOM_ID: Information_settings-Hardware-Resolution-b768f865
     :END:
     This will try to list all the connected screens and display their resolution
     individually. It is possible to display the refresh rate or to hide it.
@@ -504,7 +519,7 @@
     - Values ::
       - ~"on"~
       - ~"off"~
-    - Flag :: ~"--refresh_rate"~
+    - Flag :: ~--refresh_rate~
     - Supports :: Does not work on Windows
     - Examples ::
       - on :: ~1920x1080 @ 60Hz~
@@ -512,9 +527,3 @@
     #+begin_src sh
       refresh_rate="off"
     #+end_src
-
-*** Disks
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-Disks-48e9e728
-    :END:
-    Neofetch can display the space available and the total space of disks
