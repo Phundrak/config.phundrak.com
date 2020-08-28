@@ -258,7 +258,7 @@
     #+END_SRC
     I can also set the transparency of st (my terminal emulator) like so:
     #+BEGIN_SRC conf
-      st.alpha: 0.65g
+      st.alpha: 0.65
     #+END_SRC
 
     Next is the  declaration of my color  theme. It is based on  the [[https://www.nordtheme.com/][Nord]] theme,
