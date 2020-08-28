@@ -1,4 +1,3 @@
-# -*- org-confirm-babel-evaluate: nil -*-
 #+TITLE: i3 config (Deprecated)
 #+setupfile: headers
 #+OPTIONS: auto-id:t
@@ -651,13 +650,13 @@
     to change a bit the appearance of i3. For that, we obviously have some
     shortcuts.
     #+NAME: gaps-resize-sh
-    | shortcut          | command                                       | what it does                 |
-    |-------------------+-----------------------------------------------+------------------------------|
-    | $mod+g            | gaps inner current plus 5                     | Increase the inner gap size  |
-    | $mod+Shift+g      | gaps inner current minus 5                    | Decrease the inner gap size  |
+    | shortcut          | command                                       | what it does                |
+    |-------------------+-----------------------------------------------+-----------------------------|
+    | $mod+g            | gaps inner current plus 5                     | Increase the inner gap size |
+    | $mod+Shift+g      | gaps inner current minus 5                    | Decrease the inner gap size |
     | $mod+Ctrl+g       | gaps outer current plus 5                     | Increase the outer gap size |
     | $mod+Ctrl+Shift+g | gaps outer current minus 5                    | Decrease the outer gap size |
-    | $mod+$alt+g       | gaps inner all set 20; gaps outer all set -10 | Reset gaps                   |
+    | $mod+$alt+g       | gaps inner all set 20; gaps outer all set -10 | Reset gaps                  |
 
     Here is the corresponding configuration:
     #+BEGIN_SRC conf
