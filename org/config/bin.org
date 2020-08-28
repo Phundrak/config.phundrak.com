@@ -14,36 +14,15 @@
   original source code, all the following code snippets are exported and tangled
   from this file to the actual executables.
 
-  Please do not forget to run the following before tangling files from this file
-  to make sure the tangled files will be executables.
-  #+begin_src emacs-lisp :results silent
-    (defun phundrak/make-tangled-files-executable ()
-      (set-file-modes (buffer-file-name) #o755))
-    (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-executable)
-  #+end_src
-
-  This code block can  be evaluated once this file has been  tangled in order to
-  produce again non-executable files.
-  #+begin_src emacs-lisp :results silent
-    (defun phundrak/make-tangled-files-not-executable ()
-      (set-file-modes (buffer-file-name) #o644))
-    (add-hook 'org-babel-post-tangle-hook 'phundrak/make-tangled-files-not-executable)
-  #+end_src
-
 * 4chandl
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/4chandl
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/4chandl
   :CUSTOM_ID: 4chandl-21ff428f
   :END:
   Usage: =4chandl [ URL TO THREAD ]=
 
   I made  this small  script to  download the attached  files of  4chan threads.
-  First of all, let’s declare it as a fish script.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
-
-  Now, let’s check if any arguments were  passed to the executable. If none were
+  Let’s  check if  any arguments  were passed  to the  executable. If  none were
   passed, the script should be aborted.
   #+BEGIN_SRC fish
     if ! count $argv > /dev/null
@@ -103,7 +82,7 @@
 
 * awiki
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/awiki
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/awiki
   :CUSTOM_ID: awiki-7ac5e1d5
   :END:
   ~awiki~  is   a  simple   script  used   with  ~rofi~   that  relies   on  the
@@ -121,7 +100,6 @@
   order to choose the page we want  to display. By the way, setting the location
   of the HTML files will come in handy later.
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     set WLOCATION /usr/share/doc/arch-wiki/html/en/
     set WPAGE (/bin/ls $WLOCATION | \
     sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
@@ -136,7 +114,7 @@
 
 * Askpass
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/askpass
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/askpass
   :CUSTOM_ID: Askpass-d0d7a8c0
   :END:
   Askpass is a simple script that invokes ~rofi~  as a way to get from a GUI the
@@ -144,26 +122,24 @@
   and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
   we ignore the initial shebang. This executable is pointed at by the
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
   #+END_SRC
 
 * Backup
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/backup
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/backup
   :CUSTOM_ID: Backup-68c7c63e
   :END:
   ~backup~ is a very simple, oneliner script  that will create a local copy of a
   file and add the date at which it  was copied in the filename. You can see its
   source code here:
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
   #+END_SRC
 
 * ConnectWifi
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/connect-wifi
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/connect-wifi
   :CUSTOM_ID: ConnectWifi-16e5e24a
   :END:
   ~connect-wifi~ is  a small  utility tool  that allows the  user to  connect to
@@ -171,7 +147,6 @@
   to connect  to. We’ll  use the  ~nmcli c  s~ command  to get  the list  of the
   available networks, and we’ll chose one with ~rofi~.
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     set SELECTEDWIFI (nmcli d w l | \
     egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
     egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
@@ -191,9 +166,9 @@
    :CUSTOM_ID: ConnectWifi-fix_it-a4b11503
    :END:
 
-* Cppnew
+* Cppnew                                                           :noexport:
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/cppnew
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
   :CUSTOM_ID: Cppnew-964e697b
   :END:
   =cppnew= is a small utility that helps you create a new C++ project. Several
@@ -209,10 +184,6 @@
   The choice is given to the user which of them to use with options that will be
   given to =cppnew=.
 
-  #+begin_src fish
-#!/usr/bin/env fish
-  #+end_src
-
   First of all, if no arguments were passed, return an error.
   #+begin_src fish
     if ! count $argv >/dev/null
@@ -225,17 +196,12 @@
 
 * Cnew
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/cnew
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/cnew
   :CUSTOM_ID: Cnew-d9ec9cc4
   :END:
   =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
   creates a  CMake template C project  from the template that  already exists in
-  [[file:~/dev/templateC][~/dev/templateC]]. This script is a fish script, so let’s insert the shebang.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
-
-  If no argument was passed, display an error message and exit.
+  [[file:~/dev/templateC][~/dev/templateC]]. If no argument was passed, display an error message and exit.
   #+BEGIN_SRC fish
     if ! count $argv > /dev/null
         echo "Missing argument: PROJECT" && return -1
@@ -292,14 +258,13 @@
 
 * Dart Language Server
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/dart_language_server
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/dart_language_server
   :CUSTOM_ID: Dart_Language_Server-18c256b1
   :END:
   Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
   [[https://github.com/natebosch/dart_language_server][=dart_language_server=]]  is obsolete.  As  recommended by  the  repo owner,  we
   should launch instead the following code:
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     /usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
   #+END_SRC
   So, instead of  using the obsolete executable, instead we  will be calling the
@@ -307,39 +272,36 @@
 
 * Dmenu
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/dmenu
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/dmenu
   :CUSTOM_ID: Dmenu-527edf04
   :END:
   I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
   emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
   rofi’s dmenu emulation with the arguments initially passed to dmenu.
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     rofi -dmenu $argv
   #+END_SRC
 
 * Emacsmail
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/emacsmail
+  :HEADER-ARGS: :shebang "#!/bin/bash" :tangle ~/.local/bin/emacsmail
   :CUSTOM_ID: Emacsmail-afffb7cd
   :END:
   This  short script  is used  in my  =~/.local/share/applications/mu4e.desktop=
   file in order to send to Emacs any ~mailto:~ requests made in my system.
   #+BEGIN_SRC bash
-    #!/bin/bash
     emacsclient -c --eval "(browse-url-mail \"$@\")"
   #+END_SRC
 
 * Emoji picker
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/rofi-emoji
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-emoji
   :CUSTOM_ID: Emoji_picker-a1c374ec
   :END:
   The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
   [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
   emoji is selected, it is copied to the clipboard using =xclipboard=.
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
     awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
   #+END_SRC
@@ -356,14 +318,13 @@
 
 * Lock
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/lock
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/lock
   :CUSTOM_ID: Lock-635fcb38
   :END:
   ~lock~ is a simple script that locks the screen with ~i3lock~ while setting as
   the background image of the locked screen a corrupted screenshot of the screen
   before it was locked.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
     set TMPBG /tmp/screen.png
     scrot $TMPBG
     corrupter -add 0 $TMPBG $TMPBG
@@ -373,24 +334,22 @@
 
 * mp42webm
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/mp42webm
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/mp42webm
   :CUSTOM_ID: mp42webm-aeacca58
   :END:
   This function  allows me to  convert easily an mp4  video to the  webm format.
   Nothing too fancy here.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
     ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
   #+END_SRC
 
 * pape-update
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/pape-update
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/pape-update
   :CUSTOM_ID: pape-update-bdecbadf
   :END:
   This little tool sets a random wallpaper using nitrogen.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
     set -l PAPESDIR ~/Pictures/Wallpapers
     set -l PAPES (ls $PAPESDIR)
     set -l PAPE $PAPESDIR/$PAPES[(random 1 (count $PAPES))]
@@ -399,26 +358,21 @@
     end
   #+END_SRC
 
-* Pinfo
+* Pinfo                                                            :noexport:
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/pinfo
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
   :CUSTOM_ID: Pinfo-f3644596
   :END:
   ~pinfo~ is a utility that shows system information
 
 * Polybar-launch
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/polybar-launch
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/polybar-launch
   :CUSTOM_ID: Polybar-launch-36789edc
   :END:
   This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
-  launch it  if polybar  isn’t launched yet.  This script is  a bash  script, so
-  let’s declare its shebang.
-  #+BEGIN_SRC bash
-  #!/usr/bin/env bash
-  #+END_SRC
-
-  First thing to do is kill all polybar processes.
+  launch it if polybar isn’t launched yet. First thing to do is kill all polybar
+  processes.
   #+BEGIN_SRC bash
   killall -q polybar
   #+END_SRC
@@ -450,17 +404,13 @@
 
 * Rofi-mount
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/rofi-mount
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-mount
   :CUSTOM_ID: Rofi-mount-ebbebf68
   :END:
   =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
   interactively asks the user  what to mount, and where to mount  it. What I did
   was replace  dmenu with rofi, and  fix a couple  of bugs I encountered  in the
-  original script.  For the  record, this  is a fish  script. Let’s  declare our
-  shebang.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
+  original script.
 
 ** Get the mountable elements
    :PROPERTIES:
@@ -842,15 +792,12 @@
 
 * Rofi-pass
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/rofi-pass
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-pass
   :CUSTOM_ID: Rofi-pass-8335357f
   :END:
   =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
   password manager with  rofi as its interface, and then  stores the password in
-  the clipboard. It is a fish script, so let’s declare it as one.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
+  the clipboard.
 
   Let’s  parse all  the  arguments passed  to  the  script. If  one  of them  is
   =--type=, =-t= or =type=, the script will  attempt to type the password to the
@@ -925,14 +872,11 @@
 
 * Rofi-umount
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/rofi-umount
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-umount
   :CUSTOM_ID: Rofi-umount-ddde1667
   :END:
   =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
-  partitions. It is a fish script, so let’s declare it as that with its shebang.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
+  partitions.
 
 ** Get the unmountable drives
    :PROPERTIES:
@@ -1160,17 +1104,12 @@
 
 * set-screens
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/set-screens
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/set-screens
   :CUSTOM_ID: set-screens-01bd989a
   :END:
-  ~set-screens~ is a small script that allows the user to automatically set up
-  an external monitor
-  #+BEGIN_SRC fish
-    #!/usr/bin/env fish
-  #+END_SRC
-
-  First, let’s set some variables so we don’t have to type in hidden places some
-  values that should be easily modifiable.
+  ~set-screens~ is a  small script that allows the user  to automatically set up
+  an external monitor. First, let’s set some  variables so we don’t have to type
+  in hidden places some values that should be easily modifiable.
   #+BEGIN_SRC fish
     set internal "eDP1"
     set external "HDMI1"
@@ -1194,24 +1133,22 @@
 
 * Starwars
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/starwars
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/starwars
   :CUSTOM_ID: Starwars-654f8637
   :END:
   This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
   in your terminal. Here is the code:
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     telnet towel.blinkenlights.nl
   #+END_SRC
 
 * UpdateFlutter
   :PROPERTIES:
-  :header-args: :tangle ~/.local/bin/UpdateFlutter
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/UpdateFlutter
   :CUSTOM_ID: UpdateFlutter-1e8fbeb7
   :END:
   This is a simple utility to be ran when the ~flutter~ package is updated.
   #+BEGIN_SRC fish
-    #!/usr/bin/fish
     sudo chown -R :flutterusers /opt/flutter
     sudo chmod -R g+w /opt/flutter
     sudo chmod a+rw /opt/flutter/version
@@ -1220,14 +1157,11 @@
 
 * Wacom setup
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/wacom-setup
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/wacom-setup
   :CUSTOM_ID: Wacom_setup-331fb024
   :END:
   I made a small and quick utility to set up my Wacom tablet so it is only bound
-  to one screen. This is a fish script, so let’s insert the sheband.
-  #+BEGIN_SRC fish
-  #!/usr/bin/env fish
-  #+END_SRC
+  to one screen.
 
 ** Set our variables
    :PROPERTIES:
@@ -1388,7 +1322,7 @@
 
 * Weather
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.local/bin/we
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/we
   :CUSTOM_ID: Weather-4ed00bb0
   :END:
   A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get
@@ -1396,7 +1330,6 @@
   the city I  live in, but it is  also possible for the script to  accept as its
   arguments a search inquiry.
   #+BEGIN_SRC fish
-    #!/usr/bin/env fish
     if count $argv > /dev/null
         set -l SEARCH (string join '+' $argv)
         curl http://v2.wttr.in/~$SEARCH
