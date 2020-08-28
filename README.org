@@ -6,18 +6,9 @@
 #+OPTIONS: auto-id:t H:4 broken_links:mark email:t ^:{}
 #+KEYWORDS: dotfiles linux emacs configuration phundrak drakpa
 
-* Table of Contents                                        :TOC_4_gh:noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: h-8044ee9a-2ee8-4d52-bad1-666c41a2a6a6
-  :END:
-- [[#presentation][Presentation]]
-- [[#wheres-the-config-file-for-x][Where’s the config file for X?]]
-- [[#some-more-info-please][Some more info please?]]
-- [[#neat-whats-the-license][Neat, what’s the license?]]
-
 * Presentation
   :PROPERTIES:
-  :CUSTOM_ID: h-fbbf65b3-bf05-4466-80fb-b8f3d3094e47
+  :CUSTOM_ID: Presentation-e5605995
   :END:
   This repository is where  I keep most of my configuration  files. With what is
   stored here, anyone can recreate a working desktop configuration similar to my
@@ -32,35 +23,23 @@
 
 * Where’s the config file for X?
   :PROPERTIES:
-  :CUSTOM_ID: h-42508121-fe51-48bb-bd22-9f8894902789
+  :CUSTOM_ID: Where’s_the_config_file_for_X?-7b214c4a
   :END:
   As you  may have  noticed, I am  striving for a  100% amount  of configuration
-  files exported from Org files, that is, through literary programming. This is
-  still very much a work in progress, but so far I achieved this for the
-  following configuration files:
-  - Email signature (not very hard I must admit) ([[file:org/config/index.org]])
-  - ~.gitignore_global~ (not very hard either) ([[file:org/config/index.org]])
-  - ~.rustfmt.toml~ ([[file:org/config/index.org]])
-  - My Xresources file ([[file:org/config/index.org]])
-  - [[file:org/config/bin.org][My custom scripts]]
-  - [[file:org/config/fish.org][My fish config]]
-  - [[file:org/config/i3.org][My i3 config]]
-  - [[file:org/config/installation.org][The installation bootstrap]]
-  - [[file:org/config/nano.org][My nano config]]
-  - [[file:org/config/polybar.org][My Polybar config]]
-  - [[file:org/config/polybar.org][My Emacs (Spacemacs) config]]
-  - And finally [[file:org/config/tmux.org][my Tmux config]]
+  files exported from Org files, that  is, through literary programming. This is
+  still very much a work in progress though.  Most of what you need can be found
+  in my [[file:org/config/index.org][index.org]] file and in its folder.
 
 * Some more info please?
   :PROPERTIES:
-  :CUSTOM_ID: h-2b8488ed-8a5c-4292-ac4f-e47b7009c496
+  :CUSTOM_ID: Some_more_info_please?-f54ae73a
   :END:
   Everything you need to know is in my [[file:org/config/]] folder, and my Org files
-  are also available in web format on my website [[https://phundrak.com/config][phundrak.com/config]].
+  are also available in web format on my website [[https://config.phundrak.com/][config.phundrak.com]].
 
 * Neat, what’s the license?
   :PROPERTIES:
-  :CUSTOM_ID: h-fc461244-3932-4680-88bc-73dc5e175213
+  :CUSTOM_ID: Neat,_what’s_the_license?-399aa236
   :END:
   All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
   Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you
