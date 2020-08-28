@@ -1,4 +1,4 @@
-#+TITLE: Nano configuration
+#+TITLE: Nano configuration (Deprecated)
 #+setupfile: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's nano configuration" />
@@ -10,6 +10,10 @@
   :PROPERTIES:
   :CUSTOM_ID: Introduction-7e535842
   :END:
+  *Before proceeding,  be aware  that I  deprecated this  nano config  on August
+  28th, 2020, meaning I  won’t update it anymore unless I use  it again some day
+  in the future. I will keep it on my website though.*
+
   I nowadays rarely use Nano as a text  editor, since I mainly rely on Emacs for
   all sorts  of tasks, including  quick file  editing. However, at  times, Emacs
   won’t work or won’t be available, and I therefore need a lightweight, fast and
