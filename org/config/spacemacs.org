@@ -3221,12 +3221,12 @@
    On modern-day  computers, with  wide screens almost  everywhere, there  is no
    reason for the email buffer to open  below the email directory and not on its
    right,  which  is  why I  set  the  split  view  to be  vertical  instead  of
-   horizontal.  I also  set the  width  the email  directory should  keep to  80
-   characters  (and   I  could  go  to   120,  but  that’s  only   good  for  my
-   ultra-widescreen), because 30 characters is way too f-ing low.
+   horizontal. And to make it more readable, the header window will only occupy
+   40% of Emacs’ frame, the rest will be given to emails.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-split-view 'vertical
-           mu4e-headers-visible-columns 140)
+           mu4e-headers-visible-columns (round (* (window-total-width)
+                                                  0.4)))
    #+END_SRC
 
    This  is the  setup I  have for  my  SMTP mail  server: I  point Emacs’  SMTP
