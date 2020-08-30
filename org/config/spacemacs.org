@@ -3617,6 +3617,51 @@
                                "~/.cache/yay/*" "node_modules" "~/.config/emacs")
    #+END_SRC
 
+** Security
+   :PROPERTIES:
+   :CUSTOM_ID: User_Configuration-Security-21d88555
+   :END:
+   This paragraph  is about  making Emacs  and GPG  as a  whole (since  Emacs is
+   /always/ open on my computer) more secure.  The first thing I want to make is
+   a function that  will close any buffer  that contains an open  ~.gpg~ file –I
+   certainly do not want anyone to be able  to read such files on my computer if
+   I leave it even for a couple of minutes.
+   #+BEGIN_SRC emacs-lisp
+     (defun phundrak/kill-gpg-buffers ()
+       "Kill GPG buffers."
+       (interactive)
+       (let ((buffers-killed 0))
+         (dolist (buffer (buffer-list))
+           (with-current-buffer buffer
+             (when (string-match ".*\.gpg$" (buffer-name buffer))
+               (message "Auto killing .gpg buffer '%s'" (buffer-name buffer))
+               (when (buffer-modified-p buffer)
+                 (save-buffer))
+               (kill-buffer buffer)
+               (setq buffers-killed (+ buffers-killed 1)))))
+         (unless (zerop buffers-killed)
+           ;; Kill gpg-agent.
+           (shell-command "gpgconf --kill gpg-agent")
+           (message "%s .gpg buffers have been autosaved and killed" buffers-killed))))
+   #+END_SRC
+
+   Notice  the ~(shell-command  "gpgconf --kill  gpg-agent")~ command  there: it
+   kills ~gpg-agent~ which  will always respawn each time GPG2  is invoked. That
+   way, I know anyone trying to open a  GPG file will have to insert my password
+   when trying  to do so instead  of just hoping I  entered it not long  ago and
+   they won’t have to.
+
+   But surely, if  I only define this function  and hope to call it  each time I
+   leav my  computer, surely  at one point  I will forget  to execute  it before
+   leaving. I can’t trust  myself to always call it manually.  Which is why I’ll
+   ask Emacs  itself to  call it  after it detects  a minute  of idling.  It may
+   become from times to times a bit of a pain, but at least I’m now sure I won’t
+   ever have to worry about someone reading my GPG files open in Emacs while I’m
+   out for a quick break.
+   #+BEGIN_SRC emacs-lisp
+     (run-with-idle-timer 60 t 'phundrak/kill-gpg-buffers)
+   #+END_SRC
+
 ** Snippets
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Snippets-67a32065
