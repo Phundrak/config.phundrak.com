@@ -2816,9 +2816,9 @@
    :END:
    As you  will see,  I defined  a LOT of  custom keybindings.  All of  them are
    Spacemacs keybindings,  defined in  a way  they can  be used  seamlessly with
-   Evil. They  all begin  with ~o~,  which is a  prefix reserved  for user-defined
-   keybindings so  they won’t conflict with  any package. Let’s declare  it like
-   so.
+   Evil.  They  almost all  begin  with  ~o~, which  is  a  prefix reserved  for
+   user-defined  keybindings so  they  won’t conflict  with  any package.  Let’s
+   declare it like so.
    #+BEGIN_SRC emacs-lisp
      (spacemacs/declare-prefix "o" "custom")
    #+END_SRC
@@ -2827,21 +2827,24 @@
    the  src_emacs-lisp[:exports  results]{(princ  dotspacemacs-leader-key)}  key
    followed by the sequence assigned to each keybinding.
 
-   Before some more specialized categories, I have two commands which don’t fit
-   into any other category that I sometime use:
+   Before some more specialized categories, I  have two commands which don’t fit
+   into any other category  that I sometime use. The first one is  a fix for the
+   Bépo keybindings which left out a keybind: ~winum-select-window-by-number~ is
+   still bound  to ~SPC ²~,  which is not  a key that  is available on  the bépo
+   layout (instead, we use the dead key  ~^~ followed by ~2~, or any digits). So
+   instead, let’s use the key that is physically in the same place: ~$~.
    #+BEGIN_SRC emacs-lisp
-     (spacemacs/declare-prefix "oB" "byte-compile ~/.config/emacs")
-     (spacemacs/declare-prefix "or" "external command")
-     (spacemacs/set-leader-keys
-       "oB"   (lambda () (byte-recompile-directory (expand-file-name "~/.config/emacs") 0))
-       "or"   'helm-run-external-command)
+     (spacemacs/declare-prefix "$" "select window by number")
+     (spacemacs/set-leader-keys "$"  'winum-select-window-by-number)
    #+END_SRC
 
-   ~oB~  byte-compiles  every  ~.el~  file  located  in  the  =~/.config/emacs/=
-   directory —  it can be useful  in case of  package upgrade and an  old ~.elc~
-   file still loads instead of an uncompiled but newer ~.el~ file.
-
-   ~or~ on the other hand invokes an external comand the same way [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]] would.
+   The following, I use it rarely, it  can launch an external command from Emacs
+   to launch, for instance, my web browser  or any other software not related to
+   Emacs. It offers a similar interface to [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]] through helm.
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs/declare-prefix "or" "external command")
+     (spacemacs/set-leader-keys "or" 'helm-run-external-command)
+   #+END_SRC
 
 *** Applications
     :PROPERTIES:
