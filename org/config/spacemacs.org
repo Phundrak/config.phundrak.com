@@ -3355,6 +3355,24 @@
       (global-prettify-symbols-mode 1)
     #+END_SRC
 
+*** Time in modeline
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Visual_configuration-Time_in_modeline-61b40ef2
+    :END:
+    I like to see what time it is in Emacs. It may be sometimes redundant with
+    my window manager’s clock, but the latter is not always visible; I might
+    have, for instance, Emacs in fullscreen. First, I need to tell Emacs a few
+    things: I want a 24h format, as well as the current date.
+    #+BEGIN_SRC emacs-lisp
+      (setq display-time-24hr-format t
+            display-time-day-and-date t)
+    #+END_SRC
+
+    Now that Emacs knows how to display time, let’s ask it to.
+    #+BEGIN_SRC emacs-lisp
+      (display-time-mode 1)
+    #+END_SRC
+
 *** ~which-key~ replacements
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Visual_configuration-which-key_replacements-cccc5202
