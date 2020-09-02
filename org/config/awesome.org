@@ -1483,55 +1483,13 @@
   :CUSTOM_ID: Autostart-f2cf42fe
   :END:
   By simply  adding a  line requesting  to spawn  a command,  it is  possible to
-  create some  autolaunch. All of  my autolaunched  apps are launch  through the
-  shell.
-  #+NAME: autostart-table
-  | Command                                         | What it is for                         |
-  |-------------------------------------------------+----------------------------------------|
-  | pumopm                                          | Power manager                          |
-  | /usr/lib/xfce-polkit/xfce-polkit                | Launch or relaunch Polkit              |
-  | sleep 1 && set-screens                          | Auto-organize screens                  |
-  | picom --experimental-backends                   | Launch or relaunch Picom               |
-  | nitrogen --restore                              | Restore background                     |
-  | xss-lock -- lock                                | Enable lockscreen after a blank screen |
-  | nm-applet                                       | Launch NetworkManager applet           |
-  | numlockx on                                     | Enable numlock                         |
-  | mpc stop                                        | Stop music                             |
-  | mpd_discord_richpresence --no-idle --fork       | Launch MPD rich presence for Discord   |
-  | sleep 3 && emacsclient -c -e \"(delete-frame)\" | Launch blank EmacsClient               |
-
-  #+NAME: autostart
-  #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var apps=autostart-table
-    (mapconcat (lambda (x)
-                 (format "awful.spawn.with_shell(\"%s\")"
-                         (car x)))
-               apps
-               "\n")
-  #+END_SRC
-
-  #+RESULTS[e65349733980220944a79123e3ee0f4d638e5068]: autostart
-  #+begin_example
-  awful.spawn.with_shell("pumopm")
-  awful.spawn.with_shell("pkill xfce-polkit; /usr/lib/xfce-polkit/xfce-polkit")
-  awful.spawn.with_shell("sleep 1 && set-screens")
-  awful.spawn.with_shell("picom --experimental-backends")
-  awful.spawn.with_shell("nitrogen --restore")
-  awful.spawn.with_shell("xss-lock -- lock")
-  awful.spawn.with_shell("nm-applet")
-  awful.spawn.with_shell("numlockx on")
-  awful.spawn.with_shell("mpc stop")
-  awful.spawn.with_shell("mpd_discord_richpresence --no-idle --fork")
-  awful.spawn.with_shell("sleep 3 && emacsclient -c -e \"(delete-frame)\"")
-  #+end_example
-
-  Each of the command gets called with the call of ~awful.spawn.with_shell()~,
-  as you can see below.
+  create  some autolaunch.  All of  my autolaunched  apps are  launch through  a
+  custom  script  which  you  can  [[file:~/org/config/bin.org::#Autostart-a99e99e7][find  here]].  The  command  gets  called  with
+  ~awful.spawn.with_shell()~, as you can see below.
   #+BEGIN_SRC lua
-    <<autostart()>>
+    awful.spawn.with_shell("autostart")
   #+END_SRC
 
-  PumoPM is a custom power manager I’ve written, because other power managers
-  didn’t fit my needs, so I wrote my own. You can find it [[https://labs.phundrak.com/phundrak/pumopm][here]].
 
 * What to do now                                                   :noexport:
   :PROPERTIES:

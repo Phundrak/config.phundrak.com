@@ -5,6 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
 #+PROPERTY: header-args :exports code
+#+PROPERTY: header-args:emacs-lisp :exports none :tangle no
 
 * Presentation
   :PROPERTIES:
@@ -78,6 +79,54 @@
   Let’s now close the for loop.
   #+BEGIN_SRC fish
   end
+  #+END_SRC
+
+* Autostart
+  :PROPERTIES:
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/autostart
+  :CUSTOM_ID: Autostart-a99e99e7
+  :END:
+  Because I sometimes  switch from window manager to window  manager, creating a
+  script that  handles by itself autostarting  things for me is  way easier than
+  rewriting every time the autostart part  of my configuration. As you can every
+  instance  will be  launched  asynchronously, and  only if  there  is no  other
+  instance of said command running.
+
+  For the  record, PumoPM is  my custom power manager,  you can find  its source
+  code [[https://labs.phundrak.com/phundrak/pumopm][here]]. ~set-screens~ is a custom script declared [[*set-screens][below]].
+  #+NAME: autostart-table
+  | Command                    | Arguments                                                       | Run once? |
+  |----------------------------+-----------------------------------------------------------------+-----------|
+  | ~pumopm~                   |                                                                 | yes       |
+  | ~xfce-polkit~              |                                                                 | yes       |
+  | ~picom~                    | ~--experimental-backends~                                       | yes       |
+  | ~xidlehook~                | ~--not-when-audio --not-when-fullscreen --timer 3600 i3lock ''~ | yes       |
+  | ~nm-applet~                |                                                                 | yes       |
+  | ~numlockx~                 | ~on~                                                            | yes       |
+  | ~mpd_discord_richpresence~ | ~--no-idle --fork~                                              | yes       |
+  | ~nitrogen~                 | ~--restore~                                                     | no        |
+  | ~mpc~                      | ~stop~                                                          | no        |
+  | ~emacsclient~              | ~-c -e \"(delete-frame)\"~                                      | no        |
+
+  #+NAME: autostart-gen
+  #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
+    (mapconcat (lambda ($start-command)
+                 (let* (($command (s-replace "~" "" (nth 0 $start-command)))
+                        ($arguments (s-replace "~" "" (nth 1 $start-command)))
+                        ($once? (string= "yes" (nth 2 $start-command))))
+                   (if $once?
+                       (concat (format "if ! test (pgrep %s 2&> /dev/null)\n\t" $command)
+                               (s-collapse-whitespace (format "%s %s &" $command $arguments))
+                               "\nend\n")
+                     (format "%s %s &\n" $command $arguments))))
+               table
+               "\n")
+  #+END_SRC
+
+  #+BEGIN_SRC fish :noweb yes
+    set -l PATH $PATH /usr/lib/xfce-polkit
+
+    <<autostart-gen()>>
   #+END_SRC
 
 * awiki
