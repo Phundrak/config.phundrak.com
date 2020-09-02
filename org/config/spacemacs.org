@@ -854,8 +854,8 @@
     The below  variable sets either  the default font  or a prioritized  list of
     fonts to be used by Emacs.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-default-font '("Fantasque Sans Mono"
-                                                :size 10.0))
+      (setq-default dotspacemacs-default-font '("DejaVu Sans Mono for Powerline"
+                                                :size 9.0))
     #+END_SRC
 
     I also added the following code in order to define a fallback font for
@@ -3229,7 +3229,7 @@
    40% of Emacs’ frame, the rest will be given to emails.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-split-view 'vertical
-           mu4e-headers-visible-columns (round (* (window-total-width)
+           mu4e-headers-visible-columns (round (* (frame-total-cols)
                                                   0.4)))
    #+END_SRC
 
