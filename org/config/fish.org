@@ -223,7 +223,7 @@
    #+BEGIN_SRC fish :noweb yes
      for p in <<generate-extra-paths()>>
          if status is-login
-             contains $p $PATH || set PATH $PATH $p
+             contains $p $PATH || set PATH $p $PATH
          end
      end
    #+END_SRC
