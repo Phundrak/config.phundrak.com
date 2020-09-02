@@ -3683,21 +3683,57 @@
 ** Snippets
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Snippets-67a32065
-   :HEADER-ARGS:snippet: :padline no
+   :HEADER-ARGS:snippet: :padline no :mkdir yes
    :END:
    Yasnippet’s snippets tool  is extremely powerful and allows me  to write very
    quickly code. For now,  we have snippets for two modes.  The files you’ll see
    below are  exported to  ~$HOME/.config/emacs/private/snippets/~ and  to their
    respective mode  directory. For instance,  my ~caption~ snippet  for org-mode
-   will be exported to ~$HOME/.config/emacs/private/snippets/org-mode/caption~
+   will be exported to ~$HOME/.config/emacs/private/snippets/org-mode/caption~.
 
-*** org-mode snippets
+   Be  aware that  on top  of  these custom  snippets,  I also  use the  package
+   [[file:awesome.org::#Autostart-f2cf42fe][yasnippet-snippets]] which provide plenty of already made snippets.
+*** Rust snippets
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-f213e34d
+    :CUSTOM_ID: User_Configuration-Snippets-Rust_snippets-b106fad4
     :END:
-    The first two snippets are used to add HTML or LaTeX attributes to elements
-    in org-mode.
-    #+BEGIN_SRC snippet :mkdir yes :tangle ~/.config/emacs/private/snippets/org-mode/attr_html
+    I have so far two snippets, the  first one is actually just a convenience to
+    make it easier to type a ~println!~ macro than the default snippet.
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/println
+      # -*- mode: snippet -*-
+      # name: println
+      # key: pln
+      # --
+      println!("${1:{}}", $2);
+    #+END_SRC
+
+    The second one is more interesting: it is used to create a ~new~ method for
+    a struct, and it will try to create a function that will assign each
+    argument passed to the method to members of the struct. It relies on the
+    custom function [[#User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456][I wrote here]].
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/new
+      # -*- mode: snippet -*-
+      # name: new
+      # key: _new
+      # --
+      fn new(${1:args}) -> Self {
+        $0
+        Self {
+          ${1:$(phundrak/yas-rust-new-assignments yas-text)}
+        }
+      }
+    #+END_SRC
+
+
+*** Org headers
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_headers-ed14fbac
+    :END:
+    The first two snippets are used to  add HTML or LaTeX attributes to elements
+    in org-mode.  The third also  has a  similar usage, inserting  a ~#+CAPTION~
+    header before  an element, as  well as the  fourth which inserts  a ~#+NAME~
+    header.
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/attr_html
       # -*- mode: snippet -*-
       # name: ATTR HTML
       # key: <ah
@@ -3705,7 +3741,154 @@
       ,#+ATTR_HTML: $0
     #+END_SRC
 
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/attr_latex
+      # -*- mode: snippet -*-
+      # name: ATTR LATEX
+      # key: <al
+      # --
+      ,#+ATTR_LATEX: $0
+    #+END_SRC
 
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/caption
+      # -*- mode: snippet -*-
+      # name: caption
+      # key: <ca
+      # --
+      ,#+CAPTION: $0
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/name
+      # -*- mode: snippet -*-
+      # name: name
+      # key: <na
+      # --
+      ,#+NAME: $0
+    #+END_SRC
+
+    Now, the following  is a bit more complex:  it is meant to be used  as a new
+    org buffer  is created. It  will insert an org  header for the  title, which
+    will  default  to  the  buffer’s   name  capitalized  minus  the  dashes  or
+    underscores replaced with spaces, it will  insert a default author and email
+    based on the user’s  parameters, and the date at the  moment of the creation
+    of these headers. The user can also add some tags if they wish to.
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/header
+      # -*- mode: snippet -*-
+      # name: header
+      # key: header
+      # --
+      ,#+TITLE:  ${1:`(replace-regexp-in-string "-" " " (capitalize (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
+      ,#+AUTHOR: `(user-full-name)`
+      ,#+EMAIL:  `user-mail-address`
+      ,#+DATE:   `(format-time-string "%Y-%m-%d")`
+      ,#+TAGS:   $2
+
+      $0
+    #+END_SRC
+
+*** Org blocks
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_blocks-e4dfc448
+    :END:
+    Now,  Let’s write  some snippets  for org  blocks. The  first one  is for  a
+    comment block,  then two snippets  for an unnamed  and a named  Elisp source
+    block, and two others for an unnamed  and a named Python source block. There
+    are  also two  block for  generic unnamed  source blocks  and generic  named
+    source blocks.
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/comment_block
+      # -*- mode: snippet -*-
+      # name: comment block
+      # key: <co
+      # --
+      ,#+BEGIN_COMMENT
+      $0
+      ,#+END_COMMENT
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/emacs-lisp
+      # -*- mode: snippet -*-
+      # name: emacs-lisp block
+      # key: <el
+      # --
+      ,#+BEGIN_SRC emacs-lisp
+      $0
+      ,#+END_SRC
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/emacs-lisp-named
+            # -*- mode: snippet -*-
+            # name: named emacs-lisp block
+            # key: <eln
+            # --
+            ,#+NAME: $1
+            ,#+BEGIN_SRC emacs-lisp
+            $0
+            ,#+END_SRC
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/python
+      # -*- mode: snippet -*-
+      # name: python block
+      # key: <py
+      # --
+      ,#+BEGIN_SRC python
+      $0
+      ,#+END_SRC
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/python-named
+      # -*- mode: snippet -*-
+      # name: named python block
+      # key: <pyn
+      # --
+      ,#+NAME: $1
+      ,#+BEGIN_SRC python
+      $0
+      ,#+END_SRC
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/src
+      # -*- mode: snippet -*-
+      # name: source block
+      # key: <s
+      # --
+      ,#+BEGIN_SRC $1
+      $0
+      ,#+END_SRC
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/src-named
+      # -*- mode: snippet -*-
+      # name: named source block
+      # key: <sn
+      # --
+      ,#+NAME: $1
+      ,#+BEGIN_SRC $2
+      $0
+      ,#+END_SRC
+    #+END_SRC
+
+*** Org misc
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Snippets-Org_misc-82223a44
+    :END:
+    Finally, there are a couple of miscellaneous org snippets that insert macros
+    I often  use in my conlanging  documents. The first one  inserts a phonetics
+    macro, while the second one inserts a macro used for my Proto-Ñyqy language.
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/phon
+      # -*- mode: snippet -*-
+      # name: phon
+      # key: <ph
+      # --
+      \{\{\{phon($1)\}\}\} $0
+    #+END_SRC
+
+    #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/phon
+      # -*- mode: snippet -*-
+      # name: nyqy
+      # key: <ny
+      # --
+      \{\{\{nyqy($1)\}\}\} $0
+    #+END_SRC
 
 ** Yadm
    :PROPERTIES:
