@@ -1,0 +1,35 @@
+kind: pipeline
+name: default
+
+steps:
+- name: build
+  image: silex/emacs:27
+  commands:
+    - pwd
+    - ls -ahl
+    - which emacs
+    - emacs --script export.el
+
+- name: deploy
+  image: appleboy/drone-scp
+  settings:
+    host:
+      from_secret: ssh_host
+    target:
+      from_secret: ssh_target
+    source:
+      - !org/config/LICENSE.md
+      - org/config/*.html
+    strip_components: 2
+    username:
+      from_secret: ssh_username
+    password:
+      from_secret: ssh_password
+    port:
+      from_secret: ssh_port
+  # when:
+  #   branch:
+  #   - master
+  #   event:
+  #     exclude:
+  #     - pull_request
