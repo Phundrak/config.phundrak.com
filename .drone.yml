@@ -5,9 +5,6 @@ steps:
 - name: build
   image: silex/emacs:27-alpine
   commands:
-    - pwd
-    - ls -ahl
-    - which emacs
     - emacs --script export.el
 
 - name: deploy
