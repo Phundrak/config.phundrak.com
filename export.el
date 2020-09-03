@@ -6,7 +6,8 @@
 (package-install 'htmlize)
 (package-install 's)
 (require 's)
-(setq org-confirm-babel-evaluate nil)
+(setq org-confirm-babel-evaluate nil
+      org-html-validation-link nil)
 (let* ((files (mapcar #'expand-file-name
                       (file-expand-wildcards "org/config/*.org"))))
   (mapc (lambda (file)
