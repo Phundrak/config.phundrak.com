@@ -6,6 +6,12 @@ steps:
   image: silex/emacs:27-alpine
   commands:
     - emacs --script export.el
+  when:
+    branch:
+    - master
+    event:
+      exclude:
+      - pull_request
 
 - name: deploy
   image: appleboy/drone-scp
