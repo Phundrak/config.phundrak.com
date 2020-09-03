@@ -85,8 +85,7 @@
 
 * Execute bootstrap
   :PROPERTIES:
-  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap
-  :HEADER-ARGS:python: :tangle no
+  :HEADER-ARGS: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish"
   :CUSTOM_ID: Execute_bootstrap-e37054ef
   :END:
   =yadm=  comes with  a very  handy  feature: its  bootstrap script.  It can  be
@@ -97,12 +96,6 @@
     yadm clone https://github.com/phundrak/dotfiles
   #+END_SRC
 
-  Notice these two header files, we can see  this is a fish script, hence why we
-  need fish (which is my daily shell anyway).
-  #+BEGIN_SRC fish
-    #!/usr/bin/fish
-    # -*- mode: fish -*-
-  #+END_SRC
   Let’s take a look at what it does.
 
 ** Decrypt private yadm files
@@ -343,60 +336,66 @@
                              (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
                              (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
                                      "--eval '(setq org-confirm-babel-evaluate nil)' \\\n"
-                                     "--eval '(org-babel-do-load-languages \\'org-babel-load-languages \\'((python . t)))' \\\n"
                                      (format "--eval '(org-babel-tangle-file \"~/org/config/%s\")'\n" x))))
                 files
                 "\n")
    #+END_SRC
 
-   #+RESULTS[5a74a8854c2ed55bea68930073468d18d04bea08]: generate-tangle
+   #+RESULTS[1c025aa6fca0a3251b995f0eaf6fa866cb2a8497]: generate-tangle
    #+begin_example
+   printf '\n\n==== Tangling awesome.org\n\n' && \
+   emacs -q --batch --eval '(require \'ob-tangle)' \
+   --eval '(setq org-confirm-babel-evaluate nil)' \
+   --eval '(org-babel-tangle-file "~/org/config/awesome.org")'
+
    printf '\n\n==== Tangling bin.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/bin.org")'
 
    printf '\n\n==== Tangling fish.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/fish.org")'
 
    printf '\n\n==== Tangling i3.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/i3.org")'
 
    printf '\n\n==== Tangling index.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/index.org")'
 
    printf '\n\n==== Tangling nano.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/nano.org")'
+
+   printf '\n\n==== Tangling picom.org\n\n' && \
+   emacs -q --batch --eval '(require \'ob-tangle)' \
+   --eval '(setq org-confirm-babel-evaluate nil)' \
+   --eval '(org-babel-tangle-file "~/org/config/picom.org")'
 
    printf '\n\n==== Tangling polybar.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/polybar.org")'
+
+   printf '\n\n==== Tangling rustfmt.org\n\n' && \
+   emacs -q --batch --eval '(require \'ob-tangle)' \
+   --eval '(setq org-confirm-babel-evaluate nil)' \
+   --eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
 
    printf '\n\n==== Tangling spacemacs.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/spacemacs.org")'
 
    printf '\n\n==== Tangling tmux.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-do-load-languages \'org-babel-load-languages \'((python . t)))' \
    --eval '(org-babel-tangle-file "~/org/config/tmux.org")'
    #+end_example
 

@@ -5,9 +5,8 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's polybar config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the polybar config file of Phundrak" />
 #+PROPERTY: header-args :exports none
-#+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:emacs-lisp :tangle no :exports none
-#+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code
+#+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code :mkdirp yes
 
 * Presentation
   :PROPERTIES:
@@ -238,23 +237,32 @@
     | Siji         | Siji:pixelsize=8                                   |               0 | Symbol display        |
     | Default font | fixed:pixelsize=8                                  |               0 | Fallback font         |
 
-    #+NAME: font-config
-    #+BEGIN_SRC python :var table=fonts-polybar :cache yes
-      for i in range(0, len(table)):
-          print("font-{0} = {1};{2}".format(i, table[i][1], table[i][2]))
+    #+NAME: font-ws-config
+    #+HEADER: :var text="font"
+    #+BEGIN_SRC emacs-lisp :var table=fonts-polybar :cache yes
+      (setq counter 0)
+      (mapconcat (lambda (font)
+                   (setq counter (+ 1 counter))
+                   (format "%s-%d = %s;%s"
+                           text
+                           (- counter 1)
+                           (nth 1 font)
+                           (nth 2 font)))
+                 table
+                 "\n")
     #+END_SRC
 
-    #+RESULTS[a055f871fdabec995b015a8f083a77b0096a9c7f]: font-config
+    #+RESULTS[567cfb5e5a0bdfb0eca90846c8292b7d3fd585ea]: font-ws-config
     : font-0 = Fira Sans Book:style=Book:pixelsize=10;1
     : font-1 = IPAMincho:style=regular:pixelsize=6;0
     : font-2 = unifont:fontformat=truetype:size=6:antialias=false;0
-    : font-3 = NotoEmoji:scale=12:style=Book;0
+    : font-3 = NotoEmoji:style=Book:scale=16;0
     : font-4 = Siji:pixelsize=8;0
     : font-5 = fixed:pixelsize=8;0
 
     Here’s the font configuration:
     #+BEGIN_SRC conf-windows
-      <<font-config()>>
+      <<font-ws-config(text="font",table=fonts-polybar)>>
     #+END_SRC
 
     Note that only Fira Sans get a small  offset due to the size of the font and
@@ -270,19 +278,34 @@
     workspace  indicator for  i3. In  the  middle, we’ll  get the  title of  the
     focused window, and to the left we’ll have the date and time.
     #+NAME: modules-generate
-    #+BEGIN_SRC python :var table=[] :results value :cache yes
-      left = 'modules-left = '
-      center = 'modules-center = '
-      right = 'modules-right = '
-      for line in table:
-          if line[1] == 'left':
-              left += line[0] + ' '
-          elif line[1] == 'center':
-              center += line[0] + ' '
-          else:
-              right += line[0] + ' '
-      return left + '\n' + center + '\n' + right
+    #+BEGIN_SRC emacs-lisp :var table=top-modules :results value :cache yes
+      (setq right '()
+            center '()
+            left '())
+      (dolist (module table)
+        (let* ((module-name (nth 0 module))
+               (module-layout (nth 1 module)))
+          (message "%S" module-layout)
+          (add-to-list (cond
+                        ((string= "left" module-layout) 'left)
+                        ((string= "center" module-layout) 'center)
+                        (t 'right))
+                       module-name)))
+      (concat (concat "modules-left = "
+                      (mapconcat #'identity left " ")
+                      "\n")
+              (concat "modules-center = "
+                      (mapconcat #'identity center " ")
+                      "\n")
+              (concat "modules-right = "
+                      (mapconcat #'identity right " ")
+                      "\n"))
     #+END_SRC
+
+    #+RESULTS[90b932dc0fd32501e1513f14059b92de09a7b59e]: modules-generate
+    : modules-left = i3
+    : modules-center = xwindow
+    : modules-right = date
 
     Here is the list of modules used:
     #+NAME: top-modules
@@ -369,7 +392,7 @@
     on, see [[#Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466][Fonts and locale]] of the top bar.
     #+BEGIN_SRC conf-windows
       <<locale-bar>>
-      <<font-config()>>
+      <<font-ws-config(text="font",table=fonts-polybar)>>
     #+END_SRC
 
 *** Modules
@@ -873,29 +896,9 @@
      |                9 | 九   |
      |                0 | 十   |
 
-     #+NAME: generate-ws-names
-     #+BEGIN_SRC python :var names=ws-names :exports none :cache yes
-       for i in range(0, len(names)):
-           print('ws-icon-{0} = {1};{2}'.format(i, names[i][0], names[i][1]))
-     #+END_SRC
-
-     #+RESULTS[e4cec50affbfc3c284504f1a0f3b6a8d78197c5d]: generate-ws-names
-     #+begin_example
-     ws-icon-0 = 1;一
-     ws-icon-1 = 2;二
-     ws-icon-2 = 3;三
-     ws-icon-3 = 4;四
-     ws-icon-4 = 5;五
-     ws-icon-5 = 6;六
-     ws-icon-6 = 7;七
-     ws-icon-7 = 8;八
-     ws-icon-8 = 9;九
-     ws-icon-9 = 0;十
-     #+end_example
-
      Here are the corresponding configuration lines:
      #+BEGIN_SRC conf-windows
-     <<generate-ws-names()>>
+     <<font-ws-config(text="ws",table=ws-names)>>
      #+END_SRC
 
      In case we create a workspace which isn’t  named from ~0~ to ~9~, I want it

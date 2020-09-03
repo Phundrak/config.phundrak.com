@@ -2825,8 +2825,7 @@
    #+END_SRC
 
    Now, all keybindings that will be  defined can be invoked in Normal-mode with
-   the  src_emacs-lisp[:exports  results]{(princ  dotspacemacs-leader-key)}  key
-   followed by the sequence assigned to each keybinding.
+   the ~SPC~ key followed by the sequence assigned to each keybinding.
 
    Before some more specialized categories, I  have two commands which don’t fit
    into any other category  that I sometime use. The first one is  a fix for the
