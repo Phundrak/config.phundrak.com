@@ -3276,15 +3276,6 @@
      (setq paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-+*] ")
    #+END_SRC
 
-   There is  currently [[https://github.com/syl20bnr/evil-iedit-state/issues/27][an open  issue]] with ~evil-iedit-state~ where  exiting the
-   iedit  state  calls  ~iedit-cleanup~  despite  this  function  being  renamed
-   ~iedit-lib-cleanup~. So,  waiting for  the fix to  be pushed  upstream, let’s
-   declare an alias so Spacemacs understands what  I want to do when I hit ~ESC~
-   while in iedit state.
-   #+BEGIN_SRC emacs-lisp
-     (defalias 'iedit-cleanup 'iedit-lib-cleanup)
-   #+END_SRC
-
 *** Pinentry
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Miscellaneous-Pinentry-95004d5a
