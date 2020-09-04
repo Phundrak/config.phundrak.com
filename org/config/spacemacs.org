@@ -3227,12 +3227,13 @@
    horizontal. And to make it more  readable, the header window will only occupy
    40% of Emacs’  frame, the rest will be  given to emails. As you  can see, the
    width of the mu4e headers is evaluated each time we enter it, so it can react
-   to the frame being potentially not the same width than earlier.
+   to the frame being potentially not the  same width than earlier or the window
+   not taking the entire frame.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-split-view 'vertical)
-     (add-hook 'mu4e-headers-mode-hook
+     (add-hook 'mu4e-view-mode-hook
                (lambda ()
-                 (setq mu4e-headers-visible-columns (round (* (frame-total-cols)
+                 (setq mu4e-headers-visible-columns (round (* (window-width)
                                                               0.4)))))
    #+END_SRC
 
