@@ -239,20 +239,20 @@
 
     #+NAME: font-ws-config
     #+HEADER: :var text="font"
-    #+BEGIN_SRC emacs-lisp :var table=fonts-polybar :cache yes
+    #+BEGIN_SRC emacs-lisp :var table=fonts-polybar[,1:2] :cache yes
       (setq counter 0)
       (mapconcat (lambda (font)
                    (setq counter (+ 1 counter))
                    (format "%s-%d = %s;%s"
                            text
                            (- counter 1)
-                           (nth 1 font)
-                           (nth 2 font)))
+                           (nth 0 font)
+                           (nth 1 font)))
                  table
                  "\n")
     #+END_SRC
 
-    #+RESULTS[567cfb5e5a0bdfb0eca90846c8292b7d3fd585ea]: font-ws-config
+    #+RESULTS[53fd99d75f6b08e96288fd2a62b455d7ef8b1754]: font-ws-config
     : font-0 = Fira Sans Book:style=Book:pixelsize=10;1
     : font-1 = IPAMincho:style=regular:pixelsize=6;0
     : font-2 = unifont:fontformat=truetype:size=6:antialias=false;0
