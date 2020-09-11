@@ -403,20 +403,19 @@
      #+END_SRC
 
      Next, you can find the C/C++ layer for which I set the default language for
-     ~.h~ files  to be  C. I also  enabled support for  the C++11  standard, the
-     Google coding  style for C++,  support for subprojects and  organization of
-     the include directives on  a file save. I also set  a couple of LSP-related
-     variables, such  as the LSP executable  for C/C++ for its  CCLS backend and
-     some highlight variables.
+     ~.h~ files to be C. I also enabled support for subprojects and organization
+     of  the  include  directives on  a  file  save.  I  also set  a  couple  of
+     LSP-related variables,  such as the LSP  executable for C/C++ for  its CCLS
+     backend and some highlight variables.
      #+BEGIN_SRC emacs-lisp
        (c-c++ :variables
               c-c++-default-mode-for-headers 'c-mode
               c-c++-adopt-subprojects t
-              c-c++-enable-google-style t
               c-c++-enable-c++11 t
               c-c++-backend 'lsp-clangd
-              c-c++-lsp-sem-highlight-method 'overlay
-              c-c++-lsp-sem-highlight-rainbow t
+              c-c++-lsp-enable-semantic-highlight t
+              c-c++-lsp-semantic-highlight-method 'overlay
+              c-c++-lsp-semantic-highlight-rainbow t
               c++-enable-organize-includes-on-save t)
      #+END_SRC
 
