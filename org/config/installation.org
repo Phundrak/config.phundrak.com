@@ -399,12 +399,6 @@
      <<generate-tangle()>>
    #+END_SRC
 
-   Let’s also make  sure the exported files that are  supposed to be executables
-   are indeed executables.
-   #+BEGIN_SRC fish
-     find ~/.local/bin -type f -exec chmod +x {} +
-   #+END_SRC
-
 ** Setting up Emacs: Installing Spacemacs
    :PROPERTIES:
    :CUSTOM_ID: Execute_bootstrap-Setting_up_Emacs:_Installing_Spacemacs-0b3d44b2

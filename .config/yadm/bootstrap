@@ -156,8 +156,6 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/tmux.org")'
 
-find ~/.local/bin -type f -exec chmod +x {} +
-
 printf "\n# Installing Spacemacs ########################################################\n\n"
 rm -rf ~/.config/emacs
 
