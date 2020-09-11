@@ -291,12 +291,9 @@
    | $HOME/.config/fish          |
    | $HOME/.config/gtk-2.0       |
    | $HOME/.config/gtk-3.0       |
-   | $HOME/.config/i3            |
-   | $HOME/.config/nano          |
    | $HOME/.config/ncmpcpp       |
    | $HOME/.config/neofetch      |
    | $HOME/.config/picom         |
-   | $HOME/.config/polybar       |
    | $HOME/.config/yadm          |
    | $HOME/.local/bin            |
    | $HOME/org/capture           |
@@ -307,6 +304,22 @@
                 dirs
                 "\n")
    #+END_SRC
+
+   #+RESULTS[a95e25a5f3ac91b1f884b39dde38e3b51366b188]: gen-dirs-tangle
+   #+begin_example
+   mkdir -p $HOME/.config/awesome
+   mkdir -p $HOME/.config/awesome/theme
+   mkdir -p $HOME/.config/emacs/private
+   mkdir -p $HOME/.config/fish
+   mkdir -p $HOME/.config/gtk-2.0
+   mkdir -p $HOME/.config/gtk-3.0
+   mkdir -p $HOME/.config/ncmpcpp
+   mkdir -p $HOME/.config/neofetch
+   mkdir -p $HOME/.config/picom
+   mkdir -p $HOME/.config/yadm
+   mkdir -p $HOME/.local/bin
+   mkdir -p $HOME/org/capture
+   #+end_example
 
    Our code to generate such directories looks like this:
    #+BEGIN_SRC fish :noweb yes
@@ -321,11 +334,8 @@
    | awesome.org   |
    | bin.org       |
    | fish.org      |
-   | i3.org        |
    | index.org     |
-   | nano.org      |
    | picom.org     |
-   | polybar.org   |
    | rustfmt.org   |
    | spacemacs.org |
    | tmux.org      |
@@ -341,7 +351,7 @@
                 "\n")
    #+END_SRC
 
-   #+RESULTS[1c025aa6fca0a3251b995f0eaf6fa866cb2a8497]: generate-tangle
+   #+RESULTS[3f6418dc98ed415c34e76eb1f55f00763b1af202]: generate-tangle
    #+begin_example
    printf '\n\n==== Tangling awesome.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
@@ -358,30 +368,15 @@
    --eval '(setq org-confirm-babel-evaluate nil)' \
    --eval '(org-babel-tangle-file "~/org/config/fish.org")'
 
-   printf '\n\n==== Tangling i3.org\n\n' && \
-   emacs -q --batch --eval '(require \'ob-tangle)' \
-   --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-tangle-file "~/org/config/i3.org")'
-
    printf '\n\n==== Tangling index.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
    --eval '(org-babel-tangle-file "~/org/config/index.org")'
 
-   printf '\n\n==== Tangling nano.org\n\n' && \
-   emacs -q --batch --eval '(require \'ob-tangle)' \
-   --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-tangle-file "~/org/config/nano.org")'
-
    printf '\n\n==== Tangling picom.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
    --eval '(org-babel-tangle-file "~/org/config/picom.org")'
-
-   printf '\n\n==== Tangling polybar.org\n\n' && \
-   emacs -q --batch --eval '(require \'ob-tangle)' \
-   --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-tangle-file "~/org/config/polybar.org")'
 
    printf '\n\n==== Tangling rustfmt.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \

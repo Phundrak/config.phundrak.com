@@ -3213,7 +3213,7 @@
    On new email arrival, Emacs can send  the system a notification which will be
    handled as any other notification received by the system and will display the
    number of unread emails to the user; in my case, notifications are handled by
-   [[https://dunst-project.org/][dunst]] under i3, or AwesomeWM itself.
+   AwesomeWM.
    #+BEGIN_SRC emacs-lisp
      (setq mu4e-enable-notifications t
            mu4e-alert-email-notification-types '(count))

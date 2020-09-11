@@ -108,12 +108,9 @@ mkdir -p $HOME/.config/emacs/private
 mkdir -p $HOME/.config/fish
 mkdir -p $HOME/.config/gtk-2.0
 mkdir -p $HOME/.config/gtk-3.0
-mkdir -p $HOME/.config/i3
-mkdir -p $HOME/.config/nano
 mkdir -p $HOME/.config/ncmpcpp
 mkdir -p $HOME/.config/neofetch
 mkdir -p $HOME/.config/picom
-mkdir -p $HOME/.config/polybar
 mkdir -p $HOME/.config/yadm
 mkdir -p $HOME/.local/bin
 mkdir -p $HOME/org/capture
@@ -134,30 +131,15 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/fish.org")'
 
-printf '\n\n==== Tangling i3.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/i3.org")'
-
 printf '\n\n==== Tangling index.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/index.org")'
 
-printf '\n\n==== Tangling nano.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/nano.org")'
-
 printf '\n\n==== Tangling picom.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/picom.org")'
-
-printf '\n\n==== Tangling polybar.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/polybar.org")'
 
 printf '\n\n==== Tangling rustfmt.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
