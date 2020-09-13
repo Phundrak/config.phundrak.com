@@ -329,16 +329,16 @@
    The next step is  to tangle all the Org files. Here is the list of files that
    are to be tangled:
    #+NAME: tangled-files
-   | filename      |
-   |---------------|
-   | awesome.org   |
-   | bin.org       |
-   | fish.org      |
-   | index.org     |
-   | picom.org     |
-   | rustfmt.org   |
-   | spacemacs.org |
-   | tmux.org      |
+   | filename    |
+   |-------------|
+   | awesome.org |
+   | bin.org     |
+   | emacs.org   |
+   | fish.org    |
+   | index.org   |
+   | picom.org   |
+   | rustfmt.org |
+   | tmux.org    |
 
    #+NAME: generate-tangle
    #+BEGIN_SRC emacs-lisp :var files=tangled-files[,0]
@@ -351,7 +351,7 @@
                 "\n")
    #+END_SRC
 
-   #+RESULTS[3f6418dc98ed415c34e76eb1f55f00763b1af202]: generate-tangle
+   #+RESULTS[67c945c10d77b620097d8dc7d35017e3c848adc4]: generate-tangle
    #+begin_example
    printf '\n\n==== Tangling awesome.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
@@ -362,6 +362,11 @@
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
    --eval '(org-babel-tangle-file "~/org/config/bin.org")'
+
+   printf '\n\n==== Tangling emacs.org\n\n' && \
+   emacs -q --batch --eval '(require \'ob-tangle)' \
+   --eval '(setq org-confirm-babel-evaluate nil)' \
+   --eval '(org-babel-tangle-file "~/org/config/emacs.org")'
 
    printf '\n\n==== Tangling fish.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \
@@ -382,11 +387,6 @@
    emacs -q --batch --eval '(require \'ob-tangle)' \
    --eval '(setq org-confirm-babel-evaluate nil)' \
    --eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
-
-   printf '\n\n==== Tangling spacemacs.org\n\n' && \
-   emacs -q --batch --eval '(require \'ob-tangle)' \
-   --eval '(setq org-confirm-babel-evaluate nil)' \
-   --eval '(org-babel-tangle-file "~/org/config/spacemacs.org")'
 
    printf '\n\n==== Tangling tmux.org\n\n' && \
    emacs -q --batch --eval '(require \'ob-tangle)' \

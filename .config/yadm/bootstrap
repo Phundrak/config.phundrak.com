@@ -126,6 +126,11 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/bin.org")'
 
+printf '\n\n==== Tangling emacs.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/emacs.org")'
+
 printf '\n\n==== Tangling fish.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -145,11 +150,6 @@ printf '\n\n==== Tangling rustfmt.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
-
-printf '\n\n==== Tangling spacemacs.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/spacemacs.org")'
 
 printf '\n\n==== Tangling tmux.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
