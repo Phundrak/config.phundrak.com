@@ -123,7 +123,7 @@
 
    It is possible to also list packages that cannot be updated:
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-frozen-packages '())
+     (setq-default dotspacemacs-frozen-packages '(helm-icons))
    #+END_SRC
 
    And to list packages which won’t be installed nor loaded:
@@ -2926,84 +2926,44 @@
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Shortcuts-Files-206c2126
     :END:
-    This category is mainly used for opening configuration files, but it is also
-    more generally for files-related commands. Let’s declare keybindings related
-    to my configuration files. Here is the list of them:
-    - [[file:bin.org][bin.org]] :: contains the source code of my custom scripts in my ~$PATH~
-    - [[file:spacemacs.org][spacemacs.org]] :: this file, configuration of Emacs
-    - [[file:fish.org][fish.org]] :: configuration of my fish shell
-    - [[file:i3.org][i3.org]] :: configuration of my i3 installation
-    - [[file:index.org][index.org]] :: some various configuration files and index of this website
-    - [[file:polybar.org][polybar.org]] :: configuration for polybar
-    - [[file:picom.org][picom.org]] :: configuration for picom
-    - [[https://labs.phundrak.com/phundrak/dotfiles][README.org]] :: README of the yadm repo
-    I also have a keybinding for the following files:
-    - conlanging.org :: collection of ideas and references for conlanging
-    - elfeed.org :: where I store all the RSS sources for Elfeed
-    - journal.org :: my journal (which I don’t really use often tbh)
-    - notes.org :: to, well, take notes
-    - worldbuilding.org :: same as ~conlanging.org~ above.
-    Each of these files are accessible through a simple keybinding, and each one
-    of them has a  description so the keybinding doesn’t show  up as ~lambda~ with
-    ~which-keys~.  So, a  custom  name for  ~which-keys~ is  specified  in the  Name
-    column. If a file is not specified,  that means it is just a declaration for
-    a keybinding prefix.
-
-    First, here are my keybindings for opening my private files described above:
-    #+NAME: private-files-open-shortcuts
-    | Keybinding | Name              | File                            |
-    |------------+-------------------+---------------------------------|
-    | of         | files             |                                 |
-    | ofb        | blog.org          | ~/org/blog/content-org/blog.org |
-    | ofC        | conlanging.org    | ~/org/conlanging.org            |
-    | ofe        | elfeed.org        | ~/org/elfeed.org                |
-    | ofj        | journal.org       | ~/org/journal.org               |
-    | ofn        | notes.org         | ~/org/notes.org                 |
-    | ofw        | worldbuilding.org | ~/org/worldbuilding.org         |
-
-    And here are my keybindings for opening config files:
-    #+NAME: config-files-open-shortcuts
-    | Keybinding | Name             | File                          |
-    |------------+------------------+-------------------------------|
-    | ofc        | config files     |                               |
-    | ofca       | awesome.org      | ~/org/config/awesome.org      |
-    | ofcb       | bin.org          | ~/org/config/bin.org          |
-    | ofce       | spacemacs.org    | ~/org/config/spacemacs.org    |
-    | ofcf       | fish.org         | ~/org/config/fish.org         |
-    | ofci       | index.org        | ~/org/config/index.org        |
-    | ofcI       | installation.org | ~/org/config/installation.org |
-    | ofcp       | polybar.org      | ~/org/config/polybar.org      |
-    | ofcP       | picom.org        | ~/org/config/picom.org        |
-    | ofcr       | yadm README      | ~/README.org                  |
-
-    #+NAME: shortcuts-gen
-    #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=[] :exports none :results replace
-      (concat (mapconcat (lambda (x)
-                           (let* ((keybinding (nth 0 x))
-                                  (name (nth 1 x)))
-                             (if (string= "" name) ""
-                               (format "(spacemacs/declare-prefix \"%s\"\t\"%s\")"
-                                       keybinding name))))
-                         table "\n")
-              "\n"
-              (format "(spacemacs/set-leader-keys\n%s)"
-                      (mapconcat (lambda (x)
-                                   (let* ((keybinding (nth 0 x))
-                                          (name (nth 1 x))
-                                          (file (nth 2 x)))
-                                     (if (string= "" file)
-                                         (format "\t\;\; %s" name)
-                                       (format "\t\"%s\" (lambda () (interactive) (find-file \"%s\"))"
-                                               keybinding file))))
-                                 table
-                                 "\n")))
+    There are lots of  files which I want to be able to  quickly open. I used to
+    have one shortcut for  each one of these files, but as  their number grew, I
+    decided to switch to helm for my  file selector which will be called by only
+    one common shortcut. Most of my files will be located in =~/org=, but I have
+    some conlanging files which are located in =~/Documents/conlanging=, and all
+    my  university notes  are in  =~/Documents/university=. Let’s  declare these
+    directories in a variable:
+    #+BEGIN_SRC emacs-lisp
+      (setq phundrak/org-directories '("~/org"
+                                       "~/Documents/university"
+                                       "~/Documents/conlanging"))
     #+END_SRC
 
-    Here is the actual code for these keybindings:
-    #+BEGIN_SRC emacs-lisp :noweb yes
-      <<shortcuts-gen(table=private-files-open-shortcuts)>>
-      <<shortcuts-gen(table=config-files-open-shortcuts)>>
+    With this established, let’s write some emacs-lisp that will allow me to get
+    a list of all these files and select them through helm. Be aware that I will
+    be using some functions from third party packages, such as [[https://github.com/rejeep/f.el][f.el]] and [[https://github.com/magnars/dash.el][dash]].
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "of" "open org file")
+      (spacemacs/set-leader-keys
+        "of"
+        (lambda ()
+          (interactive)
+          (find-file
+           (helm
+            :sources (helm-build-sync-source "org files"
+                       :candidates (-mapcat
+                                    (lambda (path)
+                                      (f-files path
+                                               (lambda (file) (equal (f-ext file) "org"))
+                                               t))
+                                    phundrak/org-directories)
+                       :fuzzy-match t)
+            :buffer "*org files*"))))
     #+END_SRC
+
+    And that’s it! This should list all my org files under these directories and
+    give me  fuzzy finding for  these files. I just  need to partially  type the
+    name of the file I want to open and it should open without any issue.
 
 *** Multiple cursors
     :PROPERTIES:
