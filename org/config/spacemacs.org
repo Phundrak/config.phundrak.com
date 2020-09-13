@@ -1014,7 +1014,7 @@
     transparency level  of a  frame when  it’s active  or selected.  The default
     value is ~90~.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-active-transparency 80)
+      (setq-default dotspacemacs-active-transparency 75)
     #+END_SRC
 
     Similarly, you  can set a  value from 0 to  100 in increasing  opacity which
