@@ -29,9 +29,9 @@
   - [[file:rustfmt.org][Rustfmt configuration]]
   - [[file:tmux.org][Tmux configuration]]
 
-  As you can  see, I personally use [[https://fishshell.com/][fish]]  as my shell of choice,  and [[https://www.gnu.org/software/emacs/][Emacs]] 27.1
-  using [[http://spacemacs.org][Spacemacs]] (still  with Emacs keybinding in Insert mode  but with Evil in
-  Normal mode) as my main text editor.
+  As you can  see, I personally use [[https://fishshell.com/][fish]]  as my shell of choice,  and [[https://www.gnu.org/software/emacs/][Emacs]] 28.0
+  (using the ~native-comp~ branch) using  [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding
+  in Insert mode but with Evil in Normal mode) as my main text editor.
 
   When it  comes to  my graphical  UI, I  do not  have any  desktop environment.
   Instead, I have a tiling window manager, AwesomeWM. The historical first on my
