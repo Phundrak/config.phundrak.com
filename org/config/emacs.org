@@ -1,9 +1,9 @@
 #+title: Emacs Configuration
 #+setupfile: headers
 #+OPTIONS: auto-id:t
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Spacemacs configuration of Phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Emacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+PROPERTY: header-args: :mkdirp yes
 
 * Introduction
@@ -3114,9 +3114,9 @@
    which gets updated  with the ~mbsync~ command  from ~isync~. It has  a lot of
    neat features, but I guess my favorite ones are:
    1. the search query feature
-   2. being able to send an HTML email either to the browser
+   2. rendering an HTML email in the browser
 
-   Due to mu sitting on top of a Maildir, I need to tell mu4e where said maildir
+   Due to mu sitting on top of a maildir, I need to tell mu4e where said maildir
    is, and point it the trash, archive,  and sent folders as well as the refresh
    command and how frequently I want my emails to be refreshed.
    #+BEGIN_SRC emacs-lisp
@@ -3152,7 +3152,9 @@
              (,(s-join " "
                        '("maildir:/Inbox"
                          "AND NOT flag:trashed"
-                         "AND f:/.*up8\.edu|.*univ-paris8.*/"))
+                         "AND (f:/.*up8\.edu|.*univ-paris8.*/"
+                         "OR c:/.*up8\.edu|.*univ-paris8.*/"
+                         "OR t:/.*up8\.edu|.*univ-paris8.*/)"))
               "University" ?u)
              (,(s-join " "
                        '("maildir:/Inbox"
