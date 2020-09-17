@@ -2961,6 +2961,18 @@
             :buffer "*org files*"))))
     #+END_SRC
 
+    I also have a shortcut for ~helm-locate~ in  case I need to find a file that
+    is not in these directories. One  advantage of this over ~helm-find~ is that
+    it doesn’t matter from  where I call it, it will find any  file on my system
+    that matches the query, whereas ~helm-find~  will only search in the current
+    directory  and  its  subdirectories.  This time,  the  declaration  is  much
+    simpler:
+    #+BEGIN_SRC emacs-lisp
+      (spacemacs/declare-prefix "oF" "locate file")
+      (spacemacs/set-leader-keys "oF" 'helm-locate)
+    #+END_SRC
+
+
     And that’s it! This should list all my org files under these directories and
     give me  fuzzy finding for  these files. I just  need to partially  type the
     name of the file I want to open and it should open without any issue.
