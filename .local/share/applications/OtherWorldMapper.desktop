@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0.1
+Name=OtherWorldMapper
+Comment=OtherWorldMapper is a powerful yet intuitive fantasy map creation tool.
+Exec=/usr/bin/prime-run /home/phundrak/OtherWorldMapper/OWM
+Path=/home/phundrak/OtherWorldMapper
+Icon=/home/phundrak/OtherWorldMapper/owm.ico
+Terminal=false
+Type=Application
+Categories=Graphics
