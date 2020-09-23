@@ -286,7 +286,22 @@
     In this category,  again, one layer is enabled:  ~unicode-fonts~. This layer
     addssupport for the ~unicode-fonts~ package.
     #+BEGIN_SRC emacs-lisp
-    unicode-fonts
+      (unicode-fonts :variables
+                     unicode-fonts-enable-ligatures t
+                     unicode-fonts-ligature-modes '(prog-mode)
+                     unicode-fonts-ligature-set '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                                  ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                                  "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                                  "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                                  "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                                  "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                                  "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                                  "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                                  ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                                  "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                                  "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                                  "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                                  "\\" "://"))
     #+END_SRC
 
 *** Fun
@@ -551,6 +566,16 @@
       (restclient :variables
                   restclient-use-org t)
     #+END_SRC
+
+    LanguageTool works with Flyspell and will check for grammatical issues in my
+    english texts.
+    #+BEGIN_SRC emacs-lisp
+      (languagetool :variables
+                    langtool-default-language "en-US"
+                    languagetool-show-error-on-jump t
+                    langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*")
+    #+END_SRC
+
 
     And finally, we also have the Shell  layer for which I specified its default
     height when spawning  at the bottom of  the screen should be  40 lines high,
@@ -853,7 +878,7 @@
     The below  variable sets either  the default font  or a prioritized  list of
     fonts to be used by Emacs.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-default-font '("DejaVu Sans Mono for Powerline"
+      (setq-default dotspacemacs-default-font '("Cascadia Code"
                                                 :size 9.0))
     #+END_SRC
 
@@ -2971,7 +2996,6 @@
       (spacemacs/declare-prefix "oF" "locate file")
       (spacemacs/set-leader-keys "oF" 'helm-locate)
     #+END_SRC
-
 
     And that’s it! This should list all my org files under these directories and
     give me  fuzzy finding for  these files. I just  need to partially  type the
