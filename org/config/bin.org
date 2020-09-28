@@ -92,12 +92,10 @@
   instance  will be  launched  asynchronously, and  only if  there  is no  other
   instance of said command running.
 
-  For the  record, PumoPM is  my custom power manager,  you can find  its source
-  code [[https://labs.phundrak.com/phundrak/pumopm][here]]. ~set-screens~ is a custom script declared [[*set-screens][below]].
+  ~set-screens~ is a custom script declared [[*set-screens][below]].
   #+NAME: autostart-table
   | Command                    | Arguments                                                       | Run once? |
   |----------------------------+-----------------------------------------------------------------+-----------|
-  | ~pumopm~                   |                                                                 | yes       |
   | ~xfce-polkit~              |                                                                 | yes       |
   | ~picom~                    | ~--experimental-backends~                                       | yes       |
   | ~xidlehook~                | ~--not-when-audio --not-when-fullscreen --timer 3600 i3lock ''~ | yes       |
