@@ -1,5 +1,9 @@
 #!/usr/bin/fish
-yadm decrypt
+if test "$USER" = 'phundrak'
+    yadm decrypt
+else
+    whiptail --yesno "Decrypt private files?" 8 40 && yadm decrypt
+end
 
 set keyboardconf \
 'Section "InputClass"
@@ -12,13 +16,18 @@ set keyboardconf \
 EndSection'
 
 printf "\n# Set keyboard layout #########################################################\n\n"
-echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+whiptail --yesno "Would you like to set your keyboard layout to the bépo layout?" 8 55
+if test $status -eq 0
+    echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+end
 
 set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 
 printf "\n# Set locale ##################################################################\n\n"
+
 for item in $mylocales
-    if test (grep -e "#$item" /etc/locale.gen)
+    whiptail --yesno "Set the \"$item\" locale?" 8 40
+    if test $status -eq 0 -a (grep -e "#$item" /etc/locale.gen)
         sudo sed -i "/$item/s/^#//g" /etc/locale.gen
     end
 end
@@ -35,7 +44,10 @@ LC_ADDRESS=fr_FR.UTF-8
 LC_TIME=fr_FR.UTF-8
 LC_MEASUREMENT=fr_FR.UTF-8"
 
-echo $localeconf | sudo tee /etc/locale.conf
+whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
+if test $status -eq 0
+    echo $localeconf | sudo tee /etc/locale.conf
+end
 
 printf "\n# Generate locale #############################################################\n\n"
 sudo locale-gen
@@ -44,23 +56,10 @@ printf "\n# Create directories for mounting ####################################
 sudo mkdir -p /mnt/{USB,CD,Android}
 sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 
-mkdir -p $HOME/.cache/nano/backups
-
 printf "\n# Set fish as the default shell ###############################################\n\n"
-if not test "$SHELL" = "/usr/bin/fish"
+whiptail --yesno "Set the current user’s default shell to fish?" 8 50
+if test $status -eq 0 -a ! "$SHELL" = '/usr/bin/fish'
     chsh -s /usr/bin/fish
-end
-
-if ! test (which yay)
-    printf "\n# Installing yay ##############################################################\n\n"
-    cd
-    mkdir -p ~/fromGIT
-    cd ~/fromGIT
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-else
-    printf "\n# yay already installed #######################################################\n\n"
 end
 
 set PACKAGES \
@@ -157,13 +156,13 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(org-babel-tangle-file "~/org/config/tmux.org")'
 
 printf "\n# Installing Spacemacs ########################################################\n\n"
-rm -rf ~/.config/emacs
+rm -rf $HOME/.config/emacs $HOME/.emacs* .spacemacs
 
-git clone --single-branch --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
+git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
 
 yadm checkout -- ~/.config/emacs/private/
 
-if ! test (echo "phundrak" | sed -e "s/^.*$USER//I")
+if test "$USER" = 'phundrak'
 
 printf "\n# Update yadm’s remotes #######################################################\n\n"
 yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
@@ -173,9 +172,6 @@ printf "\n# Decrypt encrypted dotfiles #########################################
 yadm decrypt
 
 end
-
-printf '\n# Install envtpl ##############################################################\n\n'
-yay -Syu --needed python-envtpl-git
 
 printf "\n# Getting yadm susbmodules ####################################################\n\n"
 yadm submodule update --init --recursive
@@ -194,90 +190,52 @@ if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergr
 end
 
 printf "\n# Enabling Emacs as user service ##############################################\n\n"
-systemctl --user enable --now emacs
+systemctl --user enable emacs
 
 printf "\n# Enabling Mpd as a user service ##############################################\n\n"
 mkdir -p ~/.config/mpd/playlists
 systemctl --user enable --now mpd
 
-read --prompt "echo 'Do you want to activate the ssh server? (Y/n): ' " -l sshdserver
-if test $sshdserver = 'y' || test $sshdserver = "Y" || test $sshdserver = ''
+whiptail --yesno 'Do you want to activate the ssh server?' 8 50
+if test $status -eq 0
     printf "\n# Enabling ssh server #########################################################\n\n"
     sudo systemctl enable --now sshd
 end
 
-sudo systemctl enable --now ly
 sudo systemctl disable getty@tty2
+sudo systemctl enable --now ly
 
 sudo usermod -aG video $USER
 
 sudo systemctl enable --now nordvpnd
 
+nordvpn s protocol udp
+
 for f in (find ~/.etc -type f)
-    set dest (echo $f | sed -n 's/^.*etc\(.*\)$/\/etc\1/p')
+    set dest (echo $f | sed -n 's|^.*etc\(.*\)$|/etc\1|p')
     sudo ln -s $f $dest
 end
 
-read --prompt "echo 'Symlink .nanorc to root’s .nanorc? (Y/n): ' " -l nanoroot
-if test $nanoroot = 'y' || test $nanoroot = "Y" || test $nanoroot = ''
-    printf "\n# Symlinking .nanorc to root’s .nanorc ########################################\n\n"
-    sudo ln -s $HOME/.nanorc /root/.nanorc
-end
-
 mkdir -p ~/fromGIT
-
-printf "\n# Install polybar-battery #####################################################\n\n"
-cd ~/fromGIT
-git clone https://github.com/drdeimos/polybar_another_battery.git
-cd polybar_another_battery
-go get -u github.com/distatus/battery/cmd/battery
-make build
-
-cd ~/.local/bin
-ln -s ~/fromGIT/polybar_another_battery/polybar-ab polybar-ab
 
 printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT
 git clone https://github.com/hakimel/reveal.js.git
 
-printf "\n# Install powerline fonts #####################################################\n\n"
-cd ~/fromGIT
-git clone https://github.com/powerline/fonts.git --depth=1
-cd fonts
-./install.sh
-fc-cache -vf
-
 printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
-rustup default nightly
+rustup default stable
 
-rustup toolchain install stable
+rustup toolchain install nightly
 
 printf "\n# Add rust utilities ##########################################################\n\n"
 cargo install rustfmt racer
 
 rustup component add rust-src
 rustup component add rls
+rustup component add clippy
 
 printf "\n# Installing Python packages ##################################################\n\n"
 pip install --user pyls-isort pyls-mypy
-
-printf "\n# Installing Go packages ######################################################\n\n"
-go get -v golang.org/x/tools/gopls@latest
-go get -u -v golang.org/x/tools/cmd/godoc
-go get -u -v golang.org/x/tools/cmd/goimports
-go get -u -v golang.org/x/tools/cmd/gorename
-go get -u -v golang.org/x/tools/cmd/guru
-go get -u -v github.com/cweill/gotests/...
-go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
-go get -u -v github.com/fatih/gomodifytags
-go get -u -v github.com/godoctor/godoctor
-go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint
-go get -u -v github.com/haya14busa/gopkgs/cmd/gopkgs
-go get -u -v github.com/josharian/impl
-go get -u -v github.com/mdempsky/gocode
-go get -u -v github.com/rogpeppe/godef
-go get -u -v github.com/zmb3/gogetdoc
-go get -u -v golang.org/x/tools/gopls
 
 printf "\n# Setting up Chicken ##########################################################\n\n"
 chicken-install -s apropos chicken-doc
@@ -285,18 +243,15 @@ chicken-install -s apropos chicken-doc
 cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
 curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 
-printf "\n# Clean the pacman and yay cache ##############################################\n\n"
-yay -Sc --noconfirm
-
 printf "\n# Installing fisher ###########################################################\n\n"
 curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
 
 printf "\n# Installing Fisher Extensions ################################################\n\n"
-fisher add fishpkg/fish-prompt-metro
-fisher add jorgebucaran/fish-bax
+fisher add decors/fish-colored-man
 fisher add franciscolourenco/done
 fisher add jethrokuan/fzf
 fisher add jethrokuan/z
+fisher add jorgebucaran/fish-bax
 fisher add jorgebucaran/fish-getopts
 fisher add laughedelic/pisces
-fisher add acomagu/fish-async-prompt
+fisher add oh-my-fish/theme-bobthefish
