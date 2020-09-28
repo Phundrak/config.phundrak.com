@@ -115,7 +115,7 @@
      :END:
 ***** General configuration
       :PROPERTIES:
-      :HEADER-ARGS: :tangle ~/.gtkrc-2.0
+      :HEADER-ARGS: :mkdirp yes :tangle ~/.gtkrc-2.0
       :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-General_configuration-eb1f1f3c
       :END:
       This file is tangled at ~$HOME/.gtkrc-2.0~.  This is an equivalent for the
@@ -144,7 +144,7 @@
 
 ***** Filechooser
       :PROPERTIES:
-      :HEADER-ARGS: :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
+      :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
       :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-Filechooser-389f040d
       :END:
       #+BEGIN_SRC conf-unix
@@ -206,7 +206,7 @@
 
 **** GTK3
      :PROPERTIES:
-     :HEADER-ARGS: :tangle ~/.config/gtk-3.0/settings.ini
+     :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-3.0/settings.ini
      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK3-3d6cba86
      :END:
      The following file helps me choosing the aspect of various GTK+ 3 software,
@@ -262,7 +262,7 @@
 
 *** Xresources
     :PROPERTIES:
-    :HEADER-ARGS: :tangle ~/.Xresources :exports code
+    :HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
     :CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
     :END:
     My Xresources file  is very short. Indeed, it only  contains two lines which
@@ -376,7 +376,7 @@
    :END:
 *** Email signature
     :PROPERTIES:
-    :HEADER-ARGS: :tangle ~/.signature
+    :HEADER-ARGS: :mkdirp yes :tangle ~/.signature
     :CUSTOM_ID: Features-And_some_minor_configuration_files-Email_signature-8c5f2218
     :END:
     This file gets inserted automatically at the end of my emails.
@@ -391,7 +391,7 @@
 
 *** Global gitignore
     :PROPERTIES:
-    :HEADER-ARGS: :tangle ~/.gitignore_global
+    :HEADER-ARGS: :mkdirp yes :tangle ~/.gitignore_global
     :CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
     :END:
     Sometimes,  there are  some lines  that always  reappear in  gitignores. So,

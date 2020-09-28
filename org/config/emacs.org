@@ -21,7 +21,7 @@
 
 * Spacemacs layers and packages
   :PROPERTIES:
-  :header-args:emacs-lisp: :mkdir yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
+  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
   :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
   :END:
   Here  will be  our layer  configuration  set. Everything  here is  set with  a
@@ -613,7 +613,7 @@
 
 * Init
   :PROPERTIES:
-  :header-args:emacs-lisp: :mkdir yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
+  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
   :CUSTOM_ID: Init-99a4b561
   :END:
   The ~dotspacemacs/init~ function is the one called at the very begining of the
@@ -1285,7 +1285,7 @@
 
 * User Initialization
   :PROPERTIES:
-  :header-args:emacs-lisp: :mkdir yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
+  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
   :CUSTOM_ID: User_Initialization-e0d21089
   :END:
 
@@ -1333,7 +1333,7 @@
 
 * User Configuration
   :PROPERTIES:
-  :header-args:emacs-lisp: :mkdir yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
+  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :CUSTOM_ID: User_Configuration-4a937fe5
   :END:
 ** Custom functions
@@ -2375,7 +2375,7 @@
       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Emails-d87336fe
       :END:
       This is my template for a new Email:
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/email.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/email.orgcaptmpl
         ,** TODO [#A] Write Email
            SCHEDULED: %^t
            :PROPERTIES:
@@ -2408,7 +2408,7 @@
       timestamp as its title, a brief title  of my choosing, and then I can write
       whatever     I     wish    to     write.     This     is    exported     to
       =~/org/capture/journal.orgcaptmpl=.
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/journal.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/journal.orgcaptmpl
         ,* %U %^{Title}
           %?
       #+END_SRC
@@ -2422,7 +2422,7 @@
       capture was made  and when, and it even supports  text that was highlighted
       in  Emacs that  will be  inserted in  a quote  block. This  is exported  to
       =~/org/capture/notes.orgcaptmpl=.
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/notes.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/notes.orgcaptmpl
         ,* %^{Title}
           :PROPERTIES:
           :CAPTURED: %U
@@ -2430,8 +2430,7 @@
           %?
       #+END_SRC
 
-
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/notes-quote.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/notes-quote.orgcaptmpl
         ,* %^{Title}
           :PROPERTIES:
           :CAPTURED: %U
@@ -2453,7 +2452,7 @@
       what I’ve highlighted, as well as the link of the webpage on which my saved
       content     was    highlighted.     This     file     is    exported     to
       =~/org/capture/protocol.orgcaptmpl=.
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/protocol.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/protocol.orgcaptmpl
         ,* TODO [#C] %^{Title}
           :PROPERTIES:
           :CAPTURED: %U
@@ -2469,7 +2468,7 @@
 
       This next capture template is used only when a link is sent to Emacs and no
       content was highlighted.
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/protocol-link.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/protocol-link.orgcaptmpl
         ,* TODO [#C] Link: %^{Title}
           :PROPERTIES:
           :CAPTURED: %U
@@ -2490,7 +2489,7 @@
       the link is. The  title of the capture is a summary of  what this is, while
       the body of the  capture is a more detailed explanation  of what I capture,
       why, and how it could be useful to me.
-      #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/resource.orgcaptmpl
+      #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/resource.orgcaptmpl
         ,* TODO [#C] %^{Title}
           :PROPERTIES:
           :CAPTURED: %U
@@ -2511,7 +2510,7 @@
        One type of task  I often capture is related to my  servers or thing about
        computers in  general. With this,  I can capture a  task for which  I will
        either set a schedule or a deadline.
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/informatique.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/informatique.orgcaptmpl
          ,* TODO %^{Title}
            %^{Scheduled or Deadline?||SCHEDULED||DEADLINE}: %^t
            :PROPERTIES:
@@ -2526,7 +2525,7 @@
        :END:
        This capture is rarely used (I’m lucky to have a good health), but it can
        be useful.
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/health.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/health.orgcaptmpl
          ,* %^{Title}
            SCHEDULED: %^t
 
@@ -2539,7 +2538,7 @@
        :END:
        This capture is used  to store new birthdays I have  to remember. They are
        set to be repeated yearly.
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/birthday.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/birthday.orgcaptmpl
          ,* %^{Name}
            SCHEDULED: %^t
        #+END_SRC
@@ -2548,7 +2547,7 @@
        :PROPERTIES:
        :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Events-7f0f8dee
        :END:
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/event.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/event.orgcaptmpl
          ,* %^{Title}
            %^{Scheduled or deadline?||SCHEDULED||DEADLINE}: %^t
            %?
@@ -2562,7 +2561,7 @@
        :PROPERTIES:
        :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-General-1f0732db
        :END:
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/link.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/link.orgcaptmpl
          ,* TODO [#C] %^{Title}
            :PROPERTIES:
            :CAPTURED: %U
@@ -2575,7 +2574,7 @@
        :PROPERTIES:
        :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-YouTube-b89fe20e
        :END:
-       #+BEGIN_SRC org :mkdir yes :tangle ~/org/capture/youtube.orgcaptmpl
+       #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/youtube.orgcaptmpl
          ,* TODO [#C] %^{Title}
            :PROPERTIES:
            :CAPTURED: %U
@@ -3688,7 +3687,7 @@
 ** Snippets
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Snippets-67a32065
-   :HEADER-ARGS:snippet: :padline no :mkdir yes
+   :HEADER-ARGS:snippet: :padline no :mkdirp yes
    :END:
    Yasnippet’s snippets tool  is extremely powerful and allows me  to write very
    quickly code. For now,  we have snippets for two modes.  The files you’ll see
@@ -3728,7 +3727,6 @@
         }
       }
     #+END_SRC
-
 
 *** Org headers
     :PROPERTIES:

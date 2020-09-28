@@ -5,7 +5,7 @@
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's AwesomeWM config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the AwesomeWM config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :tangle no :exports none
-#+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes
+#+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes :mkdirp yes
 
 * Introduction
   :PROPERTIES:
@@ -1489,7 +1489,6 @@
   #+BEGIN_SRC lua
     awful.spawn.with_shell("autostart")
   #+END_SRC
-
 
 * What to do now                                                   :noexport:
   :PROPERTIES:

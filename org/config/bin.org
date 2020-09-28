@@ -17,7 +17,7 @@
 
 * 4chandl
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/4chandl
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/4chandl
   :CUSTOM_ID: 4chandl-21ff428f
   :END:
   Usage: =4chandl [ URL TO THREAD ]=
@@ -83,7 +83,7 @@
 
 * Autostart
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/autostart
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/autostart
   :CUSTOM_ID: Autostart-a99e99e7
   :END:
   Because I sometimes  switch from window manager to window  manager, creating a
@@ -131,7 +131,7 @@
 
 * awiki
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/awiki
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
   :CUSTOM_ID: awiki-7ac5e1d5
   :END:
   ~awiki~  is   a  simple   script  used   with  ~rofi~   that  relies   on  the
@@ -163,7 +163,7 @@
 
 * Askpass
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/askpass
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
   :CUSTOM_ID: Askpass-d0d7a8c0
   :END:
   Askpass is a simple script that invokes ~rofi~  as a way to get from a GUI the
@@ -176,7 +176,7 @@
 
 * Backup
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/backup
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
   :CUSTOM_ID: Backup-68c7c63e
   :END:
   ~backup~ is a very simple, oneliner script  that will create a local copy of a
@@ -188,7 +188,7 @@
 
 * ConnectWifi
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/connect-wifi
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
   :CUSTOM_ID: ConnectWifi-16e5e24a
   :END:
   ~connect-wifi~ is  a small  utility tool  that allows the  user to  connect to
@@ -245,7 +245,7 @@
 
 * Cnew
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/cnew
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/cnew
   :CUSTOM_ID: Cnew-d9ec9cc4
   :END:
   =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
@@ -307,7 +307,7 @@
 
 * Dart Language Server
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/dart_language_server
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dart_language_server
   :CUSTOM_ID: Dart_Language_Server-18c256b1
   :END:
   Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
@@ -321,7 +321,7 @@
 
 * Dmenu
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/dmenu
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
   :CUSTOM_ID: Dmenu-527edf04
   :END:
   I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
@@ -333,7 +333,7 @@
 
 * Emacsmail
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/bin/bash" :tangle ~/.local/bin/emacsmail
+  :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
   :CUSTOM_ID: Emacsmail-afffb7cd
   :END:
   This  short script  is used  in my  =~/.local/share/applications/mu4e.desktop=
@@ -344,7 +344,7 @@
 
 * Emoji picker
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-emoji
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
   :CUSTOM_ID: Emoji_picker-a1c374ec
   :END:
   The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
@@ -367,7 +367,7 @@
 
 * Lock
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/lock
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/lock
   :CUSTOM_ID: Lock-635fcb38
   :END:
   ~lock~ is a simple script that locks the screen with ~i3lock~ while setting as
@@ -383,7 +383,7 @@
 
 * mp42webm
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/mp42webm
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
   :CUSTOM_ID: mp42webm-aeacca58
   :END:
   This function  allows me to  convert easily an mp4  video to the  webm format.
@@ -394,7 +394,7 @@
 
 * pape-update
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/pape-update
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
   :CUSTOM_ID: pape-update-bdecbadf
   :END:
   This little tool sets a random wallpaper using nitrogen.
@@ -416,7 +416,7 @@
 
 * Polybar-launch
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/polybar-launch
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
   :CUSTOM_ID: Polybar-launch-36789edc
   :END:
   This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
@@ -453,7 +453,7 @@
 
 * Rofi-mount
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-mount
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
   :CUSTOM_ID: Rofi-mount-ebbebf68
   :END:
   =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
@@ -841,7 +841,7 @@
 
 * Rofi-pass
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-pass
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
   :CUSTOM_ID: Rofi-pass-8335357f
   :END:
   =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
@@ -921,7 +921,7 @@
 
 * Rofi-umount
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/rofi-umount
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
   :CUSTOM_ID: Rofi-umount-ddde1667
   :END:
   =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
@@ -1153,7 +1153,7 @@
 
 * set-screens
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/set-screens
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
   :CUSTOM_ID: set-screens-01bd989a
   :END:
   ~set-screens~ is a  small script that allows the user  to automatically set up
@@ -1182,7 +1182,7 @@
 
 * Starwars
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/starwars
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
   :CUSTOM_ID: Starwars-654f8637
   :END:
   This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
@@ -1193,7 +1193,7 @@
 
 * UpdateFlutter
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/UpdateFlutter
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
   :CUSTOM_ID: UpdateFlutter-1e8fbeb7
   :END:
   This is a simple utility to be ran when the ~flutter~ package is updated.
@@ -1206,7 +1206,7 @@
 
 * Wacom setup
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/wacom-setup
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
   :CUSTOM_ID: Wacom_setup-331fb024
   :END:
   I made a small and quick utility to set up my Wacom tablet so it is only bound
@@ -1371,7 +1371,7 @@
 
 * Weather
   :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle ~/.local/bin/we
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
   :CUSTOM_ID: Weather-4ed00bb0
   :END:
   A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get

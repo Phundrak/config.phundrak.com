@@ -4,7 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's Rust format config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's Rust format config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Rust format config file of Phundrak" />
-#+PROPERTY: header-args:toml :tangle ~/.rustfmt.toml
+#+PROPERTY: header-args:toml :mkdirp yes :tangle ~/.rustfmt.toml
 
 * Introduction
   :PROPERTIES:
