@@ -1068,7 +1068,7 @@
     - ~%Z~ :: like ~%z~, but including the end-of-line format
     The default value is ~"%I@%S"~.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-frame-title-format "%b (%m)")
+      (setq-default dotspacemacs-frame-title-format "Emacs: %b (%t) %U@%S")
     #+END_SRC
 
     Format specification for setting the icon title format. The default value is
