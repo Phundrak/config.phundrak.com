@@ -93,7 +93,7 @@ ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
 typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
 vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
 x11-ssh-askpass xclip xdg-user-dirs-gtk xfsprogs xorg-drivers xorg-server \
-xorg-xinit xss-lock xvkbd yaml-language-server-bin yapf zeal
+xorg-xinit xss-lock xvkbd yaml-language-server-bin zeal
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
@@ -235,7 +235,7 @@ rustup component add rls
 rustup component add clippy
 
 printf "\n# Installing Python packages ##################################################\n\n"
-pip install --user pyls-isort pyls-mypy
+pip install --user pyls-isort pyls-mypy pyls-black
 
 printf "\n# Setting up Chicken ##########################################################\n\n"
 chicken-install -s apropos chicken-doc
