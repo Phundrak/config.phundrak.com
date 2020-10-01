@@ -698,11 +698,12 @@
    Some  packages will  be needed  from  pip in  order  to get  our Emacs  setup
    correctly working.
    #+NAME: python-packages-table
-   | Package    | Why                     |
-   |------------+-------------------------|
-   | pyls-isort | Import sortings for LSP |
-   | pyls-mypy  | Mypy linter for LSP     |
-   | pyls-black | Black plugin for pyls   |
+   | Package                     | Why                     |
+   |-----------------------------+-------------------------|
+   | python-language-server[all] | Python LSP packages     |
+   | pyls-isort                  | Import sortings for LSP |
+   | pyls-mypy                   | Mypy linter for LSP     |
+   | pyls-black                  | Black plugin for pyls   |
 
    #+NAME: python-packages-gen
    #+BEGIN_SRC emacs-lisp :var packages=python-packages-table[,0]
@@ -710,8 +711,8 @@
              (s-join " " packages))
    #+END_SRC
 
-   #+RESULTS[d368dd4fa0df32b06cf27cb047ea3565777ffce6]: python-packages-gen
-   : pip install --user pyls-isort pyls-mypy pyls-black
+   #+RESULTS[cb6abaea9d7130a67569af2b4d1a545651bf29ab]: python-packages-gen
+   : pip install --user python-language-server[all] pyls-isort pyls-mypy pyls-black
 
    Let’s install them locally for our user.
    #+BEGIN_SRC fish :noweb yes

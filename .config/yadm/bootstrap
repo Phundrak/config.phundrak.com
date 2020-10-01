@@ -235,7 +235,7 @@ rustup component add rls
 rustup component add clippy
 
 printf "\n# Installing Python packages ##################################################\n\n"
-pip install --user pyls-isort pyls-mypy pyls-black
+pip install --user python-language-server[all] pyls-isort pyls-mypy pyls-black
 
 printf "\n# Setting up Chicken ##########################################################\n\n"
 chicken-install -s apropos chicken-doc
