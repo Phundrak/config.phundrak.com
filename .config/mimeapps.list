@@ -1,7 +1,7 @@
 [Added Associations]
 application/epub+zip=com.github.babluboy.bookworm.desktop;firefox.desktop;
 application/octet-stream=emacsclient.desktop;
-application/pdf=xreader.desktop;
+application/pdf=org.pwmt.zathura.desktop;xreader.desktop;
 application/vnd.rar=org.gnome.FileRoller.desktop;
 application/x-7z-compressed=org.gnome.FileRoller.desktop;
 application/x-alpm-package=org.gnome.FileRoller.desktop;
@@ -57,7 +57,7 @@ application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoff
 application/epub+zip=com.github.babluboy.bookworm.desktop
 application/lrf=com.github.babluboy.bookworm.desktop
 application/octet-stream=emacsclient.desktop
-application/pdf=xreader.desktop
+application/pdf=org.pwmt.zathura.desktop
 application/x-mobipocket-ebook=com.github.babluboy.bookworm.desktop
 application/x-wine-extension-ini=emacsclient.desktop
 application/xhtml+xml=firefox.desktop
