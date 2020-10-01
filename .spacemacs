@@ -5,7 +5,7 @@ This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
   (setq phundrak//dotspacemacs-src-dir (concat (getenv "HOME") "/.config/emacs/private/")
-        phundrak//dotspacemacs-src (concat (getenv "HOME") "/org/config/spacemacs.org")
+        phundrak//dotspacemacs-src (concat (getenv "HOME") "/org/config/emacs.org")
         phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init.el")
         phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers.el")
         phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config.el")
