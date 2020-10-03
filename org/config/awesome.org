@@ -1059,7 +1059,7 @@
    | m   | modkey, control        | yes     | toggle_vertical_maximized(c)     | toggle vertically maximized   | client | yes        |
    | n   | modkey, shift          | yes     | c.minimized = true               | minimize                      | client | yes        |
    | n   | modkey, control        | no      | restore_minimized_clients        | restore minimized             | client | no         |
-   | o   | modkey                 | yes     | c:move_to_screen()               | move to screen                | client | yes        |
+   | o   | modkey, shift          | yes     | c:move_to_screen()               | move to screen                | client | yes        |
    | q   | modkey                 | yes     | c:kill()                         | close client                  | client | yes        |
    | s   | modkey                 | yes     | awful.client.focus.byidx(-1)     | focus previous client         | client | no         |
    | t   | modkey                 | yes     | awful.client.focus.byidx(1)      | focus next client             | client | no         |
@@ -1130,6 +1130,7 @@
    | XF86MonBrightnessUp   |              | shell   | xbacklight -inc 5               | increase screen brightness | screen |
    | Prev                  | modkey, meta | shell   | xbacklight -inc 5               | increase screen brightness | screen |
    | F3                    | modkey       | spawn   | arandr                          | randr graphical frontend   | screen |
+   | o                     | modkey       | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
 
 ** Tags
    :PROPERTIES:
