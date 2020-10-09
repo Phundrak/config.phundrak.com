@@ -3383,38 +3383,6 @@
       (display-time-mode 1)
     #+END_SRC
 
-*** ~which-key~ replacements
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Visual_configuration-which-key_replacements-cccc5202
-    :END:
-    It is possible to customize a bit what the ~which-key~ package shows us when
-    invoked.  For the  record, most  of this  either comes  from [[http://www.howardism.org/][Howard  Abram]]’s
-    [[https://github.com/howardabrams/dot-files][config]] on  Github. First  of all,  I’d like to  have some  elements replaced
-    alltogether, such  as ~left~ or  ~right~ being  replaced with a  more visual
-    indicator, while some keys are replaced with a more understandable name.
-    #+BEGIN_SRC emacs-lisp
-      (setq which-key-key-replacement-alist
-            '(("<\\([[:alnum:]-]+\\)>" . "\\1")
-              ("left"                  . "◀")
-              ("right"                 . "▶")
-              ("up"                    . "▲")
-              ("down"                  . "▼")
-              ("delete"                . "DEL") ; delete key
-              ("\\`DEL\\'"             . "BS") ; backspace key
-              ("next"                  . "PgDn")
-              ("prior"                 . "PgUp")))
-    #+END_SRC
-
-    Let’s also write some replacements for the function names.
-    #+BEGIN_SRC emacs-lisp
-      (setq which-key-description-replacement-alist
-            '(("Prefix Command" . "prefix")
-              ("\\`calc-" . "")
-              ("\\`projectile-" . "𝓟/")
-              ("\\`org-babel-" . "ob/")
-              ("\\`phundrak/" . "")))
-    #+END_SRC
-
 ** Nov-mode
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Nov-mode-6f10765d
