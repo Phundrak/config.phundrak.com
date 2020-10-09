@@ -96,6 +96,7 @@
   #+NAME: autostart-table
   | Command                    | Arguments                                                       | Run once? |
   |----------------------------+-----------------------------------------------------------------+-----------|
+  | ~pumopm~                   |                                                                 | yes       |
   | ~xfce-polkit~              |                                                                 | yes       |
   | ~picom~                    | ~--experimental-backends~                                       | yes       |
   | ~xidlehook~                | ~--not-when-audio --not-when-fullscreen --timer 3600 i3lock ''~ | yes       |
@@ -412,7 +413,7 @@
   :END:
   ~pinfo~ is a utility that shows system information
 
-* Polybar-launch
+* Polybar-launch (Deprecated)
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
   :CUSTOM_ID: Polybar-launch-36789edc
@@ -1176,6 +1177,19 @@
         set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
         xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
     end
+  #+END_SRC
+
+* sshbind
+  :PROPERTIES:
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
+  :CUSTOM_ID: sshbind-756fabb1
+  :END:
+  Something that I did  not know for quite some time but  that is actually crazy
+  useful about SSH is its ability to  bind locally the port of a remote machine,
+  and  vice versa.  The syntax  is actually  very simple,  but I  prefer a  more
+  intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
+  #+BEGIN_SRC fish
+    ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
   #+END_SRC
 
 * Starwars
