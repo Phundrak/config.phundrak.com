@@ -490,10 +490,10 @@
             lua-lsp-emmy-enable-file-watchers t)
      #+END_SRC
 
-     But that won’t stop me trying to use other window managers. I am currently
-     testing StumpWM, which requires the Common Lisp layer.
+     Unfortunately, I have to write Swift code for one of my university courses,
+     so here is the layer:
      #+BEGIN_SRC emacs-lisp
-       common-lisp
+       swift
      #+END_SRC
 
 *** Readers
