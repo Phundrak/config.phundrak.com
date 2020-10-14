@@ -117,7 +117,7 @@
         printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
 
         # loop other mountpoints
-        for mp in (df -Ph 2> /dev/null | egrep "sd|tank" | egrep -v "boot|/\$")
+        for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
             set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
             set -l mp_used (echo $mp | awk '{print $3}')
             set -l mp_total (echo $mp | awk '{print $2}')
