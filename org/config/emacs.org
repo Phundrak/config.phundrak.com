@@ -660,7 +660,8 @@
 
    The default value of this variable is ="spacemacs.pdmp"=.
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp")
+     (setq-default dotspacemacs-emacs-dumper-dump-file
+                   (format "spacemacs-%s.pdmp" emacs-version))
    #+END_SRC
 
 ** Package managment and updates
@@ -686,7 +687,7 @@
 
    Spacemacs has  a capacity of performing  rollbacks after updates. We  can set
    the maximum number of rollback slots to  keep in the cache. The default value
-   is =5=.
+   is ~5~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-max-rollback-slots 5)
    #+END_SRC
@@ -696,18 +697,18 @@
     :CUSTOM_ID: Init-Package_managment_and_updates-Elpa_repository-c07fb1c4
     :END:
     It is possible to  ask Emacs to use an HTTPS  connection when contacting the
-    Elpa whenever possible. This value should be  set to =nil= when the user has
+    Elpa whenever possible. This value should be  set to ~nil~ when the user has
     no  way  to  contact  the  Elpa  though  HTTPS,  otherwise  it  is  strongly
-    recommended to  let it set  to =t=. This variable  however has no  effect if
-    Emacs is launched with the parameter  =--insecure= which forces the value of
-    this variable to =nil=. The default value is =t=.
+    recommended to  let it set  to ~t~. This variable  however has no  effect if
+    Emacs is launched with the parameter  ~--insecure~ which forces the value of
+    this variable to ~nil~. The default value is ~t~.
     #+BEGIN_SRC emacs-lisp
     (setq-default dotspacemacs-elpa-https t)
     #+END_SRC
 
     We can  set a  maximum amount  of seconds which  will represent  the maximum
     allowed time to contact the Elpa repository. By default, this setting is set
-    on =5=.
+    on ~5~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-elpa-timeout 5)
     #+END_SRC
@@ -718,14 +719,14 @@
     :END:
     The Spacelpa  repository is a  Spacemacs-specific package repository.  It is
     possible to use  it as the primary  source to install a locked  version of a
-    package. If the below value is set to =nil=, then Spacemacs will install the
+    package. If the below value is set to ~nil~, then Spacemacs will install the
     latest version of packages  from MELPA. I personally don’t use  it, so I let
-    it set to =nil=. The default value is =nil=.
+    it set to ~nil~. The default value is ~nil~.
     #+BEGIN_SRC emacs-lisp
     (setq-default dotspacemacs-use-spacelpa nil)
     #+END_SRC
 
-    If  the below  value is  not =nil=,  then the  signature for  the downloaded
+    If  the below  value is  not ~nil~,  then the  signature for  the downloaded
     Spacelpa packages must be verified.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-verify-spacelpa-archives t)
@@ -737,21 +738,22 @@
    :END:
    By  default, Spacemacs  encourages the  use  of evil-mode,  which brings  vim
    keybinding in Emacs. Still, it has three different styles available:
-   - =vim=, which goes full evil-mode usage and most adapted to Emacs newcomers,
+   - ~vim~, which goes full evil-mode usage and most adapted to Emacs newcomers,
      especially if they were  used to vim before, with the use  of a normal mode
      and an insert mode.
-   - =emacs=  which keeps  an Emacs-like  feel to  the keybindings,  without any
+   - ~emacs~  which keeps  an Emacs-like  feel to  the keybindings,  without any
      difference between an insert or normal mode.
-   - =hybrid= is a modification of the =vim= mode which brings the =emacs= style
-     in insert mode, but otherwise behaves  like the =vim= style in normal mode.
+   - ~hybrid~ is a modification of the ~vim~ mode which brings the ~emacs~ style
+     in insert mode, but otherwise behaves  like the ~vim~ style in normal mode.
      This is the style I personally use.
-   The  value can  also be  a  list with  the =:variables=  keyword (similar  to
+   The  value can  also be  a  list with  the ~:variables~  keyword (similar  to
    layers). Check the editing styles section of the documentation for details on
-   available variables. The default value is =vim=.
+   available variables. The default value is ~vim~.
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-editing-style '(hybrid :variables
-                                                       hybrid-mode-enable-evilified-state t
-                                                       hybrid-mode-default-state 'normal))
+     (setq-default dotspacemacs-editing-style
+                   '(hybrid :variables
+                            hybrid-mode-enable-evilified-state t
+                            hybrid-mode-default-state 'normal))
    #+END_SRC
 
    If non-nil,  the paste transient-state  is enabled. While enabled,  after you
@@ -766,35 +768,34 @@
    :CUSTOM_ID: Init-Spacemacs_home_configuration-8375cdcc
    :END:
    The value below specifies the startup  banner of Spacemacs. The default value
-   is =official=, it  displays the official Spacemacs logo. An  integer value is
-   the  index of  text banner,  =random=  chooses a  random text  banner in  the
-   =core/banners= directory.  A string value must  be a path to  an image format
+   is ~official~, it  displays the official Spacemacs logo. An  integer value is
+   the  index of  text banner,  ~random~  chooses a  random text  banner in  the
+   ~core/banners~ directory.  A string value must  be a path to  an image format
    supported  by your  Emacs build.  If  the value  is  nil, then  no banner  is
-   displayed. The default value is =official=.
+   displayed. The default value is ~official~.
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-startup-banner 'official)
    #+END_SRC
 
    On the Spacemacs homepage, a list of elements can also be shown, be it recent
    files, projects, agenda items,… Each of the elements making up the list value
-   of the below variable are pairs in the form =(list-type . list-size)=. If the
-   value is =nil=, then it is disabled. The possible values for =list-type= are:
-   - =recents= :: displays recently opened files
-   - =bookmarks= :: displays saved bookmarks
-   - =projects= :: displays projectile projects recently opened
-   - =agenda= :: displays upcoming events from Org-mode agendas
-   - =todos= :: displays recent TODOs detected in projectile projects
+   of the below variable are pairs in the form ~(list-type . list-size)~. If the
+   value is ~nil~, then it is disabled. The possible values for ~list-type~ are:
+   - ~recents~ :: displays recently opened files
+   - ~bookmarks~ :: displays saved bookmarks
+   - ~projects~ :: displays projectile projects recently opened
+   - ~agenda~ :: displays upcoming events from Org-mode agendas
+   - ~todos~ :: displays recent TODOs detected in projectile projects
    The order in which they are set in  the below list affects their order on the
-   Spacemacs   startup  page.   List  sikes   may  be   =nil=,  in   which  case
-   =spacemacs-buffer-startup-lists-length= takes effect.
+   Spacemacs   startup  page.   List  sikes   may  be   ~nil~,  in   which  case
+   ~spacemacs-buffer-startup-lists-length~ takes effect.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-startup-lists '((recents . 15)
-                                                (projects . 15)
-                                                (agenda . 10)))
+                                                (projects . 15)))
    #+END_SRC
 
    The below variable  allows the startup page to respond  to resize events. Its
-   default value is =t=.
+   default value is ~t~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-startup-buffer-responsive t)
    #+END_SRC
@@ -810,14 +811,14 @@
    :CUSTOM_ID: Init-Default_major_modes-37f4a891
    :END:
    The below variable sets a default major mode for a new empty buffer. Possible
-   values are mode names such as  =text-mode=, or =nil= to use Fundamental mode.
-   The default value is =text-mode=, but I prefer to use =org-mode= by default.
+   values are mode names such as  ~text-mode~, or ~nil~ to use Fundamental mode.
+   The default value is ~text-mode~, but I prefer to use ~org-mode~ by default.
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-new-empty-buffer-major-mode 'org-mode)
    #+END_SRC
 
    Similarly, the below  variable sets the default mode for  the scratch buffer.
-   Its default  value is  =text-mode=, but I  also set it  to use  =org-mode= by
+   Its default  value is  ~text-mode~, but I  also set it  to use  ~org-mode~ by
    default.
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-scratch-mode 'org-mode)
@@ -825,7 +826,7 @@
 
    By the way, it  is possible to set a default message  for the scratch buffer,
    such as “Welcome to Spacemacs!”. I prefer to keep it clean. The default value
-   is =nil=.
+   is ~nil~.
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-initial-scratch-message nil)
    #+END_SRC
@@ -840,7 +841,7 @@
     :END:
     Spacemacs makes  it quite easy  to use themes  and organize them.  The below
     value is a  list of themes, the  first of the list is  loaded when Spacemacs
-    starts. The user can press =SPC T n= to cycle to the next theme in the list.
+    starts. The user can press ~SPC T n~ to cycle to the next theme in the list.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-themes '(doom-nord doom-vibrant spacemacs-dark doom-one
                                                     doom-opera doom-dracula doom-molokai doom-peacock
@@ -851,18 +852,18 @@
 
     Emacs also makes use  of themes for the Spaceline at  the bottom of buffers.
     Supported themes are:
-    - =spacemacs=
-    - =all-the-icons=
-    - =custom=
-    - =doom= (the one I use)
-    - =vim-powerline=
-    - =vanilla=
-    The first  three are Spaceline  themes. =doom= is the  Doom-Emacs mode-line,
-    and =vanilla=  is the default  Emacs mode-line.  =custom= is a  user defined
-    theme, refer to Spacemacs’ =DOCUMENTATION.org= file  for more info on how to
+    - ~spacemacs~
+    - ~all-the-icons~
+    - ~custom~
+    - ~doom~ (the one I use)
+    - ~vim-powerline~
+    - ~vanilla~
+    The first  three are Spaceline  themes. ~doom~ is the  Doom-Emacs mode-line,
+    and ~vanilla~  is the default  Emacs mode-line.  ~custom~ is a  user defined
+    theme, refer to Spacemacs’ ~DOCUMENTATION.org~ file  for more info on how to
     create  your  own Spaceline  theme.  Value  can be  a  symbol  or list  with
-    additional  properties. The  default value  is ='(spacemacs  :separator wave
-    :separator-scale 1.5))=.
+    additional  properties. The  default value  is ~'(spacemacs  :separator wave
+    :separator-scale 1.5))~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-mode-line-theme '(doom
                                                    :separator wave
@@ -870,7 +871,7 @@
     #+END_SRC
 
     It is also possible to color the cursor depending on which mode Spacemacs is
-    in, in order to mach the state color in GUI Emacs. The default value is =t=.
+    in, in order to mach the state color in GUI Emacs. The default value is ~t~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-colorize-cursor-according-to-state t)
     #+END_SRC
@@ -892,36 +893,36 @@
     :PROPERTIES:
     :CUSTOM_ID: Init-Visual_configuration-Other_on-screen_elements-7d334e09
     :END:
-    =which-key= is  a helper which  displays available keyboard  shortcuts. This
+    ~which-key~ is  a helper which  displays available keyboard  shortcuts. This
     variable sets in seconds the time  Spacemacs should wait between a key press
-    and the moment =which-key= should be shown.
+    and the moment ~which-key~ should be shown.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-which-key-delay 3)
+      (setq-default dotspacemacs-which-key-delay 1)
     #+END_SRC
 
-    This variable sets =which-key='s frame position. Possible values are:
-    - =right=
-    - =bottom=
-    - =right-then-bottom=
-    =right-then-bottom= tries to display the frame to the right, but if there is
+    This variable sets ~which-key~'s frame position. Possible values are:
+    - ~right~
+    - ~bottom~
+    - ~right-then-bottom~
+    ~right-then-bottom~ tries to display the frame to the right, but if there is
     insufficient  space it  displays  it at  the bottom.  The  default value  is
-    =bottom=.
+    ~bottom~.
     #+BEGIN_SRC emacs-lisp
-      (setq-default dotspacemacs-which-key-position 'bottom)
+      (setq-default dotspacemacs-which-key-position 'right-then-bottom)
     #+END_SRC
 
-    This controls where =switch-to-buffer= displays  the buffer. If the value is
-    =nil=, =switch-to-buffer= displays the buffer  in the current window even if
+    This controls where ~switch-to-buffer~ displays  the buffer. If the value is
+    ~nil~, ~switch-to-buffer~ displays the buffer  in the current window even if
     another  same-purpose window  is available.  If non-nil,  ~switch-to-buffer~
     displays  the buffer  in a  same-purpose window  even if  the buffer  can be
-    displayed in the current window. The default value is =nil=.
+    displayed in the current window. The default value is ~nil~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-switch-to-buffer-prefers-purpose nil)
     #+END_SRC
 
     If this variable  is non-nil, a progress bar is  displayed when Spacemacs is
     loading. This may  increase the boot time on some  systems and emacs builds,
-    set it to =nil= to boost the loading time. The default value is =t=.
+    set it to ~nil~ to boost the loading time. The default value is ~t~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-loading-progress-bar t)
     #+END_SRC
@@ -970,6 +971,7 @@
                             text-mode
         :size-limit-kb 1000)
     #+END_SRC
+
     When used in a plist, ~visual~ takes precendence over ~relative~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-line-numbers '(:relative nil
@@ -999,20 +1001,26 @@
       (setq-default dotspacemacs-pretty-docs nil)
     #+END_SRC
 
+    If ~nil~, the home buffer shows the full path of agenda items and todos. If
+    non ~nil~, only the file name is shown.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default dotspacemacs-home-shorten-agenda-source t)
+    #+END_SRC
+
 *** Appearance of Emacs frames
     :PROPERTIES:
     :CUSTOM_ID: Init-Visual_configuration-Appearance_of_Emacs_frames-59700bb7
     :END:
     Starting from Emacs 24.4, it is  possible to make the Emacs frame fullscreen
     when Emacs starts up if the variable  is set to a non-nil value. The default
-    value is =nil=.
+    value is ~nil~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-fullscreen-at-startup nil)
     #+END_SRC
 
     This  variable is  to  be used  if  the user  does not  want  to use  native
     fullscreen  with ~spacemacs/toggle-fullscreen~.  This disables  for instance
-    the fullscreen animation under OSX. The default value is =nil=.
+    the fullscreen animation under OSX. The default value is ~nil~.
     #+BEGIN_SRC emacs-lisp
       (setq-default dotspacemacs-fullscreen-use-non-native nil)
     #+END_SRC
@@ -1082,47 +1090,49 @@
    :CUSTOM_ID: Init-Spacemacs_leader_keys_and_shortcuts-ebf21abe
    :END:
    The below  setting sets  the Spacemacs  leader key. By  default, this  is the
-   =SPC= key.
+   ~SPC~ key.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-leader-key "SPC")
    #+END_SRC
 
    Once the leader  key has been pressed,  it is possible to set  another key in
-   order to call Emacs’ command =M-x=. By default, it is again the =SPC= key.
+   order to call Emacs’ command ~M-x~. By default, it is again the ~SPC~ key.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-emacs-command-key "SPC")
    #+END_SRC
 
    It is also possible to invoke Vim Ex commands with the press of a key, and by
-   default it is the =:= key.
+   default it is the ~:~ key.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-ex-command-key ":")
    #+END_SRC
 
-   The  below variable  sets  the  leader key  accessible  in =emacs-state=  and
-   =insert-state=:
+   The  below variable  sets  the  leader key  accessible  in ~emacs-state~  and
+   ~insert-state~:
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-emacs-leader-key "M-m")
    #+END_SRC
 
    The  major mode  leader key  is a  shortcut key  which is  the equivalent  of
-   pressing =<leader> m=.  Set it to =nil=  to disable it. Its  default value is
-   =,=.
+   pressing ~<leader> m~.  Set it to ~nil~  to disable it. Its  default value is
+   ~,~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-major-mode-leader-key ",")
    #+END_SRC
 
-   In =emacs-state=  and =insert-state=, the same  major mode leader key  can be
-   accessible from another shortcut, which by default is =C-M-m=.
+   In ~emacs-state~  and ~insert-state~, the same  major mode leader key  can be
+   accessible from  another shortcut,  which by default  is ~C-M-m~  in terminal
+   mode, or ~M-return~ in GUI mode.
    #+BEGIN_SRC emacs-lisp
-     (setq-default dotspacemacs-major-mode-emacs-leader-key "C-M-m")
+     (setq-default dotspacemacs-major-mode-emacs-leader-key
+                   (if window-system "<M-return>" "C-M-m"))
    #+END_SRC
 
    These variables control whether separate commands are bound in the GUI to the
-   key pairs =C-i= and =TAB=, and =C-m= and =RET=. Setting it to a non-nil value
-   allows for separate  commands under =C-i= and =TAB=, and  =C-m= and =RET=. In
+   key pairs ~C-i~ and ~TAB~, and ~C-m~ and ~RET~. Setting it to a non-nil value
+   allows for separate  commands under ~C-i~ and ~TAB~, and  ~C-m~ and ~RET~. In
    the terminal, these pairs are generally indistinguishable, so this only works
-   in the GUI. The default value is =nil=.
+   in the GUI. The default value is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-distinguish-gui-tab nil)
    #+END_SRC
@@ -1132,26 +1142,26 @@
    :CUSTOM_ID: Init-Layouts-61c0374d
    :END:
    The variable belows sets the name of the default layout. Its default value is
-   ="Default"=.
+   ~"Default"~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-default-layout-name "Default")
    #+END_SRC
 
    If  non-nil, the  default  layout name  is displayed  in  the mode-line.  The
-   default value is =nil=.
+   default value is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-display-default-layout nil)
    #+END_SRC
 
    If non-nil, then the last auto saved layouts are resumed automatically upon
-   start. The default value is =nil=.
+   start. The default value is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-auto-resume-layouts nil)
    #+END_SRC
 
    If non-nil, the layout name will be auto-generated when creating new layouts.
    It only has an effect when using  the “jump to layout by number” command. The
-   default value is =nil=.
+   default value is ~nil~.
    #+BEGIN_SRC emacs-lisp
      (setq-default dotspacemacs-auto-generate-layout-names nil)
    #+END_SRC
@@ -1163,19 +1173,19 @@
    The below value sets the size in MB above which Spacemacs will prompt to open
    the  file literally  in order  to avoid  preformance issues.  Opening a  file
    literally means that no  major or minor mode is active.  The default value is
-   =1=.
+   ~1~.
    #+BEGIN_SRC emacs-lisp
    (setq-default dotspacemacs-large-file-size 5)
    #+END_SRC
 
    This variable  sets the  location where to  auto-save files.  Possible values
    are:
-   - =original= :: auto-saves files in-place
-   - =cache= :: auto-saves files in another file stored in the cache directory
-   - =nil= :: disables auto-saving.
-   The default value is =cache=.
+   - ~original~ :: auto-saves files in-place
+   - ~cache~ :: auto-saves files in another file stored in the cache directory
+   - ~nil~ :: disables auto-saving.
+   The default value is ~cache~.
    #+BEGIN_SRC emacs-lisp
-   (setq-default dotspacemacs-auto-save-file-location 'original)
+     (setq-default dotspacemacs-auto-save-file-location 'original)
    #+END_SRC
 
 ** Emacs server
@@ -1263,17 +1273,12 @@
     (setq-default dotspacemacs-use-clean-aindent-mode t)
   #+END_SRC
 
-  Text   of  shifted   values   from  your   keyboard's   number  row.   Default
-  ~'!@#$%^&*()'~. I adapted it to the bépo layout.
+  If non ~nil~, shift your number row to match the entered keyboard layout (only
+  in  insert  state).  Currently  supported keyboard  layouts  are  ~querty-us~,
+  ~quertz-de~   and    ~querty-ca-fr~.   New    layouts   can   be    added   in
+  ~spacemacs-editing~ layer. Default ~nil~.
   #+BEGIN_SRC emacs-lisp
-    (setq-default dotspacemacs-snoopy-keyrow "\"«»()@+-/*")
-  #+END_SRC
-
-  If non-nil  activate ~snoopy-mode~ which shifts  your number row to  match the
-  set  of  signs  given  in ~dotspacemacs-snoopy-keyrow~  in  programming  modes
-  (~insert-mode~ only). Default ~nil~.
-  #+BEGIN_SRC emacs-lisp
-    (setq-default dotspacemacs-use-snoopy-mode nil)
+    (setq-default dotspacemacs-swap-number-row nil)
   #+END_SRC
 
   Set  ~read-process-output-max~ when  startup finishes.  This defines  how much
