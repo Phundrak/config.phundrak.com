@@ -97,7 +97,6 @@
    | doom-themes         | some cool themes                                     |
    | edit-indirect       | edit region in separate buffer                       |
    | elcord              | rich integration of Emacs in Discord                 |
-   | helm-icons          | integration between helm and treemacs icons          |
    | kaolin-themes       | some cool themes                                     |
    | lsp-dart            | apparently, it isn’t included in the Dart layer      |
    | magit-gitflow       | integrate gitflow in Magit                           |
@@ -3323,16 +3322,6 @@
     it:
     #+BEGIN_SRC emacs-lisp
       (spacemacs/toggle-mode-line-battery-on)
-    #+END_SRC
-
-*** Helm icons
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Visual_configuration-Helm_icons-6475fb5f
-    :END:
-    With the package ~helm-icons~, it is possible to bring ~all-the-icons~ to
-    helm when going through files and buffers. Let’s enable it.
-    #+BEGIN_SRC emacs-lisp
-      (helm-icons-enable)
     #+END_SRC
 
 *** Prettified symbols
