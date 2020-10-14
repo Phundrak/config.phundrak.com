@@ -1,1 +1,1 @@
-/home/phundrak/.config/emacs
+.config/emacs/
