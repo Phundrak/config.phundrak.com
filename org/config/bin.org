@@ -98,11 +98,11 @@
   |----------------------------+-----------------------------------------------------------------+-----------|
   | ~pumopm~                   |                                                                 | yes       |
   | ~xfce-polkit~              |                                                                 | yes       |
+  | ~xss-lock~                 | ~lock~                                                          | yes       |
   | ~picom~                    | ~--experimental-backends~                                       | yes       |
   | ~xidlehook~                | ~--not-when-audio --not-when-fullscreen --timer 3600 i3lock ''~ | yes       |
   | ~nm-applet~                |                                                                 | yes       |
   | ~numlockx~                 | ~on~                                                            | yes       |
-  | ~mpd_discord_richpresence~ | ~--no-idle --fork~                                              | yes       |
   | ~nitrogen~                 | ~--restore~                                                     | no        |
   | ~mpc~                      | ~stop~                                                          | no        |
   | ~emacsclient~              | ~-c -e \"(delete-frame)\"~                                      | no        |
