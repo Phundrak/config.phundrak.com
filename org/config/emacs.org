@@ -193,12 +193,12 @@
     usage. It is also disabled for two modes: magit and Org.
     #+BEGIN_SRC emacs-lisp
       (auto-completion :variables
-                    auto-completion-complete-with-key-sequence-delay 0.2
-                    auto-completion-enable-help-tooltip 'manual
-                    auto-completion-enable-sort-by-usage t
-                    :disabled-for
-                    org
-                    git)
+                       auto-completion-complete-with-key-sequence-delay 0.2
+                       auto-completion-enable-help-tooltip 'manual
+                       auto-completion-enable-sort-by-usage t
+                       :disabled-for
+                       org
+                       git)
     #+END_SRC
 
     ~helm~ is also enabled, with its header disabled.
@@ -310,7 +310,7 @@
     :END:
     In this category, I only enabled two layers: ~selectric~ and ~xkcd~.
     #+BEGIN_SRC emacs-lisp
-    selectric xkcd
+      selectric xkcd
     #+END_SRC
 
 *** Internationalization
