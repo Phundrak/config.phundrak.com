@@ -1203,6 +1203,41 @@
     telnet towel.blinkenlights.nl
   #+END_SRC
 
+* Toggle touchpad tapping
+  :PROPERTIES:
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
+  :CUSTOM_ID: Toggle_touchpad_tapping-23348b00
+  :END:
+  For some reasons, my firmware does not recognize the function key for toggling
+  the touchpad.  I’m not  going to  really complain  about it  since it  lets me
+  program it like I want. Since I  often don’t need to completely deactivate the
+  touchpad, I’ll instead toggle whether tapping  is enabled or not when pressing
+  ~XF86TouchpadToggle~.  And  for that,  I  need  this  small script  that  will
+  actually toggle it, and it will be used in my window manager configuration.
+
+  First, let’s detect the current status of the touchpad:
+  #+BEGIN_SRC fish
+    set TPSTATUS (xinput list-props 12 | grep "Tapping Enabled" | grep -v "Default" | awk '{print $5}')
+  #+END_SRC
+
+  This will  set ~TPSTATUS~ either  to ~0~, meaning  tapping is disabled,  or to
+  ~1~, meaning it’s enabled. I will consider any other value as being disabled.
+  #+BEGIN_SRC fish
+    test $TPSTATUS = "1" && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
+  #+END_SRC
+
+  Now let’s declare some variables to make this script more personal. With my
+  current computer (a Gazelle by System76), the name of my touchpad is the
+  following:
+  #+BEGIN_SRC fish
+    set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
+  #+END_SRC
+
+  Finally, let’s update the touchpad’s options:
+  #+BEGIN_SRC fish
+    xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
+  #+END_SRC
+
 * UpdateFlutter
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter

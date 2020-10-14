@@ -956,6 +956,8 @@
       <<gen-sc-glob(sc-screen)>>,
       -- Tags
       <<gen-sc-glob(sc-tag)>>,
+      -- Misc
+      <<gen-sc-glob(sc-misc)>>,
       <<sc-tag-num-gen()>>
     )
     root.keys(globalkeys)
@@ -1153,6 +1155,20 @@
    | Number | modkey, control        | toggle_tag_n(                   | toggle tag #                   | tag   |
    | Number | modkey, shift          | move_focused_to_tag_n(          | move focused client to tag #   | tag   |
    | Number | modkey, control, shift | toggle_focused_client_to_tag_n( | Toggle focused client on tag # | tag   |
+
+** Misc
+   :PROPERTIES:
+   :CUSTOM_ID: Keybindings-Misc-0b45ce02
+   :END:
+   In this  category you will  find other keybindings that  do not fit  in other
+   categories. For  now, the  only keybinding  that is in  this category  is for
+   toggling the touchpad’s tapping ability. This is linked to a special script I
+   wrote [[file:bin.org::#Toggle_touchpad_tapping-23348b00][here]].
+   #+NAME: sc-misc
+   | Key                | Modifiers | Lambda? | Action    | What it does            | Group |
+   |--------------------+-----------+---------+-----------+-------------------------+-------|
+   | XF86TouchpadToggle |           | shell   | tttapping | toggle touchpad tapping | misc  |
+
 
 * Rules
   :PROPERTIES:
