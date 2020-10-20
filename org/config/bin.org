@@ -94,18 +94,19 @@
 
   ~set-screens~ is a custom script declared [[*set-screens][below]].
   #+NAME: autostart-table
-  | Command                    | Arguments                                                       | Run once? |
-  |----------------------------+-----------------------------------------------------------------+-----------|
-  | ~pumopm~                   |                                                                 | yes       |
-  | ~xfce-polkit~              |                                                                 | yes       |
-  | ~xss-lock~                 | ~lock~                                                          | yes       |
-  | ~picom~                    | ~--experimental-backends~                                       | yes       |
-  | ~xidlehook~                | ~--not-when-audio --not-when-fullscreen --timer 3600 i3lock ''~ | yes       |
-  | ~nm-applet~                |                                                                 | yes       |
-  | ~numlockx~                 | ~on~                                                            | yes       |
-  | ~nitrogen~                 | ~--restore~                                                     | no        |
-  | ~mpc~                      | ~stop~                                                          | no        |
-  | ~emacsclient~              | ~-c -e \"(delete-frame)\"~                                      | no        |
+  | Command       | Arguments                                                     | Run once? |
+  |---------------+---------------------------------------------------------------+-----------|
+  | ~set-screens~ |                                                               |           |
+  | ~pumopm~      |                                                               | yes       |
+  | ~xfce-polkit~ |                                                               | yes       |
+  | ~xss-lock~    | ~lock~                                                        | yes       |
+  | ~picom~       | ~--experimental-backends~                                     | yes       |
+  | ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
+  | ~nm-applet~   |                                                               | yes       |
+  | ~numlockx~    | ~on~                                                          | yes       |
+  | ~nitrogen~    | ~--restore~                                                   | no        |
+  | ~mpc~         | ~stop~                                                        | no        |
+  | ~emacsclient~ | ~-c -e "(delete-frame)"~                                      | no        |
 
   #+NAME: autostart-gen
   #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
@@ -115,12 +116,51 @@
                         ($once? (string= "yes" (nth 2 $start-command))))
                    (if $once?
                        (concat (format "if ! test (pgrep %s 2&> /dev/null)\n\t" $command)
-                               (s-collapse-whitespace (format "%s %s &" $command $arguments))
+                               (s-collapse-whitespace (format "%s %s & && disown" $command $arguments))
                                "\nend\n")
                      (format "%s %s &\n" $command $arguments))))
                table
                "\n")
   #+END_SRC
+
+  #+RESULTS[1c3a021a0c8c01b8edbf6c40eccc5ee1d3c8762d]: autostart-gen
+  #+begin_example
+  set-screens  &
+
+  if ! test (pgrep pumopm 2&> /dev/null)
+    pumopm & && disown
+  end
+
+  if ! test (pgrep xfce-polkit 2&> /dev/null)
+    xfce-polkit & && disown
+  end
+
+  if ! test (pgrep xss-lock 2&> /dev/null)
+    xss-lock lock & && disown
+  end
+
+  if ! test (pgrep picom 2&> /dev/null)
+    picom --experimental-backends & && disown
+  end
+
+  if ! test (pgrep xidlehook 2&> /dev/null)
+    xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
+  end
+
+  if ! test (pgrep nm-applet 2&> /dev/null)
+    nm-applet & && disown
+  end
+
+  if ! test (pgrep numlockx 2&> /dev/null)
+    numlockx on & && disown
+  end
+
+  nitrogen --restore &
+
+  mpc stop &
+
+  emacsclient -c -e "(delete-frame)" &
+  #+end_example
 
   #+BEGIN_SRC fish :noweb yes
     set -l PATH $PATH /usr/lib/xfce-polkit
