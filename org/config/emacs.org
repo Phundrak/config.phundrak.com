@@ -3201,12 +3201,12 @@
               "Emacs" ?e)
              ("maildir:/Sent" "Sent messages" ?s)
              ("flag:unread AND NOT flag:trashed" "Unread messages" ?U)
-             ("date:today..now" "Today's messages" ?t)
-             ("date:7d..now" "Last 7 days" ?w)
-             ("date:1m..now" "Last month" ?m)
-             ("date:1y..now" "Last year" ?y)
-             ("flag:trashed" "Trash" ?T)
-             ("mime:image/*" "Messages with images" ?p)))
+             ("date:today..now AND NOT flag:trashed" "Today's messages" ?t)
+             ("date:7d..now AND NOT flag:trashed" "Last 7 days" ?w)
+             ("date:1m..now AND NOT flag:trashed" "Last month" ?m)
+             ("date:1y..now AND NOT flag:trashed" "Last year" ?y)
+             ("flag:trashed AND NOT flag:trashed" "Trash" ?T)
+             ("mime:image/* AND NOT flag:trashed" "Messages with images" ?p)))
    #+END_SRC
 
    On new email arrival, Emacs can send  the system a notification which will be
