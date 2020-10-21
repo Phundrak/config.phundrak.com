@@ -1583,9 +1583,9 @@
       (setq dired-recursive-copies 'always)
     #+END_SRC
 
-    Also, when  I have two  Dired buffers opened side  by side, I  generally want
-    them to interact, for  example if I want to move  something around. So, let’s
-    tell Emacs that:
+    Also, when I  have two Dired buffers  opened side by side,  I generally want
+    them to interact  with each other, for  example if I want to  move around or
+    copy stuff. So, let’s tell Emacs that:
     #+BEGIN_SRC emacs-lisp
       (setq dired-dwim-target t)
     #+END_SRC
