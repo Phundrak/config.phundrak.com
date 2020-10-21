@@ -1521,6 +1521,22 @@
           :buffer "*org files*")))
     #+END_SRC
 
+*** ~phundrak/is-dir-a-git-repo~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakis-dir-a-git-repo-4dc207d7
+    :END:
+    This function  detects if  the path passed  as an argument  points to  a git
+    directory or to one of its subdirectories.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak/is-dir-a-git-repo ($path)
+        "Return `t' if `$path' points to a git repository or one of its
+      subdirectories"
+        (cond
+         ((null $path) nil)
+         ((f-dir? (concat $path "/.git")) t)
+         (t (phundrak/is-dir-a-git-repo (f-parent $path)))))
+    #+END_SRC
+
 *** ~phundrak/yas-rust-new-assignments~
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456
@@ -1904,7 +1920,7 @@
                               :background $background)
                    ;; add git status if it exists
                    (with-face " " :background $background)
-                   (if (magit-toplevel $path)
+                   (if (phundrak/is-dir-a-git-repo $path)
                        (phundrak/eshell-git-status $path $background))
                    (with-face " " :background $background)
                    (with-face "λ"
