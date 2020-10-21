@@ -1405,7 +1405,7 @@
     build a git prompt  that will be inserted in my Eshell  prompt. And just for
     shit and giggles, I’ve made it so it is a powerline prompt.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak/eshell-git-status ($path)
+      (defun phundrak/eshell-git-status ($path &optional background-color)
         "Returns a string indicating the status of the current
       repository if it exists. It should also append the name of the
       current branch if it is not `master' or `main'. The theme is
@@ -1459,9 +1459,8 @@
                              (dirty nord11)
                              (staged nord13)
                              (t nord14)))
-                    (background nord0))
-                (concat " "
-                        (with-face ""
+                    (background (if background-color background-color nord0)))
+                (concat (with-face ""
                                    :background accent
                                    :foreground background)
                         (with-face prompt
@@ -1896,18 +1895,27 @@
      Now, let’s declare our prompt, with some Nord colors
      #+BEGIN_SRC emacs-lisp
        (defun eshell/my-prompt ()
-         (let* ((header-bg phundrak/nord0)
-                (path      (eshell/abbr-pwd)))
-           (concat (with-face (eshell/abbr-pwd)
-                              :foreground phundrak/nord14)
+         (let* ((header-bg  phundrak/nord0)
+                ($path      (eshell/abbr-pwd))
+                ($background nord1))
+           (concat (with-face $path
+                              :foreground phundrak/nord14
+                              :background $background)
                    ;; add git status if it exists
-                   (let (($path (eshell/pwd)))
-                     (if (magit-toplevel $path)
-                         (phundrak/eshell-git-status $path)))
-                   " "
+                   (if (magit-toplevel $path)
+                       (concat
+                        (with-face " " :background $background)
+                        (phundrak/eshell-git-status $path $background)))
+                   (with-face " " :background $background)
                    (if (zerop eshell-last-command-status)
-                       (with-face "λ" :foreground phundrak/nord10)
-                     (with-face "λ" :foreground phundrak/nord11))
+                       (with-face "λ"
+                                  :foreground phundrak/nord10
+                                  :background $background)
+                     (with-face "λ"
+                                :foreground phundrak/nord11
+                                :background $background))
+                   (with-face " " :background $background)
+                   (with-face "" :foreground $background)
                    " ")))
      #+END_SRC
 
