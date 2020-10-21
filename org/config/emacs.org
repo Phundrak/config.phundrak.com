@@ -1330,7 +1330,7 @@
   :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
   :CUSTOM_ID: User_Configuration-4a937fe5
   :END:
-** Custom functions
+** Custom functions, macros, and variables
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Custom_functions-ceb4bc42
    :END:
@@ -1341,37 +1341,42 @@
    Almost all of my code snippets will be prefixed by either my name or the name
    of  the package  or layer  they  are part  of,  unless they  are an  explicit
    overwrite of a function that already exists.
-*** ~phundrak/yas-rust-new-assignments~
+*** Nord theming variables
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456
+    :CUSTOM_ID: User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99
     :END:
-    The following  function is a  function that will  allow me to  easily create
-    ~new~    functions    for    Rust     structs.    Inspired    from    [[https://github.com/jorgenschaefer/elpy][elpy]]’s
-    ~elpy-snippet-init-assignments~  function,   it  will   automatically  write
-    assignments  to  my new  struct  as  I write  new  parameters  in the  ~new~
-    function. It  also comes with  a helper  function that parses  the arguments
-    given to the ~new~ function.
+    Yes,  I do  use a  preconfigured  theme, as  mentioned above,  but for  some
+    elements such as Eshell, I need to define some variables for color, and I’ll
+    do it here.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak//yas-snippet-split-rust-args ($arg-string)
-        "Split a Rust argument string into ((name, default)...) tuples"
-        (mapcar (lambda ($elem)
-                  (split-string $elem "[[:blank:]]*:[[:blank:]]*" t))
-                (split-string $arg-string "[[:blank:]]*,[[:blank:]]*" t)))
+      (setq phundrak/nord0  "#2e3440"
+            phundrak/nord1  "#3b4252"
+            phundrak/nord2  "#434c5e"
+            phundrak/nord3  "#4c566a"
+            phundrak/nord4  "#d8dee9"
+            phundrak/nord5  "#e5e9f0"
+            phundrak/nord6  "#eceff4"
+            phundrak/nord7  "#8fbcbb"
+            phundrak/nord8  "#88c0d0"
+            phundrak/nord9  "#81a1c1"
+            phundrak/nord10 "#5e81ac"
+            phundrak/nord11 "#bf616a"
+            phundrak/nord12 "#d08770"
+            phundrak/nord13 "#ebcb8b"
+            phundrak/nord14 "#a3be8c"
+            phundrak/nord15 "#b48ead")
+    #+END_SRC
 
-      (defun phundrak/yas-rust-new-assignments ($arg-string)
-        "Return a typical new assignment for arguments.
-
-      Inspired from elpy’s functions https://github.com/jorgenschaefer/elpy"
-        (let ((indentation (make-string (save-excursion
-                                         (goto-char start-point)
-                                         (current-indentation))
-                                       ?\s)))
-          (mapconcat (lambda ($elem)
-                       (if (string-match "^\\*" (car $elem))
-                           ""
-                         (format "%s,\n%s" (car $elem) indentation)))
-                     (phundrak//yas-snippet-split-rust-args $arg-string)
-                     "")))
+*** ~with-face~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-with-face-60298b14
+    :END:
+    ~with-face~  is a  simple yet  very useful  macro that  allows me  to easily
+    create strings with faces defined as  properties to the string passed as the
+    first argument. Here is how it is implemented:
+    #+BEGIN_SRC emacs-lisp
+       (defmacro with-face (str &rest properties)
+         `(propertize ,str 'face (list ,@properties)))
     #+END_SRC
 
 *** ~phundrak/add-all-to-list~
@@ -1389,6 +1394,84 @@
         $list)
     #+END_SRC
 
+*** ~phundrak/eshell-git-status~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions_and_variables-phundrakeshell-git-status-7f487b84
+    :END:
+    This function is used  in my Eshell prompt which you  can consult [[#User_Configuration-Eshell-Eshell_theme-a06715a9][here]]. This
+    function basically  executes two git calls  to get some information  about a
+    git repo, which path we provide as an argument. Based on the result of these
+    git calls, the  function will know what  it needs to know about  the repo to
+    build a git prompt  that will be inserted in my Eshell  prompt. And just for
+    shit and giggles, I’ve made it so it is a powerline prompt.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak/eshell-git-status ($path)
+        "Returns a string indicating the status of the current
+      repository if it exists. It should also append the name of the
+      current branch if it is not `master' or `main'. The theme is
+      inspired by the bobthefish theme for the fish shell which you can
+      find here: https://github.com/oh-my-fish/theme-bobthefish
+
+      Color code:
+      - green:
+      - orange: tracked stuff is staged but not commited
+      - red: tracked stuff is modified and not commited
+
+      Symbols:
+      - `*': dirty working dir, RED
+      - `~': staged changes, ORANGE
+      - `…': untracked files, GREEN
+      - `$': stashed changes
+      - `-': unpulled commits
+      - `-': unpushed commits
+      - `±': unpulled and unpushed commits"
+        (if (magit-toplevel $path)
+            (let* ((git-status-command (concat "cd " $path "; git status"))
+                   (git-stash-status-command (concat "cd " $path "; git stash list"))
+                   (status    (eshell-command-result git-status-command))
+                   (stashstat (eshell-command-result git-stash-status-command))
+                   (detached  (s-contains? "HEAD detached" status))
+                   (dirty     (s-contains? "Changes not staged for commit" status))
+                   (staged    (s-contains? "Changes to be committed" status))
+                   (untracked (s-contains? "Untracked files" status))
+                   (stash     (not (null stashstat)))
+                   (pull      (s-contains? "git pull" status))
+                   (push      (s-contains? "git push" status))
+                   (branch    (replace-regexp-in-string "On Branch \\(.*\\)\n\\(.\\|\n\\)*" "\\1" status))
+                   (branch    (if (or (string= "master" branch)
+                                      (string= "main" branch))
+                                  nil
+                                (if (s-contains? " " branch)
+                                    nil
+                                  branch))))
+              (let ((prompt (concat " "
+                                    (if detached ">" "")
+                                    (if branch (concat " " branch " "))
+                                    (if dirty "*")
+                                    (if staged "~")
+                                    (if untracked "…")
+                                    (if (and pull push) "±"
+                                      (if pull "-"
+                                        (if push "+")))
+                                    (if stash "$")
+                                    " "))
+                    (accent (cond
+                             (dirty nord11)
+                             (staged nord13)
+                             (t nord14)))
+                    (background nord0))
+                (concat " "
+                        (with-face ""
+                                   :background accent
+                                   :foreground background)
+                        (with-face prompt
+                                   :background accent
+                                   :foreground (if dirty nord6 background))
+                        (with-face ""
+                                   :background background
+                                   :foreground accent))))))
+    #+END_SRC
+
 *** ~phundrak/fill-paragraph~
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Custom_functions-~phundrak-fill-paragraph~-ab4ef600
@@ -1401,20 +1484,6 @@
       (interactive)
       (let* ((current-prefix-arg 4))
         (call-interactively 'fill-paragraph)))
-    #+END_SRC
-
-*** ~terminal-here-default-terminal-command~
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-~terminal-here-default-terminal-command~-1916a912
-    :END:
-    This function is  actually an overwrite of the default  one which apparently
-    does   not   work   on   my    machine.   This   function   is   called   by
-    ~terminal-here-launch~  and  spawns an  external  terminal  emulator in  the
-    directory emacs was in when the terminal  was invoked. I simply point out to
-    this function the name of my terminal emulator. Here is the code:
-    #+BEGIN_SRC emacs-lisp
-      (defun terminal-here-default-terminal-command (_dir)
-        '("st"))
     #+END_SRC
 
 *** ~phundrak/find-org-file~
@@ -1451,6 +1520,53 @@
                                   phundrak/org-directories)
                      :fuzzy-match t)
           :buffer "*org files*")))
+    #+END_SRC
+
+*** ~phundrak/yas-rust-new-assignments~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456
+    :END:
+    The following  function is a  function that will  allow me to  easily create
+    ~new~    functions    for    Rust     structs.    Inspired    from    [[https://github.com/jorgenschaefer/elpy][elpy]]’s
+    ~elpy-snippet-init-assignments~  function,   it  will   automatically  write
+    assignments  to  my new  struct  as  I write  new  parameters  in the  ~new~
+    function. It  also comes with  a helper  function that parses  the arguments
+    given to the ~new~ function.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak//yas-snippet-split-rust-args ($arg-string)
+        "Split a Rust argument string into ((name, default)...) tuples"
+        (mapcar (lambda ($elem)
+                  (split-string $elem "[[:blank:]]*:[[:blank:]]*" t))
+                (split-string $arg-string "[[:blank:]]*,[[:blank:]]*" t)))
+
+      (defun phundrak/yas-rust-new-assignments ($arg-string)
+        "Return a typical new assignment for arguments.
+
+      Inspired from elpy’s functions https://github.com/jorgenschaefer/elpy"
+        (let ((indentation (make-string (save-excursion
+                                         (goto-char start-point)
+                                         (current-indentation))
+                                       ?\s)))
+          (mapconcat (lambda ($elem)
+                       (if (string-match "^\\*" (car $elem))
+                           ""
+                         (format "%s,\n%s" (car $elem) indentation)))
+                     (phundrak//yas-snippet-split-rust-args $arg-string)
+                     "")))
+    #+END_SRC
+
+*** ~terminal-here-default-terminal-command~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions-~terminal-here-default-terminal-command~-1916a912
+    :END:
+    This function is  actually an overwrite of the default  one which apparently
+    does   not   work   on   my    machine.   This   function   is   called   by
+    ~terminal-here-launch~  and  spawns an  external  terminal  emulator in  the
+    directory emacs was in when the terminal  was invoked. I simply point out to
+    this function the name of my terminal emulator. Here is the code:
+    #+BEGIN_SRC emacs-lisp
+      (defun terminal-here-default-terminal-command (_dir)
+        '("st"))
     #+END_SRC
 
 ** Emacs builtins
@@ -1763,16 +1879,10 @@
      :PROPERTIES:
      :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
      :END:
-     As with  most shells, again, it  is possible to customize  the appearance of
-     the Eshell prompt.  First, we need to declare  a macro so we can  set a face
-     with properties:
-     #+BEGIN_SRC emacs-lisp
-       (defmacro with-face (str &rest properties)
-         `(propertize ,str 'face (list ,@properties)))
-     #+END_SRC
-
-     Now,  let’s  declare a  function  that  will  abbreviate the  current  ~pwd~
-     fish-shell style.
+     As with most  shells, again, it is possible to  customize the appearance of
+     the  Eshell prompt.  Let’s  declare  a function  that  will abbreviate  the
+     current ~pwd~, that is, if we are in a directory inside our home directory,
+     ~/home/<username>~ will be abbreviated to an =~=.
      #+BEGIN_SRC emacs-lisp
        (defun eshell/abbr-pwd ()
          (let (($home (getenv "HOME"))
@@ -1783,17 +1893,22 @@
             ($path))))
      #+END_SRC
 
-     Now, let’s declare our prompt:
+     Now, let’s declare our prompt, with some Nord colors
      #+BEGIN_SRC emacs-lisp
        (defun eshell/my-prompt ()
-         (let ((header-bg "#161616"))
-           (concat
-            (with-face (eshell/abbr-pwd) :foreground "#008700")
-            "\n"
-            (if (= (user-uid) 0)
-                (with-face "➜" :foreground "red")
-              (with-face "➜" :foreground "#2345ba"))
-            " ")))
+         (let* ((header-bg phundrak/nord0)
+                (path      (eshell/abbr-pwd)))
+           (concat (with-face (eshell/abbr-pwd)
+                              :foreground phundrak/nord14)
+                   ;; add git status if it exists
+                   (let (($path (eshell/pwd)))
+                     (if (magit-toplevel $path)
+                         (phundrak/eshell-git-status $path)))
+                   " "
+                   (if (zerop eshell-last-command-status)
+                       (with-face "λ" :foreground phundrak/nord10)
+                     (with-face "λ" :foreground phundrak/nord11))
+                   " ")))
      #+END_SRC
 
      Now, let’s declare our prompt regexp and our prompt functions:
