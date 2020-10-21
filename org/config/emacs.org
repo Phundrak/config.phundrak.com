@@ -1953,20 +1953,45 @@
      only a  couple of languages are  supported directly by Org-mode  itself, and
      they need to be activated. Here are the languages I activated in my Org-mode
      configuration:
-     #+BEGIN_SRC emacs-lisp
+     #+NAME: org-babel-languages-table
+     | C          |
+     | dot        |
+     | emacs-lisp |
+     | gnuplot    |
+     | latex      |
+     | makefile   |
+     | python     |
+     | sass       |
+     | scheme     |
+     | shell      |
+
+     #+NAME: org-babel-languages-gen
+     #+BEGIN_SRC emacs-lisp :exports none :tangle no :var languages=org-babel-languages-table[,0] :cache yes :results replace
+       (mapconcat (lambda ($language) (format "(%s . t)" $language))
+                  languages
+                  "\n")
+     #+END_SRC
+
+     #+RESULTS[cf8b81f0da6306f8131e34be6d3742248fdb057b]: org-babel-languages-gen
+     #+begin_example
+     (C . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (gnuplot . t)
+     (latex . t)
+     (makefile . t)
+     (python . t)
+     (sass . t)
+     (scheme . t)
+     (shell . t)
+     #+end_example
+
+     The corresponding code is as follows:
+     #+BEGIN_SRC emacs-lisp :noweb yes
        (org-babel-do-load-languages
         'org-babel-load-languages
-        '((C          . t)
-          (dot        . t)
-          (emacs-lisp . t)
-          (gnuplot    . t)
-          (latex      . t)
-          (makefile   . t)
-          (python     . t)
-          (R          . t)
-          (sass       . t)
-          (scheme     . t)
-          (shell      . t)))
+        '(
+          <<org-babel-languages-gen()>>))
      #+END_SRC
 
      Scheme requires a default implementation for geiser:
@@ -2038,8 +2063,8 @@
       ~split-window-right~ in  order to keep  my windows organization and  have a
       similar behavior to the old one.
       #+BEGIN_SRC emacs-lisp
-        (setq org-src-window-setup 'split-window-right)
-        ;; (setq org-src-window-setup 'split-window-below)
+        ;; (setq org-src-window-setup 'split-window-right)
+        (setq org-src-window-setup 'split-window-below)
       #+END_SRC
 
       However, it is not rare that I want to change that for an horizontal split,
@@ -2291,7 +2316,7 @@
      instead creates the equivalent to the  table above into EmacsLisp code found
      in the next code snippet.
      #+NAME: org-capture-shortcut-gen
-     #+BEGIN_SRC emacs-lisp :tangle no :noweb yes :var table=org-capture-shortcuts-table :exports code :cache yes :results replace
+     #+BEGIN_SRC emacs-lisp :tangle no :var table=org-capture-shortcuts-table :exports code :cache yes :results replace
        (mapconcat (lambda (entry)
                     (let* ((shortcut   (nth 0 entry))
                            (name       (nth 1 entry))
@@ -2625,8 +2650,10 @@
      to easily  publish a bunch of  org files to  a remote location. Here  is the
      current declaration of my projects, which will be detailed later:
      #+BEGIN_SRC emacs-lisp :noweb yes
+       <<org-proj-config-setup>>
+       <<org-proj-lang-setup>>
        (setq org-publish-project-alist
-             '(
+             `(
                <<org-proj-config-html>>
                <<org-proj-config-static>>
                <<org-proj-config>>
@@ -2640,31 +2667,52 @@
       :PROPERTIES:
       :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Configuration_website-79bd0468
       :END:
+      This is my configuration for exporting my  dotfiles to my website in a web
+      format only. No PDFs or anything, just HTML. Please note that I do not use
+      that often anymore,  I much prefer the automatic script  that I have which
+      deploys through my Drone instance my website on git pushes.
+
+      And before we get into the actual configuration, I would like to introduce
+      a couple  of variables.  This is  a bit  more verbose  than if  I declared
+      everything manually,  but now I  can change all  three values at  the same
+      time without a hasle.
+      #+NAME: org-proj-config-setup
+      #+BEGIN_SRC emacs-lisp
+        (setq phundrak//projects-config-target    "/ssh:Tilo:~/www/phundrak.com/config"
+              phundrak//projects-config-source    "~/org/config/"
+              phundrak//projects-config-language  "en"
+              phundrak//projects-config-recursive t)
+      #+END_SRC
+
+      Now, here is my configuration. In this snippet, my org files located in my
+      source  directory get  exported in  the HTML  format and  published to  my
+      target directory on  my remote server through SSH via  TRAMP. A sitemap is
+      automatically generated, which comes in handy with the online sitemap that
+      is available through the navigation bar.
       #+NAME: org-proj-config-html
       #+BEGIN_SRC emacs-lisp :tangle no
         ("config-website-org"
-         :base-directory "~/org/config/"
+         :base-directory ,phundrak//projects-config-source
          :base-extension "org"
-         :exclude "\\./\\(CONTRIB\\|head\\|temp\\|svg-ink\\).*"
-         :publishing-directory "/ssh:Tilo:~/www/phundrak.com/config"
-         :recursive t
-         :language "en"
+         :publishing-directory ,phundrak//projects-config-target
+         :recursive ,phundrak//projects-config-recursive
+         :language ,phundrak//projects-config-language
          :publishing-function org-html-publish-to-html
          :headline-levels 5
          :auto-sitemap t
          :auto-preamble t)
       #+END_SRC
 
-      And lastly, we  have the component for  all the static files  needed to run
-      the website:
+      We also  have the  component for all  the static files  needed to  run the
+      website (mostly images tbh).
       #+NAME: org-proj-config-static
       #+BEGIN_SRC emacs-lisp :tangle no
         ("config-website-static"
-         :base-directory "~/org/config/"
+         :base-directory ,phundrak//projects-config-source
          :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
-         :publishing-directory "/ssh:Tilo:~/www/phundrak.com/config"
-         :recursive t
-         :language "en"
+         :publishing-directory ,phundrak//projects-config-target
+         :recursive ,phundrak//projects-config-recursive
+         :language ,phundrak//projects-config-language
          :publishing-function org-publish-attachment)
       #+END_SRC
 
@@ -2680,18 +2728,27 @@
       :PROPERTIES:
       :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Linguistics_website-34b8d4e7
       :END:
-      In my case, I only have my linguistics website, made out of three projects.
-      The  first component  is the  one generating  the HTML  files from  the org
-      files.
+      My linguistics website is made out  of three projects. As for the previous
+      project, let’s  declare the common  values for these.
+      #+NAME: org-proj-lang-setup
+      #+BEGIN_SRC emacs-lisp :tangle no
+        (setq phundrak//projects-conlanging-target    "/ssh:Tilo:~/www/phundrak.com/langue/"
+              phundrak//projects-conlanging-source    "~/Documents/conlanging/content/"
+              phundrak//projects-conlanging-language  "fr"
+              phundrak//projects-conlanging-recursive t)
+      #+END_SRC
+
+      The first component
+      is the one generating the HTML files from the org files.
       #+NAME: org-proj-lang-html
       #+BEGIN_SRC emacs-lisp :tangle no
         ("langue-phundrak-com-org"
-         :base-directory "~/Documents/conlanging/content/"
+         :base-directory ,phundrak//projects-conlanging-source
          :base-extension "org"
          :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
-         :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
-         :recursive t
-         :language "fr"
+         :publishing-directory ,phundrak//projects-conlanging-target
+         :recursive ,phundrak//projects-conlanging-recursive
+         :language ,phundrak//projects-conlanging-language
          :publishing-function org-html-publish-to-html
          :headline-levels 5
          :auto-sitemap t
@@ -2702,12 +2759,12 @@
       #+NAME: org-proj-lang-pdf
       #+BEGIN_SRC emacs-lisp :tangle no
         ("langue-phundrak-com-pdf"
-         :base-directory "~/Documents/conlanging/content/"
+         :base-directory ,phundrak//projects-conlanging-source
          :base-extension "org"
          :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
-         :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
-         :recursive t
-         :language "fr"
+         :publishing-directory ,phundrak//projects-conlanging-target
+         :recursive ,phundrak//projects-conlanging-recursive
+         :language ,phundrak//projects-conlanging-language
          :publishing-function org-latex-publish-to-pdf
          :headline-levels 5
          :auto-preamble t)
@@ -2718,11 +2775,11 @@
       #+NAME: org-proj-lang-static
       #+BEGIN_SRC emacs-lisp :tangle no
         ("langue-phundrak-com-static"
-         :base-directory "~/Documents/conlanging/content/"
+         :base-directory ,phundrak//projects-conlanging-source
          :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
-         :publishing-directory "/ssh:Tilo:~/www/phundrak.com/langue/"
-         :recursive t
-         :language "fr"
+         :publishing-directory ,phundrak//projects-conlanging-target
+         :recursive ,phundrak//projects-conlanging-recursive
+         :language ,phundrak//projects-conlanging-language
          :publishing-function org-publish-attachment)
       #+END_SRC
 
