@@ -1898,22 +1898,20 @@
          (let* ((header-bg  phundrak/nord0)
                 ($path      (eshell/abbr-pwd))
                 ($background nord1))
-           (concat (with-face $path
+           (concat (with-face " " :background $background)
+                   (with-face $path
                               :foreground phundrak/nord14
                               :background $background)
                    ;; add git status if it exists
-                   (if (magit-toplevel $path)
-                       (concat
-                        (with-face " " :background $background)
-                        (phundrak/eshell-git-status $path $background)))
                    (with-face " " :background $background)
-                   (if (zerop eshell-last-command-status)
-                       (with-face "λ"
-                                  :foreground phundrak/nord10
-                                  :background $background)
-                     (with-face "λ"
-                                :foreground phundrak/nord11
-                                :background $background))
+                   (if (magit-toplevel $path)
+                       (phundrak/eshell-git-status $path $background))
+                   (with-face " " :background $background)
+                   (with-face "λ"
+                              :foreground (if (zerop eshell-last-command-status)
+                                              phundrak/nord10
+                                            phundrak/nord11)
+                              :background $background)
                    (with-face " " :background $background)
                    (with-face "" :foreground $background)
                    " ")))
