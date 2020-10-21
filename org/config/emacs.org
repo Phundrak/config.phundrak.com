@@ -447,11 +447,8 @@
      or pytest.
      #+BEGIN_SRC emacs-lisp
        (python :variables
-               python-backend 'lsp
-               python-sort-imports-on-save t
                python-fill-column 80
-               python-test-runner '(pytest nose)
-               python-formatter 'lsp)
+               python-test-runner '(pytest nose))
      #+END_SRC
 
      With the Rust layer, the only custom configuration set is the backend being
