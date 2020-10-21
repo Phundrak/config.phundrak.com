@@ -1379,6 +1379,47 @@
          `(propertize ,str 'face (list ,@properties)))
     #+END_SRC
 
+*** ~phundrak/abbr-pwd~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakabbr-pwd-5cf1b16d
+    :END:
+    The  following is  a nice  little function  I use  in my  Eshell prompt.  It
+    shortens the name  of all the parent  directories of the current  one in its
+    path, but  leaves the current one  written in full. It  also abbreviates the
+    equivalent of the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
+    #+BEGIN_SRC emacs-lisp
+      (defun phundrak/abbr-pwd (&optional abbreviate path abbreviating)
+        (cond
+         ((and (null path)
+               abbreviating) "")
+         ((and abbreviate
+               (= 1 (length path)))
+          (car path))
+         ((and abbreviate path)
+          (f-join (let* ((dir (car path))
+                         (first-char (s-left 1 dir)))
+                    (if (string= "." first-char)
+                        (s-left 2 dir)
+                      first-char))
+                  (phundrak/abbr-pwd t (cdr path) t)))
+         (abbreviate (f-short (phundrak/abbr-pwd t (f-split (phundrak/abbr-pwd)))))
+         (t (f-short (eshell/pwd)))))
+    #+END_SRC
+
+*** ~phundrak/prompt-toggle-abbreviation~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakprompt-toggle-abbreviation-8fcc2389
+    :END:
+    #+BEGIN_SRC emacs-lisp
+      (defvar phundrak/prompt--abbreviate t
+        "Whether or not to abbreviate the displayed path in the Eshell
+      prompt")
+
+      (defun phundrak/prompt-toggle-abbreviation ()
+        (interactive)
+        (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
+    #+END_SRC
+
 *** ~phundrak/add-all-to-list~
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Custom_functions-phundrakadd-all-to-list-7e34472b
@@ -1895,24 +1936,16 @@
      :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
      :END:
      As with most  shells, again, it is possible to  customize the appearance of
-     the  Eshell prompt.  Let’s  declare  a function  that  will abbreviate  the
-     current ~pwd~, that is, if we are in a directory inside our home directory,
-     ~/home/<username>~ will be abbreviated to an =~=.
-     #+BEGIN_SRC emacs-lisp
-       (defun eshell/abbr-pwd ()
-         (let (($home (getenv "HOME"))
-               ($path (eshell/pwd)))
-           (cond
-            ((string-equal $home $path) "~")
-            ((f-ancestor-of? $home $path) (concat "~/" (f-relative $path $home)))
-            ($path))))
-     #+END_SRC
-
-     Now, let’s declare our prompt, with some Nord colors
+     the  Eshell prompt.  As you  can see,  my prompt  has some  Nord colors,  a
+     shortened path,  a git  prompt, and  an indicator  of whether  the previous
+     command  succeeded or  failed. Note  however that  the abbreviation  of the
+     current path depends  on the value of  ~phundrak/prompt--abbreviate~, if it
+     is ~t~ it is abbreviated; otherwise, it is kept in full. It can be toggled
+     with a keyboard shortcut, see [[#User_Configuration-Shortcuts-Toggle-d53c27ef][Keybindings: Toggle]].
      #+BEGIN_SRC emacs-lisp
        (defun eshell/my-prompt ()
          (let* ((header-bg  phundrak/nord0)
-                ($path      (eshell/abbr-pwd))
+                ($path      (phundrak/abbr-pwd phundrak/prompt--abbreviate))
                 ($background nord1))
            (concat (with-face " " :background $background)
                    (with-face $path
@@ -3288,12 +3321,15 @@
     - ~ots~  :: toggles  ~prettify-symbols-mode~. This  allows Emacs  to replace
       some symbols  by some others,  like for  example by replacing  ~lambda~ in
       Emacs Lisp buffers with an actual λ.
+    - ~otS~ :: toggles whether or not  Eshell should shorten the current path in
+      its prompt
     #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys
         "otb" 'fancy-battery-mode
         "otd" 'elcord-mode
         "otf" 'flycheck-mode
-        "ots" 'prettify-symbols-mode)
+        "ots" 'prettify-symbols-mode
+        "otS" 'phundrak/prompt-toggle-abbreviation)
     #+END_SRC
 
     We also have some input  methods-related shortcuts in a sub-category: ~oti~.
