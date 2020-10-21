@@ -3908,13 +3908,56 @@
       \{\{\{nyqy($1)\}\}\} $0
     #+END_SRC
 
-** Yadm
+** Tramp configuration
+   :PROPERTIES:
+   :CUSTOM_ID: User_Configuration-Tramp_configuration-acb4733b
+   :END:
+*** Docker
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Tramp_configuration-Docker-31573fdf
+    :END:
+    It is  completely possible with Tramp  to connect ot a  docker container and
+    modify files inside of  it. It is not supported natively, but  we can add it
+    quite easily. Be aware,  I am not the author of this code,  you can find its
+    original source [[https://www.emacswiki.org/emacs/TrampAndDocker][here]]. First, let’s add the Docker protocol to Tramp:
+    #+BEGIN_SRC emacs-lisp
+      (push
+       (cons
+        "docker"
+        '((tramp-login-program "docker")
+          (tramp-login-args (("exec" "-it") ("%h") ("/bin/bash")))
+          (tramp-remote-shell "/bin/sh")
+          (tramp-remote-shell-args ("-i") ("-c"))))
+       tramp-methods)
+    #+END_SRC
+
+    Now that the  method has been added, let’s add  some autocompletion for when
+    we want to connect to a Docker container:
+    #+BEGIN_SRC emacs-lisp
+      (defadvice tramp-completion-handle-file-name-all-completions
+          (around dotemacs-completion-docker activate)
+        "(tramp-completion-handle-file-name-all-completions \"\" \"/docker:\" returns
+          a list of active Docker container names, followed by colons."
+        (if (equal (ad-get-arg 1) "/docker:")
+            (let* ((dockernames-raw (shell-command-to-string "docker ps --format '{{.Names}}:'"))
+                   (dockernames (cl-remove-if-not #'(lambda (dockerline)
+                                                      (string-match ":$" dockerline))
+                                                  (split-string dockernames-raw "\n"))))
+              (setq ad-return-value dockernames))
+          ad-do-it))
+    #+END_SRC
+
+    And that’s  it! it  is now possible  to connect to  a docker  container with
+    something   like  ~/docker:conlangdict_server/~   as  the   path  given   in
+    ~find-file~.
+
+*** Yadm
    :PROPERTIES:
    :CUSTOM_ID: User_Configuration-Yadm-4344fec3
    :END:
-   yadm is  the utility  I use  for managing my  dotfiles, and  it is  a wrapper
-   In order to manage my dotfiles, I use the following shortcut to launch Magit
-   Status for yadm:
+   ~yadm~ is the utility I use for managing  my dotfiles, and it is a wrapper In
+   order to  manage my dotfiles,  I use the  following shortcut to  launch Magit
+   Status for ~yadm~:
    #+BEGIN_SRC emacs-lisp
      (spacemacs/declare-prefix "oy" "yadm status")
      (spacemacs/set-leader-keys "oy" (lambda () (interactive) (magit-status "/yadm::")))
