@@ -814,10 +814,10 @@
    #+END_SRC
 
    Similarly, the below  variable sets the default mode for  the scratch buffer.
-   Its default  value is  ~text-mode~, but I  also set it  to use  ~org-mode~ by
+   Its default  value is ~text-mode~, but  I set it to  use ~emacs-lisp-mode~ by
    default.
    #+BEGIN_SRC emacs-lisp
-   (setq-default dotspacemacs-scratch-mode 'org-mode)
+   (setq-default dotspacemacs-scratch-mode 'emacs-lisp-mode)
    #+END_SRC
 
    By the way, it  is possible to set a default message  for the scratch buffer,
