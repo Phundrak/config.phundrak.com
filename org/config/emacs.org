@@ -1419,7 +1419,7 @@
         (cond
          ((stringp $path) (f-short
                            (if $abbreviate
-                               (phundrak/abbr-path (f-split (abbr-pwd $path)))
+                               (phundrak/abbr-path (f-split (phundrak/abbr-path $path)))
                              $path)))
          ((null $path) "")
          ((listp $path)
