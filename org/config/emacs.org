@@ -1404,22 +1404,22 @@
     path, but  leaves the current one  written in full. It  also abbreviates the
     equivalent of the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak/abbr-pwd (&optional $abbreviate $path $abbreviating)
+      (defun phundrak/abbr-pwd ($path &optional $abbreviate)
         (cond
-         ((and (null $path)
-               $abbreviating) "")
-         ((and $abbreviate
-               (= 1 (length $path)))
-          (car $path))
-         ((and $abbreviate $path)
-          (f-join (let* ((dir (car $path))
-                         (first-char (s-left 1 dir)))
-                    (if (string= "." first-char)
-                        (s-left 2 dir)
-                      first-char))
-                  (phundrak/abbr-pwd t (cdr $path) t)))
-         ($abbreviate (f-short (phundrak/abbr-pwd t (f-split (phundrak/abbr-pwd)))))
-         (t (f-short (eshell/pwd)))))
+         ((stringp $path) (f-short
+                           (if $abbreviate
+                               (phundrak/abbr-pwd (f-split (abbr-pwd $path)))
+                             $path)))
+         ((null $path) "")
+         ((listp $path)
+          (f-join (cond ((= 1 (length $path)) (car $path))
+                        (t (let* ((dir (car $path))
+                                  (first-char (s-left 1 dir)))
+                             (if (string= "." first-char)
+                                 (s-left 2 dir)
+                               first-char))))
+                  (phundrak/abbr-pwd (cdr $path))))
+         (t (error "Invalid argument %s, neither stringp nor listp" $path))))
     #+END_SRC
 
 *** ~phundrak/prompt-toggle-abbreviation~
@@ -1965,7 +1965,7 @@
      is ~t~ it is abbreviated; otherwise, it is kept in full. It can be toggled
      with a keyboard shortcut, see [[#User_Configuration-Shortcuts-Toggle-d53c27ef][Keybindings: Toggle]].
      #+BEGIN_SRC emacs-lisp
-       (defun eshell/my-prompt ()
+       (defun phundrak/eshell-prompt ()
          "Definition of my prompt for Eshell
 
        It displays a powerline prompt, with first an abbreviated path to
@@ -1983,8 +1983,8 @@
        red depending on if the last eshell command was a success or a
        failure respectively."
          (let* ((header-bg  phundrak/nord0)
-                ($path      (phundrak/abbr-pwd))
-                ($abbr-path (phundrak/abbr-pwd phundrak/prompt--abbreviate))
+                ($path      (phundrak/abbr-pwd (eshell/pwd)))
+                ($abbr-path (phundrak/abbr-pwd $path phundrak/prompt--abbreviate))
                 ($background phundrak/nord1))
            (concat (with-face " " :background $background)
                    (with-face $abbr-path
@@ -2008,7 +2008,7 @@
      Now, let’s declare our prompt regexp and our prompt functions:
      #+BEGIN_SRC emacs-lisp
        (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
-             eshell-prompt-function 'eshell/my-prompt)
+             eshell-prompt-function 'phundrak/eshell-prompt)
      #+END_SRC
 
 *** Org-mode
