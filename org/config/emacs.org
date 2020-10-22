@@ -1497,16 +1497,16 @@
                                     (if stash "$")
                                     " "))
                     (accent (cond
-                             (dirty nord11)
-                             (staged nord13)
-                             (t nord14)))
-                    (background (if background-color background-color nord0)))
+                             (dirty phundrak/nord11)
+                             (staged phundrak/nord13)
+                             (t phundrak/nord14)))
+                    (background (if background-color background-color phundrak/nord0)))
                 (concat (with-face ""
                                    :background accent
                                    :foreground background)
                         (with-face prompt
                                    :background accent
-                                   :foreground (if dirty nord6 background))
+                                   :foreground (if dirty phundrak/nord6 background))
                         (with-face ""
                                    :background background
                                    :foreground accent))))))
@@ -1947,7 +1947,7 @@
          (let* ((header-bg  phundrak/nord0)
                 ($path      (phundrak/abbr-pwd))
                 ($abbr-path (phundrak/abbr-pwd phundrak/prompt--abbreviate))
-                ($background nord1))
+                ($background phundrak/nord1))
            (concat (with-face " " :background $background)
                    (with-face $path
                               :foreground phundrak/nord14
