@@ -1375,8 +1375,21 @@
     create strings with faces defined as  properties to the string passed as the
     first argument. Here is how it is implemented:
     #+BEGIN_SRC emacs-lisp
-       (defmacro with-face (str &rest properties)
-         `(propertize ,str 'face (list ,@properties)))
+      (defmacro with-face ($str &rest $properties)
+        `(propertize ,$str 'face (list ,@$properties)))
+    #+END_SRC
+
+*** ~phundrak/var-or-if-nill~
+    :PROPERTIES:
+    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakvar-or-if-nill-0d320f92
+    :END:
+    This simple macro helps me return either  the value ~var~ holds, or if it is
+    ~nil~ it will return the value ~value~ holds (or will return).
+    #+BEGIN_SRC emacs-lisp
+      (defmacro phundrak/var-or-if-nil ($var &rest $value)
+        `(if (null ,$var)
+             ,@$value
+           ,$var))
     #+END_SRC
 
 *** ~phundrak/abbr-pwd~
@@ -1388,21 +1401,21 @@
     path, but  leaves the current one  written in full. It  also abbreviates the
     equivalent of the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak/abbr-pwd (&optional abbreviate path abbreviating)
+      (defun phundrak/abbr-pwd (&optional $abbreviate $path $abbreviating)
         (cond
-         ((and (null path)
-               abbreviating) "")
-         ((and abbreviate
-               (= 1 (length path)))
-          (car path))
-         ((and abbreviate path)
-          (f-join (let* ((dir (car path))
+         ((and (null $path)
+               $abbreviating) "")
+         ((and $abbreviate
+               (= 1 (length $path)))
+          (car $path))
+         ((and $abbreviate $path)
+          (f-join (let* ((dir (car $path))
                          (first-char (s-left 1 dir)))
                     (if (string= "." first-char)
                         (s-left 2 dir)
                       first-char))
-                  (phundrak/abbr-pwd t (cdr path) t)))
-         (abbreviate (f-short (phundrak/abbr-pwd t (f-split (phundrak/abbr-pwd)))))
+                  (phundrak/abbr-pwd t (cdr $path) t)))
+         ($abbreviate (f-short (phundrak/abbr-pwd t (f-split (phundrak/abbr-pwd)))))
          (t (f-short (eshell/pwd)))))
     #+END_SRC
 
@@ -1446,7 +1459,7 @@
     build a git prompt  that will be inserted in my Eshell  prompt. And just for
     shit and giggles, I’ve made it so it is a powerline prompt.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak/eshell-git-status ($path &optional background-color)
+      (defun phundrak/eshell-git-status ($path &optional $background-color)
         "Returns a string indicating the status of the current
       repository if it exists. It should also append the name of the
       current branch if it is not `master' or `main'. The theme is
@@ -1476,8 +1489,8 @@
                    (staged    (s-contains? "Changes to be committed" status))
                    (untracked (s-contains? "Untracked files" status))
                    (stash     (not (null stashstat)))
-                   (pull      (s-contains? "git pull" status))
-                   (push      (s-contains? "git push" status))
+                   (pullable  (s-contains? "git pull" status))
+                   (pushable  (s-contains? "git push" status))
                    (branch    (replace-regexp-in-string "On Branch \\(.*\\)\n\\(.\\|\n\\)*" "\\1" status))
                    (branch    (if (or (string= "master" branch)
                                       (string= "main" branch))
@@ -1491,16 +1504,17 @@
                                     (if dirty "*")
                                     (if staged "~")
                                     (if untracked "…")
-                                    (if (and pull push) "±"
-                                      (if pull "-"
-                                        (if push "+")))
+                                    (cond ((and pullable pushable) "±")
+                                          (pullable "-")
+                                          (pushable "+"))
                                     (if stash "$")
                                     " "))
                     (accent (cond
                              (dirty phundrak/nord11)
                              (staged phundrak/nord13)
                              (t phundrak/nord14)))
-                    (background (if background-color background-color phundrak/nord0)))
+                    (background (phundrak/var-or-if-nil $background-color
+                                                        phundrak/nord0)))
                 (concat (with-face ""
                                    :background accent
                                    :foreground background)
@@ -1949,7 +1963,7 @@
                 ($abbr-path (phundrak/abbr-pwd phundrak/prompt--abbreviate))
                 ($background phundrak/nord1))
            (concat (with-face " " :background $background)
-                   (with-face $path
+                   (with-face $abbr-path
                               :foreground phundrak/nord14
                               :background $background)
                    ;; add git status if it exists
