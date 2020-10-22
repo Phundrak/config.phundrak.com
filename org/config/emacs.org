@@ -1945,7 +1945,8 @@
      #+BEGIN_SRC emacs-lisp
        (defun eshell/my-prompt ()
          (let* ((header-bg  phundrak/nord0)
-                ($path      (phundrak/abbr-pwd phundrak/prompt--abbreviate))
+                ($path      (phundrak/abbr-pwd))
+                ($abbr-path (phundrak/abbr-pwd phundrak/prompt--abbreviate))
                 ($background nord1))
            (concat (with-face " " :background $background)
                    (with-face $path
