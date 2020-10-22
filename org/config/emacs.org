@@ -1369,7 +1369,7 @@
 
 *** ~with-face~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-with-face-60298b14
+    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-with-face-60298b14
     :END:
     ~with-face~  is a  simple yet  very useful  macro that  allows me  to easily
     create strings with faces defined as  properties to the string passed as the
@@ -1382,7 +1382,7 @@
 
 *** ~phundrak/var-or-if-nill~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakvar-or-if-nill-0d320f92
+    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakvar-or-if-nill-0d320f92
     :END:
     This simple macro helps me return either  the value ~var~ holds, or if it is
     ~nil~ it will return the value ~value~ holds (or will return).
@@ -1435,7 +1435,7 @@
 
 *** ~phundrak/prompt-toggle-abbreviation~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakprompt-toggle-abbreviation-8fcc2389
+    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakprompt-toggle-abbreviation-8fcc2389
     :END:
     #+BEGIN_SRC emacs-lisp
       (defvar phundrak/prompt--abbreviate t
@@ -1544,7 +1544,7 @@
 
 *** ~phundrak/fill-paragraph~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-~phundrak-fill-paragraph~-ab4ef600
+    :CUSTOM_ID: User_Configuration-Custom_functions-phundrak-fill-paragraph-ab4ef600
     :END:
     This function was created in order  to bind to another keyboard shortcut the
     already existing ~C-u M-q~ which I  cannot type with evil-mode unless I’m in
@@ -1597,7 +1597,7 @@
 
 *** ~phundrak/is-dir-a-git-repo~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakis-dir-a-git-repo-4dc207d7
+    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakis-dir-a-git-repo-4dc207d7
     :END:
     This function  detects if  the path passed  as an argument  points to  a git
     directory or to one of its subdirectories.
@@ -1646,7 +1646,7 @@
 
 *** ~terminal-here-default-terminal-command~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-~terminal-here-default-terminal-command~-1916a912
+    :CUSTOM_ID: User_Configuration-Custom_functions-terminal-here-default-terminal-command-1916a912
     :END:
     This function is  actually an overwrite of the default  one which apparently
     does   not   work   on   my    machine.   This   function   is   called   by
@@ -2110,7 +2110,7 @@
           (org-with-point-at pom
             (let* ((orgpath (mapconcat #'identity (org-get-outline-path) "-"))
                    (heading (replace-regexp-in-string
-                             "/\\|~" ""
+                             "/\\|\\~\\|,\\|\\\\" ""
                              (replace-regexp-in-string
                               " " "_" (if (string= orgpath "")
                                           (org-get-heading t t t t)
