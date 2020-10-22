@@ -1395,20 +1395,31 @@
            ,$var))
     #+END_SRC
 
-*** ~phundrak/abbr-pwd~
+*** ~phundrak/abbr-path~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions,_macros,_and_variables-phundrakabbr-pwd-5cf1b16d
+    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakabbr-pwd-5cf1b16d
     :END:
     The  following is  a nice  little function  I use  in my  Eshell prompt.  It
     shortens the name  of all the parent  directories of the current  one in its
     path, but  leaves the current one  written in full. It  also abbreviates the
     equivalent of the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
     #+BEGIN_SRC emacs-lisp
-      (defun phundrak/abbr-pwd ($path &optional $abbreviate)
+      (defun phundrak/abbr-path ($path &optional $abbreviate)
+        "Abbreviate `$path'. If `$abbreviate' is `t', then all parent
+      directories of the current directory will be abbreviated to one
+      letter only. If a parent directory is a hidden directory (i.e.
+      preceeded by a dot), the directory will be abbreviated to the dot
+      plus the first letter of the name of the directory (e.g.
+      \".config\" -> \".c\").
+
+      For public use of the function, `$path' should be a string
+      representing a UNIX path. For internal use, `$path' can also be a
+      list. If `$path' is neither of those, an error will be thrown by
+      the function."
         (cond
          ((stringp $path) (f-short
                            (if $abbreviate
-                               (phundrak/abbr-pwd (f-split (abbr-pwd $path)))
+                               (phundrak/abbr-path (f-split (abbr-pwd $path)))
                              $path)))
          ((null $path) "")
          ((listp $path)
@@ -1418,7 +1429,7 @@
                              (if (string= "." first-char)
                                  (s-left 2 dir)
                                first-char))))
-                  (phundrak/abbr-pwd (cdr $path))))
+                  (phundrak/abbr-path (cdr $path))))
          (t (error "Invalid argument %s, neither stringp nor listp" $path))))
     #+END_SRC
 
@@ -1983,8 +1994,8 @@
        red depending on if the last eshell command was a success or a
        failure respectively."
          (let* ((header-bg  phundrak/nord0)
-                ($path      (phundrak/abbr-pwd (eshell/pwd)))
-                ($abbr-path (phundrak/abbr-pwd $path phundrak/prompt--abbreviate))
+                ($path      (phundrak/abbr-path (eshell/pwd)))
+                ($abbr-path (phundrak/abbr-path $path phundrak/prompt--abbreviate))
                 ($background phundrak/nord1))
            (concat (with-face " " :background $background)
                    (with-face $abbr-path
