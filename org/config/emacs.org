@@ -1376,6 +1376,7 @@
     first argument. Here is how it is implemented:
     #+BEGIN_SRC emacs-lisp
       (defmacro with-face ($str &rest $properties)
+        "Helper macro for creating strings with faces"
         `(propertize ,$str 'face (list ,@$properties)))
     #+END_SRC
 
@@ -1387,6 +1388,8 @@
     ~nil~ it will return the value ~value~ holds (or will return).
     #+BEGIN_SRC emacs-lisp
       (defmacro phundrak/var-or-if-nil ($var &rest $value)
+        "Return the result yield by `$value' if `$var' is `nil', return
+      `$var' otherwise"
         `(if (null ,$var)
              ,@$value
            ,$var))
@@ -1429,6 +1432,8 @@
       prompt")
 
       (defun phundrak/prompt-toggle-abbreviation ()
+        "Toggles whether the Eshell prompt should shorten the name of
+      the parent directories or not. See `phundrak/eshell-prompt'"
         (interactive)
         (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
     #+END_SRC
@@ -1562,6 +1567,9 @@
     be using some functions from third party packages, such as [[https://github.com/rejeep/f.el][f.el]] and [[https://github.com/magnars/dash.el][dash]].
     #+BEGIN_SRC emacs-lisp
       (defun phundrak/find-org-file ()
+        "Find all org files in the directories listed in
+      `phundrak/org-directories', then list them in a helm buffer where
+      the user can fuzzy-match one and open it."
         (interactive)
         (find-file
          (helm
@@ -1958,6 +1966,22 @@
      with a keyboard shortcut, see [[#User_Configuration-Shortcuts-Toggle-d53c27ef][Keybindings: Toggle]].
      #+BEGIN_SRC emacs-lisp
        (defun eshell/my-prompt ()
+         "Definition of my prompt for Eshell
+
+       It displays a powerline prompt, with first an abbreviated path to
+       the current directory. If `phundrak/prompt--abbreviate' is `t',
+       then all preceding directories will be abbreviated to one
+       character, except hidden directory which first character will be
+       preceded by a dot. Otherwise, the full name of the directories is
+       displayed.
+
+       Then, if the current directory is a git repository or one of its
+       subdirectories, it will display the current state of the
+       repository. See `phundrak/eshell-git-status'
+
+       Finally, a lambda character is displayed, either in blue or in
+       red depending on if the last eshell command was a success or a
+       failure respectively."
          (let* ((header-bg  phundrak/nord0)
                 ($path      (phundrak/abbr-pwd))
                 ($abbr-path (phundrak/abbr-pwd phundrak/prompt--abbreviate))
