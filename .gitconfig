@@ -91,5 +91,3 @@
 	gpgsign = true
 [pull]
 	rebase = false
-[init]
-	defaultBranch = senpai
