@@ -1815,19 +1815,6 @@
        (defalias 'list-buffers 'ibuffer)
      #+END_SRC
 
-     #+BEGIN_SRC emacs-lisp
-       (defun eshell/mkdir ($directory)
-         (make-directory $directory t))
-     #+END_SRC
-
-     #+BEGIN_SRC emacs-lisp
-       (defun eshell/ls (&optional $directory)
-         (shell-command (format "exa -halg@ --group-directories-first --git%s"
-                                (if (string= "" $directory)
-                                    ""
-                                  (concat " " $directory)))))
-     #+END_SRC
-
 ***** System monitoring
       :PROPERTIES:
       :CUSTOM_ID: User_Configuration-Eshell-Aliases-System_monitoring-ee01b070
@@ -1886,20 +1873,6 @@
                                               $args))
       #+END_SRC
 
-      But if I just  want to run ~pacman~ as sudo, then I  could always just type
-      ~p~.
-      #+BEGIN_SRC emacs-lisp
-        (defun eshell/p (&rest $args)
-          (phundrak/concatenate-shell-command "sudo pacman" $args))
-      #+END_SRC
-
-      Sometimes,  I  just  want  to  purge my  package  manager’s  cache,  be  it
-      ~pacman~'s or ~yay~'s. This is why I simply type ~purge~.
-      #+BEGIN_SRC emacs-lisp
-        (defun eshell/purge ()
-          (shell-command "yay -Sc"))
-      #+END_SRC
-
 ***** Other
       :PROPERTIES:
       :CUSTOM_ID: User_Configuration-Eshell-Aliases-Other-bd88ca97
@@ -1911,21 +1884,6 @@
           (eshell/mkdir "-p" $directory)
           (cd $directory))
       #+end_src
-
-      #+BEGIN_SRC emacs-lisp
-        (defun eshell/lsl (&rest $args)
-          (eshell/ls "-aHl" $args))
-      #+END_SRC
-
-      #+BEGIN_SRC emacs-lisp
-        (defun eshell/ll (&rest $args)
-          (eshell/ls "-ahl" $args))
-      #+END_SRC
-
-      #+BEGIN_SRC emacs-lisp
-        (defun eshell/la (&rest $args)
-          (eshell/ls "-A" $args))
-      #+END_SRC
 
 ***** Typos
       :PROPERTIES:
