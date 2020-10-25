@@ -1380,19 +1380,19 @@
         `(propertize ,$str 'face (list ,@$properties)))
     #+END_SRC
 
-*** ~phundrak/var-or-if-nill~
+*** ~phundrak/var-or-if-nil~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakvar-or-if-nill-0d320f92
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables_-phundrak-var-or-if-nil--5ed18c8f
     :END:
-    This simple macro helps me return either  the value ~var~ holds, or if it is
-    ~nil~ it will return the value ~value~ holds (or will return).
+    This simple function helps me return either  the value ~var~ holds, or if it
+    is ~nil~ it will return the value ~value~ holds (or will return).
     #+BEGIN_SRC emacs-lisp
-      (defmacro phundrak/var-or-if-nil ($var &rest $value)
+      (defun phundrak/var-or-if-nil ($var $value)
         "Return the result yield by `$value' if `$var' is `nil', return
       `$var' otherwise"
-        `(if (null ,$var)
-             ,@$value
-           ,$var))
+        (if (null $var)
+            $value
+          $var))
     #+END_SRC
 
 *** ~phundrak/abbr-path~
@@ -1459,8 +1459,8 @@
       element from `$elements' is already part of `$list', it will be
       ignored."
         (dolist ($e $elements)
-          (if (not (member $e $list))
-              (add-to-list '$list $e)))
+          (unless (member $e $list)
+            (add-to-list '$list $e)))
         $list)
     #+END_SRC
 
@@ -1495,51 +1495,47 @@
       - `-': unpulled commits
       - `-': unpushed commits
       - `±': unpulled and unpushed commits"
-        (if (magit-toplevel $path)
-            (let* ((git-status-command (concat "cd " $path "; git status"))
-                   (git-stash-status-command (concat "cd " $path "; git stash list"))
-                   (status    (eshell-command-result git-status-command))
-                   (stashstat (eshell-command-result git-stash-status-command))
-                   (detached  (s-contains? "HEAD detached" status))
-                   (dirty     (s-contains? "Changes not staged for commit" status))
-                   (staged    (s-contains? "Changes to be committed" status))
-                   (untracked (s-contains? "Untracked files" status))
-                   (stash     (not (null stashstat)))
-                   (pullable  (s-contains? "git pull" status))
-                   (pushable  (s-contains? "git push" status))
-                   (branch    (replace-regexp-in-string "On Branch \\(.*\\)\n\\(.\\|\n\\)*" "\\1" status))
-                   (branch    (if (or (string= "master" branch)
-                                      (string= "main" branch))
-                                  nil
-                                (if (s-contains? " " branch)
-                                    nil
-                                  branch))))
-              (let ((prompt (concat " "
-                                    (if detached ">" "")
-                                    (if branch (concat " " branch " "))
-                                    (if dirty "*")
-                                    (if staged "~")
-                                    (if untracked "…")
-                                    (cond ((and pullable pushable) "±")
-                                          (pullable "-")
-                                          (pushable "+"))
-                                    (if stash "$")
-                                    " "))
-                    (accent (cond
-                             (dirty phundrak/nord11)
-                             (staged phundrak/nord13)
-                             (t phundrak/nord14)))
-                    (background (phundrak/var-or-if-nil $background-color
-                                                        phundrak/nord0)))
-                (concat (with-face ""
-                                   :background accent
-                                   :foreground background)
-                        (with-face prompt
-                                   :background accent
-                                   :foreground (if dirty phundrak/nord6 background))
-                        (with-face ""
-                                   :background background
-                                   :foreground accent))))))
+        (let* ((git-status-command       (concat "cd " $path "; git status"))
+               (git-stash-status-command (concat "cd " $path "; git stash list"))
+               (status                   (eshell-command-result git-status-command))
+               (stashstat                (eshell-command-result git-stash-status-command))
+               (detached                 (s-contains? "HEAD detached" status))
+               (dirty                    (s-contains? "Changes not staged for commit" status))
+               (staged                   (s-contains? "Changes to be committed" status))
+               (untracked                (s-contains? "Untracked files" status))
+               (pullable                 (s-contains? "git pull" status))
+               (pushable                 (s-contains? "git push" status))
+               (branch                   (replace-regexp-in-string "On Branch \\(.*\\)\n\\(.\\|\n\\)*" "\\1" status))
+               (branch                   (unless (or (string= "master" branch)
+                                                     (string= "main" branch)
+                                                     detached)
+                                           branch)))
+          (let ((prompt (concat " "
+                                (if detached ">" "")
+                                (when branch (concat " " branch " "))
+                                (when dirty "*")
+                                (when staged "~")
+                                (when untracked "…")
+                                (cond ((and pullable pushable) "±")
+                                      (pullable "-")
+                                      (pushable "+"))
+                                (when stashstat "$")
+                                " "))
+                (accent (cond
+                         (dirty phundrak/nord11)
+                         (staged phundrak/nord13)
+                         (t phundrak/nord14)))
+                (background (phundrak/var-or-if-nil $background-color
+                                                    phundrak/nord0)))
+            (concat (with-face ""
+                               :background accent
+                               :foreground background)
+                    (with-face prompt
+                               :background accent
+                               :foreground (if dirty phundrak/nord6 background))
+                    (with-face ""
+                               :background background
+                               :foreground accent)))))
     #+END_SRC
 
 *** ~phundrak/fill-paragraph~
@@ -1605,10 +1601,10 @@
       (defun phundrak/is-dir-a-git-repo ($path)
         "Return `t' if `$path' points to a git repository or one of its
       subdirectories"
-        (cond
-         ((null $path) nil)
-         ((f-dir? (concat $path "/.git")) t)
-         (t (phundrak/is-dir-a-git-repo (f-parent $path)))))
+        (when $path
+          (if (f-dir? (concat $path "/.git"))
+              t
+            (phundrak/is-dir-a-git-repo (f-parent $path)))))
     #+END_SRC
 
 *** ~phundrak/yas-rust-new-assignments~
@@ -1993,25 +1989,24 @@
        Finally, a lambda character is displayed, either in blue or in
        red depending on if the last eshell command was a success or a
        failure respectively."
-         (let* ((header-bg  phundrak/nord0)
-                ($path      (phundrak/abbr-path (eshell/pwd)))
-                ($abbr-path (phundrak/abbr-path $path phundrak/prompt--abbreviate))
-                ($background phundrak/nord1))
-           (concat (with-face " " :background $background)
-                   (with-face $abbr-path
-                              :foreground phundrak/nord14
+         (let* ((header-bg   phundrak/nord0)
+                ($path       (phundrak/abbr-path (eshell/pwd)))
+                ($abbr-path  (phundrak/abbr-path $path phundrak/prompt--abbreviate))
+                ($background phundrak/nord1)
+                ($foreground phundrak/nord14)
+                ($success    phundrak/nord10)
+                ($error      phundrak/nord11))
+           (concat (with-face (concat " " $abbr-path " ")
+                              :foreground $foreground
                               :background $background)
-                   ;; add git status if it exists
-                   (with-face " " :background $background)
-                   (if (phundrak/is-dir-a-git-repo $path)
-                       (phundrak/eshell-git-status $path $background))
-                   (with-face " " :background $background)
-                   (with-face "λ"
+                   (when (phundrak/is-dir-a-git-repo $path)
+                     (concat (phundrak/eshell-git-status $path $background)
+                             (with-face " " :background $background)))
+                   (with-face "λ "
                               :foreground (if (zerop eshell-last-command-status)
-                                              phundrak/nord10
-                                            phundrak/nord11)
+                                              $success
+                                            $error)
                               :background $background)
-                   (with-face " " :background $background)
                    (with-face "" :foreground $background)
                    " ")))
      #+END_SRC
@@ -2061,12 +2056,12 @@
 
         An ID consists of two parts separated by a colon:
         - a prefix
-        - a   unique   part   that   will   be   created   according   to
+        - a unique part that will be created according to
           `org-id-method'.
 
-        PREFIX  can specify  the  prefix,  the default  is  given by  the
-        variable  `org-id-prefix'.  However,  if  PREFIX  is  the  symbol
-        `none', don't  use any  prefix even if  `org-id-prefix' specifies
+        PREFIX can specify the prefix, the default is given by the
+        variable `org-id-prefix'. However, if PREFIX is the symbol
+        `none', don't use any prefix even if `org-id-prefix' specifies
         one.
 
         So a typical ID could look like \"Org-4nd91V40HI\"."
@@ -2074,8 +2069,8 @@
                              ""
                            (concat (or prefix org-id-prefix)
                                    "-"))) unique)
-            (if (equal prefix "-")
-                (setq prefix ""))
+            (when (equal prefix "-")
+              (setq prefix ""))
             (cond
              ((memq org-id-method
                     '(uuidgen uuid))
@@ -2084,11 +2079,11 @@
                 (setq unique (org-id-uuid))))
              ((eq org-id-method 'org)
               (let* ((etime (org-reverse-string (org-id-time-to-b36)))
-                     (postfix (if org-id-include-domain
-                                  (progn
-                                    (require 'message)
-                                    (concat "@"
-                                            (message-make-fqdn))))))
+                     (postfix (when org-id-include-domain
+                                (progn
+                                  (require 'message)
+                                  (concat "@"
+                                          (message-make-fqdn))))))
                 (setq unique (concat etime postfix))))
              (t (error "Invalid `org-id-method'")))
             (concat prefix (car (split-string unique "-")))))
@@ -3793,7 +3788,7 @@
            (cond ((char-or-string-p $input-string) (insert $input-string))
                  ((listp $input-string) (dolist (elem $input-string)
                                          (insert (format "%s\n" elem)))))
-           (if (not $switchbuf)
+           (unless $switchbuf
                (switch-to-buffer oldbuf))))
      #+END_SRC
 
