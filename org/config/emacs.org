@@ -1369,7 +1369,7 @@
 
 *** ~with-face~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-with-face-60298b14
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-with-face-7974e15f
     :END:
     ~with-face~  is a  simple yet  very useful  macro that  allows me  to easily
     create strings with faces defined as  properties to the string passed as the
@@ -1382,7 +1382,7 @@
 
 *** ~phundrak/var-or-if-nil~
     :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables_-phundrak-var-or-if-nil--5ed18c8f
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
     :END:
     This simple function helps me return either  the value ~var~ holds, or if it
     is ~nil~ it will return the value ~value~ holds (or will return).
@@ -1397,7 +1397,7 @@
 
 *** ~phundrak/abbr-path~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakabbr-pwd-5cf1b16d
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
     :END:
     The  following is  a nice  little function  I use  in my  Eshell prompt.  It
     shortens the name  of all the parent  directories of the current  one in its
@@ -1435,7 +1435,7 @@
 
 *** ~phundrak/prompt-toggle-abbreviation~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakprompt-toggle-abbreviation-8fcc2389
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
     :END:
     #+BEGIN_SRC emacs-lisp
       (defvar phundrak/prompt--abbreviate t
@@ -1451,7 +1451,7 @@
 
 *** ~phundrak/add-all-to-list~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakadd-all-to-list-7e34472b
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
     :END:
     #+BEGIN_SRC emacs-lisp
       (defun phundrak/add-all-to-list ($list &rest $elements)
@@ -1466,7 +1466,7 @@
 
 *** ~phundrak/eshell-git-status~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_and_variables-phundrakeshell-git-status-7f487b84
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-eshell-git-status-28f16e94
     :END:
     This function is used  in my Eshell prompt which you  can consult [[#User_Configuration-Eshell-Eshell_theme-a06715a9][here]]. This
     function basically  executes two git calls  to get some information  about a
@@ -1540,7 +1540,7 @@
 
 *** ~phundrak/fill-paragraph~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-phundrak-fill-paragraph-ab4ef600
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-fill-paragraph-eb568313
     :END:
     This function was created in order  to bind to another keyboard shortcut the
     already existing ~C-u M-q~ which I  cannot type with evil-mode unless I’m in
@@ -1554,7 +1554,7 @@
 
 *** ~phundrak/find-org-file~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakfind-org-file-029040a5
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-find-org-file-a8fd200f
     :END:
     There are lots of  files which I want to be able to  quickly open. I used to
     have one shortcut for  each one of these files, but as  their number grew, I
@@ -1593,7 +1593,7 @@
 
 *** ~phundrak/is-dir-a-git-repo~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_macros_and_variables-phundrakis-dir-a-git-repo-4dc207d7
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-is-dir-a-git-repo-3bb5e09b
     :END:
     This function  detects if  the path passed  as an argument  points to  a git
     directory or to one of its subdirectories.
@@ -1609,7 +1609,7 @@
 
 *** ~phundrak/yas-rust-new-assignments~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-yas-rust-new-assignments-4ad16bde
     :END:
     The following  function is a  function that will  allow me to  easily create
     ~new~    functions    for    Rust     structs.    Inspired    from    [[https://github.com/jorgenschaefer/elpy][elpy]]’s
@@ -1642,7 +1642,7 @@
 
 *** ~terminal-here-default-terminal-command~
     :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions-terminal-here-default-terminal-command-1916a912
+    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
     :END:
     This function is  actually an overwrite of the default  one which apparently
     does   not   work   on   my    machine.   This   function   is   called   by
@@ -2099,17 +2099,20 @@
         If POM is nil, refer to the entry at point. If the entry does not
         have an CUSTOM_ID, the function returns nil. However, when CREATE
         is non nil, create a CUSTOM_ID if none is present already. PREFIX
-        will  be passed  through to  `eos/org-id-new'. In  any case,  the
+        will be passed through to `eos/org-id-new'. In any case, the
         CUSTOM_ID of the entry is returned."
           (interactive)
           (org-with-point-at pom
             (let* ((orgpath (mapconcat #'identity (org-get-outline-path) "-"))
                    (heading (replace-regexp-in-string
-                             "/\\|\\~\\|,\\|\\\\" ""
+                             "[_-]+$" ""
                              (replace-regexp-in-string
-                              " " "_" (if (string= orgpath "")
-                                          (org-get-heading t t t t)
-                                        (concat orgpath "-" (org-get-heading t t t t))))))
+                              "[-_]+" "-"
+                              (replace-regexp-in-string
+                               "[^a-zA-Z0-9-_]" "-"
+                               (if (string= orgpath "")
+                                   (org-get-heading t t t t)
+                                 (concat orgpath "_" (org-get-heading t t t t)))))))
                    (id (org-entry-get nil "CUSTOM_ID")))
               (cond
                ((and id
@@ -2136,12 +2139,8 @@
           (save-excursion
             (widen)
             (goto-char (point-min))
-            (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t"
-                                     (point-max)
-                                     t)
-              (org-map-entries (lambda ()
-                                 (eos/org-custom-id-get (point)
-                                                        'create))))))
+            (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t" (point-max) t)
+              (org-map-entries (lambda () (eos/org-custom-id-get (point) 'create))))))
       #+END_SRC
 
       Let’s add  a hook to  the above function so  it is called  automatically on
