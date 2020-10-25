@@ -1971,7 +1971,7 @@
 
      Now, let’s declare our prompt regexp and our prompt functions:
      #+BEGIN_SRC emacs-lisp
-       (setq eshell-prompt-regexp "^[^\n]*[^\n]* "
+       (setq eshell-prompt-regexp "^[^\n]*λ  "
              eshell-prompt-function 'phundrak/eshell-prompt)
      #+END_SRC
 
