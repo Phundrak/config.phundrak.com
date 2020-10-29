@@ -34,3 +34,4 @@ alias dcp      docker-compose pull
 alias flac     youtube-dl -x --audio-format flac --audio-quality 0 $*
 alias mp3      youtube-dl -x --audio-format flac --audio-quality 0 $*
 alias wget     wget -c $*
+alias rsync    rsync -ruvtEhl --progress $*
