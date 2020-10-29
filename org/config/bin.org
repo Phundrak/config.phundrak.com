@@ -99,7 +99,7 @@
   | ~set-screens~ |                                                               |           |
   | ~pumopm~      |                                                               | yes       |
   | ~xfce-polkit~ |                                                               | yes       |
-  | ~xss-lock~    | ~lock~                                                        | yes       |
+  | ~xss-lock~    | ~plock~                                                       | yes       |
   | ~picom~       | ~--experimental-backends~                                     | yes       |
   | ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
   | ~nm-applet~   |                                                               | yes       |
@@ -123,7 +123,7 @@
                "\n")
   #+END_SRC
 
-  #+RESULTS[1c3a021a0c8c01b8edbf6c40eccc5ee1d3c8762d]: autostart-gen
+  #+RESULTS[2dc7d381730eee5658caea010f3f0db75749107a]: autostart-gen
   #+begin_example
   set-screens  &
 
@@ -136,7 +136,7 @@
   end
 
   if ! test (pgrep xss-lock 2&> /dev/null)
-    xss-lock lock & && disown
+    xss-lock plock & && disown
   end
 
   if ! test (pgrep picom 2&> /dev/null)
@@ -404,22 +404,6 @@
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
 
-* Lock
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/lock
-  :CUSTOM_ID: Lock-635fcb38
-  :END:
-  ~lock~ is a simple script that locks the screen with ~i3lock~ while setting as
-  the background image of the locked screen a corrupted screenshot of the screen
-  before it was locked.
-  #+BEGIN_SRC fish
-    set TMPBG /tmp/screen.png
-    scrot $TMPBG
-    corrupter -add 0 $TMPBG $TMPBG
-    i3lock -t -e -f -i $TMPBG
-    rm $TMPBG
-  #+END_SRC
-
 * mp42webm
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
@@ -452,6 +436,22 @@
   :CUSTOM_ID: Pinfo-f3644596
   :END:
   ~pinfo~ is a utility that shows system information
+
+* Plock
+  :PROPERTIES:
+  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
+  :CUSTOM_ID: Lock-635fcb38
+  :END:
+  ~plock~ is a  simple script that locks the screen  with ~i3lock~ while setting
+  as the  background image of  the locked screen  a corrupted screenshot  of the
+  screen before it was locked.
+  #+BEGIN_SRC fish
+    set TMPBG /tmp/screen.png
+    scrot $TMPBG
+    corrupter -add 0 $TMPBG $TMPBG
+    i3lock -t -e -f -i $TMPBG
+    rm $TMPBG
+  #+END_SRC
 
 * Polybar-launch (Deprecated)
   :PROPERTIES:
