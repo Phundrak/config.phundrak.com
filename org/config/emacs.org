@@ -101,6 +101,7 @@
    | lsp-dart            | apparently, it isn’t included in the Dart layer      |
    | magit-gitflow       | integrate gitflow in Magit                           |
    | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
+   | ob-swift            |                                                      |
    | org-sidebar         | display on the side the outline of an Org buffer     |
    | org-tree-slide      | presentation tool for org-mode                       |
    | outorg              | edit comments as Org-mode buffers                    |
@@ -2133,6 +2134,7 @@
      | sass       |
      | scheme     |
      | shell      |
+     | swift      |
 
      #+NAME: org-babel-languages-gen
      #+BEGIN_SRC emacs-lisp :exports none :tangle no :var languages=org-babel-languages-table[,0] :cache yes :results replace
@@ -2141,7 +2143,7 @@
                   "\n")
      #+END_SRC
 
-     #+RESULTS[cf8b81f0da6306f8131e34be6d3742248fdb057b]: org-babel-languages-gen
+     #+RESULTS[d8ef67cfac36191c43e0f20b9c0a024cb1e9413e]: org-babel-languages-gen
      #+begin_example
      (C . t)
      (dot . t)
@@ -2153,6 +2155,7 @@
      (sass . t)
      (scheme . t)
      (shell . t)
+     (swift . t)
      #+end_example
 
      The corresponding code is as follows:
@@ -3139,13 +3142,15 @@
 
     Now, let’s also declare the keybindings  in this category. ~oac~ will invoke
     Emacs’ calculator, while  ~oac~ invokes the calendar, ~oae~  invokes the Eww
-    navigator and ~oaw~ invokes the weather forecast.
+    web browser,  ~oaw~ invokes  ~woman~ (actually ~helm-man-woman~),  and ~oaW~
+    invokes the weather forecast.
     #+BEGIN_SRC emacs-lisp
       (spacemacs/set-leader-keys
         "oac" 'calc
         "oaC" 'calendar
         "oae" 'eww
-        "oaw" 'wttrin)
+        "oaw" 'helm-man-woman
+        "oaW" 'wttrin)
     #+END_SRC
 
 **** Org tree slide
