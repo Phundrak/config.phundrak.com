@@ -612,6 +612,13 @@
      end
    #+END_SRC
 
+   Let’s  also  symlink  the  ~plock~  script ([[file:bin.org::#Lock-635fcb38][source  here]])  to  ~/usr/bin~  so
+   ~xss-lock~ can find it.
+   #+BEGIN_SRC fish
+     sudo ln -s (which plock) /usr/bin/plock
+   #+END_SRC
+
+
 ** Install packages from git
    :PROPERTIES:
    :CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-7c6a6ea4

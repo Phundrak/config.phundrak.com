@@ -217,6 +217,8 @@ for f in (find ~/.etc -type f)
     sudo ln -s $f $dest
 end
 
+sudo ln -s (which plock) /usr/bin/plock
+
 mkdir -p ~/fromGIT
 
 printf "\n# Install Reveal.JS ###########################################################\n\n"
