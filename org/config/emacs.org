@@ -1600,11 +1600,11 @@
     directory or to one of its subdirectories.
     #+BEGIN_SRC emacs-lisp
       (defun phundrak/is-dir-a-git-repo ($path)
-        "Return `t' if `$path' points to a git repository or one of its
+        "Return `$path' if it points to a git repository or one of its
       subdirectories"
         (when $path
           (if (f-dir? (concat $path "/.git"))
-              t
+              $path
             (phundrak/is-dir-a-git-repo (f-parent $path)))))
     #+END_SRC
 
@@ -1950,17 +1950,25 @@
        failure respectively."
          (let* ((header-bg   phundrak/nord0)
                 ($path       (phundrak/abbr-path (eshell/pwd)))
+                ($git-path   (phundrak/is-dir-a-git-repo $path))
                 ($abbr-path  (phundrak/abbr-path $path phundrak/prompt--abbreviate))
                 ($background phundrak/nord1)
                 ($foreground phundrak/nord14)
                 ($success    phundrak/nord10)
                 ($error      phundrak/nord11))
-           (concat (with-face (concat " " $abbr-path " ")
+           (concat (with-face (concat " " (phundrak/var-or-if-nil $git-path $path) " ")
                               :foreground $foreground
                               :background $background)
-                   (when (phundrak/is-dir-a-git-repo $path)
+                   (when $git-path
                      (concat (phundrak/eshell-git-status $path $background)
-                             (with-face " " :background $background)))
+                             (with-face (format "%s "
+                                                (let (($in-git-path (phundrak/abbr-path (f-relative $path $git-path)
+                                                                                        phundrak/prompt--abbreviate)))
+                                                  (if (string= "." $in-git-path)
+                                                      ""
+                                                    (concat " " $in-git-path))))
+                                        :foreground $foreground
+                                        :background $background)))
                    (with-face "λ "
                               :foreground (if (zerop eshell-last-command-status)
                                               $success
@@ -1974,6 +1982,12 @@
      #+BEGIN_SRC emacs-lisp
        (setq eshell-prompt-regexp "^[^\n]*λ  "
              eshell-prompt-function 'phundrak/eshell-prompt)
+     #+END_SRC
+
+     I also don't  want the banner to  be displayed, I know I  entered the Elisp
+     shell, no need to remind me. Maybe I’ll do something with it one day.
+     #+BEGIN_SRC emacs-lisp
+       (setq eshell-banner-message "")
      #+END_SRC
 
 *** Org-mode
