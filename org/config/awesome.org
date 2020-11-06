@@ -1316,14 +1316,15 @@
    With  the use  of some  rules,  it is  possible  to define  which client  are
    assigned to  which tag  by default.
    #+NAME: rules-default-tags-table
-   | Client Property | Value   | Tag |
-   |-----------------+---------+-----|
-   | class           | Emacs   |   2 |
-   | class           | firefox |   3 |
-   | class           | Nemo    |   4 |
-   | class           | Gimp*   |   5 |
-   | class           | discord |   0 |
-   | class           | Steam   |   9 |
+   | Client Property | Value      | Tag |
+   |-----------------+------------+-----|
+   | class           | Emacs      |   2 |
+   | class           | firefox    |   3 |
+   | class           | Nemo       |   4 |
+   | class           | Gimp*      |   5 |
+   | class           | discord    |   0 |
+   | class           | mattermost |   0 |
+   | class           | Steam      |   9 |
 
    #+NAME: rules-default-tags-generate
    #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var tags=rules-default-tags-table
@@ -1334,12 +1335,13 @@
                 ",\n")
    #+END_SRC
 
-   #+RESULTS[2b9fe1774ebfde3fc2cfadb24a32dee9b2639144]: rules-default-tags-generate
+   #+RESULTS[ec74b9e45bd477d22e2865de30a9c64973cf0927]: rules-default-tags-generate
    : {rule = {class = "Emacs"}, properties = {screen = 1, tag = "2"} },
    : {rule = {class = "firefox"}, properties = {screen = 1, tag = "3"} },
    : {rule = {class = "Nemo"}, properties = {screen = 1, tag = "4"} },
    : {rule = {class = "Gimp*"}, properties = {screen = 1, tag = "5"} },
    : {rule = {class = "discord"}, properties = {screen = 1, tag = "0"} },
+   : {rule = {class = "mattermost"}, properties = {screen = 1, tag = "0"} },
    : {rule = {class = "Steam"}, properties = {screen = 1, tag = "9"} }
 
    This is what these rules look like:
