@@ -1255,22 +1255,28 @@
   ~XF86TouchpadToggle~.  And  for that,  I  need  this  small script  that  will
   actually toggle it, and it will be used in my window manager configuration.
 
-  First, let’s detect the current status of the touchpad:
+  First let’s declare some variables to  make this script more personal. With my
+  current  computer (a  Gazelle by  System76), the  name of  my touchpad  is the
+  following:
   #+BEGIN_SRC fish
-    set TPSTATUS (xinput list-props 12 | grep "Tapping Enabled" | grep -v "Default" | awk '{print $5}')
+    set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
+  #+END_SRC
+
+  Let’s now get the identifier of the touchpad for ~xinput~:
+  #+BEGIN_SRC fish
+    set TPID (xinput list | grep $TPNAME | awk '{print $6}' | sed 's|id=\(.*\)|\1|g')
+  #+END_SRC
+
+  Now, let’s detect the current status of the touchpad:
+  #+BEGIN_SRC fish
+    set TPSTATUS (xinput list-props $TPID | grep "Tapping Enabled" | \
+                  grep -v "Default" | awk '{print $5}')
   #+END_SRC
 
   This will  set ~TPSTATUS~ either  to ~0~, meaning  tapping is disabled,  or to
   ~1~, meaning it’s enabled. I will consider any other value as being disabled.
   #+BEGIN_SRC fish
-    test $TPSTATUS = "1" && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
-  #+END_SRC
-
-  Now let’s declare some variables to make this script more personal. With my
-  current computer (a Gazelle by System76), the name of my touchpad is the
-  following:
-  #+BEGIN_SRC fish
-    set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
+    test [[ $TPSTATUS = "1" ]] && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
   #+END_SRC
 
   Finally, let’s update the touchpad’s options:
