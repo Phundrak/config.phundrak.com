@@ -3572,51 +3572,83 @@
       (spacemacs/toggle-mode-line-battery-on)
     #+END_SRC
 
+*** Beautify Org-mode
+    :PROPERTIES:
+    :CUSTOM_ID: User-Configuration-Visual-configuration-Beautify-Org-mode-0506af2f
+    :END:
+As I will always say, orgmode is an amazing piece of software that deserves particular care and love. That is why I want to give it a unique look and feel compared to the rest of my Emacs configuration, in order to make it feel much more comfortable.
+
+In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (message "coucou")
+#+END_SRC
+
+Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]].
+#+BEGIN_SRC emacs-lisp
+  (message "Setting up some beautiful org-mode")
+  (let* ((font  `(:font "Charis SIL"))
+         (head  `(:inherit default :weight bold))
+         (fixed `(:inherit fixed-pitch :height 0.8)))
+    (custom-theme-set-faces
+     'user
+     `(org-level-1               ((t (,@head ,@font :foreground ,phundrak/nord15 :height 1.75))))
+     `(org-level-2               ((t (,@head ,@font :foreground ,phundrak/nord10 :height 1.5))))
+     `(org-level-3               ((t (,@head ,@font :foreground ,phundrak/nord9  :height 1.25))))
+     `(org-level-4               ((t (,@head ,@font :foreground ,phundrak/nord15 :height 1.1))))
+     `(org-level-5               ((t (,@head ,@font :foreground ,phundrak/nord8 ))))
+     `(org-level-6               ((t (,@head ,@font :foreground ,phundrak/nord7 ))))
+     `(org-level-7               ((t (,@head ,@font :foreground ,phundrak/nord15))))
+     `(org-level-8               ((t (,@head ,@font :foreground ,phundrak/nord6 ))))
+     `(org-document-title        ((t (,@head ,@font :foreground ,phundrak/nord11 :height 2.0 :italic t))))
+     `(variable-pitch            ((t (:family "Charis SIL" :height 120 :weight thin))))
+     `(org-block                 ((t (,@fixed))))
+     `(org-indent                ((t (,@fixed))))
+     `(org-formula               ((t (,@fixed))))
+     `(org-macro                 ((t (,@fixed))))
+     `(org-property-value        ((t (,@fixed))) t)
+     `(org-table                 ((t (,@fixed :foreground ,phundrak/nord14))) t)
+     '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
+     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
+     '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+     `(org-document-info         ((t (:foreground ,phundrak/nord12))))
+     `(org-link                  ((t (:foreground ,phundrak/nord8 :underline t))))
+     '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8))))
+     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))))
+  (message "Org-mode is now beautiful")
+#+END_SRC
+
+Finally, let’s limit the width of images inlined in org buffers to 400px:
+#+BEGIN_SRC emacs-lisp
+  (setq org-image-actual-width 400)
+#+END_SRC
+
 *** Prettified symbols
     :PROPERTIES:
     :CUSTOM_ID: User_Configuration-Miscellaneous-Prettified_symbols-da50f4a6
     :END:
-    Just because  it is  pleasing to the  eye, some symbols  in source  code get
-    prettified into simpler symbols. Here is the  list of symbols that are to be
-    prettified. You  can see in  the corresponding  comment what symbol  will be
-    displayed.
-    #+BEGIN_SRC emacs-lisp
-      (setq prettify-symbols-alist '(("lambda" . 955) ; λ
-                                     ("->" . 8594)    ; →
-                                     ("<->" . 8596)   ; ↔
-                                     ("<-" . 8592)    ; ←
-                                     ("=>" . 8658)    ; ⇒
-                                     ("<=>" . 8860)   ; ⇔
-                                     ("<=" . 8656)    ; ⇐
-                                     ("mapc" . 8614)  ; ↦
-                                     ("map" . 8614)   ; ↦
-                                     (">>" . 187)     ; »
-                                     ("<<" . 171)     ; «
-                                     ))
-    #+END_SRC
+Just because it is pleasing to the eye, some symbols in source code get prettified into simpler symbols. Here is the list of symbols that are to be prettified. You can see in the corresponding comment what symbol will be displayed.
+#+BEGIN_SRC emacs-lisp
+  (setq prettify-symbols-alist '(("lambda" . 955) ; λ
+                                 ("->" . 8594)    ; →
+                                 ("<->" . 8596)   ; ↔
+                                 ("<-" . 8592)    ; ←
+                                 ("=>" . 8658)    ; ⇒
+                                 ("<=>" . 8860)   ; ⇔
+                                 ("<=" . 8656)    ; ⇐
+                                 ("mapc" . 8614)  ; ↦
+                                 ("map" . 8614)   ; ↦
+                                 (">>" . 187)     ; »
+                                 ("<<" . 171)     ; «
+                                 ))
+#+END_SRC
 
-    Let’s enable this mode globally.
-    #+BEGIN_SRC emacs-lisp
-      (global-prettify-symbols-mode 1)
-    #+END_SRC
-
-*** Time in modeline
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Visual_configuration-Time_in_modeline-61b40ef2
-    :END:
-    I like to see what time it is in Emacs. It may be sometimes redundant with
-    my window manager’s clock, but the latter is not always visible; I might
-    have, for instance, Emacs in fullscreen. First, I need to tell Emacs a few
-    things: I want a 24h format, as well as the current date.
-    #+BEGIN_SRC emacs-lisp
-      (setq display-time-24hr-format t
-            display-time-day-and-date t)
-    #+END_SRC
-
-    Now that Emacs knows how to display time, let’s ask it to.
-    #+BEGIN_SRC emacs-lisp
-      (display-time-mode 1)
-    #+END_SRC
+Let’s enable this mode globally.
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode 1)
+#+END_SRC
 
 ** Nov-mode
    :PROPERTIES:
