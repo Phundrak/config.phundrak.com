@@ -1794,7 +1794,6 @@ One of the amazing features of org-mode is its literary programming capacities b
 | sass       |
 | scheme     |
 | shell      |
-| swift      |
 
 #+NAME: org-babel-languages-gen
 #+BEGIN_SRC emacs-lisp :exports none :tangle no :var languages=org-babel-languages-table[,0] :cache yes :results replace
@@ -1803,7 +1802,7 @@ One of the amazing features of org-mode is its literary programming capacities b
              "\n")
 #+END_SRC
 
-#+RESULTS[d8ef67cfac36191c43e0f20b9c0a024cb1e9413e]: org-babel-languages-gen
+#+RESULTS[cf8b81f0da6306f8131e34be6d3742248fdb057b]: org-babel-languages-gen
 #+begin_example
 (C . t)
 (dot . t)
@@ -1815,7 +1814,6 @@ One of the amazing features of org-mode is its literary programming capacities b
 (sass . t)
 (scheme . t)
 (shell . t)
-(swift . t)
 #+end_example
 
 The corresponding code is as follows:
@@ -2604,7 +2602,6 @@ I also want to always be in ~visual-line-mode~ so Emacs soft-wraps lines that ar
 I also want for some non-programming modes to enable a hard-limit in terms of how many characters can fit on one line. The modes that benefit are ~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
 #+BEGIN_SRC emacs-lisp
   (mapc (lambda (x)
-       (add-hook x 'auto-fill-mode)
        (add-hook x 'visual-line-mode))
      '(message-mode-hook
        text-mode-hook
@@ -3005,16 +3002,15 @@ I want to see by default how much battery my computer has, so let’s enable it:
     :END:
 As I will always say, orgmode is an amazing piece of software that deserves particular care and love. That is why I want to give it a unique look and feel compared to the rest of my Emacs configuration, in order to make it feel much more comfortable.
 
-In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font:
+In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
-  (message "coucou")
+  (remove-hook 'org-mode-hook 'auto-fill-mode)
 #+END_SRC
 
 Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]].
 #+BEGIN_SRC emacs-lisp
-  (message "Setting up some beautiful org-mode")
   (let* ((font  `(:font "Charis SIL"))
          (head  `(:inherit default :weight bold))
          (fixed `(:inherit fixed-pitch :height 0.8)))
@@ -3044,7 +3040,6 @@ Fonts will play an important part in this, but so will colors and font size. The
      `(org-link                  ((t (:foreground ,phundrak/nord8 :underline t))))
      '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8))))
      '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))))
-  (message "Org-mode is now beautiful")
 #+END_SRC
 
 Finally, let’s limit the width of images inlined in org buffers to 400px:

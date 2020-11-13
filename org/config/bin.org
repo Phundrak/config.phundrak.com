@@ -11,243 +11,151 @@
   :PROPERTIES:
   :CUSTOM_ID: Presentation-721f3cc4
   :END:
-  This file will  present all the executable  scripts I wrote. It  is also their
-  original source code, all the following code snippets are exported and tangled
-  from this file to the actual executables.
-
-* 4chandl
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/4chandl
-  :CUSTOM_ID: 4chandl-21ff428f
-  :END:
-  Usage: =4chandl [ URL TO THREAD ]=
-
-  I made  this small  script to  download the attached  files of  4chan threads.
-  Let’s  check if  any arguments  were passed  to the  executable. If  none were
-  passed, the script should be aborted.
-  #+BEGIN_SRC fish
-    if ! count $argv > /dev/null
-        echo 'No URL specified! Give the URL to thread as the only argument.'
-        exit 1
-    end
-  #+END_SRC
-
-  Now, let’s store the regex we use to get the link to the attached files.
-  #+BEGIN_SRC fish
-  set regex_4cdn '\/\/is2\.4chan\.org\/[a-z]+\/[A-Za-z0-9]+\.[A-Za-z]{3,4}'
-  #+END_SRC
-
-  We’ll use a thread  counter to get a visual indication on  how the download is
-  going.
-  #+BEGIN_SRC fish
-    set thread_counter 1
-  #+END_SRC
-
-  Now, we will use  each of the arguments passed as a URL  to download the files
-  from.
-  #+BEGIN_SRC fish
-  for url in $argv
-  #+END_SRC
-
-  As  a visual  indicator, let’s  get the  amount of  elements we  are going  to
-  download from the current thread and print it.
-  #+BEGIN_SRC fish
-    set file_total (curl -ks $url | grep -oE $regex_4cdn | uniq | wc -l)
-    echo total files to download in current thread: $file_total
-  #+END_SRC
-
-  Let’s set a file counter so we can visualize the download progress.
-  #+BEGIN_SRC fish
-  set file_counter 1
-  #+END_SRC
-
-  Now, let’s download each file from the current thread.
-  #+BEGIN_SRC fish
-    for image_url in (curl -k -s $url | grep -Eo $regex_4cdn | uniq | sed 's/^/https:/')
-        echo -n Downloading image $counter of $total...
-        wget --no-check-certificate -q -nc $image_url
-        echo ' Done (thread: $thread_counter/thread_total\tfile: $file_counter/file_total)'
-        set file_counter (math $file_counter + 1)
-    end
-  #+END_SRC
-
-  Let’s increment the thread counter.
-  #+BEGIN_SRC fish
-  set thread_counter (math $thread_counter + 1)
-  #+END_SRC
-
-  Let’s now close the for loop.
-  #+BEGIN_SRC fish
-  end
-  #+END_SRC
+This file will present all the executable scripts I wrote. It is also their original source code, all the following code snippets are exported and tangled from this file to the actual executables.
 
 * Autostart
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/autostart
   :CUSTOM_ID: Autostart-a99e99e7
   :END:
-  Because I sometimes  switch from window manager to window  manager, creating a
-  script that  handles by itself autostarting  things for me is  way easier than
-  rewriting every time the autostart part  of my configuration. As you can every
-  instance  will be  launched  asynchronously, and  only if  there  is no  other
-  instance of said command running.
+Because I sometimes switch from window manager to window manager, creating a script that handles by itself autostarting things for me is way easier than rewriting every time the autostart part of my configuration. As you can every instance will be launched asynchronously, and only if there is no other instance of said command running.
 
-  ~set-screens~ is a custom script declared [[*set-screens][below]].
-  #+NAME: autostart-table
-  | Command       | Arguments                                                     | Run once? |
-  |---------------+---------------------------------------------------------------+-----------|
-  | ~set-screens~ |                                                               |           |
-  | ~pumopm~      |                                                               | yes       |
-  | ~xfce-polkit~ |                                                               | yes       |
-  | ~xss-lock~    | ~plock~                                                       | yes       |
-  | ~picom~       | ~--experimental-backends~                                     | yes       |
-  | ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
-  | ~nm-applet~   |                                                               | yes       |
-  | ~numlockx~    | ~on~                                                          | yes       |
-  | ~nitrogen~    | ~--restore~                                                   | no        |
-  | ~mpc~         | ~stop~                                                        | no        |
-  | ~emacsclient~ | ~-c -e "(delete-frame)"~                                      | no        |
+~set-screens~ is a custom script declared [[*set-screens][below]].
+#+NAME: autostart-table
+| Command       | Arguments                                                     | Run once? |
+|---------------+---------------------------------------------------------------+-----------|
+| ~set-screens~ |                                                               |           |
+| ~pumopm~      |                                                               | yes       |
+| ~xfce-polkit~ |                                                               | yes       |
+| ~xss-lock~    | ~plock~                                                       | yes       |
+| ~picom~       | ~--experimental-backends~                                     | yes       |
+| ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
+| ~nm-applet~   |                                                               | yes       |
+| ~numlockx~    | ~on~                                                          | yes       |
+| ~nitrogen~    | ~--restore~                                                   | no        |
+| ~mpc~         | ~stop~                                                        | no        |
+| ~emacsclient~ | ~-c -e "(delete-frame)"~                                      | no        |
 
-  #+NAME: autostart-gen
-  #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
-    (mapconcat (lambda ($start-command)
-                 (let* (($command (s-replace "~" "" (nth 0 $start-command)))
-                        ($arguments (s-replace "~" "" (nth 1 $start-command)))
-                        ($once? (string= "yes" (nth 2 $start-command))))
-                   (if $once?
-                       (concat (format "if ! test (pgrep %s 2&> /dev/null)\n\t" $command)
-                               (s-collapse-whitespace (format "%s %s & && disown" $command $arguments))
-                               "\nend\n")
-                     (format "%s %s &\n" $command $arguments))))
-               table
-               "\n")
-  #+END_SRC
+#+NAME: autostart-gen
+#+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
+  (mapconcat (lambda ($start-command)
+               (let* (($command (s-replace "~" "" (nth 0 $start-command)))
+                      ($arguments (s-replace "~" "" (nth 1 $start-command)))
+                      ($once? (string= "yes" (nth 2 $start-command))))
+                 (if $once?
+                     (concat (format "if ! test (pgrep %s 2&> /dev/null)\n\t" $command)
+                             (s-collapse-whitespace (format "%s %s & && disown" $command $arguments))
+                             "\nend\n")
+                   (format "%s %s &\n" $command $arguments))))
+             table
+             "\n")
+#+END_SRC
 
-  #+RESULTS[2dc7d381730eee5658caea010f3f0db75749107a]: autostart-gen
-  #+begin_example
-  set-screens  &
+#+RESULTS[2dc7d381730eee5658caea010f3f0db75749107a]: autostart-gen
+#+begin_example
+set-screens  &
 
-  if ! test (pgrep pumopm 2&> /dev/null)
-    pumopm & && disown
-  end
+if ! test (pgrep pumopm 2&> /dev/null)
+  pumopm & && disown
+end
 
-  if ! test (pgrep xfce-polkit 2&> /dev/null)
-    xfce-polkit & && disown
-  end
+if ! test (pgrep xfce-polkit 2&> /dev/null)
+  xfce-polkit & && disown
+end
 
-  if ! test (pgrep xss-lock 2&> /dev/null)
-    xss-lock plock & && disown
-  end
+if ! test (pgrep xss-lock 2&> /dev/null)
+  xss-lock plock & && disown
+end
 
-  if ! test (pgrep picom 2&> /dev/null)
-    picom --experimental-backends & && disown
-  end
+if ! test (pgrep picom 2&> /dev/null)
+  picom --experimental-backends & && disown
+end
 
-  if ! test (pgrep xidlehook 2&> /dev/null)
-    xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
-  end
+if ! test (pgrep xidlehook 2&> /dev/null)
+  xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
+end
 
-  if ! test (pgrep nm-applet 2&> /dev/null)
-    nm-applet & && disown
-  end
+if ! test (pgrep nm-applet 2&> /dev/null)
+  nm-applet & && disown
+end
 
-  if ! test (pgrep numlockx 2&> /dev/null)
-    numlockx on & && disown
-  end
+if ! test (pgrep numlockx 2&> /dev/null)
+  numlockx on & && disown
+end
 
-  nitrogen --restore &
+nitrogen --restore &
 
-  mpc stop &
+mpc stop &
 
-  emacsclient -c -e "(delete-frame)" &
-  #+end_example
+emacsclient -c -e "(delete-frame)" &
+#+end_example
 
-  #+BEGIN_SRC fish :noweb yes
-    set -l PATH $PATH /usr/lib/xfce-polkit
+#+BEGIN_SRC fish :noweb yes
+  set -l PATH $PATH /usr/lib/xfce-polkit
 
-    <<autostart-gen()>>
-  #+END_SRC
+  <<autostart-gen()>>
+#+END_SRC
 
 * awiki
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
   :CUSTOM_ID: awiki-7ac5e1d5
   :END:
-  ~awiki~  is   a  simple   script  used   with  ~rofi~   that  relies   on  the
-  ~arch-wiki-docs~ package  in order to provide  the user a way  to quickly find
-  and display any English page from the Arch Wiki in a browser. The advantage of
-  using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is
-  you get  instant suggestion in rofi  using fuzzy-search. The downside  is rofi
-  will only help  you find pages by their  title, and it will not  help you find
-  keywords in the content of said pages.
+~awiki~ is a simple script used with ~rofi~ that relies on the ~arch-wiki-docs~ package in order to provide the user a way to quickly find and display any English page from the Arch Wiki in a browser. The advantage of using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is you get instant suggestion in rofi using fuzzy-search. The downside is rofi will only help you find pages by their title, and it will not help you find keywords in the content of said pages.
 
-  The first  step is  to create  the list of  all the  pages that  are currently
-  stored      on      disk.       ~arch-wiki-docs~      stores      them      in
-  ~/usr/share/doc/arch-wiki/html/en~. A  simple ~ls~  piped in three  ~sed~ will
-  give us a  list of page titles. We  then pipe that into rofi in  dmenu mode in
-  order to choose the page we want  to display. By the way, setting the location
-  of the HTML files will come in handy later.
-  #+BEGIN_SRC fish
-    set WLOCATION /usr/share/doc/arch-wiki/html/en/
-    set WPAGE (/bin/ls $WLOCATION | \
-    sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
-    rofi -dmenu -p "Arch Wiki" -i | sed 's/ +/_/g')
-  #+END_SRC
+The first step is to create the list of all the pages that are currently stored on disk. ~arch-wiki-docs~ stores them in ~/usr/share/doc/arch-wiki/html/en~. A simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then pipe that into rofi in dmenu mode in order to choose the page we want to display. By the way, setting the location of the HTML files will come in handy later.
+#+BEGIN_SRC fish
+  set WLOCATION /usr/share/doc/arch-wiki/html/en/
+  set WPAGE (/bin/ls $WLOCATION | \
+  sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
+  rofi -dmenu -p "Arch Wiki" -i | sed 's/ +/_/g')
+#+END_SRC
 
-  Now, all I need to  do is to send this list into rofi and  tell it to open the
-  result with our favorite browser with ~xdg-open~.
-  #+BEGIN_SRC fish
-    xdg-open $WLOCATION$WPAGE.html
-  #+END_SRC
+Now, all I need to do is to send this list into rofi and tell it to open the result with our favorite browser with ~xdg-open~.
+#+BEGIN_SRC fish
+  xdg-open $WLOCATION$WPAGE.html
+#+END_SRC
 
 * Askpass
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
   :CUSTOM_ID: Askpass-d0d7a8c0
   :END:
-  Askpass is a simple script that invokes ~rofi~  as a way to get from a GUI the
-  user’s sudo password. It is inspired  by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
-  and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As  you can see, this is a oneliner if
-  we ignore the initial shebang. This executable is pointed at by the
-  #+BEGIN_SRC fish
-    rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
-  #+END_SRC
+Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As you can see, this is a oneliner if we ignore the initial shebang. This executable is pointed at by the
+#+BEGIN_SRC fish
+  rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
+#+END_SRC
 
 * Backup
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
   :CUSTOM_ID: Backup-68c7c63e
   :END:
-  ~backup~ is a very simple, oneliner script  that will create a local copy of a
-  file and add the date at which it  was copied in the filename. You can see its
-  source code here:
-  #+BEGIN_SRC fish
-    cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
-  #+END_SRC
+~backup~ is a very simple, oneliner script that will create a local copy of a file and add the date at which it was copied in the filename. You can see its source code here:
+#+BEGIN_SRC fish
+  cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
+#+END_SRC
 
-* ConnectWifi
+* ConnectWifi                                                      :noexport:
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
   :CUSTOM_ID: ConnectWifi-16e5e24a
   :END:
-  ~connect-wifi~ is  a small  utility tool  that allows the  user to  connect to
-  available WiFi networks. The  first thing to do is to select  the WiFi we want
-  to connect  to. We’ll  use the  ~nmcli c  s~ command  to get  the list  of the
-  available networks, and we’ll chose one with ~rofi~.
-  #+BEGIN_SRC fish
-    set SELECTEDWIFI (nmcli d w l | \
-    egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
-    egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
-    rofi -dmenu -p "Select your WiFi network")
-  #+END_SRC
-  Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
-  let’s just send a notification no network was selected.
-  #+BEGIN_SRC fish
-    if test -z $SELECTEDWIFI
-        notify-send "No WiFi network selected" -u low && exit
-    end
-    nmcli c u $SELECTEDWIFI
-  #+END_SRC
+~connect-wifi~ is a small utility tool that allows the user to connect to available WiFi networks. The first thing to do is to select the WiFi we want to connect to. We’ll use the ~nmcli c s~ command to get the list of the available networks, and we’ll chose one with ~rofi~.
+#+BEGIN_SRC fish
+  set SELECTEDWIFI (nmcli d w l | \
+  egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
+  egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
+  rofi -dmenu -p "Select your WiFi network")
+#+END_SRC
+Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
+let’s just send a notification no network was selected.
+#+BEGIN_SRC fish
+  if test -z $SELECTEDWIFI
+      notify-send "No WiFi network selected" -u low && exit
+  end
+  nmcli c u $SELECTEDWIFI
+#+END_SRC
 
 ** TODO fix it
    :PROPERTIES:
@@ -259,148 +167,130 @@
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
   :CUSTOM_ID: Cppnew-964e697b
   :END:
-  =cppnew= is a small utility that helps you create a new C++ project. Several
-  templates are available, the default one using CMake, and three others that
-  are a bit more advances, based on:
-  - CMake + [[https://conan.io/][Conan]]
-  - [[https://mesonbuild.com/][Meson]] + [[https://ninja-build.org/][Ninja]]
-  - Meson + Ninja + Conan
-  There is also a default [[http://doxygen.nl/][Doxygen]] file included for your documentation, ready to
-  go. I  even made it  so that you  can execute it  as an executable  file, like
-  =./doc/Doxyfile= from the project root.
+=cppnew= is a small utility that helps you create a new C++ project. Several templates are available, the default one using CMake, and three others that are a bit more advances, based on:
+- CMake + [[https://conan.io/][Conan]]
+- [[https://mesonbuild.com/][Meson]] + [[https://ninja-build.org/][Ninja]]
+- Meson + Ninja + Conan
+There is also a default [[http://doxygen.nl/][Doxygen]] file included for your documentation, ready to go. I even made it so that you can execute it as an executable file, like =./doc/Doxyfile= from the project root.
 
-  The choice is given to the user which of them to use with options that will be
-  given to =cppnew=.
+The choice is given to the user which of them to use with options that will be given to =cppnew=.
 
-  First of all, if no arguments were passed, return an error.
-  #+begin_src fish
-    if ! count $argv >/dev/null
-        echo "Missing argument: PROJECT" && return -1
-    end
-  #+end_src
+First of all, if no arguments were passed, return an error.
+#+begin_src fish
+  if ! count $argv >/dev/null
+      echo "Missing argument: PROJECT" && return -1
+  end
+#+end_src
 
-  Now, let’s set a couple of variables which will prove useful later on when
-  trying to set up our project.
+Now, let’s set a couple of variables which will prove useful later on when trying to set up our project.
 
 * Cnew
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/cnew
   :CUSTOM_ID: Cnew-d9ec9cc4
   :END:
-  =cnew=  is a  small utility  script similar  to but  simpler than  cppnew that
-  creates a  CMake template C project  from the template that  already exists in
-  [[file:~/dev/templateC][~/dev/templateC]]. If no argument was passed, display an error message and exit.
-  #+BEGIN_SRC fish
-    if ! count $argv > /dev/null
-        echo "Missing argument: PROJECT" && return -1
-    end
-  #+END_SRC
-
-  Pass the first argument to a switch statement.
-  #+BEGIN_SRC fish
-  switch "$argv[1]"
-  #+END_SRC
-
-  If the argument  is =-h= or =--help=,  then display the help  message and exit
-  the script normally.
-  #+BEGIN_SRC fish
-    case -h --help
-        man ~/dev/fishfunctions/cnew.man
-        exit 0
-  #+END_SRC
-
-  Else, the argument is the name of the project the user wants to create.
-  #+BEGIN_SRC fish
-    case '*'
-        set -g project_name $argv[1]
-  #+END_SRC
-
-  Let’s close the switch statement.
-  #+BEGIN_SRC fish
+=cnew= is a small utility script similar to but simpler than cppnew that creates a CMake template C project from the template that already exists in [[file:~/dev/templateC][~/dev/templateC]]. If no argument was passed, display an error message and exit.
+#+BEGIN_SRC fish
+  if ! count $argv > /dev/null
+      echo "Missing argument: PROJECT" && return -1
   end
-  #+END_SRC
+#+END_SRC
 
-  Now, let’s copy the template where the  user is executing =cnew= from, give it
-  the name of the project and move to the project.
-  #+BEGIN_SRC fish
-    cp -r ~/dev/templateC $argv[1]
-    cd $argv[1]
-  #+END_SRC
+Pass the first argument to a switch statement.
+#+BEGIN_SRC fish
+switch "$argv[1]"
+#+END_SRC
 
-  The  default files  have a  placeholder  for the  name of  the project.  Let’s
-  replace these placeholders with the project’s name.
-  #+BEGIN_SRC fish
-    sed -i "s/PROJECTNAME/$argv[1]/g" CMakeLists.txt
-    sed -i "s/PROJECTNAME/$argv[1]/g" README.org
-    sed -i "s/CPROJECTNAME/$argv[1]/g" doc/Doxyfile
-  #+END_SRC
+If the argument is =-h= or =--help=, then display the help message and exit the script normally.
+#+BEGIN_SRC fish
+  case -h --help
+      man ~/dev/fishfunctions/cnew.man
+      exit 0
+#+END_SRC
 
-  Now, let’s create a git repository and initialize it.
-  #+BEGIN_SRC fish
-    git init
-    git add .
-    git commit -m "initial commit"
-  #+END_SRC
+Else, the argument is the name of the project the user wants to create.
+#+BEGIN_SRC fish
+  case '*'
+      set -g project_name $argv[1]
+#+END_SRC
 
-  And we’re done!
+Let’s close the switch statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+Now, let’s copy the template where the user is executing =cnew= from, give it the name of the project and move to the project.
+#+BEGIN_SRC fish
+  cp -r ~/dev/templateC $argv[1]
+  cd $argv[1]
+#+END_SRC
+
+The default files have a placeholder for the name of the project. Let’s replace these placeholders with the project’s name.
+#+BEGIN_SRC fish
+  sed -i "s/PROJECTNAME/$argv[1]/g" CMakeLists.txt
+  sed -i "s/PROJECTNAME/$argv[1]/g" README.org
+  sed -i "s/CPROJECTNAME/$argv[1]/g" doc/Doxyfile
+#+END_SRC
+
+Now, let’s create a git repository and initialize it.
+#+BEGIN_SRC fish
+  git init
+  git add .
+  git commit -m "initial commit"
+#+END_SRC
+
+And we’re done!
 
 * Dart Language Server
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dart_language_server
   :CUSTOM_ID: Dart_Language_Server-18c256b1
   :END:
-  Spacemacs' recommendations  on how  to use  Dart with  LSP is  outdated, since
-  [[https://github.com/natebosch/dart_language_server][=dart_language_server=]]  is obsolete.  As  recommended by  the  repo owner,  we
-  should launch instead the following code:
-  #+BEGIN_SRC fish
-    /usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
-  #+END_SRC
-  So, instead of  using the obsolete executable, instead we  will be calling the
-  analysis server as requested.
+Spacemacs' recommendations on how to use Dart with LSP is outdated, since [[https://github.com/natebosch/dart_language_server][=dart_language_server=]] is obsolete. As recommended by the repo owner, we should launch instead the following code:
+#+BEGIN_SRC fish
+  /usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
+#+END_SRC
+
+So, instead of using the obsolete executable, instead we will be calling the analysis server as requested.
 
 * Dmenu
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
   :CUSTOM_ID: Dmenu-527edf04
   :END:
-  I  wrote this  very simple  script  in order  to replace  =dmenu= with  rofi’s
-  emulation  of dmenu,  since I  prefer  rofi’s appearance.  It basically  calls
-  rofi’s dmenu emulation with the arguments initially passed to dmenu.
-  #+BEGIN_SRC fish
-    rofi -dmenu $argv
-  #+END_SRC
+I wrote this very simple script in order to replace =dmenu= with rofi’s emulation of dmenu, since I prefer rofi’s appearance. It basically calls rofi’s dmenu emulation with the arguments initially passed to dmenu.
+#+BEGIN_SRC fish
+  rofi -dmenu $argv
+#+END_SRC
 
 * Emacsmail
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
   :CUSTOM_ID: Emacsmail-afffb7cd
   :END:
-  This  short script  is used  in my  =~/.local/share/applications/mu4e.desktop=
-  file in order to send to Emacs any ~mailto:~ requests made in my system.
-  #+BEGIN_SRC bash
-    emacsclient -c --eval "(browse-url-mail \"$@\")"
-  #+END_SRC
+This short script is used in my =~/.local/share/applications/mu4e.desktop= file in order to send to Emacs any ~mailto:~ requests made in my system.
+#+BEGIN_SRC bash
+  emacsclient -c --eval "(browse-url-mail \"$@\")"
+#+END_SRC
 
 * Emoji picker
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
   :CUSTOM_ID: Emoji_picker-a1c374ec
   :END:
-  The   emoji  picker   is   a   simple  fish   script   that   uses  rofi   and
-  [[file:~/.config/emoji.txt][~/.config/emoji.txt]]  to provide  a small,  local search  for emojis.  Once the
-  emoji is selected, it is copied to the clipboard using =xclipboard=.
-  #+BEGIN_SRC fish
-    grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
-    awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
-  #+END_SRC
+The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. Once the emoji is selected, it is copied to the clipboard using =xclipboard=.
+#+BEGIN_SRC fish
+  grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
+  awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+#+END_SRC
 
-  Also, let’s send a notification telling the user the emoji has been copied!
-  #+BEGIN_SRC fish
-    set emoji (xclip -o -selection clipboard | tr -d '\n')
-    test -z "$emoji" && notify-send "No emoji copied" -u low && exit
-    set -a emoji "copied to clipboard"
-    notify-send -u low $emoji
-  #+END_SRC
+Also, let’s send a notification telling the user the emoji has been copied!
+#+BEGIN_SRC fish
+  set emoji (xclip -o -selection clipboard | tr -d '\n')
+  test -z "$emoji" && notify-send "No emoji copied" -u low && exit
+  set -a emoji "copied to clipboard"
+  notify-send -u low $emoji
+#+END_SRC
 
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
 
@@ -409,1073 +299,951 @@
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
   :CUSTOM_ID: mp42webm-aeacca58
   :END:
-  This function  allows me to  convert easily an mp4  video to the  webm format.
-  Nothing too fancy here.
-  #+BEGIN_SRC fish
-    ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
-  #+END_SRC
+This function allows me to convert easily an mp4 video to the webm format. Nothing too fancy here.
+#+BEGIN_SRC fish
+  ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
+#+END_SRC
 
 * pape-update
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
   :CUSTOM_ID: pape-update-bdecbadf
   :END:
-  This little tool sets a random wallpaper using nitrogen.
-  #+BEGIN_SRC fish
-    set -l PAPESDIR ~/Pictures/Wallpapers
-    set -l PAPES (ls $PAPESDIR)
-    set -l PAPE $PAPESDIR/$PAPES[(random 1 (count $PAPES))]
-    for i in (seq (xrandr --current | grep ' connected' | wc -l))
-        nitrogen --set-zoom-fill $PAPE --head=(math "$i - 1") --save
-    end
-  #+END_SRC
+This little tool sets a random wallpaper using nitrogen.
+#+BEGIN_SRC fish
+  set -l PAPESDIR ~/Pictures/Wallpapers
+  set -l PAPES (ls $PAPESDIR)
+  set -l PAPE $PAPESDIR/$PAPES[(random 1 (count $PAPES))]
+  for i in (seq (xrandr --current | grep ' connected' | wc -l))
+      nitrogen --set-zoom-fill $PAPE --head=(math "$i - 1") --save
+  end
+#+END_SRC
 
 * Pinfo                                                            :noexport:
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
   :CUSTOM_ID: Pinfo-f3644596
   :END:
-  ~pinfo~ is a utility that shows system information
+~pinfo~ is a utility that shows system information
 
 * Plock
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
   :CUSTOM_ID: Lock-635fcb38
   :END:
-  ~plock~ is a  simple script that locks the screen  with ~i3lock~ while setting
-  as the  background image of  the locked screen  a corrupted screenshot  of the
-  screen before it was locked.
-  #+BEGIN_SRC fish
-    set TMPBG /tmp/screen.png
-    scrot $TMPBG
-    corrupter -add 0 $TMPBG $TMPBG
-    i3lock -t -e -f -i $TMPBG
-    rm $TMPBG
-  #+END_SRC
+~plock~ is a simple script that locks the screen with ~i3lock~ while setting as the background image of the locked screen a corrupted screenshot of the screen before it was locked.
+#+BEGIN_SRC fish
+  set TMPBG /tmp/screen.png
+  scrot $TMPBG
+  corrupter -add 0 $TMPBG $TMPBG
+  i3lock -t -e -f -i $TMPBG
+  rm $TMPBG
+#+END_SRC
 
 * Polybar-launch (Deprecated)
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
   :CUSTOM_ID: Polybar-launch-36789edc
   :END:
-  This scripts  allows the user  to kill polybar and  relaunch it, or  to simply
-  launch it if polybar isn’t launched yet. First thing to do is kill all polybar
-  processes.
-  #+BEGIN_SRC bash
-  killall -q polybar
-  #+END_SRC
+This scripts allows the user to kill polybar and relaunch it, or to simply launch it if polybar isn’t launched yet. First thing to do is kill all polybar processes.
+#+BEGIN_SRC bash
+killall -q polybar
+#+END_SRC
 
-  Now we have to wait untill all polybar processes have been shut down.
-  #+BEGIN_SRC bash
-  while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
-  #+END_SRC
+Now we have to wait untill all polybar processes have been shut down.
+#+BEGIN_SRC bash
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+#+END_SRC
 
-  Now that  our system isn’t running  polybar anymore, we’ll launch  it again on
-  all of our  screens. By the way, I  have two bars, so I’ll have  to lauch them
-  both.
-  #+BEGIN_SRC bash
-    if type "xrandr"; then
-        for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-            MONITOR=$m polybar --reload top &
-            MONITOR=$m polybar --reload bottom &
-        done
-    else
-        polybar --reload top &
-        polybar --reload bottom &
-    fi
-  #+END_SRC
+Now that our system isn’t running polybar anymore, we’ll launch it again on all of our screens. By the way, I have two bars, so I’ll have to lauch them both.
+#+BEGIN_SRC bash
+  if type "xrandr"; then
+      for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+          MONITOR=$m polybar --reload top &
+          MONITOR=$m polybar --reload bottom &
+      done
+  else
+      polybar --reload top &
+      polybar --reload bottom &
+  fi
+#+END_SRC
 
-  And we’re done! Let’s just launch a notification polybar has been relaunched.
-  #+BEGIN_SRC bash
-    notify-send "Polybar restarted!" -a "polybar-launch"
-  #+END_SRC
+And we’re done! Let’s just launch a notification polybar has been relaunched.
+#+BEGIN_SRC bash
+  notify-send "Polybar restarted!" -a "polybar-launch"
+#+END_SRC
 
 * Rofi-mount
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
   :CUSTOM_ID: Rofi-mount-ebbebf68
   :END:
-  =rofimount=  is  a  script  inspired  by  [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this  one]],  based  on  dmenu,  which
-  interactively asks the user  what to mount, and where to mount  it. What I did
-  was replace  dmenu with rofi, and  fix a couple  of bugs I encountered  in the
-  original script.
+=rofimount= is a script inspired by [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this one]], based on dmenu, which interactively asks the user what to mount, and where to mount it. What I did was replace dmenu with rofi, and fix a couple of bugs I encountered in the original script.
 
 ** Get the mountable elements
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
    :END:
-   #+BEGIN_SRC fish
-     begin
-   #+END_SRC
-   What the script does first is detect everything that can be mounted. Between
-   a =begin= and =end=, let’s set =LFS= as a local variable. This si in order to
-   get sane variables in the current block.
-   #+BEGIN_SRC fish
-   set -l LFS
-   #+END_SRC
+#+BEGIN_SRC fish
+  begin
+#+END_SRC
 
-   Now, let’s detect the amount of mountable Android filesystems, and if any are
-   detected, let’s read them into a global variable.
-   #+BEGIN_SRC fish
-     set -l a (math (jmtpfs -l | wc -l) - 2)
-     test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
-   #+END_SRC
+What the script does first is detect everything that can be mounted. Between a =begin= and =end=, let’s set =LFS= as a local variable. This si in order to get sane variables in the current block.
+#+BEGIN_SRC fish
+set -l LFS
+#+END_SRC
 
-   We’ll do the same for external and internal drives and partitions that can be
-   mounted here.
-   #+BEGIN_SRC fish
-     lsblk -rpo "name,type,size,mountpoint" | \
-     awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
-     read -zg usbdrives
-   #+END_SRC
+Now, let’s detect the amount of mountable Android filesystems, and if any are detected, let’s read them into a global variable.
+#+BEGIN_SRC fish
+  set -l a (math (jmtpfs -l | wc -l) - 2)
+  test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
+#+END_SRC
 
-   Finally, we look for any CD drive that could be mounted on our device.
-   #+BEGIN_SRC fish
-     blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
-   #+END_SRC
+We’ll do the same for external and internal drives and partitions that can be mounted here.
+#+BEGIN_SRC fish
+  lsblk -rpo "name,type,size,mountpoint" | \
+  awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
+  read -zg usbdrives
+#+END_SRC
 
-   And that’s the end of our first block!
-   #+BEGIN_SRC fish
-     end
-   #+END_SRC
+Finally, we look for any CD drive that could be mounted on our device.
+#+BEGIN_SRC fish
+  blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
+#+END_SRC
 
-   Alright, we’ll  save what  kind on drives  we can mount  in a  temporary file
-   called =/tmp/drives=. We’ll make sure it’s  blank by erasing it then creating
-   it again with  =touch=, like so. The =-f=  flag on =rm= is here so  we get no
-   error if we try to delete a file that doesn’t exist (yet).
-   #+BEGIN_SRC fish
-     set -g TMPDRIVES /tmp/drives
-     rm -f $TMPDRIVES
-     touch $TMPDRIVES
-   #+END_SRC
+And that’s the end of our first block!
+#+BEGIN_SRC fish
+  end
+#+END_SRC
 
-   Now, let’s write what type of drives we can mount in this temporary file.
-   #+BEGIN_SRC fish
-     test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
-     test -n "$cddrives" && echo "CD" >> $TMPDRIVES
-     test -n "$anddrives" && echo "Android" >> $TMPDRIVES
-   #+END_SRC
+Alright, we’ll save what kind on drives we can mount in a temporary file called =/tmp/drives=. We’ll make sure it’s blank by erasing it then creating it again with =touch=, like so. The =-f= flag on =rm= is here so we get no error if we try to delete a file that doesn’t exist (yet).
+#+BEGIN_SRC fish
+  set -g TMPDRIVES /tmp/drives
+  rm -f $TMPDRIVES
+  touch $TMPDRIVES
+#+END_SRC
 
-   Now, we want to  declare where to look for mount  directories. For now, we’ll
-   only look in =/media=, but you can add more if you wish.
-   #+BEGIN_SRC fish
-     set -g basemount /media
-   #+END_SRC
+Now, let’s write what type of drives we can mount in this temporary file.
+#+BEGIN_SRC fish
+  test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
+  test -n "$cddrives" && echo "CD" >> $TMPDRIVES
+  test -n "$anddrives" && echo "Android" >> $TMPDRIVES
+#+END_SRC
+
+Now, we want to declare where to look for mount directories. For now, we’ll only look in =/media=, but you can add more if you wish.
+#+BEGIN_SRC fish
+  set -g basemount /media
+#+END_SRC
 
 ** Get the mount point
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
    :END:
-   Now, let’s declare a function that will allow us to chose the drive we want
-   to mount.
-   #+BEGIN_SRC fish
-     function getmount
-   #+END_SRC
+Now, let’s declare a function that will allow us to chose the drive we want to mount.
+#+BEGIN_SRC fish
+  function getmount
+#+END_SRC
 
-   First, we want to get our mount point.  We’ll run a =find= command on each of
-   the directories listed in =$basemount= to look for folders on which our drive
-   could be mounted. This  list will be passed to rofi from  which we will chose
-   our mount point.
-   #+BEGIN_SRC fish
-     set -g mp (for d in $basemount
-         find $d -maxdepth 5 -type d
-     end | rofi -dmenu -i -p 'Type in mount point.')
-   #+END_SRC
+First, we want to get our mount point. We’ll run a =find= command on each of the directories listed in =$basemount= to look for folders on which our drive could be mounted. This list will be passed to rofi from which we will chose our mount point.
+#+BEGIN_SRC fish
+  set -g mp (for d in $basemount
+      find $d -maxdepth 5 -type d
+  end | rofi -dmenu -i -p 'Type in mount point.')
+#+END_SRC
 
-   We  should verify  that something  has been  actually selected,  otherwise we
-   should abort the script.
-   #+BEGIN_SRC fish
-     if test -z $mp || test $mp = ""
-         return 1
-     end
-   #+END_SRC
+We should verify that something has been actually selected, otherwise we should abort the script.
+#+BEGIN_SRC fish
+  if test -z $mp || test $mp = ""
+      return 1
+  end
+#+END_SRC
 
-   Now, if the selected  mount point does not exist, we’ll  ask the user whether
-   the directory  should be created.  If no, the script  will abort. If  yes, an
-   attempt will be made at creating the  directory as the user; if that fails, a
-   new attempt will be made as sudo.
-   #+BEGIN_SRC fish
-     if test ! -d $mp
-         switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
-             case 'Yes'
-                 mkdir -p $mp || sudo -A mkdir -p $mp
-             case '*'
-                 return 1
-         end
-     end
-   #+END_SRC
+Now, if the selected mount point does not exist, we’ll ask the user whether the directory should be created. If no, the script will abort. If yes, an attempt will be made at creating the directory as the user; if that fails, a new attempt will be made as sudo.
+#+BEGIN_SRC fish
+  if test ! -d $mp
+      switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
+          case 'Yes'
+              mkdir -p $mp || sudo -A mkdir -p $mp
+          case '*'
+              return 1
+      end
+  end
+#+END_SRC
 
-   Finally, let’s close the function
-   #+BEGIN_SRC fish
-     end
-   #+END_SRC
+Finally, let’s close the function
+#+BEGIN_SRC fish
+  end
+#+END_SRC
 
 ** Mount a USB drive, hard drive or partition
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
    :END:
-   Alright,  we  want  to  mount  a  partition  that  answers  by  the  name  of
-   =/dev/sdXX=, how  do we do that?  Let’s create first the  function =mountusb=
-   that will take care of it for us.
-   #+BEGIN_SRC fish
-   function mountusb
-   #+END_SRC
+Alright, we want to mount a partition that answers by the name of =/dev/sdXX=, how do we do that? Let’s create first the function =mountusb= that will take care of it for us.
+#+BEGIN_SRC fish
+function mountusb
+#+END_SRC
 
-   Now, the first thing we want to do  is select the partition we want to mount.
-   Remember, we  stored those in =$usbdrives=  earlier, so let’s pipe  them into
-   rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
-   #+BEGIN_SRC fish
-     set -g chosen (echo $usbdrives | \
-     rofi -dmenu -i -p "Mount which drive?" | \
-     awk '{print $1}')
-   #+END_SRC
+Now, the first thing we want to do is select the partition we want to mount. Remember, we stored those in =$usbdrives= earlier, so let’s pipe them into rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
+#+BEGIN_SRC fish
+  set -g chosen (echo $usbdrives | \
+  rofi -dmenu -i -p "Mount which drive?" | \
+  awk '{print $1}')
+#+END_SRC
 
-   As usual  after a user  selection, let’s  verify something has  actually been
-   selected. If not, let’s abort the script.
-   #+BEGIN_SRC fish
-   test -z $chosen && return 1
-   #+END_SRC
+As usual after a user selection, let’s verify something has actually been selected. If not, let’s abort the script.
+#+BEGIN_SRC fish
+test -z $chosen && return 1
+#+END_SRC
 
-   Now, let’s select  the mount point of our partition.  We’ll call the function
-   =getmount= described in [[#Rofi-mount-Get_the_mount_point-6c4bac06][Get the mount point]] to select it.
-   #+BEGIN_SRC fish
-   getmount
-   #+END_SRC
+Now, let’s select the mount point of our partition. We’ll call the function =getmount= described in [[#Rofi-mount-Get_the_mount_point-6c4bac06][Get the mount point]] to select it.
+#+BEGIN_SRC fish
+getmount
+#+END_SRC
 
-   Let’s verify  the variable  =mp= set  in =getmount=  is not  empty, otherwise
-   abort the script.
-   #+BEGIN_SRC fish
-   test -z $mp && return 1
-   #+END_SRC
+Let’s verify the variable =mp= set in =getmount= is not empty, otherwise abort the script.
+#+BEGIN_SRC fish
+test -z $mp && return 1
+#+END_SRC
 
-   Now, let’s mount it! We’ll use a switch which will detect the filesystem used
-   so we know how to mount the partition.
-   #+BEGIN_SRC fish
-   switch (lsblk -no "fstype" $chosen)
-   #+END_SRC
+Now, let’s mount it! We’ll use a switch which will detect the filesystem used so we know how to mount the partition.
+#+BEGIN_SRC fish
+switch (lsblk -no "fstype" $chosen)
+#+END_SRC
 
-   We have two named case: =vfat= filesystems.
-   #+BEGIN_SRC fish
-     case "vfat"
-         sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
-   #+END_SRC
+We have two named case: =vfat= filesystems.
+#+BEGIN_SRC fish
+  case "vfat"
+      sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
+#+END_SRC
 
-   And =ntfs= filesystems.
-   #+BEGIN_SRC fish
-     case "ntfs"
-         sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
-   #+END_SRC
+And =ntfs= filesystems.
+#+BEGIN_SRC fish
+  case "ntfs"
+      sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
+#+END_SRC
 
-   Else, we’ll let  =mount= determine which filesystem is used  by the partition
-   (generally =ext4=).
-   #+BEGIN_SRC fish
-     case '*'
-         sudo -A mount $chosen $mp
-   #+END_SRC
+Else, we’ll let =mount= determine which filesystem is used by the partition (generally =ext4=).
+#+BEGIN_SRC fish
+  case '*'
+      sudo -A mount $chosen $mp
+#+END_SRC
 
-   We’ll also  run a =chown=  on this newly mounted  filesystem so the  user can
-   access it without any issues.
-   #+BEGIN_SRC fish
-     sudo -A chown -R $USER:(id -g $USER) $mp
-   #+END_SRC
+We’ll also run a =chown= on this newly mounted filesystem so the user can access it without any issues.
+#+BEGIN_SRC fish
+  sudo -A chown -R $USER:(id -g $USER) $mp
+#+END_SRC
 
-   Let’s close the  switch block and send a notification  the partition has been
-   mounted.
-   #+BEGIN_SRC fish
-   end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
-   #+END_SRC
+Let’s close the switch block and send a notification the partition has been mounted.
+#+BEGIN_SRC fish
+end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
+#+END_SRC
 
-   And let’s close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+And let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Mount an Android device
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
    :END:
-   The function  that manages  to mount  Android filesystems  is =mountandroid=.
-   Let’s declare it.
-   #+BEGIN_SRC fish
-   function mountandroid -d "Mount an Android device"
-   #+END_SRC
+The function that manages to mount Android filesystems is =mountandroid=. Let’s declare it.
+#+BEGIN_SRC fish
+function mountandroid -d "Mount an Android device"
+#+END_SRC
 
-   We’ll select which Android we want to mount. We will be asked through rofi.
-   #+BEGIN_SRC fish
-   set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
-   #+END_SRC
+We’ll select which Android we want to mount. We will be asked through rofi.
+#+BEGIN_SRC fish
+set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
+#+END_SRC
 
-   Now, we need to  get the bus of the Android device we  want to mount. It will
-   be useful  later, after we  authorized mounting from  our device, to  get the
-   path to our partition.
-   #+BEGIN_SRC fish
-   set bus (echo $chosen | sed 's/,.*//')
-   #+END_SRC
+Now, we need to get the bus of the Android device we want to mount. It will be useful later, after we authorized mounting from our device, to get the path to our partition.
+#+BEGIN_SRC fish
+set bus (echo $chosen | sed 's/,.*//')
+#+END_SRC
 
-   Let’s temporarily mount our device.
-   #+BEGIN_SRC fish
-   jmtpfs -device=$chosen $mp
-   #+END_SRC
+Let’s temporarily mount our device.
+#+BEGIN_SRC fish
+jmtpfs -device=$chosen $mp
+#+END_SRC
 
-   Now, we need to allow our computer  to mount our Android device. Depending on
-   the Android version it is running on, we either need to specify our device is
-   USB connected in order to exchange  files, or Android will explicitely ask us
-   if it is OK for our computer to access it. Let’s inform the user of that.
-   #+BEGIN_SRC fish
-     echo "OK" | \
-     rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
-   #+END_SRC
+Now, we need to allow our computer to mount our Android device. Depending on the Android version it is running on, we either need to specify our device is USB connected in order to exchange files, or Android will explicitely ask us if it is OK for our computer to access it. Let’s inform the user of that.
+#+BEGIN_SRC fish
+  echo "OK" | \
+  rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
+#+END_SRC
 
-   Now, let’s get the actual path of our Android filesystem we wish to mount,
-   and let’s unmount the previous temporary filesystem.
-   #+BEGIN_SRC fish
-     set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
-     sudo -A umount $mp
-   #+END_SRC
+Now, let’s get the actual path of our Android filesystem we wish to mount, and let’s unmount the previous temporary filesystem.
+#+BEGIN_SRC fish
+  set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
+  sudo -A umount $mp
+#+END_SRC
 
-   Now we  cam mount the  new filesystem and  send a notification  if everything
-   went well.
-   #+BEGIN_SRC fish
-     jmtpfs -device=$newchosen $mp && \
-     notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
-   #+END_SRC
+Now we cam mount the new filesystem and send a notification if everything went well.
+#+BEGIN_SRC fish
+  jmtpfs -device=$newchosen $mp && \
+  notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
+#+END_SRC
 
-   And now, we can close our function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+And now, we can close our function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Mount a CD drive
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
    :END:
-   This part  is way  easier than the  previous functions. As  we will  see, the
-   function =mountcd='s body is only three  lines long. First, let’s declare the
-   function.
-   #+BEGIN_SRC fish
-   function mountcd
-   #+END_SRC
+This part is way easier than the previous functions. As we will see, the function =mountcd='s body is only three lines long. First, let’s declare the function.
+#+BEGIN_SRC fish
+function mountcd
+#+END_SRC
 
-   Now, let’s chose the CD drive we want to mount using =rofi=.
-   #+BEGIN_SRC fish
-     set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
-   #+END_SRC
+Now, let’s chose the CD drive we want to mount using =rofi=.
+#+BEGIN_SRC fish
+  set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
+#+END_SRC
 
-   We’ll also  get the  mountpoint thanks to  the =getmount=  function described
-   earlier.
-   #+BEGIN_SRC fish
-   getmount
-   #+END_SRC
+We’ll also get the mountpoint thanks to the =getmount= function described earlier.
+#+BEGIN_SRC fish
+getmount
+#+END_SRC
 
-   And finally, let’s mount it and send the notification everything went well.
-   #+BEGIN_SRC fish
-     sudo -A mount $chosen $mp && \
-     notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
-   #+END_SRC
+And finally, let’s mount it and send the notification everything went well.
+#+BEGIN_SRC fish
+  sudo -A mount $chosen $mp && \
+  notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
+#+END_SRC
 
-   Finally, let’s close our function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Finally, let’s close our function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Ask what type of drive we want to mount
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
    :END:
-   The first thing we will be asked if different types of drives are detected is
-   which of these types the user wishes to mount. This is done with the function
-   =asktype= which is declared below.
-   #+BEGIN_SRC fish
-   function asktype
-   #+END_SRC
+The first thing we will be asked if different types of drives are detected is which of these types the user wishes to mount. This is done with the function =asktype= which is declared below.
+#+BEGIN_SRC fish
+function asktype
+#+END_SRC
 
-   We will use a  switch statement which will use our anwser  to rofi about what
-   we wish to mount.
-   #+BEGIN_SRC fish
-   switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
-   #+END_SRC
+We will use a switch statement which will use our anwser to rofi about what we wish to mount.
+#+BEGIN_SRC fish
+switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
+#+END_SRC
 
-   If we  chose the  option "USB", we’ll  mount a hard  drive, partition  or USB
-   drive. In which case we’ll call the =mountusb= function.
-   #+BEGIN_SRC fish
-     case "USB"
-         mountusb
-   #+END_SRC
+If we chose the option "USB", we’ll mount a hard drive, partition or USB drive. In which case we’ll call the =mountusb= function.
+#+BEGIN_SRC fish
+  case "USB"
+      mountusb
+#+END_SRC
 
-   If we chose the "Android" option, the =mountandroid= function is called.
-   #+BEGIN_SRC fish
-     case "Android"
-         mountandroid
-   #+END_SRC
+If we chose the "Android" option, the =mountandroid= function is called.
+#+BEGIN_SRC fish
+  case "Android"
+      mountandroid
+#+END_SRC
 
-   Else if we chose the "CD" option, we’ll call the =mountcd= function.
-   #+BEGIN_SRC fish
-     case "CD"
-         mountcd
-   #+END_SRC
-   If nothing  is selected, the function  will naturally exit. Now,  let’s close
-   our switch statement and our function.
-   #+BEGIN_SRC fish
-   end
-   end
-   #+END_SRC
+Else if we chose the "CD" option, we’ll call the =mountcd= function.
+#+BEGIN_SRC fish
+  case "CD"
+      mountcd
+#+END_SRC
+
+If nothing is selected, the function will naturally exit. Now, let’s close our switch statement and our function.
+#+BEGIN_SRC fish
+end
+end
+#+END_SRC
 
 ** Launch the mounting functions
    :PROPERTIES:
    :CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
    :END:
-   Now that we have declared our functions and set our variables, we’ll read the
-   temporary file described  in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The  amount of lines
-   is passed in a switch statement.
-   #+BEGIN_SRC fish
-   switch (wc -l < $TMPDRIVES)
-   #+END_SRC
+Now that we have declared our functions and set our variables, we’ll read the temporary file described in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The amount of lines is passed in a switch statement.
+#+BEGIN_SRC fish
+switch (wc -l < $TMPDRIVES)
+#+END_SRC
 
-   If the file has no lines, i.e. it is empty, we have no mountable media. Let’s
-   inform our user this is the case.
-   #+BEGIN_SRC fish
-     case 0
-         notify-send "No USB drive or Android device or CD detected" -a "dmount"
-   #+END_SRC
+If the file has no lines, i.e. it is empty, we have no mountable media. Let’s inform our user this is the case.
+#+BEGIN_SRC fish
+  case 0
+      notify-send "No USB drive or Android device or CD detected" -a "dmount"
+#+END_SRC
 
-   If we  only have one line,  we have only  one type of mountable  media. We’ll
-   pass this line to a second switch statement.
-   #+BEGIN_SRC fish
-     case 1
-         switch (cat $TMPDRIVES)
-   #+END_SRC
-   This will allow the script to automatically  detect what type of media it is,
-   and mount the corresponding function.
-   #+BEGIN_SRC fish
-     case "USB"
-         mountusb
-     case "Android"
-         mountandroid
-     case "CD"
-         mountCD
-   #+END_SRC
-   Let’s close this nested switch case.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+If we only have one line, we have only one type of mountable media. We’ll pass this line to a second switch statement.
+#+BEGIN_SRC fish
+  case 1
+      switch (cat $TMPDRIVES)
+#+END_SRC
+This will allow the script to automatically detect what type of media it is, and mount the corresponding function.
+#+BEGIN_SRC fish
+  case "USB"
+      mountusb
+  case "Android"
+      mountandroid
+  case "CD"
+      mountCD
+#+END_SRC
+Let’s close this nested switch case.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
-   If we have more than one line, we’ll have to ask the user what type of media
-   they want to mount.
-   #+BEGIN_SRC fish
-     case '*'
-         asktype
-   #+END_SRC
+If we have more than one line, we’ll have to ask the user what type of media they want to mount.
+#+BEGIN_SRC fish
+  case '*'
+      asktype
+#+END_SRC
 
-   Now, let’s end our switch statement!
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Now, let’s end our switch statement!
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
-   Finally, we’ll delete our temporary file.
-   #+BEGIN_SRC fish
-   rm -f $TMPDRIVES
-   #+END_SRC
+Finally, we’ll delete our temporary file.
+#+BEGIN_SRC fish
+rm -f $TMPDRIVES
+#+END_SRC
 
-   And with that, this is the end of our script!
+And with that, this is the end of our script!
 
 * Rofi-pass
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
   :CUSTOM_ID: Rofi-pass-8335357f
   :END:
-  =rofi-pass= is  a simple  utility that  gets a password  stored in  the [[https://www.passwordstore.org/][=pass=]]
-  password manager with  rofi as its interface, and then  stores the password in
-  the clipboard.
+=rofi-pass= is a simple utility that gets a password stored in the [[https://www.passwordstore.org/][=pass=]] password manager with rofi as its interface, and then stores the password in the clipboard.
 
-  Let’s  parse all  the  arguments passed  to  the  script. If  one  of them  is
-  =--type=, =-t= or =type=, the script will  attempt to type the password to the
-  text area already selected without pasting the password to the clipboard.
-  #+BEGIN_SRC fish
-    for arg in $argv
-        switch $arg
-            case '--type' '-t' 'type'
-                set -g TYPE "yes"
-            case '*'
-                printf 'Unknown argument: %s\n.' $arg
-                exit 1
-        end
-    end
-  #+END_SRC
+Let’s parse all the arguments passed to the script. If one of them is =--type=, =-t= or =type=, the script will attempt to type the password to the text area already selected without pasting the password to the clipboard.
+#+BEGIN_SRC fish
+  for arg in $argv
+      switch $arg
+          case '--type' '-t' 'type'
+              set -g TYPE "yes"
+          case '*'
+              printf 'Unknown argument: %s\n.' $arg
+              exit 1
+      end
+  end
+#+END_SRC
 
-  Now, let’s get the list of the passwords that exist in our =pass= repository.
-  #+BEGIN_SRC fish
-    set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
-    string replace -r ".*.password-store/" "" | \
-    string replace -r ".gpg" "" | sort)
-  #+END_SRC
+Now, let’s get the list of the passwords that exist in our =pass= repository.
+#+BEGIN_SRC fish
+  set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
+  string replace -r ".*.password-store/" "" | \
+  string replace -r ".gpg" "" | sort)
+#+END_SRC
 
-  Let the user choose which password they wish to select.
-  #+BEGIN_SRC fish
-    set password (for elem in $passwords
-        echo $elem
-    end | rofi -dmenu -i -p "Select your password")
-  #+END_SRC
+Let the user choose which password they wish to select.
+#+BEGIN_SRC fish
+  set password (for elem in $passwords
+      echo $elem
+  end | rofi -dmenu -i -p "Select your password")
+#+END_SRC
 
-  Let’s  verify we  actually selected  a  password and  not just  exited. If  no
-  password was selected, let’s simply exit the script.
-  #+BEGIN_SRC fish
-    if test -z $password
-        exit
-    end
-  #+END_SRC
+Let’s verify we actually selected a password and not just exited. If no password was selected, let’s simply exit the script.
+#+BEGIN_SRC fish
+  if test -z $password
+      exit
+  end
+#+END_SRC
 
-  Depending  on the  arguments  passed  earlier, we  might  want some  different
-  behavior.
-  #+BEGIN_SRC fish :noweb yes
-    if test $TYPE = "yes"
-        <<rofi-pass-type>>
-    else
-        <<rofi-pass-copy>>
-    end
-  #+END_SRC
+Depending on the arguments passed earlier, we might want some different behavior.
+#+BEGIN_SRC fish :noweb yes
+  if test $TYPE = "yes"
+      <<rofi-pass-type>>
+  else
+      <<rofi-pass-copy>>
+  end
+#+END_SRC
 
-  The default behavior is to copy the  password to the clipboard for 45 seconds,
-  so let’s do that.
-  #+NAME: rofi-pass-copy
-  #+BEGIN_SRC fish :noweb yes :tangle no
-    pass show -c $password 2> /dev/null
-  #+END_SRC
+The default behavior is to copy the password to the clipboard for 45 seconds, so let’s do that.
+#+NAME: rofi-pass-copy
+#+BEGIN_SRC fish :noweb yes :tangle no
+  pass show -c $password 2> /dev/null
+#+END_SRC
 
-  Else, if we passed  =--type=, =-t= or =type= as an argument  of the script, we
-  want it to attempt to type our  password in the currently selected text input.
-  Let’s do that.
-  #+NAME: rofi-pass-type
-  #+BEGIN_SRC fish :noweb yes :tangle no
-    set -l IFS
-    <<rofi-pass-type-get-password>>
-    printf %s $pass | xvkbd -file -
-  #+END_SRC
+Else, if we passed =--type=, =-t= or =type= as an argument of the script, we want it to attempt to type our password in the currently selected text input. Let’s do that.
+#+NAME: rofi-pass-type
+#+BEGIN_SRC fish :noweb yes :tangle no
+  set -l IFS
+  <<rofi-pass-type-get-password>>
+  printf %s $pass | xvkbd -file -
+#+END_SRC
 
-  To correctly  get the password  from =pass=, we need  to parse the  output and
-  only get the first line, hence the following command.
-  #+NAME: rofi-pass-type-get-password
-  #+BEGIN_SRC fish :tangle no
-  set pass (pass show $password | string split -n \n)[1]
-  #+END_SRC
+To correctly get the password from ~pass~, we need to parse the output and only get the first line, hence the following command.
+#+NAME: rofi-pass-type-get-password
+#+BEGIN_SRC fish :tangle no
+set pass (pass show $password | string split -n \n)[1]
+#+END_SRC
 
 * Rofi-umount
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
   :CUSTOM_ID: Rofi-umount-ddde1667
   :END:
-  =rofiumount=  is the  counterpart of  =rofimount= for  unmounting our  mounted
-  partitions.
+~rofiumount~ is the counterpart of ~rofimount~ for unmounting our mounted partitions.
 
 ** Get the unmountable drives
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
    :END:
-   First, we will need to list all the drives that can be safely unmounted.
-   Let’s run this.
-   #+BEGIN_SRC fish
-     set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
-     awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
-   #+END_SRC
+First, we will need to list all the drives that can be safely unmounted. Let’s run this.
+#+BEGIN_SRC fish
+  set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
+  awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
+#+END_SRC
 
-   Now, let’s get the android devices that are mounted.
-   #+BEGIN_SRC fish
-   set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
-   #+END_SRC
+Now, let’s get the android devices that are mounted.
+#+BEGIN_SRC fish
+set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
+#+END_SRC
 
-   And let’s get the CD drives that are mounted.
-   #+BEGIN_SRC fish
-   set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
-   #+END_SRC
+And let’s get the CD drives that are mounted.
+#+BEGIN_SRC fish
+set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
+#+END_SRC
 
-   We’ll store all of our information in a temporary file, =/tmp/undrives=.
-   #+BEGIN_SRC fish
-   set -g undrivefile /tmp/undrives
-   #+END_SRC
+We’ll store all of our information in a temporary file, =/tmp/undrives=.
+#+BEGIN_SRC fish
+set -g undrivefile /tmp/undrives
+#+END_SRC
 
-   Let’s make sure we begin with a clean, empty file.
-   #+BEGIN_SRC fish
-     rm -f $undrivefile
-     touch $undrivefile
-   #+END_SRC
+Let’s make sure we begin with a clean, empty file.
+#+BEGIN_SRC fish
+  rm -f $undrivefile
+  touch $undrivefile
+#+END_SRC
 
-   Depending on if  the related variables are set, write  the different types of
-   mounted drives in the temporary file.
-   #+BEGIN_SRC fish
-     test -n "$drives" && echo "USB" >> $undrivefile
-     test -n "$cds" && echo "CD" >> $undrivefile
-     test -n "$androids" && echo "Android" >> $undrivefile
-   #+END_SRC
+Depending on if the related variables are set, write the different types of mounted drives in the temporary file.
+#+BEGIN_SRC fish
+  test -n "$drives" && echo "USB" >> $undrivefile
+  test -n "$cds" && echo "CD" >> $undrivefile
+  test -n "$androids" && echo "Android" >> $undrivefile
+#+END_SRC
 
 ** Unmount disk partitions
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
    :END:
-   The  function =unmountusb=  will take  care of  unmounting any  drive we  can
-   safely unmount. First, let’s declare the function.
-   #+BEGIN_SRC fish
-   function unmountusb
-   #+END_SRC
+The function =unmountusb= will take care of unmounting any drive we can safely unmount. First, let’s declare the function.
+#+BEGIN_SRC fish
+function unmountusb
+#+END_SRC
 
-   Let’s chose the drive to unmount with rofi.
-   #+BEGIN_SRC fish
-     set chosen (echo $drives | \
-     rofi -dmenu -i -p "Unmount which drive?" | \
-     awk '{print $1}')
-   #+END_SRC
+Let’s chose the drive to unmount with rofi.
+#+BEGIN_SRC fish
+  set chosen (echo $drives | \
+  rofi -dmenu -i -p "Unmount which drive?" | \
+  awk '{print $1}')
+#+END_SRC
 
-   Let’s verify if the user actually selected  any drive. If no, let’s abort the
-   script.
-   #+BEGIN_SRC fish
-   test -z "$chosen" && exit 0
-   #+END_SRC
+Let’s verify if the user actually selected any drive. If no, let’s abort the script.
+#+BEGIN_SRC fish
+test -z "$chosen" && exit 0
+#+END_SRC
 
-   Now, let’s unmount  the chosen drive and  send a notification if  it has been
-   done.
-   #+BEGIN_SRC fish
-     sudo -A umount $chosen && \
-     notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
-   #+END_SRC
+Now, let’s unmount the chosen drive and send a notification if it has been done.
+#+BEGIN_SRC fish
+  sudo -A umount $chosen && \
+  notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
 
-   Now, let’s close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Now, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Unmount Android device
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
    :END:
-   The  function  =unmountandroid= will  take  care  of unmounting  any  mounted
-   Android device. First, let’s declare our function.
-   #+BEGIN_SRC fish
-   function unmountandroid
-   #+END_SRC
+The function =unmountandroid= will take care of unmounting any mounted Android device. First, let’s declare our function.
+#+BEGIN_SRC fish
+function unmountandroid
+#+END_SRC
 
-   Let the user choose which Android device to unmount.
-   #+BEGIN_SRC fish
-   set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
-   #+END_SRC
+Let the user choose which Android device to unmount.
+#+BEGIN_SRC fish
+set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
+#+END_SRC
 
-   We’ll verify the user chose any device.
-   #+BEGIN_SRC fish
-     test -z "$chosen" && exit 0
-   #+END_SRC
+We’ll verify the user chose any device.
+#+BEGIN_SRC fish
+  test -z "$chosen" && exit 0
+#+END_SRC
 
-   If a device has been chosen, let’s  unmount it and send a notification it has
-   been successfuly unmounted.
-   #+BEGIN_SRC fish
-     sudo -A umount -l $chosen && \
-     notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
-   #+END_SRC
+If a device has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
+#+BEGIN_SRC fish
+  sudo -A umount -l $chosen && \
+  notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
 
-   Finally, let’s close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Finally, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Unmount CD drive
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
    :END:
-   =unmountcd= will take care of unmounting any mounted CD drive. Let’s declare
-   this function.
-   #+BEGIN_SRC fish
-   function unmountcd
-   #+END_SRC
+=unmountcd= will take care of unmounting any mounted CD drive. Let’s declare this function.
+#+BEGIN_SRC fish
+function unmountcd
+#+END_SRC
 
-   As before, let the user chose which CD drive to unmount.
-   #+BEGIN_SRC fish
-   set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
-   #+END_SRC
+As before, let the user chose which CD drive to unmount.
+#+BEGIN_SRC fish
+set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
+#+END_SRC
 
-   We’ll verify the user chose any device.
-   #+BEGIN_SRC fish
-     test -z "$chosen" && exit 0
-   #+END_SRC
+We’ll verify the user chose any device.
+#+BEGIN_SRC fish
+  test -z "$chosen" && exit 0
+#+END_SRC
 
-   If a drive has  been chosen, let’s unmount it and send  a notification it has
-   been successfuly unmounted.
-   #+BEGIN_SRC fish
-     sudo -A umount -l $chosen && \
-     notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
-   #+END_SRC
+If a drive has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
+#+BEGIN_SRC fish
+  sudo -A umount -l $chosen && \
+  notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
 
-   Now, let’s close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Now, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Ask what type of drive to unmount
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
    :END:
-   If several  types of  unmountable drives  are available,  let’s ask  the user
-   which type to unmount based on the  content of the temporary file declared in
-   [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
-   #+BEGIN_SRC fish
-   function asktype
-   #+END_SRC
+If several types of unmountable drives are available, let’s ask the user which type to unmount based on the content of the temporary file declared in [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
+#+BEGIN_SRC fish
+function asktype
+#+END_SRC
 
-   Let’s create a switch statement to which  will be passed the selection of the
-   user from rofi.
-   #+BEGIN_SRC fish
-     switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
-   #+END_SRC
+Let’s create a switch statement to which will be passed the selection of the user from rofi.
+#+BEGIN_SRC fish
+  switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
+#+END_SRC
 
-   Three types of values can be returned: "USB", "CD", or "Android". These
-   values will be used to launch their corresponding function.
-   #+BEGIN_SRC fish
-     case 'USB'
-         unmountusb
-     case 'CD'
-         unmountcd
-     case 'Android'
-         unmountandroid
-   #+END_SRC
+Three types of values can be returned: "USB", "CD", or "Android". These values will be used to launch their corresponding function.
+#+BEGIN_SRC fish
+  case 'USB'
+      unmountusb
+  case 'CD'
+      unmountcd
+  case 'Android'
+      unmountandroid
+#+END_SRC
 
-   Let’s close the switch statement.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Let’s close the switch statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
-   Let’s now close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Let’s now close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Launch the unmounting functions
    :PROPERTIES:
    :CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
    :END:
-   Now back to the  body of our script, let’s input in a  switch case the number
-   of lines contained in our temporary file.
-   #+BEGIN_SRC fish
-   switch (wc -l < $undrivefile)
-   #+END_SRC
+Now back to the body of our script, let’s input in a switch case the number of lines contained in our temporary file.
+#+BEGIN_SRC fish
+switch (wc -l < $undrivefile)
+#+END_SRC
 
-   If the file containes no lines. i.e. it is empty, nothing is to be unmounted.
-   Let’s inform the user of that.
-   #+BEGIN_SRC fish
-     case 0
-         notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
-   #+END_SRC
+If the file containes no lines. i.e. it is empty, nothing is to be unmounted. Let’s inform the user of that.
+#+BEGIN_SRC fish
+  case 0
+      notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
+#+END_SRC
 
-   Else, if there is only one type  of drive, we’ll automatically let our script
-   choose based on the content of this sole line.
-   #+BEGIN_SRC fish
-     case 1
-         switch (cat $undrivefile)
-             case 'USB'
-                 unmountusb
-             case 'CD'
-                 unmountcd
-             case 'Android'
-                 unmountandroid
-         end
-   #+END_SRC
+Else, if there is only one type of drive, we’ll automatically let our script choose based on the content of this sole line.
+#+BEGIN_SRC fish
+  case 1
+      switch (cat $undrivefile)
+          case 'USB'
+              unmountusb
+          case 'CD'
+              unmountcd
+          case 'Android'
+              unmountandroid
+      end
+#+END_SRC
 
-   And if there are more types than one, let’s ask the user.
-   #+BEGIN_SRC fish
-   case '*'
-        asktype
-   #+END_SRC
+And if there are more types than one, let’s ask the user.
+#+BEGIN_SRC fish
+case '*'
+     asktype
+#+END_SRC
 
-   Let’s close our main switch statement.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Let’s close our main switch statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
-   And finally, let’s delete our temporary file.
-   #+BEGIN_SRC fish
-   rm -f $undrivefile
-   #+END_SRC
+And finally, let’s delete our temporary file.
+#+BEGIN_SRC fish
+rm -f $undrivefile
+#+END_SRC
 
 * set-screens
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
   :CUSTOM_ID: set-screens-01bd989a
   :END:
-  ~set-screens~ is a  small script that allows the user  to automatically set up
-  an external monitor. First, let’s set some  variables so we don’t have to type
-  in hidden places some values that should be easily modifiable.
-  #+BEGIN_SRC fish
-    set internal "eDP1"
-    set external "HDMI1"
-  #+END_SRC
+~set-screens~ is a small script that allows the user to automatically set up an external monitor. First, let’s set some variables so we don’t have to type in hidden places some values that should be easily modifiable.
+#+BEGIN_SRC fish
+  set internal "eDP1"
+  set external "HDMI1"
+#+END_SRC
 
-  Now, let’s  set the  ~DETECTEDSCREEN~ variable  with a  simple ~grep~.  If the
-  variable  turns out  to be  empty, this  means the  display was  not detected.
-  However, if  it’s not, then  it will  be an array  with its second  value that
-  holds the  maximum resolution the  display can handle.  It needs to  be passed
-  through ~awk~ in order  to get only the resolution itself  and not the refresh
-  rate, but  once we’ve got that,  we can set  our external monitor as  the main
-  monitor with its maximum resolution. i3 is also restarted in order to properly
-  display the wallpaper and Polybar on the new screen.
-  #+BEGIN_SRC fish
-    set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
-    if test -n "$externaldisplay"
-        set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
-        xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
-    end
-  #+END_SRC
+Now, let’s set the ~DETECTEDSCREEN~ variable with a simple ~grep~. If the variable turns out to be empty, this means the display was not detected. However, if it’s not, then it will be an array with its second value that holds the maximum resolution the display can handle. It needs to be passed through ~awk~ in order to get only the resolution itself and not the refresh rate, but once we’ve got that, we can set our external monitor as the main monitor with its maximum resolution. i3 is also restarted in order to properly display the wallpaper and Polybar on the new screen.
+#+BEGIN_SRC fish
+  set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
+  if test -n "$externaldisplay"
+      set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
+      xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
+  end
+#+END_SRC
 
 * sshbind
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
   :CUSTOM_ID: sshbind-756fabb1
   :END:
-  Something that I did  not know for quite some time but  that is actually crazy
-  useful about SSH is its ability to  bind locally the port of a remote machine,
-  and  vice versa.  The syntax  is actually  very simple,  but I  prefer a  more
-  intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
-  #+BEGIN_SRC fish
-    ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
-  #+END_SRC
+Something that I did not know for quite some time but that is actually crazy useful about SSH is its ability to bind locally the port of a remote machine, and vice versa. The syntax is actually very simple, but I prefer a more intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
+#+BEGIN_SRC fish
+  ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
+#+END_SRC
 
 * Starwars
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
   :CUSTOM_ID: Starwars-654f8637
   :END:
-  This is a one-liner that allows you to  watch Star Wars episode 4 in ASCII art
-  in your terminal. Here is the code:
-  #+BEGIN_SRC fish
-    telnet towel.blinkenlights.nl
-  #+END_SRC
+This is a one-liner that allows you to watch Star Wars episode 4 in ASCII art in your terminal. Here is the code:
+#+BEGIN_SRC fish
+  telnet towel.blinkenlights.nl
+#+END_SRC
 
 * Toggle touchpad tapping
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
   :CUSTOM_ID: Toggle_touchpad_tapping-23348b00
   :END:
-  For some reasons, my firmware does not recognize the function key for toggling
-  the touchpad.  I’m not  going to  really complain  about it  since it  lets me
-  program it like I want. Since I  often don’t need to completely deactivate the
-  touchpad, I’ll instead toggle whether tapping  is enabled or not when pressing
-  ~XF86TouchpadToggle~.  And  for that,  I  need  this  small script  that  will
-  actually toggle it, and it will be used in my window manager configuration.
+For some reasons, my firmware does not recognize the function key for toggling the touchpad. I’m not going to really complain about it since it lets me program it like I want. Since I often don’t need to completely deactivate the touchpad, I’ll instead toggle whether tapping is enabled or not when pressing ~XF86TouchpadToggle~. And for that, I need this small script that will actually toggle it, and it will be used in my window manager configuration.
 
-  First let’s declare some variables to  make this script more personal. With my
-  current  computer (a  Gazelle by  System76), the  name of  my touchpad  is the
-  following:
-  #+BEGIN_SRC fish
-    set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
-  #+END_SRC
+First let’s declare some variables to make this script more personal. With my current computer (a Gazelle by System76), the name of my touchpad is the following:
+#+BEGIN_SRC fish
+  set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
+#+END_SRC
 
-  Let’s now get the identifier of the touchpad for ~xinput~:
-  #+BEGIN_SRC fish
-    set TPID (xinput list | grep $TPNAME | awk '{print $6}' | sed 's|id=\(.*\)|\1|g')
-  #+END_SRC
+Let’s now get the identifier of the touchpad for ~xinput~:
+#+BEGIN_SRC fish
+  set TPID (xinput list | grep $TPNAME | awk '{print $6}' | sed 's|id=\(.*\)|\1|g')
+#+END_SRC
 
-  Now, let’s detect the current status of the touchpad:
-  #+BEGIN_SRC fish
-    set TPSTATUS (xinput list-props $TPID | grep "Tapping Enabled" | \
-                  grep -v "Default" | awk '{print $5}')
-  #+END_SRC
+Now, let’s detect the current status of the touchpad:
+#+BEGIN_SRC fish
+  set TPSTATUS (xinput list-props $TPID | grep "Tapping Enabled" | \
+                grep -v "Default" | awk '{print $5}')
+#+END_SRC
 
-  This will  set ~TPSTATUS~ either  to ~0~, meaning  tapping is disabled,  or to
-  ~1~, meaning it’s enabled. I will consider any other value as being disabled.
-  #+BEGIN_SRC fish
-    test [[ $TPSTATUS = "1" ]] && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
-  #+END_SRC
+This will set ~TPSTATUS~ either to ~0~, meaning tapping is disabled, or to ~1~, meaning it’s enabled. I will consider any other value as being disabled.
+#+BEGIN_SRC fish
+  test [[ $TPSTATUS = "1" ]] && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
+#+END_SRC
 
-  Finally, let’s update the touchpad’s options:
-  #+BEGIN_SRC fish
-    xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
-  #+END_SRC
+Finally, let’s update the touchpad’s options:
+#+BEGIN_SRC fish
+  xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
+#+END_SRC
 
 * UpdateFlutter
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
   :CUSTOM_ID: UpdateFlutter-1e8fbeb7
   :END:
-  This is a simple utility to be ran when the ~flutter~ package is updated.
-  #+BEGIN_SRC fish
-    sudo chown -R :flutterusers /opt/flutter
-    sudo chmod -R g+w /opt/flutter
-    sudo chmod a+rw /opt/flutter/version
-    sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
-  #+END_SRC
+This is a simple utility to be ran when the ~flutter~ package is updated.
+#+BEGIN_SRC fish
+  sudo chown -R :flutterusers /opt/flutter
+  sudo chmod -R g+w /opt/flutter
+  sudo chmod a+rw /opt/flutter/version
+  sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
+#+END_SRC
 
 * Wacom setup
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
   :CUSTOM_ID: Wacom_setup-331fb024
   :END:
-  I made a small and quick utility to set up my Wacom tablet so it is only bound
-  to one screen.
+I made a small and quick utility to set up my Wacom tablet so it is only bound to one screen.
 
 ** Set our variables
    :PROPERTIES:
    :CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
    :END:
-   Let’s first declare our function that will be called to set our variables.
-   #+BEGIN_SRC fish
-   function set_device
-   #+END_SRC
+Let’s first declare our function that will be called to set our variables.
+#+BEGIN_SRC fish
+function set_device
+#+END_SRC
 
-   We need some variables in order to correctly set our tablet. First, let’s get
-   declare what the name of our tablet is, and what the name of its touchpad is.
-   #+BEGIN_SRC fish
-     set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
-     set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
-   #+END_SRC
+We need some variables in order to correctly set our tablet. First, let’s get declare what the name of our tablet is, and what the name of its touchpad is.
+#+BEGIN_SRC fish
+  set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
+  set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
+#+END_SRC
 
-   We will also  modify two settings: the  speed of the cursor  on the touchpad,
-   and the scroll speed. Let’s declare the name of these two settings.
-   #+BEGIN_SRC fish
-     set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
-     set -g WACOMPROPSCROLLPSEED "ScrollDistance"
-   #+END_SRC
+We will also modify two settings: the speed of the cursor on the touchpad, and the scroll speed. Let’s declare the name of these two settings.
+#+BEGIN_SRC fish
+  set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
+  set -g WACOMPROPSCROLLPSEED "ScrollDistance"
+#+END_SRC
 
-   To get the correct values for the area  it can cover, we’ll need to reset our
-   tablet.
-   #+BEGIN_SRC fish
-   xsetwacom set "$DEVICE" ResetArea
-   #+END_SRC
+To get the correct values for the area it can cover, we’ll need to reset our tablet.
+#+BEGIN_SRC fish
+xsetwacom set "$DEVICE" ResetArea
+#+END_SRC
 
-   Now we can get the X and Y areas.
-   #+BEGIN_SRC fish
-     set -l AREATOT (xsetwacom get "$DEVICE" Area)
-     set -g AREAX (echo $AREATOT | awk '{print $3}')
-     set -g AREAY (echo $AREATOT | awk '{print $4}')
-   #+END_SRC
+Now we can get the X and Y areas.
+#+BEGIN_SRC fish
+  set -l AREATOT (xsetwacom get "$DEVICE" Area)
+  set -g AREAX (echo $AREATOT | awk '{print $3}')
+  set -g AREAY (echo $AREATOT | awk '{print $4}')
+#+END_SRC
 
-   Now let’s close our function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Now let’s close our function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Select our screen
    :PROPERTIES:
    :CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
    :END:
-   This function will allow us to select  the screen on which the tablet will be
-   active.  We can  also select  the option  “desktop” so  that all  screens are
-   selected. Let’s declare our function.
-   #+BEGIN_SRC fish
-   function set_screen
-   #+END_SRC
+This function will allow us to select the screen on which the tablet will be active. We can also select the option “desktop” so that all screens are selected. Let’s declare our function.
+#+BEGIN_SRC fish
+function set_screen
+#+END_SRC
 
-   First, let’s set what screens are available, including the desktop option.
-   #+BEGIN_SRC fish
-     set CONNECTED_DISPLAYS (xrandr -q --current | \
-     sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
-   #+END_SRC
+First, let’s set what screens are available, including the desktop option.
+#+BEGIN_SRC fish
+  set CONNECTED_DISPLAYS (xrandr -q --current | \
+  sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
+#+END_SRC
 
-   Now, let’s select the one we wish to use using rofi.
-   #+BEGIN_SRC fish
-     set -g SCREEN (for d in $CONNECTED_DISPLAYS
-         echo $d
-     end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
-   #+END_SRC
+Now, let’s select the one we wish to use using rofi.
+#+BEGIN_SRC fish
+  set -g SCREEN (for d in $CONNECTED_DISPLAYS
+      echo $d
+  end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
+#+END_SRC
 
-   Now, let’s get the resolution of our selected screen.
-   #+BEGIN_SRC fish
-     set -l LINE (xrandr -q --current | if [ "$SCREEN" = "desktop" ]
-         sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
-     else
-         sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
-     end)
-   #+END_SRC
+Now, let’s get the resolution of our selected screen.
+#+BEGIN_SRC fish
+  set -l LINE (xrandr -q --current | if [ "$SCREEN" = "desktop" ]
+      sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
+  else
+      sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
+  end)
+#+END_SRC
 
-   From that, let’s get the vertical and horizontal resolution of our screen.
-   #+BEGIN_SRC fish
-   echo $LINE | read -g WIDTH HEIGHT
-   #+END_SRC
+From that, let’s get the vertical and horizontal resolution of our screen.
+#+BEGIN_SRC fish
+echo $LINE | read -g WIDTH HEIGHT
+#+END_SRC
 
-   If any of our =WIDTH= ou =HEIGHT= it empty, we’ll have to abort the script.
-   #+BEGIN_SRC fish
-     if test -z $WIDTH || test -z $HEIGHT
-         exit 1
-     end
-   #+END_SRC
+If any of our ~WIDTH~ ou ~HEIGHT~ it empty, we’ll have to abort the script.
+#+BEGIN_SRC fish
+  if test -z $WIDTH || test -z $HEIGHT
+      exit 1
+  end
+#+END_SRC
 
-   Let’s close our function now.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Let’s close our function now.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Adjust the tablet
    :PROPERTIES:
    :CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
    :END:
-   This function  will take care  of adjusting our  tablet to our  screen. Let’s
-   declare our function.
-   #+BEGIN_SRC fish
-   function adjust_device
-   #+END_SRC
+This function will take care of adjusting our tablet to our screen. Let’s declare our function.
+#+BEGIN_SRC fish
+function adjust_device
+#+END_SRC
 
-   If our screen is too high or too  wide for our tablet, we will have to adjust
-   the  height or  width  of the  area  used by  the tablet.  So  let’s get  the
-   theoretical new height and width of the area.
-   #+BEGIN_SRC fish
-     set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
-     set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
-   #+END_SRC
+If our screen is too high or too wide for our tablet, we will have to adjust the height or width of the area used by the tablet. So let’s get the theoretical new height and width of the area.
+#+BEGIN_SRC fish
+  set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
+  set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
+#+END_SRC
 
-   Now,  if  the  current height  of  the  tablet’s  area  is greater  than  the
-   theoretical new  area, it means the  current area is too  high. Otherwise, it
-   should be the other way around. Let’s set =NEWAREAX= and =NEWAREAY= that will
-   be used to set the new area for the tablet.
+Now, if the current height of the tablet’s area is greater than the theoretical new area, it means the current area is too high. Otherwise, it should be the other way around. Let’s set =NEWAREAX= and =NEWAREAY= that will be used to set the new area for the tablet.
+#+BEGIN_SRC fish
+  if test $AREAY -gt $RATIOAREAY
+      set -g NEWAREAX $AREAX
+      set -g NEWAREAY $RATIOAREAY
+  else
+      set -g NEWAREAX $RATIOAREAX
+      set -g NEWAREAY $AREAY
+  end
+#+END_SRC
 
-   #+BEGIN_SRC fish
-     if test $AREAY -gt $RATIOAREAY
-         set -g NEWAREAX $AREAX
-         set -g NEWAREAY $RATIOAREAY
-     else
-         set -g NEWAREAX $RATIOAREAX
-         set -g NEWAREAY $AREAY
-     end
-   #+END_SRC
+Alright, now let’s set the new area with these new variables.
+#+BEGIN_SRC fish
+  xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
+  xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
+#+END_SRC
 
-   Alright, now let’s set the new area with these new variables.
-   #+BEGIN_SRC fish
-     xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
-     xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
-   #+END_SRC
+Let’s slow down the cursor’s speed on the touchpad.
+#+BEGIN_SRC fish
+xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
+#+END_SRC
 
-   Let’s slow down the cursor’s speed on the touchpad.
-   #+BEGIN_SRC fish
-   xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
-   #+END_SRC
+Let’s also slow down the scroll speed of the touchpad.
+#+BEGIN_SRC fish
+  xsetwacom set $DEVICETOUCH $WACOMPROPSCROLLPSEED "90"
+#+END_SRC
 
-   Let’s also slow down the scroll speed of the touchpad.
-   #+BEGIN_SRC fish
-     xsetwacom set $DEVICETOUCH $WACOMPROPSCROLLPSEED "90"
-   #+END_SRC
-
-   Now, let’s close the function.
-   #+BEGIN_SRC fish
-   end
-   #+END_SRC
+Now, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
 
 ** Lauch the functions
    :PROPERTIES:
    :CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
    :END:
-   Back  to the  main  body of  the  script,  we can  now  launch the  functions
-   sequencially.
-   #+BEGIN_SRC fish
-     set_device
-     set_screen
-     adjust_device
-   #+END_SRC
+Back to the main body of the script, we can now launch the functions sequencially.
+#+BEGIN_SRC fish
+  set_device
+  set_screen
+  adjust_device
+#+END_SRC
 
 * Weather
   :PROPERTIES:
   :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
   :CUSTOM_ID: Weather-4ed00bb0
   :END:
-  A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get
-  a weather forecast in the terminal. By default, I want the request to be about
-  the city I  live in, but it is  also possible for the script to  accept as its
-  arguments a search inquiry.
-  #+BEGIN_SRC fish
-    if count $argv > /dev/null
-        set -l SEARCH (string join '+' $argv)
-        curl http://v2.wttr.in/~$SEARCH
-    else
-        curl http://v2.wttr.in/Aubervilliers
-    end
-  #+END_SRC
+A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a weather forecast in the terminal. By default, I want the request to be about the city I live in, but it is also possible for the script to accept as its arguments a search inquiry.
+#+BEGIN_SRC fish
+  if count $argv > /dev/null
+      set -l SEARCH (string join '+' $argv)
+      curl http://v2.wttr.in/~$SEARCH
+  else
+      curl http://v2.wttr.in/Aubervilliers
+  end
+#+END_SRC

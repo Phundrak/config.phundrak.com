@@ -10,134 +10,106 @@
   :PROPERTIES:
   :CUSTOM_ID: Introduction-7e535842
   :END:
-  *Before proceeding,  be aware  that I  deprecated this  nano config  on August
-  28th, 2020, meaning I  won’t update it anymore unless I use  it again some day
-  in the future. I will keep it on my website though.*
+*Before proceeding, be aware that I deprecated this nano config on August 28th, 2020, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
 
-  I nowadays rarely use Nano as a text  editor, since I mainly rely on Emacs for
-  all sorts  of tasks, including  quick file  editing. However, at  times, Emacs
-  won’t work or won’t be available, and I therefore need a lightweight, fast and
-  reliable text editor: Nano. And despite Nano being a simple piece of software,
-  it does offer some customization I cannot refuse. Here is how I configured it:
+I nowadays rarely use Nano as a text editor, since I mainly rely on Emacs for all sorts of tasks, including quick file editing. However, at times, Emacs won’t work or won’t be available, and I therefore need a lightweight, fast and reliable text editor: Nano. And despite Nano being a simple piece of software, it does offer some customization I cannot refuse. Here is how I configured it:
 
 * Configuration
   :PROPERTIES:
   :CUSTOM_ID: Configuration-b55668a7
   :END:
-  When saving a file, create a backup file by adding a tilde (=~=) to the file's
-  name. And make and keep not just one backup file, but make and keep a uniquely
-  numbered one every time  a file is saved — when backups  are enabled with =set
-  backup= or =--backup=  or =-B=. The uniquely numbered files  are stored in the
-  directory =~/.cache/nano/backups/=.
-  #+BEGIN_SRC conf
-    set backup
-    set backupdir /home/phundrak/.cache/nano/backups/
-  #+END_SRC
+When saving a file, create a backup file by adding a tilde (=~=) to the file's name. And make and keep not just one backup file, but make and keep a uniquely numbered one every time a file is saved — when backups are enabled with =set backup= or =--backup= or =-B=. The uniquely numbered files are stored in the directory =~/.cache/nano/backups/=.
+#+BEGIN_SRC conf
+  set backup
+  set backupdir /home/phundrak/.cache/nano/backups/
+#+END_SRC
 
-  Save a file by default in  Unix format. This overrides nano's default behavior
-  of saving a  file in the format that  it had. (This option has  no effect when
-  you also use =set noconvert=.)
-  #+BEGIN_SRC conf
-    set unix
-  #+END_SRC
+Save a file by default in Unix format. This overrides nano's default behavior of saving a file in the format that it had. (This option has no effect when you also use =set noconvert=.)
+#+BEGIN_SRC conf
+  set unix
+#+END_SRC
 
 ** Keys behavior
    :PROPERTIES:
    :CUSTOM_ID: Configuration-Keys_behavior-c665fa36
    :END:
-   Make the  Home key  smarter. When Home  is pressed anywhere  but at  the very
-   beginning of  non-whitespace characters on  a line,  the cursor will  jump to
-   that beginning  (either forwards or backwards).  If the cursor is  already at
-   that position, it will jump to the true beginning of the line.
-   #+BEGIN_SRC conf
-     set smarthome
-   #+END_SRC
+Make the Home key smarter. When Home is pressed anywhere but at the very beginning of non-whitespace characters on a line, the cursor will jump to that beginning (either forwards or backwards). If the cursor is already at that position, it will jump to the true beginning of the line.
+#+BEGIN_SRC conf
+  set smarthome
+#+END_SRC
 
 ** Search
    :PROPERTIES:
    :CUSTOM_ID: Configuration-Search-6e458076
    :END:
-   Do case-unsensitive searches by default.
-   #+BEGIN_SRC conf
-     unset casesensitive
-   #+END_SRC
+Do case-unsensitive searches by default.
+#+BEGIN_SRC conf
+  unset casesensitive
+#+END_SRC
 
-   Do regular-expression searches by default.  Regular expressions in =nano= are
-   of the extended type (ERE).
-   #+BEGIN_SRC conf
-     set regexp
-   #+END_SRC
+Do regular-expression searches by default. Regular expressions in =nano= are of the extended type (ERE).
+#+BEGIN_SRC conf
+  set regexp
+#+END_SRC
 
 ** Visual settings
    :PROPERTIES:
    :CUSTOM_ID: Configuration-Visual_settings-9952f2ae
    :END:
-   Use bold instead of reverse video for  the title bar, status bar, key combos,
-   function tags,  line numbers, and  selected text.  This can be  overridden by
-   setting the options =titlecolor=, =statuscolor=, =keycolor=, =functioncolor=,
-   =numbercolor=, and =selectedcolor=.
-   #+BEGIN_SRC conf
-     set boldtext
-   #+END_SRC
+Use bold instead of reverse video for the title bar, status bar, key combos, function tags, line numbers, and selected text. This can be overridden by setting the options =titlecolor=, =statuscolor=, =keycolor=, =functioncolor=, =numbercolor=, and =selectedcolor=.
+#+BEGIN_SRC conf
+  set boldtext
+#+END_SRC
 
-   Enable soft line wrapping for easier viewing of very long lines.
-   #+BEGIN_SRC conf
-    set softwrap
-   #+END_SRC
+Enable soft line wrapping for easier viewing of very long lines.
+#+BEGIN_SRC conf
+ set softwrap
+#+END_SRC
 
-   When soft  line wrapping is enabled,  make it wrap lines  at blank characters
-   (tabs and spaces) instead of always at the edge of the screen.
-   #+BEGIN_SRC conf
-     set atblanks
-   #+END_SRC
+When soft line wrapping is enabled, make it wrap lines at blank characters (tabs and spaces) instead of always at the edge of the screen.
+#+BEGIN_SRC conf
+  set atblanks
+#+END_SRC
 
-   Display line numbers to the left of the text area.
-   #+BEGIN_SRC conf
-     set linenumbers
-   #+END_SRC
+Display line numbers to the left of the text area.
+#+BEGIN_SRC conf
+  set linenumbers
+#+END_SRC
 
-   Constantly display the cursor position in  the status bar. This overrides the
-   option =quickblank=.
-   #+BEGIN_SRC conf
-     set constantshow
-   #+END_SRC
+Constantly display the cursor position in the status bar. This overrides the option =quickblank=.
+#+BEGIN_SRC conf
+  set constantshow
+#+END_SRC
 
 ** Whitespace settings
    :PROPERTIES:
    :CUSTOM_ID: Configuration-Whitespace_settings-8cef9cd7
    :END:
-  Convert typed tabs to spaces. Sue me.
-  #+BEGIN_SRC conf
-    set tabstospaces
-  #+END_SRC
+Convert typed tabs to spaces. Sue me.
+#+BEGIN_SRC conf
+  set tabstospaces
+#+END_SRC
 
-  Use a  tab size of a  certain amount of columns.  The value of number  must be
-  greater than 0. The default value is 8.
-  #+BEGIN_SRC conf
-  set tabsize 2
-  #+END_SRC
+Use a tab size of a certain amount of columns. The value of number must be greater than 0. The default value is 8.
+#+BEGIN_SRC conf
+set tabsize 2
+#+END_SRC
 
-  Automatically indent  a newly created line  to the same number  of tabs and/or
-  spaces as the previous  line (or as the next line if the  previous line is the
-  beginning of a paragraph).
-  #+BEGIN_SRC conf
-    set autoindent
-  #+END_SRC
+Automatically indent a newly created line to the same number of tabs and/or spaces as the previous line (or as the next line if the previous line is the beginning of a paragraph).
+#+BEGIN_SRC conf
+  set autoindent
+#+END_SRC
 
-  Remove  trailing whitespace  from wrapped  lines when  automatic hard-wrapping
-  occurs or when text is justified.
-  #+BEGIN_SRC conf
-  set trimblanks
-  #+END_SRC
+Remove trailing whitespace from wrapped lines when automatic hard-wrapping occurs or when text is justified.
+#+BEGIN_SRC conf
+set trimblanks
+#+END_SRC
 
 ** Included configuration file
    :PROPERTIES:
    :CUSTOM_ID: Configuration-Included_configuration_file-70b0f35b
    :END:
-   Nano gives the  opportunity to include some files located  elsewhere. This is
-   why I added [[https://github.com/scopatz/nanorc][this repo]] as a submodule of  my dotfiles so I can access a lot of
-   them at the  same time. Since the submodule is  cloned in =~/.config/nanorc=,
-   we can add only one line to include all of the =.nanorc= files.
-   #+BEGIN_SRC conf
-     include ~/.config/nano/nano-syntax/*.nanorc
-   #+END_SRC
+Nano gives the opportunity to include some files located elsewhere. This is why I added [[https://github.com/scopatz/nanorc][this repo]] as a submodule of my dotfiles so I can access a lot of them at the same time. Since the submodule is cloned in =~/.config/nanorc=, we can add only one line to include all of the =.nanorc= files.
+#+BEGIN_SRC conf
+  include ~/.config/nano/nano-syntax/*.nanorc
+#+END_SRC

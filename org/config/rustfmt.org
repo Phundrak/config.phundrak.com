@@ -10,117 +10,99 @@
   :PROPERTIES:
   :CUSTOM_ID: Introduction-465e99fe
   :END:
-  The  ~.rustfmt.toml~  file  located  in  the ~$HOME~  directory  is  a  global
-  configuration  file for  Rust’s code  formatters, such  as ~rustfmt~.  In this
-  file, you can find how my Rust code is always formatted.
+The ~.rustfmt.toml~ file located in the ~$HOME~ directory is a global configuration file for Rust’s code formatters, such as ~rustfmt~. In this file, you can find how my Rust code is always formatted.
 
 * General settings
   :PROPERTIES:
   :CUSTOM_ID: General_settings-7f5cb2f6
   :END:
-  First, we are using the 2018 edition of Rust.
-  #+BEGIN_SRC toml
-    edition = "2018"
-  #+END_SRC
-
-  Put single-expression functions on a single line.
-  #+BEGIN_SRC toml
-    fn_single_line = true
-  #+END_SRC
-
-  Format string literals where necessary.
-  #+BEGIN_SRC toml
-    format_strings = true
-  #+END_SRC
-
-  Maximum width of each line
-  #+BEGIN_SRC toml
-    max_width = 80
-  #+END_SRC
-
-  Merge multiple imports into a single nested import.
-  #+BEGIN_SRC toml
-    merge_imports = true
-  #+END_SRC
+First, we are using the 2018 edition of Rust.
+#+BEGIN_SRC toml
+  edition = "2018"
+#+END_SRC
+Put single-expression functions on a single line.
+#+BEGIN_SRC toml
+  fn_single_line = true
+#+END_SRC
+Format string literals where necessary.
+#+BEGIN_SRC toml
+  format_strings = true
+#+END_SRC
+Maximum width of each line
+#+BEGIN_SRC toml
+  max_width = 80
+#+END_SRC
+Merge multiple imports into a single nested import.
+#+BEGIN_SRC toml
+  merge_imports = true
+#+END_SRC
 
 * Structs and Enums
   :PROPERTIES:
   :CUSTOM_ID: Structs_and_Enums-6a2a856d
   :END:
-  The maximum length  of enum variant having discriminant,  that gets vertically
-  aligned with others.  Variants without discriminants would be  ignored for the
-  purpose of alignment.
+The maximum length of enum variant having discriminant, that gets vertically aligned with others. Variants without discriminants would be ignored for the purpose of alignment.
 
-  Note that this is not how much whitespace is inserted, but instead the longest
-  variant name that doesn't get ignored when aligning.
-  #+BEGIN_SRC toml
-    enum_discrim_align_threshold = 20
-  #+END_SRC
-
-  The maximum diff of width between struct fields to be aligned with each other.
-  #+BEGIN_SRC toml
-    struct_field_align_threshold = 20
-  #+END_SRC
-
-  Reorder impl items. ~type~ and ~const~ are put first, then macros and methods.
-  #+BEGIN_SRC toml
-    reorder_impl_items = true
-  #+END_SRC
+Note that this is not how much whitespace is inserted, but instead the longest variant name that doesn't get ignored when aligning.
+#+BEGIN_SRC toml
+  enum_discrim_align_threshold = 20
+#+END_SRC
+The maximum diff of width between struct fields to be aligned with each other.
+#+BEGIN_SRC toml
+  struct_field_align_threshold = 20
+#+END_SRC
+Reorder impl items. ~type~ and ~const~ are put first, then macros and methods.
+#+BEGIN_SRC toml
+  reorder_impl_items = true
+#+END_SRC
 
 * Comments
   :PROPERTIES:
   :CUSTOM_ID: Comments-b1904bb0
   :END:
-  Convert ~/* */~ comments to ~//~ comments where possible.
-  #+BEGIN_SRC toml
-    normalize_comments = true
-  #+END_SRC
-
-  Break comments to fit on the line.
-  #+BEGIN_SRC toml
-    wrap_comments = true
-  #+END_SRC
-
-  Report ~FIXME~ items in comments.
-  #+BEGIN_SRC toml
-    report_fixme = "Always"
-  #+END_SRC
-
-  Report ~TODO~ items in comments.
-  #+BEGIN_SRC toml
-    todo = "Always"
-  #+END_SRC
+Convert ~/* */~ comments to ~//~ comments where possible.
+#+BEGIN_SRC toml
+  normalize_comments = true
+#+END_SRC
+Break comments to fit on the line.
+#+BEGIN_SRC toml
+  wrap_comments = true
+#+END_SRC
+Report ~FIXME~ items in comments.
+#+BEGIN_SRC toml
+  report_fixme = "Always"
+#+END_SRC
+Report ~TODO~ items in comments.
+#+BEGIN_SRC toml
+  todo = "Always"
+#+END_SRC
 
 * Documentation
   :PROPERTIES:
   :CUSTOM_ID: Documentation-0c7981c7
   :END:
-  Format code snippet included in doc comments.
-  #+BEGIN_SRC toml
-    format_code_in_doc_comments = true
-  #+END_SRC
-
- Convert ~#![doc]~ and ~#[doc]~ attributes to ~//!~ and ~///~ doc comments.
- #+BEGIN_SRC toml
-   normalize_doc_attributes = true
- #+END_SRC
+Format code snippet included in doc comments.
+#+BEGIN_SRC toml
+  format_code_in_doc_comments = true
+#+END_SRC
+Convert ~#![doc]~ and ~#[doc]~ attributes to ~//!~ and ~///~ doc comments.
+#+BEGIN_SRC toml
+  normalize_doc_attributes = true
+#+END_SRC
 
 * Whitespace
   :PROPERTIES:
   :CUSTOM_ID: Whitespace-e8792b44
   :END:
-
-  Use tab characters for indentation, spaces for alignment.
-  #+BEGIN_SRC toml
-    hard_tabs = false
-  #+END_SRC
-
-  Number of spaces per tab.
-  #+BEGIN_SRC toml
-    tab_spaces = 4
-  #+END_SRC
-
-  I want newlines to always be Unix style.
-  #+BEGIN_SRC toml
-    newline_style = "Unix"
-  #+END_SRC
+Use tab characters for indentation, spaces for alignment.
+#+BEGIN_SRC toml
+  hard_tabs = false
+#+END_SRC
+Number of spaces per tab.
+#+BEGIN_SRC toml
+  tab_spaces = 4
+#+END_SRC
+I want newlines to always be Unix style.
+#+BEGIN_SRC toml
+  newline_style = "Unix"
+#+END_SRC

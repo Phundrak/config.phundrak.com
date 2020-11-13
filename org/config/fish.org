@@ -11,654 +11,557 @@
   :PROPERTIES:
   :CUSTOM_ID: Presentation-340195eb
   :END:
-  The file present in =~/.config/fish/config.fish= is the configuration file for
-  the  [[https://fishshell.com/][fish  shell]]. It  contains  custom  functions, environment  variables  and
-  abbreviations.
+The file present in =~/.config/fish/config.fish= is the configuration file for the [[https://fishshell.com/][fish shell]]. It contains custom functions, environment variables and abbreviations.
 
-  Just  in  case,  we  might  need   sometimes  to  declare  the  fish  function
-  =fish_title= as =true=, so let’s do so.
-  #+BEGIN_SRC fish
-    function fish_title
-        true
-    end
-  #+END_SRC
+Just in case, we might need sometimes to declare the fish function =fish_title= as =true=, so let’s do so.
+#+BEGIN_SRC fish
+  function fish_title
+      true
+  end
+#+END_SRC
 
 * Fish from within Emacs
   :PROPERTIES:
   :CUSTOM_ID: Fish_from_within_Emacs-360c0a74
   :END:
-  I sometimes call fish from within  emacs, with =M-x ansi-term=. In this case,
-  the variable =TERM= needs to have the value =eterm-color=.
-  #+BEGIN_SRC fish
-    if test -n "$EMACS"
-        set -x TERM eterm-color
-    end
-  #+END_SRC
+I sometimes call fish from within emacs, with =M-x ansi-term=. In this case, the variable =TERM= needs to have the value =eterm-color=.
+#+BEGIN_SRC fish
+  if test -n "$EMACS"
+      set -x TERM eterm-color
+  end
+#+END_SRC
 
 * Tramp remote access
   :PROPERTIES:
   :CUSTOM_ID: Tramp_remote_access-72aedec2
   :END:
-  When accessing from  a remote machine our computer from  Emacs, tramp needs a
-  precise shell appearance: a simple =$= followed by a space after which to put
-  the  commands it  needs to  execute,  and nothing  else. Due  to this,  let’s
-  deactivate  and redefine  some of  the functions  defining the  appearance of
-  fish.
-  #+BEGIN_SRC fish
-    if test "$TERM" = "dumb"
-        function fish_prompt
-            echo "\$ "
-        end
-        function fish_right_prompt; end
-        function fish_greeting; end
-        function fish_title; end
-    end
-  #+END_SRC
+When accessing from a remote machine our computer from Emacs, tramp needs a precise shell appearance: a simple =$= followed by a space after which to put the commands it needs to execute, and nothing else. Due to this, let’s deactivate and redefine some of the functions defining the appearance of fish.
+#+BEGIN_SRC fish
+  if test "$TERM" = "dumb"
+      function fish_prompt
+          echo "\$ "
+      end
+      function fish_right_prompt; end
+      function fish_greeting; end
+      function fish_title; end
+  end
+#+END_SRC
 
 * Regular fish shell appearance
   :PROPERTIES:
   :CUSTOM_ID: Regular_fish_shell_appearance-c3e532e1
   :END:
-  Now, there is  only one function I  modify when it comes to  the appearance of
-  fish when I’m the one using it: the ~fish_greeting~ function. I use it to give
-  me an overview of my computer’s  status, including its hostname, uptime, disks
-  usage, ram usage, swap usage, and networking.
-  #+BEGIN_SRC fish
-    set RED '\033[0;31m'
-    set GREEN '\033[0;32m'
-    set NC '\033[0m'
+Now, there is only one function I modify when it comes to the appearance of fish when I’m the one using it: the ~fish_greeting~ function. I use it to give me an overview of my computer’s status, including its hostname, uptime, disks usage, ram usage, swap usage, and networking.
+#+BEGIN_SRC fish
+  set RED '\033[0;31m'
+  set GREEN '\033[0;32m'
+  set NC '\033[0m'
 
-    function display_slider # used total
-        set -l slider_length 38
-        set -l used $argv[1]
-        set -l total $argv[2]
-        set -l used_slider (math -s0 "($used * $slider_length) / $total")
-        set -l unused_slider (math -s0 "$slider_length - $used_slider")
-        echo -en "["
-        echo -en $RED
-        echo -en (string repeat -n $used_slider '=')
-        echo -en $GREEN
-        echo -en (string repeat -n $unused_slider '=')
-        echo -en $NC
-        echo -en "]"
-    end
+  function display_slider # used total
+      set -l slider_length 38
+      set -l used $argv[1]
+      set -l total $argv[2]
+      set -l used_slider (math -s0 "($used * $slider_length) / $total")
+      set -l unused_slider (math -s0 "$slider_length - $used_slider")
+      echo -en "["
+      echo -en $RED
+      echo -en (string repeat -n $used_slider '=')
+      echo -en $GREEN
+      echo -en (string repeat -n $unused_slider '=')
+      echo -en $NC
+      echo -en "]"
+  end
 
-    function fish_greeting
-        set -l ruler_length 79
-        set -l ruler (string repeat -n $ruler_length "=")
+  function fish_greeting
+      set -l ruler_length 79
+      set -l ruler (string repeat -n $ruler_length "=")
 
-        set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
-        set -l uptime (uptime -p | sed 's/up //')
+      set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
+      set -l uptime (uptime -p | sed 's/up //')
 
-        set -l root (df -Ph | grep -E "/\$")
-        set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
-        set -l root_used (echo $root | awk '{print $3}')
-        set -l root_total (echo $root | awk '{print $2}')
+      set -l root (df -Ph | grep -E "/\$")
+      set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
+      set -l root_used (echo $root | awk '{print $3}')
+      set -l root_total (echo $root | awk '{print $2}')
 
-        set -l ram (free -tm | grep Mem)
-        set -l ram_total (echo $ram | awk '{print $2}')
-        set -l ram_used (echo $ram | awk '{print $3}')
-        set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
+      set -l ram (free -tm | grep Mem)
+      set -l ram_total (echo $ram | awk '{print $2}')
+      set -l ram_used (echo $ram | awk '{print $3}')
+      set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
 
-        set -l swap (free -tm | grep Swap)
-        set -l swap_total (echo $swap | awk '{print $2}')
-        set -l swap_used (echo $swap | awk '{print $3}')
-        set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
+      set -l swap (free -tm | grep Swap)
+      set -l swap_total (echo $swap | awk '{print $2}')
+      set -l swap_used (echo $swap | awk '{print $3}')
+      set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
 
-        set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
-        set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
-        set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
-        set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
+      set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
+      set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
+      set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
+      set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
 
-        echo $ruler
-        printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
-        printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
-        printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
-        printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
+      echo $ruler
+      printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
+      printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
+      printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
+      printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
 
-        # loop other mountpoints
-        for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
-            set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
-            set -l mp_used (echo $mp | awk '{print $3}')
-            set -l mp_total (echo $mp | awk '{print $2}')
-            set -l mp_name (echo $mp | awk '{print $6}')
-            printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
-        end
+      # loop other mountpoints
+      for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
+          set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
+          set -l mp_used (echo $mp | awk '{print $3}')
+          set -l mp_total (echo $mp | awk '{print $2}')
+          set -l mp_name (echo $mp | awk '{print $6}')
+          printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
+      end
 
-        printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
-        printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
-        echo $ruler
-    end
-  #+END_SRC
+      printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
+      printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
+      echo $ruler
+  end
+#+END_SRC
 
 * Global variables
   :PROPERTIES:
   :CUSTOM_ID: Global_variables-1c84df8b
   :END:
+In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t have to call my web browser directly but rather with this variable.
+#+BEGIN_SRC fish
+  set -gx BROWSER firefox
+#+END_SRC
 
-  In order  to keep some other  code clean, I  set the ~$BROWSER~ variable  so I
-  don’t have to call my web browser directly but rather with this variable.
-  #+BEGIN_SRC fish
-    set -gx BROWSER firefox
-  #+END_SRC
-
-  Sometimes, software  will rely on =SUDO_ASKPASS=  to get a GUI  from which it
-  can get the sudo password. So, let’s declare it.
-  #+BEGIN_SRC fish
-    set -gx SUDO_ASKPASS ~/.local/bin/askpass
-  #+END_SRC
+Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can get the sudo password. So, let’s declare it.
+#+BEGIN_SRC fish
+  set -gx SUDO_ASKPASS ~/.local/bin/askpass
+#+END_SRC
 
 ** Development
    :PROPERTIES:
    :CUSTOM_ID: Global_variables-Development-76b3ff13
    :END:
-   Now, let’s declare our editor of  choice, EmacsClient; not Emacs itself since
-   it will most  often be just quick  edits, nothing too heavy, if  it is called
-   from the  ~EDITOR~ variable  (from Git,  for example),  or from  the ~VISUAL~
-   variable.
-   #+BEGIN_SRC fish
-     set -gx EDITOR emacsclient -c
-     set -gx VISUAL emacsclient -c
-   #+END_SRC
+Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since it will most often be just quick edits, nothing too heavy, if it is called from the ~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
+#+BEGIN_SRC fish
+  set -gx EDITOR emacsclient -c
+  set -gx VISUAL emacsclient -c
+#+END_SRC
 
-   We also need to set the path to the Dart SDK.
-   #+BEGIN_SRC fish
-   set -gx DART_SDK /opt/dart-sdk/bin
-   #+END_SRC
+We also need to set the path to the Dart SDK.
+#+BEGIN_SRC fish
+set -gx DART_SDK /opt/dart-sdk/bin
+#+END_SRC
 
-   And we also need to specify where the Android SDK it located.
-   #+BEGIN_SRC fish
-   set -gx ANDROID_HOME $HOME/Android/Sdk
-   #+END_SRC
+And we also need to specify where the Android SDK it located.
+#+BEGIN_SRC fish
+set -gx ANDROID_HOME $HOME/Android/Sdk
+#+END_SRC
 
-   Still related to Dart and Flutter development,
-   #+BEGIN_SRC fish
-     set -gx CHROME_EXECUTABLE /usr/bin/chromium
-   #+END_SRC
+Still related to Dart and Flutter development,
+#+BEGIN_SRC fish
+  set -gx CHROME_EXECUTABLE /usr/bin/chromium
+#+END_SRC
 
-   Next,  we have  two  variables from  Deno, the  Node.js  destroyer. Its  base
-   directory will be  set in my XDG  config directory, and its  binaries will be
-   located in my local binaries directory (see below).
-   #+BEGIN_SRC fish
-     set -gx DENO_DIR $HOME/.config/deno
-     set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
-   #+END_SRC
+Next, we have two variables from Deno, the Node.js destroyer. Its base directory will be set in my XDG config directory, and its binaries will be located in my local binaries directory (see below).
+#+BEGIN_SRC fish
+  set -gx DENO_DIR $HOME/.config/deno
+  set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
+#+END_SRC
 
-   Finally, some development  packages require the =PKG_CONFIG_PATH=  to be set,
-   so let’s do so.
-   #+BEGIN_SRC fish
-     set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
-   #+END_SRC
+Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so let’s do so.
+#+BEGIN_SRC fish
+  set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
+#+END_SRC
 
-** $PATH
+** ~$PATH~
    :PROPERTIES:
    :CUSTOM_ID: Global_variables-$PATH-e1320303
    :END:
-   Some global variables might sometimes be needed and need to be modified. This
-   is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s
-   binaries, Go’s binaries  and my own executables. And of  course, don’t forget
-   to add the already existing ~PATH~.
+Some global variables might sometimes be needed and need to be modified. This is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s binaries, Go’s binaries and my own executables. And of course, don’t forget to add the already existing ~PATH~.
 
-   #+NAME: extra-paths
-   | additional path           | what it leads to                     |
-   |---------------------------+--------------------------------------|
-   | $HOME/.pub-cache/bin      | Dart binaries and executables        |
-   | $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
-   | $HOME/go/bin              | Go binaries and executables          |
-   | $HOME/.cargo/bin          | Rust binaries and executables        |
-   | $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
-   | $HOME/.cabal/bin          | Haskel binaries                      |
+#+NAME: extra-paths
+| additional path           | what it leads to                     |
+|---------------------------+--------------------------------------|
+| $HOME/.pub-cache/bin      | Dart binaries and executables        |
+| $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
+| $HOME/go/bin              | Go binaries and executables          |
+| $HOME/.cargo/bin          | Rust binaries and executables        |
+| $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
+| $HOME/.cabal/bin          | Haskel binaries                      |
 
-   #+NAME: generate-extra-paths
-   #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-     (mapconcat (lambda (x) x)
-                paths " ")
-   #+END_SRC
+#+NAME: generate-extra-paths
+#+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
+  (mapconcat (lambda (x) x)
+             paths " ")
+#+END_SRC
 
-   #+RESULTS[f1fff053cb9e2239f35571249763683a4a62e643]: generate-extra-paths
-   : $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin $HOME/.cabal/bin
+#+RESULTS[f1fff053cb9e2239f35571249763683a4a62e643]: generate-extra-paths
+: $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin $HOME/.cabal/bin
 
-   The  code below  ensures  the ~PATH~  is  updated only  at  login, and  every
-   location is addded only once.
-   #+BEGIN_SRC fish :noweb yes
-     for p in <<generate-extra-paths()>>
-         if status is-login
-             contains $p $PATH || set PATH $p $PATH
-         end
-     end
-   #+END_SRC
+The code below ensures the ~PATH~ is updated only at login, and every location is addded only once.
+#+BEGIN_SRC fish :noweb yes
+  for p in <<generate-extra-paths()>>
+      if status is-login
+          contains $p $PATH || set PATH $p $PATH
+      end
+  end
+#+END_SRC
 
 * Abbreviations
   :PROPERTIES:
   :CUSTOM_ID: Abbreviations-97537716
   :END:
-  #+NAME: generate-abbr
-  #+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
-    (replace-regexp-in-string "\\\\vert[{}]*"
-                              "|"
-                              (mapconcat (lambda (x) (format "abbr %s '%s'" (car x) (cadr x)))
-                                         table
-                                         "\n")
-                              t t)
-  #+END_SRC
+#+NAME: generate-abbr
+#+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
+  (replace-regexp-in-string "\\\\vert[{}]*"
+                            "|"
+                            (mapconcat (lambda (x) (format "abbr %s '%s'" (car x) (cadr x)))
+                                       table
+                                       "\n")
+                            t t)
+#+END_SRC
 
 ** System monitoring
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-System_monitoring-bd909755
    :END:
-   Here I  have some abbreviations which  are quite useful when  performing some
-   system monitoring. With =df=, we can get an overview of our filesystem usage,
-   while with =diskspace=  we get some more precise information.  =meminfo= is a
-   call to  =free= with sane  defaults, and similar  to =meminfo=, we  also have
-   =gpumeminfo= so we can  get a quick look at the memory-related  logs of our X
-   session.  I also  declared =cpuinfo=  an alias  of =lscpu=  in order  to keep
-   consistent with  =meminfo=. =pscpu= gives us  information on what the  CPU is
-   running  right  now,  and  =pscpu10=  limits that  to  the  top  10  threads.
-   Similarly, =psmem=  gives us information on  the memory usage of  the current
-   threads, and =psmem10= only the ten most important threads in terms of memory
-   usage.
-   #+NAME: mgmt-abbr
-   | abbreviation | command                                           |
-   |--------------+---------------------------------------------------|
-   | df           | df -H                                             |
-   | diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size" |
-   | du           | du -ch                                            |
-   | meminfo      | free -m -l -t                                     |
-   | gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log        |
-   | cpuinfo      | lscpu                                             |
-   | pscpu        | ps auxf \vert sort -nr -k 3                       |
-   | pscpu10      | ps auxf \vert sort -nr -k 3 \vert head -10        |
-   | psmem        | ps auxf \vert sort -nr -k 4                       |
-   | psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10        |
+Here I have some abbreviations which are quite useful when performing some system monitoring. With =df=, we can get an overview of our filesystem usage, while with =diskspace= we get some more precise information. =meminfo= is a call to =free= with sane defaults, and similar to =meminfo=, we also have =gpumeminfo= so we can get a quick look at the memory-related logs of our X session. I also declared =cpuinfo= an alias of =lscpu= in order to keep consistent with =meminfo=. =pscpu= gives us information on what the CPU is running right now, and =pscpu10= limits that to the top 10 threads. Similarly, =psmem= gives us information on the memory usage of the current threads, and =psmem10= only the ten most important threads in terms of memory usage.
+#+NAME: mgmt-abbr
+| abbreviation | command                                           |
+|--------------+---------------------------------------------------|
+| df           | df -H                                             |
+| diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size" |
+| du           | du -ch                                            |
+| meminfo      | free -m -l -t                                     |
+| gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log        |
+| cpuinfo      | lscpu                                             |
+| pscpu        | ps auxf \vert sort -nr -k 3                       |
+| pscpu10      | ps auxf \vert sort -nr -k 3 \vert head -10        |
+| psmem        | ps auxf \vert sort -nr -k 4                       |
+| psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10        |
 
-   #+begin_SRC fish
-     <<generate-abbr(table=mgmt-abbr)>>
-   #+END_SRC
+#+begin_SRC fish
+  <<generate-abbr(table=mgmt-abbr)>>
+#+END_SRC
 
 ** System management (packages and services)
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-7249fbb7
    :END:
-   I added  some of these abbreviations  due to how  often I have to  write the
-   whole thing.
+I added some of these abbreviations due to how often I have to write the whole thing.
 
 *** Package management
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f
     :END:
-    The first  command is =remove=  which removes a  package from my  system, as
-    well as its dependencies no longer  needed. =p=. =pacman='s or =yay='s. This
-    is  why I  simply type  =purge=. And  if I  want to  simply seach  among the
-    =pacman= repos,  I can type  =search=. Otherwise, if  I want to  include AUR
-    results, I’ll use =yay=.
+The first command is =remove= which removes a package from my system, as well as its dependencies no longer needed. =p=. =pacman='s or =yay='s. This is why I simply type =purge=. And if I want to simply seach among the =pacman= repos, I can type =search=. Otherwise, if I want to include AUR results, I’ll use =yay=.
 
-    #+NAME: pm-abbr
-    | abbreviation | command            |
-    |--------------+--------------------|
-    | remove       | sudo pacman -Rscnd |
-    | p            | sudo pacman        |
-    | purge        | yay -Sc            |
-    | search       | yay -Ss            |
+#+NAME: pm-abbr
+| abbreviation | command            |
+|--------------+--------------------|
+| remove       | sudo pacman -Rscnd |
+| p            | sudo pacman        |
+| purge        | yay -Sc            |
+| search       | yay -Ss            |
 
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=pm-abbr)>>
-    #+END_SRC
+#+BEGIN_SRC fish
+  <<generate-abbr(table=pm-abbr)>>
+#+END_SRC
 
 *** Service management
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Service_management-8c5ae482
     :END:
-    I don’t have the muscle memory of =systemctl=. So instead, I simply type
-    =c= when I want to do something user service related.
-    And if I  want to manipulate system  services, I can instead  type a simple
-    capital =S=.
-    #+NAME: service-abbr
-    | abbreviation | command   |
-    |--------------+-----------|
-    | s            | systemctl |
+I don’t have the muscle memory of =systemctl=. So instead, I simply type =c= when I want to do something user service related. And if I want to manipulate system services, I can instead type a simple capital =S=.
+#+NAME: service-abbr
+| abbreviation | command   |
+|--------------+-----------|
+| s            | systemctl |
 
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=service-abbr)>>
-    #+END_SRC
+#+BEGIN_SRC fish
+  <<generate-abbr(table=service-abbr)>>
+#+END_SRC
 
 ** Development
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-Development-d6050ca4
    :END:
-   A good amount of these commands  are development related, especially when it
-   comes to compilation or Docker.
+A good amount of these commands are development related, especially when it comes to compilation or Docker.
 
 *** CMake
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Development-CMake-f2951675
     :END:
-    I have the following abbreviations so I  can quickly run CMake and create a
-    configuration for debug or release profiles.
-    #+NAME: abbr-cmake
-    | abbreviation | command                          |
-    |--------------+----------------------------------|
-    | cdebug       | cmake -DCMAKE_BUILD_TYPE=Debug   |
-    | crelease     | cmake -DCMAKE_BUILD_TYPE=Release |
+I have the following abbreviations so I can quickly run CMake and create a configuration for debug or release profiles.
+#+NAME: abbr-cmake
+| abbreviation | command                          |
+|--------------+----------------------------------|
+| cdebug       | cmake -DCMAKE_BUILD_TYPE=Debug   |
+| crelease     | cmake -DCMAKE_BUILD_TYPE=Release |
 
-    Here is the corresponding fish configuration:
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=abbr-cmake)>>
-    #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=abbr-cmake)>>
+#+END_SRC
 
 *** Docker
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Development-Docker-2d0a1288
     :END:
-    And of course, when it comes to  Docker Compose, I don't have time to write
-    the full command, so I use these instead.
-    #+NAME: abbr-docker
-    | abbreviation | command                      |
-    |--------------+------------------------------|
-    | dc           | docker-compose               |
-    | dcb          | docker-compose build         |
-    | dcd          | docker-compose down          |
-    | dcl          | docker-compose logs          |
-    | dcp          | docker-compose pull          |
-    | dcr          | docker-compose run --rm      |
-    | dcu          | docker-compose up            |
-    | dcub         | docker-compose up --build    |
-    | dcud         | docker-compose up -d         |
-    | dcudb        | docker-compose up -d --build |
+And of course, when it comes to Docker Compose, I don't have time to write the full command, so I use these instead.
+#+NAME: abbr-docker
+| abbreviation | command                      |
+|--------------+------------------------------|
+| dc           | docker-compose               |
+| dcb          | docker-compose build         |
+| dcd          | docker-compose down          |
+| dcl          | docker-compose logs          |
+| dcp          | docker-compose pull          |
+| dcr          | docker-compose run --rm      |
+| dcu          | docker-compose up            |
+| dcub         | docker-compose up --build    |
+| dcud         | docker-compose up -d         |
+| dcudb        | docker-compose up -d --build |
 
-    Here is the corresponding fish configuration:
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=abbr-docker)>>
-    #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=abbr-docker)>>
+#+END_SRC
 
 *** Text editors
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Development-Text_editors-5a23df47
     :END:
-    I  greatly prefer  to use  Emacsclient  as my  main text  editor; Emacs  has
-    basically all I need. So, it's only  normal I have an abbreviation to launch
-    a new instance of it. However,  in a graphical environment, this will launch
-    a new  graphical window of  Emacs. To launch  a terminal instance,  I'll use
-    ~enw~ (~nw~ stands for the option “nowindow” ~-nw~ of Emacs). I also wish to
-    completely stop  using other text editors,  such as ~vi~, ~vim~,  ~nano~ and
-    ~ed~, so let's all add their command as an abbreviation for Emacs.
+I greatly prefer to use Emacsclient as my main text editor; Emacs has basically all I need. So, it's only normal I have an abbreviation to launch a new instance of it. However, in a graphical environment, this will launch a new graphical window of Emacs. To launch a terminal instance, I'll use ~enw~ (~nw~ stands for the option “nowindow” ~-nw~ of Emacs). I also wish to completely stop using other text editors, such as ~vi~, ~vim~, ~nano~ and ~ed~, so let's all add their command as an abbreviation for Emacs.
 
-    #+NAME: abbr-text-ed
-    | abbreviation | command            |
-    |--------------+--------------------|
-    | e            | emacsclient -c     |
-    | enw          | emacsclient -c -nw |
-    | vi           | emacsclient -c     |
-    | vim          | emacsclient -c     |
-    | nano         | emacsclient -c     |
-    | ed           | emacsclient -c     |
+#+NAME: abbr-text-ed
+| abbreviation | command            |
+|--------------+--------------------|
+| e            | emacsclient -c     |
+| enw          | emacsclient -c -nw |
+| vi           | emacsclient -c     |
+| vim          | emacsclient -c     |
+| nano         | emacsclient -c     |
+| ed           | emacsclient -c     |
 
-    Here is the corresponding fish configuration:
-    #+BEGIN_SRC fish :noweb yes
-      <<generate-abbr(table=abbr-text-ed)>>
-    #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish :noweb yes
+  <<generate-abbr(table=abbr-text-ed)>>
+#+END_SRC
 
 *** Compilation
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Development-Compilation-dd066050
     :END:
-    By  default, I  set  ~clang~,  ~clang++~, ~gcc~  and  ~g++~  to the  latest
-    standard and with the ~-Wall~ flag activated.
-    #+NAME: abbr-comp
-    | abbreviation | command              |
-    |--------------+----------------------|
-    | clang        | clang -Wall          |
-    | clang++      | clang++ -Wall        |
-    | g++          | g++ -Wall -std=c++20 |
-    | gcc          | gcc -Wall -std=c18   |
+By default, I set ~clang~, ~clang++~, ~gcc~ and ~g++~ to the latest standard and with the ~-Wall~ flag activated.
+#+NAME: abbr-comp
+| abbreviation | command              |
+|--------------+----------------------|
+| clang        | clang -Wall          |
+| clang++      | clang++ -Wall        |
+| g++          | g++ -Wall -std=c++20 |
+| gcc          | gcc -Wall -std=c18   |
 
-    Here is the corresponding fish configuration:
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=abbr-comp)>>
-    #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=abbr-comp)>>
+#+END_SRC
 
 *** Git
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Development-Git-5e5055c1
     :END:
-    And let's  face it:  we all  at one point  just wanted  to commit  our code
-    without thinking about the message, to  just get over with it. Don't worry,
-    I got you covered.
-    #+NAME: abbr-git
-    | abbreviation | command                                             |
-    |--------------+-----------------------------------------------------|
-    | randcommit   | git commit -m (curl -s whatthecommit.com/index.txt) |
+And let's face it: we all at one point just wanted to commit our code without thinking about the message, to just get over with it. Don't worry, I got you covered.
+#+NAME: abbr-git
+| abbreviation | command                                             |
+|--------------+-----------------------------------------------------|
+| randcommit   | git commit -m (curl -s whatthecommit.com/index.txt) |
 
-    Here is the corresponding fish configuration:
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=abbr-git)>>
-    #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=abbr-git)>>
+#+END_SRC
 
 ** LaTeX
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-LaTeX-76865eb9
    :END:
-   Yes, although  I use org-mode, I  still have some use  for LaTeX, especially
-   when it  comes to PDF  exports of my  org files. Hence  why I use  the LaTeX
-   package manager. It  is recommended to use ~tllocalmgr~  instead of ~tlmgr~,
-   but I can never  remember the command, and the latter is  faster to type, so
-   time for an abbreviation. Same goes for ~texhash~ which must be run as sudo.
-   #+NAME: latex-abbr
-   | abbreviation | command      |
-   |--------------+--------------|
-   | tlmgr        | tllocalmgr   |
-   | texhash      | sudo texhash |
+Yes, although I use org-mode, I still have some use for LaTeX, especially when it comes to PDF exports of my org files. Hence why I use the LaTeX package manager. It is recommended to use ~tllocalmgr~ instead of ~tlmgr~, but I can never remember the command, and the latter is faster to type, so time for an abbreviation. Same goes for ~texhash~ which must be run as sudo.
+#+NAME: latex-abbr
+| abbreviation | command      |
+|--------------+--------------|
+| tlmgr        | tllocalmgr   |
+| texhash      | sudo texhash |
 
-   Here is the corresponding fish configuration:
-   #+BEGIN_SRC fish
-     <<generate-abbr(table=latex-abbr)>>
-   #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=latex-abbr)>>
+#+END_SRC
 
 ** Some security measures
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-Some_security_measures-489cb521
    :END:
-   Some commands can be  quite dangerous when not used properly,  which is why I
-   added default flags and options so I can get warnings before things get ugly.
-   The =-i= and =-I=  add prompts in case we might not want  to do what we asked
-   the shell  to do. Notice  =lns= which  creates symlinks, =rmd=  which removes
-   directories,  =rmf=  which  forces  deletion, and  =rmdf=  which  forces  the
-   delition of a directory. Notice also the =--preserve-root= which will prevent
-   me from  accidentally removing the  root folder. I  added the same  option to
-   =chgrp=, =chmod=, and =chown=.
-   #+NAME: sec-abbr
-   | abbreviation | command                  |
-   |--------------+--------------------------|
-   | cp           | cp -i                    |
-   | ln           | ln -i                    |
-   | lns          | ln -si                   |
-   | mv           | mv -i                    |
-   | rm           | rm -Iv                   |
-   | rmd          | rm --preserve-root -Irv  |
-   | rmdf         | rm --preserve-root -Irfv |
-   | rmf          | rm --preserve-root -Ifv  |
-   | chgrp        | chgrp --preserve-root -v |
-   | chmod        | chmod --preserve-root -v |
-   | chown        | chown --preserve-root -v |
+Some commands can be quite dangerous when not used properly, which is why I added default flags and options so I can get warnings before things get ugly. The =-i= and =-I= add prompts in case we might not want to do what we asked the shell to do. Notice =lns= which creates symlinks, =rmd= which removes directories, =rmf= which forces deletion, and =rmdf= which forces the delition of a directory. Notice also the =--preserve-root= which will prevent me from accidentally removing the root folder. I added the same option to =chgrp=, =chmod=, and =chown=.
+#+NAME: sec-abbr
+| abbreviation | command                  |
+|--------------+--------------------------|
+| cp           | cp -i                    |
+| ln           | ln -i                    |
+| lns          | ln -si                   |
+| mv           | mv -i                    |
+| rm           | rm -Iv                   |
+| rmd          | rm --preserve-root -Irv  |
+| rmdf         | rm --preserve-root -Irfv |
+| rmf          | rm --preserve-root -Ifv  |
+| chgrp        | chgrp --preserve-root -v |
+| chmod        | chmod --preserve-root -v |
+| chown        | chown --preserve-root -v |
 
-   Here is the corresponding fish configuration:
-   #+BEGIN_SRC fish
-     <<generate-abbr(table=sec-abbr)>>
-   #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=sec-abbr)>>
+#+END_SRC
 
 ** Typos
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-Typos-370bbb27
    :END:
-   Let's admit it,  we all make typos from  time to time in the  shell, and some
-   are recurrent enough we make abbreviations or aliases of the correct command.
-   Well, I  have some  of my  abbreviations which were  make exactly  because of
-   this. Sometimes for some reasons, my  brain makes me write ~clean~ instead of
-   ~clear~. So, let's just  replace the former by the latter.  I'm also very bad
-   at typing ~exit~. And sometimes I suck at typing ~htop~. ~q~ isn't a typo per
-   se, instead just a habit I have.
-   #+NAME: typo-abbr
-   | abbreviation | command |
-   |--------------+---------|
-   | clean        | clear   |
-   | exi          | exit    |
-   | exti         | exit    |
-   | q            | exit    |
-   | hotp         | htop    |
+Let's admit it, we all make typos from time to time in the shell, and some are recurrent enough we make abbreviations or aliases of the correct command. Well, I have some of my abbreviations which were make exactly because of this. Sometimes for some reasons, my brain makes me write ~clean~ instead of ~clear~. So, let's just replace the former by the latter. I'm also very bad at typing ~exit~. And sometimes I suck at typing ~htop~. ~q~ isn't a typo per se, instead just a habit I have.
+#+NAME: typo-abbr
+| abbreviation | command |
+|--------------+---------|
+| clean        | clear   |
+| exi          | exit    |
+| exti         | exit    |
+| q            | exit    |
+| hotp         | htop    |
 
-   Here is the corresponding fish configuration:
-   #+BEGIN_SRC fish
-     <<generate-abbr(table=typo-abbr)>>
-   #+END_SRC
+Here is the corresponding fish configuration:
+#+BEGIN_SRC fish
+  <<generate-abbr(table=typo-abbr)>>
+#+END_SRC
 
 ** Misc
    :PROPERTIES:
    :CUSTOM_ID: Abbreviations-Misc-c2631eb6
    :END:
-   Finally, some miscellaneous abbreviations that don't really fit into any of
-   the above categories.
+Finally, some miscellaneous abbreviations that don't really fit into any of the above categories.
 
 *** Media
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-Media-e4b85d56
     :END:
-    Here you will  find various commands related to media  in general. the first
-    one is a  command to play some chillhop from  the [[https://www.youtube.com/user/Chillhopdotcom][Chillhop YouTube channel]]'s
-    livestream.
-    #+BEGIN_SRC fish
-      abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
-    #+END_SRC
+Here you will find various commands related to media in general. the first one is a command to play some chillhop from the [[https://www.youtube.com/user/Chillhopdotcom][Chillhop YouTube channel]]'s livestream.
+#+BEGIN_SRC fish
+  abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
+#+END_SRC
 
-    When it comes to mpv, I do not  want to force it to open a graphical window
-    if for example  I want to listen to  an audio file. I also do  not want any
-    border on that window. So, I declared this abbreviation.
-    #+BEGIN_SRC fish
-      abbr mpv 'mpv --no-border --force-window=no'
-    #+END_SRC
+When it comes to mpv, I do not want to force it to open a graphical window if for example I want to listen to an audio file. I also do not want any border on that window. So, I declared this abbreviation.
+#+BEGIN_SRC fish
+  abbr mpv 'mpv --no-border --force-window=no'
+#+END_SRC
 
-    When I want to download a song from YouTube, I'll just use the command ~flac
-    videoIdentifier~ to get it through ~youtube-dl~.
-    #+BEGIN_SRC fish
-      abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
-    #+END_SRC
+When I want to download a song from YouTube, I'll just use the command ~flac videoIdentifier~ to get it through ~youtube-dl~.
+#+BEGIN_SRC fish
+  abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
+#+END_SRC
 
-    I download a  LOT of videos from YouTube, generally  educative videos that I
-    do not want to lose to YouTube one  day who will decide that such channel is
-    unworthy of  their platform,  or if  the original  author decides  to delete
-    their videos  or whatever.  So, I  use the  abbreviation ~ytdl~  to download
-    either one video, or a whole YouTube channel.
-    #+BEGIN_SRC fish
-      abbr ytdl 'youtube-dl -f best -ciw -o "~/Videos/YouTube/%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"'
-    #+END_SRC
+I download a LOT of videos from YouTube, generally educative videos that I do not want to lose to YouTube one day who will decide that such channel is unworthy of their platform, or if the original author decides to delete their videos or whatever. So, I use the abbreviation ~ytdl~ to download either one video, or a whole YouTube channel.
+#+BEGIN_SRC fish
+  abbr ytdl 'youtube-dl -f best -ciw -o "~/Videos/YouTube/%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"'
+#+END_SRC
 
-    Some sane default options for ~sxiv~, a simple X image Viewer. This includes
-    playing GIFs and  not displaying the filename below. Sxiv  will also open in
-    fullscreen and will fit the displayed image to the frame. I also abbreviated
-    ~feh~ to sxiv, old habits die hard.
-    #+BEGIN_SRC fish
-      abbr sxiv 'sxiv -abfs f'
-      abbr feh 'sxiv -abfs f'
-    #+END_SRC
+Some sane default options for ~sxiv~, a simple X image Viewer. This includes playing GIFs and not displaying the filename below. Sxiv will also open in fullscreen and will fit the displayed image to the frame. I also abbreviated ~feh~ to sxiv, old habits die hard.
+#+BEGIN_SRC fish
+  abbr sxiv 'sxiv -abfs f'
+  abbr feh 'sxiv -abfs f'
+#+END_SRC
 
-    Finally, let's declare the following abbreviation that will launch an mpv
-    instance displaying my webcam:
-    #+BEGIN_SRC fish
-      abbr webcam 'mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
-    #+END_SRC
+Finally, let's declare the following abbreviation that will launch an mpv instance displaying my webcam:
+#+BEGIN_SRC fish
+  abbr webcam 'mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
+#+END_SRC
 
 *** Sudo
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-Sudo-aef0214a
     :END:
-    First, I make it so that ~sudo~ comes  with the ~-A~ switch in order to call
-    my custom  graphical script for  getting my  password (see [[file:bin.org::#Askpass-d0d7a8c0][askpass]]).  I also
-    made it so ~please~ is an equivalent to ~sudo -A~ as a joke.
-    #+BEGIN_SRC fish
-      abbr please 'sudo -A'
-    #+END_SRC
+First, I make it so that ~sudo~ comes with the ~-A~ switch in order to call my custom graphical script for getting my password (see [[file:bin.org::#Askpass-d0d7a8c0][askpass]]). I also made it so ~please~ is an equivalent to ~sudo -A~ as a joke.
+#+BEGIN_SRC fish
+  abbr please 'sudo -A'
+#+END_SRC
 
 *** History
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-History-a2124b23
     :END:
-    I also find  it more intuitive and  faster to just write  ~hist~ instead of
-    ~history~, so let's declare that.
-    #+BEGIN_SRC fish
-      abbr hist history
-    #+END_SRC
+I also find it more intuitive and faster to just write ~hist~ instead of ~history~, so let's declare that.
+#+BEGIN_SRC fish
+  abbr hist history
+#+END_SRC
 
 *** Compression
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-Compression-4fd4ffef
     :END:
-    It seems it's just like many other people,  but I cannot for the life of me
-    remember the syntax  of ~tar~. So, I made the  following abbreviations, and
-    one day hopefully, after seeing  the abbreviations' expansion over and over
-    I'll remember the command like I  did for the abbreviation of ~remove~ (see
-    [[#Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f][Package management]]).
-    #+NAME: tar-abbr
-    | abbreviation | command   |
-    |--------------+-----------|
-    | compress     | tar -czf  |
-    | untar        | tar -xvzf |
+It seems it's just like many other people, but I cannot for the life of me remember the syntax of ~tar~. So, I made the following abbreviations, and one day hopefully, after seeing the abbreviations' expansion over and over I'll remember the command like I did for the abbreviation of ~remove~ (see [[#Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f][Package management]]).
+#+NAME: tar-abbr
+| abbreviation | command   |
+|--------------+-----------|
+| compress     | tar -czf  |
+| untar        | tar -xvzf |
 
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=tar-abbr)>>
-    #+END_SRC
+#+BEGIN_SRC fish
+  <<generate-abbr(table=tar-abbr)>>
+#+END_SRC
 
 *** exa
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-exa-e1b528b9
     :END:
-    #+NAME: exa-abbr
-    | abbreviation | command                                    |
-    |--------------+--------------------------------------------|
-    | exa          | exa -halg@ --group-directories-first --git |
-    | ls           | exa -halg@ --group-directories-first --git |
-    | lsl          | exa -halg@ --group-directories-first --git |
+#+NAME: exa-abbr
+| abbreviation | command                                    |
+|--------------+--------------------------------------------|
+| exa          | exa -halg@ --group-directories-first --git |
+| ls           | exa -halg@ --group-directories-first --git |
+| lsl          | exa -halg@ --group-directories-first --git |
 
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=exa-abbr)>>
-    #+END_SRC
+#+BEGIN_SRC fish
+  <<generate-abbr(table=exa-abbr)>>
+#+END_SRC
 
 *** Network Management
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-Network_Management-0b7fc91d
     :END:
-    First, we have just =nmcli= with  sane default options,  that is a  pretty output
-    with colors.
-    #+BEGIN_SRC fish
-      abbr nmcli 'nmcli -p -c auto'
-    #+END_SRC
+First, we have just =nmcli= with sane default options, that is a pretty output with colors.
+#+BEGIN_SRC fish
+  abbr nmcli 'nmcli -p -c auto'
+#+END_SRC
 
 *** NordVPN
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-NordVPN-09438638
     :END:
-    Next, we  have some  NordVPN-related shortcuts.  The first  one is  a simple
-    abbreviation to  =nordvpn=. The  second one  is a shortcut  to connect  to a
-    server, and to disconnect  from the current server. I also  have a couple of
-    shortcuts to quickly  connect to some preselected  countries, mainly France,
-    Germany, Japan and the US.
-    #+NAME: nordvpn-abbr
-    | abbreviation | command                 |
-    |--------------+-------------------------|
-    | n            | nordvpn                 |
-    | nc           | nordvpn c               |
-    | nd           | nordvpn d               |
-    | ncf          | nordvpn c France        |
-    | ncg          | nordvpn c Germany       |
-    | ncj          | nordvpn c Japan         |
-    | ncu          | nordvpn c United_States |
+Next, we have some NordVPN-related shortcuts. The first one is a simple abbreviation to =nordvpn=. The second one is a shortcut to connect to a server, and to disconnect from the current server. I also have a couple of shortcuts to quickly connect to some preselected countries, mainly France, Germany, Japan and the US.
+#+NAME: nordvpn-abbr
+| abbreviation | command                 |
+|--------------+-------------------------|
+| n            | nordvpn                 |
+| nc           | nordvpn c               |
+| nd           | nordvpn d               |
+| ncf          | nordvpn c France        |
+| ncg          | nordvpn c Germany       |
+| ncj          | nordvpn c Japan         |
+| ncu          | nordvpn c United_States |
 
-    #+BEGIN_SRC fish
-      <<generate-abbr(table=nordvpn-abbr)>>
-    #+END_SRC
+#+BEGIN_SRC fish
+  <<generate-abbr(table=nordvpn-abbr)>>
+#+END_SRC
 
 *** Wget
     :PROPERTIES:
     :CUSTOM_ID: Abbreviations-Misc-Wget-27f4bebf
     :END:
-    By default, continue a download that was interupted.
-    #+BEGIN_SRC fish
-      abbr wget 'wget -c'
-    #+END_SRC
+By default, continue a download that was interupted.
+#+BEGIN_SRC fish
+  abbr wget 'wget -c'
+#+END_SRC

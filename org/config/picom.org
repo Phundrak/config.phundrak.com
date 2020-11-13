@@ -9,627 +9,526 @@
   :PROPERTIES:
   :CUSTOM_ID: Introduction-a5320326
   :END:
-  Picom  is the  successor  to Compton,  a standalone  compositor  for Xorg.  It
-  provides  compositing for  WM  that do  not  provide  any, such  as  i3. I  am
-  currently using  [[https://github.com/ibhagwan/picom][ibhagwan’s fork of  compton]] which provides  the ~dual-kawase~
-  blur from [[https://github.com/tryone144/compton][tryone’s compton]] and rounded corners from [[https://github.com/sdhand/picom][sdhand’s compton]].
+Picom is the successor to Compton, a standalone compositor for Xorg. It provides compositing for WM that do not provide any, such as i3. I am currently using [[https://github.com/ibhagwan/picom][ibhagwan’s fork of compton]] which provides the ~dual-kawase~ blur from [[https://github.com/tryone144/compton][tryone’s compton]] and rounded corners from [[https://github.com/sdhand/picom][sdhand’s compton]].
 
 * Shadows
   :PROPERTIES:
   :CUSTOM_ID: Shadows-f4ffbb27
   :END:
-  The following  enables client-side  shadows on  windows. Note  desktop windows
-  (windows   with  ~_NET_WM_WINDOW_TYPE_DESKTOP~)   never  get   shadow,  unless
-  explicitly  requested  using the  wintypes  option.  I personally  deactivated
-  shadows because they don’t work out too well with rounded corners.
-  #+BEGIN_SRC conf
-    shadow = false;
-  #+END_SRC
+The following enables client-side shadows on windows. Note desktop windows (windows with ~_NET_WM_WINDOW_TYPE_DESKTOP~) never get shadow, unless explicitly requested using the wintypes option. I personally deactivated shadows because they don’t work out too well with rounded corners.
+#+BEGIN_SRC conf
+  shadow = false;
+#+END_SRC
 
-  The blur radius radius  for shadows is measured in pixels,  and it defaults to
-  12px.
-  #+BEGIN_SRC conf
-    shadow-radius = 7;
-  #+END_SRC
+The blur radius radius for shadows is measured in pixels, and it defaults to 12px.
+#+BEGIN_SRC conf
+  shadow-radius = 7;
+#+END_SRC
 
-  Picom can also apply some level of opacity on shadows.
-  | Default value | ~0.75~ |
-  | Min value     | ~0.0~  |
-  | Max value     | ~1.0~  |
-  #+BEGIN_SRC conf
-    shadow-opacity = 0.85
-  #+END_SRC
+Picom can also apply some level of opacity on shadows.
+| Default value | ~0.75~ |
+| Min value     | ~0.0~  |
+| Max value     | ~1.0~  |
+#+BEGIN_SRC conf
+  shadow-opacity = 0.85
+#+END_SRC
 
-  The left and top offsets for shadows are expressed in pixels.
-  | Default value | ~-15~ |
-  #+BEGIN_SRC conf
-    shadow-offset-x = -5;
-    shadow-offset-y = -5;
-  #+END_SRC
+The left and top offsets for shadows are expressed in pixels.
+| Default value | ~-15~ |
+#+BEGIN_SRC conf
+  shadow-offset-x = -5;
+  shadow-offset-y = -5;
+#+END_SRC
 
-  The following  values have an  impact on the  shadow’s RGB color.
-  | Default value | ~0.0~ |
-  | Min value     | ~0.0~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    shadow-red = 0.0;
-    shadow-green = 0.0;
-    shadow-blue = 0.0;
-  #+END_SRC
+The following  values have an  impact on the  shadow’s RGB color.
+| Default value | ~0.0~ |
+| Min value     | ~0.0~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  shadow-red = 0.0;
+  shadow-green = 0.0;
+  shadow-blue = 0.0;
+#+END_SRC
 
-  It is possible to specify a list  of conditions of windows that should have no
-  shadow.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    shadow-exclude = [
-      "name = 'Notification'",
-      "class_g = 'Conky'",
-      "class_g ?= 'Notify-osd'",
-      "class_g = 'Cairo-clock'",
-      "_GTK_FRAME_EXTENTS@:c"
-    ];
-  #+END_SRC
+It is possible to specify a list  of conditions of windows that should have no
+shadow.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  shadow-exclude = [
+    "name = 'Notification'",
+    "class_g = 'Conky'",
+    "class_g ?= 'Notify-osd'",
+    "class_g = 'Cairo-clock'",
+    "_GTK_FRAME_EXTENTS@:c"
+  ];
+#+END_SRC
 
-  It is  also possible  to specify an  X geometry that  describes the  region in
-  which shadows  should not  be painted in,  such as a  dock window  region. For
-  example,
-  #+BEGIN_SRC conf :tangle no
-    # shadow-exclude-reg = "x10+0+0"
-  #+END_SRC
-  would make  the 10  pixels at  the bottom of  the screen  not have  any shadow
-  painted on.
-  | Default value | ~""~ |
-  #+BEGIN_SRC conf :tangle no
-    shadow-exclude-reg = ""
-  #+END_SRC
+It is  also possible  to specify an  X geometry that  describes the  region in
+which shadows  should not  be painted in,  such as a  dock window  region. For
+example,
+#+BEGIN_SRC conf :tangle no
+  # shadow-exclude-reg = "x10+0+0"
+#+END_SRC
+would make  the 10  pixels at  the bottom of  the screen  not have  any shadow
+painted on.
+| Default value | ~""~ |
+#+BEGIN_SRC conf :tangle no
+  shadow-exclude-reg = ""
+#+END_SRC
 
-  Finally,  it is  also possible  to crop  the  shadow of  a window  fully on  a
-  particular Xinerama screen to the screen.
-  - Default value :: ~false~
-  #+BEGIN_SRC conf
-    xinerama-shadow-crop = false
-  #+END_SRC
+Finally,  it is  also possible  to crop  the  shadow of  a window  fully on  a
+particular Xinerama screen to the screen.
+- Default value :: ~false~
+#+BEGIN_SRC conf
+  xinerama-shadow-crop = false
+#+END_SRC
 
 ** Deprecated options
    :PROPERTIES:
    :HEADER-ARGS:conf: :tangle no
    :CUSTOM_ID: Shadows-Deprecated_options-da215d5a
    :END:
-   Options in this subheader *will not* be exported to my configuration file.
+Options in this subheader *will not* be exported to my configuration file.
 
-   Thanks  to this  value, Picom  can  avoid drawing  shadows on  dock or  panel
-   windows.  This option  is deprecated,  and  users should  use the  ~wintypes~
-   option in their config file instead.
-   | Default value | ~false~ |
-   #+BEGIN_SRC conf
-     no-dock-shadow = false;
-   #+END_SRC
+Thanks to this value, Picom can avoid drawing shadows on dock or panel windows. This option is deprecated, and users should use the ~wintypes~ option in their config file instead.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  no-dock-shadow = false;
+#+END_SRC
 
-   This option allows Picom not to draw on drag-and-drop windows. This option is
-   deprecated, and users  should use the ~wintypes~ option in  their config file
-   instead.
-   | Default value | ~false~ |
-   #+BEGIN_SRC conf
-     no-dnd-shadow = false;
-   #+END_SRC
+This option allows Picom not to draw on drag-and-drop windows. This option is deprecated, and users should use the ~wintypes~ option in their config file instead.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  no-dnd-shadow = false;
+#+END_SRC
 
-   ~shadow-ignore-shaped~ is also  deprecated. It used to indicate  Picom not to
-   paint  shadows on  shaped windows.  Note  shaped windows  here means  windows
-   setting their  shape through X  Shape extension. Those using  ARGB background
-   are beyond Picom’s control. Since it is deprecated, you could instead use
-   #+BEGIN_SRC conf :tangle no
-     shadow-exclude = 'bounding_shaped'
-   #+END_SRC
-   or
-   #+BEGIN_SRC conf :tangle no
-     shadow-exclude = 'bounding_shaped && !rounded_corners'
-   #+END_SRC
-   | Default value | ~""~ |
-   #+BEGIN_SRC conf :tangle no
-     shadow-ignore-shaped = ""
-   #+END_SRC
+~shadow-ignore-shaped~ is also deprecated. It used to indicate Picom not to paint shadows on shaped windows. Note shaped windows here means windows setting their shape through X Shape extension. Those using ARGB background are beyond Picom’s control. Since it is deprecated, you could instead use
+#+BEGIN_SRC conf :tangle no
+  shadow-exclude = 'bounding_shaped'
+#+END_SRC
+or
+#+BEGIN_SRC conf :tangle no
+  shadow-exclude = 'bounding_shaped && !rounded_corners'
+#+END_SRC
+| Default value | ~""~ |
+#+BEGIN_SRC conf :tangle no
+  shadow-ignore-shaped = ""
+#+END_SRC
 
 * Rounded corners
   :PROPERTIES:
   :CUSTOM_ID: Rounded_corners-33bfcd20
   :END:
-  A great feature added by ibhagwan’s fork of compton is the addition of rounded
-  corners  from  sdhand’s  fork,  and  the Kawase  blur  (described  [[#Background_blurring-55835066][here]])  from
-  tryone144’s fork. Here we can see the declaration of the corners’ radius:
-  #+BEGIN_SRC conf
-    corner-radius = 9.0;
-  #+END_SRC
+A great feature added by ibhagwan’s fork of picom is the addition of rounded corners from sdhand’s fork, and the Kawase blur (described [[#Background_blurring-55835066][here]]) from tryone144’s fork. Here we can see the declaration of the corners’ radius:
+#+BEGIN_SRC conf
+  corner-radius = 9.0;
+#+END_SRC
 
-  It  is also  possible  to  exclude some  windows  from  getting their  corners
-  rounded. I personally excluded any window generated by AwesomeWM.
-  #+BEGIN_SRC conf
-    rounded-corners-exclude = [
-      "_NET_WM_WINDOW_TYPE@[0]:a = '_NET_WM_WINDOW_TYPE_DOCK'"
-    ];
-  #+END_SRC
+It is also possible to exclude some windows from getting their corners rounded. I personally excluded any window generated by AwesomeWM.
+#+BEGIN_SRC conf
+  rounded-corners-exclude = [
+    "_NET_WM_WINDOW_TYPE@[0]:a = '_NET_WM_WINDOW_TYPE_DOCK'"
+  ];
+#+END_SRC
 
 * Fading
   :PROPERTIES:
   :CUSTOM_ID: Fading-419d8047
   :END:
-  Picom has the ability to create some fading effects on windows when opening or
-  closing  or when  the opacity  changes. The  following parameter  toggles this
-  feature   on   or  off.   However,   its   behavior   can  be   changed   with
-  ~no-fading-openclose~.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    fading = true
-  #+END_SRC
+Picom has the ability to create some fading effects on windows when opening or closing or when the opacity changes. The following parameter toggles this feature on or off. However, its behavior can be changed with ~no-fading-openclose~.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  fading = true
+#+END_SRC
 
-  These values  controls the opacity  change between  steps while fading  in and
-  out.
-  | Default value | ~0.028~ (fade-in), ~0.03~ (fade-out) |
-  | Min value     | ~0.01~                               |
-  | Max value     | ~1.0~                                |
-  #+BEGIN_SRC conf
-    fade-in-step = 0.09;
-    fade-out-step = 0.08;
-  #+END_SRC
+These values controls the opacity change between steps while fading in and out.
+| Default value | ~0.028~ (fade-in), ~0.03~ (fade-out) |
+| Min value     | ~0.01~                               |
+| Max value     | ~1.0~                                |
+#+BEGIN_SRC conf
+  fade-in-step = 0.09;
+  fade-out-step = 0.08;
+#+END_SRC
 
-  This value represents the time between steps in fade steps, in milliseconds.
-  | Default value | ~10~ |
-  | Min value     | ~1~  |
-  #+BEGIN_SRC conf
-    fade-delta = 20;
-  #+END_SRC
+This value represents the time between steps in fade steps, in milliseconds.
+| Default value | ~10~ |
+| Min value     | ~1~  |
+#+BEGIN_SRC conf
+  fade-delta = 20;
+#+END_SRC
 
-  It  is possible  to exclude  some  windows that  should  not be  faded with  a
-  specified list of conditions.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    fade-exclude = [ "class_g = 'mpv'" ];
-  #+END_SRC
+It is possible to exclude some windows that should not be faded with a specified list of conditions.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  fade-exclude = [ "class_g = 'mpv'" ];
+#+END_SRC
 
-  This option allows Picom not to create any fade on windows opening or closing.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    no-fading-openclose = true;
-  #+END_SRC
+This option allows Picom not to create any fade on windows opening or closing.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  no-fading-openclose = true;
+#+END_SRC
 
-  Finally, this  option is a workaround  for Openbox, Fluxbox and  others by not
-  fading destroyed ARGB windows with WM frame.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    no-fading-destroyed-argb = false
-  #+END_SRC
+Finally, this option is a workaround for Openbox, Fluxbox and others by not fading destroyed ARGB windows with WM frame.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  no-fading-destroyed-argb = false
+#+END_SRC
 
 * Transparency and opacity
   :PROPERTIES:
   :CUSTOM_ID: Transparency_and_opacity-6c6b36d2
   :END:
-  Picom  is also  able  to  create some  opacity  or  transparency for  windows,
-  depending on  their state  or on  some user-defined  rules. For  instance, the
-  following value describes the opacity of inactive windows.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    inactive-opacity = 0.6;
-  #+END_SRC
+Picom is also able to create some opacity or transparency for windows, depending on their state or on some user-defined rules. For instance, the following value describes the opacity of inactive windows.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  inactive-opacity = 0.6;
+#+END_SRC
 
-  On the  other hand,  it is possible  to declare a  default opacity  for active
-  windows.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    active-opacity = 1;
-  #+END_SRC
+On the other hand, it is possible to declare a default opacity for active windows.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  active-opacity = 1;
+#+END_SRC
 
-  This however describes the opacity of window titlebars and borders.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    frame-opacity = 1.0;
-  #+END_SRC
+This however describes the opacity of window titlebars and borders.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  frame-opacity = 1.0;
+#+END_SRC
 
-  ~menu-opacity~ describes the opacity for dropdown menus and popup menus.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    # menu-opacity = 0.9;
-  #+END_SRC
+~menu-opacity~ describes the opacity for dropdown menus and popup menus.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  # menu-opacity = 0.9;
+#+END_SRC
 
-  ~inactive-opacity-override~ allows  the user  to let  inactive opacity  set by
-  ~-i~ override the ~_NET_WM_OPACITY_ values of windows.
-  | Default value | ~true~ |
-  #+BEGIN_SRC conf
-    inactive-opacity-override = true;
-  #+END_SRC
+~inactive-opacity-override~ allows the user to let inactive opacity set by ~-i~ override the ~_NET_WM_OPACITY_ values of windows.
+| Default value | ~true~ |
+#+BEGIN_SRC conf
+  inactive-opacity-override = true;
+#+END_SRC
 
-  While it is possible to alter opacity on inactive windows, it is also possible
-  to dim them.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    # inactive-dim = 1.0
-  #+END_SRC
+While it is possible to alter opacity on inactive windows, it is also possible to dim them.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  # inactive-dim = 1.0
+#+END_SRC
 
-  It is also  possible to use a  fixed inactive dim value,  instead of adjusting
-  according to window opacity.
-  | Default value | ~1.0~ |
-  | Min value     | ~0.1~ |
-  | Max value     | ~1.0~ |
-  #+BEGIN_SRC conf
-    # inactive-dim-fixed = 1.0
-  #+END_SRC
+It is also possible to use a fixed inactive dim value, instead of adjusting according to window opacity.
+| Default value | ~1.0~ |
+| Min value     | ~0.1~ |
+| Max value     | ~1.0~ |
+#+BEGIN_SRC conf
+  # inactive-dim-fixed = 1.0
+#+END_SRC
 
-  It is  also possible to  specify a list of  conditions of windows  that should
-  always be considered focused.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    focus-exclude = [ "class_g = 'mpv'" ];
-  #+END_SRC
+It is also possible to specify a list of conditions of windows that should always be considered focused.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  focus-exclude = [ "class_g = 'mpv'" ];
+#+END_SRC
 
-  The  user  can   also  specify  a  list  of  opacity   rules,  in  the  format
-  ~PERCENT:PATTERN~,  like ~50:name  *= "Firefox"~.  picom-trans is  recommended
-  over this.  Note we  don't make  any guarantee  about possible  conflicts with
-  other programs that  set ~_NET_WM_WINDOW_OPACITY~ on frame  or client windows.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    opacity-rule = [
-      "85:class_g = 'Polybar'",
-      # "55:class_g *?= 'Rofi'",
-    ];
-  #+END_SRC
+The user can also specify a list of opacity rules, in the format ~PERCENT:PATTERN~, like ~50:name *= "Firefox"~ . ~picom-trans~ is recommended over this. Note we don't make any guarantee about possible conflicts with other programs that set ~_NET_WM_WINDOW_OPACITY~ on frame or client windows.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  opacity-rule = [];
+#+END_SRC
 
 * Background blurring
   :PROPERTIES:
   :CUSTOM_ID: Background_blurring-55835066
   :END:
-  The following  are the  parameters for background  blurring, see  the \*BLUR\*
-  section for more information.
-  #+BEGIN_SRC conf
-    blur: {
-      method = "dual_kawase";
-      strength = 7;
-      background = false;
-      background-frame = false;
-      background-fixed = false;
-    }
-  #+END_SRC
+The following are the parameters for background blurring, see the \*BLUR\* section for more information.
+#+BEGIN_SRC conf
+  blur: {
+    method = "dual_kawase";
+    strength = 7;
+    background = false;
+    background-frame = false;
+    background-fixed = false;
+  }
+#+END_SRC
 
-  This value enables or disables the blur for the background of semi-transparent
-  or  ARGB  windows.  It  has bad  performances  though,  with  driver-dependent
-  behavior. The name of the switch may change without prior notifications.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    blur-background = true;
-  #+END_SRC
+This value enables or disables the blur for the background of semi-transparent or ARGB windows. It has bad performances though, with driver-dependent behavior. The name of the switch may change without prior notifications.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  blur-background = true;
+#+END_SRC
 
-  Blur background of windows when the window  frame is not opaque. If true, this
-  implies the value ~true~ for ~blur-background~.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    blur-background-frame = true;
-  #+END_SRC
+Blur background of windows when the window frame is not opaque. If true, this implies the value ~true~ for ~blur-background~.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  blur-background-frame = true;
+#+END_SRC
 
-  The following determines whether to use fixed blur strength rather than
-  adjusting according to window opacity.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    blur-background-fixed = false;
-  #+END_SRC
+The following determines whether to use fixed blur strength rather than adjusting according to window opacity.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  blur-background-fixed = false;
+#+END_SRC
 
-  Specify     the    blur     convolution     kernel,     with    the     format
-  ~"5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"~.
-  | Default value | ~""~ |
-  #+BEGIN_SRC conf
-    # blur-kern = "3x3box";
-    blur-kern = "5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-  #+END_SRC
+Specify the blur convolution kernel, with the format ~"5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"~.
+| Default value | ~""~ |
+#+BEGIN_SRC conf
+  # blur-kern = "3x3box";
+  blur-kern = "5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
+#+END_SRC
 
-  It is possible to write exclude conditions for background blur.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    blur-background-exclude = [
-      "window_type = 'desktop'",
-      "class_g = 'Polybar'",
-      "class_g = 'discord-overlay'",
-      "_GTK_FRAME_EXTENTS@:c"
-    ];
-  #+END_SRC
+It is possible to write exclude conditions for background blur.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  blur-background-exclude = [
+    "window_type = 'desktop'",
+    "class_g = 'Polybar'",
+    "class_g = 'discord-overlay'",
+    "_GTK_FRAME_EXTENTS@:c"
+  ];
+#+END_SRC
 * General settings
   :PROPERTIES:
   :CUSTOM_ID: General_settings-41398de7
   :END:
-  Daemonize process. Fork to background after initialization. Causes issues
-  with certain (badly-written) drivers.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    daemon = true;
-  #+END_SRC
+Daemonize process. Fork to background after initialization. Causes issues with certain (badly-written) drivers.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  daemon = true;
+#+END_SRC
 
-  Picom has  three backends it  can use: ~xrender~, ~glx~,  and ~xr_glx_hybrid~.
-  GLX backend is typically much faster but depends on a sane driver.
-  | Default value | ~xrender~ |
-  #+BEGIN_SRC conf
-    backend = "glx";
-  #+END_SRC
+Picom has three backends it can use: ~xrender~, ~glx~, and ~xr_glx_hybrid~. GLX backend is typically much faster but depends on a sane driver.
+| Default value | ~xrender~ |
+#+BEGIN_SRC conf
+  backend = "glx";
+#+END_SRC
 
-  This enables or disables VSync.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    vsync = true;
-  #+END_SRC
+This enables or disables VSync.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  vsync = true;
+#+END_SRC
 
-  Enable remote control via D-Bus. See  the *D-BUS API* section below for more
-  details.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    dbus = false;
-  #+END_SRC
+Enable remote control via D-Bus. See the *D-BUS API* section below for more details.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  dbus = false;
+#+END_SRC
 
-  Try to  detect WM windows (a  non-override-redirect window with no  child that
-  has ~WM_STATE~) and markz them as active.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    mark-wmwin-focused = true;
-  #+END_SRC
+Try to detect WM windows (a non-override-redirect window with no child that has ~WM_STATE~) and markz them as active.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  mark-wmwin-focused = true;
+#+END_SRC
 
 
-  Mark  override-redirect  windows  that  doesn't   have  a  child  window  with
-  ~WM_STATE~ focused.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    mark-ovredir-focused = true;
-  #+END_SRC
+Mark override-redirect windows that doesn't have a child window with ~WM_STATE~ focused.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  mark-ovredir-focused = true;
+#+END_SRC
 
-  Try to  detect windows  with rounded  corners and  don't consider  them shaped
-  windows. The accuracy is not very high, unfortunately.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    detect-rounded-corners = true;
-  #+END_SRC
+Try to detect windows with rounded corners and don't consider them shaped windows. The accuracy is not very high, unfortunately.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  detect-rounded-corners = true;
+#+END_SRC
 
-  Detect ~_NET_WM_OPACITY~  on client  windows, useful  for window  managers not
-  passing ~_NET_WM_OPACITY~ of client windows to frame windows.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    detect-client-opacity = true;
-  #+END_SRC
+Detect ~_NET_WM_OPACITY~ on client windows, useful for window managers not passing ~_NET_WM_OPACITY~ of client windows to frame windows.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  detect-client-opacity = true;
+#+END_SRC
 
-  Specify refresh  rate of  the screen. If  not specified or  0, picom  will try
-  detecting this with X RandR extension.
-  | Default value | ~60~ |
-  #+BEGIN_SRC conf
-    refresh-rate = 60;
-  #+END_SRC
+Specify refresh rate of the screen. If not specified or 0, picom will try detecting this with X RandR extension.
+| Default value | ~60~ |
+#+BEGIN_SRC conf
+  refresh-rate = 120;
+#+END_SRC
 
-  Limit picom to repaint  at most once every 1 /  ~refresh_rate~ second to boost
-  performance. This should not be used with
-  #+BEGIN_SRC text :tangle no
-    vsync drm/opengl/opengl-oml
-  #+END_SRC
-  as they essentially  does sw-opti's job already, unless you  wish to specify a
-  lower refresh rate than the actual value.
-  | Default value | ~""~ |
-  #+BEGIN_SRC conf
-    # sw-opti =;
-  #+END_SRC
+Limit picom to repaint at most once every 1 / ~refresh_rate~ second to boost performance. This should not be used with
+#+BEGIN_SRC text :tangle no
+  vsync drm/opengl/opengl-oml
+#+END_SRC
+as they essentially does sw-opti's job already, unless you wish to specify a lower refresh rate than the actual value.
+| Default value | ~""~ |
+#+BEGIN_SRC conf
+  # sw-opti =;
+#+END_SRC
 
-  Use EWMH  ~_NET_ACTIVE_WINDOW~ to  determine currently focused  window, rather
-  than  listening  to  ~FocusIn~/~FocusOut~  event. Might  have  more  accuracy,
-  provided that the WM supports it.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    # use-ewmh-active-win = false;
-  #+END_SRC
+Use EWMH ~_NET_ACTIVE_WINDOW~ to determine currently focused window, rather than listening to ~FocusIn~/~FocusOut~ event. Might have more accuracy, provided that the WM supports it.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  # use-ewmh-active-win = false;
+#+END_SRC
 
-  Unredirect all windows if a full-screen opaque window is detected, to maximize
-  performance  for   full-screen  windows.   Known  to  cause   flickering  when
-  redirecting/unredirecting  windows. paint-on-overlay  may make  the flickering
-  less obvious.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    unredir-if-possible = false;
-  #+END_SRC
+Unredirect all windows if a full-screen opaque window is detected, to maximize performance for full-screen windows. Known to cause flickering when redirecting/unredirecting windows. paint-on-overlay may make the flickering less obvious.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  unredir-if-possible = false;
+#+END_SRC
 
-  Delay before unredirecting the window, in milliseconds.
-  | Default value | ~0~ |
-  #+BEGIN_SRC conf
-    unredir-if-possible-delay = 0;
-  #+END_SRC
+Delay before unredirecting the window, in milliseconds.
+| Default value | ~0~ |
+#+BEGIN_SRC conf
+  unredir-if-possible-delay = 0;
+#+END_SRC
 
-  Conditions   of  windows   that  shouldn't   be  considered   full-screen  for
-  unredirecting screen.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    unredir-if-possible-exclude = [];
-  #+END_SRC
+Conditions of windows that shouldn't be considered full-screen for unredirecting screen.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  unredir-if-possible-exclude = [];
+#+END_SRC
 
-  Use  ~WM_TRANSIENT_FOR~ to  group windows,  and consider  windows in  the same
-  group focused at the same time.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    detect-transient = true;
-  #+END_SRC
+Use ~WM_TRANSIENT_FOR~ to group windows, and consider windows in the same group focused at the same time.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  detect-transient = true;
+#+END_SRC
 
-  Use  ~WM_CLIENT_LEADER~ to  group windows,  and consider  windows in  the same
-  group  focused at  the same  time. ~WM_TRANSIENT_FOR~  has higher  priority if
-  detect-transient is enabled, too.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    detect-client-leader = true;
-  #+END_SRC
+Use ~WM_CLIENT_LEADER~ to group windows, and consider windows in the same group focused at the same time. ~WM_TRANSIENT_FOR~ has higher priority if detect-transient is enabled, too.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  detect-client-leader = true;
+#+END_SRC
 
-  Resize  damaged region  by  a  specific number  of  pixels.  A positive  value
-  enlarges it while a  negative one shrinks it. If the  value is positive, those
-  additional pixels  will not be actually  painted to screen, only  used in blur
-  calculation, and such.  (Due to technical limitations,  with use-damage, those
-  pixels will still be incorrectly painted to screen.) Primarily used to fix the
-  line corruption issues of  blur, in which case you should  use the blur radius
-  value here (e.g. with a 3x3 kernel, you should use ~--resize-damage 1~, with a
-  5x5 one  you use ~--resize-damage  2~, and  so on). May  or may not  work with
-  *--glx-no-stencil*. Shrinking doesn't function correctly.
-  | Default value | ~1~ |
-  #+BEGIN_SRC conf
-    resize-damage = 1;
-  #+END_SRC
+Resize damaged region by a specific number of pixels. A positive value enlarges it while a negative one shrinks it. If the value is positive, those additional pixels will not be actually painted to screen, only used in blur calculation, and such. (Due to technical limitations, with use-damage, those pixels will still be incorrectly painted to screen.) Primarily used to fix the line corruption issues of blur, in which case you should use the blur radius value here (e.g. with a 3x3 kernel, you should use ~--resize-damage 1~, with a 5x5 one you use ~--resize-damage 2~, and so on). May or may not work with ~--glx-no-stencil~. Shrinking doesn't function correctly.
+| Default value | ~1~ |
+#+BEGIN_SRC conf
+  resize-damage = 1;
+#+END_SRC
 
-  Specify a list  of conditions of windows that should  be painted with inverted
-  color. Resource-hogging, and is not well tested.
-  | Default value | ~[]~ |
-  #+BEGIN_SRC conf
-    invert-color-include = [];
-  #+END_SRC
+Specify a list of conditions of windows that should be painted with inverted color. Resource-hogging, and is not well tested.
+| Default value | ~[]~ |
+#+BEGIN_SRC conf
+  invert-color-include = [];
+#+END_SRC
 
-  Disable  the use  of damage  information. This  cause the  whole screen  to be
-  redrawn everytime,  instead of the  part of  the screen has  actually changed.
-  Potentially  degrades  the performance,  but  might  fix some  artifacts.  The
-  opposing option is use-damage
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    use-damage = false;
-  #+END_SRC
+Disable the use of damage information. This cause the whole screen to be redrawn everytime, instead of the part of the screen has actually changed. Potentially degrades the performance, but might fix some artifacts. The opposing option is use-damage
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  use-damage = false;
+#+END_SRC
 
-  Use X Sync fence to sync clients' draw  calls, to make sure all draw calls are
-  finished  before  picom starts  drawing.  Needed  on nvidia-drivers  with  GLX
-  backend for some users.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    xrender-sync-fence = false;
-  #+END_SRC
+Use X Sync fence to sync clients' draw calls, to make sure all draw calls are finished before picom starts drawing. Needed on nvidia-drivers with GLX backend for some users.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  xrender-sync-fence = false;
+#+END_SRC
 
-  Force  all  windows  to  be  painted  with blending.  Useful  if  you  have  a
-  glx-fshader-win that could turn opaque pixels transparent.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    force-win-blend = false;
-  #+END_SRC
+Force all windows to be painted with blending. Useful if you have a glx-fshader-win that could turn opaque pixels transparent.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  force-win-blend = false;
+#+END_SRC
 
-  Do not use EWMH to detect fullscreen  windows. Reverts to checking if a window
-  is fullscreen based only on its size and coordinates.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    no-ewmh-fullscreen = false;
-  #+END_SRC
+Do not use EWMH to detect fullscreen windows. Reverts to checking if a window is fullscreen based only on its size and coordinates.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  no-ewmh-fullscreen = false;
+#+END_SRC
 
-  Dimming  bright windows  so their  brightness doesn't  exceed this  set value.
-  Brightness of a window is estimated by  averaging all pixels in the window, so
-  this could  comes with a  performance hit. Setting  this to 1.0  disables this
-  behaviour. Requires ~--use-damage~ to be disabled.
-  | Default value | ~1.0~ |
-  #+BEGIN_SRC conf
-    max-brightness = 1.0;
-  #+END_SRC
+Dimming bright windows so their brightness doesn't exceed this set value. Brightness of a window is estimated by averaging all pixels in the window, so this could comes with a performance hit. Setting this to 1.0 disables this behaviour. Requires ~--use-damage~ to be disabled.
+| Default value | ~1.0~ |
+#+BEGIN_SRC conf
+  max-brightness = 1.0;
+#+END_SRC
 
-  Make transparent windows  clip other windows like  non-transparent windows do,
-  instead of blending on top of them.
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    transparent-clipping = false;
-  #+END_SRC
+Make transparent windows clip other windows like non-transparent windows do, instead of blending on top of them.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  transparent-clipping = false;
+#+END_SRC
 
-  Set the log level. Possible values are:
-  - ~trace~
-  - ~debug~
-  - ~info~
-  - ~warn~
-  - ~error~
-  in increasing level  of importance. Case doesn't matter. If  using the "TRACE"
-  log level,  it's better to  log into a file  using ~--log-file~, since  it can
-  generate a huge stream of logs.
-  | Default value | ~"debug"~ |
-  #+BEGIN_SRC conf
-    log-level = "warn";
-  #+END_SRC
+Set the log level. Possible values are:
+- ~trace~
+- ~debug~
+- ~info~
+- ~warn~
+- ~error~
+in increasing level of importance. Case doesn't matter. If using the "TRACE" log level, it's better to log into a file using ~--log-file~, since it can generate a huge stream of logs.
+| Default value | ~"debug"~ |
+#+BEGIN_SRC conf
+  log-level = "warn";
+#+END_SRC
 
-  Set the log file. If ~--log-file~ is  never specified, logs will be written to
-  stderr. Otherwise, logs will to written to  the given file, though some of the
-  early logs might still be written to the stderr. When setting this option from
-  the config file, it is recommended to use an absolute path.
-  | Default value | ~''~ |
-  #+BEGIN_SRC conf
-    # log-file = '/path/to/your/log/file';
-  #+END_SRC
+Set the log file. If ~--log-file~ is never specified, logs will be written to stderr. Otherwise, logs will to written to the given file, though some of the early logs might still be written to the stderr. When setting this option from the config file, it is recommended to use an absolute path.
+| Default value | ~''~ |
+#+BEGIN_SRC conf
+  # log-file = '/path/to/your/log/file';
+#+END_SRC
 
-  Show all X errors (for debugging)
-  | Default value | ~false~ |
-  #+BEGIN_SRC conf
-    # show-all-xerrors = false;
-  #+END_SRC
+Show all X errors (for debugging)
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  # show-all-xerrors = false;
+#+END_SRC
 
-  Write process ID to a file.
-  | Default value | ~''~ |
-  #+BEGIN_SRC conf
-    # write-pid-path = '/path/to/your/log/file';
-  #+END_SRC
+Write process ID to a file.
+| Default value | ~''~ |
+#+BEGIN_SRC conf
+  # write-pid-path = '/path/to/your/log/file';
+#+END_SRC
 
-  Window type settings.  ~WINDOW_TYPE~ is one of the 15  window types defined in
-  EWMH standard:
-  - ~"unknown"~
-  - ~"desktop"~
-  - ~"dock"~
-  - ~"toolbar"~
-  - ~"menu"~
-  - ~"utility"~
-  - ~"splash"~
-  - ~"dialog"~
-  - ~"normal"~
-  - ~"dropdown_menu"~
-  - ~"popup_menu"~
-  - ~"tooltip"~
-  - ~"notification"~
-  - ~"combo"~
-  - ~"dnd"~
-  Following per window-type options are available:
-  - fade, shadow :: Controls window-type-specific shadow and fade settings.
-  - opacity :: Controls default opacity of the window type.
-  - focus :: Controls whether the window of this type is to be always considered
-    focused. (By default, all window types except "normal" and "dialog" has this
-    on.)
-  - full-shadow  :: Controls  whether shadow  is drawn  under the  parts of  the
-    window that you  normally won't be able  to see. Useful when  the window has
-    parts of it transparent, and you want shadows in those areas.
-  - redir-ignore :: Controls whether this type of windows should cause screen to
-    become   redirected   again   after   been   unredirected.   If   you   have
-    unredir-if-possible  set,   and  doesn't   want  certain  window   to  cause
-    unnecessary screen redirection, you can set this to `true`.
-  #+BEGIN_SRC conf
-    wintypes:
-    {
-      tooltip = { fade = true; shadow = true; opacity = 0.75; focus = true; full-shadow = false; };
-      dock = { shadow = false; }
-      dnd = { shadow = false; }
-      popup_menu = { opacity = 0.8; }
-      dropdown_menu = { opacity = 0.8; }
-    };
-  #+END_SRC
+Window type settings. ~WINDOW_TYPE~ is one of the 15 window types defined in EWMH standard:
+- ~"unknown"~
+- ~"desktop"~
+- ~"dock"~
+- ~"toolbar"~
+- ~"menu"~
+- ~"utility"~
+- ~"splash"~
+- ~"dialog"~
+- ~"normal"~
+- ~"dropdown_menu"~
+- ~"popup_menu"~
+- ~"tooltip"~
+- ~"notification"~
+- ~"combo"~
+- ~"dnd"~
+Following per window-type options are available:
+- fade, shadow :: Controls window-type-specific shadow and fade settings.
+- opacity :: Controls default opacity of the window type.
+- focus :: Controls whether the window of this type is to be always considered focused. (By default, all window types except "normal" and "dialog" has this on.)
+- full-shadow :: Controls whether shadow is drawn under the parts of the window that you normally won't be able to see. Useful when the window has parts of it transparent, and you want shadows in those areas.
+- redir-ignore :: Controls whether this type of windows should cause screen to become redirected again after been unredirected. If you have unredir-if-possible set, and doesn't want certain window to cause unnecessary screen redirection, you can set this to `true`.
+#+BEGIN_SRC conf
+  wintypes:
+  {
+    tooltip = { fade = true; shadow = true; opacity = 0.75; focus = true; full-shadow = false; };
+    dock = { shadow = false; }
+    dnd = { shadow = false; }
+    popup_menu = { opacity = 0.8; }
+    dropdown_menu = { opacity = 0.8; }
+  };
+#+END_SRC
 
 ** GLX backend-specific options
    :PROPERTIES:
    :CUSTOM_ID: General_settings-GLX_backend-specific_options-43892981
    :END:
-   Avoid using stencil buffer, useful if  you don't have a stencil buffer. Might
-   cause  incorrect  opacity  when  rendering  transparent  content  (but  never
-   practically happened) and may not work with blur-background. Tests show a 15%
-   performance boost. Recommended.
-   | Default value | ~false~ |
-   #+BEGIN_SRC conf
-     glx-no-stencil = true;
-   #+END_SRC
+Avoid using stencil buffer, useful if you don't have a stencil buffer. Might cause incorrect opacity when rendering transparent content (but never practically happened) and may not work with blur-background. Tests show a 15% performance boost. Recommended.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  glx-no-stencil = true;
+#+END_SRC
 
-   Avoid rebinding pixmap  on window damage. Probably  could improve performance
-   on rapid window content changes, but is known to break things on some drivers
-   (LLVMpipe, xf86-video-intel, etc.). Recommended if it works.
-   | Default value | ~false~ |
-   #+BEGIN_SRC conf
-     glx-no-rebind-pixmap = false;
-   #+END_SRC
+Avoid rebinding pixmap on window damage. Probably could improve performance on rapid window content changes, but is known to break things on some drivers (LLVMpipe, xf86-video-intel, etc.). Recommended if it works.
+| Default value | ~false~ |
+#+BEGIN_SRC conf
+  glx-no-rebind-pixmap = false;
+#+END_SRC
 
-   Use  specified  GLSL  fragment  shader for  rendering  window  contents.  See
-   ~compton-default-fshader-win.glsl~                                        and
-   ~compton-fake-transparency-fshader-win.glsl~ in the source tree for examples.
-   | Default value | ~''~ |
-   #+BEGIN_SRC conf :tangle no
-     glx-fshader-win = '';
-   #+END_SRC
+Use specified GLSL fragment shader for rendering window contents. See ~compton-default-fshader-win.glsl~ and ~compton-fake-transparency-fshader-win.glsl~ in the source tree for examples.
+| Default value | ~''~ |
+#+BEGIN_SRC conf :tangle no
+  glx-fshader-win = '';
+#+END_SRC

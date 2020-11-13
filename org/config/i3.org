@@ -11,21 +11,15 @@
   :PROPERTIES:
   :CUSTOM_ID: Presentation-9c7a53bf
   :END:
-  *Before proceeding, be aware that I  deprecated this i3 config on August 22nd,
-  2020, meaning I won’t update it anymore unless  I use it again some day in the
-  future. I will keep it on my website though.*
+*Before proceeding, be aware that I deprecated this i3 config on August 22nd, 2020, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
 
-  =i3= is  a window manager for  GNU/Linux which automatically tiles  windows in
-  workspaces. This configuration was ade to automatically handle some tasks such
-  as  which  software allowed  where,  autostart,  and launching  software  with
-  shortcuts.
+=i3= is a window manager for GNU/Linux which automatically tiles windows in workspaces. This configuration was ade to automatically handle some tasks such as which software allowed where, autostart, and launching software with shortcuts.
 
-  It  is  to be  noted  I  am using  [[https://github.com/Airblader/i3][Airblader’s  fork  of i3]],  =i3-gaps=.  Some
-  configuration will not work with =i3=.
+It is to be noted I am using [[https://github.com/Airblader/i3][Airblader’s fork of i3]], =i3-gaps=. Some configuration will not work with =i3=.
 
-  #+BEGIN_SRC conf :exports none
-    # -*- mode: conf -*-
-  #+END_SRC
+#+BEGIN_SRC conf :exports none
+  # -*- mode: conf -*-
+#+END_SRC
 
 * Variables declaration
   :PROPERTIES:
@@ -35,354 +29,302 @@
    :PROPERTIES:
    :CUSTOM_ID: Variables_declaration-Global-1cf1bfe4
    :END:
-   The first I  do is declaring the modifier  key and the alt key  —I don’t find
-   the names =Mod1=  and =Mod4= to be  explicit enough. This will  map =$mod= to
-   the Super  key (or as some  people unfortunately call it,  the /Windows/ key)
-   and =$alt= to  the Alt key.
+The first I do is declaring the modifier key and the alt key —I don’t find the names =Mod1= and =Mod4= to be explicit enough. This will map =$mod= to the Super key (or as some people unfortunately call it, the /Windows/ key) and =$alt= to the Alt key.
 
-   Let’s  also  bind the  =$up=,  =$down=,  =$left=  and =$right=  variables  to
-   respectively the up,  down, left, and right arrows on  the keyboard. Why bind
-   them to  variables? If I  ever want  to modify the  arrow keys to  some other
-   keys, like  =é=, =a=,  =u=, and  =i= (the  equivalent of  =wqsd= on  the bépo
-   layout) or  =c=, =t=,  =s=, and  =r= (the  equivalent of  =hjkl= on  the bépo
-   layout), I will just have to modify these four lines.
+Let’s also bind the =$up=, =$down=, =$left= and =$right= variables to respectively the up, down, left, and right arrows on the keyboard. Why bind them to variables? If I ever want to modify the arrow keys to some other keys, like =é=, =a=, =u=, and =i= (the equivalent of =wqsd= on the bépo layout) or =c=, =t=, =s=, and =r= (the equivalent of =hjkl= on the bépo layout), I will just have to modify these four lines.
 
-   I’ll also set the  =$term= variable. A lot of shortcuts in  my i3 config rely
-   on the terminal emulator itself to  launch commands in the terminal, and thus
-   call the terminal itself. If I ever  need to move from my current terminal, I
-   will just have to change the name of the executable here.
+I’ll also set the =$term= variable. A lot of shortcuts in my i3 config rely on the terminal emulator itself to launch commands in the terminal, and thus call the terminal itself. If I ever need to move from my current terminal, I will just have to change the name of the executable here.
 
-   #+NAME: variable-table
-   | variable | value |
-   |----------+-------|
-   | $mod     | Mod4  |
-   | $alt     | Mod1  |
-   | $up      | Up    |
-   | $down    | Down  |
-   | $left    | Left  |
-   | $right   | Right |
-   | $term    | st    |
+#+NAME: variable-table
+| variable | value |
+|----------+-------|
+| $mod     | Mod4  |
+| $alt     | Mod1  |
+| $up      | Up    |
+| $down    | Down  |
+| $left    | Left  |
+| $right   | Right |
+| $term    | st    |
 
-   #+NAME: variable-sh
-   | variable    | value                                                                    |
-   |-------------+--------------------------------------------------------------------------|
-   | $exiti3     | i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'               |
-   | $lockscreen | Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89           |
-   | $rofiexec   | rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons |
-   | $mail       | emacsclient -c -e '(mu4e)' -n                                            |
-   | $ec         | emacsclient -c -n                                                        |
-   | $walset     | wal -i ~/Pictures/Wallpapers -o wal-set                                  |
+#+NAME: variable-sh
+| variable    | value                                                                    |
+|-------------+--------------------------------------------------------------------------|
+| $exiti3     | i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'               |
+| $lockscreen | Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89           |
+| $rofiexec   | rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons |
+| $mail       | emacsclient -c -e '(mu4e)' -n                                            |
+| $ec         | emacsclient -c -n                                                        |
+| $walset     | wal -i ~/Pictures/Wallpapers -o wal-set                                  |
 
-   Variables will be set like so.
-   #+BEGIN_SRC conf :tangle no
-   set $term st
-   #+END_SRC
+Variables will be set like so.
+#+BEGIN_SRC conf :tangle no
+set $term st
+#+END_SRC
 
-   #+NAME: generate-variables
-   #+BEGIN_SRC emacs-lisp :var variables=variable-table :cache yes
-     (mapconcat (lambda (x) (format "set %s %s" (car x) (cadr x)))
-                variables
-                "\n")
-   #+END_SRC
+#+NAME: generate-variables
+#+BEGIN_SRC emacs-lisp :var variables=variable-table :cache yes
+  (mapconcat (lambda (x) (format "set %s %s" (car x) (cadr x)))
+             variables
+             "\n")
+#+END_SRC
 
-   #+RESULTS[48079cbd7e6dbf2003fe5ae87216bd38f638b6f8]: generate-variables
-   : set $mod Mod4
-   : set $alt Mod1
-   : set $up Up
-   : set $down Down
-   : set $left Left
-   : set $right Right
-   : set $term st
+#+RESULTS[48079cbd7e6dbf2003fe5ae87216bd38f638b6f8]: generate-variables
+: set $mod Mod4
+: set $alt Mod1
+: set $up Up
+: set $down Down
+: set $left Left
+: set $right Right
+: set $term st
 
-   Finally, some variables  hold some long strings for commands  I don’t want to
-   have to type multiple times.
-   #+NAME: generate-variables2
-   #+BEGIN_SRC emacs-lisp :var variables=variable-sh :cache yes
-     (mapconcat (lambda (x) (format "set %s \"%s\"" (car x) (cadr x)))
-                variables
-                "\n")
-   #+END_SRC
+Finally, some variables hold some long strings for commands I don’t want to have to type multiple times.
+#+NAME: generate-variables2
+#+BEGIN_SRC emacs-lisp :var variables=variable-sh :cache yes
+  (mapconcat (lambda (x) (format "set %s \"%s\"" (car x) (cadr x)))
+             variables
+             "\n")
+#+END_SRC
 
-   #+RESULTS[c901e3e31c500859661650e86a6b63aef286acbe]: generate-variables2
-   : set $exiti3 "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
-   : set $lockscreen "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
-   : set $rofiexec "rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
-   : set $mail "emacsclient -c -e '(mu4e)' -n"
-   : set $ec "emacsclient -c -n"
-   : set $walset "wal -i ~/Pictures/Wallpapers -o wal-set"
+#+RESULTS[c901e3e31c500859661650e86a6b63aef286acbe]: generate-variables2
+: set $exiti3 "i3-nagbar -t warning -m 'Leave i3?' -b 'Yes' 'i3-msg exit'"
+: set $lockscreen "Lucien Cartier-Tilet\n(Phuntsok Drak-pa)\n+33 (0)6 83 90 56 89"
+: set $rofiexec "rofi -combi-modi 'window,drun' -show combi -mohh combi -m -1 -show-icons"
+: set $mail "emacsclient -c -e '(mu4e)' -n"
+: set $ec "emacsclient -c -n"
+: set $walset "wal -i ~/Pictures/Wallpapers -o wal-set"
 
-   Here is the configuration:
-   #+BEGIN_SRC conf :noweb yes
-     <<generate-variables()>>
-     <<generate-variables2()>>
-   #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf :noweb yes
+  <<generate-variables()>>
+  <<generate-variables2()>>
+#+END_SRC
 
-   Now comes  the font for the  window tiles. Honestly, this  setting is useless
-   since we do not see it, but let’s set it anyway.
-   #+BEGIN_SRC conf
-     font Fira Sans Book:style=Book:pixelsize=10
-   #+END_SRC
+Now comes the font for the window tiles. Honestly, this setting is useless since we do not see it, but let’s set it anyway.
+#+BEGIN_SRC conf
+  font Fira Sans Book:style=Book:pixelsize=10
+#+END_SRC
 
 ** Floating windows
    :PROPERTIES:
    :CUSTOM_ID: Variables_declaration-Floating_windows-897d0c3b
    :END:
-   Floating  windows are  windows that  are not  tiled with  other windows,  but
-   rather are free to go anywhere on your screen, with any size. A bit like what
-   you would get with any other non-tiling window manager or desktop environment
-   (though most of them support minimal tiling features).
+Floating windows are windows that are not tiled with other windows, but rather are free to go anywhere on your screen, with any size. A bit like what you would get with any other non-tiling window manager or desktop environment (though most of them support minimal tiling features).
 
-   Let’s declare our floading modyfier. With floating windows, you can move them
-   around by clicking on the window’s borders;  but since we don’t have any with
-   this  config, we  will  have instead  to press  the  floating modifier  while
-   clicking on the window (anywhere on the window is fine) to move them around.
+Let’s declare our floading modyfier. With floating windows, you can move them around by clicking on the window’s borders; but since we don’t have any with this config, we will have instead to press the floating modifier while clicking on the window (anywhere on the window is fine) to move them around.
 
-   Here is the configuration:
-   #+BEGIN_SRC conf
-   floating_modifier $mod
-   #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+floating_modifier $mod
+#+END_SRC
 
 * i3 global settings
   :PROPERTIES:
   :CUSTOM_ID: i3_global_settings-1b863d93
   :END:
-  Some settings affect i3 globally, such as its aspect or how it handles the
-  mouse. Hence, here are some settings I set in my configuration.
+Some settings affect i3 globally, such as its aspect or how it handles the mouse. Hence, here are some settings I set in my configuration.
 
 ** Mouse settings
    :PROPERTIES:
    :CUSTOM_ID: i3_global_settings-Mouse_settings-4630241d
    :END:
-   First of all, I  do not want i3 to warp my mouse  each time I change windows;
-   my mouse stays where it is.
-   #+BEGIN_SRC conf
-   mouse_warping none
-   #+END_SRC
-   I also to not  want the window focus to follow my  mouse, because sometimes I
-   will just knock  my physical mouse out of  the way of my hand, and  when I do
-   that the software  mouse will most likely  end up in another window  I do not
-   want to focus.
-   #+BEGIN_SRC conf
-     focus_follows_mouse no
-   #+END_SRC
+First of all, I do not want i3 to warp my mouse each time I change windows; my mouse stays where it is.
+#+BEGIN_SRC conf
+mouse_warping none
+#+END_SRC
+
+I also to not want the window focus to follow my mouse, because sometimes I will just knock my physical mouse out of the way of my hand, and when I do that the software mouse will most likely end up in another window I do not want to focus.
+#+BEGIN_SRC conf
+  focus_follows_mouse no
+#+END_SRC
 
 ** Popup handling
    :PROPERTIES:
    :CUSTOM_ID: i3_global_settings-Popup_handling-51b6ed8d
    :END:
-   While in  fullscreen, some software might  generate a popup. In  that case, I
-   want to  be aware of  that, and  any popup will  make me leave  fullscreen in
-   order to be presented with said popup.
-   #+BEGIN_SRC conf
-   popup_during_fullscreen leave_fullscreen
-   #+END_SRC
+While in fullscreen, some software might generate a popup. In that case, I want to be aware of that, and any popup will make me leave fullscreen in order to be presented with said popup.
+#+BEGIN_SRC conf
+popup_during_fullscreen leave_fullscreen
+#+END_SRC
 
 ** Behavior of workspace changes
    :PROPERTIES:
    :CUSTOM_ID: i3_global_settings-Behavior_of_workspace_changes-00202985
    :END:
-   When changing workspace as  described below, we often want to  go back to the
-   previous workspace we were working on,  but we might not remember immediately
-   which  one it  was, or  we might  still have  our fingers  ready to  fire the
-   shortcut which made us make the first workspace change. Hence, if we type the
-   same workspace  change shortcut, instead  of doing  nothing it will  bring us
-   back to the previous workspace we were on.
-   #+BEGIN_SRC conf
-   workspace_auto_back_and_forth yes
-   #+END_SRC
+When changing workspace as described below, we often want to go back to the previous workspace we were working on, but we might not remember immediately which one it was, or we might still have our fingers ready to fire the shortcut which made us make the first workspace change. Hence, if we type the same workspace change shortcut, instead of doing nothing it will bring us back to the previous workspace we were on.
+#+BEGIN_SRC conf
+workspace_auto_back_and_forth yes
+#+END_SRC
 
 ** Gaps and window appearance
    :PROPERTIES:
    :CUSTOM_ID: i3_global_settings-Gaps_and_window_appearance-749e9f7b
    :END:
-   As mentioned in at the beginning of  this document, I am using i3-gaps, which
-   brings spacing (gaps) between windows to i3.
+As mentioned in at the beginning of this document, I am using i3-gaps, which brings spacing (gaps) between windows to i3.
 
-   First, I want space around my  windows only when there are several containers
-   on the same screen, otherwise they will be maximized.
-   #+BEGIN_SRC conf
-     smart_gaps on
-   #+END_SRC
+First, I want space around my windows only when there are several containers on the same screen, otherwise they will be maximized.
+#+BEGIN_SRC conf
+  smart_gaps on
+#+END_SRC
 
-   I also  do not  want to  see any  window border,  so I  will be  turning this
-   setting off.
-   #+BEGIN_SRC conf
-     smart_borders on
-   #+END_SRC
+I also do not want to see any window border, so I will be turning this setting off.
+#+BEGIN_SRC conf
+  smart_borders on
+#+END_SRC
 
-   By the way, the default border is invisible, since it is zero pixels wide.
-   #+BEGIN_SRC conf
-   default_border pixel 0
-   #+END_SRC
+By the way, the default border is invisible, since it is zero pixels wide.
+#+BEGIN_SRC conf
+default_border pixel 0
+#+END_SRC
 
-   Then comes the size of these gaps. I made the outer gap negative so the space
-   between my  windows and  the border  of my  screens is  smaller than  the gap
-   between my containers.
-   #+BEGIN_SRC conf
-     gaps inner 20
-     gaps outer -10
-   #+END_SRC
+Then comes the size of these gaps. I made the outer gap negative so the space between my windows and the border of my screens is smaller than the gap between my containers.
+#+BEGIN_SRC conf
+  gaps inner 20
+  gaps outer -10
+#+END_SRC
 
-   Some  parameters are  also available  when it  comes to  the colors  i3 uses.
-   Honestly, we  won’t see these colors  much, so let’s simply  keep the default
-   values.
-   #+BEGIN_SRC conf
-     set_from_resource $fg i3wm.color7 #f0f0f0
-     set_from_resource $bg i3wm.color2 #f0f0f0
+Some parameters are also available when it comes to the colors i3 uses. Honestly, we won’t see these colors much, so let’s simply keep the default values.
+#+BEGIN_SRC conf
+  set_from_resource $fg i3wm.color7 #f0f0f0
+  set_from_resource $bg i3wm.color2 #f0f0f0
 
-     # class                 border  backgr. text indicator child_border
-     client.focused          $bg     $bg     $fg  $bg       $bg
-     client.focused_inactive $bg     $bg     $fg  $bg       $bg
-     client.unfocused        $bg     $bg     $fg  $bg       $bg
-     client.urgent           $bg     $bg     $fg  $bg       $bg
-     client.placeholder      $bg     $bg     $fg  $bg       $bg
-   #+END_SRC
+  # class                 border  backgr. text indicator child_border
+  client.focused          $bg     $bg     $fg  $bg       $bg
+  client.focused_inactive $bg     $bg     $fg  $bg       $bg
+  client.unfocused        $bg     $bg     $fg  $bg       $bg
+  client.urgent           $bg     $bg     $fg  $bg       $bg
+  client.placeholder      $bg     $bg     $fg  $bg       $bg
+#+END_SRC
 
 * Assigning windows to workspaces
   :PROPERTIES:
   :CUSTOM_ID: Assigning_windows_to_workspaces-e59f61e5
   :END:
-  I decided to bind some windows to some workspaces in order to have a better
-  organization of my desktop.
+I decided to bind some windows to some workspaces in order to have a better organization of my desktop.
+#+NAME: assignment-table
+| Application | Class       | Workspace |
+|-------------+-------------+-----------|
+| Emacs       | Emacs       |         2 |
+| Chromium    | Chromium    |         3 |
+| Firefox     | firefox     |         3 |
+| Nemo        | Nemo        |         4 |
+| Wonderdraft | Godot       |         5 |
+| Gimp        | Gimp*       |         6 |
+| Gnome Boxes | gnome-boxes |         8 |
+| Steam       | Steam       |         9 |
+| Discord     | discord     |        10 |
 
-  #+NAME: assignment-table
-  | Application | Class       | Workspace |
-  |-------------+-------------+-----------|
-  | Emacs       | Emacs       |         2 |
-  | Chromium    | Chromium    |         3 |
-  | Firefox     | firefox     |         3 |
-  | Nemo        | Nemo        |         4 |
-  | Wonderdraft | Godot       |         5 |
-  | Gimp        | Gimp*       |         6 |
-  | Gnome Boxes | gnome-boxes |         8 |
-  | Steam       | Steam       |         9 |
-  | Discord     | discord     |        10 |
+The class table is used in the assignment in the i3 config file. For instance, Gimp’s assignment will look like this:
+#+BEGIN_SRC conf :tangle no
+  assign [class="Gimp*"] 6
+#+END_SRC
 
-  The class table is used in the assignment in the i3 config file. For instance,
-  Gimp’s assignment will look like this:
-  #+BEGIN_SRC conf :tangle no
-    assign [class="Gimp*"] 6
-  #+END_SRC
+#+NAME: generate-workspaces
+#+BEGIN_SRC emacs-lisp :var workspaces=assignment-table :cache yes
+  (mapconcat (lambda (x) (format "assign [class=\"%s\"] %s" (cadr x) (caddr x)))
+             workspaces
+             "\n")
+#+END_SRC
 
-  #+NAME: generate-workspaces
-  #+BEGIN_SRC emacs-lisp :var workspaces=assignment-table :cache yes
-    (mapconcat (lambda (x) (format "assign [class=\"%s\"] %s" (cadr x) (caddr x)))
-               workspaces
-               "\n")
-  #+END_SRC
+#+RESULTS[0995341b013e50227edf78257ab502e46a30bc9a]: generate-workspaces
+: assign [class="Emacs"] 2
+: assign [class="Chromium"] 3
+: assign [class="firefox"] 3
+: assign [class="Nemo"] 4
+: assign [class="Godot"] 5
+: assign [class="Gimp*"] 6
+: assign [class="gnome-boxes"] 8
+: assign [class="Steam"] 9
+: assign [class="discord"] 10
 
-  #+RESULTS[0995341b013e50227edf78257ab502e46a30bc9a]: generate-workspaces
-  : assign [class="Emacs"] 2
-  : assign [class="Chromium"] 3
-  : assign [class="firefox"] 3
-  : assign [class="Nemo"] 4
-  : assign [class="Godot"] 5
-  : assign [class="Gimp*"] 6
-  : assign [class="gnome-boxes"] 8
-  : assign [class="Steam"] 9
-  : assign [class="discord"] 10
+Here is the configuration:
+#+BEGIN_SRC conf :noweb yes
+<<generate-workspaces()>>
+#+END_SRC
 
-  Here is the configuration:
-  #+BEGIN_SRC conf :noweb yes
-  <<generate-workspaces()>>
-  #+END_SRC
+And although this is not specifically assigning a window to a workspace, I also want to have the tenth workspace assigned to a specific output in case I have two screens — and since this is the case when I am using only one computer, Marpa, I will be using some EmacsLisp in order to generate a different configuration file from this org file depending on the name of the machine.
+#+NAME: ws10-output-edp1
+#+BEGIN_SRC emacs-lisp
+  (if (string= system-name "Marpa")
+      "workspace 10 output eDP-1"
+    "")
+#+END_SRC
 
-  And although  this is not  specifically assigning a  window to a  workspace, I
-  also want to have the tenth workspace  assigned to a specific output in case I
-  have  two screens  — and  since this  is the  case when  I am  using only  one
-  computer,  Marpa, I  will  be using  some  EmacsLisp in  order  to generate  a
-  different configuration file  from this org file depending on  the name of the
-  machine.
-  #+NAME: ws10-output-edp1
-  #+BEGIN_SRC emacs-lisp
-    (if (string= system-name "Marpa")
-        "workspace 10 output eDP-1"
-      "")
-  #+END_SRC
-
-  Now I’ll call the above code as a noweb reference that should be executed.
-  #+BEGIN_SRC conf
-    <<ws10-output-edp1()>>
-  #+END_SRC
+Now I’ll call the above code as a noweb reference that should be executed.
+#+BEGIN_SRC conf
+  <<ws10-output-edp1()>>
+#+END_SRC
 
 * Shortcuts
   :PROPERTIES:
   :CUSTOM_ID: Shortcuts-9c7074d3
   :END:
-  I use *A LOT*  of shortcuts when it comes to my workflow.  Like, all the time.
-  So, expect  this chapter to be  a bit long, and  I’ll try to make  it readable
-  still.
+I use *A LOT* of shortcuts when it comes to my workflow. Like, all the time. So, expect this chapter to be a bit long, and I’ll try to make it readable still.
 
-  Shortcuts are set like so:
-  #+BEGIN_SRC conf :tangle no
-  bindsym shortcut command
-  #+END_SRC
+Shortcuts are set like so:
+#+BEGIN_SRC conf :tangle no
+bindsym shortcut command
+#+END_SRC
 
-  #+NAME: generate-shortcuts
-  #+BEGIN_SRC emacs-lisp :exports none :var table=[] :tangle no
-    (mapconcat (lambda (x) (format "bindsym %s %s" (car x) (cadr x)))
-               table
-               "\n")
-  #+END_SRC
+#+NAME: generate-shortcuts
+#+BEGIN_SRC emacs-lisp :exports none :var table=[] :tangle no
+  (mapconcat (lambda (x) (format "bindsym %s %s" (car x) (cadr x)))
+             table
+             "\n")
+#+END_SRC
 
 ** Terminal shortcuts
    :PROPERTIES:
    :CUSTOM_ID: Shortcuts-Terminal_shortcuts-514ecdbe
    :END:
-   I have a couple of shortcuts which  are related to my terminal. For instance,
-   ~$mod+Return~ opens a regular terminal  instance while ~$mod+$alt+M~ opens an
-   SSH instance on my Mila host.
-   #+NAME: terminal-shortcuts
-   | shortcut          | command              | What it does                                     |
-   |-------------------+----------------------+--------------------------------------------------|
-   | $mod+Return       | exec $term           | Opens a regular terminal console                 |
-   | $mod+$alt+Return  | split h;; exec $term | Opens a terminal console below the current one   |
-   | $mod+Shift+Return | split v;; exec $term | Opens a terminal on the right of the current one |
-   | $mod+$alt+m       | exec $term ssh Mila  | Opens an SSH instance in my Mila host            |
-   | $mod+$alt+n       | exec $term ssh Naro  | Opens an SSH instance in my Naro host            |
-   | $mod+Shift+h      | exec $term htop      | Opens a terminal with ~htop~                     |
+I have a couple of shortcuts which are related to my terminal. For instance, ~$mod+Return~ opens a regular terminal instance while ~$mod+$alt+M~ opens an SSH instance on my Mila host.
+#+NAME: terminal-shortcuts
+| shortcut          | command              | What it does                                     |
+|-------------------+----------------------+--------------------------------------------------|
+| $mod+Return       | exec $term           | Opens a regular terminal console                 |
+| $mod+$alt+Return  | split h;; exec $term | Opens a terminal console below the current one   |
+| $mod+Shift+Return | split v;; exec $term | Opens a terminal on the right of the current one |
+| $mod+$alt+m       | exec $term ssh Mila  | Opens an SSH instance in my Mila host            |
+| $mod+$alt+n       | exec $term ssh Naro  | Opens an SSH instance in my Naro host            |
+| $mod+Shift+h      | exec $term htop      | Opens a terminal with ~htop~                     |
 
-   Here is the configuration:
-   #+BEGIN_SRC conf
-   <<generate-shortcuts(table=terminal-shortcuts)>>
-   #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=terminal-shortcuts)>>
+#+END_SRC
 
 ** i3 shortcuts
    :PROPERTIES:
    :CUSTOM_ID: Shortcuts-i3_shortcuts-369039ae
    :END:
-   A couple of shortcuts are dedicated to i3 itself.
-   #+NAME: i3-sh
-   | shortcut     | command                         | what it does                     |
-   |--------------+---------------------------------+----------------------------------|
-   | $mod+Shift+c | exec yadm alt && i3-msg reload  | Reload the i3 configuration file |
-   | $mod+Shift+r | exec yadm alt && i3-msg restart | Restart i3 inplace               |
-   | $mod+Shift+e | exec $exiti3                    | Quit i3                          |
+A couple of shortcuts are dedicated to i3 itself.
+#+NAME: i3-sh
+| shortcut     | command                         | what it does                     |
+|--------------+---------------------------------+----------------------------------|
+| $mod+Shift+c | exec yadm alt && i3-msg reload  | Reload the i3 configuration file |
+| $mod+Shift+r | exec yadm alt && i3-msg restart | Restart i3 inplace               |
+| $mod+Shift+e | exec $exiti3                    | Quit i3                          |
 
-   And  although this  is not  really an  i3  shortcut per  se, I  add here  the
-   shortcut for  launching pywal,  which will  set one of  my wallpapers  as the
-   wallpaper and will generate my system’s color configuration from it.
-   #+NAME: wal-sh
-   | shortcut | command      | what it does                                                 |
-   |----------+--------------+--------------------------------------------------------------|
-   | $mod+w   | exec $walset | Set a random wallpaper and generates a color profile from it |
+And although this is not really an i3 shortcut per se, I add here the shortcut for launching pywal, which will set one of my wallpapers as the wallpaper and will generate my system’s color configuration from it.
+#+NAME: wal-sh
+| shortcut | command      | what it does                                                 |
+|----------+--------------+--------------------------------------------------------------|
+| $mod+w   | exec $walset | Set a random wallpaper and generates a color profile from it |
 
-   We also  have some shortcuts  to lock our  screen, sleep, hibernate  and shut
-   down our computer.
-   #+NAME: computer-sh
-   | shortcut      | command                    | what it does           |
-   |---------------+----------------------------+------------------------|
-   | $mod+l        | exec i3lock -fol           | Lock the screen        |
-   | $mod+$alt+h   | exec "systemctl suspend"   | Suspend the computer   |
-   | $mod+Ctrl+h   | exec "systemctl hibernate" | Hibernate the computer |
-   | $mod+Shift+F4 | exec poweroff              | Power off the computer |
+We also have some shortcuts to lock our screen, sleep, hibernate and shut down our computer.
+#+NAME: computer-sh
+| shortcut      | command                    | what it does           |
+|---------------+----------------------------+------------------------|
+| $mod+l        | exec i3lock -fol           | Lock the screen        |
+| $mod+$alt+h   | exec "systemctl suspend"   | Suspend the computer   |
+| $mod+Ctrl+h   | exec "systemctl hibernate" | Hibernate the computer |
+| $mod+Shift+F4 | exec poweroff              | Power off the computer |
 
-   Here is the configuration:
-   #+BEGIN_SRC conf
-   <<generate-shortcuts(table=i3-sh)>>
-   <<generate-shortcuts(table=wal-sh)>>
-   <<generate-shortcuts(table=computer-sh)>>
-   #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=i3-sh)>>
+<<generate-shortcuts(table=wal-sh)>>
+<<generate-shortcuts(table=computer-sh)>>
+#+END_SRC
 
 ** Window and workspace management
    :PROPERTIES:
@@ -392,533 +334,479 @@
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Managing_how_windows_will_split-5a22ae31
     :END:
-    It is possible to indicate to i3 how windows interact with one another, and
-    especially how they are organized by spawning new windows either to the
-    right or below the current window.
-    #+NAME: split-win-sh
-    | shortcuts | command | what it does                                           |
-    |-----------+---------+--------------------------------------------------------|
-    | $mod+h    | split h | Next window to spawn will spawn below the current one  |
-    | $mod+v    | split v | Next window to spawn will spawn beside the current one |
+It is possible to indicate to i3 how windows interact with one another, and especially how they are organized by spawning new windows either to the right or below the current window.
+#+NAME: split-win-sh
+| shortcuts | command | what it does                                           |
+|-----------+---------+--------------------------------------------------------|
+| $mod+h    | split h | Next window to spawn will spawn below the current one  |
+| $mod+v    | split v | Next window to spawn will spawn beside the current one |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=split-win-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=split-win-sh)>>
+#+END_SRC
 
 *** Focus windows
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Focus_windows-69a00ae9
     :END:
-    To change window focus, you can use one of the following shortcuts:
-    #+NAME: window-focus-sh
-    | shortcut    | command     | what it does                              |
-    |-------------+-------------+-------------------------------------------|
-    | $mod+$left  | focus left  | Focus the window left of the current one  |
-    | $mod+$down  | focus down  | Focus the window down of the current one  |
-    | $mod+$up    | focus up    | Focus the window up of the current one    |
-    | $mod+$right | focus right | Focus the windof right of the current one |
+To change window focus, you can use one of the following shortcuts:
+#+NAME: window-focus-sh
+| shortcut    | command     | what it does                              |
+|-------------+-------------+-------------------------------------------|
+| $mod+$left  | focus left  | Focus the window left of the current one  |
+| $mod+$down  | focus down  | Focus the window down of the current one  |
+| $mod+$up    | focus up    | Focus the window up of the current one    |
+| $mod+$right | focus right | Focus the windof right of the current one |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=window-focus-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=window-focus-sh)>>
+#+END_SRC
 
 *** Focus workspaces
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Focus_workspaces-9f4bee74
     :END:
-    Just like windows,  it is also possible to change  focus between workspaces,
-    because let’s be  honest, most people won’t have ten  screens to display all
-    ten workspaces at the same time, and frankly that would be impractical.
-    #+NAME: ws-focus-sh
-    | shortcut | window       | what it does            |
-    |----------+--------------+-------------------------|
-    | $mod+1   | workspace 1  | Focus first workspace   |
-    | $mod+2   | workspace 2  | Focus second workspace  |
-    | $mod+3   | workspace 3  | Focus third workspace   |
-    | $mod+4   | workspace 4  | Focus fourth workspace  |
-    | $mod+5   | workspace 5  | Focus fifth workspace   |
-    | $mod+6   | workspace 6  | Focus sixth workspace   |
-    | $mod+7   | workspace 7  | Focus seventh workspace |
-    | $mod+8   | workspace 8  | Focus eighth workspace  |
-    | $mod+9   | workspace 9  | Focus ninth workspace   |
-    | $mod+0   | workspace 10 | Focus tenth workspace   |
+Just like windows, it is also possible to change focus between workspaces, because let’s be honest, most people won’t have ten screens to display all ten workspaces at the same time, and frankly that would be impractical.
+#+NAME: ws-focus-sh
+| shortcut | window       | what it does            |
+|----------+--------------+-------------------------|
+| $mod+1   | workspace 1  | Focus first workspace   |
+| $mod+2   | workspace 2  | Focus second workspace  |
+| $mod+3   | workspace 3  | Focus third workspace   |
+| $mod+4   | workspace 4  | Focus fourth workspace  |
+| $mod+5   | workspace 5  | Focus fifth workspace   |
+| $mod+6   | workspace 6  | Focus sixth workspace   |
+| $mod+7   | workspace 7  | Focus seventh workspace |
+| $mod+8   | workspace 8  | Focus eighth workspace  |
+| $mod+9   | workspace 9  | Focus ninth workspace   |
+| $mod+0   | workspace 10 | Focus tenth workspace   |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=ws-focus-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=ws-focus-sh)>>
+#+END_SRC
 
 *** Moving windows
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_windows-d8c90ac2
     :END:
-    To move windows, a couple of shortcuts are available:
-    #+NAME: window-move-sh
-    | shortcut          | command    | what it does                  |
-    |-------------------+------------+-------------------------------|
-    | $mod+Shift+$left  | move left  | Move the focused window left  |
-    | $mod+Shift+$down  | move down  | Move the focused window down  |
-    | $mod+Shift+$up    | move up    | Move the focused window up    |
-    | $mod+Shift+$right | move right | Move the focused window right |
+To move windows, a couple of shortcuts are available:
+#+NAME: window-move-sh
+| shortcut          | command    | what it does                  |
+|-------------------+------------+-------------------------------|
+| $mod+Shift+$left  | move left  | Move the focused window left  |
+| $mod+Shift+$down  | move down  | Move the focused window down  |
+| $mod+Shift+$up    | move up    | Move the focused window up    |
+| $mod+Shift+$right | move right | Move the focused window right |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=window-move-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=window-move-sh)>>
+#+END_SRC
 
 *** Moving containers
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_containers-b97cf4ae
     :END:
-    To move  containers between  the available screens,  you have  the following
-    shortcuts:
-    #+NAME: containers-move-sh
-    | shortcut         | command                        | what it does                                               |
-    |------------------+--------------------------------+------------------------------------------------------------|
-    | $mod+Ctrl+$left  | move container to output left  | Moves the container to the screen left of the current one  |
-    | $mod+Ctrl+$down  | move container to output down  | Moves the container to the screen down of the current one  |
-    | $mod+Ctrl+$up    | move container to output up    | Moves the container to the screen above the current one    |
-    | $mod+Ctrl+$right | move container to output right | Moves the container to the screen right of the current one |
+To move containers between the available screens, you have the following shortcuts:
+#+NAME: containers-move-sh
+| shortcut         | command                        | what it does                                               |
+|------------------+--------------------------------+------------------------------------------------------------|
+| $mod+Ctrl+$left  | move container to output left  | Moves the container to the screen left of the current one  |
+| $mod+Ctrl+$down  | move container to output down  | Moves the container to the screen down of the current one  |
+| $mod+Ctrl+$up    | move container to output up    | Moves the container to the screen above the current one    |
+| $mod+Ctrl+$right | move container to output right | Moves the container to the screen right of the current one |
 
-    You can also send containers to other workspaces by their number.
-    #+NAME: containers-ws-sh
-    | shortcut     | command                        | what it does                               |
-    |--------------+--------------------------------+--------------------------------------------|
-    | $mod+Shift+1 | move container to workspace 1  | Move current container to the workspace 1  |
-    | $mod+Shift+2 | move container to workspace 2  | Move current container to the workspace 2  |
-    | $mod+Shift+3 | move container to workspace 3  | Move current container to the workspace 3  |
-    | $mod+Shift+4 | move container to workspace 4  | Move current container to the workspace 4  |
-    | $mod+Shift+5 | move container to workspace 5  | Move current container to the workspace 5  |
-    | $mod+Shift+6 | move container to workspace 6  | Move current container to the workspace 6  |
-    | $mod+Shift+7 | move container to workspace 7  | Move current container to the workspace 7  |
-    | $mod+Shift+8 | move container to workspace 8  | Move current container to the workspace 8  |
-    | $mod+Shift+9 | move container to workspace 9  | Move current container to the workspace 9  |
-    | $mod+Shift+0 | move container to workspace 10 | Move current container to the workspace 10 |
+You can also send containers to other workspaces by their number.
+#+NAME: containers-ws-sh
+| shortcut     | command                        | what it does                               |
+|--------------+--------------------------------+--------------------------------------------|
+| $mod+Shift+1 | move container to workspace 1  | Move current container to the workspace 1  |
+| $mod+Shift+2 | move container to workspace 2  | Move current container to the workspace 2  |
+| $mod+Shift+3 | move container to workspace 3  | Move current container to the workspace 3  |
+| $mod+Shift+4 | move container to workspace 4  | Move current container to the workspace 4  |
+| $mod+Shift+5 | move container to workspace 5  | Move current container to the workspace 5  |
+| $mod+Shift+6 | move container to workspace 6  | Move current container to the workspace 6  |
+| $mod+Shift+7 | move container to workspace 7  | Move current container to the workspace 7  |
+| $mod+Shift+8 | move container to workspace 8  | Move current container to the workspace 8  |
+| $mod+Shift+9 | move container to workspace 9  | Move current container to the workspace 9  |
+| $mod+Shift+0 | move container to workspace 10 | Move current container to the workspace 10 |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=containers-move-sh)>>
-    <<generate-shortcuts(table=containers-ws-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=containers-move-sh)>>
+<<generate-shortcuts(table=containers-ws-sh)>>
+#+END_SRC
 
 *** Moving workspaces
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Moving_workspaces-a71d7b54
     :END:
 
-    It is also possible to move workspaces. The related shortcuts available are
-    the following:
+It is also possible to move workspaces. The related shortcuts available are the following:
 
-    #+NAME: workspace-move-sh
-    | shortcut               | command                        | what it does                                               |
-    |------------------------+--------------------------------+------------------------------------------------------------|
-    | $mod+Ctrl+Shift+$left  | move workspace to output left  | Moves the workspace to the screen left of the current one  |
-    | $mod+Ctrl+Shift+$down  | move workspace to output down  | Moves the workspace to the screen down of the current one  |
-    | $mod+Ctrl+Shift+$up    | move workspace to output up    | Moves the workspace to the screen above the current one    |
-    | $mod+Ctrl+Shift+$right | move workspace to output right | Moves the workspace to the screen right of the current one |
+#+NAME: workspace-move-sh
+| shortcut               | command                        | what it does                                               |
+|------------------------+--------------------------------+------------------------------------------------------------|
+| $mod+Ctrl+Shift+$left  | move workspace to output left  | Moves the workspace to the screen left of the current one  |
+| $mod+Ctrl+Shift+$down  | move workspace to output down  | Moves the workspace to the screen down of the current one  |
+| $mod+Ctrl+Shift+$up    | move workspace to output up    | Moves the workspace to the screen above the current one    |
+| $mod+Ctrl+Shift+$right | move workspace to output right | Moves the workspace to the screen right of the current one |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=workspace-move-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=workspace-move-sh)>>
+#+END_SRC
 
 *** Close windows
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Close_windows-5e521a48
     :END:
-    To close windows, we have two main shortcuts: Alt+F4 and mod+q. The first
-    one is here due to habits, but I don’t really use it anymore due to my main
-    keyboard which doesn’t have any easy access to the functions keys, hence
-    mod+q.
-    #+NAME: close-win-sh
-    | shortcut | command | what it does            |
-    |----------+---------+-------------------------|
-    | $mod+q   | kill    | kill the current window |
-    | $alt+F4  | kill    | kill the current window |
+To close windows, we have two main shortcuts: Alt+F4 and mod+q. The first one is here due to habits, but I don’t really use it anymore due to my main keyboard which doesn’t have any easy access to the functions keys, hence mod+q.
+#+NAME: close-win-sh
+| shortcut | command | what it does            |
+|----------+---------+-------------------------|
+| $mod+q   | kill    | kill the current window |
+| $alt+F4  | kill    | kill the current window |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=close-win-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=close-win-sh)>>
+#+END_SRC
 
 *** Manage the size of the current window
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Manage_the_size_of_the_current_window-11afa914
     :END:
-    It is  possible to change the  size of the current  window, even if it  is a
-    floating one.  The first shortcut  that might  interest you is  $mod+f which
-    switches your current window to fullscreen. But to resize a window, you will
-    need to enter the ~resize~ mode.
-    #+NAME: size-win-sh
-    | shortcut | command           | what it does                                      |
-    |----------+-------------------+---------------------------------------------------|
-    | $mod+f   | fullscreen toggle | Puts the current window in fullscreen or exits it |
-    | $mod+r   | mode "resize"     | Enter resize mode                                 |
+It is possible to change the size of the current window, even if it is a floating one. The first shortcut that might interest you is $mod+f which switches your current window to fullscreen. But to resize a window, you will need to enter the ~resize~ mode.
+#+NAME: size-win-sh
+| shortcut | command           | what it does                                      |
+|----------+-------------------+---------------------------------------------------|
+| $mod+f   | fullscreen toggle | Puts the current window in fullscreen or exits it |
+| $mod+r   | mode "resize"     | Enter resize mode                                 |
 
-    When it comes to modes, they are defined as follows:
-    #+BEGIN_SRC conf :tangle no
-      mode "nameofyourmode" {
-          here go your shortcuts
-      }
-    #+END_SRC
+When it comes to modes, they are defined as follows:
+#+BEGIN_SRC conf :tangle no
+  mode "nameofyourmode" {
+      here go your shortcuts
+  }
+#+END_SRC
 
-    So, all the following shortcuts will  be inserted in a mode called ~resize~.
-    Note that not only are the resizing  shortcuts bound to the arrow keys, they
-    are also bound to ~ctsr~, which is the bépo equivalent of ~hjkl~.
-    #+NAME: resize-win-sh
-    | shortcut | command                             | what it does                              |
-    |----------+-------------------------------------+-------------------------------------------|
-    | $right   | resize grow width 20 px or 10 ppt   | Increase the width of the current window  |
-    | r        | resize grow width 20 px or 10 ppt   | Increase the width of the current window  |
-    | $left    | resize shrink width 10 px or 5 ppt  | Decrease the width of the current window  |
-    | c        | resize shrink width 10 px or 5 ppt  | Decrease the width of the current window  |
-    | $down    | resize grow height 10 px or 5 ppt   | Increase the height of the current window |
-    | t        | resize grow height 10 px or 5 ppt   | Increase the height of the current window |
-    | $up      | resize shrink height 10 px or 5 ppt | Decrease the height of the current window |
-    | s        | resize shrink height 10 px or 5 ppt | Decrease the height of the current window |
-    | Return   | mode "default"                      | Return to the default mode                |
-    | Escape   | mode "default"                      | Return to the default mode                |
-    If  you prefer,  you  can think  of  these shortcuts  not  as increasing  or
-    decreasing the width or height of the  current window, but rather as how the
-    bottom or right limit of the windows  will be moved relative to the top left
-    corner.
+So, all the following shortcuts will be inserted in a mode called ~resize~. Note that not only are the resizing shortcuts bound to the arrow keys, they are also bound to ~ctsr~, which is the bépo equivalent of ~hjkl~.
+#+NAME: resize-win-sh
+| shortcut | command                             | what it does                              |
+|----------+-------------------------------------+-------------------------------------------|
+| $right   | resize grow width 20 px or 10 ppt   | Increase the width of the current window  |
+| r        | resize grow width 20 px or 10 ppt   | Increase the width of the current window  |
+| $left    | resize shrink width 10 px or 5 ppt  | Decrease the width of the current window  |
+| c        | resize shrink width 10 px or 5 ppt  | Decrease the width of the current window  |
+| $down    | resize grow height 10 px or 5 ppt   | Increase the height of the current window |
+| t        | resize grow height 10 px or 5 ppt   | Increase the height of the current window |
+| $up      | resize shrink height 10 px or 5 ppt | Decrease the height of the current window |
+| s        | resize shrink height 10 px or 5 ppt | Decrease the height of the current window |
+| Return   | mode "default"                      | Return to the default mode                |
+| Escape   | mode "default"                      | Return to the default mode                |
+If you prefer, you can think of these shortcuts not as increasing or decreasing the width or height of the current window, but rather as how the bottom or right limit of the windows will be moved relative to the top left corner.
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-      <<generate-shortcuts(table=size-win-sh)>>
-      mode "resize" {
-          <<generate-shortcuts(table=resize-win-sh)>>
-      }
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+  <<generate-shortcuts(table=size-win-sh)>>
+  mode "resize" {
+      <<generate-shortcuts(table=resize-win-sh)>>
+  }
+#+END_SRC
 
 *** Manage floating windows
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Manage_floating_windows-9206f4da
     :END:
-    As said above,  your windows can be floating windows  instead of being tiled
-    like they are by default. For this too we have a couple of shortcuts:
-    #+NAME: float-win-sh
-    | shortcut         | command              | what it does                                         |
-    |------------------+----------------------+------------------------------------------------------|
-    | $mod+Shift+space | floating toggle      | Toggles the window between tiled and floating mode   |
-    | $mod+space       | focus mode_toggle    | Toggles the focus between tiled and floating windows |
-    | $mod+Ctrl+c      | move position center | Centers the focused floating window                  |
-    If you  want to move around  your floating window,  you can do it  with your
-    mouse while holding down the floating modifier declared [[#Variables_declaration-Floating_windows-897d0c3b][here]].
+As said above, your windows can be floating windows instead of being tiled like they are by default. For this too we have a couple of shortcuts:
+#+NAME: float-win-sh
+| shortcut         | command              | what it does                                         |
+|------------------+----------------------+------------------------------------------------------|
+| $mod+Shift+space | floating toggle      | Toggles the window between tiled and floating mode   |
+| $mod+space       | focus mode_toggle    | Toggles the focus between tiled and floating windows |
+| $mod+Ctrl+c      | move position center | Centers the focused floating window                  |
+If you want to move around your floating window, you can do it with your mouse while holding down the floating modifier declared [[#Variables_declaration-Floating_windows-897d0c3b][here]].
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=float-win-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=float-win-sh)>>
+#+END_SRC
 
 *** Scratchpad and window display
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Scratchpad_and_window_display-10d8d1f4
     :END:
-    You can think  of i3’s scratchpad as  some sort of extra  workspace in which
-    you can hide your  windows you are not using, or as if  you want to reduce a
-    window to the taskbar of other  window managers or desktop environments. You
-    have basically two shortcuts for the  scratchpad: one that sends the current
-    window to  the scratchpad, and one  that cicles through the  windows sent to
-    the scratchpad and shows them to you  sequencially. If you go through all of
-    them, they will be hidden again. You  can get a window out of the scratchpad
-    by tiling it to the current workspace with the shortcut described above.
+You can think of i3’s scratchpad as some sort of extra workspace in which you can hide your windows you are not using, or as if you want to reduce a window to the taskbar of other window managers or desktop environments. You have basically two shortcuts for the scratchpad: one that sends the current window to the scratchpad, and one that cicles through the windows sent to the scratchpad and shows them to you sequencially. If you go through all of them, they will be hidden again. You can get a window out of the scratchpad by tiling it to the current workspace with the shortcut described above.
 
-    You also have  the possibility of making a floating  window a sticky window.
-    This means not only  will it show on all workspaces, it will  also be on top
-    of every other window.  It can be useful if you have some  notes you want to
-    keep an eye on for instance.
-    #+NAME: scratchpad-sh
-    | shortcut     | command         | what it does                                         |
-    |--------------+-----------------+------------------------------------------------------|
-    | $mod+Shift+s | move scratchpad | Sends the current window to the scratchpad           |
-    | $mod+s       | scratchpad show | Shows and cycles through windows from the scratchpad |
-    | $mod+Ctrl+s  | sticky toggle   | Toggles sticky mode on current window                |
+You also have the possibility of making a floating window a sticky window. This means not only will it show on all workspaces, it will also be on top of every other window. It can be useful if you have some notes you want to keep an eye on for instance.
+#+NAME: scratchpad-sh
+| shortcut     | command         | what it does                                         |
+|--------------+-----------------+------------------------------------------------------|
+| $mod+Shift+s | move scratchpad | Sends the current window to the scratchpad           |
+| $mod+s       | scratchpad show | Shows and cycles through windows from the scratchpad |
+| $mod+Ctrl+s  | sticky toggle   | Toggles sticky mode on current window                |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=scratchpad-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=scratchpad-sh)>>
+#+END_SRC
 
 *** Gaps management
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Window_and_workspace_management-Gaps_management-33979213
     :END:
-    It is possible to dynamically change the gaps between containers if we want
-    to change a bit the appearance of i3. For that, we obviously have some
-    shortcuts.
-    #+NAME: gaps-resize-sh
-    | shortcut          | command                                       | what it does                |
-    |-------------------+-----------------------------------------------+-----------------------------|
-    | $mod+g            | gaps inner current plus 5                     | Increase the inner gap size |
-    | $mod+Shift+g      | gaps inner current minus 5                    | Decrease the inner gap size |
-    | $mod+Ctrl+g       | gaps outer current plus 5                     | Increase the outer gap size |
-    | $mod+Ctrl+Shift+g | gaps outer current minus 5                    | Decrease the outer gap size |
-    | $mod+$alt+g       | gaps inner all set 20; gaps outer all set -10 | Reset gaps                  |
+It is possible to dynamically change the gaps between containers if we want to change a bit the appearance of i3. For that, we obviously have some shortcuts.
+#+NAME: gaps-resize-sh
+| shortcut          | command                                       | what it does                |
+|-------------------+-----------------------------------------------+-----------------------------|
+| $mod+g            | gaps inner current plus 5                     | Increase the inner gap size |
+| $mod+Shift+g      | gaps inner current minus 5                    | Decrease the inner gap size |
+| $mod+Ctrl+g       | gaps outer current plus 5                     | Increase the outer gap size |
+| $mod+Ctrl+Shift+g | gaps outer current minus 5                    | Decrease the outer gap size |
+| $mod+$alt+g       | gaps inner all set 20; gaps outer all set -10 | Reset gaps                  |
 
-    Here is the corresponding configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=gaps-resize-sh)>>
-    #+END_SRC
+Here is the corresponding configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=gaps-resize-sh)>>
+#+END_SRC
 
 ** Launching software
    :PROPERTIES:
    :CUSTOM_ID: Shortcuts-Launching_software-0e088e69
    :END:
-   A  big part  of  my i3  shortcuts  though are  related  to launching  various
-   software. I’ll try to sort them by category  here, but do take a look even at
-   categories which  you might not  be interested  in, they might  actually have
-   something useful for you.
+A big part of my i3 shortcuts though are related to launching various software. I’ll try to sort them by category here, but do take a look even at categories which you might not be interested in, they might actually have something useful for you.
 
 *** Software and command launcher
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Software_and_command_launcher-a3f5863e
     :END:
-    These commands will allow the user to launch applications which provide
-    ~.desktop~ files or user-defined ~.desktop~ files, as well as commands with
-    the help of rofi.
-    #+NAME: launcher-sh
-    | shortcut     | command                               | what it does                                          |
-    |--------------+---------------------------------------+-------------------------------------------------------|
-    | $mod+Shift+d | exec --no-startup-id j4-dmenu-desktop | Launch a registered application                       |
-    | $mod+d       | exec --no-startup-id $rofiexec        | Launch a terminal command or a registered application |
+These commands will allow the user to launch applications which provide ~.desktop~ files or user-defined ~.desktop~ files, as well as commands with the help of rofi.
+#+NAME: launcher-sh
+| shortcut     | command                               | what it does                                          |
+|--------------+---------------------------------------+-------------------------------------------------------|
+| $mod+Shift+d | exec --no-startup-id j4-dmenu-desktop | Launch a registered application                       |
+| $mod+d       | exec --no-startup-id $rofiexec        | Launch a terminal command or a registered application |
 
-    Here is the configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=launcher-sh)>>
-    #+END_SRC
+Here is the configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=launcher-sh)>>
+#+END_SRC
 
 *** Internet software
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Internet_software-a0524cd8
     :END:
-    I have a couple of Internet-related software I can launch easily.
-    #+NAME: internet-sh
-    | shortcut     | command             | what it does                |
-    |--------------+---------------------+-----------------------------|
-    | $mod+b       | exec firefox        | Launch browser              |
-    | $mod+m       | exec $mail          | Launch Gnus, my mail client |
-    | Ctrl+Shift+d | exec discord-canary | Launch Discord              |
+I have a couple of Internet-related software I can launch easily.
+#+NAME: internet-sh
+| shortcut     | command             | what it does                |
+|--------------+---------------------+-----------------------------|
+| $mod+b       | exec firefox        | Launch browser              |
+| $mod+m       | exec $mail          | Launch Gnus, my mail client |
+| Ctrl+Shift+d | exec discord-canary | Launch Discord              |
 
-    Hence this configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=internet-sh)>>
-    #+END_SRC
+Hence this configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=internet-sh)>>
+#+END_SRC
 
 *** Screenshots
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Screenshots-41e41c88
     :END:
-    A couple of shortcuts are available for taking screenshots.
-    #+NAME: screenshot-sh
-    | shortcut    | command                           | what it does                                             |
-    |-------------+-----------------------------------+----------------------------------------------------------|
-    | Print       | exec --no-startup-id scrot        | Takes a screenshot of the entire desktop                 |
-    | Ctrl+Print  | exec --no-startup-id "scrot -s"   | Takes a screenshot of a region or the selected window    |
-    | Shift+Print | exec --no-startup-id "scrot -d 3" | takes a screenshot of the desktop three in three seconds |
+A couple of shortcuts are available for taking screenshots.
+#+NAME: screenshot-sh
+| shortcut    | command                           | what it does                                             |
+|-------------+-----------------------------------+----------------------------------------------------------|
+| Print       | exec --no-startup-id scrot        | Takes a screenshot of the entire desktop                 |
+| Ctrl+Print  | exec --no-startup-id "scrot -s"   | Takes a screenshot of a region or the selected window    |
+| Shift+Print | exec --no-startup-id "scrot -d 3" | takes a screenshot of the desktop three in three seconds |
 
-    This gives us this configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=screenshot-sh)>>
-    #+END_SRC
+This gives us this configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=screenshot-sh)>>
+#+END_SRC
 
 *** Screen brightness
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Screen_brightness-6855d53f
     :END:
-    Here we  have four commands  for managing  our screen’s brightness  (this is
-    useful for laptops, not so much with desktops), and two of them are actually
-    duplicates of the other two in case  a laptop doesn’t have dedicated keys or
-    we are using a keyboard which doesn’t provide them.
-    #+NAME: brightness-sh
-    | shortcut              | command                | what it does                          |
-    |-----------------------+------------------------+---------------------------------------|
-    | XF86MonBrightnessUp   | exec xbacklight -inc 5 | Increase the brightness of the screen |
-    | $mod+$alt+Next        | exec xbacklight -inc 5 | Increase the brightness of the screen |
-    | XF86MonBrightnessDown | exec xbacklight -dec 5 | Decrease the brightness of the screen |
-    | $mod+$alt+Prev        | exec xbacklight -dec 5 | Decrease the brightness of the screen |
+Here we have four commands for managing our screen’s brightness (this is useful for laptops, not so much with desktops), and two of them are actually duplicates of the other two in case a laptop doesn’t have dedicated keys or we are using a keyboard which doesn’t provide them.
+#+NAME: brightness-sh
+| shortcut              | command                | what it does                          |
+|-----------------------+------------------------+---------------------------------------|
+| XF86MonBrightnessUp   | exec xbacklight -inc 5 | Increase the brightness of the screen |
+| $mod+$alt+Next        | exec xbacklight -inc 5 | Increase the brightness of the screen |
+| XF86MonBrightnessDown | exec xbacklight -dec 5 | Decrease the brightness of the screen |
+| $mod+$alt+Prev        | exec xbacklight -dec 5 | Decrease the brightness of the screen |
 
-    This gives us this configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=brightness-sh)>>
-    #+END_SRC
+This gives us this configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=brightness-sh)>>
+#+END_SRC
 
 *** Media control
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Media_control-18ad2815
     :END:
-    Some shortcuts are  dedicated to media control, especially when  it comes to
-    controlling music.  All of these  media control  shortcuts will be  calls to
-    ~mpc~ which will in turn send commands to ~mpd~, which is the music server I
-    use on my computers.
-    #+NAME: media-sh
-    | shortcut                  | command            | what it does                   |
-    |---------------------------+--------------------+--------------------------------|
-    | XF86AudioNext             | exec mpc next      | Forward to the next track      |
-    | $alt+XF86AudioRaiseVolume | exec mpc next      | Forward to the next track      |
-    | $mod+Next                 | exec mpc next      | Forward to the next track      |
-    | XF86AudioPrev             | exec mpc prev      | Backward to the previous track |
-    | $alt+XF86AudioLowerVolume | exec mpc prev      | Backward to the previous track |
-    | $mod+Prior                | exec mpc prev      | Backward to the previous track |
-    | XF86AudioPlay             | exec mpc toggle    | Play or pause the music        |
-    | $mod+p                    | exec mpc toggle    | Play or pause the music        |
-    | $mod+$alt+p               | exec mpc stop      | Completely stop the music      |
-    | XF86AudioStop             | exec mpc stop      | Completely stop the music      |
-    | $alt+XF86AudioPlay        | exec mpc stop      | Completely stop the music      |
-    | $mod+$alt+7               | exec mpc volume +5 | Increase the volume from mpd   |
-    | $mod+$alt+8               | exec mpc volume -5 | Decrease the volume from mpd   |
+Some shortcuts are dedicated to media control, especially when it comes to controlling music. All of these media control shortcuts will be calls to ~mpc~ which will in turn send commands to ~mpd~, which is the music server I use on my computers.
+#+NAME: media-sh
+| shortcut                  | command            | what it does                   |
+|---------------------------+--------------------+--------------------------------|
+| XF86AudioNext             | exec mpc next      | Forward to the next track      |
+| $alt+XF86AudioRaiseVolume | exec mpc next      | Forward to the next track      |
+| $mod+Next                 | exec mpc next      | Forward to the next track      |
+| XF86AudioPrev             | exec mpc prev      | Backward to the previous track |
+| $alt+XF86AudioLowerVolume | exec mpc prev      | Backward to the previous track |
+| $mod+Prior                | exec mpc prev      | Backward to the previous track |
+| XF86AudioPlay             | exec mpc toggle    | Play or pause the music        |
+| $mod+p                    | exec mpc toggle    | Play or pause the music        |
+| $mod+$alt+p               | exec mpc stop      | Completely stop the music      |
+| XF86AudioStop             | exec mpc stop      | Completely stop the music      |
+| $alt+XF86AudioPlay        | exec mpc stop      | Completely stop the music      |
+| $mod+$alt+7               | exec mpc volume +5 | Increase the volume from mpd   |
+| $mod+$alt+8               | exec mpc volume -5 | Decrease the volume from mpd   |
 
-    We also  have two shortcuts for  launching ncmpcpp, my mpd  frontend, either
-    with the playlist open by default, or the visualizes open.
-    #+NAME: ncmpcpp-sh
-    | shortcut     | command                           | what it does                     |
-    |--------------+-----------------------------------+----------------------------------|
-    | $mod+Shift+n | exec $term ncmpcpp -q             | Launch ncmpcpp’s playlist editor |
-    | $mod+Shift+v | exec $term ncmpcpp -qs visualizer | Launch ncmpcpp’s visualizer      |
+We also have two shortcuts for launching ncmpcpp, my mpd frontend, either with the playlist open by default, or the visualizes open.
+#+NAME: ncmpcpp-sh
+| shortcut     | command                           | what it does                     |
+|--------------+-----------------------------------+----------------------------------|
+| $mod+Shift+n | exec $term ncmpcpp -q             | Launch ncmpcpp’s playlist editor |
+| $mod+Shift+v | exec $term ncmpcpp -qs visualizer | Launch ncmpcpp’s visualizer      |
 
-    We also  have more  general shortcuts,  like how  to manipulate  the general
-    volume level.
-    #+NAME: volume-sh
-    | shortcut             | command                                | what it does         |
-    |----------------------+----------------------------------------+----------------------|
-    | XF86AudioMute        | exec "amixer set Master 1+ toggle"     | Mute or unmute audio |
-    | Ctrl+$mod+Prior      | exec "amixer -q set Master 2%+ unmute" | Raise volume         |
-    | XF86AudioRaiseVolume | exec "amixer -q set Master 2%+ unmute" | Raise volume         |
-    | Ctrl+$mod+Next       | exec "amixer -q set Master 2%- unmute" | Reduce volume        |
-    | XF86AudioLowerVolume | exec "amixer -q set Master 2%- unmute" | Reduce volume        |
+We also have more general shortcuts, like how to manipulate the general volume level.
+#+NAME: volume-sh
+| shortcut             | command                                | what it does         |
+|----------------------+----------------------------------------+----------------------|
+| XF86AudioMute        | exec "amixer set Master 1+ toggle"     | Mute or unmute audio |
+| Ctrl+$mod+Prior      | exec "amixer -q set Master 2%+ unmute" | Raise volume         |
+| XF86AudioRaiseVolume | exec "amixer -q set Master 2%+ unmute" | Raise volume         |
+| Ctrl+$mod+Next       | exec "amixer -q set Master 2%- unmute" | Reduce volume        |
+| XF86AudioLowerVolume | exec "amixer -q set Master 2%- unmute" | Reduce volume        |
 
-    This gives us this configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=media-sh)>>
-    <<generate-shortcuts(table=ncmpcpp-sh)>>
-    <<generate-shortcuts(table=volume-sh)>>
-    #+END_SRC
+This gives us this configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=media-sh)>>
+<<generate-shortcuts(table=ncmpcpp-sh)>>
+<<generate-shortcuts(table=volume-sh)>>
+#+END_SRC
 
 *** Rofi utilities
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Rofi_utilities-b8eb5b95
     :END:
-    We also have some utilities I’ve written and which are interfaced with rofi.
-    Here are said shortcuts.
-    #+NAME: rofi-sh
-    | shortcut          | command               | what it does                                                          |
-    |-------------------+-----------------------+-----------------------------------------------------------------------|
-    | $mod+Shift+p      | exec rofi-pass --type | Types the selected password available from ~pass~ where the cursor is |
-    | $mod+Ctrl+Shift+p | exec rofi-pass        | Copies in the clipboard the selected password from ~pass~ for 45 sec  |
-    | $mod+Ctrl+m       | exec rofi-mount       | Volume mounting helper                                                |
-    | $mod+Ctrl+u       | exec rofi-umount      | Volume unmounting helper                                              |
-    | $mod+$alt+e       | exec rofi-emoji       | Emoji picker, copies it in the clipboard                              |
-    | $mod+Ctrl+w       | exec wacom-setup      | Sets my Wacom Bamboo tablet as being active on the selected screen    |
-    | $mod+Shift+w      | exec connect-wifi     | Connect to an available WiFi network                                  |
+We also have some utilities I’ve written and which are interfaced with rofi. Here are said shortcuts.
+#+NAME: rofi-sh
+| shortcut          | command               | what it does                                                          |
+|-------------------+-----------------------+-----------------------------------------------------------------------|
+| $mod+Shift+p      | exec rofi-pass --type | Types the selected password available from ~pass~ where the cursor is |
+| $mod+Ctrl+Shift+p | exec rofi-pass        | Copies in the clipboard the selected password from ~pass~ for 45 sec  |
+| $mod+Ctrl+m       | exec rofi-mount       | Volume mounting helper                                                |
+| $mod+Ctrl+u       | exec rofi-umount      | Volume unmounting helper                                              |
+| $mod+$alt+e       | exec rofi-emoji       | Emoji picker, copies it in the clipboard                              |
+| $mod+Ctrl+w       | exec wacom-setup      | Sets my Wacom Bamboo tablet as being active on the selected screen    |
+| $mod+Shift+w      | exec connect-wifi     | Connect to an available WiFi network                                  |
 
-    This gives us the following configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=rofi-sh)>>
-    #+END_SRC
+This gives us the following configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=rofi-sh)>>
+#+END_SRC
 
 *** Miscellaneous
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Miscellaneous-7ec80fea
     :END:
-    And last  but not least, I  have some other shortcuts  for various software,
-    some of them which I use quite a lot like the shortcut for launching Emacs.
-    #+NAME: misc-sh
-    | shortcut    | command          | what it does                    |
-    |-------------+------------------+---------------------------------|
-    | $mod+e      | exec $ec         | Launch Emacs client             |
-    | $mod+n      | exec nemo        | Launch Nemo (file manager)      |
-    | $mod+$alt+c | exec speedcrunch | Launch Speedcrunch (calculator) |
-    | $mod+F3     | exec arandr      | Launch arandr                   |
+And last but not least, I have some other shortcuts for various software, some of them which I use quite a lot like the shortcut for launching Emacs.
+#+NAME: misc-sh
+| shortcut    | command          | what it does                    |
+|-------------+------------------+---------------------------------|
+| $mod+e      | exec $ec         | Launch Emacs client             |
+| $mod+n      | exec nemo        | Launch Nemo (file manager)      |
+| $mod+$alt+c | exec speedcrunch | Launch Speedcrunch (calculator) |
+| $mod+F3     | exec arandr      | Launch arandr                   |
 
-    This gives us the following configuration:
-    #+BEGIN_SRC conf
-    <<generate-shortcuts(table=misc-sh)>>
-    #+END_SRC
+This gives us the following configuration:
+#+BEGIN_SRC conf
+<<generate-shortcuts(table=misc-sh)>>
+#+END_SRC
 
 *** Screen management
     :PROPERTIES:
     :CUSTOM_ID: Shortcuts-Launching_software-Screen_management-f9b35bf2
     :END:
-    Additionally,  we have  a shortcut  for  entering presentation  mode on  the
-    additional screen of the computer; on my main computer, Mila, the additional
-    screen is  HDMI-1, while it  is VGA1 on my  travel laptop. We’ll use some
-    Emacs Lisp to determine on the configuration file export which screens names
-    to use.
-    #+NAME: hostname-screen-management
-    #+BEGIN_SRC emacs-lisp
-      (cond ((string= system-name "Marpa") "bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1")
-            ((string= system-name "gampo") "bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1"))
-    #+END_SRC
+Additionally, we have a shortcut for entering presentation mode on the additional screen of the computer; on my main computer, Mila, the additional screen is HDMI-1, while it is VGA1 on my travel laptop. We’ll use some Emacs Lisp to determine on the configuration file export which screens names to use.
+#+NAME: hostname-screen-management
+#+BEGIN_SRC emacs-lisp
+  (cond ((string= system-name "Marpa") "bindsym $mod+Ctrl+p xrandr --output HDMI-1 --mode 1024x768 --right-of eDP-1")
+        ((string= system-name "gampo") "bindsym $mod+Ctrl+p xrandr --output VGA1 --mode 1024x768 --right-of LVDS1"))
+#+END_SRC
 
-    Now, we just have to call this Emacs Lisp code as a noweb reference and
-    execute it.
-    #+BEGIN_SRC conf :noweb yes
-      <<hostname-screen-management()>>
-    #+END_SRC
+Now, we just have to call this Emacs Lisp code as a noweb reference and execute it.
+#+BEGIN_SRC conf :noweb yes
+  <<hostname-screen-management()>>
+#+END_SRC
 
 * Software autolaunch
   :PROPERTIES:
   :CUSTOM_ID: Software_autolaunch-ccee82f6
   :END:
-  When i3  is launched, I  want it to  also launch some  software automatically.
-  Here is what we will launch:
-  #+NAME: autolaunch
-  | always execute it? | command                                   | what it is                             |
-  |--------------------+-------------------------------------------+----------------------------------------|
-  | no                 | /usr/lib/xfce-polkit/xfce-polkit          | Launch the XFCE Polkit                 |
-  | no                 | picom --experimental-backends -e 1        | Launch picom                           |
-  | no                 | xss-lock -- lock                          | Launch power management                |
-  | no                 | numlockx on                               | Activate NumLock                       |
-  | no                 | dunst -config ~/.config/dunst/dunstrc     | Launch notification manager            |
-  | no                 | nm-applet                                 | NetworkManager system tray             |
-  | yes                | wal -i "$(< "${HOME}/.cache/wal/wal")"    | Sets the wallpaper from last session   |
-  | no                 | xrdb $HOME/.Xresources                    | Load Xresources files                  |
-  | yes                | polybar-launch                            | Launch polybar                         |
-  | no                 | mpc stop                                  | Stop music from mpd                    |
-  | no                 | mpd_discord_richpresence --no-idle --fork | Launch mpd status sharing with Discord |
+When i3 is launched, I want it to also launch some software automatically. Here is what we will launch:
+#+NAME: autolaunch
+| always execute it? | command                                   | what it is                             |
+|--------------------+-------------------------------------------+----------------------------------------|
+| no                 | /usr/lib/xfce-polkit/xfce-polkit          | Launch the XFCE Polkit                 |
+| no                 | picom --experimental-backends -e 1        | Launch picom                           |
+| no                 | xss-lock -- lock                          | Launch power management                |
+| no                 | numlockx on                               | Activate NumLock                       |
+| no                 | dunst -config ~/.config/dunst/dunstrc     | Launch notification manager            |
+| no                 | nm-applet                                 | NetworkManager system tray             |
+| yes                | wal -i "$(< "${HOME}/.cache/wal/wal")"    | Sets the wallpaper from last session   |
+| no                 | xrdb $HOME/.Xresources                    | Load Xresources files                  |
+| yes                | polybar-launch                            | Launch polybar                         |
+| no                 | mpc stop                                  | Stop music from mpd                    |
+| no                 | mpd_discord_richpresence --no-idle --fork | Launch mpd status sharing with Discord |
 
-  #+NAME: generate-autolaunch
-  #+BEGIN_SRC emacs-lisp :exports none :cache yes :var table=autolaunch
-    (mapconcat (lambda (x)
-                 (format (concat (if (string= (car x)
-                                              "yes")
-                                     "exec_always"
-                                   "exec")
-                                 " --no-startup-id %s")
-                         (cadr x)))
-               table
-               "\n")
-  #+END_SRC
+#+NAME: generate-autolaunch
+#+BEGIN_SRC emacs-lisp :exports none :cache yes :var table=autolaunch
+  (mapconcat (lambda (x)
+               (format (concat (if (string= (car x)
+                                            "yes")
+                                   "exec_always"
+                                 "exec")
+                               " --no-startup-id %s")
+                       (cadr x)))
+             table
+             "\n")
+#+END_SRC
 
-  #+RESULTS[283577fe2e66b30c936b7fcf142713d285db8da6]: generate-autolaunch
-  #+begin_example
-  exec_always --no-startup-id wal -i "$(< "${HOME}/.cache/wal/wal")"
-  exec --no-startup-id xss-lock -- i3lock -fol
-  exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-  exec --no-startup-id xrdb $HOME/.Xresources
-  exec --no-startup-id compton -F --opengl --config ~/.config/compton.conf -e 1
-  exec_always --no-startup-id polybar-launch
-  exec_always --no-startup-id enable_touch
-  exec --no-startup-id syndaemon -i 1.0 -t -k
-  exec --no-startup-id mpc stop
-  exec --no-startup-id mpd_discord_richpresence --no-idle --fork
-  exec --no-startup-id nm-applet
-  exec --no-startup-id numlockx on
-  #+end_example
+#+RESULTS[283577fe2e66b30c936b7fcf142713d285db8da6]: generate-autolaunch
+#+begin_example
+exec_always --no-startup-id wal -i "$(< "${HOME}/.cache/wal/wal")"
+exec --no-startup-id xss-lock -- i3lock -fol
+exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+exec --no-startup-id xrdb $HOME/.Xresources
+exec --no-startup-id compton -F --opengl --config ~/.config/compton.conf -e 1
+exec_always --no-startup-id polybar-launch
+exec_always --no-startup-id enable_touch
+exec --no-startup-id syndaemon -i 1.0 -t -k
+exec --no-startup-id mpc stop
+exec --no-startup-id mpd_discord_richpresence --no-idle --fork
+exec --no-startup-id nm-applet
+exec --no-startup-id numlockx on
+#+end_example
 
-  My  travel  laptop  has  a  fingerprint   reader  which  can  be  used  as  an
-  authentification  method when  the root  password is  asked. Let’s  launch our
-  policy kit manager if that is the case:
-  #+NAME: fingerprint-thinkpad
-  #+BEGIN_SRC emacs-lisp
-    (if (string= system-name "gampo")
-        "exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
-      "")
-  #+END_SRC
+My travel laptop has a fingerprint reader which can be used as an authentification method when the root password is asked. Let’s launch our policy kit manager if that is the case:
+#+NAME: fingerprint-thinkpad
+#+BEGIN_SRC emacs-lisp
+  (if (string= system-name "gampo")
+      "exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
+    "")
+#+END_SRC
 
-  #+BEGIN_SRC conf
-    <<fingerprint-thinkpad()>>
-    <<generate-autolaunch()>>
-  #+END_SRC
+#+BEGIN_SRC conf
+  <<fingerprint-thinkpad()>>
+  <<generate-autolaunch()>>
+#+END_SRC
