@@ -3007,26 +3007,27 @@ In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for 
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (remove-hook 'org-mode-hook 'auto-fill-mode)
+  (auto-fill-mode -1)
 #+END_SRC
-
-Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]].
+Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]] and [[https://lepisma.xyz/2017/10/28/ricing-org-mode/][this one]].
 #+BEGIN_SRC emacs-lisp
-  (let* ((font  `(:font "Charis SIL"))
+  (let* ((font  `(:font "Charis SIL" :height 1.0))
          (head  `(:inherit default :weight bold))
          (fixed `(:inherit fixed-pitch :height 0.8)))
     (custom-theme-set-faces
      'user
-     `(org-level-1               ((t (,@head ,@font :foreground ,phundrak/nord15 :height 1.75))))
-     `(org-level-2               ((t (,@head ,@font :foreground ,phundrak/nord10 :height 1.5))))
-     `(org-level-3               ((t (,@head ,@font :foreground ,phundrak/nord9  :height 1.25))))
-     `(org-level-4               ((t (,@head ,@font :foreground ,phundrak/nord15 :height 1.1))))
-     `(org-level-5               ((t (,@head ,@font :foreground ,phundrak/nord8 ))))
-     `(org-level-6               ((t (,@head ,@font :foreground ,phundrak/nord7 ))))
-     `(org-level-7               ((t (,@head ,@font :foreground ,phundrak/nord15))))
-     `(org-level-8               ((t (,@head ,@font :foreground ,phundrak/nord6 ))))
-     `(org-document-title        ((t (,@head ,@font :foreground ,phundrak/nord11 :height 2.0 :italic t))))
-     `(variable-pitch            ((t (:family "Charis SIL" :height 120 :weight thin))))
+     `(org-level-1               ((t (,@font ,@head :foreground ,phundrak/nord15 :height 1.75))))
+     `(org-level-2               ((t (,@font ,@head :foreground ,phundrak/nord10 :height 1.5))))
+     `(org-level-3               ((t (,@font ,@head :foreground ,phundrak/nord9  :height 1.25))))
+     `(org-level-4               ((t (,@font ,@head :foreground ,phundrak/nord15 :height 1.1))))
+     `(org-level-5               ((t (,@font ,@head :foreground ,phundrak/nord8))))
+     `(org-level-6               ((t (,@font ,@head :foreground ,phundrak/nord7))))
+     `(org-level-7               ((t (,@font ,@head :foreground ,phundrak/nord15))))
+     `(org-level-8               ((t (,@font ,@head :foreground ,phundrak/nord6))))
+     `(org-document-title        ((t (,@font ,@head :foreground ,phundrak/nord11 :height 2.0 :italic t))))
+     `(variable-pitch            ((t (,@font :height 1.3 :weight thin))))
      `(org-block                 ((t (,@fixed))))
+     `(org-block-begin-line      ((t (,@fixed))))
      `(org-indent                ((t (,@fixed))))
      `(org-formula               ((t (,@fixed))))
      `(org-macro                 ((t (,@fixed))))
@@ -3041,7 +3042,16 @@ Fonts will play an important part in this, but so will colors and font size. The
      '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8))))
      '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))))
 #+END_SRC
-
+Some other tweaks will make Org-mode more beautiful. This includes a new folding icon, some indentation that is not added whitespace.
+#+BEGIN_SRC emacs-lisp
+  (setq org-startup-indented t
+        org-startup-align-all-tables t
+        org-pretty-entities t
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t
+        org-ellipsis "  ")
+#+END_SRC
 Finally, let’s limit the width of images inlined in org buffers to 400px:
 #+BEGIN_SRC emacs-lisp
   (setq org-image-actual-width 400)
