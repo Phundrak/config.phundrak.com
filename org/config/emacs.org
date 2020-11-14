@@ -7,16 +7,16 @@
 #+PROPERTY: header-args: :mkdirp yes
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-f1cbb8bb
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-f1cbb8bb
+:END:
 This file  is the main source  file for my Emacs  configuration which contains most of the user code. It is  exported thanks to Emacs’ code tangling from the original Org file  which you can find on my  dotfiles’ repository[fn:1] if you are  reading   the  web   version  of   it.  You  can   also  find   there  my ~.spacemacs~[fn:2] and its  code which isn’t part of the  present file. As you can  see in  my  ~.spacemacs~,  at init-time,  if  Emacs  detects the  tangled configuration  files are  older than  the Org  file, then  Emacs tangles  them again, and then loads them.
 
 * Spacemacs layers and packages
-  :PROPERTIES:
-  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
-  :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
-  :END:
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
+:CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
+:END:
 Here  will be  our layer  configuration  set. Everything  here is  set with  a ~setq-default~ in the ~dotspacemacs/layers~ function like so:
 #+BEGIN_SRC emacs-lisp :tangle no
     (defun dotspacemacs/layers ()
@@ -26,9 +26,9 @@ Here  will be  our layer  configuration  set. Everything  here is  set with  a ~
   #+END_SRC
 
 ** General configuration
-   :PROPERTIES:
-   :CUSTOM_ID: Spacemacs_layers_and_packages-General_configuration-66b4311e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-General_configuration-66b4311e
+:END:
 First, we need to tell Spacemacs which base distribution we are using. This is a layer contained in the directory ~+distribution~. For now, available distributions are ~spacemacs-base~ and ~spacemacs~ (the default one).
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-distribution 'spacemacs)
@@ -49,9 +49,9 @@ If the following variable is non-nil, Spacemacs will ask for confirmation before
    #+END_SRC
 
 ** Package management
-   :PROPERTIES:
-   :CUSTOM_ID: Spacemacs_layers_and_packages-Package_management-0add1a62
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Package_management-0add1a62
+:END:
 It is possible to indicate to Spacemacs a list of additional paths where to look for configuration layers. Paths must have a trailing slash, i.e. =~/.mycontribs/=. As you can see, I added none:
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-configuration-layer-path '())
@@ -111,9 +111,9 @@ The default value is ~used-only~.
 #+END_SRC
 
 ** Layers
-   :PROPERTIES:
-   :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-36e1c90c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-36e1c90c
+:END:
 All layers are set one variable: ~dotspacemacs-configuration-layers~. This variable is a list of layers, some of them will have some custom variables. Typically, the variable will be set like so:
 #+BEGIN_SRC emacs-lisp :tangle no
      (setq-default dotspacemacs-configuration-layers
@@ -132,9 +132,9 @@ All layers are set one variable: ~dotspacemacs-configuration-layers~. This varia
 #+END_SRC
 
 *** Checkers
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Checkers-aefeae26
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Checkers-aefeae26
+:END:
 The two first checkers I use are for spell and syntax checking. ~spell-checking~ is disabled by default, however it should auto-detect the dictionary to use.
 #+BEGIN_SRC emacs-lisp
   (spell-checking :variables
@@ -144,9 +144,9 @@ The two first checkers I use are for spell and syntax checking. ~spell-checking~
 #+END_SRC
 
 *** Completion
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Completion-883e2b83
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Completion-883e2b83
+:END:
 ~auto-completion~ is a layer enabled in order to provide auto-completion to all supported language layers. It is set so that the =RET= key has no behavior with this layer, however the =TAB= key cycles between candidates displayed by the auto-completion toolbox. I also want the autocompletion to include snippets in the popup, and the content of the popup is sorted by usage. It is also disabled for two modes: magit and Org.
 #+BEGIN_SRC emacs-lisp
   (auto-completion :variables
@@ -164,9 +164,9 @@ The two first checkers I use are for spell and syntax checking. ~spell-checking~
 #+END_SRC
 
 *** Email
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Email-67c16308
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Email-67c16308
+:END:
 I use as my daily Email client ~mu4e~, so let’s enable it and tell Emacs where mu4e is installed. I also tell mu4e to use maildirs extensions, use async operations, where to keep attachments, and enable the mu4e modeline.
 #+BEGIN_SRC emacs-lisp
       (mu4e :variables
@@ -177,9 +177,9 @@ I use as my daily Email client ~mu4e~, so let’s enable it and tell Emacs where
     #+END_SRC
 
 *** Emacs
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Emacs-8e976e5c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Emacs-8e976e5c
+:END:
 The first layer enabled in this category is ~better-defaults~. I also made it so that when a command equivalent to ~C-a~ or ~C-e~ is pressed, the cursor will respectively first move to the beginning of code first before going past the indentation and to the end of the code before going to the end of the line before going over the end of the comments on the same line.
 #+BEGIN_SRC emacs-lisp
   (better-defaults :variables
@@ -214,9 +214,9 @@ The ~semantic~ layer is also enabled.
 #+END_SRC
 
 *** File trees
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-File_trees-5b6ed3e4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-File_trees-5b6ed3e4
+:END:
 In this category, I only enabled one layer: ~treemacs~. In this layer, I set is so that treemacs syncs with my current buffer, and it automatically refreshes its buffer when there is a change in the part of the file system shown by treemacs.
 #+BEGIN_SRC emacs-lisp
   (treemacs :variables
@@ -225,9 +225,9 @@ In this category, I only enabled one layer: ~treemacs~. In this layer, I set is 
 #+END_SRC
 
 *** Fonts
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Fonts-11de8977
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Fonts-11de8977
+:END:
 In this category, again, one layer is enabled: ~unicode-fonts~. This layer addssupport for the ~unicode-fonts~ package.
 #+BEGIN_SRC emacs-lisp
   (unicode-fonts :variables
@@ -269,13 +269,13 @@ In this category, I enabled the ~keyboard-layout~ layer to enable compatibility 
 #+END_SRC
 
 *** Programming languages
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-4c318b81
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-4c318b81
+:END:
 **** Domain-specific (DSLs)
-     :PROPERTIES:
-     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-Domain-specific_(DSLs)-2c919937
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-Domain-specific_(DSLs)-2c919937
+:END:
 In this category, I enabled support for the ~major-modes~ layer for the Arch Linux PKGBUILDs support, ~emacs-lisp~ and ~scheme~ layers, support for the CSV format with the ~csv~ layer, the ~yaml~ language, shell scripting languages and support for the ~dot~ tool with the ~graphviz~ layer.
 #+BEGIN_SRC emacs-lisp
   major-modes emacs-lisp scheme graphviz yaml shell-scripts
@@ -338,9 +338,9 @@ Only one framework support has been enabled so far, and is is for the Django fra
 #+END_SRC
 
 **** General-purpose
-     :PROPERTIES:
-     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-General-purpose-1ed71a5b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Programming_languages-General-purpose-1ed71a5b
+:END:
 Among the layers I activated, the only one without any specific configuration is the ~asm~ layer for the Assembly language.
 #+BEGIN_SRC emacs-lisp
   asm
@@ -408,22 +408,22 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
 #+END_SRC
 
 *** Readers
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
+:END:
 **** Epub and Pdf readers
-     :PROPERTIES:
-     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Epub_and_Pdf_readers-0ef6688f
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Epub_and_Pdf_readers-0ef6688f
+:END:
      In this category, only the ~epub~ and ~pdf~ layers are enabled without any special configuration, so I can read these files from Emacs directly.
      #+BEGIN_SRC emacs-lisp
      epub pdf
      #+END_SRC
 
 **** Elfeed
-     :PROPERTIES:
-     :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Elfeed-78877179
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-Elfeed-78877179
+:END:
      Elfeed is an Emacs feeed and RSS reader which can be managed through org files. Actually, through only one file in my case, located in my =~/org= directory.
      #+BEGIN_SRC emacs-lisp
        (elfeed :variables
@@ -431,27 +431,27 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
      #+END_SRC
 
 *** Version control
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Version_control-bc8e286a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Version_control-bc8e286a
+:END:
     Only the ~git~ layer is enabled in this category.
     #+BEGIN_SRC emacs-lisp
     git
     #+END_SRC
 
 *** Themes
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Themes-d88d1225
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Themes-d88d1225
+:END:
     Here, the ~colors~ layer is the only one enabled. It activates support for identifiers colorization, and strings representing colors.
     #+BEGIN_SRC emacs-lisp
       colors
     #+END_SRC
 
 *** Tools
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Tools-e57e405e
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Tools-e57e405e
+:END:
     In this category, the first layer to be enabled is the CMake layer for which I enabled support for the ~cmake-ide~ package.
     #+BEGIN_SRC emacs-lisp
       (cmake :variables
@@ -488,18 +488,18 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
     #+END_SRC
 
 *** Web Services
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Web_Services-c2888251
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Web_Services-c2888251
+:END:
     In this category, I have only enabled a layer for Twitter support.
     #+BEGIN_SRC emacs-lisp
     twitter
     #+END_SRC
 
 *** Custom layers
-    :PROPERTIES:
-    :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Custom_layers-69473533
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Custom_layers-69473533
+:END:
     Lastly, three custom layers have been enabled: a w3m layer, and two of my custom layers for Dired and for conlanging tools.
     #+BEGIN_SRC emacs-lisp
     conlanging dired-phundrak w3m
@@ -511,10 +511,10 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
 #+END_SRC
 
 * Init
-  :PROPERTIES:
-  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
-  :CUSTOM_ID: Init-99a4b561
-  :END:
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
+:CUSTOM_ID: Init-99a4b561
+:END:
 The ~dotspacemacs/init~ function is the one called at the very begining of the Spacemacs startup, before any kind of configuration, including the layer configuration. Only the values of the Spacemacs settings should be modified here. By default, every values are set in a ~setq-default~ sexp, and they represent all the supported Spacemacs settings. Hence, the function looks like this:
 #+BEGIN_SRC emacs-lisp :tangle no
   (defun dotspacemacs/init ()
@@ -524,9 +524,9 @@ The ~dotspacemacs/init~ function is the one called at the very begining of the S
 #+END_SRC
 
 ** Emacs with pdumper
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Emacs_with_pdumper-f24ab30b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Emacs_with_pdumper-f24ab30b
+:END:
 It is possible to compile Emacs 27 from source with support for the portable dumper, as shown in Spacemacs’ ~EXPERIMENTAL.org~ file. I do not use this feature yet, as I am still on Emacs 26 provided from Arch Linux’s repositories, so I’ll disable the Spacemacs support for this feature. The default value of this variable is ~nil~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-enable-emacs-pdumper t)
@@ -549,9 +549,9 @@ The default value of this variable is ~"spacemacs.pdmp"~.
 #+END_SRC
 
 ** Package managment and updates
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Package_managment_and_updates-79363da3
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Package_managment_and_updates-79363da3
+:END:
 Spacemacs’ core configuration can be updated via git commands using Github services. If Spacemacs is not set to the ~develop~ branch, it can check by itself if any update is available. However, I am using said branch, therefore I should set this variable to ~nil~. The default value is ~nil~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-check-for-update nil)
@@ -568,9 +568,9 @@ Spacemacs has a capacity of performing rollbacks after updates. We can set the m
 #+END_SRC
 
 *** Elpa repository
-    :PROPERTIES:
-    :CUSTOM_ID: Init-Package_managment_and_updates-Elpa_repository-c07fb1c4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Package_managment_and_updates-Elpa_repository-c07fb1c4
+:END:
 It is possible to ask Emacs to use an HTTPS connection when contacting the Elpa whenever possible. This value should be set to ~nil~ when the user has no way to contact the Elpa though HTTPS, otherwise it is strongly recommended to let it set to ~t~. This variable however has no effect if Emacs is launched with the parameter ~--insecure~ which forces the value of this variable to ~nil~. The default value is ~t~.
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-elpa-https t)
@@ -582,9 +582,9 @@ We can set a maximum amount of seconds which will represent the maximum allowed 
 #+END_SRC
 
 *** Spacelpa repository
-    :PROPERTIES:
-    :CUSTOM_ID: Init-Package_managment_and_updates-Spacelpa_repository-a431b288
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Package_managment_and_updates-Spacelpa_repository-a431b288
+:END:
 The Spacelpa repository is a Spacemacs-specific package repository. It is possible to use it as the primary source to install a locked version of a package. If the below value is set to ~nil~, then Spacemacs will install the latest version of packages from MELPA. I personally don’t use it, so I let it set to ~nil~. The default value is ~nil~.
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-use-spacelpa nil)
@@ -596,9 +596,9 @@ If the below value is not ~nil~, then the signature for the downloaded Spacelpa 
 #+END_SRC
 
 ** Editing style
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Editing_style-56d58a4b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Editing_style-56d58a4b
+:END:
 By default, Spacemacs encourages the use of evil-mode, which brings vim keybinding in Emacs. Still, it has three different styles available:
 - ~vim~, which goes full evil-mode usage and most adapted to Emacs newcomers, especially if they were used to vim before, with the use of a normal mode and an insert mode.
 - ~emacs~ which keeps an Emacs-like feel to the keybindings, without any difference between an insert or normal mode.
@@ -617,9 +617,9 @@ If non-nil, the paste transient-state is enabled. While enabled, after you paste
 #+END_SRC
 
 ** Spacemacs home configuration
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Spacemacs_home_configuration-8375cdcc
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Spacemacs_home_configuration-8375cdcc
+:END:
 The value below specifies the startup banner of Spacemacs. The default value is ~official~, it displays the official Spacemacs logo. An integer value is the index of text banner, ~random~ chooses a random text banner in the ~core/banners~ directory. A string value must be a path to an image format supported by your Emacs build. If the value is nil, then no banner is displayed. The default value is ~official~.
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-startup-banner 'official)
@@ -648,9 +648,9 @@ If non-nil show the version string in the Spacemacs buffer. It will appear as ~(
 #+END_SRC
 
 ** Default major modes
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Default_major_modes-37f4a891
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Default_major_modes-37f4a891
+:END:
 The below variable sets a default major mode for a new empty buffer. Possible values are mode names such as ~text-mode~, or ~nil~ to use Fundamental mode. The default value is ~text-mode~, but I prefer to use ~org-mode~ by default.
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-new-empty-buffer-major-mode 'org-mode)
@@ -667,13 +667,13 @@ By the way, it is possible to set a default message for the scratch buffer, such
 #+END_SRC
 
 ** Visual configuration
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Visual_configuration-c4116cc1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Visual_configuration-c4116cc1
+:END:
 *** Themes
-    :PROPERTIES:
-    :CUSTOM_ID: Init-Visual_configuration-Themes-315992bb
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Visual_configuration-Themes-315992bb
+:END:
 Spacemacs makes it quite easy to use themes and organize them. The below value is a list of themes, the first of the list is loaded when Spacemacs starts. The user can press ~SPC T n~ to cycle to the next theme in the list.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-themes '(doom-nord doom-vibrant spacemacs-dark doom-one
@@ -714,9 +714,9 @@ I also added the following code in order to define a fallback font for emojis, d
 #+END_SRC
 
 *** Other on-screen elements
-    :PROPERTIES:
-    :CUSTOM_ID: Init-Visual_configuration-Other_on-screen_elements-7d334e09
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Visual_configuration-Other_on-screen_elements-7d334e09
+:END:
 ~which-key~ is a helper which displays available keyboard shortcuts. This variable sets in seconds the time Spacemacs should wait between a key press and the moment ~which-key~ should be shown.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-which-key-delay 1)
@@ -806,9 +806,9 @@ If ~nil~, the home buffer shows the full path of agenda items and todos. If non 
 #+END_SRC
 
 *** Appearance of Emacs frames
-    :PROPERTIES:
-    :CUSTOM_ID: Init-Visual_configuration-Appearance_of_Emacs_frames-59700bb7
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Visual_configuration-Appearance_of_Emacs_frames-59700bb7
+:END:
 Starting from Emacs 24.4, it is possible to make the Emacs frame fullscreen when Emacs starts up if the variable is set to a non-nil value. The default value is ~nil~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-fullscreen-at-startup nil)
@@ -866,9 +866,9 @@ Format specification for setting the icon title format. The default value is ~ni
 #+END_SRC
 
 ** Spacemacs leader keys and shortcuts
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Spacemacs_leader_keys_and_shortcuts-ebf21abe
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Spacemacs_leader_keys_and_shortcuts-ebf21abe
+:END:
 The below setting sets the Spacemacs leader key. By default, this is the ~SPC~ key.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-leader-key "SPC")
@@ -906,9 +906,9 @@ These variables control whether separate commands are bound in the GUI to the ke
 #+END_SRC
 
 ** Layouts
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Layouts-61c0374d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Layouts-61c0374d
+:END:
 The variable belows sets the name of the default layout. Its default value is ~"Default"~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-default-layout-name "Default")
@@ -930,9 +930,9 @@ If non-nil, the layout name will be auto-generated when creating new layouts. It
 #+END_SRC
 
 ** Files-related settings
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Files-related_settings-67fba383
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Files-related_settings-67fba383
+:END:
 The below value sets the size in MB above which Spacemacs will prompt to open the file literally in order to avoid preformance issues. Opening a file literally means that no major or minor mode is active. The default value is ~1~.
 #+BEGIN_SRC emacs-lisp
 (setq-default dotspacemacs-large-file-size 5)
@@ -948,9 +948,9 @@ The default value is ~cache~.
 #+END_SRC
 
 ** Emacs server
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Emacs_server-d3947c28
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Emacs_server-d3947c28
+:END:
 Emacs can be launched as a server if the following value is set to non-nil and if one isn’t already running. The default value is ~nil~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-enable-server nil)
@@ -967,9 +967,9 @@ It is also possible to tell Emacs that the quit function should keep the server 
 #+END_SRC
 
 ** Miscellaneous
-   :PROPERTIES:
-   :CUSTOM_ID: Init-Miscellaneous-6b4f0b76
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Init-Miscellaneous-6b4f0b76
+:END:
 This value changes the folding method of code blocks. The possible values are either ~evil~, the default value, or ~origami~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-folding-method 'evil)
@@ -1027,10 +1027,10 @@ et ~read-process-output-max~ when startup finishes. This defines how much data i
 +END_SRC
 
 * User Initialization
-  :PROPERTIES:
-  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
-  :CUSTOM_ID: User_Initialization-e0d21089
-  :END:
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
+:CUSTOM_ID: User_Initialization-e0d21089
+:END:
 While Emacs and especially Spacemacs loads, I want it to initialize some elements and load some packages. First of all, I want it to load my private Emacs config file:
 #+BEGIN_SRC emacs-lisp
   (load "~/.config/emacs/private/private_emacs")
@@ -1063,22 +1063,22 @@ Finally, here is a quick workaround for Tramp, sometimes it cannot connect to my
 #+END_SRC
 
 * User Configuration
-  :PROPERTIES:
-  :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
-  :CUSTOM_ID: User_Configuration-4a937fe5
-  :END:
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
+:CUSTOM_ID: User_Configuration-4a937fe5
+:END:
 ** Custom functions, macros, and variables
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Custom_functions-ceb4bc42
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Custom_functions-ceb4bc42
+:END:
 In this section, I will put my various custom functions that do not fit in other sections and which are more oriented towards general usage throughout Emacs and in Elisp code.
 
 Almost all of my code snippets will be prefixed by either my name or the name of the package or layer they are part of, unless they are an explicit overwrite of a function that already exists.
 
 *** Nord theming variables
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99
+:END:
 Yes, I do use a preconfigured theme, as mentioned above, but for some elements such as Eshell, I need to define some variables for color, and I’ll do it here.
 #+BEGIN_SRC emacs-lisp
   (setq phundrak/nord0  "#2e3440"
@@ -1100,9 +1100,9 @@ Yes, I do use a preconfigured theme, as mentioned above, but for some elements s
 #+END_SRC
 
 *** ~with-face~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-with-face-7974e15f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-with-face-7974e15f
+:END:
 ~with-face~ is a simple yet very useful macro that allows me to easily create strings with faces defined as properties to the string passed as the first argument. Here is how it is implemented:
 #+BEGIN_SRC emacs-lisp
   (defmacro with-face ($str &rest $properties)
@@ -1111,9 +1111,9 @@ Yes, I do use a preconfigured theme, as mentioned above, but for some elements s
 #+END_SRC
 
 *** ~phundrak/var-or-if-nil~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
+:END:
 This simple function helps me return either the value ~var~ holds, or if it is ~nil~ it will return the value ~value~ holds (or will return).
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/var-or-if-nil ($var $value)
@@ -1125,9 +1125,9 @@ This simple function helps me return either the value ~var~ holds, or if it is ~
 #+END_SRC
 
 *** ~phundrak/abbr-path~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
+:END:
 The following is a nice little function I use in my Eshell prompt. It shortens the name of all the parent directories of the current one in its path, but leaves the current one written in full. It also abbreviates the equivalent of the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/abbr-path ($path &optional $abbreviate)
@@ -1160,9 +1160,9 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
 #+END_SRC
 
 *** ~phundrak/prompt-toggle-abbreviation~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
+:END:
 #+BEGIN_SRC emacs-lisp
   (defvar phundrak/prompt--abbreviate t
     "Whether or not to abbreviate the displayed path in the Eshell
@@ -1176,9 +1176,9 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
 #+END_SRC
 
 *** ~phundrak/add-all-to-list~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
+:END:
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/add-all-to-list ($list &rest $elements)
     "Add all $elements from `$elements' to the $list `$list'. If an
@@ -1191,9 +1191,9 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
 #+END_SRC
 
 *** ~phundrak/eshell-git-status~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-eshell-git-status-28f16e94
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-eshell-git-status-28f16e94
+:END:
 This function is used in my Eshell prompt which you can consult [[#User_Configuration-Eshell-Eshell_theme-a06715a9][here]]. This function basically executes two git calls to get some information about a git repo, which path we provide as an argument. Based on the result of these git calls, the function will know what it needs to know about the repo to build a git prompt that will be inserted in my Eshell prompt. And just for shit and giggles, I’ve made it so it is a powerline prompt.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/eshell-git-status ($path &optional $background-color)
@@ -1260,9 +1260,9 @@ This function is used in my Eshell prompt which you can consult [[#User_Configur
 #+END_SRC
 
 *** ~phundrak/fill-paragraph~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-fill-paragraph-eb568313
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-fill-paragraph-eb568313
+:END:
 This function was created in order to bind to another keyboard shortcut the already existing ~C-u M-q~ which I cannot type with evil-mode unless I’m in insert mode.
 #+BEGIN_SRC emacs-lisp
 (defun phundrak/fill-paragraph ()
@@ -1272,9 +1272,9 @@ This function was created in order to bind to another keyboard shortcut the alre
 #+END_SRC
 
 *** ~phundrak/find-org-file~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-find-org-file-a8fd200f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-find-org-file-a8fd200f
+:END:
 There are lots of files which I want to be able to quickly open. I used to have one shortcut for each one of these files, but as their number grew, I decided to switch to helm for my file selector which will be called by only one common shortcut. Most of my files will be located in =~/org=, but I have some conlanging files which are located in =~/Documents/conlanging=, and all my university notes are in =~/Documents/university=. Let’s declare these directories in a variable:
 #+BEGIN_SRC emacs-lisp
   (setq phundrak/org-directories '("~/org"
@@ -1303,9 +1303,9 @@ With this established, let’s write some emacs-lisp that will allow me to get a
 #+END_SRC
 
 *** ~phundrak/is-dir-a-git-repo~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-is-dir-a-git-repo-3bb5e09b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-is-dir-a-git-repo-3bb5e09b
+:END:
 This function detects if the path passed as an argument points to a git directory or to one of its subdirectories.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/is-dir-a-git-repo ($path)
@@ -1318,9 +1318,9 @@ This function detects if the path passed as an argument points to a git director
 #+END_SRC
 
 *** ~phundrak/yas-rust-new-assignments~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-yas-rust-new-assignments-4ad16bde
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-yas-rust-new-assignments-4ad16bde
+:END:
 The following function is a function that will allow me to easily create ~new~ functions for Rust structs. Inspired from [[https://github.com/jorgenschaefer/elpy][elpy]]’s ~elpy-snippet-init-assignments~ function, it will automatically write assignments to my new struct as I write new parameters in the ~new~ function. It also comes with a helper function that parses the arguments given to the ~new~ function.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak//yas-snippet-split-rust-args ($arg-string)
@@ -1346,9 +1346,9 @@ The following function is a function that will allow me to easily create ~new~ f
 #+END_SRC
 
 *** ~terminal-here-default-terminal-command~
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
+:END:
 This function is actually an overwrite of the default one which apparently does not work on my machine. This function is called by ~terminal-here-launch~ and spawns an external terminal emulator in the directory emacs was in when the terminal was invoked. I simply point out to this function the name of my terminal emulator. Here is the code:
 #+BEGIN_SRC emacs-lisp
   (defun terminal-here-default-terminal-command (_dir)
@@ -1356,13 +1356,13 @@ This function is actually an overwrite of the default one which apparently does 
 #+END_SRC
 
 ** Emacs builtins
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Emacs_builtins-7822b8dd
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Emacs_builtins-7822b8dd
+:END:
 *** Dired
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Dired-ef8a7cac
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Dired-ef8a7cac
+:END:
 When it comes to dired, I chose do modify some elements on how things are sorted and shown, but there isn’t much configuration. First, I want to always copy folders in a recursive way, no questions asked.
 #+BEGIN_SRC emacs-lisp
   (setq dired-recursive-copies 'always)
@@ -1384,15 +1384,15 @@ By the way, let’s enable ~org-download~ when we are in a Dired buffer:
 #+END_SRC
 
 *** Eshell
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Eshell-3012e67e
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-3012e67e
+:END:
 Eshell is a built-in shell available from Emacs which I use almost as often as Fish. Some adjustments are necessary for making this shell usable for me.
 
 **** Environment variables
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Eshell-Environment_variables-8dac73e0
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Environment_variables-8dac73e0
+:END:
 Some environment variables need to be correctly set so Eshell can correctly work. The first environment variable to be set is the ~PATH~, as I have a couple of directories where executables are located. Let’s add them to our path.
 #+BEGIN_SRC emacs-lisp
   (setenv "PATH"
@@ -1424,9 +1424,9 @@ The ~EDITOR~ variable also needs to be set for git commands, especially the ~yad
 #+END_SRC
 
 **** Custom functions
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Eshell-Custom_functions-79d98245
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-79d98245
+:END:
 When I’m in Eshell, sometimes I wish to open multiple files at once in Emacs. For this, when I have several arguments for ~find-file~, I want to be able to open them all at once. Let’s modify ~find-file~ like so:
 #+BEGIN_SRC emacs-lisp
   (defadvice find-file (around find-files activate)
@@ -1445,9 +1445,9 @@ I also want to be able to have multiple instances of Eshell opened at once. For 
 #+END_SRC
 
 ***** Redirect text editors to Emacs
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
+:END:
 I still have some muscle memory telling me to open nano, ed, or vim, and sometimes I even try to type ~emacs~ in the terminal, which is stupid with Eshell since I’m already inside Emacs. So, for each of these text editors, let’s make the command open the files in Emacs.
 #+BEGIN_SRC emacs-lisp
   (defun eshell/emacs (&rest $files)
@@ -1464,9 +1464,9 @@ I still have some muscle memory telling me to open nano, ed, or vim, and sometim
 #+END_SRC
 
 **** Aliases
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Eshell-Aliases-ef06615f
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Aliases-ef06615f
+:END:
 This function is a function that will come in very handy for Eshell functions that call shell processes. It concatenates the initial string ~command~ with all the arguments ~args~, each separated with a space.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/concatenate-shell-command ($command &rest $args)
@@ -1494,9 +1494,9 @@ For some ease of use, I’ll also declare ~list-buffers~ as an alias of ~ibuffer
 #+END_SRC
 
 ***** System monitoring
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Eshell-Aliases-System_monitoring-ee01b070
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Aliases-System_monitoring-ee01b070
+:END:
 Similar to ~meminfo~, we also have ~gpumeminfo~ so we can get a quick look at the memory-related logs of our X session.
 #+BEGIN_SRC emacs-lisp
   (defun eshell/gpumeminfo (&rest $args)
@@ -1534,9 +1534,9 @@ Similarly, ~psmem~ gives us information on the memory usage of the current threa
 #+END_SRC
 
 ***** System management (packages and services)
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Eshell-Aliases-System_management_(packages_and_services)-afb6d9d3
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Aliases-System_management_(packages_and_services)-afb6d9d3
+:END:
 The first command is ~remove~ which removes a package and its dependencies from the system.
 #+BEGIN_SRC emacs-lisp
   (defun eshell/remove (&rest $args)
@@ -1545,9 +1545,9 @@ The first command is ~remove~ which removes a package and its dependencies from 
 #+END_SRC
 
 ***** Other
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Eshell-Aliases-Other-bd88ca97
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Aliases-Other-bd88ca97
+:END:
 ~mkcd~ is a function that allows me to create a directory and ~cd~ into it at the same time.
 #+begin_src emacs-lisp
   (defun eshell/mkcd ($directory)
@@ -1556,9 +1556,9 @@ The first command is ~remove~ which removes a package and its dependencies from 
 #+end_src
 
 ***** Typos
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Eshell-Aliases-Typos-c7bfe6eb
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Aliases-Typos-c7bfe6eb
+:END:
 ~q~ is a shorthand for ~exit~. ~exti~ and ~exi~ are for typos when I type ~exit~.
 #+BEGIN_SRC emacs-lisp
   (defun eshell/q (&rest $args)
@@ -1576,9 +1576,9 @@ The first command is ~remove~ which removes a package and its dependencies from 
 #+END_SRC
 
 **** Visual commands
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
+:END:
 With Eshell, some commands don’t work very well, especially commands that create a TUI. So, let’s declare them as visual commands or subcommands:
 #+BEGIN_SRC emacs-lisp
   (setq eshell-visual-commands
@@ -1588,9 +1588,9 @@ With Eshell, some commands don’t work very well, especially commands that crea
 #+END_SRC
 
 **** Eshell theme
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
+:END:
 As with most shells, again, it is possible to customize the appearance of the Eshell prompt. As you can see, my prompt has some Nord colors, a shortened path, a git prompt, and an indicator of whether the previous command succeeded or failed. Note however that the abbreviation of the current path depends on the value of ~phundrak/prompt--abbreviate~, if it is ~t~ it is abbreviated; otherwise, it is kept in full. It can be toggled with a keyboard shortcut, see [[#User_Configuration-Shortcuts-Toggle-d53c27ef][Keybindings: Toggle]].
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/eshell-prompt ()
@@ -1652,9 +1652,9 @@ I also don't want the banner to be displayed, I know I entered the Elisp shell, 
 #+END_SRC
 
 *** Org-mode
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Org-mode-04ab8ad3
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-04ab8ad3
+:END:
 Org-mode is probably one of the best if not the best Emacs feature I have ever discovered. It is awesome for writing documents, regardless of the format you need it to be exported to, for agenda management, and for literary programming, such as with this document.
 #+BEGIN_SRC emacs-lisp :tangle no
   (with-eval-after-load 'org
@@ -1668,15 +1668,15 @@ Org-mode is probably one of the best if not the best Emacs feature I have ever d
  #+END_SRC
 
 **** Custom org-mode functions
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-f1726995
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-f1726995
+:END:
 We begin with a couple of custom functions that I use in my org-mode files.
 
 ***** Custom and unique headings ID
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-Custom_and_unique_headings_ID-44d2beaf
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-Custom_and_unique_headings_ID-44d2beaf
+:END:
 The first ones are dedicated to provide org-mode headings a fixed and unique ID that won’t change over time. This code was taken from [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][https://writequit.org/articles/emacs-org-mode-generate-ids.html]]. The first function’s job is to create these unique IDs
 #+BEGIN_SRC emacs-lisp
   (defun eos/org-id-new (&optional prefix)
@@ -1779,9 +1779,9 @@ Let’s add a hook to the above function so it is called automatically on save, 
 #+END_SRC
 
 **** Org babel languages
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_babel_languages-c062fc16
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_babel_languages-c062fc16
+:END:
 One of the amazing features of org-mode is its literary programming capacities by running code blocks from within Org-mode itself. But for that, only a couple of languages are supported directly by Org-mode itself, and they need to be activated. Here are the languages I activated in my Org-mode configuration:
 #+NAME: org-babel-languages-table
 | C          |
@@ -1835,13 +1835,13 @@ By the way, I wish to see source code behave the same way in the source blocks a
 #+END_SRC
 
 **** Org variables
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-97587637
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-97587637
+:END:
 ***** User information
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-User_information-6c7d5e3f
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-User_information-6c7d5e3f
+:END:
 Some  variables  about  myself  need  to be  set  so  Org-mode  knows  what
 information to include in exported files.
 #+BEGIN_SRC emacs-lisp
@@ -1852,9 +1852,9 @@ information to include in exported files.
 #+END_SRC
 
 ***** Visual settings
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Visual_settings-5d02f4c0
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Visual_settings-5d02f4c0
+:END:
 Visually, I prefer to hide the markers of macros, so let’s do that:
 #+BEGIN_SRC emacs-lisp
   (setq org-hide-macro-markers t)
@@ -1867,9 +1867,9 @@ I also have an issue where small dots precede my org headers. Let’s fix that:
 #+END_SRC
 
 ***** Org behavior
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
+:END:
 Here is one behavior that I really want to see modified: the ability to use ~M-RET~ without slicing the text the marker is on.
 #+BEGIN_SRC emacs-lisp
   (setq org-M-RET-may-split-line nil)
@@ -1910,18 +1910,18 @@ Lastly, I know this can be a terrible idea, but I want Emacs to just evaluate Or
 #+END_SRC
 
 ***** Miscellaneous
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Miscellaneous-ddcb568a
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Miscellaneous-ddcb568a
+:END:
 When creating a link to an Org flie, I want to create an ID only if the link is created interactively, and only if there is no custom ID already created.
 #+BEGIN_SRC emacs-lisp
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 #+END_SRC
 
 **** Org files exports
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_files_exports-1e194169
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_files_exports-1e194169
+:END:
 When it comes to exports, I want the LaTeX and PDF exports to be done with XeLaTeX only. This implies the modification of the following variable:
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-compiler "xelatex")
@@ -1978,9 +1978,9 @@ On HTML exports, Org-mode tries to include a validation link for the exported HT
 #+END_SRC
 
 **** Custom LaTeX formats
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Custom_LaTeX_formats-8e8dca1c
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Custom_LaTeX_formats-8e8dca1c
+:END:
 I currently have two custom formats for my Org-mode exports: one for general use (initialy for my conlanging files, hence its ~conlang~ name), and one for beamer exports.
 
 Below is the declaration of the ~conlang~ LaTeX class:
@@ -2020,9 +2020,9 @@ Both these classes have to be added to ~org-latex-classes~ like so:
 #+END_SRC
 
 **** Org agenda
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_agenda-53f9d319
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_agenda-53f9d319
+:END:
 One awesome feature of Org mode is the agenda. By default, my agendas are stored in =~/org/agenda=.
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
@@ -2049,9 +2049,9 @@ I also have a custom command in Org agenda to mark some tasks as daily tasks wit
 #+END_SRC
 
 **** Org capture
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
+:END:
 Org-capture is an amazing feature of Org-mode which allows me to quickly save links, resources, reminders, and notes in neatly organized org files. Here they are described:
 #+BEGIN_SRC emacs-lisp
   (setq
@@ -2204,16 +2204,16 @@ You may notice a capture entry for my journal, and this is due to the fact I do 
 In the next sub-sections will be described my org capture templates. These are not tangled into my Emacs configuration files, but into separate ~.orgcaptmpl~ files stored into =~/org/capture/=.
 
 ***** Emails
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Emails-d87336fe
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Emails-d87336fe
+:END:
 This is my template for a new Email:
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/email.orgcaptmpl
   ,** TODO [#A] Write Email
      SCHEDULED: %^t
-     :PROPERTIES:
-     :CAPTURED: %U
-     :END:
+:PROPERTIES:
+:CAPTURED: %U
+:END:
   From: Lucien Cartier-Tilet <lucien@phundrak.com>
   To: %^{Recipient}
   Subject: %^{Object}
@@ -2230,9 +2230,9 @@ This is my template for a new Email:
 I use it in case my computer is not yet connected to the internet and I need to already write the email so I can send it later. All I will need to to afterwards will be to copy and paste my capture in a new message buffer and send it once I am back online. This is exported to =~/org/capture/email.orgcaptmpl=.
 
 ***** Journal
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Journal-9916f9bf
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Journal-9916f9bf
+:END:
 This template is quite simple: it creates a new entry with the current timestamp as its title, a brief title of my choosing, and then I can write whatever I wish to write. This is exported to =~/org/capture/journal.orgcaptmpl=.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/journal.orgcaptmpl
   ,* %U %^{Title}
@@ -2240,23 +2240,23 @@ This template is quite simple: it creates a new entry with the current timestamp
 #+END_SRC
 
 ***** Notes
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Notes-4b4c10aa
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Notes-4b4c10aa
+:END:
 This template is used for taking note about various subjects that can go from conlanging to development. I wrote it so I can know from where this capture was made and when, and it even supports text that was highlighted in Emacs that will be inserted in a quote block. This is exported to =~/org/capture/notes.orgcaptmpl=.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/notes.orgcaptmpl
   ,* %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:END:
     %?
 #+END_SRC
 
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/notes-quote.orgcaptmpl
   ,* %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:END:
     Possible inspiration:
     ,#+begin_quote
     %i
@@ -2266,17 +2266,17 @@ This template is used for taking note about various subjects that can go from co
 #+END_SRC
 
 ***** Protocol
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Protocol-ec45ec49
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Protocol-ec45ec49
+:END:
 This capture is used when received through org-protocol, with the Org-protocol Extension for Firefox. It allows me to save in a quote block what I’ve highlighted, as well as the link of the webpage on which my saved content was highlighted. This file is exported to =~/org/capture/protocol.orgcaptmpl=.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/protocol.orgcaptmpl
   ,* TODO [#C] %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :LINK:     %:link
-    :TITLE:    %:description
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:LINK:     %:link
+:TITLE:    %:description
+:END:
     ,#+begin_quote
     %i
     ,#+end_quote
@@ -2287,50 +2287,50 @@ This capture is used when received through org-protocol, with the Org-protocol E
 This next capture template is used only when a link is sent to Emacs and no content was highlighted.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/protocol-link.orgcaptmpl
   ,* TODO [#C] Link: %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :LINK:     %:link
-    :TITLE:    %:description
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:LINK:     %:link
+:TITLE:    %:description
+:END:
     %?
 #+END_SRC
 
 ***** Resources
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Resources-b23bfbd0
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Resources-b23bfbd0
+:END:
 This is the default template for resources, which generally are located on the Internet. By default, I give them the lowest priority, because although this is something for me to remember later, it is not by default important. You can see in the properties I record when the capture happened, and what the link is. The title of the capture is a summary of what this is, while the body of the capture is a more detailed explanation of what I capture, why, and how it could be useful to me.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/resource.orgcaptmpl
   ,* TODO [#C] %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :LINK:     %^{Link}
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:LINK:     %^{Link}
+:END:
     %?
 #+END_SRC
 
 ***** Tasks
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-3fcf382a
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-3fcf382a
+:END:
 ****** Computers and stuff
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Computers_and_stuff-a4eef8e3
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Computers_and_stuff-a4eef8e3
+:END:
 One type of task I often capture is related to my servers or thing about computers in general. With this, I can capture a task for which I will either set a schedule or a deadline.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/informatique.orgcaptmpl
   ,* TODO %^{Title}
     %^{Scheduled or Deadline?||SCHEDULED||DEADLINE}: %^t
-    :PROPERTIES:
-    :CATEGORY: %^{Category}
-    :END:
+:PROPERTIES:
+:CATEGORY: %^{Category}
+:END:
     %?
 #+END_SRC
 
 ****** Health
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Health-74f8f338
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Health-74f8f338
+:END:
 This capture is rarely used (I’m lucky to have a good health), but it can be useful.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/health.orgcaptmpl
   ,* %^{Title}
@@ -2340,9 +2340,9 @@ This capture is rarely used (I’m lucky to have a good health), but it can be u
 #+END_SRC
 
 ****** Birthdays
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Birthdays-ec3b27be
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Birthdays-ec3b27be
+:END:
 This capture is used to store new birthdays I have to remember. They are set to be repeated yearly.
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/birthday.orgcaptmpl
   ,* %^{Name}
@@ -2350,9 +2350,9 @@ This capture is used to store new birthdays I have to remember. They are set to 
 #+END_SRC
 
 ****** Events
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Events-7f0f8dee
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Tasks-Events-7f0f8dee
+:END:
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/event.orgcaptmpl
   ,* %^{Title}
     %^{Scheduled or deadline?||SCHEDULED||DEADLINE}: %^t
@@ -2360,40 +2360,40 @@ This capture is used to store new birthdays I have to remember. They are set to 
 #+END_SRC
 
 ***** Links
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-586a6b2a
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-586a6b2a
+:END:
 ****** General
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-General-1f0732db
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-General-1f0732db
+:END:
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/link.orgcaptmpl
   ,* TODO [#C] %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :LINK:     %^{Link}
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:LINK:     %^{Link}
+:END:
     %?
 #+END_SRC
 
 ****** YouTube
-       :PROPERTIES:
-       :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-YouTube-b89fe20e
-       :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_capture-Links-YouTube-b89fe20e
+:END:
 #+BEGIN_SRC org :mkdirp yes :tangle ~/org/capture/youtube.orgcaptmpl
   ,* TODO [#C] %^{Title}
-    :PROPERTIES:
-    :CAPTURED: %U
-    :AUTHOR:   %^{Author}
-    :LINK:     %^{Link}
-    :END:
+:PROPERTIES:
+:CAPTURED: %U
+:AUTHOR:   %^{Author}
+:LINK:     %^{Link}
+:END:
     %?
 #+END_SRC
 
 **** Org projects
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-5be088cd
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_projects-5be088cd
+:END:
 Another great features of Org-mode is the Org projects that allow the user to easily publish a bunch of org files to a remote location. Here is the current declaration of my projects, which will be detailed later:
 #+BEGIN_SRC emacs-lisp :noweb yes
   <<org-proj-config-setup>>
@@ -2410,9 +2410,9 @@ Another great features of Org-mode is the Org projects that allow the user to ea
 #+END_SRC
 
 ***** Configuration website
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Configuration_website-79bd0468
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Configuration_website-79bd0468
+:END:
 This is my configuration for exporting my dotfiles to my website in a web format only. No PDFs or anything, just HTML. Please note that I do not use that often anymore, I much prefer the automatic script that I have which deploys through my Drone instance my website on git pushes.
 
 And before we get into the actual configuration, I would like to introduce a couple of variables. This is a bit more verbose than if I declared everything manually, but now I can change all three values at the same time without a hasle.
@@ -2460,9 +2460,9 @@ The project is then defined like so:
 #+END_SRC
 
 ***** Linguistics website
-      :PROPERTIES:
-      :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Linguistics_website-34b8d4e7
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_projects-Linguistics_website-34b8d4e7
+:END:
 My linguistics website is made out of three projects. As for the previous project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -2530,31 +2530,31 @@ The project is then defined like so:
 #+END_SRC
 
 ** Editing and modes
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
+:END:
 *** Default modes
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Editing_and_modes-Default_modes-50d4e086
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Default_modes-50d4e086
+:END:
 Some buffers sometimes won’t have a default mode at all, such as the ~*scratch*~ buffer. In any vanilla configuration, they will then default to ~text-mode~. I personally prefer ~org-mode~ to be my default mode, so let’s set it so!
 #+BEGIN_SRC emacs-lisp
   (setq edit-server-default-major-mode 'org-mode)
 #+END_SRC
 
 *** Evil
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Editing_and_modes-Evil-3cedaaee
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Evil-3cedaaee
+:END:
 As a user of Evil, I’m sometimes pissed when I accidentally press ~C-u~ and it gets me to the top of the document. So, let’s disable it:
 #+BEGIN_SRC emacs-lisp
   (setq evil-want-C-u-scroll nil)
 #+END_SRC
 
 *** File extensions
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-File_extensions-f76fe752
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-File_extensions-f76fe752
+:END:
 Sometimes, Emacs doesn’t recognize or misrecognizes some extensions, resulting in a wrong mode set for said file. Let’s fix that by associating the extension with the desired mode:
 #+BEGIN_SRC emacs-lisp
   (dolist (e '(("xml" . web-mode)
@@ -2585,9 +2585,9 @@ We also have a couple of extensions which should all be in ~conf-unix-mode~, let
 #+END_SRC
 
 *** Hooks
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Miscellaneous-Hooks-86da2da0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Hooks-86da2da0
+:END:
 I also have some hooks I use for enabling some major and minor modes. The first one here allows the execution of the deletion of trailing space each time I save a file.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -2609,18 +2609,18 @@ I also want for some non-programming modes to enable a hard-limit in terms of ho
 #+END_SRC
 
 *** Twittering mode
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Miscellaneous-Twittering_mode-b97d9327
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Twittering_mode-b97d9327
+:END:
 For ~twittering-mode~, a Twitter major mode for Emacs, I want to encrypt my data using a master password, which I do thanks to this option:
 #+BEGIN_SRC emacs-lisp
   (setq twittering-use-master-password t)
 #+END_SRC
 
 *** Wrapping regions
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Editing_and_modes-Wrapping_regions-2250281e
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Wrapping_regions-2250281e
+:END:
 I really like the ~M-(~ keybinding for wrapping a selected region between parenthesis. However, parenthesis are not everything (even in Lisp dialects), and other wrappers could be nice. And they are! Here is how they are declared:
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-[") 'insert-pair)
@@ -2634,9 +2634,9 @@ I really like the ~M-(~ keybinding for wrapping a selected region between parent
 For the record, this is from [[http://www.howardism.org/][Howard Abram]]’s [[https://github.com/howardabrams/dot-files][dotfiles]].
 
 ** Keybindings
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Shortcuts-aef3f7a7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-aef3f7a7
+:END:
 As you will see, I defined a LOT of custom keybindings. All of them are Spacemacs keybindings, defined in a way they can be used seamlessly with Evil. They almost all begin with ~o~, which is a prefix reserved for user-defined keybindings so they won’t conflict with any package. Let’s declare it like so.
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "o" "custom")
@@ -2657,9 +2657,9 @@ The following, I use it rarely, it can launch an external command from Emacs to 
 #+END_SRC
 
 *** Applications
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Applications-af8730b1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Applications-af8730b1
+:END:
 As this is a new category, let’s declare its prefix:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "oa" "applications")
@@ -2676,9 +2676,9 @@ Now, let’s also declare the keybindings in this category. ~oac~ will invoke Em
 #+END_SRC
 
 **** Org tree slide
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Keybindings-Applications-Org_tree_slide-29545c5e
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Keybindings-Applications-Org_tree_slide-29545c5e
+:END:
 Finally, here we have the keybindings for ~org-tree-slide~, a presentation mode with orgmode. Since I want the keys to be directly accessible without any prefix from Spacemacs, I’ll have to declare them the vanilla way. First we have keybindings that will launch the presentation:
 #+BEGIN_SRC emacs-lisp
   (define-key org-mode-map (kbd "<f8>") 'org-tree-slide-mode)
@@ -2702,9 +2702,9 @@ Next, we have some additional keybindings that will only be active when in ~org-
 #+END_SRC
 
 *** Comments
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Comments-508db33d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Comments-508db33d
+:END:
 Some keybindings are also related to comment editing, in particular using outorg. Let’s first declare the dedicated prefix:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "oc" "comments")
@@ -2721,9 +2721,9 @@ Now, let’s declare the following keybindings:
 ~oco~ enables the outline minor mode, which then allows for the edition of comments in org buffers with ~oce~ and saving them to the original source file with ~occ~.
 
 *** Files
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Files-206c2126
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Files-206c2126
+:END:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "of" "open org file")
   (spacemacs/set-leader-keys "of" 'phundrak/find-org-file)
@@ -2738,9 +2738,9 @@ I also have a shortcut for ~helm-locate~ in case I need to find a file that is n
 And that’s it! This should list all my org files under these directories and give me fuzzy finding for these files. I just need to partially type the name of the file I want to open and it should open without any issue.
 
 *** Multiple cursors
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Multiple_cursors-83db7c9c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Multiple_cursors-83db7c9c
+:END:
 I don’t really like Spacemacs’ layer for MultipleCursors, so I prefer to simply install the package and create shortcuts for it myself. Let’s first declare category:
 #+BEGIN_SRC emacs-lisp
  (spacemacs/declare-prefix "om" "multiple-cursors")
@@ -2756,9 +2756,9 @@ Now, let’s declare the shortcuts related to multiple-cursors:
 #+END_SRC
 
 *** Org-mode
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Org-mode-a8938199
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Org-mode-a8938199
+:END:
 Now, onto some shortcuts related to org-mode. Let’s first declare the category:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix-for-mode 'org-mode "mo" "custom" "User-defined keybindings")
@@ -2802,9 +2802,9 @@ Finaly, I set the following shortcut in order to easily remove ~RESULTS~ blocks 
 #+END_SRC
 
 *** Toggle
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Toggle-d53c27ef
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Toggle-d53c27ef
+:END:
 This category allows to toggle some modes and options.
 #+BEGIN_SRC emacs-lisp
  (spacemacs/declare-prefix "ot" "toggle")
@@ -2845,9 +2845,9 @@ The shortcuts below though allow me to directly switch to one of these three kno
 #+END_SRC
 
 *** Text
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Shortcuts-Text-8d877c4b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Shortcuts-Text-8d877c4b
+:END:
 The last category is a text-related category. Let’s declare it:
 #+BEGIN_SRC emacs-lisp
  (spacemacs/declare-prefix "ox" "text")
@@ -2859,9 +2859,9 @@ The only command for now is a command that allows the use of ~C-u M-q~ with the 
 #+END_SRC
 
 ** Mu4e
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Mu4e-f3df8e9e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Mu4e-f3df8e9e
+:END:
 Mu4e is a frontend for mu, an email analyzer which sits on top of a Maildir which gets updated with the ~mbsync~ command from ~isync~. It has a lot of neat features, but I guess my favorite ones are:
 1. the search query feature
 2. rendering an HTML email in the browser
@@ -2954,9 +2954,9 @@ I am still unsure about this variable and if it has an effect on mu4e, but I wis
 #+END_SRC
 
 ** Miscellaneous
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Miscellaneous-d230bc2f
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-d230bc2f
+:END:
 I have a lot of variables that need to be set but don’t fall in any other category, so I’ll collect them here.
 
 I have this regexp for detecting paragraphs.
@@ -2965,18 +2965,18 @@ I have this regexp for detecting paragraphs.
 #+END_SRC
 
 *** Pinentry
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Miscellaneous-Pinentry-95004d5a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Pinentry-95004d5a
+:END:
 Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s set it so:
 #+BEGIN_SRC emacs-lisp
 (setq epa-pinentry-mode 'loopback)
 #+END_SRC
 
 *** Wttr.in cities
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Miscellaneous-Wttr.in_cities-dd24f8c5
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Wttr.in_cities-dd24f8c5
+:END:
 Thanks to the wttrin package, I can get the weather forecast in Emacs for a couple of cities. I just need to specify them to Emacs like so:
 #+BEGIN_SRC emacs-lisp
   (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
@@ -2984,22 +2984,22 @@ Thanks to the wttrin package, I can get the weather forecast in Emacs for a coup
 #+END_SRC
 
 ** Visual configuration
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Visual_configuration-78e6cafc
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Visual_configuration-78e6cafc
+:END:
 *** Battery mode line
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Editing_and_modes-Battery_mode_line-895e5e52
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Battery_mode_line-895e5e52
+:END:
 I want to see by default how much battery my computer has, so let’s enable it:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/toggle-mode-line-battery-on)
 #+END_SRC
 
 *** Beautify Org-mode
-    :PROPERTIES:
-    :CUSTOM_ID: User-Configuration-Visual-configuration-Beautify-Org-mode-0506af2f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Visual-configuration-Beautify-Org-mode-0506af2f
+:END:
 As I will always say, orgmode is an amazing piece of software that deserves particular care and love. That is why I want to give it a unique look and feel compared to the rest of my Emacs configuration, in order to make it feel much more comfortable.
 
 In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why.
@@ -3048,9 +3048,9 @@ Finally, let’s limit the width of images inlined in org buffers to 400px:
 #+END_SRC
 
 *** Prettified symbols
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Miscellaneous-Prettified_symbols-da50f4a6
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Prettified_symbols-da50f4a6
+:END:
 Just because it is pleasing to the eye, some symbols in source code get prettified into simpler symbols. Here is the list of symbols that are to be prettified. You can see in the corresponding comment what symbol will be displayed.
 #+BEGIN_SRC emacs-lisp
   (setq prettify-symbols-alist '(("lambda" . 955) ; λ
@@ -3073,9 +3073,9 @@ Let’s enable this mode globally.
 #+END_SRC
 
 ** Nov-mode
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Nov-mode-6f10765d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Nov-mode-6f10765d
+:END:
 ~nov-mode~ is the mode used in the Epub reader. Here I will write a little function that I will call through a hook each time I’m opening a new EPUB file.
 #+BEGIN_SRC emacs-lisp
   (defun my-nov-font-setup ()
@@ -3097,13 +3097,13 @@ Let’s also set the maximum length of the lines in ~nov-mode~:
 #+END_SRC
 
 ** Programming
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Programming-b4b565ae
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Programming-b4b565ae
+:END:
 *** LSP
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-LSP-4f8aa691
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-LSP-4f8aa691
+:END:
 When it comes to the LSP layer, there are some options which are not enabled by default that I want to use, especially some modes I want to take advantage of. This is why I enable first the ~lsp-treemacs-sync-mode~ so treemacs is LSP aware:
 #+BEGIN_SRC emacs-lisp
   (lsp-treemacs-sync-mode 1)
@@ -3122,9 +3122,9 @@ Finally, I also want the documentation tooltip to show up when the cursor is abo
 #+END_SRC
 
 *** ASM configuration
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-ASM_configuration-f6dc7674
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-ASM_configuration-f6dc7674
+:END:
 The first thing I will set with my ASM configuration is where the reference PDF is located.
 #+BEGIN_SRC emacs-lisp
   (setq x86-lookup-pdf "~/Documents/code/asm/Intelx86/325383-sdm-vol-2abcd.pdf")
@@ -3136,9 +3136,9 @@ I will also modify what the comment character is, from a ~;~ to a ~#~:
 #+END_SRC
 
 *** C/C++
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-C-C++-76c3f997
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-C-C++-76c3f997
+:END:
 As the C/C++ syntax is checked by flycheck, let’s make sure we are using the latest standard available, that is C++17 and C17, from Clang.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c-mode-hook
@@ -3150,9 +3150,9 @@ As the C/C++ syntax is checked by flycheck, let’s make sure we are using the l
 #+END_SRC
 
 *** Dart configuration
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Dart_configuration-ecf24ebf
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Dart_configuration-ecf24ebf
+:END:
 For Dart, I mainly declared some custom shortcuts bound to ~dart-mode~ related to flutter, so nothing too exciting here. Some prefix are declared in order to avoid the shortcuts in helm to show up as just ~custom~.
 #+begin_src emacs-lisp
   (spacemacs/declare-prefix-for-mode 'dart-mode "mo" "user-defined")
@@ -3171,24 +3171,24 @@ Now, for the shortcuts themselves:
 #+END_SRC
 
 *** Emacs Lisp
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Emacs_Lisp-59230f3c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Emacs_Lisp-59230f3c
+:END:
 Here will be stored my configuration directly related to Emacs Lisp, including some functions or default modes.
 
 **** Enable ~eldoc-mode~ by default
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Emacs_Lisp-Enable_~eldoc-mode~_by_default-f131abde
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Emacs_Lisp-Enable_~eldoc-mode~_by_default-f131abde
+:END:
 By default, if some Elisp code is opened, I want to enable ~eldoc-mode~ so I can easily get some documentation on the symbols in the source code. This is done via the use of hooks.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook 'eldoc-mode)
 #+END_SRC
 
 **** ~phundrak/write-to-buffer~
-     :PROPERTIES:
-     :CUSTOM_ID: User_Configuration-Emacs_Lisp-~phundrak-write-to-buffer~-2f192dd3
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Emacs_Lisp-~phundrak-write-to-buffer~-2f192dd3
+:END:
 I was very surprised when I discovered no such function exists in Elisp. This function basically writes a string into a buffer, and optionally switches the user to the buffer. Here is the code for that function:
 #+BEGIN_SRC elisp :results silent
   (defun write-to-buffer ($input-string $outputbuf &optional $switchbuf)
@@ -3207,18 +3207,18 @@ I was very surprised when I discovered no such function exists in Elisp. This fu
 #+END_SRC
 
 *** Python
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Python-9cdd1b06
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Python-9cdd1b06
+:END:
 Emacs throws me an error about the python interpreter, let’s silence it:
 #+BEGIN_SRC emacs-lisp
   (setq python-shell-completion-native-disabled-interpreters '("python"))
 #+END_SRC
 
 *** Rust
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Rust-ba633575
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Rust-ba633575
+:END:
 I need to point to racer where the source code of Rust is located so I can get some documentation. This is installed with the ~rust-src~ component you can get through ~rustup~. To install it, simply run
 #+BEGIN_SRC shell :tangle no :exports code
   $ rustup component add rust-src
@@ -3250,18 +3250,18 @@ Finally, I wish to enable ~electric-pair-mode~ and ~indent-guide-mode~ for Rust 
 #+END_SRC
 
 *** Scheme
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Scheme-e35aa50a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Scheme-e35aa50a
+:END:
 The Scheme configuration will be very short, I just need to tell Emacs the name of the interpreter since it is not the default one:
 #+BEGIN_SRC emacs-lisp
   (setq geiser-chicken-binary "chicken-csi")
 #+END_SRC
 
 ** Projectile
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Projectile-06e580f0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Projectile-06e580f0
+:END:
 Projectile is an awesome utility which helps managing projects within Emacs. It will automatically detect version controlled directories, and will by default assume this is a project I can be working on. However, there are some directories that are version controlled that I do not want to see in my list of projects, namely all the cached AUR packages from my AUR helper, ~yay~. They are all stored in the same parent directory, so let’s ignore that. I will also make Emacs ignore all ~node_modules~ directories it could encounter. And for some reason, =~/.config/emacs= is always in my projects list (I now use XDG-compliant directories), so let’s also ignore that.
 #+BEGIN_SRC emacs-lisp
   (phundrak/add-all-to-list projectile-globally-ignored-directories
@@ -3269,9 +3269,9 @@ Projectile is an awesome utility which helps managing projects within Emacs. It 
 #+END_SRC
 
 ** Security
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Security-21d88555
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Security-21d88555
+:END:
 This paragraph is about making Emacs and GPG as a whole (since Emacs is /always/ open on my computer) more secure. The first thing I want to make is a function that will close any buffer that contains an open ~.gpg~ file –I certainly do not want anyone to be able to read such files on my computer if I leave it even for a couple of minutes.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/kill-gpg-buffers ()
@@ -3300,18 +3300,18 @@ But surely, if I only define this function and hope to call it each time I leav 
 #+END_SRC
 
 ** Snippets
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Snippets-67a32065
-   :HEADER-ARGS:snippet: :padline no :mkdirp yes
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Snippets-67a32065
+:HEADER-ARGS:snippet: :padline no :mkdirp yes
+:END:
 Yasnippet’s snippets tool is extremely powerful and allows me to write very quickly code. For now, we have snippets for two modes. The files you’ll see below are exported to ~$HOME/.config/emacs/private/snippets/~ and to their respective mode directory. For instance, my ~caption~ snippet for org-mode will be exported to ~$HOME/.config/emacs/private/snippets/org-mode/caption~.
 
 Be aware that on top of these custom snippets, I also use the package [[file:awesome.org::#Autostart-f2cf42fe][yasnippet-snippets]] which provide plenty of already made snippets.
 
 *** Rust snippets
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Snippets-Rust_snippets-b106fad4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Snippets-Rust_snippets-b106fad4
+:END:
 I have so far two snippets, the first one is actually just a convenience to make it easier to type a ~println!~ macro than the default snippet.
 #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/println
   # -*- mode: snippet -*-
@@ -3336,9 +3336,9 @@ The second one is more interesting: it is used to create a ~new~ method for a st
 #+END_SRC
 
 *** Org headers
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_headers-ed14fbac
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_headers-ed14fbac
+:END:
 The first two snippets are used to add HTML or LaTeX attributes to elements in org-mode. The third also has a similar usage, inserting a ~#+CAPTION~ header before an element, as well as the fourth which inserts a ~#+NAME~ header.
 #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/attr_html
   # -*- mode: snippet -*-
@@ -3388,9 +3388,9 @@ Now, the following is a bit more complex: it is meant to be used as a new org bu
 #+END_SRC
 
 *** Org blocks
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_blocks-e4dfc448
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_blocks-e4dfc448
+:END:
 Now, Let’s write some snippets for org blocks. The first one is for a comment block, then two snippets for an unnamed and a named Elisp source block, and two others for an unnamed and a named Python source block. There are also two block for generic unnamed source blocks and generic named source blocks.
 #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/comment_block
   # -*- mode: snippet -*-
@@ -3466,9 +3466,9 @@ Now, Let’s write some snippets for org blocks. The first one is for a comment 
 #+END_SRC
 
 *** Org misc
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Snippets-Org_misc-82223a44
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Snippets-Org_misc-82223a44
+:END:
 Finally, there are a couple of miscellaneous org snippets that insert macros I often use in my conlanging documents. The first one inserts a phonetics macro, while the second one inserts a macro used for my Proto-Ñyqy language.
 #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/phon
   # -*- mode: snippet -*-
@@ -3487,13 +3487,13 @@ Finally, there are a couple of miscellaneous org snippets that insert macros I o
 #+END_SRC
 
 ** Tramp configuration
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Tramp_configuration-acb4733b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Tramp_configuration-acb4733b
+:END:
 *** Docker
-    :PROPERTIES:
-    :CUSTOM_ID: User_Configuration-Tramp_configuration-Docker-31573fdf
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Tramp_configuration-Docker-31573fdf
+:END:
 It is completely possible with Tramp to connect ot a docker container and modify files inside of it. It is not supported natively, but we can add it quite easily. Be aware, I am not the author of this code, you can find its original source [[https://www.emacswiki.org/emacs/TrampAndDocker][here]]. First, let’s add the Docker protocol to Tramp:
 #+BEGIN_SRC emacs-lisp
   (push
@@ -3524,9 +3524,9 @@ Now that the method has been added, let’s add some autocompletion for when we 
 And that’s it! it is now possible to connect to a docker container with something like ~/docker:conlangdict_server/~ as the path given in ~find-file~.
 
 *** Yadm
-   :PROPERTIES:
-   :CUSTOM_ID: User_Configuration-Yadm-4344fec3
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Yadm-4344fec3
+:END:
 ~yadm~ is the utility I use for managing my dotfiles, and it is a wrapper In order to manage my dotfiles, I use the following shortcut to launch Magit Status for ~yadm~:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "oy" "yadm status")
@@ -3546,9 +3546,9 @@ around ~git~. Logically, it means Magit could theoretically manage my yadm repo.
    #+END_SRC
 
 * Footnotes
-  :PROPERTIES:
-  :CUSTOM_ID: Footnotes-5ffd05ee
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Footnotes-5ffd05ee
+:END:
 
 [fn:2] [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs]]
 
