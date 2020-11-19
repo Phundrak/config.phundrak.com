@@ -1319,7 +1319,7 @@ This function detects if the path passed as an argument points to a git director
 
 *** ~phundrak/yas-rust-new-assignments~
 :PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-yas-rust-new-assignments-4ad16bde
+:CUSTOM_ID: Custom-functions-yas-rust-new-assignments-4ad16bde
 :END:
 The following function is a function that will allow me to easily create ~new~ functions for Rust structs. Inspired from [[https://github.com/jorgenschaefer/elpy][elpy]]’s ~elpy-snippet-init-assignments~ function, it will automatically write assignments to my new struct as I write new parameters in the ~new~ function. It also comes with a helper function that parses the arguments given to the ~new~ function.
 #+BEGIN_SRC emacs-lisp
@@ -3332,7 +3332,7 @@ I have so far two snippets, the first one is actually just a convenience to make
   println!("${1:{}}", $2);
 #+END_SRC
 
-The second one is more interesting: it is used to create a ~new~ method for a struct, and it will try to create a function that will assign each argument passed to the method to members of the struct. It relies on the custom function [[#User_Configuration-Custom_functions-phundrakyas-rust-new-assignments-10f73456][I wrote here]].
+The second one is more interesting: it is used to create a ~new~ method for a struct, and it will try to create a function that will assign each argument passed to the method to members of the struct. It relies on the custom function [[#Custom-functions-yas-rust-new-assignments-4ad16bde][I wrote here]].
 #+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/new
   # -*- mode: snippet -*-
   # name: new
