@@ -1957,9 +1957,9 @@ By the way, reference links in LaTeX should be written in this format:
 When it comes to the export itself, the latex file needs to be processed several times through XeLaTeX.
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-pdf-process
-        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+END_SRC
 
 For Reveal.JS exports, I need to set where to find the framework by default:
