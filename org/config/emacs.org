@@ -2737,6 +2737,18 @@ I also have a shortcut for ~helm-locate~ in case I need to find a file that is n
 
 And that’s it! This should list all my org files under these directories and give me fuzzy finding for these files. I just need to partially type the name of the file I want to open and it should open without any issue.
 
+*** Games
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Keybindings-Games-c9e6ac80
+:END:
+Apparently, no evil keybindings are set for Tetris. Let’s declare them (adapted to the bépo layout):
+#+BEGIN_SRC emacs-lisp
+  (evil-define-key 'emacs tetris-mode-map "c" 'tetris-move-left)
+  (evil-define-key 'emacs tetris-mode-map "t" 'tetris-move-down)
+  (evil-define-key 'emacs tetris-mode-map "s" 'tetris-rotate-prev)
+  (evil-define-key 'emacs tetris-mode-map "r" 'tetris-move-right)
+#+END_SRC
+
 *** Multiple cursors
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Shortcuts-Multiple_cursors-83db7c9c
