@@ -71,7 +71,7 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | elcord              | rich integration of Emacs in Discord                 |
 | magit-gitflow       | integrate gitflow in Magit                           |
 | multiple-cursors    | I don’t like the layer, I prefer this package alone  |
-| ob-swift            |                                                      |
+| ob-swift            | org-babel package for Swift                          |
 | org-sidebar         | display on the side the outline of an Org buffer     |
 | org-tree-slide      | presentation tool for org-mode                       |
 | outorg              | edit comments as Org-mode buffers                    |
@@ -2741,6 +2741,12 @@ And that’s it! This should list all my org files under these directories and g
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Keybindings-Games-c9e6ac80
 :END:
+Just to make it easier to launch it, I’ll declare a shortcut for launching tetris (which is built into Emacs).
+#+BEGIN_SRC emacs-lisp
+  (spacemacs/declare-prefix "oat" "tetris")
+  (spacemacs/set-leader-keys "oat" 'tetris)
+#+END_SRC
+
 Apparently, no evil keybindings are set for Tetris. Let’s declare them (adapted to the bépo layout):
 #+BEGIN_SRC emacs-lisp
   (evil-define-key 'emacs tetris-mode-map "c" 'tetris-move-left)
@@ -3016,9 +3022,9 @@ As I will always say, orgmode is an amazing piece of software that deserves part
 
 In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why.
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (remove-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
   (auto-fill-mode -1)
 #+END_SRC
 Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]] and [[https://lepisma.xyz/2017/10/28/ricing-org-mode/][this one]].
@@ -3045,6 +3051,7 @@ Fonts will play an important part in this, but so will colors and font size. The
      `(org-macro                 ((t (,@fixed))))
      `(org-target                ((t (,@fixed))))
      `(org-property-value        ((t (,@fixed))) t)
+     '(org-checkbox              ((t (:inherit (org-todo shadow fixed-pitch)))))
      `(org-table                 ((t (,@fixed :foreground ,phundrak/nord14))) t)
      '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
      '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
