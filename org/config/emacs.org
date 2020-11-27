@@ -52,12 +52,13 @@ If the following variable is non-nil, Spacemacs will ask for confirmation before
 :PROPERTIES:
 :CUSTOM_ID: Spacemacs_layers_and_packages-Package_management-0add1a62
 :END:
-It is possible to indicate to Spacemacs a list of additional paths where to look for configuration layers. Paths must have a trailing slash, i.e. =~/.mycontribs/=. As you can see, I added none:
+It is possible to indicate to Spacemacs a list of additional paths where to look for configuration layers. Paths must have a trailing slash, i.e. =~/.mycontribs/=. As you can see, I added only one:
 #+BEGIN_SRC emacs-lisp
-(setq-default dotspacemacs-configuration-layer-path '())
+  (setq-default dotspacemacs-configuration-layer-path
+                '("~/fromGIT/emacs-packages"))
 #+END_SRC
 
-However, I do have additional packages I installed either from the Elpa or the Melpa. These are set in ~dotspacemacs-additional-packages~, a list of additional packages that will be installed without being wrapped in a layer. If you need some configuration for these packages, then consider creating a layer. You can also puth the configuration in ~dotspacemacs/user-config~. To use a local version of a package, use the ~:location~ property, for instance:
+However, I do have additional packages I installed either from the Elpa or the Melpa. These are set in ~dotspacemacs-additional-packages~, a list of additional packages that will be installed without being wrapped in a layer. If I need some configuration for these packages, then I should consider creating a layer. I can also puth the configuration in ~dotspacemacs/user-config~. To use a local version of a package, use the ~:location~ property, for instance:
 #+BEGIN_SRC emacs-lisp :tangle no
   '(your-package :location "~/path/to/your-package/")
 #+END_SRC
