@@ -934,7 +934,7 @@ Here will be declared some shortcuts directly related to Awesome itself.
 |-----+------------------------+---------+---------------------------+-------------------------+---------|
 | h   | modkey                 | no      | hotkeys_popup.show_help   | show help               | awesome |
 | h   | modkey, shift          | yes     | mainmenu:show()           | show main menu          | awesome |
-| l   | modkey                 | spawn   | lock                      | lock screen             | awesome |
+| l   | modkey                 | spawn   | plock                     | lock screen             | awesome |
 | q   | modkey, shift          | no      | awesome.quit              | quit awesome            | awesome |
 | r   | modkey, shift, control | no      | awesome.restart           | reload awesome          | awesome |
 | w   | modkey                 | no      | set_random_pape           | set random wallpaper    | awesome |
@@ -1298,7 +1298,7 @@ A right click on the titlebar will also raise the window, but will instead allow
 Next comes the actual creation of the titlebar for the client ~c~. For that, we call ~awful.titlebar()~, tell it where the titlebar should be relative to the client and what its setup should be. The full call should look like so:
 #+NAME: signal-titlebar-create
 #+BEGIN_SRC lua :tangle no
-  awful.titlebar(c, {position="left"}) : setup {
+  awful.titlebar(c, {position="left", size = 22}) : setup {
     <<signal-titlebar-setup>>
   }
 #+END_SRC
