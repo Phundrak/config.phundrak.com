@@ -3035,6 +3035,7 @@ In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for 
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (auto-fill-mode -1)
 #+END_SRC
+
 Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]] and [[https://lepisma.xyz/2017/10/28/ricing-org-mode/][this one]].
 #+BEGIN_SRC emacs-lisp
   (let* ((font  `(:font "Charis SIL" :height 1.0))
@@ -3070,6 +3071,7 @@ Fonts will play an important part in this, but so will colors and font size. The
      '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8))))
      '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))))
 #+END_SRC
+
 Some other tweaks will make Org-mode more beautiful. This includes a new folding icon, some indentation that is not added whitespace.
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t
@@ -3078,8 +3080,12 @@ Some other tweaks will make Org-mode more beautiful. This includes a new folding
         org-fontify-whole-heading-line t
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
+        org-display-inline-images t
+        org-redisplay-inline-images t
+        org-startup-with-inline-images "inlineimages"
         org-ellipsis "  ")
 #+END_SRC
+
 Finally, let’s limit the width of images inlined in org buffers to 400px:
 #+BEGIN_SRC emacs-lisp
   (setq org-image-actual-width 400)
@@ -3092,12 +3098,6 @@ Finally, let’s limit the width of images inlined in org buffers to 400px:
 Just because it is pleasing to the eye, some symbols in source code get prettified into simpler symbols. Here is the list of symbols that are to be prettified. You can see in the corresponding comment what symbol will be displayed.
 #+BEGIN_SRC emacs-lisp
   (setq prettify-symbols-alist '(("lambda" . 955) ; λ
-                                 ("->" . 8594)    ; →
-                                 ("<->" . 8596)   ; ↔
-                                 ("<-" . 8592)    ; ←
-                                 ("=>" . 8658)    ; ⇒
-                                 ("<=>" . 8860)   ; ⇔
-                                 ("<=" . 8656)    ; ⇐
                                  ("mapc" . 8614)  ; ↦
                                  ("map" . 8614)   ; ↦
                                  (">>" . 187)     ; »
@@ -3108,6 +3108,15 @@ Just because it is pleasing to the eye, some symbols in source code get prettifi
 Let’s enable this mode globally.
 #+BEGIN_SRC emacs-lisp
   (global-prettify-symbols-mode 1)
+#+END_SRC
+
+*** Misc
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Visual-configuration-Misc-2f4ce585
+:END:
+Emacs is already silent, but let’s set the bell as visible:
+#+BEGIN_SRC emacs-lisp
+  (setq visible-bell t)
 #+END_SRC
 
 ** Nov-mode
