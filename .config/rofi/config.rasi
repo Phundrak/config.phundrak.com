@@ -1,150 +1,118 @@
-/* -*- mode: css; -*- */
+/*
+ * sidetab-adapta theme,
+ * based on sidetab theme by deadguy.
+ *
+ * Theme found at https://github.com/shizonic/nord-rofi-theme
+ *
+ * This theme has been dedicated to the public domain.
+ *
+ */
+
 configuration {
-  /* columns: 4; */
-  combi-modi: [window,drun,ssh];
-  location: 0;
-  /* modi: [window,drun,ssh,combi]; */
-  lines: 20;
-  parse-hosts: false;
-  parse-known-hosts: false;
-  terminal: "st";
-  /* theme: "~/.cache/wal/colors-rofi-dark.rasi"; */
-  /* width: 50; */
-  /* auto-select: false;*/
-  /* bw: 1; */
-  /* cache-dir: ;*/
-  /* case-sensitive: false;*/
-  /* click-to-exit: true;*/
-  /* color-active: ;*/
-  /* color-normal: ;*/
-  /* color-urgent: ;*/
-  /* color-window: ;*/
-  /* combi-hide-mode-prefix: false;*/
-  /* combi-modi: "window,drun,ssh,combi"; */
-  /* cycle: true;*/
-  /* disable-history: false; */
-  /* display-combi: ;*/
-  /* display-drun: ;*/
-  /* display-keys: ;*/
-  /* display-run: ;*/
-  /* display-ssh: ;*/
-  /* display-window: ;*/
-  /* display-windowcd: ;*/
-  /* dpi: -1;*/
-  /* drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]"; */
-  /* drun-match-fields: "name,generic,exec,categories"; */
-  /* drun-show-actions: false;*/
-  /* eh: 1;*/
-  /* fake-background: "screenshot";*/
-  /* fake-transparency: false;*/
-  /* filter: ;*/
-  /* fixed-num-lines: true;*/
-  /* font: "mono 12";*/
-  /* fullscreen: false;*/
-  /* hide-scrollbar: false;*/
-  /* icon-theme: ""; */
-  /* ignored-prefixes: "";*/
-  /* kb-accept-alt: "Shift+Return";*/
-  /* kb-accept-custom: "Control+Return";*/
-  /* kb-accept-entry: "Control+j,Control+m,Return,KP_Enter";*/
-  /* kb-cancel: "Escape,Control+g,Control+bracketleft";*/
-  /* kb-clear-line: "Control+w";*/
-  /* kb-custom-10: "Alt+0";*/
-  /* kb-custom-11: "Alt+exclam";*/
-  /* kb-custom-12: "Alt+at";*/
-  /* kb-custom-13: "Alt+numbersign";*/
-  /* kb-custom-14: "Alt+dollar";*/
-  /* kb-custom-15: "Alt+percent";*/
-  /* kb-custom-16: "Alt+dead_circumflex";*/
-  /* kb-custom-17: "Alt+ampersand";*/
-  /* kb-custom-18: "Alt+asterisk";*/
-  /* kb-custom-19: "Alt+parenleft";*/
-  /* kb-custom-1: "Alt+1";*/
-  /* kb-custom-2: "Alt+2";*/
-  /* kb-custom-3: "Alt+3";*/
-  /* kb-custom-4: "Alt+4";*/
-  /* kb-custom-5: "Alt+5";*/
-  /* kb-custom-6: "Alt+6";*/
-  /* kb-custom-7: "Alt+7";*/
-  /* kb-custom-8: "Alt+8";*/
-  /* kb-custom-9: "Alt+9";*/
-  /* kb-delete-entry: "Shift+Delete";*/
-  /* kb-ellipsize: "Alt+period";*/
-  /* kb-mode-next: "Shift+Right,Control+Tab";*/
-  /* kb-mode-previous: "Shift+Left,Control+ISO_Left_Tab";*/
-  /* kb-move-char-back: "Left,Control+b";*/
-  /* kb-move-char-forward: "Right,Control+f";*/
-  /* kb-move-end: "Control+e";*/
-  /* kb-move-front: "Control+a";*/
-  /* kb-move-word-back: "Alt+b,Control+Left";*/
-  /* kb-move-word-forward: "Alt+f,Control+Right";*/
-  /* kb-page-next: "Page_Down";*/
-  /* kb-page-prev: "Page_Up";*/
-  /* kb-primary-paste: "Control+V,Shift+Insert";*/
-  /* kb-remove-char-back: "BackSpace,Shift+BackSpace,Control+h";*/
-  /* kb-remove-char-forward: "Delete,Control+d";*/
-  /* kb-remove-to-eol: "Control+k";*/
-  /* kb-remove-to-sol: "Control+u";*/
-  /* kb-remove-word-back: "Control+Alt+h,Control+BackSpace";*/
-  /* kb-remove-word-forward: "Control+Alt+d";*/
-  /* kb-row-down: "Down,Control+n";*/
-  /* kb-row-first: "Home,KP_Home";*/
-  /* kb-row-last: "End,KP_End";*/
-  /* kb-row-left: "Control+Page_Up";*/
-  /* kb-row-right: "Control+Page_Down";*/
-  /* kb-row-select: "Control+space";*/
-  /* kb-row-tab: "Tab";*/
-  /* kb-row-up: "Up,Control+p,ISO_Left_Tab";*/
-  /* kb-screenshot: "Alt+S";*/
-  /* kb-secondary-paste: "Control+v,Insert";*/
-  /* kb-select-10: "Super+0";*/
-  /* kb-select-1: "Super+1";*/
-  /* kb-select-2: "Super+2";*/
-  /* kb-select-3: "Super+3";*/
-  /* kb-select-4: "Super+4";*/
-  /* kb-select-5: "Super+5";*/
-  /* kb-select-6: "Super+6";*/
-  /* kb-select-7: "Super+7";*/
-  /* kb-select-8: "Super+8";*/
-  /* kb-select-9: "Super+9";*/
-  /* kb-toggle-case-sensitivity: "grave,dead_grave";*/
-  /* kb-toggle-sort: "Alt+grave";*/
-  /* line-margin: 2;*/
-  /* line-padding: 1;*/
-  /* m: "-5";*/
-  /* matching-negate-char: '-' /* unsupported */;*/
-  /* matching: "normal";*/
-  /* max-history-size: 25;*/
-  /* me-accept-custom: "Control+MouseDPrimary";*/
-  /* me-accept-entry: "MouseDPrimary";*/
-  /* me-select-entry: "MousePrimary";*/
-  /* ml-row-down: "ScrollDown";*/
-  /* ml-row-left: "ScrollLeft";*/
-  /* ml-row-right: "ScrollRight";*/
-  /* ml-row-up: "ScrollUp";*/
-  /* padding: 5; */
-  /* pid: "/run/user/1000/rofi.pid";*/
-  /* run-command: "{cmd}";*/
-  /* run-list-command: "";*/
-  /* run-shell-command: "{terminal} -e {cmd}";*/
-  /* scroll-method: 0;*/
-  /* scrollbar-width: 8;*/
-  /* separator-style: "dash";*/
-  /* show-icons: true; */
-  /* show-match: true;*/
-  /* show: combi; */
-  /* sidebar-mode: true; */
-  /* sort: true; */
-  /* sorting-method: ;*/
-  /* ssh-client: "ssh";*/
-  /* ssh-command: "{terminal} -e {ssh-client} {host} [-p {port}]";*/
-  /* threads: 0;*/
-  /* tokenize: true;*/
-  /* window-command: "wmctrl -i -R {window}";*/
-  /* window-format: "{w}    {c}   {t}";*/
-  /* window-match-fields: "all";*/
-  /* xoffset: 0; */
-  /* yoffset: 0; */
+        show-icons:   true;
+        sidebar-mode: true;
 }
-@import "flamingo"
-@theme "~/.cache/wal/colors-rofi-dark.rasi"
+
+* {
+        background-color:           #2e3440;
+        text-color:                 #FFFFFF;
+
+        accent-color:               #88c0d0;
+        accent2-color:              #88c0d0;
+        hover-color:                #8fbcbb;
+        urgent-color:               #FFFFFF;
+        window-color:               #ffffff;
+
+        selected-normal-foreground: @background-color;
+        normal-foreground:          @text-color;
+        selected-normal-background: @hover-color;
+        normal-background:          @background-color;
+
+        selected-urgent-foreground: @background-color;
+        urgent-foreground:          @background-color;
+        selected-urgent-background: @urgent-color;
+        urgent-background:          @background-color;
+
+        selected-active-foreground: @background-color;
+        active-foreground:          @background-color;
+        selected-active-background: @hover-color;
+        active-background:          @accent-color;
+}
+
+#window {
+        anchor:   west;
+        location: west;
+        width:    384px;
+        height:   100%;
+}
+
+#mainbox {
+        children: [ entry, listview, mode-switcher ];
+}
+
+entry {
+        expand: false;
+        margin: 8px;
+}
+
+element {
+        padding: 8px;
+}
+
+element normal.normal {
+        background-color: @normal-background;
+        text-color:       @normal-foreground;
+}
+
+element normal.urgent {
+        background-color: @urgent-background;
+        text-color:       @urgent-foreground;
+}
+
+element normal.active {
+        background-color: @active-background;
+        text-color:       @active-foreground;
+}
+
+element selected.normal {
+        background-color: @selected-normal-background;
+        text-color:       @selected-normal-foreground;
+        border:           0 4px solid 0 0;
+        border-color:     @accent2-color;
+}
+
+element selected.urgent {
+        background-color: @selected-urgent-background;
+        text-color:       @selected-urgent-foreground;
+}
+
+element selected.active {
+        background-color: @selected-active-background;
+        text-color:       @selected-active-foreground;
+}
+
+element alternate.normal {
+        background-color: @normal-background;
+        text-color:       @normal-foreground;
+}
+
+element alternate.urgent {
+        background-color: @urgent-background;
+        text-color:       @urgent-foreground;
+}
+
+element alternate.active {
+        background-color: @active-background;
+        text-color:       @active-foreground;
+}
+
+button {
+        padding: 8px;
+}
+
+button selected {
+        background-color: @active-background;
+        text-color:       @background-color;
+}
+
+/* vim: ft=css
