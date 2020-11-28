@@ -911,18 +911,19 @@ Most of these keybindings are available at root-level of Awesome and will be dec
     :CUSTOM_ID: Keybindings-Applications-Rofi-ca998c87
     :END:
 #+NAME: sc-app-rofi
-| Key | Modifiers              | Lambda? | Action                                | What it does                    | Group |
-|-----+------------------------+---------+---------------------------------------+---------------------------------+-------|
-| a   | modkey                 | shell   | awiki                                 | find and open an ArchWiki page  | rofi  |
-| d   | modkey                 | spawn   | rofi -show combi                      | invoke rofi                     | rofi  |
-| d   | modkey, shift          | spawn   | rofi -combi-modi drun,run -show combi | invoke j4-dmenu-desktop         | rofi  |
-| p   | modkey, shift          | shell   | rofi-pass -t                          | types password from ~pass~      | rofi  |
-| p   | modkey, control, shift | shell   | rofi-pass                             | copy password from ~pass~       | rofi  |
-| e   | modkey, meta           | shell   | rofi-emoji                            | select and copy emoji from list | rofi  |
-| m   | modkey, meta           | shell   | rofi-mount                            | volume mounting helper          | rofi  |
-| u   | modkey, meta           | shell   | rofi-umount                           | volume unmounting helper        | rofi  |
-| w   | modkey, control        | shell   | wacom-setup                           | set up my wacom tablet          | rofi  |
-| w   | modkey, shift          | shell   | rofi-wifi-menu                        | connect to available wifi       | rofi  |
+| Key | Modifiers              | Lambda? | Action                                   | What it does                    | Group |
+|-----+------------------------+---------+------------------------------------------+---------------------------------+-------|
+| a   | modkey                 | shell   | awiki                                    | find and open an ArchWiki page  | rofi  |
+| d   | modkey                 | spawn   | rofi -combi-modi drun,window -show combi | rofi for drun and windows       | rofi  |
+| d   | modkey, shift          | spawn   | rofi -show run                           | rofi with run modi              | rofi  |
+| d   | modkey, meta           | spawn   | rofi -show ssh                           | rofi for SSH                    |       |
+| p   | modkey, shift          | shell   | rofi-pass -t                             | types password from ~pass~      | rofi  |
+| p   | modkey, control, shift | shell   | rofi-pass                                | copy password from ~pass~       | rofi  |
+| e   | modkey, meta           | shell   | rofi-emoji                               | select and copy emoji from list | rofi  |
+| m   | modkey, meta           | shell   | rofi-mount                               | volume mounting helper          | rofi  |
+| u   | modkey, meta           | shell   | rofi-umount                              | volume unmounting helper        | rofi  |
+| w   | modkey, control        | shell   | wacom-setup                              | set up my wacom tablet          | rofi  |
+| w   | modkey, shift          | shell   | rofi-wifi-menu                           | connect to available wifi       | rofi  |
 
 ** Awesome
    :PROPERTIES:
