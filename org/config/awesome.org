@@ -916,7 +916,7 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | a   | modkey                 | shell   | awiki                                    | find and open an ArchWiki page  | rofi  |
 | d   | modkey                 | spawn   | rofi -combi-modi drun,window -show combi | rofi for drun and windows       | rofi  |
 | d   | modkey, shift          | spawn   | rofi -show run                           | rofi with run modi              | rofi  |
-| d   | modkey, meta           | spawn   | rofi -show ssh                           | rofi for SSH                    |       |
+| d   | modkey, meta           | spawn   | rofi -show ssh                           | rofi for SSH                    | rofi  |
 | p   | modkey, shift          | shell   | rofi-pass -t                             | types password from ~pass~      | rofi  |
 | p   | modkey, control, shift | shell   | rofi-pass                                | copy password from ~pass~       | rofi  |
 | e   | modkey, meta           | shell   | rofi-emoji                               | select and copy emoji from list | rofi  |
@@ -924,6 +924,7 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | u   | modkey, meta           | shell   | rofi-umount                              | volume unmounting helper        | rofi  |
 | w   | modkey, control        | shell   | wacom-setup                              | set up my wacom tablet          | rofi  |
 | w   | modkey, shift          | shell   | rofi-wifi-menu                           | connect to available wifi       | rofi  |
+| y   | modkey                 | shell   | rofi-ytdl                                | download video from web         | rofi  |
 
 ** Awesome
    :PROPERTIES:
