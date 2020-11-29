@@ -996,6 +996,26 @@ And finally, let’s delete our temporary file.
 rm -f $undrivefile
 #+END_SRC
 
+* rofi-ytdl
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-ytdl
+:CUSTOM_ID: rofi-ytdl-ff8f789d
+:END:
+This is just a simple wrapper around [[#ytdl-a-youtube-dl-wrapper-03bd63e0][ytdl]] so I can easily download a video from rofi, which we’ll use first to retrieve the URL of the video we want to download, be it from YouTube or other website supported by ~youtube-dl~.
+#+BEGIN_SRC bash
+  URL=$(echo "Video to download:" | rofi -dmenu -i -p "Video to download:")
+#+END_SRC
+
+Now, if the variable ~URL~ is not empty (i.e. the user specified a link and did not abort the operation), we’ll proceed to teh download. Before it begins, we’ll send a notification saying the download is about to begin. When the ~ytdl~ process ends, we’ll also send a notification notifying the user on the success or failure of the download.
+#+BEGIN_SRC bash
+  if [ -n "$URL" ]; then
+      notify-send -u normal "YTDL" "Starting downloading\n$URL"
+      ytdl "$URL" \
+          && notify-send -u normal "YTDL" "Finished downloading!" \
+              || notify-send -u critical "YTDL" "Failed downloading\n$URL"
+  fi
+#+END_SRC
+
 * set-screens
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
@@ -1247,3 +1267,389 @@ A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in
       curl http://v2.wttr.in/Aubervilliers
   end
 #+END_SRC
+
+* ytdl - a ~youtube-dl~ wrapper
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytdl
+:HEADER-ARGS:EMACS-LISP: :exports none :tangle no
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-03bd63e0
+:END:
+This script is a wrapper around ~youtube-dl~ which I use mainly for archiving YouTube videos on my NAS (at the time I’m writing this, I have already 2.1TB worth of videos archived). The principle behind this script is quite simple: I want to avoid as much as possible to redownload any video already downloaded in order to avoid pinging too much YouTube’s servers, 429 Too Many Requests errors are really annoying, and it comes really early when you have only a couple of new videos to download among the few 14k videos already downloaded.
+
+Be aware this script was written for the Fish shell (3.1.0 and above),  and makes use of youtube-dl 2020.03.24 and above, [[https://github.com/jorgebucaran/fish-getopts][Fish getopts]] and [[https://github.com/BurntSushi/ripgrep][ripgrep]].
+
+** Setting default values
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Setting-default-values-da404639
+:END:
+Some variables in this script will have default values, we do not want to have a mile-long command each time we wish to download a single video. We’ll also set some global variables that won’t change:
+#+NAME: ytdl-default-vars
+| Variable Name    | Default Value                                             | String? |
+|------------------+-----------------------------------------------------------+---------|
+| YTDL_SHARED_DIR  | $HOME/.local/share/ytdl                                   | no      |
+| FORMAT_DEFAULT   | %(uploader)s/%(upload_date)s - %(title)s.%(ext)s          | yes     |
+| DOWNFILE_DEFAULT | $YTDL_SHARED_DIR/downloaded                               | no      |
+| ERRFILE_DEFAULT  | $YTDL_SHARED_DIR/video-errors                             | no      |
+| LOGFILE_DEFAULT  | $YTDL_SHARED_DIR/ytdl.log                                 | no      |
+| PREFFERED_FORMAT | bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio | yes     |
+| VERSION          | 0.3                                                       | yes     |
+
+There is one more default variable pointing to ytdl’s root directory which depends on whether the videos directory has a French or English name:
+#+NAME: ytdl-default-vars-root
+#+BEGIN_SRC fish :tangle no
+  if test -d "$HOME/Vidéos"
+      set -g ROOTDIR_DEFAULT "$HOME/Vidéos" # French name
+  else
+      set -g ROOTDIR_DEFAULT "$HOME/Videos" # English name
+  end
+#+END_SRC
+
+#+NAME: ytdl-default-vars-make
+#+BEGIN_SRC emacs-lisp :var vars=ytdl-default-vars
+  (mapconcat (lambda (var)
+               (let ((varname  (car  var))
+                     (varvalue (cadr var))
+                     (string?  (string= (nth 2 var) "yes")))
+                 (format "set -g %-16s %s" varname (if string? (format "\"%s\"" varvalue)
+                                                   varvalue))))
+             vars
+             "\n")
+#+END_SRC
+
+#+RESULTS: ytdl-default-vars-make
+: set -g YTDL_SHARED_DIR  $HOME/.local/share/ytdl
+: set -g FORMAT_DEFAULT   "%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"
+: set -g DOWNFILE_DEFAULT $YTDL_SHARED_DIR/downloaded
+: set -g ERRFILE_DEFAULT  $YTDL_SHARED_DIR/video-errors
+: set -g LOGFILE_DEFAULT  $YTDL_SHARED_DIR/ytdl.log
+: set -g PREFFERED_FORMAT "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio"
+: set -g VERSION          "0.3"
+
+#+BEGIN_SRC fish :noweb yes
+  <<ytdl-default-vars-make()>>
+  <<ytdl-default-vars-root>>
+#+END_SRC
+
+We’ll also create the directory pointed at by ~YTDL_SHARED_DIR~ if it doesn’t exist already:
+#+BEGIN_SRC fish
+  mkdir -p $YTDL_SHARED_DIR
+#+END_SRC
+
+** Help message
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Help-message-3773aacd
+:END:
+The next step is displaying the help message for the script. For that, just a long string echo’d will do, wrapped in the function ~_ytdl_help~.
+#+BEGIN_SRC fish
+  function _ytdl_help
+      echo "Usage: ytdl [OPTION]... URL [URL]...
+
+      -4, --ipv4
+          Download with forced IPv4
+          Default: no
+
+      -6, --ipv6
+          Download with forced IPv6
+          Default: no
+
+      -a, --batch-file <file>
+          File containing URLs to download, one URL per line. Lines starting with
+          '#', ';' or ']' are considered as comments and ignored.
+          Default: None
+
+      -c, --id-cache <file>
+          File containing the video IDs that were already downloaded, one ID per
+          line.
+          Default: $DOWNFILE_DEFAULT
+
+      -d, --directory <dir>
+          Root directory in which to download videos.
+          Default: $ROOTDIR_DEFAULT
+
+      -e, --error-file <file>
+          File containing the IDs of videos that failed to download, one ID per
+          line
+          Default: $ERRFILE_DEFAULT
+
+      -f, --format <format>
+          Format name for downloaded videos, including path relative to root
+          directory
+          Default: $FORMAT_DEFAULT
+
+      -l, --logs <file>
+          File in which to store logs.
+          Default: $LOGFILE_DEFAULT
+
+      -V, --verbose
+          Show verbose output
+          Default: no
+
+      -v, --version
+          Show version of ytdl.
+
+      -h, --help
+          Shows this help message"
+  end
+#+END_SRC
+
+We also have the function ~_ytdl_version~ to display the current version of ~ytdl~:
+#+BEGIN_SRC fish
+  function _ytdl_version
+      echo "ytdl 0.3, developped for fish 3.1.0 and youtube-dl 2020.03.24 or newer"
+      echo "requires Fish getopts <https://github.com/jorgebucaran/fish-getopts>"
+      echo "and ripgrep <https://github.com/BurntSushi/ripgrep>"
+  end
+#+END_SRC
+
+** Arguments Handling
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Arguments-Handling-1daebbe8
+:END:
+The function ~_ytdl_parse_ops~ is a little bit trickier: we use ~getopts~ to parse the arguments passed to the script in order to get some preferences from the user. Here is a quick reference on what options are available and what they do:
+#+NAME: ytdl-table-arguments
+| Short | Long       | Takes a value? | Associated Variable | Default Value     | What it does         |
+|-------+------------+----------------+---------------------+-------------------+----------------------|
+| 4     | ipv4       | no             | IPV4                | None              | Force IPv4           |
+| 6     | ipv6       | no             | IPV6                | None              | Force IPv6           |
+| a     | batch-file | yes            | FILE                | None              | Batch file           |
+| c     | cache      | yes            | DOWNFILE            | $DOWNFILE_DEFAULT | Cache file           |
+| d     | directory  | yes            | ROOTDIR             | $ROOTDIR_DEFAULT  | Root directory       |
+| e     | error-file | yes            | ERRFILE             | $ERRFILE_DEFAULT  | Error logs           |
+| f     | format     | yes            | FORMAT              | $FORMAT_DEFAULT   | Filename format      |
+| l     | logs       | yes            | LOGFILE             | $LOGFILE_DEFAULT  | Logs                 |
+| V     | verbose    | no             | VERBOSE             | 1                 | Verbose output       |
+| v     | version    | command        | None                | None              | Script version       |
+| h     | help       | command        | None                | None              | Display this message |
+
+We can also pass individual YouTube URLs without any options or switches associated to them, they will be downloaded as part of a single queue.
+
+#+NAME: ytdl-arg-handling-gen
+#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
+  (mapconcat (lambda (arg)
+               (let* ((short (format "%s" (nth 0 arg)))
+                      (long  (nth 1 arg))
+                      (arg?  (string= "yes" (nth 2 arg)))
+                      (var   (unless (string= "None" (nth 3 arg))
+                               (nth 3 arg))))
+                 (format "case %s %s\n\t%s"
+                         short long
+                         (if var (format "set -g %s %s" var
+                                         (if arg? "$value" ""))
+                           (format "_ytdl_%s && exit"
+                                   (if (string= "h" short) "help" "version"))))))
+             args
+             "\n")
+#+END_SRC
+
+#+RESULTS: ytdl-arg-handling-gen
+#+begin_example
+case 4 ipv4
+	set -g IPV4
+case 6 ipv6
+	set -g IPV6
+case a batch-file
+	set -g FILE $value
+case c cache
+	set -g DOWNFILE $value
+case d directory
+	set -g ROOTDIR $value
+case e error-file
+	set -g ERRFILE $value
+case f format
+	set -g FORMAT $value
+case l logs
+	set -g LOGFILE $value
+case V verbose
+	set -g VERBOSE
+case v version
+	_ytdl_version && exit
+case h help
+	_ytdl_help && exit
+#+end_example
+
+The following shows how ~getopts~ is used to catch the options and switches passed to the script:
+#+NAME: ytdl-getopts
+#+BEGIN_SRC fish :noweb yes :tangle no
+  getopts $argv | while read -l key value
+      switch $key
+          <<ytdl-arg-handling-gen()>>
+          case _
+              for v in $value
+                  set -g VIDEOS $VIDEOS $v
+              end
+      end
+  end
+#+END_SRC
+
+#+NAME: ytdl-arg-set-default-value-gen
+#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
+  (let* ((args (-filter (lambda (arg)
+                          (let* ((var     (unless (string= "None" (nth 3 arg)) (nth 3 arg)))
+                                 (default (format "%s" (nth 4 arg)))
+                                 (default (unless (string= "None" default) default)))
+                            (and var default)))
+                        args)))
+    (mapconcat (lambda (arg)
+                 (let* ((var     (nth 3 arg))
+                        (default (format "%s" (nth 4 arg))))
+                   (format "if set -q $%s\n\tset -g %s %s\nend"
+                           var var default)))
+               args
+               "\n"))
+#+END_SRC
+
+#+RESULTS: ytdl-arg-set-default-value-gen
+#+begin_example
+if set -q $DOWNFILE
+	set -g DOWNFILE $DOWNFILE_DEFAULT
+end
+if set -q $ROOTDIR
+	set -g ROOTDIR $ROOTDIR_DEFAULT
+end
+if set -q $ERRFILE
+	set -g ERRFILE $ERRFILE_DEFAULT
+end
+if set -q $FORMAT
+	set -g FORMAT $FORMAT_DEFAULT
+end
+if set -q $LOGFILE
+	set -g LOGFILE $LOGFILE_DEFAULT
+end
+if set -q $VERBOSE
+	set -g VERBOSE 1
+end
+#+end_example
+
+Some values need to be set to their default, so let’s assign them their value if no user value was passed:
+#+NAME: ytdl-arg-set-default-value
+#+BEGIN_SRC fish :noweb yes :tangle no
+  <<ytdl-arg-set-default-value-gen()>>
+  set -g FORMAT "$ROOTDIR/$FORMAT"
+#+END_SRC
+
+Both these code blocks are executed in ~_ytdl_parse_ops~:
+#+BEGIN_SRC fish :noweb yes
+  function _ytdl_parse_ops
+      <<ytdl-getopts>>
+      <<ytdl-arg-set-default-value>>
+  end
+#+END_SRC
+
+** Logging
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Logging-f4b9815e
+:END:
+~_ytdl_log~ is a very simple function used for logging information for the user in the file pointed to by ~LOGFILE~. The first argument the function should receive is its log level. I generally use either ~"INFO"~ or ~"ERR"~. The second argument is the message to log.
+#+BEGIN_SRC fish
+  function _ytdl_log
+      set -l INFOLEVEL $argv[1]
+      set -l MSG $argv[2]
+      set -l LOG (printf "[%s] %s %s\n" $INFOLEVEL (date +"%F %T") $MSG)
+      printf "%s\n" $LOG >> $LOGFILE
+      if test $VERBOSE -eq 1
+          echo $LOG
+      end
+  end
+#+END_SRC
+
+** Download a Single Video
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-a-Single-Video-afedf321
+:END:
+In order to download a single video, a simple function has been written for this that will display when downloaded how far it is down the list of videos to be downloaded and it will add its ID to the file listing all videos downloaded. The script will also try to download the video according to the ~PREFFERED_FORMAT~ variable, but if the download fails it will download the default format selected by ~youtube-dl~. If both downloads fail, the ID of the video will be added to the list of failed videos. If one of the downloads succeeds, it will remove the ID from the list of failed downloads.
+
+The first argument of the function is the video ID from YouTube, the second argument is the position of the video in the queue, and the third argument is the queue length –can be the amount of videos in a whole YouTube channel, the amount of videos in a playlist, or simply the amount of YouTube URLs passed as arguments to the script.
+#+BEGIN_SRC fish
+  function _ytdl_download_video
+      set ID $argv[1]
+      _ytdl_log "INFO" (printf "Downloading video with ID $ID (%4d/%4d)" $argv[2] $argv[3])
+      if youtube-dl -f $PREFFERED_FORMAT -ciw -o $FORMAT "https://youtube.com/watch?v=$ID"
+          echo $ID >> $DOWNFILE
+      else if youtube-dl -ciw -o $FORMAT "https://youtube.com/watch?v=$ID"
+          echo $ID >> $DOWNFILE
+      else
+          _ytdl_log "ERR" "Could not download $VIDEO"
+          echo $ID >> $ERRFILE
+      end
+  end
+#+END_SRC
+
+/Note that this function is not meant to be called without any checks before./ It is meant to be called by ~_ytdl_download_queue~ described below.
+
+** Download a Queue of Videos
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-a-Queue-of-Videos-6ef8d51f
+:END:
+One of the main goals of this tool is to check if a video has already been downloaded. This is why, as you will see below, we use ripgrep to check if the ID of the video we want to download is already present in the list of downloaded videos. If not, it will then be downloaded though ~_ytdl_download_video~ described above.
+#+BEGIN_SRC fish
+  function _ytdl_download_queue
+      for i in (seq (count $argv))
+          rg -- $argv[$i] $DOWNFILE 2&> /dev/null
+          if test $status -ne 0
+              _ytdl_download_video $argv[$i] $i (count $argv)
+          end
+      end
+  end
+#+END_SRC
+
+** Download Videos From Arguments
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-Videos-From-Arguments-57a5dac1
+:END:
+The main aim of this function is to transform the URLs contained in the arguments passed to the script to a list of IDs usable later on by ~ytdl~.
+#+BEGIN_SRC fish
+  function _ytdl_download_arg_urls
+      set -g IDs
+      for VIDEO in $argv
+          _ytdl_log "Info" "Getting video ID for $VIDEO"
+          set -g IDs $IDs (youtube-dl --get-id $VIDEO)
+      end
+      _ytdl_download_queue $IDs
+  end
+#+END_SRC
+
+** Download Videos From a Batch File
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-Videos-From-a-Batch-File-0f1382c4
+:END:
+The final function to declare before the main body of the script is ~_ytdl_download_batch~: it will look for each line, ignoring the ones beginning by ~#~, ~;~ and ~]~ (just like ~youtube-dl~) and will download them, assuming these are channel URLs or playlist URLs, however it should also work with direct video URLs.
+
+What this function does is for each line, it will fetch the entierty of the video IDs found in a playlist or channel. Then, it will look each ID up the list of already downloaded videos and will add all new IDs to a queue of videos to be downloaded. It will then pass each new video ID to ~_ytdl_download_video~ directly.
+#+BEGIN_SRC fish
+  function _ytdl_download_batch
+      set -q $FILE
+      if test $status -eq 1
+          set -g NEW
+          set CHANNELS (cat $FILE | grep -vE "#|;|\]")
+          for c in $CHANNELS
+              _ytdl_log "INFO" "Getting IDs for channel $c"
+              set IDS (youtube-dl --get-id $c)
+              _ytdl_log "INFO" "Fetching new videos from channel"
+              for i in (seq (count $IDS))
+                  printf "\rsearching (%d/%d)" $IDn (count $IDS)
+                  rg -- $IDS[$i] $DOWNFILE 2&> /dev/null
+                  if test $status -ne 0
+                      set -g NEW $IDS[$i] $NEW
+                  end
+              end
+              printf "\n"
+          end
+          for i in (seq (count $NEW))
+              _ytdl_download_video $NEW[$i] $i (count $NEW)
+          end
+      end
+  end
+#+END_SRC
+
+** Main Body
+:PROPERTIES:
+:CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Main-Body-8a06cb9e
+:END:
+Now that we have all our functions declared, let’s call them! First, we need to parse our arguments. We’ll then download all files passed as arguments. Finally, we’ll download videos, playlists and channels specified from a batch file.
+#+BEGIN_SRC fish
+  _ytdl_parse_ops $argv
+  _ytdl_download_arg_urls $VIDEOS
+  _ytdl_download_batch
+#+END_SRC
+
+And that’s all! If you’re interested with a very simple interface for downloading one video once, I wrote a small [[#rofi-ytdl-ff8f789d][~rofi-ytdl~]] script that calls the ~rofi~ utility to specify a single link and download it.
