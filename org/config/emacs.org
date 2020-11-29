@@ -246,7 +246,7 @@ In this category, again, one layer is enabled: ~unicode-fonts~. This layer addss
                                               "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
                                               "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
                                               "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                              "\\" "://"))
+                                              "\\\\" "://"))
 #+END_SRC
 
 *** Fun
@@ -1055,13 +1055,6 @@ I would also like to enable the setup of flycheck for Rust when Flycheck is load
 By default, Flyspell should be disabled and only enabled manually.
 #+BEGIN_SRC emacs-lisp
   (flyspell-mode 0)
-#+END_SRC
-
-Here is a little workaround to the issue [[https://github.com/Fuco1/smartparens/issues/1055][#1055]] of smartparens which will be fixed when the PR [[https://github.com/Fuco1/smartparens/pull/1054][#1054]] will be fixed.
-#+BEGIN_SRC emacs-lisp
-  (require 'comp)
-  (add-to-list 'comp-bootstrap-black-list "smartparens")
-  (add-to-list 'comp-deferred-compilation-black-list "smartparens")
 #+END_SRC
 
 Finally, here is a quick workaround for Tramp, sometimes it cannot connect to my hosts if I don’t have this code snippet.

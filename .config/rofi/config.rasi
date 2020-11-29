@@ -1,8 +1,11 @@
+/* -*- mode: css -*- */
+
 /*
  * sidetab-adapta theme,
  * based on sidetab theme by deadguy.
  *
  * Theme found at https://github.com/shizonic/nord-rofi-theme
+ * Modified by P’undrak
  *
  * This theme has been dedicated to the public domain.
  *
@@ -10,7 +13,7 @@
 
 configuration {
         show-icons:   true;
-        sidebar-mode: true;
+        sidebar-mode: false;
 }
 
 * {
@@ -40,10 +43,10 @@ configuration {
 }
 
 #window {
-        anchor:   west;
-        location: west;
-        width:    384px;
-        height:   100%;
+        anchor:   center;
+        location: center;
+        width:    800px;
+        height:   80%;
 }
 
 #mainbox {
@@ -114,5 +117,3 @@ button selected {
         background-color: @active-background;
         text-color:       @background-color;
 }
-
-/* vim: ft=css
