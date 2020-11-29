@@ -8,16 +8,16 @@
 #+PROPERTY: header-args:emacs-lisp :exports none :tangle no
 
 * Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-721f3cc4
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Presentation-721f3cc4
+:END:
 This file will present all the executable scripts I wrote. It is also their original source code, all the following code snippets are exported and tangled from this file to the actual executables.
 
 * Autostart
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/autostart
-  :CUSTOM_ID: Autostart-a99e99e7
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/autostart
+:CUSTOM_ID: Autostart-a99e99e7
+:END:
 Because I sometimes switch from window manager to window manager, creating a script that handles by itself autostarting things for me is way easier than rewriting every time the autostart part of my configuration. As you can every instance will be launched asynchronously, and only if there is no other instance of said command running.
 
 ~set-screens~ is a custom script declared [[*set-screens][below]].
@@ -97,10 +97,10 @@ emacsclient -c -e "(delete-frame)" &
 #+END_SRC
 
 * awiki
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
-  :CUSTOM_ID: awiki-7ac5e1d5
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
+:CUSTOM_ID: awiki-7ac5e1d5
+:END:
 ~awiki~ is a simple script used with ~rofi~ that relies on the ~arch-wiki-docs~ package in order to provide the user a way to quickly find and display any English page from the Arch Wiki in a browser. The advantage of using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is you get instant suggestion in rofi using fuzzy-search. The downside is rofi will only help you find pages by their title, and it will not help you find keywords in the content of said pages.
 
 The first step is to create the list of all the pages that are currently stored on disk. ~arch-wiki-docs~ stores them in ~/usr/share/doc/arch-wiki/html/en~. A simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then pipe that into rofi in dmenu mode in order to choose the page we want to display. By the way, setting the location of the HTML files will come in handy later.
@@ -117,30 +117,30 @@ Now, all I need to do is to send this list into rofi and tell it to open the res
 #+END_SRC
 
 * Askpass
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
-  :CUSTOM_ID: Askpass-d0d7a8c0
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
+:CUSTOM_ID: Askpass-d0d7a8c0
+:END:
 Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As you can see, this is a oneliner if we ignore the initial shebang. This executable is pointed at by the
 #+BEGIN_SRC fish
   rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
 #+END_SRC
 
 * Backup
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
-  :CUSTOM_ID: Backup-68c7c63e
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
+:CUSTOM_ID: Backup-68c7c63e
+:END:
 ~backup~ is a very simple, oneliner script that will create a local copy of a file and add the date at which it was copied in the filename. You can see its source code here:
 #+BEGIN_SRC fish
   cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
 #+END_SRC
 
 * ConnectWifi                                                      :noexport:
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
-  :CUSTOM_ID: ConnectWifi-16e5e24a
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
+:CUSTOM_ID: ConnectWifi-16e5e24a
+:END:
 ~connect-wifi~ is a small utility tool that allows the user to connect to available WiFi networks. The first thing to do is to select the WiFi we want to connect to. We’ll use the ~nmcli c s~ command to get the list of the available networks, and we’ll chose one with ~rofi~.
 #+BEGIN_SRC fish
   set SELECTEDWIFI (nmcli d w l | \
@@ -158,15 +158,15 @@ let’s just send a notification no network was selected.
 #+END_SRC
 
 ** TODO fix it
-   :PROPERTIES:
-   :CUSTOM_ID: ConnectWifi-fix_it-a4b11503
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: ConnectWifi-fix_it-a4b11503
+:END:
 
 * Cppnew                                                           :noexport:
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
-  :CUSTOM_ID: Cppnew-964e697b
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
+:CUSTOM_ID: Cppnew-964e697b
+:END:
 =cppnew= is a small utility that helps you create a new C++ project. Several templates are available, the default one using CMake, and three others that are a bit more advances, based on:
 - CMake + [[https://conan.io/][Conan]]
 - [[https://mesonbuild.com/][Meson]] + [[https://ninja-build.org/][Ninja]]
@@ -185,10 +185,10 @@ First of all, if no arguments were passed, return an error.
 Now, let’s set a couple of variables which will prove useful later on when trying to set up our project.
 
 * Cnew
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/cnew
-  :CUSTOM_ID: Cnew-d9ec9cc4
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/cnew
+:CUSTOM_ID: Cnew-d9ec9cc4
+:END:
 =cnew= is a small utility script similar to but simpler than cppnew that creates a CMake template C project from the template that already exists in [[file:~/dev/templateC][~/dev/templateC]]. If no argument was passed, display an error message and exit.
 #+BEGIN_SRC fish
   if ! count $argv > /dev/null
@@ -242,10 +242,10 @@ Now, let’s create a git repository and initialize it.
 And we’re done!
 
 * Dart Language Server
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dart_language_server
-  :CUSTOM_ID: Dart_Language_Server-18c256b1
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dart_language_server
+:CUSTOM_ID: Dart_Language_Server-18c256b1
+:END:
 Spacemacs' recommendations on how to use Dart with LSP is outdated, since [[https://github.com/natebosch/dart_language_server][=dart_language_server=]] is obsolete. As recommended by the repo owner, we should launch instead the following code:
 #+BEGIN_SRC fish
   /usr/bin/dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp
@@ -254,30 +254,30 @@ Spacemacs' recommendations on how to use Dart with LSP is outdated, since [[http
 So, instead of using the obsolete executable, instead we will be calling the analysis server as requested.
 
 * Dmenu
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
-  :CUSTOM_ID: Dmenu-527edf04
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
+:CUSTOM_ID: Dmenu-527edf04
+:END:
 I wrote this very simple script in order to replace =dmenu= with rofi’s emulation of dmenu, since I prefer rofi’s appearance. It basically calls rofi’s dmenu emulation with the arguments initially passed to dmenu.
 #+BEGIN_SRC fish
   rofi -dmenu $argv
 #+END_SRC
 
 * Emacsmail
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
-  :CUSTOM_ID: Emacsmail-afffb7cd
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
+:CUSTOM_ID: Emacsmail-afffb7cd
+:END:
 This short script is used in my =~/.local/share/applications/mu4e.desktop= file in order to send to Emacs any ~mailto:~ requests made in my system.
 #+BEGIN_SRC bash
   emacsclient -c --eval "(browse-url-mail \"$@\")"
 #+END_SRC
 
 * Emoji picker
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
-  :CUSTOM_ID: Emoji_picker-a1c374ec
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
+:CUSTOM_ID: Emoji_picker-a1c374ec
+:END:
 The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. Once the emoji is selected, it is copied to the clipboard using =xclipboard=.
 #+BEGIN_SRC fish
   grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
@@ -295,20 +295,20 @@ Also, let’s send a notification telling the user the emoji has been copied!
   It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
 
 * mp42webm
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
-  :CUSTOM_ID: mp42webm-aeacca58
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
+:CUSTOM_ID: mp42webm-aeacca58
+:END:
 This function allows me to convert easily an mp4 video to the webm format. Nothing too fancy here.
 #+BEGIN_SRC fish
   ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
 #+END_SRC
 
 * pape-update
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
-  :CUSTOM_ID: pape-update-bdecbadf
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
+:CUSTOM_ID: pape-update-bdecbadf
+:END:
 This little tool sets a random wallpaper using nitrogen.
 #+BEGIN_SRC fish
   set -l PAPESDIR ~/Pictures/Wallpapers
@@ -320,17 +320,17 @@ This little tool sets a random wallpaper using nitrogen.
 #+END_SRC
 
 * Pinfo                                                            :noexport:
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
-  :CUSTOM_ID: Pinfo-f3644596
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
+:CUSTOM_ID: Pinfo-f3644596
+:END:
 ~pinfo~ is a utility that shows system information
 
 * Plock
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
-  :CUSTOM_ID: Lock-635fcb38
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
+:CUSTOM_ID: Lock-635fcb38
+:END:
 ~plock~ is a simple script that locks the screen with ~i3lock~ while setting as the background image of the locked screen a corrupted screenshot of the screen before it was locked.
 #+BEGIN_SRC fish
   set TMPBG /tmp/screen.png
@@ -341,10 +341,10 @@ This little tool sets a random wallpaper using nitrogen.
 #+END_SRC
 
 * Polybar-launch (Deprecated)
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
-  :CUSTOM_ID: Polybar-launch-36789edc
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
+:CUSTOM_ID: Polybar-launch-36789edc
+:END:
 This scripts allows the user to kill polybar and relaunch it, or to simply launch it if polybar isn’t launched yet. First thing to do is kill all polybar processes.
 #+BEGIN_SRC bash
 killall -q polybar
@@ -374,16 +374,16 @@ And we’re done! Let’s just launch a notification polybar has been relaunched
 #+END_SRC
 
 * Rofi-mount
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
-  :CUSTOM_ID: Rofi-mount-ebbebf68
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
+:CUSTOM_ID: Rofi-mount-ebbebf68
+:END:
 =rofimount= is a script inspired by [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this one]], based on dmenu, which interactively asks the user what to mount, and where to mount it. What I did was replace dmenu with rofi, and fix a couple of bugs I encountered in the original script.
 
 ** Get the mountable elements
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
+:END:
 #+BEGIN_SRC fish
   begin
 #+END_SRC
@@ -436,9 +436,9 @@ Now, we want to declare where to look for mount directories. For now, we’ll on
 #+END_SRC
 
 ** Get the mount point
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
+:END:
 Now, let’s declare a function that will allow us to chose the drive we want to mount.
 #+BEGIN_SRC fish
   function getmount
@@ -476,9 +476,9 @@ Finally, let’s close the function
 #+END_SRC
 
 ** Mount a USB drive, hard drive or partition
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
+:END:
 Alright, we want to mount a partition that answers by the name of =/dev/sdXX=, how do we do that? Let’s create first the function =mountusb= that will take care of it for us.
 #+BEGIN_SRC fish
 function mountusb
@@ -545,9 +545,9 @@ end
 #+END_SRC
 
 ** Mount an Android device
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
+:END:
 The function that manages to mount Android filesystems is =mountandroid=. Let’s declare it.
 #+BEGIN_SRC fish
 function mountandroid -d "Mount an Android device"
@@ -592,9 +592,9 @@ end
 #+END_SRC
 
 ** Mount a CD drive
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
+:END:
 This part is way easier than the previous functions. As we will see, the function =mountcd='s body is only three lines long. First, let’s declare the function.
 #+BEGIN_SRC fish
 function mountcd
@@ -622,9 +622,9 @@ end
 #+END_SRC
 
 ** Ask what type of drive we want to mount
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
+:END:
 The first thing we will be asked if different types of drives are detected is which of these types the user wishes to mount. This is done with the function =asktype= which is declared below.
 #+BEGIN_SRC fish
 function asktype
@@ -660,9 +660,9 @@ end
 #+END_SRC
 
 ** Launch the mounting functions
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
+:END:
 Now that we have declared our functions and set our variables, we’ll read the temporary file described in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The amount of lines is passed in a switch statement.
 #+BEGIN_SRC fish
 switch (wc -l < $TMPDRIVES)
@@ -712,10 +712,10 @@ rm -f $TMPDRIVES
 And with that, this is the end of our script!
 
 * Rofi-pass
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
-  :CUSTOM_ID: Rofi-pass-8335357f
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
+:CUSTOM_ID: Rofi-pass-8335357f
+:END:
 =rofi-pass= is a simple utility that gets a password stored in the [[https://www.passwordstore.org/][=pass=]] password manager with rofi as its interface, and then stores the password in the clipboard.
 
 Let’s parse all the arguments passed to the script. If one of them is =--type=, =-t= or =type=, the script will attempt to type the password to the text area already selected without pasting the password to the clipboard.
@@ -782,16 +782,16 @@ set pass (pass show $password | string split -n \n)[1]
 #+END_SRC
 
 * Rofi-umount
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
-  :CUSTOM_ID: Rofi-umount-ddde1667
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
+:CUSTOM_ID: Rofi-umount-ddde1667
+:END:
 ~rofiumount~ is the counterpart of ~rofimount~ for unmounting our mounted partitions.
 
 ** Get the unmountable drives
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
+:END:
 First, we will need to list all the drives that can be safely unmounted. Let’s run this.
 #+BEGIN_SRC fish
   set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
@@ -827,9 +827,9 @@ Depending on if the related variables are set, write the different types of moun
 #+END_SRC
 
 ** Unmount disk partitions
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
+:END:
 The function =unmountusb= will take care of unmounting any drive we can safely unmount. First, let’s declare the function.
 #+BEGIN_SRC fish
 function unmountusb
@@ -859,9 +859,9 @@ end
 #+END_SRC
 
 ** Unmount Android device
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
+:END:
 The function =unmountandroid= will take care of unmounting any mounted Android device. First, let’s declare our function.
 #+BEGIN_SRC fish
 function unmountandroid
@@ -889,9 +889,9 @@ end
 #+END_SRC
 
 ** Unmount CD drive
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
+:END:
 =unmountcd= will take care of unmounting any mounted CD drive. Let’s declare this function.
 #+BEGIN_SRC fish
 function unmountcd
@@ -919,9 +919,9 @@ end
 #+END_SRC
 
 ** Ask what type of drive to unmount
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
+:END:
 If several types of unmountable drives are available, let’s ask the user which type to unmount based on the content of the temporary file declared in [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
 #+BEGIN_SRC fish
 function asktype
@@ -953,9 +953,9 @@ end
 #+END_SRC
 
 ** Launch the unmounting functions
-   :PROPERTIES:
-   :CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
+:END:
 Now back to the body of our script, let’s input in a switch case the number of lines contained in our temporary file.
 #+BEGIN_SRC fish
 switch (wc -l < $undrivefile)
@@ -997,10 +997,10 @@ rm -f $undrivefile
 #+END_SRC
 
 * set-screens
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
-  :CUSTOM_ID: set-screens-01bd989a
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
+:CUSTOM_ID: set-screens-01bd989a
+:END:
 ~set-screens~ is a small script that allows the user to automatically set up an external monitor. First, let’s set some variables so we don’t have to type in hidden places some values that should be easily modifiable.
 #+BEGIN_SRC fish
   set internal "eDP1"
@@ -1017,30 +1017,30 @@ Now, let’s set the ~DETECTEDSCREEN~ variable with a simple ~grep~. If the vari
 #+END_SRC
 
 * sshbind
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
-  :CUSTOM_ID: sshbind-756fabb1
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
+:CUSTOM_ID: sshbind-756fabb1
+:END:
 Something that I did not know for quite some time but that is actually crazy useful about SSH is its ability to bind locally the port of a remote machine, and vice versa. The syntax is actually very simple, but I prefer a more intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
 #+BEGIN_SRC fish
   ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
 #+END_SRC
 
 * Starwars
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
-  :CUSTOM_ID: Starwars-654f8637
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
+:CUSTOM_ID: Starwars-654f8637
+:END:
 This is a one-liner that allows you to watch Star Wars episode 4 in ASCII art in your terminal. Here is the code:
 #+BEGIN_SRC fish
   telnet towel.blinkenlights.nl
 #+END_SRC
 
 * Toggle touchpad tapping
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
-  :CUSTOM_ID: Toggle_touchpad_tapping-23348b00
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
+:CUSTOM_ID: Toggle_touchpad_tapping-23348b00
+:END:
 For some reasons, my firmware does not recognize the function key for toggling the touchpad. I’m not going to really complain about it since it lets me program it like I want. Since I often don’t need to completely deactivate the touchpad, I’ll instead toggle whether tapping is enabled or not when pressing ~XF86TouchpadToggle~. And for that, I need this small script that will actually toggle it, and it will be used in my window manager configuration.
 
 First let’s declare some variables to make this script more personal. With my current computer (a Gazelle by System76), the name of my touchpad is the following:
@@ -1070,10 +1070,10 @@ Finally, let’s update the touchpad’s options:
 #+END_SRC
 
 * UpdateFlutter
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
-  :CUSTOM_ID: UpdateFlutter-1e8fbeb7
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
+:CUSTOM_ID: UpdateFlutter-1e8fbeb7
+:END:
 This is a simple utility to be ran when the ~flutter~ package is updated.
 #+BEGIN_SRC fish
   sudo chown -R :flutterusers /opt/flutter
@@ -1083,16 +1083,16 @@ This is a simple utility to be ran when the ~flutter~ package is updated.
 #+END_SRC
 
 * Wacom setup
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
-  :CUSTOM_ID: Wacom_setup-331fb024
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
+:CUSTOM_ID: Wacom_setup-331fb024
+:END:
 I made a small and quick utility to set up my Wacom tablet so it is only bound to one screen.
 
 ** Set our variables
-   :PROPERTIES:
-   :CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
+:END:
 Let’s first declare our function that will be called to set our variables.
 #+BEGIN_SRC fish
 function set_device
@@ -1128,9 +1128,9 @@ end
 #+END_SRC
 
 ** Select our screen
-   :PROPERTIES:
-   :CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
+:END:
 This function will allow us to select the screen on which the tablet will be active. We can also select the option “desktop” so that all screens are selected. Let’s declare our function.
 #+BEGIN_SRC fish
 function set_screen
@@ -1176,9 +1176,9 @@ end
 #+END_SRC
 
 ** Adjust the tablet
-   :PROPERTIES:
-   :CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
+:END:
 This function will take care of adjusting our tablet to our screen. Let’s declare our function.
 #+BEGIN_SRC fish
 function adjust_device
@@ -1223,9 +1223,9 @@ end
 #+END_SRC
 
 ** Lauch the functions
-   :PROPERTIES:
-   :CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
+:END:
 Back to the main body of the script, we can now launch the functions sequencially.
 #+BEGIN_SRC fish
   set_device
@@ -1234,10 +1234,10 @@ Back to the main body of the script, we can now launch the functions sequenciall
 #+END_SRC
 
 * Weather
-  :PROPERTIES:
-  :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
-  :CUSTOM_ID: Weather-4ed00bb0
-  :END:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
+:CUSTOM_ID: Weather-4ed00bb0
+:END:
 A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a weather forecast in the terminal. By default, I want the request to be about the city I live in, but it is also possible for the script to accept as its arguments a search inquiry.
 #+BEGIN_SRC fish
   if count $argv > /dev/null
