@@ -224,18 +224,18 @@ The code below ensures the ~PATH~ is updated only at login, and every location i
    :END:
 Here I have some abbreviations which are quite useful when performing some system monitoring. With =df=, we can get an overview of our filesystem usage, while with =diskspace= we get some more precise information. =meminfo= is a call to =free= with sane defaults, and similar to =meminfo=, we also have =gpumeminfo= so we can get a quick look at the memory-related logs of our X session. I also declared =cpuinfo= an alias of =lscpu= in order to keep consistent with =meminfo=. =pscpu= gives us information on what the CPU is running right now, and =pscpu10= limits that to the top 10 threads. Similarly, =psmem= gives us information on the memory usage of the current threads, and =psmem10= only the ten most important threads in terms of memory usage.
 #+NAME: mgmt-abbr
-| abbreviation | command                                           |
-|--------------+---------------------------------------------------|
-| df           | df -H                                             |
-| diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size" |
-| du           | du -ch                                            |
-| meminfo      | free -m -l -t                                     |
-| gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log        |
-| cpuinfo      | lscpu                                             |
-| pscpu        | ps auxf \vert sort -nr -k 3                       |
-| pscpu10      | ps auxf \vert sort -nr -k 3 \vert head -10        |
-| psmem        | ps auxf \vert sort -nr -k 4                       |
-| psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10        |
+| abbreviation | command                                    |
+|--------------+--------------------------------------------|
+| df           | df -H                                      |
+| diskspace    | sudo df -h \vert grep -E "sd\vert{}lv\vert{}Size"          |
+| du           | du -ch                                     |
+| meminfo      | free -m -l -t                              |
+| gpumeminfo   | grep -i --color memory /var/log/Xorg.0.log |
+| cpuinfo      | lscpu                                      |
+| pscpu        | ps auxf \vert sort -nr -k 3                    |
+| pscpu10      | ps auxf \vert sort -nr -k 3 \vert head -10         |
+| psmem        | ps auxf \vert sort -nr -k 4                    |
+| psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10         |
 
 #+begin_SRC fish
   <<generate-abbr(table=mgmt-abbr)>>
@@ -462,11 +462,6 @@ When it comes to mpv, I do not want to force it to open a graphical window if fo
 When I want to download a song from YouTube, I'll just use the command ~flac videoIdentifier~ to get it through ~youtube-dl~.
 #+BEGIN_SRC fish
   abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
-#+END_SRC
-
-I download a LOT of videos from YouTube, generally educative videos that I do not want to lose to YouTube one day who will decide that such channel is unworthy of their platform, or if the original author decides to delete their videos or whatever. So, I use the abbreviation ~ytdl~ to download either one video, or a whole YouTube channel.
-#+BEGIN_SRC fish
-  abbr ytdl 'youtube-dl -f best -ciw -o "~/Videos/YouTube/%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"'
 #+END_SRC
 
 Some sane default options for ~sxiv~, a simple X image Viewer. This includes playing GIFs and not displaying the filename below. Sxiv will also open in fullscreen and will fit the displayed image to the frame. I also abbreviated ~feh~ to sxiv, old habits die hard.
