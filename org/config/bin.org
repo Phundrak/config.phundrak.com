@@ -1,9 +1,9 @@
 #+TITLE: Executable scripts
 #+setupfile: headers
 #+OPTIONS: auto-id:t
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the i3 config file of Phundrak" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s custom scripts" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s custom scripts" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Source code of Phundrak’s custom scripts" />
 #+PROPERTY: header-args :exports code
 #+PROPERTY: header-args:emacs-lisp :exports none :tangle no
 
