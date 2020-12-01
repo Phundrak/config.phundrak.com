@@ -1,5 +1,5 @@
 [Added Associations]
-application/epub+zip=com.github.babluboy.bookworm.desktop;firefox.desktop;
+application/epub+zip=emacsclient.desktop;firefox.desktop;
 application/octet-stream=emacsclient.desktop;
 application/pdf=org.pwmt.zathura.desktop;xreader.desktop;
 application/vnd.rar=org.gnome.FileRoller.desktop;
@@ -11,8 +11,6 @@ application/x-cd-image=org.gnome.FileRoller.desktop;
 application/x-compressed-tar=org.gnome.FileRoller.desktop;
 application/x-java-archive=javaws.desktop;org.gnome.FileRoller.desktop;
 application/x-java-jnlp-file=javaws.desktop;
-application/x-mobi8-ebook=com.github.babluboy.bookworm.desktop;
-application/x-mobipocket-ebook=com.github.babluboy.bookworm.desktop;
 application/x-shellscript=emacsclient.desktop;
 application/x-wine-extension-ini=emacsclient.desktop;
 application/x-xz-compressed-tar=org.gnome.FileRoller.desktop;
@@ -26,7 +24,7 @@ image/gif=sxiv.desktop;nomacs.desktop;
 image/jpeg=sxiv.desktop;nomacs.desktop;
 image/png=sxiv.desktop;nomacs.desktop;
 image/svg+xml=inkscape.desktop;nomacs.desktop;org.nomacs.ImageLounge.desktop;
-image/vnd.djvu+multipage=com.github.babluboy.bookworm.desktop;
+image/vnd.djvu+multipage=org.pwmt.zathura.desktop;
 image/webp=sxiv.desktop;nomacs.desktop;
 image/x-canon-cr2=nomacs.desktop;
 inode/directory=nemo.desktop;
@@ -54,11 +52,9 @@ x-scheme-handler/mailto=mu4e.desktop
 application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;
 
 [Default Applications]
-application/epub+zip=com.github.babluboy.bookworm.desktop
-application/lrf=com.github.babluboy.bookworm.desktop
+application/epub+zip=emacsclient.desktop
 application/octet-stream=emacsclient.desktop
 application/pdf=org.pwmt.zathura.desktop
-application/x-mobipocket-ebook=com.github.babluboy.bookworm.desktop
 application/x-wine-extension-ini=emacsclient.desktop
 application/xhtml+xml=firefox.desktop
 application/xml=emacsclient.desktop
@@ -70,7 +66,7 @@ image/gif=sxiv.desktop
 image/jpeg=sxiv.desktop
 image/png=sxiv.desktop
 image/svg+xml=org.nomacs.ImageLounge.desktop
-image/vnd.djvu+multipage=com.github.babluboy.bookworm.desktop
+image/vnd.djvu+multipage=org.pwmt.zathura.desktop
 image/webp=sxiv.desktop
 image/x-canon-cr2=sxiv.desktop
 inode/directory=nemo.desktop
