@@ -65,23 +65,24 @@ However, I do have additional packages I installed either from the Elpa or the M
 
 With the variable ~dotspacemacs-additional-packages~, it is possible to install extra packages which are not already included in any layers. Dependencies should be explicitly included as they won’t be resolved automatically. Here is a table of all the extra packages I use:
 #+NAME: extra-packages
-| name of the package | why is it installed                                  |
-|---------------------+------------------------------------------------------|
-| caddyfile-mode      | Major mode for editing Caddyfiles                    |
-| edit-indirect       | edit region in separate buffer                       |
-| elcord              | rich integration of Emacs in Discord                 |
-| magit-gitflow       | integrate gitflow in Magit                           |
-| multiple-cursors    | I don’t like the layer, I prefer this package alone  |
-| ob-swift            | org-babel package for Swift                          |
-| org-sidebar         | display on the side the outline of an Org buffer     |
-| org-tree-slide      | presentation tool for org-mode                       |
-| outorg              | edit comments as Org-mode buffers                    |
-| pinentry            | enter a GPG password from Emacs                      |
-| s                   | The long lost Emacs string manipulation library.     |
-| visual-fill-column  | allow the use of ~fill-column~ in ~visual-line-mode~ |
-| wrap-region         | easily wrap region with delimiters                   |
-| wttrin              | weather in Emacs                                     |
-| yasnippet-snippets  | snippets for YaSnippet                               |
+| name of the package        | why is it installed                                  |
+|----------------------------+------------------------------------------------------|
+| caddyfile-mode             | Major mode for editing Caddyfiles                    |
+| edit-indirect              | edit region in separate buffer                       |
+| elcord                     | rich integration of Emacs in Discord                 |
+| eshell-syntax-highlighting | Eshell Syntax Highlight                              |
+| magit-gitflow              | integrate gitflow in Magit                           |
+| multiple-cursors           | I don’t like the layer, I prefer this package alone  |
+| ob-swift                   | org-babel package for Swift                          |
+| org-sidebar                | display on the side the outline of an Org buffer     |
+| org-tree-slide             | presentation tool for org-mode                       |
+| outorg                     | edit comments as Org-mode buffers                    |
+| pinentry                   | enter a GPG password from Emacs                      |
+| s                          | The long lost Emacs string manipulation library.     |
+| visual-fill-column         | allow the use of ~fill-column~ in ~visual-line-mode~ |
+| wrap-region                | easily wrap region with delimiters                   |
+| wttrin                     | weather in Emacs                                     |
+| yasnippet-snippets         | snippets for YaSnippet                               |
 
 #+name: make-extra-pkg
 #+begin_src emacs-lisp :var packages=extra-packages[,0] :tangle no :exports none
@@ -1390,80 +1391,6 @@ By the way, let’s enable ~org-download~ when we are in a Dired buffer:
 :END:
 Eshell is a built-in shell available from Emacs which I use almost as often as Fish. Some adjustments are necessary for making this shell usable for me.
 
-**** Environment variables
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Environment_variables-8dac73e0
-:END:
-Some environment variables need to be correctly set so Eshell can correctly work. The first environment variable to be set is the ~PATH~, as I have a couple of directories where executables are located. Let’s add them to our path.
-#+BEGIN_SRC emacs-lisp
-  (setenv "PATH"
-          (concat
-           (getenv "HOME") "/.pub-cache/bin"
-           ":" (getenv "HOME") "/.local/bin"
-           ":" (getenv "HOME") "/go/bin"
-           ":" (getenv "HOME") "/.cargo/bin"
-           ":" (getenv "HOME") "/.gem/ruby/2.6.0/bin"
-           ":" (getenv "PATH")))
-#+END_SRC
-
-I would also like to set two environment variables related to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
-#+BEGIN_SRC emacs-lisp
-  (setenv "DART_SDK" "/opt/dart-sdk/bin")
-  (setenv "ANDROID_HOME" (concat (getenv "HOME") "/Android/Sdk/"))
-#+END_SRC
-
-Finally, I’d like to add a custom directory to the ~PKG_CONFIG_PATH~:
-#+BEGIN_SRC emacs-lisp
-  (setenv "PKG_CONFIG_PATH" (concat
-                             "/usr/local/lib/pkgconfig/" ":"
-                             (getenv "PKG_CONFIG_PATH")))
-#+END_SRC
-
-The ~EDITOR~ variable also needs to be set for git commands, especially the ~yadm~ commands.
-#+BEGIN_SRC emacs-lisp
-  (setenv "EDITOR" "emacsclient -c")
-#+END_SRC
-
-**** Custom functions
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-79d98245
-:END:
-When I’m in Eshell, sometimes I wish to open multiple files at once in Emacs. For this, when I have several arguments for ~find-file~, I want to be able to open them all at once. Let’s modify ~find-file~ like so:
-#+BEGIN_SRC emacs-lisp
-  (defadvice find-file (around find-files activate)
-    "Also find all files within a list of files. This even works recursively."
-    (if (listp filename)
-        (loop for f in filename do (find-file f wildcards))
-      ad-do-it))
-#+END_SRC
-
-I also want to be able to have multiple instances of Eshell opened at once. For that, I declared the function ~eshell-new~ that does exactly that.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell-new()
-    "Open a new instance of eshell."
-    (interactive)
-    (eshell 'N))
-#+END_SRC
-
-***** Redirect text editors to Emacs
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
-:END:
-I still have some muscle memory telling me to open nano, ed, or vim, and sometimes I even try to type ~emacs~ in the terminal, which is stupid with Eshell since I’m already inside Emacs. So, for each of these text editors, let’s make the command open the files in Emacs.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/emacs (&rest $files)
-    "Open a file in a new buffer. Old habits die hard"
-    (if (null $files)
-        (bury-buffer)
-      (mapc #'find-file
-            (mapcar #'expand-file-name
-                    (eshell-flatten-list (reverse $files))))))
-  (defalias 'eshell/vi 'eshell/emacs)
-  (defalias 'eshell/vim 'eshell/emacs)
-  (defalias 'eshell/ed 'eshell/emacs)
-  (defalias 'eshell/nano 'eshell/emacs)
-#+END_SRC
-
 **** Aliases
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-Aliases-ef06615f
@@ -1576,16 +1503,78 @@ The first command is ~remove~ which removes a package and its dependencies from 
     (eshell/clear $args))
 #+END_SRC
 
-**** Visual commands
+**** Custom functions
 :PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
+:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-79d98245
 :END:
-With Eshell, some commands don’t work very well, especially commands that create a TUI. So, let’s declare them as visual commands or subcommands:
+When I’m in Eshell, sometimes I wish to open multiple files at once in Emacs. For this, when I have several arguments for ~find-file~, I want to be able to open them all at once. Let’s modify ~find-file~ like so:
 #+BEGIN_SRC emacs-lisp
-  (setq eshell-visual-commands
-        '("fish" "zsh" "bash" "tmux" "htop" "top" "vim" "bat" "nano")
-        eshell-visual-subcommands
-        '("git" "log" "l" "diff" "show"))
+  (defadvice find-file (around find-files activate)
+    "Also find all files within a list of files. This even works recursively."
+    (if (listp filename)
+        (loop for f in filename do (find-file f wildcards))
+      ad-do-it))
+#+END_SRC
+
+I also want to be able to have multiple instances of Eshell opened at once. For that, I declared the function ~eshell-new~ that does exactly that.
+#+BEGIN_SRC emacs-lisp
+  (defun eshell-new()
+    "Open a new instance of eshell."
+    (interactive)
+    (eshell 'N))
+#+END_SRC
+
+***** Redirect text editors to Emacs
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
+:END:
+I still have some muscle memory telling me to open nano, ed, or vim, and sometimes I even try to type ~emacs~ in the terminal, which is stupid with Eshell since I’m already inside Emacs. So, for each of these text editors, let’s make the command open the files in Emacs.
+#+BEGIN_SRC emacs-lisp
+  (defun eshell/emacs (&rest $files)
+    "Open a file in a new buffer. Old habits die hard"
+    (if (null $files)
+        (bury-buffer)
+      (mapc #'find-file
+            (mapcar #'expand-file-name
+                    (eshell-flatten-list (reverse $files))))))
+  (defalias 'eshell/vi 'eshell/emacs)
+  (defalias 'eshell/vim 'eshell/emacs)
+  (defalias 'eshell/ed 'eshell/emacs)
+  (defalias 'eshell/nano 'eshell/emacs)
+#+END_SRC
+
+**** Environment variables
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Environment_variables-8dac73e0
+:END:
+Some environment variables need to be correctly set so Eshell can correctly work. The first environment variable to be set is the ~PATH~, as I have a couple of directories where executables are located. Let’s add them to our path.
+#+BEGIN_SRC emacs-lisp
+  (setenv "PATH"
+          (concat
+           (getenv "HOME") "/.pub-cache/bin"
+           ":" (getenv "HOME") "/.local/bin"
+           ":" (getenv "HOME") "/go/bin"
+           ":" (getenv "HOME") "/.cargo/bin"
+           ":" (getenv "HOME") "/.gem/ruby/2.6.0/bin"
+           ":" (getenv "PATH")))
+#+END_SRC
+
+I would also like to set two environment variables related to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
+#+BEGIN_SRC emacs-lisp
+  (setenv "DART_SDK" "/opt/dart-sdk/bin")
+  (setenv "ANDROID_HOME" (concat (getenv "HOME") "/Android/Sdk/"))
+#+END_SRC
+
+Finally, I’d like to add a custom directory to the ~PKG_CONFIG_PATH~:
+#+BEGIN_SRC emacs-lisp
+  (setenv "PKG_CONFIG_PATH" (concat
+                             "/usr/local/lib/pkgconfig/" ":"
+                             (getenv "PKG_CONFIG_PATH")))
+#+END_SRC
+
+The ~EDITOR~ variable also needs to be set for git commands, especially the ~yadm~ commands.
+#+BEGIN_SRC emacs-lisp
+  (setenv "EDITOR" "emacsclient -c")
 #+END_SRC
 
 **** Eshell theme
@@ -1650,6 +1639,23 @@ Now, let’s declare our prompt regexp and our prompt functions:
 I also don't want the banner to be displayed, I know I entered the Elisp shell, no need to remind me. Maybe I’ll do something with it one day.
 #+BEGIN_SRC emacs-lisp
   (setq eshell-banner-message "")
+#+END_SRC
+
+The package [[https://github.com/akreisher/eshell-syntax-highlighting][eshell-syntax-highlighting]] enables a colorful syntax highlighter similar to fish’s built-in syntax highligter. To activate it, we simply have to put the following code in our configuration:
+#+BEGIN_SRC emacs-lisp
+  (eshell-syntax-highlighting-global-mode +1)
+#+END_SRC
+
+**** Visual commands
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
+:END:
+With Eshell, some commands don’t work very well, especially commands that create a TUI. So, let’s declare them as visual commands or subcommands:
+#+BEGIN_SRC emacs-lisp
+  (setq eshell-visual-commands
+        '("fish" "zsh" "bash" "tmux" "htop" "top" "vim" "bat" "nano")
+        eshell-visual-subcommands
+        '("git" "log" "l" "diff" "show"))
 #+END_SRC
 
 *** Org-mode
