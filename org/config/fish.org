@@ -125,6 +125,11 @@ The theme I use for fish is [[https://github.com/oh-my-fish/theme-bobthefish][bo
   set -g theme_date_format "+%g-%m-%d %H:%M:%S"
 #+END_SRC
 
+I also wish to have a kinda different newline prompt, so let’s set it:
+#+BEGIN_SRC fish
+  set -g theme_newline_prompt 'λ '
+#+END_SRC
+
 * Global variables
   :PROPERTIES:
   :CUSTOM_ID: Global_variables-1c84df8b
