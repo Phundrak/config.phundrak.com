@@ -485,13 +485,13 @@ However, a right click combined with the modkey will add the clicked tag to the 
 The scroll wheel is treated as clicks just as any right or left clicks and can be interpreted by Awesome. They can prove useful when it comes to tags. If a scroll up is detected over tags, then Awesome will display the previous tag.
 #+NAME: tag-simple-scroll-up
 #+BEGIN_SRC lua :tangle no
-  awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end)
+  awful.button({ }, 4, function(t) awful.tag.viewprev(t.screen) end)
 #+END_SRC
 
 Otherwise, if a scroll down is detected, the next tag will be displayed.
 #+NAME: tag-simple-scroll-down
 #+BEGIN_SRC lua :tangle no
-  awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+  awful.button({ }, 5, function(t) awful.tag.viewnext(t.screen) end)
 #+END_SRC
 
 So, here’s the actual configuration code for the taglist:
