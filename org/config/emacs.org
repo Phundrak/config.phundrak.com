@@ -1421,87 +1421,12 @@ For some ease of use, I’ll also declare ~list-buffers~ as an alias of ~ibuffer
   (defalias 'list-buffers 'ibuffer)
 #+END_SRC
 
-***** System monitoring
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Aliases-System_monitoring-ee01b070
-:END:
-Similar to ~meminfo~, we also have ~gpumeminfo~ so we can get a quick look at the memory-related logs of our X session.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/gpumeminfo (&rest $args)
-    (eshell/grep "-i" "--color" "memory" "/var/log/Xorg.0.log"))
-  (defun eshell/diskspace ()
-    (shell-command "sudo df -h | grep -E \"sd|lv|Size\" | sort"))
-#+END_SRC
-
-I also declared ~cpuinfo~ an alias of ~lscpu~ in order to keep consistent with ~meminfo~.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/meminfo ()
-    (shell-command "free -m -l -t"))
-#+END_SRC
-
-~pscpu~ gives us information on what the CPU is running right now, and I also declared ~cpuinfo~ an alias of ~lscpu~ in order to keep consistent with ~meminfo~.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/cpuinfo ()
-    (shell-command "lscpu"))
-#+END_SRC
-
-~pscpu10~ limits that to the top 10 threads.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/pscpu ()
-    (shell-command "ps auxf | sort -nr -k 3"))
-  (defun eshell/pscpu10 ()
-    (shell-command "ps auxf | sort -nr -k 3 | head -10"))
-#+END_SRC
-
-Similarly, ~psmem~ gives us information on the memory usage of the current threads, and ~psmem10~ only the ten most important threads in terms of memory usage.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/pscpu ()
-    (shell-command "ps auxf | sort -nr -k 4"))
-  (defun eshell/pscpu10 ()
-    (shell-command "ps auxf | sort -nr -k 4 | head -10"))
-#+END_SRC
-
-***** System management (packages and services)
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Aliases-System_management_(packages_and_services)-afb6d9d3
-:END:
-The first command is ~remove~ which removes a package and its dependencies from the system.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/remove (&rest $args)
-    (phundrak/concatenate-shell-command "sudo pacman -Rscnd"
-                                        $args))
-#+END_SRC
-
-***** Other
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Aliases-Other-bd88ca97
-:END:
 ~mkcd~ is a function that allows me to create a directory and ~cd~ into it at the same time.
 #+begin_src emacs-lisp
   (defun eshell/mkcd ($directory)
     (eshell/mkdir "-p" $directory)
     (cd $directory))
 #+end_src
-
-***** Typos
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Eshell-Aliases-Typos-c7bfe6eb
-:END:
-~q~ is a shorthand for ~exit~. ~exti~ and ~exi~ are for typos when I type ~exit~.
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/q (&rest $args)
-    (eshell/exit $args))
-  (defun eshell/exti (&rest $args)
-    (eshell/exit $args))
-  (defun eshell/exi (&rest $args)
-    (eshell/exit $args))
-#+END_SRC
-
-~clean~ is also a typo of ~clear~ I often make. Let’s fix this:
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/clean (&rest $args)
-    (eshell/clear $args))
-#+END_SRC
 
 **** Custom functions
 :PROPERTIES:
@@ -1528,19 +1453,15 @@ I also want to be able to have multiple instances of Eshell opened at once. For 
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-Custom_functions-Redirect_text_editors_to_Emacs-dff362c6
 :END:
-I still have some muscle memory telling me to open nano, ed, or vim, and sometimes I even try to type ~emacs~ in the terminal, which is stupid with Eshell since I’m already inside Emacs. So, for each of these text editors, let’s make the command open the files in Emacs.
+I still have some stupid muscle memory telling me to open ~emacs~ in the terminal, which is stupid with Eshell since I’m already inside Emacs. So, let’s open each file passed to the ~emacs~ command and bury the eshell buffer (we’ll get back to it later).
 #+BEGIN_SRC emacs-lisp
   (defun eshell/emacs (&rest $files)
     "Open a file in a new buffer. Old habits die hard"
-    (if (null $files)
-        (bury-buffer)
-      (mapc #'find-file
-            (mapcar #'expand-file-name
-                    (eshell-flatten-list (reverse $files))))))
-  (defalias 'eshell/vi 'eshell/emacs)
-  (defalias 'eshell/vim 'eshell/emacs)
-  (defalias 'eshell/ed 'eshell/emacs)
-  (defalias 'eshell/nano 'eshell/emacs)
+    (if $files
+        (mapc #'find-file
+              (mapcar #'expand-file-name
+                      (eshell-flatten-list (reverse $files))))
+      (bury-buffer)))
 #+END_SRC
 
 **** Environment variables
