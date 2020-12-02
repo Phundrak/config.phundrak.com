@@ -3037,9 +3037,9 @@ In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for 
 
 Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]] and [[https://lepisma.xyz/2017/10/28/ricing-org-mode/][this one]].
 #+BEGIN_SRC emacs-lisp
-  (let* ((font  `(:font "Charis SIL" :height 1.0))
-         (head  `(:inherit default :weight bold))
-         (fixed `(:inherit fixed-pitch :height 0.8)))
+  (let* ((font          `(:font "Charis SIL"   :height 1.0))
+         (head          `(:inherit default     :weight bold))
+         (fixed         `(:inherit fixed-pitch :height 0.8)))
     (custom-theme-set-faces
      'user
      `(org-level-1               ((t (,@font ,@head :foreground ,phundrak/nord15 :height 1.75))))
@@ -3059,16 +3059,17 @@ Fonts will play an important part in this, but so will colors and font size. The
      `(org-macro                 ((t (,@fixed))))
      `(org-target                ((t (,@fixed))))
      `(org-property-value        ((t (,@fixed))) t)
-     '(org-checkbox              ((t (:inherit (org-todo shadow fixed-pitch)))))
+     `(org-drawer                ((t (,@fixed :foreground ,phundrak/nord10))) t)
      `(org-table                 ((t (,@fixed :foreground ,phundrak/nord14))) t)
      '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
      '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
      '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
      '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
-     `(org-document-info         ((t (:foreground ,phundrak/nord12))))
-     `(org-link                  ((t (:foreground ,phundrak/nord8 :underline t))))
      '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8))))
-     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))))
+     `(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.8 :foreground ,phundrak/nord15))))
+     '(org-checkbox              ((t (:inherit (org-todo shadow fixed-pitch)))))
+     `(org-document-info         ((t (:foreground ,phundrak/nord12))))
+     `(org-link                  ((t (:foreground ,phundrak/nord8 :underline t))))))
 #+END_SRC
 
 Some other tweaks will make Org-mode more beautiful. This includes a new folding icon, some indentation that is not added whitespace.
