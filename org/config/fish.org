@@ -120,6 +120,11 @@ Now, there is only one function I modify when it comes to the appearance of fish
   end
 #+END_SRC
 
+The theme I use for fish is [[https://github.com/oh-my-fish/theme-bobthefish][bobthefish]], which by default puts a really long timestamp to the right of the prompt. I want something shorter, so here is the variable to set, using the format specified in ~date(1)~.
+#+BEGIN_SRC fish
+  set -g theme_date_format "+%g-%m-%d %H:%M:%S"
+#+END_SRC
+
 * Global variables
   :PROPERTIES:
   :CUSTOM_ID: Global_variables-1c84df8b
