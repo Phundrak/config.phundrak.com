@@ -1304,19 +1304,19 @@ With this established, let’s write some emacs-lisp that will allow me to get a
       :buffer "*org files*")))
 #+END_SRC
 
-*** ~phundrak/is-dir-a-git-repo~
+*** ~phundrak/git-repo-root~
 :PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-is-dir-a-git-repo-3bb5e09b
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-git-repo-root-f7cf3bb9
 :END:
-This function detects if the path passed as an argument points to a git directory or to one of its subdirectories.
+This function detects if the path passed as an argument points to a git directory or to one of its subdirectories. If it is, it will return the path to the root of the git repository, else it will return ~nil~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/is-dir-a-git-repo ($path)
+  (defun phundrak/git-repo-root ($path)
     "Return `$path' if it points to a git repository or one of its
   subdirectories"
     (when $path
       (if (f-dir? (concat $path "/.git"))
           $path
-        (phundrak/is-dir-a-git-repo (f-parent $path)))))
+        (phundrak/git-repo-root (f-parent $path)))))
 #+END_SRC
 
 *** ~phundrak/yas-rust-new-assignments~
@@ -1602,13 +1602,16 @@ As with most shells, again, it is possible to customize the appearance of the Es
   failure respectively."
     (let* ((header-bg   phundrak/nord0)
            ($path       (phundrak/abbr-path (eshell/pwd)))
-           ($git-path   (phundrak/is-dir-a-git-repo $path))
+           ($git-path   (phundrak/git-repo-root $path))
            ($abbr-path  (phundrak/abbr-path $path phundrak/prompt--abbreviate))
            ($background phundrak/nord1)
            ($foreground phundrak/nord14)
            ($success    phundrak/nord10)
            ($error      phundrak/nord11))
-      (concat (with-face (concat " " (phundrak/var-or-if-nil $git-path $path) " ")
+      (concat (with-face (concat " "
+                                 (phundrak/abbr-path (phundrak/var-or-if-nil $git-path $path)
+                                                     phundrak/prompt--abbreviate)
+                                 " ")
                          :foreground $foreground
                          :background $background)
               (when $git-path
