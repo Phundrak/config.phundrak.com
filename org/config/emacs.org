@@ -2968,7 +2968,7 @@ This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services
         message-send-mail-function 'smtpmail-send-it)
 #+END_SRC
 
-I am unsure yet if this has any effect on mu4e, but this variable should discourage mu4e from reading rich text emails and instead open them as plain text. However, I do not wish to discourage opening HTML emails since I can compile them to PDF or open them in the browser.
+I am unsure yet if this has any effect on mu4e, but this variable should discourage mu4e from reading rich text emails and instead open them as plain text. However, I do not wish to discourage opening HTML emails since I can open them in the browser.
 #+BEGIN_SRC emacs-lisp
   (setq mm-discouraged-alternatives '("text/richtext"))
 #+END_SRC
