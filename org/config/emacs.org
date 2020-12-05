@@ -1119,20 +1119,6 @@ Yes, I do use a preconfigured theme, as mentioned above, but for some elements s
     `(propertize ,$str 'face (list ,@$properties)))
 #+END_SRC
 
-*** ~phundrak/var-or-if-nil~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
-:END:
-This simple function helps me return either the value ~var~ holds, or if it is ~nil~ it will return the value ~value~ holds (or will return).
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/var-or-if-nil ($var $value)
-    "Return the result yield by `$value' if `$var' is `nil', return
-  `$var' otherwise"
-    (if (null $var)
-        $value
-      $var))
-#+END_SRC
-
 *** ~phundrak/abbr-path~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
@@ -1168,22 +1154,6 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
      (t (error "Invalid argument %s, neither stringp nor listp" $path))))
 #+END_SRC
 
-*** ~phundrak/prompt-toggle-abbreviation~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
-:END:
-#+BEGIN_SRC emacs-lisp
-  (defvar phundrak/prompt--abbreviate t
-    "Whether or not to abbreviate the displayed path in the Eshell
-  prompt")
-
-  (defun phundrak/prompt-toggle-abbreviation ()
-    "Toggles whether the Eshell prompt should shorten the name of
-  the parent directories or not. See `phundrak/eshell-prompt'"
-    (interactive)
-    (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
-#+END_SRC
-
 *** ~phundrak/add-all-to-list~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
@@ -1197,6 +1167,26 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
       (unless (member $e $list)
         (add-to-list '$list $e)))
     $list)
+#+END_SRC
+
+*** ~phundrak/blog-publish~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
+:END:
+This function is quite a simple function made to automatically publish [[https://blog.phundrak.com][my blog]] based on Hugo. After exporting my blog using ~ox-hugo~, I simply have to call this function which will look for all files located in =~/org/blog/public= and copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/blog-publish ()
+    (let* ((blog-path "~/org/blog")
+           (public-path (concat blog-path "/public"))
+           (target-path "/ssh:Tilo:/home/phundrak/www/phundrak.com/blog"))
+      (shell-command (format "cd %s && hugo" blog-path))
+      (let ((files (mapcar (lambda (file)
+                             (f-relative file public-path))
+                           (f-files (format "%s/public" blog-path) nil t))))
+        (dolist (file files)
+          (copy-file (concat public-path "/" file)
+                     (concat target-path "/" file)
+                     t nil t)))))
 #+END_SRC
 
 *** ~phundrak/eshell-git-status~
@@ -1326,6 +1316,46 @@ This function detects if the path passed as an argument points to a git director
         (phundrak/git-repo-root (f-parent $path)))))
 #+END_SRC
 
+*** ~terminal-here-default-terminal-command~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
+:END:
+This function is actually an overwrite of the default one which apparently does not work on my machine. This function is called by ~terminal-here-launch~ and spawns an external terminal emulator in the directory emacs was in when the terminal was invoked. I simply point out to this function the name of my terminal emulator. Here is the code:
+#+BEGIN_SRC emacs-lisp
+  (defun terminal-here-default-terminal-command (_dir)
+    '("st"))
+#+END_SRC
+
+*** ~phundrak/prompt-toggle-abbreviation~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defvar phundrak/prompt--abbreviate t
+    "Whether or not to abbreviate the displayed path in the Eshell
+  prompt")
+
+  (defun phundrak/prompt-toggle-abbreviation ()
+    "Toggles whether the Eshell prompt should shorten the name of
+  the parent directories or not. See `phundrak/eshell-prompt'"
+    (interactive)
+    (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
+#+END_SRC
+
+*** ~phundrak/var-or-if-nil~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
+:END:
+This simple function helps me return either the value ~var~ holds, or if it is ~nil~ it will return the value ~value~ holds (or will return).
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/var-or-if-nil ($var $value)
+    "Return the result yield by `$value' if `$var' is `nil', return
+  `$var' otherwise"
+    (if (null $var)
+        $value
+      $var))
+#+END_SRC
+
 *** ~phundrak/yas-rust-new-assignments~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-yas-rust-new-assignments-4ad16bde
@@ -1352,16 +1382,6 @@ The following function is a function that will allow me to easily create ~new~ f
                      (format "%s,\n%s" (car $elem) indentation)))
                  (phundrak//yas-snippet-split-rust-args $arg-string)
                  "")))
-#+END_SRC
-
-*** ~terminal-here-default-terminal-command~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
-:END:
-This function is actually an overwrite of the default one which apparently does not work on my machine. This function is called by ~terminal-here-launch~ and spawns an external terminal emulator in the directory emacs was in when the terminal was invoked. I simply point out to this function the name of my terminal emulator. Here is the code:
-#+BEGIN_SRC emacs-lisp
-  (defun terminal-here-default-terminal-command (_dir)
-    '("st"))
 #+END_SRC
 
 ** Emacs builtins
