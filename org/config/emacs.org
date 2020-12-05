@@ -319,6 +319,13 @@ The Markdown layer has been enabled, with support for live preview with ~vmd~, a
                                      ("elisp" "emacs-lisp")))
 #+END_SRC
 
+PlantUML is a very useful DSL for creating UML diagrams from some text description. As you can see below, this layer will be enabled, both as a standalone mode for opening ~.pum~ files, but also for org-mode code blocks.
+#+BEGIN_SRC emacs-lisp
+  (plantuml :variables
+            plantuml-jar-path "~/.local/bin/plantuml.jar"
+            org-plantuml-jar-path "~/.local/bin/plantuml.jar")
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (bibtex :variables
           org-ref-default-bibliography '("~/Documents/Papers/references.bib")
@@ -327,8 +334,8 @@ The Markdown layer has been enabled, with support for live preview with ~vmd~, a
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-       csv
-     #+END_SRC
+  csv
+#+END_SRC
 
 **** Frameworks
 :PROPERTIES:
@@ -1721,6 +1728,7 @@ One of the amazing features of org-mode is its literary programming capacities b
 | gnuplot    |
 | latex      |
 | makefile   |
+| plantuml   |
 | python     |
 | sass       |
 | scheme     |
