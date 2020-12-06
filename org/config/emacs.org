@@ -1176,6 +1176,7 @@ The following is a nice little function I use in my Eshell prompt. It shortens t
 This function is quite a simple function made to automatically publish [[https://blog.phundrak.com][my blog]] based on Hugo. After exporting my blog using ~ox-hugo~, I simply have to call this function which will look for all files located in =~/org/blog/public= and copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/blog-publish ()
+    (interactive)
     (let* ((blog-path "~/org/blog")
            (public-path (concat blog-path "/public"))
            (target-path "/ssh:Tilo:/home/phundrak/www/phundrak.com/blog"))
