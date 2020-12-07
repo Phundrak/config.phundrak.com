@@ -68,6 +68,8 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | name of the package | why is it installed                                  |
 |---------------------+------------------------------------------------------|
 | caddyfile-mode      | Major mode for editing Caddyfiles                    |
+| dired-git-info      | Git information in Dired buffers                     |
+| diredfl             | Extra font lock rules for a more colourful dired     |
 | edit-indirect       | edit region in separate buffer                       |
 | elcord              | rich integration of Emacs in Discord                 |
 | magit-gitflow       | integrate gitflow in Magit                           |
@@ -508,10 +510,10 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
 :PROPERTIES:
 :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Custom_layers-69473533
 :END:
-    Lastly, three custom layers have been enabled: a w3m layer, and two of my custom layers for Dired and for conlanging tools.
-    #+BEGIN_SRC emacs-lisp
-    conlanging dired-phundrak w3m
-    #+END_SRC
+Lastly, two custom layers have been enabled: a w3m layer, and my custom layers for conlanging tools.
+#+BEGIN_SRC emacs-lisp
+conlanging w3m
+#+END_SRC
 
 # Don’t delete this code block, it wraps the layers
 #+BEGIN_SRC emacs-lisp :exports none
@@ -1332,6 +1334,22 @@ This function detects if the path passed as an argument points to a git director
     (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
 #+END_SRC
 
+*** ~phundrak/open-marked-files~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-open-marked-files-b87d37f7
+:END:
+This function is particularly useful in Dired buffers when someone wants to open multiple files. This function will basically look for all marked files in the current dired buffer and open each one of them in their individual buffer.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/open-marked-files ()
+    (interactive)
+    (let ((file-list (if (string= major-mode "dired-mode")
+                         (dired-get-marked-files)
+                       (list (buffer-file-name)))))
+      (mapc (lambda (file)
+              (find-file file))
+            file-list)))
+#+END_SRC
+
 *** ~phundrak/var-or-if-nil~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
@@ -1402,6 +1420,62 @@ This function is actually an overwrite of the default one which apparently does 
     '("st"))
 #+END_SRC
 
+*** ~xah/dired-sort~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-xah-dired-sort-28bde838
+:END:
+This function comes directly from Xah Lee’s website and allows the user to sort files in a dired buffer depending on four factors:
+ * File name
+ * File size
+ * Last modification date
+ * File extension
+#+BEGIN_SRC emacs-lisp
+  (defun xah/dired-sort ()
+    "Sort dired dir listing in different ways. Prompt for a choice.
+  URL `http://ergoemacs.org/emacs/dired_sort.html'
+  Version 2018-12-23, modified by Phundrak on 2019-08-06"
+    (interactive)
+    (let ($sort-by $arg)
+      (setq $sort-by (ido-completing-read "Sort by:" '( "name" "size" "date" "extension" )))
+      (cond
+       ((equal $sort-by "name") (setq $arg "-ahl --group-directories-first"))
+       ((equal $sort-by "date") (setq $arg "-ahl -t --group-directories-first"))
+       ((equal $sort-by "size") (setq $arg "-ahl -S --group-directories-first"))
+       ((equal $sort-by "extension") (setq $arg "-ahlD -X --group-directories-first"))
+       (t (error "logic error 09535" )))
+      (dired-sort-other $arg )))
+#+END_SRC
+
+*** ~xah/open-in-external-app~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-xah-open-in-external-app-2655f31c
+:END:
+Here is another of Xah’s functions, this time to open a file externally to Emacs. For instance, I sometimes want to open a PDF in Zathura rather than in Emacs, or an HTML file in Firefox. With this function, it is now possible!
+#+BEGIN_SRC emacs-lisp
+  (defun xah/open-in-external-app (&optional files)
+    "Open the current file or dired marked file in external app.
+  The app is chosen from your OS’ preference.
+
+  When called in emacs lisp, if files is given, open that.
+
+  URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+  Version 2019-01-18"
+    (interactive)
+    (let* (($file-list (if files
+                           (progn (list files))
+                         (if (string-equal major-mode "dired-mode")
+                             (dired-get-marked-files)
+                           (list (buffer-file-name)))))
+           ($do-it-p (if (<= (length $file-list) 5)
+                         t
+                       (y-or-n-p "Open more than 5 files? "))))
+      (when $do-it-p
+        (mapc (lambda ($fpath)
+                (let ((process-connection-type nil))
+                  (start-process "" nil "xdg-open" $fpath)))
+              $file-list))))
+#+END_SRC
+
 ** Emacs builtins
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Emacs_builtins-7822b8dd
@@ -1428,6 +1502,11 @@ Finally, let’s tell Dired how to sort the elements to be displayed: directorie
 By the way, let’s enable ~org-download~ when we are in a Dired buffer:
 #+BEGIN_SRC emacs-lisp
   (add-hook 'dired-mode-hook 'org-download-enable)
+#+END_SRC
+
+Finally, let’s enable globally ~diredfl~ so we can get a colourful Dired buffer each time we open one:
+#+BEGIN_SRC emacs-lisp
+  (diredfl-global-mode 1)
 #+END_SRC
 
 *** Eshell
@@ -2888,6 +2967,28 @@ Now, let’s declare the following keybindings:
 #+END_SRC
 
 ~oco~ enables the outline minor mode, which then allows for the edition of comments in org buffers with ~oce~ and saving them to the original source file with ~occ~.
+
+*** Dired
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Keybindings-Dired-2a45af8d
+:END:
+A couple of keybindings will be added to Dired. The first one is the opening parenthesis which will enable or disable ~dired-hide-details-mode~. On the other hand, a closing parenthesis will show git information in the current Dired buffer.
+#+BEGIN_SRC emacs-lisp
+  (evil-define-key 'normal dired-mode-map "(" 'dired-hide-details-mode)
+  (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode)
+#+END_SRC
+
+Something I use from time to time is ~S-F1~ for opening dired in my ~$HOME~ directory. For that, I simply did the following:
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<s-f1>") (lambda () (interactive) (dired "~/")))
+#+END_SRC
+
+A couple of other useful utilities, sach as opening all marked files, sorting files, opening them externally and renaming them, are also bound to a simple key press:
+#+BEGIN_SRC emacs-lisp
+  (evil-define-key 'normal dired-mode-map "f" 'phundrak/open-marked-files)
+  (evil-define-key 'normal dired-mode-map "F" 'xah/open-in-external-app)
+  (evil-define-key 'normal dired-mode-map "s" 'xah/dired-sort)
+#+END_SRC
 
 *** Files
 :PROPERTIES:
