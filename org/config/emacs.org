@@ -4,7 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Emacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
-#+PROPERTY: header-args: :mkdirp yes
+#+PROPERTY: header-args: :mkdirp yes :lexical t
 
 * Introduction
 :PROPERTIES:
@@ -14,7 +14,7 @@ This file  is the main source  file for my Emacs  configuration which contains m
 
 * Spacemacs layers and packages
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent :lexical t
 :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
 :END:
 Here  will be  our layer  configuration  set. Everything  here is  set with  a ~setq-default~ in the ~dotspacemacs/layers~ function like so:
@@ -522,7 +522,7 @@ conlanging w3m
 
 * Init
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent :lexical t
 :CUSTOM_ID: Init-99a4b561
 :END:
 The ~dotspacemacs/init~ function is the one called at the very begining of the Spacemacs startup, before any kind of configuration, including the layer configuration. Only the values of the Spacemacs settings should be modified here. By default, every values are set in a ~setq-default~ sexp, and they represent all the supported Spacemacs settings. Hence, the function looks like this:
@@ -1038,7 +1038,7 @@ et ~read-process-output-max~ when startup finishes. This defines how much data i
 
 * User Initialization
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent :lexical t
 :CUSTOM_ID: User_Initialization-e0d21089
 :END:
 While Emacs and especially Spacemacs loads, I want it to initialize some elements and load some packages. First of all, I want it to load my private Emacs config file:
@@ -1074,7 +1074,7 @@ Finally, here is a quick workaround for Tramp, sometimes it cannot connect to my
 
 * User Configuration
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent :lexical
 :CUSTOM_ID: User_Configuration-4a937fe5
 :END:
 ** Custom functions, macros, and variables
