@@ -1316,16 +1316,6 @@ This function detects if the path passed as an argument points to a git director
         (phundrak/git-repo-root (f-parent $path)))))
 #+END_SRC
 
-*** ~terminal-here-default-terminal-command~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
-:END:
-This function is actually an overwrite of the default one which apparently does not work on my machine. This function is called by ~terminal-here-launch~ and spawns an external terminal emulator in the directory emacs was in when the terminal was invoked. I simply point out to this function the name of my terminal emulator. Here is the code:
-#+BEGIN_SRC emacs-lisp
-  (defun terminal-here-default-terminal-command (_dir)
-    '("st"))
-#+END_SRC
-
 *** ~phundrak/prompt-toggle-abbreviation~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
@@ -1384,6 +1374,34 @@ The following function is a function that will allow me to easily create ~new~ f
                  "")))
 #+END_SRC
 
+*** ~screenshot-svg~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-screenshot-svg-9e2e21d2
+:END:
+This function allows for taking SVG screenshots of Emacs from itself using Cairo. The function definition was taken [[https://github.com/caiohcs/my-emacs#screenshots][from here]].
+#+BEGIN_SRC emacs-lisp
+  (defun screenshot-svg ()
+    "Save a screenshot of the current frame as an SVG image.
+  Saves to a temp file and puts the filename in the kill ring."
+    (interactive)
+    (let* ((filename (make-temp-file "Emacs" nil ".svg"))
+           (data (x-export-frames nil 'svg)))
+      (with-temp-file filename
+        (insert data))
+      (kill-new filename)
+      (message filename)))
+#+END_SRC
+
+*** ~terminal-here-default-terminal-command~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
+:END:
+This function is actually an overwrite of the default one which apparently does not work on my machine. This function is called by ~terminal-here-launch~ and spawns an external terminal emulator in the directory emacs was in when the terminal was invoked. I simply point out to this function the name of my terminal emulator. Here is the code:
+#+BEGIN_SRC emacs-lisp
+  (defun terminal-here-default-terminal-command (_dir)
+    '("st"))
+#+END_SRC
+
 ** Emacs builtins
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Emacs_builtins-7822b8dd
@@ -1417,6 +1435,10 @@ By the way, let’s enable ~org-download~ when we are in a Dired buffer:
 :CUSTOM_ID: User_Configuration-Eshell-3012e67e
 :END:
 Eshell is a built-in shell available from Emacs which I use almost as often as Fish. Some adjustments are necessary for making this shell usable for me.
+
+But first, here is a screenshot of what to expect visually from my configuration of Eshell when it is launched:
+
+#+include: ./img/eshell.svg export html
 
 **** Aliases
 :PROPERTIES:
