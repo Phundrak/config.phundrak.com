@@ -1525,6 +1525,198 @@ The ~EDITOR~ variable also needs to be set for git commands, especially the ~yad
   (setenv "EDITOR" "emacsclient -c")
 #+END_SRC
 
+**** Eshell banner
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Eshell-Eshell-banner-12d63d67
+:END:
+The code creating the Eshell banner is a bit lengthy and requires some additional explanations that would make the following chapter [[#User_Configuration-Eshell-Eshell_theme-a06715a9][Eshell theme]] too long. So, here it is!
+
+The banner for Eshell will collect some system information and display them gracefully. These pieces of information are:
+- The GNU/Linux distribution running (I do not use any other OS on my computer)
+- The kernel name and its version
+- The machine’s hostname
+- Its uptime
+- Its RAM and Swap usage
+- How full are its mountpoints
+Some of these information can be grabbed directly from Emacs built-in functions, but some others need to be retrieved manually. Let’s first get into it with the mounted partitions for which we’ll define a structure:
+#+BEGIN_SRC emacs-lisp
+  (defstruct phundrak/mounted-partitions
+    "Object representing a mounted partition found in the system"
+    path size used percent)
+#+END_SRC
+
+We’ll also define a variable setting the maximum length of a partition path before it gets abbreviated:
+#+BEGIN_SRC emacs-lisp
+  (defvar phundrak//eshell-banner--max-length 13)
+#+END_SRC
+
+Now, we can get our partitions. For this, we’ll make a call to the shell command ~df -lH~ and we’ll keep only the partitions mounted on a device stored in ~/dev~, for instance on ~/dev/sda~. And as mentioned above, if the mount path of the partition exceeds the length specified by ~phundrak//eshell-banner--max-length~, it will get abbreviated by [[#User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3][~phundrak/abbr-path~]].
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/get-mounted-partitions ()
+    (let ((partitions (s-split "\n"
+                               (shell-command-to-string "df -lH")
+                               t)))
+      (-keep (lambda (partition)
+               (let* ((partition  (s-split " " partition t))
+                      (filesystem (nth 0 partition))
+                      (size       (nth 1 partition))
+                      (used       (nth 2 partition))
+                      (percent    (nth 4 partition))
+                      (mount      (nth 5 partition)))
+                 (when (s-prefix? "/dev" filesystem)
+                   (make-phundrak/mounted-partitions
+                    :path (if (> phundrak--max-length-path (length mount))
+                              mount
+                            (phundrak/abbr-path mount t))
+                    :size size
+                    :used used
+                    :percent (string-to-number (s-chop-suffix "%" percent))))))
+             partitions)))
+#+END_SRC
+
+We’ll need some padding for the name of the information displayed on the left hand side of the banner. The maximum length without any partitions is eight characters due to the text ~Hostname~, so if any partition path is longer than this, the left padding will increase.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak//eshell-banner--get-left-pad (initial-pad partitions)
+    (if partitions
+        (let ((part-length (length (phundrak/mounted-partitions-path (car partitions)))))
+          (phundrak//eshell-banner--get-left-pad (if (> part-length initial-pad)
+                                                     part-length
+                                                   initial-pad)
+                                                 (cdr partitions)))
+      initial-pad))
+#+END_SRC
+
+Now, Let’s set three variables that will be used in the function following this declaration. They will be used to determine in which color a percentage should be displayed. I’ll consider any percentage below 60% to be acceptable and therefore displayed in green. However, starting from this threshold, I want the user to be noticed of the usage of whatever percentage shown that it has gone up and it should be watched and displayed in yellow. Above 75%, the user should consider this a warning, and the percentage will be displayed in orange. Above 90%, it is considered critical and the percentage will be displayed in red.
+#+BEGIN_SRC emacs-lisp
+  (defvar phundrak//eshell-banner--critical-percentage 90)
+  (defvar phundrak//eshell-banner--warning-percentage  75)
+  (defvar phundrak//eshell-banner--notice-percentage   60)
+
+  (defun phundrak//eshell-banner--color-percentage (percentage)
+    (cond
+     ((> percentage phundrak//eshell-banner--critical-percentage)
+      (with-face (format "%2d" percentage) :foreground phundrak/nord11))
+     ((> percentage phundrak//eshell-banner--warning-percentage)
+      (with-face (format "%2d" percentage) :foreground phundrak/nord12))
+     ((> percentage phundrak//eshell-banner--notice-percentage)
+      (with-face (format "%2d" percentage) :foreground phundrak/nord13))
+     (t
+      (with-face (format "%2d" percentage) :foreground phundrak/nord14))))
+#+END_SRC
+
+This function will be used when displaying progress bars. These will be used for displaying the Ram, Swap and partitions usage of the system, displaying the used part in red and the free part in green. For this, we just need to know the size of the progress bar we wish to use as well as how full it should be. Note that the percentage should be between 0 and 100.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak//eshell-banner--progress-bar (length percentage)
+    (let* ((length-green (if (= 0 percentage)
+                             0
+                           (/ (* length percentage) 100)))
+           (length-red   (- length length-green)))
+      (message "%s / %s (%s / %s)" length-green length-red length percentage)
+      (concat (with-face "[" :weight 'bold)
+              (with-face (s-repeat length-green "=")
+                         :weight 'bold :foreground phundrak/nord14)
+              (with-face (s-repeat length-red "=")
+                         :weight 'bold :foreground phundrak/nord11)
+              (with-face "]" :weight 'bold))))
+#+END_SRC
+
+This function will be used in two distinct functions: ~phundrak/eshell-banner~ which we will see later, and ~phundrak//eshell-banner--display-memory~ which we will see now. This function displays information for the two types of memory we have, RAM and Swap memory. Here is the definition of this function:
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak//eshell-banner--display-memory (type used total text-padding ramp-length)
+    (let ((percentage (if (= used 0)
+                          0
+                        (/ total used))))
+      (concat (s-pad-right text-padding "." type)
+              ": "
+              (phundrak//eshell-banner--progress-bar ramp-length
+                                                    percentage)
+              (format " %-4s / %-5s ("
+                      (file-size-human-readable used)
+                      (file-size-human-readable total))
+              (phundrak//eshell-banner--color-percentage
+               percentage)
+              "%)\n")))
+#+END_SRC
+
+We now need a function for displaying partitions. As you can see, it will be quite similar to the above one:
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak//eshell-banner--display-partition (part left-pad ramp-length)
+    (concat (s-pad-right left-pad "."
+                         (with-face (phundrak/mounted-partitions-path part)
+                                    :weight 'bold))
+            ": "
+            (phundrak//eshell-banner--progress-bar ramp-length
+                                                   (phundrak/mounted-partitions-percent part))
+            (format " %-4s / %-5s (%s%%)"
+                    (phundrak/mounted-partitions-used part)
+                    (phundrak/mounted-partitions-size part)
+                    (phundrak//eshell-banner--color-percentage (phundrak/mounted-partitions-percent part)))))
+#+END_SRC
+
+And we can now build our banner! Here is our function that does exactly that:
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/eshell-banner ()
+    (let* ((partitions        (phundrak/get-mounted-partitions))
+           (memory            (-map (lambda (line)
+                                      (s-split " " line t))
+                                    (s-split "\n"
+                                             (shell-command-to-string "free -b | tail -2")
+                                             t)))
+           (ram               (nth 0 memory))
+           (swap              (nth 1 memory))
+           (ramp-length       43)
+           (left-pad          (phundrak//eshell-banner--get-left-pad phundrak//eshell-banner--max-length partitions))
+           (right-pad         8)
+           (left-column-width 27))
+      (concat (format "%s\n" (s-repeat 79 "="))
+              ;; OS and Kernel
+              (format "%s: %s%s: %s\n"
+                      (s-pad-right left-pad "." "OS")
+                      (s-pad-right left-column-width
+                                   " "
+                                   (with-face (s-replace "\"" ""
+                                                         (s-trim (shell-command-to-string "lsb_release -sd")))
+                                              :weight 'bold))
+                      (s-pad-right right-pad "." "Kernel")
+                      (with-face (concat "Linux " operating-system-release)
+                                 :weight 'bold))
+              ;; Hostname and Uptime
+              (format "%s: %s%s: %s\n"
+                      (s-pad-right left-pad "." "Hostname")
+                      (s-pad-right left-column-width
+                                   " "
+                                   (with-face (system-name) :weight 'bold))
+                      (s-pad-right right-pad "." "Uptime")
+                      (with-face (s-chop-prefix "up "
+                                                (s-trim (shell-command-to-string "uptime -p")))
+                                 :weight 'bold))
+              ;; RAM ramp
+              (phundrak//eshell-banner--display-memory "Ram"
+                                                      (string-to-number (nth 2 ram))
+                                                      (string-to-number (nth 1 ram))
+                                                      left-pad
+                                                      ramp-length)
+              ;; SWAP ramp
+              (phundrak//eshell-banner--display-memory "Swap"
+                                                      (string-to-number (nth 2 swap))
+                                                      (string-to-number (nth 1 swap))
+                                                      left-pad
+                                                      ramp-length)
+              ;; Partitions
+              (mapconcat (lambda (part)
+                           (phundrak//eshell-banner--display-partition part left-pad ramp-length))
+                         partitions
+                         "\n")
+              (format "\n%s\n" (s-repeat 79 "=")))))
+#+END_SRC
+
+We now only have to set the result of this function as our Eshell banner. Since a simple ~setq~ would only run ~phundrak/eshell-banner~ once when Emacs starts, we’ll actually make Emacs set the value of ~eshell-banner-message~ each time it is required by Eshell with a hook:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'eshell-banner-load-hook
+            (lambda ()
+              (setq eshell-banner-message (phundrak/eshell-banner))))
+#+END_SRC
+
 **** Eshell theme
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
