@@ -1664,7 +1664,7 @@ Now, we can get our partitions. For this, we’ll make a call to the shell comma
                       (mount      (nth 5 partition)))
                  (when (s-prefix? "/dev" filesystem)
                    (make-phundrak/mounted-partitions
-                    :path (if (> phundrak--max-length-path (length mount))
+                    :path (if (> phundrak//eshell-banner--max-length (length mount))
                               mount
                             (phundrak/abbr-path mount t))
                     :size size
@@ -1724,11 +1724,11 @@ This function will be used in two distinct functions: ~phundrak/eshell-banner~ w
   (defun phundrak//eshell-banner--display-memory (type used total text-padding ramp-length)
     (let ((percentage (if (= used 0)
                           0
-                        (/ total used))))
+                        (/ (* 100 used) total))))
       (concat (s-pad-right text-padding "." type)
               ": "
               (phundrak//eshell-banner--progress-bar ramp-length
-                                                    percentage)
+                                                     percentage)
               (format " %-4s / %-5s ("
                       (file-size-human-readable used)
                       (file-size-human-readable total))
