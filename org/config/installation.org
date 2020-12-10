@@ -197,11 +197,11 @@ First of all, the bootstrap shell will set the user’s shell to fish.
 Let’s set in a custom varible what packages we’ll be needing.
 #+BEGIN_SRC fish
   set PACKAGES \
-  acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii aspell-en \
-  aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git base-devel \
-  bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bzip2 chicken \
-  chromium clisp corrupter-git cppcheck cppreference cppreference-devhelp \
-  cpupower discord-canary discount docker docker-compose \
+  acpi acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii \
+  aspell-en aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git \
+  base-devel bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bzip2 \
+  chicken chromium clisp corrupter-git cppcheck cppreference \
+  cppreference-devhelp cpupower discord-canary discount docker docker-compose \
   dockerfile-language-server-bin doxygen emacs emacs-org-mode exa exfat-utils \
   farbfeld fd ffmpegthumbnailer findutils firefox flake8 flat-remix-gtk freeglut \
   fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
