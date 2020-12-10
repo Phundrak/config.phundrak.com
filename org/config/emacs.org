@@ -3248,6 +3248,13 @@ This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services
         message-send-mail-function 'smtpmail-send-it)
 #+END_SRC
 
+Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]].
+#+BEGIN_SRC emacs-lisp
+  (custom-theme-set-faces
+   'user
+   `(mu4e-replied-face ((t (:inherit (mu4e-header-highlight-facefont-lock-builtin-face) :weight normal :foreground ,phundrak/nord15)))))
+#+END_SRC
+
 I am unsure yet if this has any effect on mu4e, but this variable should discourage mu4e from reading rich text emails and instead open them as plain text. However, I do not wish to discourage opening HTML emails since I can open them in the browser.
 #+BEGIN_SRC emacs-lisp
   (setq mm-discouraged-alternatives '("text/richtext"))
