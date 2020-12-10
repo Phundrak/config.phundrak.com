@@ -1285,22 +1285,20 @@ There are lots of files which I want to be able to quickly open. I used to have 
 
 With this established, let’s write some emacs-lisp that will allow me to get a list of all these files and select them through helm. Be aware that I will be using some functions from third party packages, such as [[https://github.com/rejeep/f.el][f.el]] and [[https://github.com/magnars/dash.el][dash]].
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/find-org-file ()
+  (defun phundrak/find-org-files ()
     "Find all org files in the directories listed in
-  `phundrak/org-directories', then list them in a helm buffer where
-  the user can fuzzy-match one and open it."
+  `phundrak/org-directories', then list them in an ido buffer where
+  the user can match one and open it."
     (interactive)
     (find-file
-     (helm
-      :sources (helm-build-sync-source "org files"
-                 :candidates (-mapcat
-                              (lambda (path)
-                                (f-files path
-                                         (lambda (file) (equal (f-ext file) "org"))
-                                         t))
-                              phundrak/org-directories)
-                 :fuzzy-match t)
-      :buffer "*org files*")))
+     (ido-completing-read
+      "Org File:"
+      (s-split "\n"
+               (mapconcat (lambda (path)
+                            (shell-command-to-string
+                             (format "fd . %s -e org" path)))
+                          phundrak/org-directories
+                          "\n")))))
 #+END_SRC
 
 *** ~phundrak/git-repo-root~
@@ -2996,7 +2994,7 @@ A couple of other useful utilities, sach as opening all marked files, sorting fi
 :END:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "of" "open org file")
-  (spacemacs/set-leader-keys "of" 'phundrak/find-org-file)
+  (spacemacs/set-leader-keys "of" 'phundrak/find-org-files)
 #+END_SRC
 
 I also have a shortcut for ~helm-locate~ in case I need to find a file that is not in these directories. One advantage of this over ~helm-find~ is that it doesn’t matter from where I call it, it will find any file on my system that matches the query, whereas ~helm-find~ will only search in the current directory and its subdirectories. This time, the declaration is much simpler:
