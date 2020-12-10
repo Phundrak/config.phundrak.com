@@ -3157,6 +3157,7 @@ Mu4e is a frontend for mu, an email analyzer which sits on top of a Maildir whic
 1. the search query feature
 2. rendering an HTML email in the browser
 
+*** Setup
 Due to mu sitting on top of a maildir, I need to tell mu4e where said maildir is, and point it the trash, archive, and sent folders as well as the refresh command and how frequently I want my emails to be refreshed.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-maildir "~/.mail"
@@ -3168,14 +3169,6 @@ Due to mu sitting on top of a maildir, I need to tell mu4e where said maildir is
         mu4e-update-interval 60)
 #+END_SRC
 
-The following also allows me to automatically include my signature in my Emails, to view images in my Emacs buffers and to show me the address of my contacts and not just their names.
-#+BEGIN_SRC emacs-lisp
-  (setq mu4e-compose-signature-auto-include t
-        mu4e-view-show-images t
-        mu4e-view-prefer-html t
-        mu4e-view-show-addresses t)
-#+END_SRC
-
 This source block is an example of the search queries in mu4e, and part of the reason why I very much like mu4e: these bookmarks are actually defined by search queries, but act as if they were just yet another type of custom inbox you get with modern Email client (and often you don’t even get them). All these bookmarks can be accessed through a shortcut on the main mu4e buffer, prefixed by ~b~. So, for instance, my unread messages are accessed through ~bU~.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-bookmarks
@@ -3184,8 +3177,8 @@ This source block is an example of the search queries in mu4e, and part of the r
                       "AND NOT flag:trashed"
                       "AND NOT to:CONLANG@LISTSERV.BROWN.EDU"
                       "AND NOT to:AUXLANG@LISTSERV.BROWN.EDU"
-                      "AND NOT to:ateliers-emacs.framalistes.org"
-                      "AND NOT to:ateliers-paris.emacs-doctor.com"
+                      "AND NOT to:ateliers-emacs@framalistes.org"
+                      "AND NOT to:ateliers-paris@emacs-doctor.com"
                       "AND NOT list:ateliers-emacs.framalistes.org"
                       "AND NOT list:ateliers-paris.emacs-doctor.com"))
            "Inbox" ?i) ;; Inbox without the linguistics mailing lists
@@ -3204,6 +3197,7 @@ This source block is an example of the search queries in mu4e, and part of the r
           (,(s-join " "
                     '("maildir:/Inbox"
                       "AND (list:ateliers-emacs.framalistes.org"
+                      "OR to:ateliers-paris@emacs-doctor.com"
                       "OR list:ateliers-paris.emacs-doctor.com)"))
            "Emacs" ?e) ;; Emacs mailing list
           ("maildir:/Sent" "Sent messages" ?s)
@@ -3225,6 +3219,23 @@ On new email arrival, Emacs can send the system a notification which will be han
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
+This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services to my private mail server on its SMTP port, which should be used with a STARTTLS stream. And I tell Emacs this is the default way to send an email.
+#+BEGIN_SRC emacs-lisp
+  (setq smtpmail-smtp-server "mail.phundrak.com"
+        smtpmail-smtp-service 587
+        smtpmail-stream-type 'starttls
+        message-send-mail-function 'smtpmail-send-it)
+#+END_SRC
+
+*** Visual Configuration
+The following also allows me to automatically include my signature in my Emails, to view images in my Emacs buffers and to show me the address of my contacts and not just their names.
+#+BEGIN_SRC emacs-lisp
+  (setq mu4e-compose-signature-auto-include t
+        mu4e-view-show-images t
+        mu4e-view-prefer-html t
+        mu4e-view-show-addresses t)
+#+END_SRC
+
 Now this hook is added so I can get a maximal width for the text of my emails, I really don’t like it when lines are kilometers long. I would like instead to hook ~visual-line-mode~ and ~auto-fill-mode~, but for some reasons Emacs throws an error when I add them, So I go with ~visual-fill-column-mode~ instead.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'mu4e-view-mode-hook 'visual-fill-column-mode)
@@ -3240,21 +3251,31 @@ On modern-day computers, with wide screens almost everywhere, there is no reason
                                                                 0.4))))))
 #+END_SRC
 
-This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services to my private mail server on its SMTP port, which should be used with a STARTTLS stream. And I tell Emacs this is the default way to send an email.
+Icons are nice and all, but my current font does not display some of the default icons set by mu4e. Due to this, I will define back these icons to the original characters defined by mu4e:
 #+BEGIN_SRC emacs-lisp
-  (setq smtpmail-smtp-server "mail.phundrak.com"
-        smtpmail-smtp-service 587
-        smtpmail-stream-type 'starttls
-        message-send-mail-function 'smtpmail-send-it)
+  (setq mu4e-headers-draft-mark                  '("D"  . "D")
+        mu4e-headers-flagged-mark                '("F"  . "F")
+        mu4e-headers-new-mark                    '("N"  . "N")
+        mu4e-headers-passed-mark                 '("P"  . "P")
+        mu4e-headers-replied-mark                '("R"  . "R")
+        mu4e-headers-seen-mark                   '("S"  . "S")
+        mu4e-headers-trashed-mark                '("T"  . "T")
+        mu4e-headers-attach-mark                 '("a"  . "a")
+        mu4e-headers-encrypted-mark              '("x"  . "x")
+        mu4e-headers-signed-mark                 '("s"  . "s")
+        mu4e-headers-unread-mark                 '("u"  . "u"))
 #+END_SRC
 
 Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]].
 #+BEGIN_SRC emacs-lisp
   (custom-theme-set-faces
    'user
-   `(mu4e-replied-face ((t (:inherit (mu4e-header-highlight-facefont-lock-builtin-face) :weight normal :foreground ,phundrak/nord15)))))
+   `(mu4e-replied-face ((t (:inherit (mu4e-header-highlight-facefont-lock-builtin-face)
+                                     :weight normal
+                                     :foreground ,phundrak/nord15)))))
 #+END_SRC
 
+*** Misc
 I am unsure yet if this has any effect on mu4e, but this variable should discourage mu4e from reading rich text emails and instead open them as plain text. However, I do not wish to discourage opening HTML emails since I can open them in the browser.
 #+BEGIN_SRC emacs-lisp
   (setq mm-discouraged-alternatives '("text/richtext"))
