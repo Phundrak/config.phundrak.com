@@ -423,9 +423,9 @@ Finally, let’s declare the menubar’s terminal for applications that require 
   menubar.utils.terminal = terminal
 #+END_SRC
 
-** widgets
+** Widgets
 :PROPERTIES:
-:CUSTOM_ID: Top_bar-Other_widgets-0b255378
+:CUSTOM_ID: Top_bar-Widgets-0b255378
 :END:
 Let’s declare the keyboard map indicator and switcher for the top bar:
 #+BEGIN_SRC lua
