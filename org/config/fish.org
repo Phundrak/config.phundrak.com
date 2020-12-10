@@ -8,9 +8,9 @@
 #+PROPERTY: header-args :exports code :tangle no
 
 * Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-340195eb
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Presentation-340195eb
+:END:
 The file present in =~/.config/fish/config.fish= is the configuration file for the [[https://fishshell.com/][fish shell]]. It contains custom functions, environment variables and abbreviations.
 
 Just in case, we might need sometimes to declare the fish function =fish_title= as =true=, so let’s do so.
@@ -21,9 +21,9 @@ Just in case, we might need sometimes to declare the fish function =fish_title= 
 #+END_SRC
 
 * Fish from within Emacs
-  :PROPERTIES:
-  :CUSTOM_ID: Fish_from_within_Emacs-360c0a74
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Fish_from_within_Emacs-360c0a74
+:END:
 I sometimes call fish from within emacs, with =M-x ansi-term=. In this case, the variable =TERM= needs to have the value =eterm-color=.
 #+BEGIN_SRC fish
   if test -n "$EMACS"
@@ -32,9 +32,9 @@ I sometimes call fish from within emacs, with =M-x ansi-term=. In this case, the
 #+END_SRC
 
 * Tramp remote access
-  :PROPERTIES:
-  :CUSTOM_ID: Tramp_remote_access-72aedec2
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Tramp_remote_access-72aedec2
+:END:
 When accessing from a remote machine our computer from Emacs, tramp needs a precise shell appearance: a simple =$= followed by a space after which to put the commands it needs to execute, and nothing else. Due to this, let’s deactivate and redefine some of the functions defining the appearance of fish.
 #+BEGIN_SRC fish
   if test "$TERM" = "dumb"
@@ -48,9 +48,9 @@ When accessing from a remote machine our computer from Emacs, tramp needs a prec
 #+END_SRC
 
 * Regular fish shell appearance
-  :PROPERTIES:
-  :CUSTOM_ID: Regular_fish_shell_appearance-c3e532e1
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Regular_fish_shell_appearance-c3e532e1
+:END:
 Now, there is only one function I modify when it comes to the appearance of fish when I’m the one using it: the ~fish_greeting~ function. I use it to give me an overview of my computer’s status, including its hostname, uptime, disks usage, ram usage, swap usage, and networking.
 #+BEGIN_SRC fish
   set RED '\033[0;31m'
@@ -131,9 +131,9 @@ I also wish to have a kinda different newline prompt, so let’s set it:
 #+END_SRC
 
 * Global variables
-  :PROPERTIES:
-  :CUSTOM_ID: Global_variables-1c84df8b
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-1c84df8b
+:END:
 In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t have to call my web browser directly but rather with this variable.
 #+BEGIN_SRC fish
   set -gx BROWSER firefox
@@ -145,9 +145,9 @@ Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can g
 #+END_SRC
 
 ** Development
-   :PROPERTIES:
-   :CUSTOM_ID: Global_variables-Development-76b3ff13
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-Development-76b3ff13
+:END:
 Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since it will most often be just quick edits, nothing too heavy, if it is called from the ~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
 #+BEGIN_SRC fish
   set -gx EDITOR emacsclient -c
@@ -181,10 +181,10 @@ Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so l
 #+END_SRC
 
 ** ~$PATH~
-   :PROPERTIES:
-   :CUSTOM_ID: Global_variables-$PATH-e1320303
-   :END:
 Some global variables might sometimes be needed and need to be modified. This is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s binaries, Go’s binaries and my own executables. And of course, don’t forget to add the already existing ~PATH~.
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-$PATH-e1320303
+:END:
 
 #+NAME: extra-paths
 | additional path           | what it leads to                     |
@@ -215,9 +215,9 @@ The code below ensures the ~PATH~ is updated only at login, and every location i
 #+END_SRC
 
 * Abbreviations
-  :PROPERTIES:
-  :CUSTOM_ID: Abbreviations-97537716
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-97537716
+:END:
 #+NAME: generate-abbr
 #+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
   (replace-regexp-in-string "\\\\vert[{}]*"
@@ -229,9 +229,9 @@ The code below ensures the ~PATH~ is updated only at login, and every location i
 #+END_SRC
 
 ** System monitoring
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-System_monitoring-bd909755
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-System_monitoring-bd909755
+:END:
 Here I have some abbreviations which are quite useful when performing some system monitoring. With =df=, we can get an overview of our filesystem usage, while with =diskspace= we get some more precise information. =meminfo= is a call to =free= with sane defaults, and similar to =meminfo=, we also have =gpumeminfo= so we can get a quick look at the memory-related logs of our X session. I also declared =cpuinfo= an alias of =lscpu= in order to keep consistent with =meminfo=. =pscpu= gives us information on what the CPU is running right now, and =pscpu10= limits that to the top 10 threads. Similarly, =psmem= gives us information on the memory usage of the current threads, and =psmem10= only the ten most important threads in terms of memory usage.
 #+NAME: mgmt-abbr
 | abbreviation | command                                    |
@@ -252,15 +252,15 @@ Here I have some abbreviations which are quite useful when performing some syste
 #+END_SRC
 
 ** System management (packages and services)
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-7249fbb7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-7249fbb7
+:END:
 I added some of these abbreviations due to how often I have to write the whole thing.
 
 *** Package management
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f
+:END:
 The first command is =remove= which removes a package from my system, as well as its dependencies no longer needed. =p=. =pacman='s or =yay='s. This is why I simply type =purge=. And if I want to simply seach among the =pacman= repos, I can type =search=. Otherwise, if I want to include AUR results, I’ll use =yay=.
 
 #+NAME: pm-abbr
@@ -276,9 +276,9 @@ The first command is =remove= which removes a package from my system, as well as
 #+END_SRC
 
 *** Service management
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Service_management-8c5ae482
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Service_management-8c5ae482
+:END:
 I don’t have the muscle memory of =systemctl=. So instead, I simply type =c= when I want to do something user service related. And if I want to manipulate system services, I can instead type a simple capital =S=.
 #+NAME: service-abbr
 | abbreviation | command   |
@@ -290,15 +290,15 @@ I don’t have the muscle memory of =systemctl=. So instead, I simply type =c= w
 #+END_SRC
 
 ** Development
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-Development-d6050ca4
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-d6050ca4
+:END:
 A good amount of these commands are development related, especially when it comes to compilation or Docker.
 
 *** CMake
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Development-CMake-f2951675
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-CMake-f2951675
+:END:
 I have the following abbreviations so I can quickly run CMake and create a configuration for debug or release profiles.
 #+NAME: abbr-cmake
 | abbreviation | command                          |
@@ -312,9 +312,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 *** Docker
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Development-Docker-2d0a1288
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-Docker-2d0a1288
+:END:
 And of course, when it comes to Docker Compose, I don't have time to write the full command, so I use these instead.
 #+NAME: abbr-docker
 | abbreviation | command                      |
@@ -336,9 +336,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 *** Text editors
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Development-Text_editors-5a23df47
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-Text_editors-5a23df47
+:END:
 I greatly prefer to use Emacsclient as my main text editor; Emacs has basically all I need. So, it's only normal I have an abbreviation to launch a new instance of it. However, in a graphical environment, this will launch a new graphical window of Emacs. To launch a terminal instance, I'll use ~enw~ (~nw~ stands for the option “nowindow” ~-nw~ of Emacs). I also wish to completely stop using other text editors, such as ~vi~, ~vim~, ~nano~ and ~ed~, so let's all add their command as an abbreviation for Emacs.
 
 #+NAME: abbr-text-ed
@@ -357,9 +357,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 *** Compilation
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Development-Compilation-dd066050
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-Compilation-dd066050
+:END:
 By default, I set ~clang~, ~clang++~, ~gcc~ and ~g++~ to the latest standard and with the ~-Wall~ flag activated.
 #+NAME: abbr-comp
 | abbreviation | command              |
@@ -375,9 +375,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 *** Git
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Development-Git-5e5055c1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Development-Git-5e5055c1
+:END:
 And let's face it: we all at one point just wanted to commit our code without thinking about the message, to just get over with it. Don't worry, I got you covered.
 #+NAME: abbr-git
 | abbreviation | command                                             |
@@ -390,9 +390,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 ** LaTeX
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-LaTeX-76865eb9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-LaTeX-76865eb9
+:END:
 Yes, although I use org-mode, I still have some use for LaTeX, especially when it comes to PDF exports of my org files. Hence why I use the LaTeX package manager. It is recommended to use ~tllocalmgr~ instead of ~tlmgr~, but I can never remember the command, and the latter is faster to type, so time for an abbreviation. Same goes for ~texhash~ which must be run as sudo.
 #+NAME: latex-abbr
 | abbreviation | command      |
@@ -406,9 +406,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 ** Some security measures
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-Some_security_measures-489cb521
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Some_security_measures-489cb521
+:END:
 Some commands can be quite dangerous when not used properly, which is why I added default flags and options so I can get warnings before things get ugly. The =-i= and =-I= add prompts in case we might not want to do what we asked the shell to do. Notice =lns= which creates symlinks, =rmd= which removes directories, =rmf= which forces deletion, and =rmdf= which forces the delition of a directory. Notice also the =--preserve-root= which will prevent me from accidentally removing the root folder. I added the same option to =chgrp=, =chmod=, and =chown=.
 #+NAME: sec-abbr
 | abbreviation | command                  |
@@ -431,9 +431,9 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 ** Typos
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-Typos-370bbb27
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Typos-370bbb27
+:END:
 Let's admit it, we all make typos from time to time in the shell, and some are recurrent enough we make abbreviations or aliases of the correct command. Well, I have some of my abbreviations which were make exactly because of this. Sometimes for some reasons, my brain makes me write ~clean~ instead of ~clear~. So, let's just replace the former by the latter. I'm also very bad at typing ~exit~. And sometimes I suck at typing ~htop~. ~q~ isn't a typo per se, instead just a habit I have.
 #+NAME: typo-abbr
 | abbreviation | command |
@@ -450,15 +450,15 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 ** Misc
-   :PROPERTIES:
-   :CUSTOM_ID: Abbreviations-Misc-c2631eb6
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-c2631eb6
+:END:
 Finally, some miscellaneous abbreviations that don't really fit into any of the above categories.
 
 *** Media
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-Media-e4b85d56
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-Media-e4b85d56
+:END:
 Here you will find various commands related to media in general. the first one is a command to play some chillhop from the [[https://www.youtube.com/user/Chillhopdotcom][Chillhop YouTube channel]]'s livestream.
 #+BEGIN_SRC fish
   abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
@@ -486,27 +486,27 @@ Finally, let's declare the following abbreviation that will launch an mpv instan
 #+END_SRC
 
 *** Sudo
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-Sudo-aef0214a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-Sudo-aef0214a
+:END:
 First, I make it so that ~sudo~ comes with the ~-A~ switch in order to call my custom graphical script for getting my password (see [[file:bin.org::#Askpass-d0d7a8c0][askpass]]). I also made it so ~please~ is an equivalent to ~sudo -A~ as a joke.
 #+BEGIN_SRC fish
   abbr please 'sudo -A'
 #+END_SRC
 
 *** History
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-History-a2124b23
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-History-a2124b23
+:END:
 I also find it more intuitive and faster to just write ~hist~ instead of ~history~, so let's declare that.
 #+BEGIN_SRC fish
   abbr hist history
 #+END_SRC
 
 *** Compression
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-Compression-4fd4ffef
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-Compression-4fd4ffef
+:END:
 It seems it's just like many other people, but I cannot for the life of me remember the syntax of ~tar~. So, I made the following abbreviations, and one day hopefully, after seeing the abbreviations' expansion over and over I'll remember the command like I did for the abbreviation of ~remove~ (see [[#Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f][Package management]]).
 #+NAME: tar-abbr
 | abbreviation | command   |
@@ -519,9 +519,9 @@ It seems it's just like many other people, but I cannot for the life of me remem
 #+END_SRC
 
 *** exa
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-exa-e1b528b9
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-exa-e1b528b9
+:END:
 #+NAME: exa-abbr
 | abbreviation | command                                    |
 |--------------+--------------------------------------------|
@@ -534,18 +534,18 @@ It seems it's just like many other people, but I cannot for the life of me remem
 #+END_SRC
 
 *** Network Management
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-Network_Management-0b7fc91d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-Network_Management-0b7fc91d
+:END:
 First, we have just =nmcli= with sane default options, that is a pretty output with colors.
 #+BEGIN_SRC fish
   abbr nmcli 'nmcli -p -c auto'
 #+END_SRC
 
 *** NordVPN
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-NordVPN-09438638
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-NordVPN-09438638
+:END:
 Next, we have some NordVPN-related shortcuts. The first one is a simple abbreviation to =nordvpn=. The second one is a shortcut to connect to a server, and to disconnect from the current server. I also have a couple of shortcuts to quickly connect to some preselected countries, mainly France, Germany, Japan and the US.
 #+NAME: nordvpn-abbr
 | abbreviation | command                 |
@@ -563,9 +563,9 @@ Next, we have some NordVPN-related shortcuts. The first one is a simple abbrevia
 #+END_SRC
 
 *** Wget
-    :PROPERTIES:
-    :CUSTOM_ID: Abbreviations-Misc-Wget-27f4bebf
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Abbreviations-Misc-Wget-27f4bebf
+:END:
 By default, continue a download that was interupted.
 #+BEGIN_SRC fish
   abbr wget 'wget -c'
