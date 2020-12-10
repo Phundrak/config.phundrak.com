@@ -6,15 +6,15 @@
 #+PROPERTY: header-args:conf :exports code :mkdirp yes :tangle ~/.config/picom/picom.conf
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-a5320326
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-a5320326
+:END:
 Picom is the successor to Compton, a standalone compositor for Xorg. It provides compositing for WM that do not provide any, such as i3. I am currently using [[https://github.com/ibhagwan/picom][ibhagwan’s fork of compton]] which provides the ~dual-kawase~ blur from [[https://github.com/tryone144/compton][tryone’s compton]] and rounded corners from [[https://github.com/sdhand/picom][sdhand’s compton]].
 
 * Shadows
-  :PROPERTIES:
-  :CUSTOM_ID: Shadows-f4ffbb27
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Shadows-f4ffbb27
+:END:
 The following enables client-side shadows on windows. Note desktop windows (windows with ~_NET_WM_WINDOW_TYPE_DESKTOP~) never get shadow, unless explicitly requested using the wintypes option. I personally deactivated shadows because they don’t work out too well with rounded corners.
 #+BEGIN_SRC conf
   shadow = false;
@@ -84,10 +84,10 @@ particular Xinerama screen to the screen.
 #+END_SRC
 
 ** Deprecated options
-   :PROPERTIES:
-   :HEADER-ARGS:conf: :tangle no
-   :CUSTOM_ID: Shadows-Deprecated_options-da215d5a
-   :END:
+:PROPERTIES:
+:HEADER-ARGS:conf: :tangle no
+:CUSTOM_ID: Shadows-Deprecated_options-da215d5a
+:END:
 Options in this subheader *will not* be exported to my configuration file.
 
 Thanks to this value, Picom can avoid drawing shadows on dock or panel windows. This option is deprecated, and users should use the ~wintypes~ option in their config file instead.
@@ -116,9 +116,9 @@ or
 #+END_SRC
 
 * Rounded corners
-  :PROPERTIES:
-  :CUSTOM_ID: Rounded_corners-33bfcd20
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Rounded_corners-33bfcd20
+:END:
 A great feature added by ibhagwan’s fork of picom is the addition of rounded corners from sdhand’s fork, and the Kawase blur (described [[#Background_blurring-55835066][here]]) from tryone144’s fork. Here we can see the declaration of the corners’ radius:
 #+BEGIN_SRC conf
   corner-radius = 9.0;
@@ -132,9 +132,9 @@ It is also possible to exclude some windows from getting their corners rounded. 
 #+END_SRC
 
 * Fading
-  :PROPERTIES:
-  :CUSTOM_ID: Fading-419d8047
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Fading-419d8047
+:END:
 Picom has the ability to create some fading effects on windows when opening or closing or when the opacity changes. The following parameter toggles this feature on or off. However, its behavior can be changed with ~no-fading-openclose~.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
@@ -176,9 +176,9 @@ Finally, this option is a workaround for Openbox, Fluxbox and others by not fadi
 #+END_SRC
 
 * Transparency and opacity
-  :PROPERTIES:
-  :CUSTOM_ID: Transparency_and_opacity-6c6b36d2
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Transparency_and_opacity-6c6b36d2
+:END:
 Picom is also able to create some opacity or transparency for windows, depending on their state or on some user-defined rules. For instance, the following value describes the opacity of inactive windows.
 | Default value | ~1.0~ |
 | Min value     | ~0.1~ |
@@ -246,9 +246,9 @@ The user can also specify a list of opacity rules, in the format ~PERCENT:PATTER
 #+END_SRC
 
 * Background blurring
-  :PROPERTIES:
-  :CUSTOM_ID: Background_blurring-55835066
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Background_blurring-55835066
+:END:
 The following are the parameters for background blurring, see the \*BLUR\* section for more information.
 #+BEGIN_SRC conf
   blur: {
@@ -296,9 +296,9 @@ It is possible to write exclude conditions for background blur.
   ];
 #+END_SRC
 * General settings
-  :PROPERTIES:
-  :CUSTOM_ID: General_settings-41398de7
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: General_settings-41398de7
+:END:
 Daemonize process. Fork to background after initialization. Causes issues with certain (badly-written) drivers.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
@@ -512,9 +512,9 @@ Following per window-type options are available:
 #+END_SRC
 
 ** GLX backend-specific options
-   :PROPERTIES:
-   :CUSTOM_ID: General_settings-GLX_backend-specific_options-43892981
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: General_settings-GLX_backend-specific_options-43892981
+:END:
 Avoid using stencil buffer, useful if you don't have a stencil buffer. Might cause incorrect opacity when rendering transparent content (but never practically happened) and may not work with blur-background. Tests show a 15% performance boost. Recommended.
 | Default value | ~false~ |
 #+BEGIN_SRC conf

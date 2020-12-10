@@ -8,9 +8,9 @@
 #+PROPERTY: header-args:lua :tangle ~/.config/awesome/rc.lua :exports code :noweb yes :mkdirp yes
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-4c41360e
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-4c41360e
+:END:
 From the Arch Wiki: awesome is a highly configurable, next generation framework window manager for Xorg. It is very fast and extensible. It is primarily targeted at power users, developers and any people dealing with every day computing tasks and who want to have fine-grained control on its graphical environment.
 
 Personally, what really made me want to try Awesome is the fact its configuration file is written with an actual programming language and not just a configuration language like with i3, and by the fact it works with tags and not workspaces which makes window management much more flexible.
@@ -18,9 +18,9 @@ Personally, what really made me want to try Awesome is the fact its configuratio
 This document was written in Emacs with Org-mode and is both the documentation and source code of my configuration file which can be extracted to ~$HOME/.config/awesome/rc.lua~ through a call to ~org-babel-tangle~.
 
 * Loading libraries
-  :PROPERTIES:
-  :CUSTOM_ID: Loading_libraries-4df76999
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Loading_libraries-4df76999
+:END:
 First of all, some initialization is needed, and this initialization is about math randomness. So, let’s initialize the ~random~ method of the ~math~ library:
 #+BEGIN_SRC lua
   math.randomseed(os.time())
@@ -81,9 +81,9 @@ By the way, let’s initialize the ~random~ method of the ~math~ library:
 #+END_SRC
 
 * Error handling
-  :PROPERTIES:
-  :CUSTOM_ID: Error_handling-f6a6668f
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Error_handling-f6a6668f
+:END:
 This code checks if Awesome encountered an error during startup and fell back to another config. This code will only ever execute for the fallback config.
 #+BEGIN_SRC lua
   if awesome.startup_errors then
@@ -111,22 +111,22 @@ And this code handles runtime errors after startup thanks to signals.
 #+END_SRC
 
 * Variable definitions
-  :PROPERTIES:
-  :CUSTOM_ID: Variable_definitions-06b2bcbf
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Variable_definitions-06b2bcbf
+:END:
 ** Themes
-   :PROPERTIES:
-   :CUSTOM_ID: Variable_definitions-Themes-591886b4
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Variable_definitions-Themes-591886b4
+:END:
 With Awesome, it is possible to load or write custom themes in order to give Awesome a special look that fits the user. I am currently using a custom theme that is not yet included in my dotfiles. I will add it later, along with the images used for the theme.
 #+BEGIN_SRC lua
   beautiful.init("/home/phundrak/.config/awesome/nord/theme.lua")
 #+END_SRC
 
 ** Default terminal and text editor
-   :PROPERTIES:
-   :CUSTOM_ID: Variable_definitions-Default_terminal_and_text_editor-44b84e20
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Variable_definitions-Default_terminal_and_text_editor-44b84e20
+:END:
 The two following variables are set so that I don’t need to go over my whole config file in order to modify which terminal or text editor I use, not that I do it often though.
 #+BEGIN_SRC lua
   terminal = "st"
@@ -134,9 +134,9 @@ The two following variables are set so that I don’t need to go over my whole c
 #+END_SRC
 
 ** Keys
-   :PROPERTIES:
-   :CUSTOM_ID: Variable_definitions-Keys-b8def4ac
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Variable_definitions-Keys-b8def4ac
+:END:
 The following declares the default Modkey. Usually, ~Mod4~ is the Super key, situated between the Ctrl key and the Alt key with a logo (usually Windows’). Another usual value for this is ~Mod1~, which is the Alt key, but it has greater chances of interfering with other software. I also defined some other obvious variables in order to make my code cleaner later on.
 #+BEGIN_SRC lua
   modkey = "Mod4"
@@ -147,17 +147,17 @@ The following declares the default Modkey. Usually, ~Mod4~ is the Super key, sit
 #+END_SRC
 
 * Custom functions
-  :PROPERTIES:
-  :CUSTOM_ID: Custom_functions-ed54dbe2
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-ed54dbe2
+:END:
 ** Wallpaper-related functions
-   :PROPERTIES:
-   :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-5912f7dd
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Wallpaper-related_functions-5912f7dd
+:END:
 *** Set a random wallpaper
-    :PROPERTIES:
-    :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
+:END:
 This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in my custom scripts. This depends on [[https://github.com/l3ib/nitrogen/][Nitrogen]].
 #+BEGIN_SRC lua
   local function set_random_pape()
@@ -169,9 +169,9 @@ This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=
 #+END_SRC
 
 *** Restore previous wallpaper
-    :PROPERTIES:
-    :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c
+:END:
 I also wrote the following function that will restore the previously set wallpaper:
 #+BEGIN_SRC lua
   local function set_wallpaper(_)
@@ -180,9 +180,9 @@ I also wrote the following function that will restore the previously set wallpap
 #+END_SRC
 
 ** Layout manipulation
-   :PROPERTIES:
-   :CUSTOM_ID: Custom_functions-Layout_manipulation-6bc7db06
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Layout_manipulation-6bc7db06
+:END:
 The following function is used by a shortcut described below in [[#Keybindings-Clients-f9f96d60]].
 #+BEGIN_SRC lua
   local function client_go_back()
@@ -194,9 +194,9 @@ The following function is used by a shortcut described below in [[#Keybindings-C
 #+END_SRC
 
 ** Clients manipulation
-   :PROPERTIES:
-   :CUSTOM_ID: Custom_functions-Clients_manipulation-7e958fed
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Clients_manipulation-7e958fed
+:END:
 #+BEGIN_SRC lua
   local function restore_minimized_clients()
     local c = awful.client.restore()
@@ -238,9 +238,9 @@ The following function is used by a shortcut described below in [[#Keybindings-C
 #+END_SRC
 
 ** Tag manipulation
-   :PROPERTIES:
-   :CUSTOM_ID: Custom_functions-Tag_manipulation-5fc67669
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Tag_manipulation-5fc67669
+:END:
 #+BEGIN_SRC lua
   local function view_tag_n(i)
     local screen = awful.screen.focused()
@@ -284,9 +284,9 @@ The following function is used by a shortcut described below in [[#Keybindings-C
 #+END_SRC
 
 ** Awesome prompt
-   :PROPERTIES:
-   :CUSTOM_ID: Custom_functions-Awesome_prompt-de4fde50
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Custom_functions-Awesome_prompt-de4fde50
+:END:
 #+BEGIN_SRC lua
   local function invoke_lua_execute_prompt()
     awful.prompt.run {
@@ -299,9 +299,9 @@ The following function is used by a shortcut described below in [[#Keybindings-C
 #+END_SRC
 
 * Layouts
-  :PROPERTIES:
-  :CUSTOM_ID: Layouts-be55a7fd
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Layouts-be55a7fd
+:END:
 The following is a list of available windows layouts. I only enable some of them, and their order in the table is their order in Awesome.
 #+NAME: table-layouts
 | Layout          | Enabled? |
@@ -355,15 +355,15 @@ Here is the code that activates these layouts:
 #+END_SRC
 
 * Top bar
-  :PROPERTIES:
-  :CUSTOM_ID: Top_bar-d3117294
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Top_bar-d3117294
+:END:
 The top bar in Awesome is declared thanks to a ~wibar~ widget fro the ~awful~ library. It is comprised of several buttons and widgets that will be declared below.
 
 ** Menus
-   :PROPERTIES:
-   :CUSTOM_ID: Top_bar-Menus-cf468ca8
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Top_bar-Menus-cf468ca8
+:END:
 #+NAME: make-menu
 #+BEGIN_SRC emacs-lisp :var menu=table-awesome-menu
   (mapconcat (lambda (x)
@@ -423,10 +423,10 @@ Finally, let’s declare the menubar’s terminal for applications that require 
   menubar.utils.terminal = terminal
 #+END_SRC
 
-** Other widgets
-   :PROPERTIES:
-   :CUSTOM_ID: Top_bar-Other_widgets-0b255378
-   :END:
+** widgets
+:PROPERTIES:
+:CUSTOM_ID: Top_bar-Other_widgets-0b255378
+:END:
 Let’s declare the keyboard map indicator and switcher for the top bar:
 #+BEGIN_SRC lua
   keyboardlayout = awful.widget.keyboardlayout()
@@ -438,9 +438,9 @@ Let’s also create a clock widget:
 #+END_SRC
 
 ** Tag list
-   :PROPERTIES:
-   :CUSTOM_ID: Top_bar-Tag_list-d43dbb62
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Top_bar-Tag_list-d43dbb62
+:END:
 In order to create the taglist (an equivalent to workspaces, but better), we need to create first a local variable that will hold the widget. It will be declared as you can see below:
 #+BEGIN_SRC lua :tangle no
   local tasklist_buttons = gears.table.join(
@@ -507,9 +507,9 @@ So, here’s the actual configuration code for the taglist:
 #+END_SRC
 
 ** Tasks list
-   :PROPERTIES:
-   :CUSTOM_ID: Top_bar-Tasks_list-fb7c9b20
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Top_bar-Tasks_list-fb7c9b20
+:END:
 Similarly to the tag list, the task list can display some special behavior depending on the clicks it receives. These clicks are set like so:
 #+BEGIN_SRC lua :tangle no
   local tasklist_buttons = gears.table.join(
@@ -568,13 +568,13 @@ So, here’s the actual code for the tasklist:
 #+END_SRC
 
 * Theme and display
-  :PROPERTIES:
-  :CUSTOM_ID: Theme_and_display-6f94bad4
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Theme_and_display-6f94bad4
+:END:
 ** Screen update
-   :PROPERTIES:
-   :CUSTOM_ID: Theme_and_display-Screen_update-e162a27a
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Theme_and_display-Screen_update-e162a27a
+:END:
 When a screen’s geometry changes (e.g. when a different resolution is applied), the signal ~property::geometry~ is sent. When this is the case, the wallpaper should be redisplayed since it won’t necessarily fit the new geometry of the screen. And remember, I have a [[#Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c][function that does exactly that]]! Let’s connect this function to the geometry change signal:
 #+BEGIN_SRC lua
   screen.connect_signal("property::geometry", set_wallpaper)
@@ -682,9 +682,9 @@ In the end, our code looks like this:
 #+END_SRC
 
 * Mouse bindings
-  :PROPERTIES:
-  :CUSTOM_ID: Mouse_bindings-eb4a69a8
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Mouse_bindings-eb4a69a8
+:END:
 It is possible with Awesome to bind some shortcuts to mouse events when the mouse is above Awesome itself (not above some client). Only one is set: the right click opens the Awesome menu.
 #+BEGIN_SRC lua
   root.buttons(gears.table.join(
@@ -720,9 +720,9 @@ I will  also set three mouse  bindings for when  the mouse is above  a client:
 #+END_SRC
 
 * Keybindings
-  :PROPERTIES:
-  :CUSTOM_ID: Keybindings-a4e415b3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-a4e415b3
+:END:
 Keybindings allow the user to execute some Lua code all across Awesome. They all bear at least a list of modifier keys, the actual key to be pressed, the action they keybinding should yield, a description, and a group. The latter two will be useful for the keybindings help window which will display them all, sorted by group and with the description displayed next to the keybinding itself.
 
 Here are some keybindings related to Awesome itself. Most of them will be described in tables, but due to some limitations from Org-mode (the Emacs mode used to write this document and generate my Awesome configuration), a few of them will be directly written as Lua code.
@@ -866,9 +866,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 #+END_SRC
 
 ** Applications
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Applications-8321c6c9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Applications-8321c6c9
+:END:
 #+NAME: sc-app
 | Key    | Modifiers | Lambda? | Action                | What it does      | Group |
 |--------+-----------+---------+-----------------------+-------------------+-------|
@@ -876,9 +876,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | n      | modkey    | spawn   | nemo                  | open file manager | app   |
 
 *** Internet apps
-    :PROPERTIES:
-    :CUSTOM_ID: Keybindings-Applications-Internet_apps-87e80705
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Applications-Internet_apps-87e80705
+:END:
 #+NAME: sc-app-internet
 | Key | Modifiers      | Lambda? | Action                            | What it does       | Group    |
 |-----+----------------+---------+-----------------------------------+--------------------+----------|
@@ -886,9 +886,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | d   | control, shift | spawn   | discord-canary                    | launch Discord     | internet |
 
 *** Screenshots
-    :PROPERTIES:
-    :CUSTOM_ID: Keybindings-Applications-Screenshots-fa63a5a5
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Applications-Screenshots-fa63a5a5
+:END:
 #+NAME: sc-app-screenshot
 | Key   | Modifiers | Lambda? | Action     | What it does                | Group      |
 |-------+-----------+---------+------------+-----------------------------+------------|
@@ -897,9 +897,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | Print | shift     | spawn   | scrot -d 3 | Screenshot (3s delay)       | screenshot |
 
 *** Emacs
-    :PROPERTIES:
-    :CUSTOM_ID: Keybindings-Applications-Emacs-95f8f6a4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Applications-Emacs-95f8f6a4
+:END:
 #+NAME: sc-app-emacs
 | Key | Modifiers     | Lambda? | Action                        | What it does             | Group |
 |-----+---------------+---------+-------------------------------+--------------------------+-------|
@@ -907,9 +907,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | e   | modkey, shift | spawn   | emacsclient -c -n -e '(mu4e)' | invoke Emacs mail client | emacs |
 
 *** Rofi
-    :PROPERTIES:
-    :CUSTOM_ID: Keybindings-Applications-Rofi-ca998c87
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Applications-Rofi-ca998c87
+:END:
 #+NAME: sc-app-rofi
 | Key | Modifiers              | Lambda? | Action                                   | What it does                    | Group |
 |-----+------------------------+---------+------------------------------------------+---------------------------------+-------|
@@ -927,9 +927,9 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 | y   | modkey                 | shell   | rofi-ytdl                                | download video from web         | rofi  |
 
 ** Awesome
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Awesome-7b691e10
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Awesome-7b691e10
+:END:
 Here will be declared some shortcuts directly related to Awesome itself.
 #+NAME: sc-awesome
 | Key | Modifiers              | Lambda? | Action                    | What it does            | Group   |
@@ -946,9 +946,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | F4  | modkey, shift, control | spawn   | poweroff                  | power off computer      | awesome |
 
 ** Clients
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Clients-f9f96d60
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Clients-f9f96d60
+:END:
    These shortcuts are related to clients (aka windows) management.
 #+NAME: sc-client
 | Key | Modifiers              | Lambda? | Action                           | What it does                  | Group  | Clientkey? |
@@ -973,9 +973,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | Tab | modkey                 | no      | client_go_back                   | go back                       | client | no         |
 
 ** Layout manipulation
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Layout_manipulation-648b4581
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Layout_manipulation-648b4581
+:END:
 #+NAME: sc-layout
 | Key   | Modifiers       | Lambda? | Action                              | What it does                      | Group  |
 |-------+-----------------+---------+-------------------------------------+-----------------------------------+--------|
@@ -989,9 +989,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | space | modkey, meta    | yes     | awful.layout.inc(-1)                | previous layout                   | layout |
 
 ** Media
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Media-f2cc1324
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Media-f2cc1324
+:END:
 #+NAME: sc-media
 | Key                  | Modifiers       | Lambda?  | Action                          | What it does             | Group |
 |----------------------+-----------------+----------+---------------------------------+--------------------------+-------|
@@ -1018,9 +1018,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | p                    | modkey, meta    | shell    | mpc stop                        | stop playback            | media |
 
 ** Screen
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Screen-b73991f0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Screen-b73991f0
+:END:
 #+NAME: sc-screen
 | Key                   | Modifiers    | Lambda? | Action                          | What it does               | Group  |
 |-----------------------+--------------+---------+---------------------------------+----------------------------+--------|
@@ -1034,9 +1034,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | o                     | modkey       | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
 
 ** Tags
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Tags-3424b757
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Tags-3424b757
+:END:
 #+NAME: sc-tag
 | Key    | Modifiers       | Lambda? | Action                    | What it does | Group |
 |--------+-----------------+---------+---------------------------+--------------+-------|
@@ -1054,9 +1054,9 @@ Another set of shortcuts is linked to the number row on the keyboard that allow 
 | Number | modkey, control, shift | toggle_focused_client_to_tag_n( | Toggle focused client on tag # | tag   |
 
 ** Misc
-   :PROPERTIES:
-   :CUSTOM_ID: Keybindings-Misc-0b45ce02
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Misc-0b45ce02
+:END:
 In this category you will find other keybindings that do not fit in other categories. For now, the only keybinding that is in this category is for toggling the touchpad’s tapping ability. This is linked to a special script I wrote [[file:bin.org::#Toggle_touchpad_tapping-23348b00][here]].
 #+NAME: sc-misc
 | Key                | Modifiers | Lambda? | Action    | What it does            | Group |
@@ -1064,9 +1064,9 @@ In this category you will find other keybindings that do not fit in other catego
 | XF86TouchpadToggle |           | shell   | tttapping | toggle touchpad tapping | misc  |
 
 * Rules
-  :PROPERTIES:
-  :CUSTOM_ID: Rules-c6142cdf
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Rules-c6142cdf
+:END:
 With ~awful.rules~, users are able to describe some rules for window clients when the latter spawn, such as their placement, their properties or even execute a script. A rule can be applied through the ~manage~ signal, and they are all stored in ~awful.rules.rules~, the global rules table, as follows:
 #+BEGIN_SRC lua :tangle no
   awful.rules.rules = {
@@ -1087,9 +1087,9 @@ With ~awful.rules~, users are able to describe some rules for window clients whe
 For more documentation on rules and their syntax, you can read the [[https://awesomewm.org/doc/api/libraries/awful.rules.html][official documentation]].
 
 ** Universal rules
-   :PROPERTIES:
-   :CUSTOM_ID: Rules-Universal_rules-50aad2ce
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rules-Universal_rules-50aad2ce
+:END:
 The first rule is a universal rule which will match all clients, as you can see with its syntax below:
 #+BEGIN_SRC lua :tangle no
   { rule = {},
@@ -1145,9 +1145,9 @@ This is what my universal rules look like:
 #+END_SRC
 
 ** Floating clients
-   :PROPERTIES:
-   :CUSTOM_ID: Rules-Floating_clients-49ab582e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rules-Floating_clients-49ab582e
+:END:
 Some clients will be declared by default as floating windows. For this, we will declare a rule that will match any of the provided conditions:
 #+NAME: rules-floating-conditions-table
 | Property | Matches      | Comment                                                        |
@@ -1184,9 +1184,9 @@ If any of these conditions is matched, then the client will be set as floating, 
 #+END_SRC
 
 ** Titlebars
-   :PROPERTIES:
-   :CUSTOM_ID: Rules-Titlebars-b532fdba
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rules-Titlebars-b532fdba
+:END:
 Any normal or dialog client will get a titlebar. This is enabled like so:
 #+NAME: rules-titlebars
 #+BEGIN_SRC lua :tangle no
@@ -1196,9 +1196,9 @@ Any normal or dialog client will get a titlebar. This is enabled like so:
 #+END_SRC
 
 ** Default tag for clients
-   :PROPERTIES:
-   :CUSTOM_ID: Rules-Default_tag_for_clients-6ded2a47
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Rules-Default_tag_for_clients-6ded2a47
+:END:
 With the use of some rules, it is possible to define which client are assigned to which tag by default.
 #+NAME: rules-default-tags-table
 | Client Property | Value      | Tag |
@@ -1236,15 +1236,15 @@ This is what these rules look like:
 #+END_SRC
 
 * Signals
-  :PROPERTIES:
-  :CUSTOM_ID: Signals-e32971d6
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Signals-e32971d6
+:END:
 Signals are a way for Awesome to handle events, such as client creation or deletion.
 
 ** Client creation
-   :PROPERTIES:
-   :CUSTOM_ID: Signals-Client_creation-8048ac12
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Signals-Client_creation-8048ac12
+:END:
 When a new client is created, the ~manage~ signal is emited. When so, the following snippet ensures this new client is not off the screen, unless its position was deliberately set by a program or by the user. It will also spawn the new client where the mouse currently is.
 #+BEGIN_SRC lua
      client.connect_signal("manage", function (c)
@@ -1258,9 +1258,9 @@ When a new client is created, the ~manage~ signal is emited. When so, the follow
    #+END_SRC
 
 ** Titlebar creation
-   :PROPERTIES:
-   :CUSTOM_ID: Signals-Titlebar_creation-3b1aaa14
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Signals-Titlebar_creation-3b1aaa14
+:END:
 It is possible for Awesome to send request signals, such as the request to create titlebar (generally for new clients). The following snippet handles this titlebar creation if titlebar creation was set to ~true~ in the [[#Rules-c6142cdf][rules]]. For a detailed explanation of the code, see below.
 #+BEGIN_SRC lua
   client.connect_signal("request::titlebars", function(c)
@@ -1337,9 +1337,9 @@ To make Awesome happy, I also must indicate that the middle elements are vertica
 #+END_SRC
 
 ** Changes of focus
-   :PROPERTIES:
-   :CUSTOM_ID: Signals-Changes_of_focus-1b73902c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Signals-Changes_of_focus-1b73902c
+:END:
 The default Awesome configuration enables the following snippet of code that makes windows hovered by the user’s mouse focused. Just for completeness’ sake, I included it in this document, but be aware this won’t be tangled into my configuration file and focus will not follow my mouse.
 #+BEGIN_SRC lua :tangle no
   client.connect_signal("mouse::enter", function(c)
@@ -1354,26 +1354,26 @@ It is also possible to change the color of the borders based on client focus. Wh
 #+end_SRC
 
 * Autostart
-  :PROPERTIES:
-  :CUSTOM_ID: Autostart-f2cf42fe
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Autostart-f2cf42fe
+:END:
 By simply adding a line requesting to spawn a command, it is possible to create some autolaunch. All of my autolaunched apps are launch through a custom script which you can [[file:~/org/config/bin.org::#Autostart-a99e99e7][find here]]. The command gets called with ~awful.spawn.with_shell()~, as you can see below.
 #+BEGIN_SRC lua
   awful.spawn.with_shell("autostart")
 #+END_SRC
 
 * What to do now                                                   :noexport:
-  :PROPERTIES:
-  :CUSTOM_ID: What_to_do_now-bce61fe1
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: What_to_do_now-bce61fe1
+:END:
 ** DONE Error on S-q
    CLOSED: [2020-04-12 dim. 15:47]
-   :PROPERTIES:
-   :CUSTOM_ID: What_to_do_now-Error_on_S-q-beea9b99
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: What_to_do_now-Error_on_S-q-beea9b99
+:END:
 ~attempt to index a nil value (global 'c')~
 
 ** TODO Make custom theme
-   :PROPERTIES:
-   :CUSTOM_ID: What_to_do_now-Make_custom_theme-5837307e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: What_to_do_now-Make_custom_theme-5837307e
+:END:

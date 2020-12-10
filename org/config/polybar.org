@@ -9,9 +9,9 @@
 #+PROPERTY: header-args:conf-windows :tangle ~/.config/polybar/config :noweb yes :exports code :mkdirp yes
 
 * Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-4e723f32
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Presentation-4e723f32
+:END:
 *Before proceeding, be aware that I deprecated this polybar config on August 22nd, 2020, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
 
 Polybar is a desktop utility for displaying various information in form of bars for GNU/Linux systems. It is often used as a replacement for native bars available in window managers, such as i3. In my case, I use two instances of polybar in order to get two bars displayed on each screen. The information displayed is either related to i3 itself, or it is system information, such as CPU or disk usage. More information will be given and explained below.
@@ -23,9 +23,9 @@ Be aware that this PDF documents suffers from a couple of issues with some chara
 #+END_EXPORT
 
 * General settings
-  :PROPERTIES:
-  :CUSTOM_ID: General_settings-e02fb78c
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: General_settings-e02fb78c
+:END:
   Some general settings are available for Polybar, and they are declared under
   the ~[settings]~ section.
   #+BEGIN_SRC conf-windows
@@ -46,9 +46,9 @@ Be aware that this PDF documents suffers from a couple of issues with some chara
   #+END_SRC
 
 * Colors declaration for polybar
-  :PROPERTIES:
-  :CUSTOM_ID: Colors_declaration_for_polybar-75ee0b65
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Colors_declaration_for_polybar-75ee0b65
+:END:
 #+BEGIN_SRC conf-windows :exports none
   ; -*- mode: conf-windows -*-
 #+END_SRC
@@ -74,9 +74,9 @@ Polybar is also aware of alerts sent by window managers such as i3 when a window
 #+END_SRC
 
 * Declaration of the bars
-  :PROPERTIES:
-  :CUSTOM_ID: Declaration_of_the_bars-a95135a3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-a95135a3
+:END:
 It is possible in i3 to declare as many bars as we wish, and each of these bars will be named. Naming the bar is done in its module declaration like so:
 #+BEGIN_SRC conf-windows :tangle no
   [bar/nameofthebar]
@@ -84,18 +84,18 @@ It is possible in i3 to declare as many bars as we wish, and each of these bars 
 In my configuration, I use two of such bars, one atop of my screen, and one at the bottom.
 
 ** Top bar declaration
-   :PROPERTIES:
-   :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-fc0cd977
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-fc0cd977
+:END:
 As unimaginative as it might seem, I went for a rather explicit name for my bars. The top one is simply named ~top~, as shown below.
 #+BEGIN_SRC conf-windows
 [bar/top]
 #+END_SRC
 
 *** Positioning
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Positioning-2505760c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Positioning-2505760c
+:END:
 We need to set on which screen the bar is to be displayed. Indeed, it is possible to display a bar on only one specific screen if we wish to. Actually, it is even the default behavior of polybar, but as we will see later with the launching script, it is possible to launch bars on multiple outputs at the same time. Here, we simply get the value of the variable ~monitor~ from the launch environment.
 #+NAME: monitor-bar
 #+BEGIN_SRC conf-windows
@@ -132,9 +132,9 @@ The top bar doesn’t include any system tray, so let’s disable that.
 #+END_SRC
 
 *** Colors and display
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Colors_and_display-30f12652
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Colors_and_display-30f12652
+:END:
 As explained above, we declared some global variables when it comes to colors, and this is where they will be used. The bar’s background will be of the same color as the main background color declared earlier, and the same goes for the foreground.
 #+NAME: bar-colors
 #+BEGIN_SRC conf-windows
@@ -156,9 +156,9 @@ Although the variable for the default line color is not used, we still have to s
 #+END_SRC
 
 *** Fonts and locale
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466
+:END:
 Now we can chose which font fill be used in order to display text in this bar, as well as the locale we want. The locale will be useful for displaying information such as date and time, which is a module we will have in this top bar. First, the declaration of the locale is done like so:
 #+NAME: locale-bar
 #+BEGIN_SRC conf-windows
@@ -204,9 +204,9 @@ Here’s the font configuration:
 Note that only Fira Sans get a small offset due to the size of the font and the height of the bar itself.
 
 *** Modules
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Modules-18979638
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Top_bar_declaration-Modules-18979638
+:END:
 Finally, arguably one of the most important parts of our bar configuration: the module selection. Modules can be positioned in three different parts of our bar: to the right, in middle or to the left. On the left, we want our workspace indicator for i3. In the middle, we’ll get the title of the focused window, and to the left we’ll have the date and time.
 #+NAME: modules-generate
 #+BEGIN_SRC emacs-lisp :var table=top-modules :results value :cache yes
@@ -253,18 +253,18 @@ Here is the list of modules used:
 Each module will be described in details later in this document.
 
 ** Bottom bar declaration
-   :PROPERTIES:
-   :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-8504b5ec
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-8504b5ec
+:END:
 As described above, we will once again have to declare our bar with an equally unimaginative but explicit name.
 #+BEGIN_SRC conf-windows
   [bar/bottom]
 #+END_SRC
 
 *** Positioning
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Positioning-b1883756
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Positioning-b1883756
+:END:
 The variables are the same as above, but two of them will be slightly modified:
 #+BEGIN_SRC conf-windows
   bottom = true
@@ -294,9 +294,9 @@ However, we do display the system tray on this bottom bar at its right. It has n
 #+END_SRC
 
 *** Colors and display
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82
+:END:
 Nothing changes from the top bar, all the variables stay with the same values. See [[#Declaration_of_the_bars-Bottom_bar_declaration-Colors_and_display-854aae82][Colors and display]] of the top bar for more information.
 #+BEGIN_SRC conf-windows
   <<bar-colors>>
@@ -305,9 +305,9 @@ Nothing changes from the top bar, all the variables stay with the same values. S
 #+END_SRC
 
 *** Fonts and locale
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Fonts_and_locale-67459d62
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Fonts_and_locale-67459d62
+:END:
 Again, nothing changes from the top bar, so for more info on what’s going on, see [[#Declaration_of_the_bars-Top_bar_declaration-Fonts_and_locale-70a25466][Fonts and locale]] of the top bar.
 #+BEGIN_SRC conf-windows
   <<locale-bar>>
@@ -315,9 +315,9 @@ Again, nothing changes from the top bar, so for more info on what’s going on, 
 #+END_SRC
 
 *** Modules
-    :PROPERTIES:
-    :CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Modules-702b21fc
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Declaration_of_the_bars-Bottom_bar_declaration-Modules-702b21fc
+:END:
 Now, we can get to something interesting again: modules. This bar has a lot more modules than the top bar. Here is the list of the modules we have on the bottom bar:
 #+NAME: table-modules-bottom
 | Module name    | Position | Brief description               |
@@ -342,9 +342,9 @@ All these modules will be explained below.
 As you may have noticed, no modules will be displayed in the middle of this bar.
 
 * Modules
-  :PROPERTIES:
-  :CUSTOM_ID: Modules-2e1a51bc
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-2e1a51bc
+:END:
 Before we begin to describe the different modules, I would like to point out something that will be repeated multiple times if I don’t talk about it right now: for each module, it is possible to declare the foreground and background color of the prefix of the modules, as well as the underline color and the padding of the module. I like these parameters to be rather consistent, so the code block you will see below will often be reused. The colors refer to the colors declared earlier, and the padding is minimal.
 #+NAME: mod-prefix-col
 #+BEGIN_SRC conf-windows :tangle no
@@ -355,13 +355,13 @@ Before we begin to describe the different modules, I would like to point out som
 #+END_SRC
 
 ** Hardware
-   :PROPERTIES:
-   :CUSTOM_ID: Modules-Hardware-26426ebd
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-26426ebd
+:END:
 *** Battery
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Battery-299f2e42
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Battery-299f2e42
+:END:
 This module allows the user to get a battery widget among the polybar modules that will also send a notification to the user if the battery level drops below a certain value. This module relies on ~polybar-another-battery~ ([[https://github.com/drdeimos/polybar_another_battery][link]]) and its generated binary ~polybar-ab~ which should be in the ~$PATH~.
 
 The first line of the module declaration lets the user name the module however they want. In this case, the name is ~custom-battery~.
@@ -382,9 +382,9 @@ The ~-thr 10~ specifies the threshold for polybar-ab at which it should warn the
 Of course, users on desktop computers won’t need this module which is aimed at laptop users. Feel free to remove it if you do not need it.
 
 *** Filesystem
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Filesystem-26f0a3c6
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Filesystem-26f0a3c6
+:END:
 This module allows to display information about our filesystem, including (and this is what I use this module for) displaying the used space and remaining space on different mount points. This module is an internal module to polybar, so let’s declare it as such:
 #+BEGIN_SRC conf-windows
   [module/filesystem]
@@ -423,9 +423,9 @@ If the volume is unmounted (which should be worrying considering the mountpoints
 #+END_SRC
 
 *** Xbacklight
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Xbacklight-2901c504
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Xbacklight-2901c504
+:END:
 This module is used in order to display the level of brightness of a screen. It is not used by itself, but rather by other modules, such as [[#Modules-Hardware-ACPI_backlight-9eaeaa79][ACPI backlight]]. First of all, this module is an internal module for xbacklight. It will also display the brightness percentage, prefixed by a sun emoji. Lastly, it will be underlined by a green line.
 #+BEGIN_SRC conf-windows
   [module/xbacklight]
@@ -437,9 +437,9 @@ This module is used in order to display the level of brightness of a screen. It 
 #+END_SRC
 
 *** ACPI backlight
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-ACPI_backlight-9eaeaa79
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-ACPI_backlight-9eaeaa79
+:END:
 This module indicates the backlight level of a screen thanks to the ACPI Linux module. There isn’t much to tell about the module itself other than it inherits the module described above, [[#Modules-Hardware-Xbacklight-2901c504][xbacklight]]. It also sets which driver should be used, in this case the ~intel_backlight~ driver.
 #+BEGIN_SRC conf-windows
   [module/backlight-acpi]
@@ -449,9 +449,9 @@ This module indicates the backlight level of a screen thanks to the ACPI Linux m
 #+END_SRC
 
 *** CPU
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-CPU-365dcb98
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-CPU-365dcb98
+:END:
 This module indicates how much of the CPU is being used. As shown below, I made it so we can see the load on each core. The first thing to do is to declare the module as an internal module dedicated to the CPU.
 #+BEGIN_SRC conf-windows
   [module/cpu]
@@ -484,9 +484,9 @@ Finally, this module will be underlined in red.
 #+END_SRC
 
 *** Memory
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Memory-2f2f9475
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Memory-2f2f9475
+:END:
 Similarly to the CPU module, it is possible for Polybar to display the RAM load of the computer. As above, let’s declare this module as an internal module to Polybar:
 #+BEGIN_SRC conf-windows
   [module/memory]
@@ -511,9 +511,9 @@ Lastly, it will be underlined in green.
 #+END_SRC
 
 *** Wlan
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Wlan-3457f36b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Wlan-3457f36b
+:END:
 It is possible for Polybar to display the name of the current WiFi network the computer is connected to. For that, we first need to declare the Wlan module as an internal module of Polybar.
 #+BEGIN_SRC conf-windows
   [module/wlan]
@@ -544,9 +544,9 @@ The format of the module when connected to a network will the the display of the
 #+END_SRC
 
 *** Ethernet
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Ethernet-dc749304
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Ethernet-dc749304
+:END:
 Just like any other module, the ethernet module has to be declared as an internal module.
 #+BEGIN_SRC conf-windows
   [module/eth]
@@ -578,9 +578,9 @@ The module will be underlined in green.
 #+END_SRC
 
 *** Volume
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Volume-ebf9f7a4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Volume-ebf9f7a4
+:END:
 The volume module in Polybar is linked to its internal bindings to ALSA. Let’s declare it accordingly.
 #+BEGIN_SRC conf-windows
   [module/volume]
@@ -606,9 +606,9 @@ In any case, it will be underlined in green.
 #+END_SRC
 
 *** Temperature
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Hardware-Temperature-a9f08cde
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Hardware-Temperature-a9f08cde
+:END:
 The temperature module checks the temperature of the CPU, and warns the user above a certain threshold of heat, in my case if my CPU is above 60°C.
 #+BEGIN_SRC conf-windows
   [module/temperature]
@@ -632,13 +632,13 @@ The format of the module is the thermometer emoji followed by the temperature of
 #+END_SRC
 
 ** Software
-   :PROPERTIES:
-   :CUSTOM_ID: Modules-Software-f6529189
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-f6529189
+:END:
 *** Window title
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Software-Window_title-3f931641
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-Window_title-3f931641
+:END:
 This module’s aim is to simply provide the name of the currently focused window given by Xorg. This module is an internal module to polybar, that is to say it is built-in, and is of the type ~xwindow~. So, let’s declare the module accordingly, including the piece of common code declared at the beginning of the chapter:
 #+BEGIN_SRC conf-windows
   [module/xwindow]
@@ -653,9 +653,9 @@ Now we can take care of the label, which is the actual text that will be display
 #+END_SRC
 
 *** i3
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Software-i3-db36ddfb
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-db36ddfb
+:END:
 Now comes the module for i3 interaction. Thanks to this module, it is possible to show which workspaces are active and focused, and it is possible to change workspaces by clicking on the ones displayed in the bar. First, let’s declare it; it is an internal module by the way.
 #+BEGIN_SRC conf-windows
   [module/i3]
@@ -703,9 +703,9 @@ We also wand to set the label mode to be whichever mode the workspace described 
 #+end_src
 
 **** Workspace icons
-     :PROPERTIES:
-     :CUSTOM_ID: Modules-Software-i3-Workspace_icons-89237191
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-Workspace_icons-89237191
+:END:
 Now, let’s name our workspaces. We can give them whatever name we want them to have, but I just like the aesthetics of Japanese characters, so let’s go with the kanji equivalent of the number of the workspaces.
 #+NAME: ws-names
 | workspace number | name |
@@ -732,9 +732,9 @@ In case we create a workspace which isn’t named from ~0~ to ~9~, I want it to 
 #+end_src
 
 **** Focused workspaces
-     :PROPERTIES:
-     :CUSTOM_ID: Modules-Software-i3-Focused_workspaces-0ca3b93d
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-Focused_workspaces-0ca3b93d
+:END:
 Now we can define the label itself. First, we will need to define the label when the workspace is focused. We’ll simply take the alternative background for the focused label, and the underline will be defined from Xrdb’s 8th color, with yellow as the fallback color. It will also have a two pixels padding. The text itself will be the dynamic icons declared above.
 #+begin_src conf-windows
   label-focused = %icon%
@@ -744,9 +744,9 @@ Now we can define the label itself. First, we will need to define the label when
 #+end_src
 
 **** Visible workspaces
-     :PROPERTIES:
-     :CUSTOM_ID: Modules-Software-i3-Visible_workspaces-4be78e50
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-Visible_workspaces-4be78e50
+:END:
 The ~visible~ label is related to the ~focused~ labels since it is describing workspaces that can be seen, but are not currently focused, i.e. a workspace that appears on another screen than the one currently used so it is visible, but it isn’t focused. The difference with the ~unfocused~ workspaces is that the latter are neither focused nor visible. As you can see, we are simply using all of the declarations from above for the focused labels so we can ensure they appear the same way the focused labels do.
 #+begin_src conf-windows
   label-visible = ${self.label-focused}
@@ -756,9 +756,9 @@ The ~visible~ label is related to the ~focused~ labels since it is describing wo
 #+end_src
 
 **** Unfocused workspaces
-     :PROPERTIES:
-     :CUSTOM_ID: Modules-Software-i3-Unfocused_workspaces-13063042
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-Unfocused_workspaces-13063042
+:END:
 When it comes to the unfocused label, there won’t be any custom background or underline, so we’ll just copy the two remaining lines from the focused labels for unfocused labels.
 #+begin_src conf-windows
   label-unfocused = %icon%
@@ -766,9 +766,9 @@ When it comes to the unfocused label, there won’t be any custom background or 
 #+end_src
 
 **** Urgent workspaces
-     :PROPERTIES:
-     :CUSTOM_ID: Modules-Software-i3-Urgent_workspaces-ed2bd93c
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-i3-Urgent_workspaces-ed2bd93c
+:END:
 Lastly, we get our urgent workspaces: workspaces in which most of the time it’s just a popup that appeared or a software that finally launched itself while working on something else on another workspace. To make it a bit more unique, let’s declare its background as being the color 0 from xrdb, with some dark red as the fallback color. And as the other labels, the text will be the icon and it will have a two pixels padding.
 #+begin_src conf-windows
   label-urgent = %icon%
@@ -777,9 +777,9 @@ Lastly, we get our urgent workspaces: workspaces in which most of the time it’
 #+end_src
 
 *** Mpd
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Software-Mpd-4b1ec78e
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-Mpd-4b1ec78e
+:END:
 Mpd is a music server for GNU/Linux systems that interfaces will several front-ends, including ncmpcpp (the main one I use), ncmpcpp and mpc. It also interfaces with polybar thanks to some built in commands.
 
 First, let’s declare our module as an internal module.
@@ -812,9 +812,9 @@ If Mpd is offline, then I would like to display a short messages that tells the 
 #+END_SRC
 
 *** Date
-    :PROPERTIES:
-    :CUSTOM_ID: Modules-Software-Date-f7338626
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Modules-Software-Date-f7338626
+:END:
 This module is really simple: it gives the current date. It is an internal module, and as declared below, it updates every second:
 #+BEGIN_SRC conf-windows
   [module/date]
@@ -846,9 +846,9 @@ This module is underlined in blue:
 #+END_SRC
 
 * Footnotes
-  :PROPERTIES:
-  :CUSTOM_ID: Footnotes-62d05520
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Footnotes-62d05520
+:END:
 
 [fn:1] [[https://github.com/polybar/polybar/wiki/Fonts][https://github.com/polybar/polybar/wiki/Fonts]]
 

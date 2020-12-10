@@ -10,15 +10,15 @@
 #+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-cd5792cd
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-cd5792cd
+:END:
 Here will be presented what I do to get my system up and running on a fresh Arch Linux install. These installation instructions were written in order to get an Arch Linux distribution up and running with the same configuration as my main computer’s and my travelling laptop’s configuration.
 
 * Install Arch Linux
-  :PROPERTIES:
-  :CUSTOM_ID: Install_Arch_Linux-ac7ad3b2
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Install_Arch_Linux-ac7ad3b2
+:END:
 I usually install Arch from the [[https://www.archlinux.org/download/][vanilla ISO]], however I began using [[https://github.com/MatMoul/archfi][archfi]] to install easily the distro (I’ve done it so many times, I know how it works now). Usually, my distros will be installed on two partitions: ~/home~ and ~/~ (root).
 
 If the computer supports EFI bootloaders, the EFI partition will be mounted on ~/boot/efi~. I generally use ~systemd-boot~ as my boot manager, but if you are more comfortable with another one, just install what you want. Be aware that if you format your ~/boot~ partition, you will delete all boot managers that already exist; so, if you are dual-booting, *DO NOT FORMAT IT*. Yes, I made the mistake of wiping the Windows boot manager when I used to dual-boot.
@@ -26,9 +26,9 @@ If the computer supports EFI bootloaders, the EFI partition will be mounted on ~
 In order to use the ~suspend-then-hibernate~ systemd command, it is necessary to have a swap partition at least twice the size of your installed RAM. That is because when this command will be run, the system will try to save the current state of your machine, stored in your RAM, to the swap filesystem. If there is not enough space, the command will fail, and you won’t be able to use this command. For instance, my current computer has 32GB of RAM, hence my SWAP partition is 16GB large.
 
 ** Get the latest, fastest mirrors
-   :PROPERTIES:
-   :CUSTOM_ID: Install_Arch_Linux-Get_the_latest_fastest_mirrors-765401c9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Install_Arch_Linux-Get_the_latest_fastest_mirrors-765401c9
+:END:
 When you boot into the live ISO, execute the following command:
 #+BEGIN_SRC sh
   pacman -Sy reflector
@@ -39,9 +39,9 @@ When you boot into the live ISO, execute the following command:
 This will update the packages from your live ISO, and you will get the best mirrors for your installation. Of course, change the countries accordingly to your location. In my case, I am only interested in French, German, and Belgian mirrors.
 
 ** Install the system
-   :PROPERTIES:
-   :CUSTOM_ID: Install_Arch_Linux-Install_the_system-3ff49aa6
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Install_Arch_Linux-Install_the_system-3ff49aa6
+:END:
 Then you can use a custom script to ease your installation of Arch if you do not wish to do it manually. Personally, I’ve done it several times already, I know how the distro works, I just want to be able to install my distro quickly now. I’ll need to download the script with ~wget~, but apparently it isn’t installed by default on Arch ISOs anymore, so I’ll need to install it.
 #+BEGIN_SRC sh
   pacman -S wget
@@ -59,10 +59,10 @@ Then, follow the instructions and install Arch Linux. Take the opportunity to in
 Once your system is installed, reboot and remove your installation media from your computer.
 
 * Execute bootstrap
-  :PROPERTIES:
-  :HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
-  :CUSTOM_ID: Execute_bootstrap-e37054ef
-  :END:
+:PROPERTIES:
+:HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
+:CUSTOM_ID: Execute_bootstrap-e37054ef
+:END:
 With the installation of Arch with ~archfi~, I will have [[https://github.com/Jguer/yay][yay]], an AUR helper, installed. This will allow me to have some basic packages installed in order to run the bootstrap described below. So, let’s install ~fish~ (our shell running the script), ~git~, and my dotfiles manager ~yadm~.
 #+BEGIN_SRC sh
   yay -Sy fish git yadm
@@ -78,9 +78,9 @@ With the installation of Arch with ~archfi~, I will have [[https://github.com/Jg
 Let’s take a look at what it does.
 
 ** Decrypt private yadm files
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Decrypt_private_yadm_files-68af7157
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Decrypt_private_yadm_files-68af7157
+:END:
 Some private files are stored encrypted in the repository of my yadm dotfiles. I will need them later on during the bootstrap execution.
 #+BEGIN_SRC fish
   if test "$USER" = 'phundrak'
@@ -91,9 +91,9 @@ Some private files are stored encrypted in the repository of my yadm dotfiles. I
 #+END_SRC
 
 ** Get a correct keyboard layout
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Get_a_correct_keyboard_layout-77d24b30
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Get_a_correct_keyboard_layout-77d24b30
+:END:
 I use mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout, a French keyboard layout inspired by Dvorak layouts, however I sometimes need to switch back to the standard French AZERTY or the American QWERTY layout, so I make it so the Menu key switches for me my layout between these three. This makes it so my xorg configuration of my keyboard looks like this:
 #+BEGIN_SRC fish
   set keyboardconf \
@@ -117,9 +117,9 @@ So, let’s ask the user if they want to set it as their keyboard configuration.
 #+END_SRC
 
 ** Set our locale
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Set_our_locale-e74d772a
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_our_locale-e74d772a
+:END:
 I use two main locales, the French and US UTF-8 locales, and I like to keep the Japanese locale activated just in case.
 #+BEGIN_SRC fish
   set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
@@ -167,9 +167,9 @@ Now we can generate our locale!
 #+END_SRC
 
 ** Create some folders
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Create_some_folders-bf701387
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Create_some_folders-bf701387
+:END:
 Let’s create some folders we might need for mounting our drives, Android devices and CDs.
 #+BEGIN_SRC fish
   printf "\n# Create directories for mounting #############################################\n\n"
@@ -178,9 +178,9 @@ Let’s create some folders we might need for mounting our drives, Android devic
 #+END_SRC
 
 ** Set user’s shell to fish
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Set_user’s_shell_to_fish-1a794be2
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_user’s_shell_to_fish-1a794be2
+:END:
 First of all, the bootstrap shell will set the user’s shell to fish.
 #+BEGIN_SRC fish
   printf "\n# Set fish as the default shell ###############################################\n\n"
@@ -191,9 +191,9 @@ First of all, the bootstrap shell will set the user’s shell to fish.
 #+END_SRC
 
 ** Install basic packages
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Install_basic_packages-17173316
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_basic_packages-17173316
+:END:
 Let’s set in a custom varible what packages we’ll be needing.
 #+BEGIN_SRC fish
   set PACKAGES \
@@ -242,9 +242,9 @@ These are the minimum I would have in my own installation. You can edit it howev
 #+END_SRC
 
 ** Tangle configuration files from Org files
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Tangle_configuration_files_from_Org_files-cc524361
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Tangle_configuration_files_from_Org_files-cc524361
+:END:
 Before tangling our configuration files, we need to create some directories first so our files can be properly tangled. Here’s the list of directories we need to create:
 #+NAME: dirs-tangled-files
 | $HOME/.config/awesome       |
@@ -361,9 +361,9 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 #+END_SRC
 
 ** Setting up Emacs: Installing Spacemacs
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Setting_up_Emacs:_Installing_Spacemacs-0b3d44b2
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Setting_up_Emacs:_Installing_Spacemacs-0b3d44b2
+:END:
 Now, the first thing we want to do with Emacs is install its Spacemacs distribution. We’ll clone its =develop= branch into =~/.config/emacs=. We need to do this prior to our dotfiles’ cloning because of some submodules that are cloned within our =~/.config/emacs= directory, and git won’t let us clone Spacemacs in an already existing and non-empty directory. To make sure it isn’t one, let’s delete any potentially existing =~/.config/emacs= directory:
 #+BEGIN_SRC fish
   printf "\n# Installing Spacemacs ########################################################\n\n"
@@ -381,13 +381,13 @@ And we can restore what might have been deleted in our =~/.emacs.d/private= dire
 #+END_SRC
 
 ** Set up dotfiles’ git repository
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-ab372bd9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-ab372bd9
+:END:
 *** Update our dotfiles’ remotes
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-Update_our_dotfiles’_remotes-5a0fe6f7
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-Update_our_dotfiles’_remotes-5a0fe6f7
+:END:
 This line in the bootstrap script will test if the current user is using my username. If yes, it’s probably me.
 #+BEGIN_SRC fish
   if test "$USER" = 'phundrak'
@@ -412,9 +412,9 @@ Finally, let’s close this ~if~ statement.
 #+END_SRC
 
 *** Update our submodules
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-Update_our_submodules-3e921579
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_dotfiles-Update_our_submodules-3e921579
+:END:
 Now we can download the various dependencies of our dotfiles. To do so, let’s run the following command:
 #+BEGIN_SRC fish
   printf "\n# Getting yadm susbmodules ####################################################\n\n"
@@ -422,15 +422,15 @@ Now we can download the various dependencies of our dotfiles. To do so, let’s 
 #+END_SRC
 
 ** Enable some services
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Enable_some_services-3d38d98e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-3d38d98e
+:END:
 We have installed some packages which require some services to run. Let’s enable them.
 
 *** Systemd-timesyncd
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Systemd-timesyncd-d887e45b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Systemd-timesyncd-d887e45b
+:END:
 This service enables time syncing with the NTP protocol, so I can be sure my computer’s time is correct. The service first needs to be enabled:
 #+BEGIN_SRC fish
   printf "\n# Enabling timesync ###########################################################\n\n"
@@ -443,9 +443,9 @@ Now, let systemd know I want to use the NTP protocol to keep my computer’s tim
 #+END_SRC
 
 *** Docker
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Docker-305e8309
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Docker-305e8309
+:END:
 First, let’s activate Docker on startup.
 #+BEGIN_SRC fish
   printf "\n# Enabling and starting Docker ################################################\n\n"
@@ -461,9 +461,9 @@ Now, if we wish it, we can be added to the =docker= group so we won’t have to 
 #+END_SRC
 
 *** Emacs
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Emacs-c7785c21
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Emacs-c7785c21
+:END:
 Emacs will run as a user service, which means it won’t be launched until we log in. However, the service won’t be started immediately, I personally prefer to start a standalone instance in which installing and compiling the Emacs packages will happen, and then once that is done I will start the service.
 #+BEGIN_SRC fish
   printf "\n# Enabling Emacs as user service ##############################################\n\n"
@@ -471,9 +471,9 @@ Emacs will run as a user service, which means it won’t be launched until we lo
 #+END_SRC
 
 *** Mpd
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Mpd-f0f5b9b7
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Mpd-f0f5b9b7
+:END:
 Mpd will also use as a user service in order to get rid of some lines of code in my configuration.
 #+BEGIN_SRC fish
   printf "\n# Enabling Mpd as a user service ##############################################\n\n"
@@ -482,9 +482,9 @@ Mpd will also use as a user service in order to get rid of some lines of code in
 #+END_SRC
 
 *** SSH server
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-SSH_server-204f5997
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-SSH_server-204f5997
+:END:
 Maybe we want to activate an SSH server on our machine. If so, we can enable it. Let’s ask the question.
 #+BEGIN_SRC fish
   whiptail --yesno 'Do you want to activate the ssh server?' 8 50
@@ -495,9 +495,9 @@ Maybe we want to activate an SSH server on our machine. If so, we can enable it.
 #+END_SRC
 
 *** Ly
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Ly-f4b161c0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Ly-f4b161c0
+:END:
 Ly is a display manager based on ncurses which I find nice enough for me to use (I generally don’t like using display managers). Let’s enable it, and let’s disable tty2 while we’re at it (Ly uses it to run X).
 #+BEGIN_SRC fish
   sudo systemctl disable getty@tty2
@@ -505,18 +505,18 @@ Ly is a display manager based on ncurses which I find nice enough for me to use 
 #+END_SRC
 
 *** Acpilight
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Acpilight-39152794
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Acpilight-39152794
+:END:
 ~acpilight~ is our utility managing the brightness of our screen. There is actually no service to enable here, but we must ensure the user is part of the ~video~ group so we can modify the brightness of our screen without using ~sudo~.
 #+BEGIN_SRC fish
   sudo usermod -aG video $USER
 #+END_SRC
 
 *** NordVPN
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Enable_some_services-NordVPN-75c1bd88
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-NordVPN-75c1bd88
+:END:
 Thanks to the AUR package ~nordvpn-bin~, I no longer have to manually maintain my VPN connections with OpenVPN. However, it requires a service that we should activate:
 #+BEGIN_SRC fish
   sudo systemctl enable --now nordvpnd
@@ -528,9 +528,9 @@ Let’s also set its default protocol to UDP. This will allow me to use any port
 #+END_SRC
 
 ** Symlink some system config files
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Symlink_some_system_config_files-1dd95175
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Symlink_some_system_config_files-1dd95175
+:END:
 We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
 #+BEGIN_SRC fish
   for f in (find ~/.etc -type f)
@@ -545,18 +545,18 @@ Let’s also symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source 
 #+END_SRC
 
 ** Install packages from git
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-7c6a6ea4
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-7c6a6ea4
+:END:
 Now, let’s install some packages from git directly.
 #+BEGIN_SRC fish
   mkdir -p ~/fromGIT
 #+END_SRC
 
 *** Reveal.JS
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-Reveal.JS-bb4da0bf
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-Reveal.JS-bb4da0bf
+:END:
 I sometimes use Reveal.JS to make presentations, and I set its location in my [[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
 #+BEGIN_SRC fish
   printf "\n# Install Reveal.JS ###########################################################\n\n"
@@ -565,13 +565,13 @@ I sometimes use Reveal.JS to make presentations, and I set its location in my [[
 #+END_SRC
 
 ** Install Rust
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Install_Rust-1839c4d0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_Rust-1839c4d0
+:END:
 *** Install the toolchains
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Install_Rust-Install_the_toolchains-3480764a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_Rust-Install_the_toolchains-3480764a
+:END:
 When using Rust, I bounce between two toolchains, the ~stable~ toolchain and the ~nightly~ toolchain, although I try to stick with Rust Stable. To install them, I will use ~rustup~ which has already been installed previously.
 #+BEGIN_SRC fish
   printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
@@ -584,9 +584,9 @@ This will both download the stable toolchain and set it as the default one. Now 
 #+END_SRC
 
 *** Install some utilities
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Install_Rust-Install_some_utilities-c4a7c785
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_Rust-Install_some_utilities-c4a7c785
+:END:
 We’ll need some utilities when developing Rust from Emacs, namely ~rustfmt~ and ~racer~. Let’s install them with ~cargo~.
 #+BEGIN_SRC fish
   printf "\n# Add rust utilities ##########################################################\n\n"
@@ -619,9 +619,9 @@ Here is the code to do so:
 #+END_SRC
 
 ** Install some python packages
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Install_some_python_packages-a4447a6f
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Install_some_python_packages-a4447a6f
+:END:
 Some packages will be needed from pip in order to get our Emacs setup correctly working.
 #+NAME: python-packages-table
 | Package                     | Why                     |
@@ -647,9 +647,9 @@ Let’s install them locally for our user.
 #+END_SRC
 
 ** Set up Chicken (Scheme interpreter/compiler)
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Set_up_Chicken_(Scheme_interpreter-compiler)-3c1a3c4a
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_Chicken_(Scheme_interpreter-compiler)-3c1a3c4a
+:END:
 Chicken needs to be set up before being used. First, we need to install its documentation.
 #+BEGIN_SRC fish
   printf "\n# Setting up Chicken ##########################################################\n\n"
@@ -663,15 +663,15 @@ Then, we’ll complete the documentation like so:
 #+END_SRC
 
 ** Set up our fish shell
-   :PROPERTIES:
-   :CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-f0741c22
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-f0741c22
+:END:
 The last thing we want to do is to set up our fish shell with some extensions in order to improve the user experience.
 
 *** Install ~fisher~
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-Install_=fisher=-3a44531b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-Install_=fisher=-3a44531b
+:END:
 We will be using ~fisher~ as our extensions manager for Fish. Let’s install it.
 #+BEGIN_SRC fish
   printf "\n# Installing fisher ###########################################################\n\n"
@@ -679,9 +679,9 @@ We will be using ~fisher~ as our extensions manager for Fish. Let’s install it
 #+END_SRC
 
 *** Install our extensions
-    :PROPERTIES:
-    :CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-Install_our_extensions-188e4566
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-Install_our_extensions-188e4566
+:END:
 I generally use the following extensions in my Fish shell.
 #+NAME: fish-extensions-table
 #+CAPTION: Fish extensions managed by Fisher

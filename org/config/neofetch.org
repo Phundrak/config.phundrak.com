@@ -8,15 +8,15 @@
 #+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf :exports code :noweb yes :padline no :mkdir yes :shebang "#!/usr/bin/env sh"
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-5942aea3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-5942aea3
+:END:
 [[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was written in Bash, and thus its configuration file is written as a Bash script too. This document was written with org-mode, and my configuration file is tangled from the source blocks you will see below to ~~/.config/neofetch/config.conf~. This configuration will only contain what I need. For any further information, please refer to the [[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
 
 * The ~print_info~ functions
-  :PROPERTIES:
-  :CUSTOM_ID: The_print_info_functions-bb30763f
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: The_print_info_functions-bb30763f
+:END:
 The ~print_info~ function is the function called by Neofetch in order to print the system information it could fetch. In this function, we’ll choose what to display, and how. This function looks like this:
 #+BEGIN_SRC sh :tangle no
   print_info() {
@@ -85,23 +85,23 @@ Hence, the function looks like so:
 Each of these modules can be tuned with the variables presented below.
 
 * Information settings
-  :PROPERTIES:
-  :CUSTOM_ID: Information_settings-9d4cfe88
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-9d4cfe88
+:END:
 Each of the following variable tunes a function that can be called in ~print_info~ described above. It is possible to tune them by modifying this document or the configuration file itself, and they can be overridden by the command line with flags passed to ~neofetch~. I will divide these variables in two main categories: hardware and software-related properties.
 
 ** Software
-   :PROPERTIES:
-   :CUSTOM_ID: Information_settings-Software-59f4cb0f
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-59f4cb0f
+:END:
 *** OS
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-OS-67908fc4
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-OS-67908fc4
+:END:
 **** Distro
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-Distro-cd12bc4f
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-OS-Distro-cd12bc4f
+:END:
 This variable can shorten the output of the ~distro~ function.
 - Default value :: ~"on"~
 - Values ::
@@ -119,9 +119,9 @@ This variable can shorten the output of the ~distro~ function.
 It is possible to display when the distro has been installed on the computer.
 
 **** Kernel
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-Kernel-658cedce
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-OS-Kernel-658cedce
+:END:
 The variable below can shorten the output ofh the ~kernel~ function.
 - Default value :: ~"on"~
 - Values ::
@@ -137,9 +137,9 @@ The variable below can shorten the output ofh the ~kernel~ function.
 #+end_src
 
 **** OS Architecture
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-OS_Architecture-2f60c93c
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-OS-OS_Architecture-2f60c93c
+:END:
 This variable can show or hide the OS architecture in the ~distro~ output.
 - Default value :: ~"off"~
 - Values ::
@@ -154,9 +154,9 @@ This variable can show or hide the OS architecture in the ~distro~ output.
 #+end_src
 
 **** Packages
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-OS-Packages-f836a58d
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-OS-Packages-f836a58d
+:END:
 It is possible to show or hide Package Manager names.
 - Default :: ~'tiny'~
 - Values :: ~'on'~ / ~'tiny'~ / ~'off'~
@@ -170,13 +170,13 @@ It is possible to show or hide Package Manager names.
 #+END_SRC
 
 **** Shell
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Shell-76439406
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Shell-76439406
+:END:
 ***** Shell path
-      :PROPERTIES:
-      :CUSTOM_ID: Information_settings-Software-Shell-Shell_path-9eda636d
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Shell-Shell_path-9eda636d
+:END:
 This allows to show either the path of the user’s shell, or simply its name.
 - Default value :: ~"off"~
 - Values ::
@@ -191,9 +191,9 @@ This allows to show either the path of the user’s shell, or simply its name.
 +end_src
 
 ***** Shell version
-      :PROPERTIES:
-      :CUSTOM_ID: Information_settings-Software-Shell-Shell_version-03964bb3
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Shell-Shell_version-03964bb3
+:END:
 This allows to show the shell’s version in the output of ~shell~.
 - Default value :: ~"on"~
 - Values ::
@@ -208,9 +208,9 @@ This allows to show the shell’s version in the output of ~shell~.
 #+end_src
 
 *** Uptime
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-Uptime-a7b5361a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Uptime-a7b5361a
+:END:
 This variable can shorten the output of the ~uptime~ function. ~on~ shortens
 it a bit, while ~tiny~ shortens it greatly.
 - Default value :: ~"on"~
@@ -228,9 +228,9 @@ it a bit, while ~tiny~ shortens it greatly.
 #+end_src
 
 *** IP address
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-IP_address-26df5e1d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-IP_address-26df5e1d
+:END:
 It is possible to display the machine’s public IP address with the function ~ip~. The value below allows the user to change the website used to fetch it.
 - Default value :: ~"http://ident.me"~
 - Value :: ~"url"~
@@ -252,15 +252,15 @@ It is possible to display the machine’s public IP address with the function ~i
 #+end_src
 
 *** Theming
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Software-Theming-ba7f1ccd
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Theming-ba7f1ccd
+:END:
 This section will allow the user to modify what Neofetch can and cannot display about the machine’s theming —by this, I mean its GTK theme, its icons and its default font.
 
 **** Shorten output
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Shorten_output-cbef1fa4
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Theming-Shorten_output-cbef1fa4
+:END:
 With this value, it is possible to shorten the output of the computer’s theming.
 - Default value :: ~"off"~
 - Values ::
@@ -275,9 +275,9 @@ With this value, it is possible to shorten the output of the computer’s themin
 #+end_src
 
 **** Enable or disable theming display for GTK2
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-f4398571
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-f4398571
+:END:
 It is possible to explicitely show or hide the computer’s theming with GTK2 with this variable.
 - Default value :: ~"on"~
 - Values ::
@@ -292,9 +292,9 @@ It is possible to explicitely show or hide the computer’s theming with GTK2 wi
 #+end_src
 
 **** Enable or disable theming display for GTK3
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK3-c4070e66
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK3-c4070e66
+:END:
 The same variable as above is also available for GTK3.
 - Default value :: ~"on"~
 - Values ::
@@ -309,17 +309,17 @@ The same variable as above is also available for GTK3.
 #+end_src
 
 ** Hardware
-   :PROPERTIES:
-   :CUSTOM_ID: Information_settings-Hardware-de7ed990
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-de7ed990
+:END:
 *** CPU
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-CPU-eb0bcd7d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-eb0bcd7d
+:END:
 **** CPU brand
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-5b25776b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-5b25776b
+:END:
 With this variables, it  is possible to show or hide the brand  of a CPU in
 the ~cpu~ output.
 - Default value :: ~"on"~
@@ -335,9 +335,9 @@ the ~cpu~ output.
 #+end_src
 
 **** CPU speed
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed-2bf6e5f7
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed-2bf6e5f7
+:END:
 With this variable, it is possible to show or hide the speed of the CPU.
 - Default value :: ~"on"~
 - Values ::
@@ -352,9 +352,9 @@ With this variable, it is possible to show or hide the speed of the CPU.
 #+end_src
 
 **** CPU speed type
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-a24de48f
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-a24de48f
+:END:
 This allows Neofetch to know what type of speed it has to fetch regarding the machine’s CPU. Any file in ~/sys/devices/system/cpu/cpu0/cpufreq~ can be used as a value.
 - Default value :: ~"bios_limit"~
 - Values ::
@@ -369,9 +369,9 @@ This allows Neofetch to know what type of speed it has to fetch regarding the ma
 #+end_src
 
 **** CPU speed shorthand
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-0d15fe08
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-0d15fe08
+:END:
 This value allows to show sorter CPU speed with less digits. This flag is not supported in systems with CPU speed below 1GHz.
 - Default value :: ~"off"~
 - Values ::
@@ -386,9 +386,9 @@ This value allows to show sorter CPU speed with less digits. This flag is not su
 #+end_src
 
 **** CPU cores
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-30177354
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-30177354
+:END:
 With this variable, it is possible to display the number of cores that are available in the CPU.
 - Default value :: ~"logical"~
 - Values ::
@@ -406,9 +406,9 @@ With this variable, it is possible to display the number of cores that are avail
 #+end_src
 
 **** CPU temperature
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-a22e522c
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-a22e522c
+:END:
 This variable allows the user to hide or show the CPU’s temperature, and if shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD and NetBSD-based systems, you’ll need to enable the ~coretemp~ kernel module. This only supports newer Intel processors.
 - Default value :: ~"off"~
 - Values ::
@@ -426,15 +426,15 @@ This variable allows the user to hide or show the CPU’s temperature, and if sh
 #+end_src
 
 *** GPU
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-GPU-2c842575
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-GPU-2c842575
+:END:
 The function responsible for displaying information regarding the GPUs is ~gpu~. It will try to list all available GPUs and display what it knows about them.
 
 **** GPU brand
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-6e2da615
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-6e2da615
+:END:
 This value allows the user to hide or show the brand of their GPU in the output of ~gpu~.
 - Default value :: ~"on"~
 - Values ::
@@ -450,9 +450,9 @@ This value allows the user to hide or show the brand of their GPU in the output 
 #+end_src
 
 **** Which GPU to display
-     :PROPERTIES:
-     :CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-f40d3aac
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-f40d3aac
+:END:
 This allows the user to choose which GPU appears in the output of the function ~gpu~.
 - Default value :: ~"all"~
 - Values ::
@@ -474,9 +474,9 @@ This allows the user to choose which GPU appears in the output of the function ~
 #+end_src
 
 *** Resolution
-    :PROPERTIES:
-    :CUSTOM_ID: Information_settings-Hardware-Resolution-b768f865
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Information_settings-Hardware-Resolution-b768f865
+:END:
 This will try to list all the connected screens and display their resolution individually. It is possible to display the refresh rate or to hide it.
 - Default value :: ~"off"~
 - Values ::

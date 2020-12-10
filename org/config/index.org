@@ -6,9 +6,9 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the dotfiles of Phundrak" />
 
 * Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-981f2f04
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Presentation-981f2f04
+:END:
 This is my collection of dotfiles for my daily GNU/Linux environment, tweaked to my liking. If you wish to get the same setup as mine, follow the instructions below.
 
 For starters, here is the link to all the pages on my website that you might find interesting. I’ll describe them in more details below.
@@ -33,9 +33,9 @@ When it comes to my graphical UI, I do not have any desktop environment. Instead
 Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is optimized for usage with the Bépo layout set as a software layout, and for shortcuts from i3.
 
 * Screenshots
-  :PROPERTIES:
-  :CUSTOM_ID: Screenshots-51f1cef3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Screenshots-51f1cef3
+:END:
 #+CAPTION: Desktop with Neofetch in the terminal
 [[./img/neofetch.png.webp]]
 
@@ -46,9 +46,9 @@ Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://confi
 [[./img/rofi.png.webp]]
 
 * Features
-  :PROPERTIES:
-  :CUSTOM_ID: Features-5ab2a2c0
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-5ab2a2c0
+:END:
 - Emacs configuration perfectly tailored for my own use
 - Beautiful and comfy i3 and polybar configuration
 - And enough information below to get basically the same distro install as I have on my main computer and my travel laptop.
@@ -56,44 +56,44 @@ Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://confi
 Most of the org files you will find in this repos are the actual source code of much of my config files. For instance, the bootstrap found in [[file:installation.org][installation.org]] exports almost all of its code snippets to [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x org-babel-tangle= from within Emacs. Below I will also present and comment some of my short config files which do not deserve to have a full org file dedicated to them.
 
 ** Tiling Window Managers
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Tiling_Window_Managers-da221e37
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Tiling_Window_Managers-da221e37
+:END:
 *** AwesomeWM
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
+:END:
 AwesomeWM is the TWM I use the most on my computer between itself and i3. My configuration for it is documented in detail in its corresponding document, which you can find [[file:awesome.org][here]].
 
 *** i3 configuration (Deprecated)
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
+:END:
 The i3 configuration is detailed in its corresponding README which you can find [[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update it until I may someday use it again. This was deprecated on August 22nd, 2020.
 
 ** Polybar config (Deprecated)
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Polybar_config_(Deprecated)-c8f95774
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Polybar_config_(Deprecated)-c8f95774
+:END:
 My annotated polybar config can be found [[file:polybar.org][here]], if you wish to use it. Be aware I do not use polybar anymore, and I will not update it until I may someday use it again. This was deprecated on August 22nd, 2020.
 
 ** Graphical tweaks
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Graphical_tweaks-9879f6b0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Graphical_tweaks-9879f6b0
+:END:
 *** GTK Settings
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-752e9916
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-752e9916
+:END:
 **** GTK2
-     :PROPERTIES:
-     :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-74c9de24
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-74c9de24
+:END:
 ***** General configuration
-      :PROPERTIES:
-      :HEADER-ARGS: :mkdirp yes :tangle ~/.gtkrc-2.0
-      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-General_configuration-eb1f1f3c
-      :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.gtkrc-2.0
+:CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-General_configuration-eb1f1f3c
+:END:
 This file is tangled at ~$HOME/.gtkrc-2.0~. This is an equivalent for the GTK3 configuration file you will see below, and it shares most of its settings. First, let’s select the Nordic theme for GTK2. Let’s also set the icon theme.
 #+BEGIN_SRC conf-unix
   # -*- mode: unix-config -*-
@@ -116,10 +116,10 @@ This changes the shortcuts in menu, let’s also make the menus snappier.
 #+END_SRC
 
 ***** Filechooser
-      :PROPERTIES:
-      :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
-      :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-Filechooser-389f040d
-      :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-2.0/gtkfilechooser.ini
+:CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-Filechooser-389f040d
+:END:
 #+BEGIN_SRC conf-unix
   [Filechooser Settings]
 #+END_SRC
@@ -173,10 +173,10 @@ And finally, setting our icon view scale to ~-1~ sets the icon view to the max s
 #+END_SRC
 
 **** GTK3
-     :PROPERTIES:
-     :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-3.0/settings.ini
-     :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK3-3d6cba86
-     :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-3.0/settings.ini
+:CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK3-3d6cba86
+:END:
 The following file helps me choosing the aspect of various GTK+ 3 software, including their theme and icons. First, let’s declare the header:
 #+BEGIN_SRC conf-unix
   [Settings]
@@ -217,16 +217,16 @@ Since window decorations are handled by my WMs, I will leave this variable empty
 #+END_SRC
 
 *** Picom (Compton)
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
+:END:
 Picom is a standalone compositor for Xorg, and the successor to Compton, itself successor to xcompmgr-dana, itself a fork of xcompmgr. You can find my Picom configuration [[file:picom.org][here]].
 
 *** Xresources
-    :PROPERTIES:
-    :HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
-    :CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
-    :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
+:CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
+:END:
 My Xresources file is very short. Indeed, it only contains two lines which are dedicated to my =st= terminal to set its font and shell. The font is set as follows.
 #+BEGIN_SRC conf
   st.font: Fantasque Sans Mono:size=10:antialias=true
@@ -281,13 +281,13 @@ Next is the declaration of my color theme. It is based on the [[https://www.nord
 #+END_SRC
 
 ** Text and source code editing
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Text_and_source_code_editing-63cc66d5
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Text_and_source_code_editing-63cc66d5
+:END:
 *** Emacs configuration
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Text_and_source_code_editing-Emacs_configuration-ef937102
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Text_and_source_code_editing-Emacs_configuration-ef937102
+:END:
 Emacs is my main text editor, which I use for almost everything. Because, you know…
 #+begin_quote
 Emacs is a great operating system, it just lacks a good text editor.
@@ -296,38 +296,38 @@ Emacs is a great operating system, it just lacks a good text editor.
 You can find my Emacs config, based on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and my user configuration in my [[file:emacs.org][emacs.org]] file.
 
 *** Nano (deprecated)
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Text_and_source_code_editing-Nano-a9d4839f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Text_and_source_code_editing-Nano-a9d4839f
+:END:
 Although it is a very simple piece of software, nano does offer some customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file. Be aware I do not use nano anymore, and I will not update it until I may someday use it again. This was deprecated on August 28th, 2020.
 
 *** Rustfmt
-    :PROPERTIES:
-    :CUSTOM_ID: Features-Text_and_source_code_editing-Rustfmt-2c4ac0b3
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Text_and_source_code_editing-Rustfmt-2c4ac0b3
+:END:
 You can find my Rustfmt configuration [[file:rustfmt.org][here]].
 
 ** Custom scripts in =PATH=
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Custom_scripts_in_=PATH=-043e8c8e
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Custom_scripts_in_=PATH=-043e8c8e
+:END:
 I have written some scripts that help me daily accomplish some simple tasks, like mounting and unmounting a drive or Android device, an emoji picker, a utility to set up my Wacom tablet, and so on. You can find them stored in my [[file:bin.org][bin.org]] file along with their detailed explanation in the README placed in the same folder —which is actually their source code once the org-mode file gets tangled.
 
 ** Fish configuration with useful abbreviations
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Fish_configuration_with_useful_abbreviations-c71ffba0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Fish_configuration_with_useful_abbreviations-c71ffba0
+:END:
 You can also find in my Fish shell configuration in my [[file:~/org/config-website/fish.org][fish.org]] file, which contains my usual abbreviations.
 
 ** And some minor configuration files
-   :PROPERTIES:
-   :CUSTOM_ID: Features-And_some_minor_configuration_files-d5cec319
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-And_some_minor_configuration_files-d5cec319
+:END:
 *** Email signature
-    :PROPERTIES:
-    :HEADER-ARGS: :mkdirp yes :tangle ~/.signature
-    :CUSTOM_ID: Features-And_some_minor_configuration_files-Email_signature-8c5f2218
-    :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.signature
+:CUSTOM_ID: Features-And_some_minor_configuration_files-Email_signature-8c5f2218
+:END:
 This file gets inserted automatically at the end of my emails.
 #+BEGIN_SRC text
   Lucien “Phundrak” Cartier-Tilet
@@ -339,10 +339,10 @@ This file gets inserted automatically at the end of my emails.
 #+END_SRC
 
 *** Global gitignore
-    :PROPERTIES:
-    :HEADER-ARGS: :mkdirp yes :tangle ~/.gitignore_global
-    :CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
-    :END:
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.gitignore_global
+:CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
+:END:
 Sometimes, there are some lines that always reappear in gitignores. So, instead of always adding them, let git now that some elements are to be ignored by default, hence the [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want nano’s backup files.
 #+BEGIN_SRC text
   ~*
@@ -355,15 +355,15 @@ And object files and output binaries generated by =gcc= and the likes aren’t w
 #+END_SRC
 
 ** Tmux configuration
-   :PROPERTIES:
-   :CUSTOM_ID: Features-Tmux_configuration-ce76e030
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Features-Tmux_configuration-ce76e030
+:END:
 You can find my tmux configuration in [[file:tmux.org][tmux.org]]. It depends on the submodule [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
 
 * Dependencies
-  :PROPERTIES:
-  :CUSTOM_ID: Dependencies-ef5057dd
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Dependencies-ef5057dd
+:END:
 Of course, some dependencies are needed for my dotfiles to work well. Here is a non-exhaustive list of software needed by these configuration files:
 - [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
   - [[http://spacemacs.org][Spacemacs]] (develop branch)
@@ -384,13 +384,13 @@ And some other stuff scattered around in my dotfiles.
 BTW, I use Arch.
 
 * Installation
-  :PROPERTIES:
-  :CUSTOM_ID: Installation-9ec2ae86
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Installation-9ec2ae86
+:END:
 For an installation walkthrough of my Arch Linux installation, check out my [[file:installation.org][installation.org]] file where I walk you through the first manual steps and through the bootstrap you can execute to automatically take care of a lot of elements.
 
 * Licence
-  :PROPERTIES:
-  :CUSTOM_ID: Licence-48911096
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Licence-48911096
+:END:
 All of my dotfiles (and my dotfiles only) are available under the GNU GPLv3 Licence. Please consult [[file:LICENCE.md]] for more information. In short: you are free to access, edit and redistribute all of my dotfiles under the same licence and as allowed by the licence, and if you fuck up something, it’s your own responsibility.

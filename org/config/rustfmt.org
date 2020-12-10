@@ -7,15 +7,15 @@
 #+PROPERTY: header-args:toml :mkdirp yes :tangle ~/.rustfmt.toml
 
 * Introduction
-  :PROPERTIES:
-  :CUSTOM_ID: Introduction-465e99fe
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Introduction-465e99fe
+:END:
 The ~.rustfmt.toml~ file located in the ~$HOME~ directory is a global configuration file for Rust’s code formatters, such as ~rustfmt~. In this file, you can find how my Rust code is always formatted.
 
 * General settings
-  :PROPERTIES:
-  :CUSTOM_ID: General_settings-7f5cb2f6
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: General_settings-7f5cb2f6
+:END:
 First, we are using the 2018 edition of Rust.
 #+BEGIN_SRC toml
   edition = "2018"
@@ -38,9 +38,9 @@ Merge multiple imports into a single nested import.
 #+END_SRC
 
 * Structs and Enums
-  :PROPERTIES:
-  :CUSTOM_ID: Structs_and_Enums-6a2a856d
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Structs_and_Enums-6a2a856d
+:END:
 The maximum length of enum variant having discriminant, that gets vertically aligned with others. Variants without discriminants would be ignored for the purpose of alignment.
 
 Note that this is not how much whitespace is inserted, but instead the longest variant name that doesn't get ignored when aligning.
@@ -57,9 +57,9 @@ Reorder impl items. ~type~ and ~const~ are put first, then macros and methods.
 #+END_SRC
 
 * Comments
-  :PROPERTIES:
-  :CUSTOM_ID: Comments-b1904bb0
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Comments-b1904bb0
+:END:
 Convert ~/* */~ comments to ~//~ comments where possible.
 #+BEGIN_SRC toml
   normalize_comments = true
@@ -78,9 +78,9 @@ Report ~TODO~ items in comments.
 #+END_SRC
 
 * Documentation
-  :PROPERTIES:
-  :CUSTOM_ID: Documentation-0c7981c7
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Documentation-0c7981c7
+:END:
 Format code snippet included in doc comments.
 #+BEGIN_SRC toml
   format_code_in_doc_comments = true
@@ -91,9 +91,9 @@ Convert ~#![doc]~ and ~#[doc]~ attributes to ~//!~ and ~///~ doc comments.
 #+END_SRC
 
 * Whitespace
-  :PROPERTIES:
-  :CUSTOM_ID: Whitespace-e8792b44
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Whitespace-e8792b44
+:END:
 Use tab characters for indentation, spaces for alignment.
 #+BEGIN_SRC toml
   hard_tabs = false

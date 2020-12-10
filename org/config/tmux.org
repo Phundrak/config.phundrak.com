@@ -7,15 +7,15 @@
 #+PROPERTY: header-args :mkdirp yes :tangle ~/.tmux.conf.local
 
 * Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-0b37c6c0
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Presentation-0b37c6c0
+:END:
 I don’t really use tmux often, but I certainly do like a nice presentation and useful features, hence this configuration. This config file is inspired by gpakosz’s tmux configuration repo you can find [[https://github.com/gpakosz/.tmux][here]].
 
 * Windows and pane creation
-  :PROPERTIES:
-  :CUSTOM_ID: Windows_and_pane_creation-66275518
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Windows_and_pane_creation-66275518
+:END:
 Whether if a new *window* will retain the current path. Possible values are:
 - ~true~
 - ~false~ (default)
@@ -42,9 +42,9 @@ tmux_conf_new_session_prompt=false
 #+END_SRC
 
 * Display
-  :PROPERTIES:
-  :CUSTOM_ID: Display-d5ae1908
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Display-d5ae1908
+:END:
 Whether to activate RGB 24-bit color support (only available in tmux >= 2.2). Possible values are:
 - ~true~
 - ~false~ (default)
@@ -81,9 +81,9 @@ These variables set the left/right separators between sections. With the current
 #+END_SRC
 
 ** Colors and style
-   :PROPERTIES:
-   :CUSTOM_ID: Display-Colors_and_style-0994a014
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Display-Colors_and_style-0994a014
+:END:
 Colors displayed in tmux can be chosen thanks to the following variables. Any color should be formatted as a hexadecimal RGB value preceded by a pound sign =#= (e.g. =#00afff= for light blue) or =default= to let our terminal set it for us.
 
 Choose the style of the pane borders. Possible values are:
@@ -133,9 +133,9 @@ Set the style of the status line.
 #+END_SRC
 
 ** Window status bar
-   :PROPERTIES:
-   :CUSTOM_ID: Display-Window_status_bar-dff37ae7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: Display-Window_status_bar-dff37ae7
+:END:
 The following variables are to set the window’s status style and format.
 
 Sets the colors and style of the window status.
@@ -302,9 +302,9 @@ Set the clock style. If it is displayed on the right side of the status bar, it 
 #+END_SRC
 
 * Clipboard
-  :PROPERTIES:
-  :CUSTOM_ID: Clipboard-66d0d03a
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: Clipboard-66d0d03a
+:END:
 Whether if in copy mode, copying the selection also copies to the OS clipboard. Possible values are:
 - ~true~
 - ~false~ (default)
@@ -313,9 +313,9 @@ Whether if in copy mode, copying the selection also copies to the OS clipboard. 
 #+END_SRC
 
 * User customizations
-  :PROPERTIES:
-  :CUSTOM_ID: User_customizations-c913b5d7
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: User_customizations-c913b5d7
+:END:
 Here we can override or undo some setting from settings from tmux. First, we can increase the history size.
 #+BEGIN_SRC conf-unix
   set -g history-limit 10000
