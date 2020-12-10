@@ -181,10 +181,10 @@ Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so l
 #+END_SRC
 
 ** ~$PATH~
-Some global variables might sometimes be needed and need to be modified. This is for example the case with my ~PATH~ variable in which I add Rust’s Cargo’s binaries, Go’s binaries and my own executables. And of course, don’t forget to add the already existing ~PATH~.
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-$PATH-e1320303
 :END:
+A variable available with the fish shell is ~fish_user_paths~ which lists custom paths to binaries specified by the user. Using this variable ensures they are included in the ~$PATH~ variable only once without the need to set it directly. For instance, my ~PATH~ variable needs Rust’s Cargo’s binaries, Go’s binaries, my own executables, and some more.
 
 #+NAME: extra-paths
 | additional path           | what it leads to                     |
@@ -199,19 +199,21 @@ Some global variables might sometimes be needed and need to be modified. This is
 #+NAME: generate-extra-paths
 #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
   (mapconcat (lambda (x) x)
-             paths " ")
+             paths " \\\n")
 #+END_SRC
 
-#+RESULTS[f1fff053cb9e2239f35571249763683a4a62e643]: generate-extra-paths
-: $HOME/.pub-cache/bin $HOME/.local/bin $HOME/go/bin $HOME/.cargo/bin $HOME/.gem/ruby/2.6.0/bin $HOME/.cabal/bin
+#+RESULTS[8b780f78d3d321222408ba76c754c920d95b03ac]: generate-extra-paths
+: $HOME/.pub-cache/bin \
+: 	$HOME/.local/bin \
+: 	$HOME/go/bin \
+: 	$HOME/.cargo/bin \
+: 	$HOME/.gem/ruby/2.6.0/bin \
+: 	$HOME/.cabal/bin
 
-The code below ensures the ~PATH~ is updated only at login, and every location is addded only once.
+So, let’s set our user paths:
 #+BEGIN_SRC fish :noweb yes
-  for p in <<generate-extra-paths()>>
-      if status is-login
-          contains $p $PATH || set PATH $p $PATH
-      end
-  end
+  set -g fish_user_paths \
+  <<generate-extra-paths()>>
 #+END_SRC
 
 * Abbreviations
