@@ -3158,6 +3158,9 @@ Mu4e is a frontend for mu, an email analyzer which sits on top of a Maildir whic
 2. rendering an HTML email in the browser
 
 *** Setup
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Mu4e-Setup-1d23809e
+:END:
 Due to mu sitting on top of a maildir, I need to tell mu4e where said maildir is, and point it the trash, archive, and sent folders as well as the refresh command and how frequently I want my emails to be refreshed.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-maildir "~/.mail"
@@ -3228,6 +3231,9 @@ This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services
 #+END_SRC
 
 *** Visual Configuration
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Mu4e-Visual-Configuration-34f56f7e
+:END:
 The following also allows me to automatically include my signature in my Emails, to view images in my Emacs buffers and to show me the address of my contacts and not just their names.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-compose-signature-auto-include t
@@ -3266,16 +3272,22 @@ Icons are nice and all, but my current font does not display some of the default
         mu4e-headers-unread-mark                 '("u"  . "u"))
 #+END_SRC
 
-Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]].
+Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]]. The same goes for forwarded emails that will get the Nord14 foreground text color. And please, no underligning.
 #+BEGIN_SRC emacs-lisp
-  (custom-theme-set-faces
-   'user
-   `(mu4e-replied-face ((t (:inherit (mu4e-header-highlight-facefont-lock-builtin-face)
-                                     :weight normal
-                                     :foreground ,phundrak/nord15)))))
+  (let ((common-face `(:inherit (mu4e-header-highlight-face font-lock-builtin-face)
+                       :weight normal
+                       :underline nil
+                       :background ,phundrak/nord0)))
+    (custom-theme-set-faces
+     'user
+     `(mu4e-replied-face   ((t (,@common-face :foreground ,phundrak/nord14))))
+     `(mu4e-forwarded-face ((t (,@common-face :foreground ,phundrak/nord15))))))
 #+END_SRC
 
 *** Misc
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Mu4e-Misc-9c7a4f5b
+:END:
 I am unsure yet if this has any effect on mu4e, but this variable should discourage mu4e from reading rich text emails and instead open them as plain text. However, I do not wish to discourage opening HTML emails since I can open them in the browser.
 #+BEGIN_SRC emacs-lisp
   (setq mm-discouraged-alternatives '("text/richtext"))
