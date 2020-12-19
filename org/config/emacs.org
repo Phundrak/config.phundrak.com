@@ -1272,9 +1272,9 @@ This function was created in order to bind to another keyboard shortcut the alre
     (call-interactively 'fill-paragraph)))
 #+END_SRC
 
-*** ~phundrak/find-org-file~
+*** ~phundrak/find-org-files~
 :PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-find-org-file-a8fd200f
+:CUSTOM_ID: Custom-functions-phundrak-find-org-files-a8fd200f
 :END:
 There are lots of files which I want to be able to quickly open. I used to have one shortcut for each one of these files, but as their number grew, I decided to switch to helm for my file selector which will be called by only one common shortcut. Most of my files will be located in =~/org=, but I have some conlanging files which are located in =~/Documents/conlanging=, and all my university notes are in =~/Documents/university=. Let’s declare these directories in a variable:
 #+BEGIN_SRC emacs-lisp
@@ -1710,7 +1710,6 @@ This function will be used when displaying progress bars. These will be used for
                              0
                            (/ (* length percentage) 100)))
            (length-red   (- length length-green)))
-      (message "%s / %s (%s / %s)" length-green length-red length percentage)
       (concat (with-face "[" :weight 'bold)
               (with-face (s-repeat length-green "=")
                          :weight 'bold :foreground phundrak/nord14)
@@ -1729,7 +1728,7 @@ This function will be used in two distinct functions: ~phundrak/eshell-banner~ w
               ": "
               (phundrak//eshell-banner--progress-bar ramp-length
                                                      percentage)
-              (format " %-4s / %-5s ("
+              (format " %6s / %-5s ("
                       (file-size-human-readable used)
                       (file-size-human-readable total))
               (phundrak//eshell-banner--color-percentage
@@ -1746,7 +1745,7 @@ We now need a function for displaying partitions. As you can see, it will be qui
             ": "
             (phundrak//eshell-banner--progress-bar ramp-length
                                                    (phundrak/mounted-partitions-percent part))
-            (format " %-4s / %-5s (%s%%)"
+            (format " %6s / %-5s (%s%%)"
                     (phundrak/mounted-partitions-used part)
                     (phundrak/mounted-partitions-size part)
                     (phundrak//eshell-banner--color-percentage (phundrak/mounted-partitions-percent part)))))
@@ -1763,7 +1762,7 @@ And we can now build our banner! Here is our function that does exactly that:
                                              t)))
            (ram               (nth 0 memory))
            (swap              (nth 1 memory))
-           (ramp-length       43)
+           (ramp-length       41)
            (left-pad          (phundrak//eshell-banner--get-left-pad phundrak//eshell-banner--max-length partitions))
            (right-pad         8)
            (left-column-width 27))
@@ -3250,26 +3249,22 @@ Now this hook is added so I can get a maximal width for the text of my emails, I
 On modern-day computers, with wide screens almost everywhere, there is no reason for the email buffer to open below the email directory and not on its right, which is why I set the split view to be vertical instead of horizontal. And to make it more readable, the header window will only occupy 40% of Emacs’ frame, the rest will be given to emails. As you can see, the width of the mu4e headers is evaluated each time we enter it, so it can react to the frame being potentially not the same width than earlier or the window not taking the entire frame. It has to have a minimal size though, I’d say 80 characters is enough for that.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-split-view 'vertical)
-  (add-hook 'mu4e-headers-mode-hook
-            (lambda ()
-              (setq mu4e-headers-visible-columns (max 80
-                                                      (round (* (window-width)
-                                                                0.4))))))
+  (setq mu4e-headers-visible-columns 80)
 #+END_SRC
 
 Icons are nice and all, but my current font does not display some of the default icons set by mu4e. Due to this, I will define back these icons to the original characters defined by mu4e:
 #+BEGIN_SRC emacs-lisp
-  (setq mu4e-headers-draft-mark                  '("D"  . "D")
-        mu4e-headers-flagged-mark                '("F"  . "F")
-        mu4e-headers-new-mark                    '("N"  . "N")
-        mu4e-headers-passed-mark                 '("P"  . "P")
-        mu4e-headers-replied-mark                '("R"  . "R")
-        mu4e-headers-seen-mark                   '("S"  . "S")
-        mu4e-headers-trashed-mark                '("T"  . "T")
-        mu4e-headers-attach-mark                 '("a"  . "a")
-        mu4e-headers-encrypted-mark              '("x"  . "x")
-        mu4e-headers-signed-mark                 '("s"  . "s")
-        mu4e-headers-unread-mark                 '("u"  . "u"))
+  (setq mu4e-headers-draft-mark     '("D"  . "D")
+        mu4e-headers-flagged-mark   '("F"  . "F")
+        mu4e-headers-new-mark       '("N"  . "N")
+        mu4e-headers-passed-mark    '("P"  . "P")
+        mu4e-headers-replied-mark   '("R"  . "R")
+        mu4e-headers-seen-mark      '("S"  . "S")
+        mu4e-headers-trashed-mark   '("T"  . "T")
+        mu4e-headers-attach-mark    '("a"  . "a")
+        mu4e-headers-encrypted-mark '("x"  . "x")
+        mu4e-headers-signed-mark    '("s"  . "s")
+        mu4e-headers-unread-mark    '("u"  . "u"))
 #+END_SRC
 
 Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]]. The same goes for forwarded emails that will get the Nord14 foreground text color. And please, no underligning.
