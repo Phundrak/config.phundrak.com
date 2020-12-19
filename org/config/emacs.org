@@ -712,7 +712,7 @@ It is also possible to color the cursor depending on which mode Spacemacs is in,
   (setq-default dotspacemacs-colorize-cursor-according-to-state t)
 #+END_SRC
 
-The below variable sets either the default font or a prioritized list of fonts to be used by Emacs.
+The below variable sets either the default font or a prioritized list of fonts to be used by Emacs. The ~:size~ can be specified as a non-negative integer (pixel size), or a floating-point (point size). Point size is recommended, because it’s device independent (add a ~.0~ to make an integer a floating point). The default size is ~10.0~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-default-font '("Cascadia Code"
                                             :size 9.0))
@@ -1283,7 +1283,7 @@ There are lots of files which I want to be able to quickly open. I used to have 
                                    "~/Documents/conlanging"))
 #+END_SRC
 
-With this established, let’s write some emacs-lisp that will allow me to get a list of all these files and select them through helm. Be aware that I will be using some functions from third party packages, such as [[https://github.com/rejeep/f.el][f.el]] and [[https://github.com/magnars/dash.el][dash]].
+With this established, let’s write some emacs-lisp that will allow me to get a list of all these files and select them through helm. Be aware that I will be using some functions from third party packages, such as [[https://github.com/magnars/s.el][s.el]] and [[https://github.com/magnars/dash.el][dash]], as well as [[https://github.com/sharkdp/fd][fd]].
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/find-org-files ()
     "Find all org files in the directories listed in
