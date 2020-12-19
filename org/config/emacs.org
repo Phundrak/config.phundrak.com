@@ -91,7 +91,7 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes :exports none
-  (setq-default dotspacemacs-additional-packages (quote <<make-extra-pkg()>>))
+  (setq-default dotspacemacs-additional-packages '<<make-extra-pkg()>>)
 #+end_src
 
 It is possible to also list packages that cannot be updated:
@@ -110,7 +110,7 @@ Finally, it is possible to define the behaviour of Spacemacs when installing pac
 - ~all~  ::  installs  *all*  packages   supported  by  Spacemacs  and  never uninstalls them.
 The default value is ~used-only~.
 #+BEGIN_SRC emacs-lisp
-(setq-default dotspacemacs-install-packages 'used-but-keep-unused)
+(setq-default dotspacemacs-install-packages 'used-only)
 #+END_SRC
 
 ** Layers
