@@ -1180,7 +1180,7 @@ This function is quite a simple function made to automatically publish [[https:/
     (interactive)
     (let* ((blog-path "~/org/blog")
            (public-path (concat blog-path "/public"))
-           (target-path "/ssh:Tilo:/home/phundrak/www/phundrak.com/blog"))
+           (target-path "/rsync:Tilo:/home/phundrak/www/phundrak.com/blog"))
       (shell-command (format "cd %s && hugo" blog-path))
       (let ((files (mapcar (lambda (file)
                              (f-relative file public-path))
@@ -2776,13 +2776,13 @@ This is my configuration for exporting my dotfiles to my website in a web format
 And before we get into the actual configuration, I would like to introduce a couple of variables. This is a bit more verbose than if I declared everything manually, but now I can change all three values at the same time without a hasle.
 #+NAME: org-proj-config-setup
 #+BEGIN_SRC emacs-lisp
-  (setq phundrak//projects-config-target    "/ssh:Tilo:~/www/phundrak.com/config"
+  (setq phundrak//projects-config-target    "/rsync:Tilo:~/www/phundrak.com/config"
         phundrak//projects-config-source    "~/org/config/"
         phundrak//projects-config-language  "en"
         phundrak//projects-config-recursive t)
 #+END_SRC
 
-Now, here is my configuration. In this snippet, my org files located in my source directory get exported in the HTML format and published to my target directory on my remote server through SSH via TRAMP. A sitemap is automatically generated, which comes in handy with the online sitemap that is available through the navigation bar.
+Now, here is my configuration. In this snippet, my org files located in my source directory get exported in the HTML format and published to my target directory on my remote server through RSYNC via TRAMP. A sitemap is automatically generated, which comes in handy with the online sitemap that is available through the navigation bar.
 #+NAME: org-proj-config-html
 #+BEGIN_SRC emacs-lisp :tangle no
   ("config-website-org"
@@ -2824,7 +2824,7 @@ The project is then defined like so:
 My linguistics website is made out of three projects. As for the previous project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
 #+BEGIN_SRC emacs-lisp :tangle no
-  (setq phundrak//projects-conlanging-target    "/ssh:Tilo:~/www/phundrak.com/langue/"
+  (setq phundrak//projects-conlanging-target    "/rsync:Tilo:~/www/phundrak.com/langue/"
         phundrak//projects-conlanging-source    "~/Documents/conlanging/content/"
         phundrak//projects-conlanging-language  "fr"
         phundrak//projects-conlanging-recursive t)
