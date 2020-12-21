@@ -14,13 +14,15 @@ It should only modify the values of Spacemacs settings."
             (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-sl)
             (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-ui)
             (file-newer-than-file-p phundrak//dotspacemacs-src phundrak//dotspacemacs-uc))
-    (princ "Exporting new Emacs configuration from spacemacs.org through org-babel...")
-    (call-process
-     (concat invocation-directory invocation-name)
-     nil nil t
-     "-q" "--batch" "--eval" "(require 'ob-tangle)"
-     "--eval" (format "(org-babel-tangle-file \"%s\")" phundrak//dotspacemacs-src))
-    (princ "done"))
+    (message "Exporting new Emacs configuration from spacemacs.org through org-babel...")
+    (with-temp-buffer
+      (shell-command (format "emacs -Q --batch %s %s %s"
+                             "--eval \"(require 'ob-tangle)\""
+                             "--eval \"(setq org-confirm-babel-evaluate nil)\""
+                             (format "--eval '(org-babel-tangle-file \"%s\")'"
+                                     phundrak//dotspacemacs-src))
+                     (current-buffer)))
+    (message "done"))
   (load-file phundrak//dotspacemacs-si))
 
 (defun dotspacemacs/layers ()
