@@ -1916,7 +1916,9 @@ Org-mode is probably one of the best if not the best Emacs feature I have ever d
 :END:
 As I will always say, orgmode is an amazing piece of software that deserves particular care and love. That is why I want to give it a unique look and feel compared to the rest of my Emacs configuration, in order to make it feel much more comfortable. You will find below how my org buffers look like when I open one of them.
 
-#+include: ./img/org-mode.svg export html
+#+begin_export html
+<p><img src="./img/org-mode.svg" alt="Screenshot of an org-mode buffer" style="max-height: 900px" /></p>
+#+end_export
 
 And here you can find the source code of this buffer you just saw a screenshot of:
 #+BEGIN_SRC org :exports code
@@ -1930,21 +1932,23 @@ And here you can find the source code of this buffer you just saw a screenshot o
   :CUSTOM_ID: custom-id-for-html-export
   :END:
   # A regular comment
-  This is an example org file, with [[https://config.phundrak.com/emacs][a link]], a {{{macro(with arguments)}}}, an <<anchor>>, a code block and a bullet list:
+  This is an example org file, with [[https://config.phundrak.com/emacs][a link]], a {{{macro(with arguments)}}}, an <<anchor>>, /text in italic/, __undelined__, *bold*, +striken through+, some ~code~ and =verbatim=, some^{superscript} and_{subscript}, a code block and a bullet list:
   ,#+header :export code
   ,#+BEGIN_SRC emacs-lisp
     (message "Hello World!")
   ,#+END_SRC
-
    ,* Element 1
    ,* Element 2
-
+  | /    |     <r> |   <c>    | <     |
+  | This |      is |    a     | table |
+  |------+---------+----------+-------|
+  | With | various | elements |       |
   ,** TODO Global task [1/2]
   ,*** TODO [#A] Task 1
   ,*** TODO Checkboxes [1/3]
-  - [ ] Hello
-  - [ ] World!
-  - [X] This is done
+  - [ ] Checkbox 1
+  - [X] Checkbox 2
+  - [ ] Checkbox 3
   ,*** DONE Task 2
   CLOSED: [2020-12-21 mon. 14:30]
   ,** Header 2
