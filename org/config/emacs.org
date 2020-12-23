@@ -80,6 +80,7 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | outorg              | edit comments as Org-mode buffers                    |
 | pinentry            | enter a GPG password from Emacs                      |
 | s                   | The long lost Emacs string manipulation library.     |
+| sicp                | Texinfo version of the [[https://mitpress.mit.edu/sites/default/files/sicp/index.html][SICP]]                          |
 | visual-fill-column  | allow the use of ~fill-column~ in ~visual-line-mode~ |
 | wrap-region         | easily wrap region with delimiters                   |
 | wttrin              | weather in Emacs                                     |
@@ -510,9 +511,9 @@ Unfortunately, I have to write Swift code for one of my university courses, so h
 :PROPERTIES:
 :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Custom_layers-69473533
 :END:
-Lastly, two custom layers have been enabled: a w3m layer, and my custom layers for conlanging tools.
+Lastly, one custom layers have been enabled: my custom layers for conlanging tools.
 #+BEGIN_SRC emacs-lisp
-conlanging w3m
+conlanging
 #+END_SRC
 
 # Don’t delete this code block, it wraps the layers
@@ -1563,7 +1564,7 @@ When I’m in Eshell, sometimes I wish to open multiple files at once in Emacs. 
   (defadvice find-file (around find-files activate)
     "Also find all files within a list of files. This even works recursively."
     (if (listp filename)
-        (loop for f in filename do (find-file f wildcards))
+        (cl-loop for f in filename do (find-file f wildcards))
       ad-do-it))
 #+END_SRC
 
@@ -1639,7 +1640,7 @@ The banner for Eshell will collect some system information and display them grac
 - How full are its mountpoints
 Some of these information can be grabbed directly from Emacs built-in functions, but some others need to be retrieved manually. Let’s first get into it with the mounted partitions for which we’ll define a structure:
 #+BEGIN_SRC emacs-lisp
-  (defstruct phundrak/mounted-partitions
+  (cl-defstruct phundrak/mounted-partitions
     "Object representing a mounted partition found in the system"
     path size used percent)
 #+END_SRC
@@ -3085,8 +3086,8 @@ Now, let’s declare the following keybindings:
 :END:
 A couple of keybindings will be added to Dired. The first one is the opening parenthesis which will enable or disable ~dired-hide-details-mode~. On the other hand, a closing parenthesis will show git information in the current Dired buffer.
 #+BEGIN_SRC emacs-lisp
-  (evil-define-key 'normal dired-mode-map "(" 'dired-hide-details-mode)
-  (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode)
+  (define-key dired-mode-map (kbd "(") 'dired-hide-details-mode)
+  (define-key dired-mode-map (kbd ")") 'dired-git-info-mode)
 #+END_SRC
 
 Something I use from time to time is ~S-F1~ for opening dired in my ~$HOME~ directory. For that, I simply did the following:
@@ -3096,9 +3097,9 @@ Something I use from time to time is ~S-F1~ for opening dired in my ~$HOME~ dire
 
 A couple of other useful utilities, sach as opening all marked files, sorting files, opening them externally and renaming them, are also bound to a simple key press:
 #+BEGIN_SRC emacs-lisp
-  (evil-define-key 'normal dired-mode-map "f" 'phundrak/open-marked-files)
-  (evil-define-key 'normal dired-mode-map "F" 'xah/open-in-external-app)
-  (evil-define-key 'normal dired-mode-map "s" 'xah/dired-sort)
+  (define-key dired-mode-map (kbd "f") 'phundrak/open-marked-files)
+  (define-key dired-mode-map (kbd "F") 'xah/open-in-external-app)
+  (define-key dired-mode-map (kbd "s") 'xah/dired-sort)
 #+END_SRC
 
 *** Files
@@ -3130,10 +3131,11 @@ Just to make it easier to launch it, I’ll declare a shortcut for launching tet
 
 Apparently, no evil keybindings are set for Tetris. Let’s declare them (adapted to the bépo layout):
 #+BEGIN_SRC emacs-lisp
-  (evil-define-key 'emacs tetris-mode-map "c" 'tetris-move-left)
-  (evil-define-key 'emacs tetris-mode-map "t" 'tetris-move-down)
-  (evil-define-key 'emacs tetris-mode-map "s" 'tetris-rotate-prev)
-  (evil-define-key 'emacs tetris-mode-map "r" 'tetris-move-right)
+  (require 'tetris)
+  (define-key tetris-mode-map (kbd "c") 'tetris-move-left)
+  (define-key tetris-mode-map (kbd "t") 'tetris-move-down)
+  (define-key tetris-mode-map (kbd "s") 'tetris-rotate-prev)
+  (define-key tetris-mode-map (kbd "r") 'tetris-move-right)
 #+END_SRC
 
 *** Multiple cursors

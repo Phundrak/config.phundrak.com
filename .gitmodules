@@ -2,11 +2,8 @@
 	path = .config/tmux
 	url = https://github.com/gpakosz/.tmux.git
 [submodule ".config/emacs/private/conlanging"]
-	path = .config/emacs/private/conlanging
+	path = fromGIT/emacs-packages/conlanging
 	url = https://labs.phundrak.com/phundrak/conlang-layer
-[submodule ".config/emacs/private/w3m"]
-	path = .config/emacs/private/w3m
-	url = https://github.com/venmos/w3m-layer.git
 [submodule ".mozilla/firefox/lruehqec.default/chrome"]
 	path = .mozilla/firefox/lruehqec.default/chrome
 	url = git@labs.phundrak.com:phundrak/blurredfox-nord.git
