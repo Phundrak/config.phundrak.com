@@ -534,6 +534,41 @@ The ~dotspacemacs/init~ function is the one called at the very begining of the S
      ))
 #+END_SRC
 
+** Handling my Spacemacs litterate config
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no
+:CUSTOM_ID: Init-Handling-my-Spacemacs-litterate-config-679170db
+:END:
+Just before we get onto the usual content of the ~dotspacemacs/init~ function you would find in a typical Spacemacs installation, I would like to talk a bit about how I manage writing a litterate config for Spacemacs and ensure Emacs starts with an up-to-date configuration from said litterate config. For that, I actually declared a couple of variables:
+#+BEGIN_SRC emacs-lisp
+  (setq phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
+        phundrak//dotspacemacs-src "~/org/config/emacs.org"
+        phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init")
+        phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers")
+        phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config")
+        phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
+#+END_SRC
+Now I know a couple of my files that get exported by this document. If I compare how recent these files are compared to my litterate config, I know if Emacs missed tangling its configuration before launching, so if any of my ~si~, ~sl~, ~uc~, or ~ui~ files are older than my ~emacs.org~, then I’ll tangle the latter; and since my user config is growing longer and longer, I want Emacs to be able to parse it fast next time it boots, so let’s compile my exported ~.el~ files!
+#+BEGIN_SRC emacs-lisp
+  (when (or (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-si ".el"))
+              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-sl ".el"))
+              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-ui ".el"))
+              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-uc ".el")))
+      (message "Exporting new Emacs configuration from spacemacs.org through org-babel...")
+      (with-temp-buffer
+        (shell-command (format "emacs -Q --batch %s %s %s"
+                               "--eval \"(require 'ob-tangle)\""
+                               "--eval \"(setq org-confirm-babel-evaluate nil)\""
+                               (format "--eval '(org-babel-tangle-file \"%s\")'"
+                                       phundrak//dotspacemacs-src))
+                       (current-buffer)))
+      (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done")
+      (with-temp-buffer
+        (byte-recompile-directory phundrak//dotspacemacs-src-dir
+                                  0 t)))
+#+END_SRC
+All that’s left to do in the Spacemacs functions is to call ~load~ on ~si~, ~sl~, ~uc~, and ~ui~. Be aware this sub-chapter won’t be tangled, so it might not be up to date with the [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][actual dotspacemacs file]]. Please check it just in case something changed and I forgot to update this part of ~emacs.org~.
+
 ** Emacs with pdumper
 :PROPERTIES:
 :CUSTOM_ID: Init-Emacs_with_pdumper-f24ab30b
