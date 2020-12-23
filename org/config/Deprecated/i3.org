@@ -1,5 +1,5 @@
 #+TITLE: i3 config
-#+setupfile: headers
+#+setupfile: ../headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's i3 config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's i3 config" />
@@ -20,6 +20,19 @@ It is to be noted I am using [[https://github.com/Airblader/i3][Airblader’s fo
 #+BEGIN_SRC conf :exports none
   # -*- mode: conf -*-
 #+END_SRC
+
+* Screenshots
+:PROPERTIES:
+:CUSTOM_ID: Screenshots-51f1cef3
+:END:
+#+CAPTION: Desktop with Neofetch in the terminal
+[[./img/neofetch.png.webp]]
+
+#+CAPTION: Desktop with Emacs opened
+[[./img/emacs.png.webp]]
+
+#+CAPTION: Desktop with Rofi
+[[./img/rofi.png.webp]]
 
 * Variables declaration
 :PROPERTIES:
