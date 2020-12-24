@@ -1,6 +1,8 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
-(defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/")
-(defvar phundrak//dotspacemacs-src "~/org/config/emacs.org")
+(defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
+  "Directory for my exported Elisp configuration files")
+(defvar phundrak//dotspacemacs-src "~/org/config/emacs.org"
+  "My litterate config file for Emacs")
 (defvar phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init"))
 (defvar phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers"))
 (defvar phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config"))
@@ -9,6 +11,11 @@
                                            phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
 
 (defun phundrak/update-config-files-p (&optional compiled?)
+  "Verify if any of my exported Elisp configuration files are
+newer than my litterate configuration.
+
+If `compiled?' is `t', check the `.elc' files instead of the
+`.el' files."
   (catch 'ret
     (dolist (file phundrak//dotspacemacs-files)
       (when (file-newer-than-file-p phundrak//dotspacemacs-src

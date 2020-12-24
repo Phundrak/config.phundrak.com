@@ -545,18 +545,39 @@ The ~dotspacemacs/init~ function is the one called at the very begining of the S
 
 ** Handling my Spacemacs litterate config
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle no
+:header-args:emacs-lisp: :tangle no :exports code :results silent :lexical t
 :CUSTOM_ID: Init-Handling-my-Spacemacs-litterate-config-679170db
 :END:
 Just before we get onto the usual content of the ~dotspacemacs/init~ function you would find in a typical Spacemacs installation, I would like to talk a bit about how I manage writing a litterate config for Spacemacs and ensure Emacs starts with an up-to-date configuration from said litterate config. For that, I actually declared a couple of variables:
 #+BEGIN_SRC emacs-lisp
-  (setq phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
-        phundrak//dotspacemacs-src "~/org/config/emacs.org"
-        phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init")
-        phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers")
-        phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config")
-        phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
+  (defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
+    "Directory for my exported Elisp configuration files")
+  (defvar phundrak//dotspacemacs-src "~/org/config/emacs.org"
+    "My litterate config file for Emacs")
+  (defvar phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init"))
+  (defvar phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers"))
+  (defvar phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config"))
+  (defvar phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
+  (defvar phundrak//dotspacemacs-files (list phundrak//dotspacemacs-si phundrak//dotspacemacs-sl
+                                             phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
 #+END_SRC
+I also declared the following function that tells me if my Elisp files are more recent than my ~emacs.org~ file. The ~compiled?~ argument lets me compare either the ~.el~ files if it is ~nil~, or the ~.elc~ files if it is ~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/update-config-files-p (&optional compiled?)
+    "Verify if any of my exported Elisp configuration files are
+  newer than my litterate configuration.
+
+  If `compiled?' is `t', check the `.elc' files instead of the
+  `.el' files."
+    (catch 'ret
+      (dolist (file phundrak//dotspacemacs-files)
+        (when (file-newer-than-file-p phundrak//dotspacemacs-src
+                                      (format "%s.%s"
+                                              file
+                                              (if compiled? "elc" "el")))
+          (throw 'ret t)))))
+#+END_SRC
+
 Now I know a couple of my files that get exported by this document. If I compare how recent these files are compared to my litterate config, I know if Emacs missed tangling its configuration before launching, so if any of my ~si~, ~sl~, ~uc~, or ~ui~ files are older than my ~emacs.org~, then I’ll tangle the latter; and since my user config is growing longer and longer, I want Emacs to be able to parse it fast next time it boots, so let’s compile my exported ~.el~ files!
 #+BEGIN_SRC emacs-lisp
   (when (or (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-si ".el"))
@@ -1949,7 +1970,7 @@ With Eshell, some commands don’t work very well, especially commands that crea
 *** Org-mode
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-04ab8ad3
-:header-args:emacs-lisp: :tangle no
+:header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
 Org-mode is probably one of the best if not the best Emacs feature I have ever discovered. It is awesome for writing documents, regardless of the format you need it to be exported to, for agenda management, and for literary programming, such as with this document.
 #+BEGIN_SRC emacs-lisp
