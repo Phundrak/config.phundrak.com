@@ -1123,7 +1123,7 @@ Finally, here is a quick workaround for Tramp, sometimes it cannot connect to my
 
 * User Configuration
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent :lexical
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent :lexical t
 :CUSTOM_ID: User_Configuration-4a937fe5
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
@@ -1318,10 +1318,10 @@ This function is used in my Eshell prompt which you can consult [[#User_Configur
 :END:
 This function was created in order to bind to another keyboard shortcut the already existing ~C-u M-q~ which I cannot type with evil-mode unless I’m in insert mode.
 #+BEGIN_SRC emacs-lisp
-(defun phundrak/fill-paragraph ()
-  (interactive)
-  (let* ((current-prefix-arg 4))
-    (call-interactively 'fill-paragraph)))
+  (defun phundrak/fill-paragraph ()
+    (interactive)
+    (let* ((current-prefix-arg 4))
+      (call-interactively 'fill-paragraph)))
 #+END_SRC
 
 *** ~phundrak/find-org-files~
@@ -1949,29 +1949,82 @@ With Eshell, some commands don’t work very well, especially commands that crea
 *** Org-mode
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-04ab8ad3
+:header-args:emacs-lisp: :tangle no
 :END:
 Org-mode is probably one of the best if not the best Emacs feature I have ever discovered. It is awesome for writing documents, regardless of the format you need it to be exported to, for agenda management, and for literary programming, such as with this document.
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'org
     ;; configuration goes here
     )
 #+END_SRC
 
- # Don’t delete this, this code block is here to wrap the org configuration
- #+BEGIN_SRC emacs-lisp :exports none
-   (with-eval-after-load 'org
- #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/private/user-config.el :exports none :noweb yes
+  (with-eval-after-load 'org
+    ;; agenda
+    <<org-agenda-files>>
+    <<org-agenda-commands>>
+    ;; Babel
+    <<org-babel-load-languages>>
+    <<org-babel-set-geiser>>
+    <<org-src-tab-acts-natively>>
+    <<org-confirm-babel>>
+    ;; Beautiful org
+    <<beautiful-org-hooks>>
+    <<beautiful-org-faces>>
+    <<beautiful-org-options>>
+    <<beautiful-org-images>>
+    <<beautiful-org-hide-macro-markers>>
+    <<beautiful-org-hide-dots>>
+    ;; Capture
+    <<org-capture-target-files>>
+    <<org-capture-templates>>
+    ;; Custom functions
+    ;;;; Better IDs
+    <<org-better-id-new>>
+    <<org-better-id-get>>
+    <<org-better-id-add-ids>>
+    <<org-better-id-hooks>>
+    ;; File export
+    <<org-use-sub-superscripts>>
+    ;;;; Latex
+    <<org-latex-compiler>>
+    <<org-latex-listings>>
+    <<org-latex-default-packages>>
+    <<org-export-latex-hyperref-format>>
+    <<org-latex-pdf-process>>
+    ;;;; HTML
+    <<org-re-reveal-root>>
+    <<org-html-validation>>
+    ;; Latex Formats
+    <<org-latex-classes>>
+    ;; Projects
+    <<org-publish-projects>>
+    ;; Variables
+    ;;;; Behavior
+    <<org-use-property-inheritance>>
+    <<org-list-allow-alphabetical>>
+    <<org-src-block-lsp>>
+    <<org-M-RET-may-split-line>>
+    <<org-src-window-setup>>
+    <<org-src-window-toggle>>
+    <<org-id-link-to-org>>
+    ;;;; User information
+    <<org-user-information>>
+    )
+#+END_SRC
 
 **** Agenda
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_agenda-53f9d319
 :END:
 One awesome feature of Org mode is the agenda. By default, my agendas are stored in =~/org/agenda=.
+#+NAME: org-agenda-files
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+END_SRC
 
 I also have a custom command in Org agenda to mark some tasks as daily tasks with the =:DAILY:= tag,:
+#+NAME: org-agenda-custom-commands
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-custom-commands
         '(("h" "Daily habits"
@@ -1991,7 +2044,7 @@ I also have a custom command in Org agenda to mark some tasks as daily tasks wit
                                       ":YEARLY:")))))
 #+END_SRC
 
-**** Babel languages
+**** Babel
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_babel_languages-c062fc16
 :END:
@@ -2012,7 +2065,7 @@ One of the amazing features of org-mode is its literary programming capacities b
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
 #+header: :var languages=org-babel-languages-table[,0]
-#+BEGIN_SRC emacs-lisp :exports none :tangle no
+#+BEGIN_SRC emacs-lisp :exports none
   (mapconcat (lambda ($language) (format "(%s . t)" $language))
              languages
              "\n")
@@ -2034,6 +2087,7 @@ One of the amazing features of org-mode is its literary programming capacities b
 #+end_example
 
 The corresponding code is as follows:
+#+NAME: org-babel-load-languages
 #+BEGIN_SRC emacs-lisp :noweb yes
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -2042,13 +2096,21 @@ The corresponding code is as follows:
 #+END_SRC
 
 Scheme requires a default implementation for geiser:
+#+NAME: org-babel-set-geiser
 #+BEGIN_SRC emacs-lisp
   (setq geiser-default-implementation 'racket)
 #+END_SRC
 
 By the way, I wish to see source code behave the same way in the source blocks as in their own major mode. Let’s tell Emacs so:
+#+NAME: org-src-tab-acts-natively
 #+BEGIN_SRC emacs-lisp
   (setq org-src-tab-acts-natively t)
+#+END_SRC
+
+Lastly, I know this can be a terrible idea, but I want Emacs to just evaluate Org code blocks without asking me. Of course, this could represent some big security issue if not careful enough, but I generaly just open my own org files.
+#+NAME: org-confirm-babel
+#+BEGIN_SRC emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
 #+END_SRC
 
 **** Beautify Org-mode
@@ -2102,6 +2164,7 @@ And here you can find the source code of this buffer you just saw a screenshot o
 #+END_SRC
 
 In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why.
+#+NAME: beautiful-org-hooks
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'visual-line-mode)
   (remove-hook 'org-mode-hook 'auto-fill-mode)
@@ -2110,6 +2173,7 @@ In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for 
 #+END_SRC
 
 Fonts will play an important part in this, but so will colors and font size. The following code is largely based on the one found [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][on this blog post]] and [[https://lepisma.xyz/2017/10/28/ricing-org-mode/][this one]].
+#+NAME: beautiful-org-faces
 #+BEGIN_SRC emacs-lisp
   (let* ((font          `(:font "Charis SIL"   :height 1.0))
          (head          `(:inherit default     :weight bold))
@@ -2147,6 +2211,7 @@ Fonts will play an important part in this, but so will colors and font size. The
 #+END_SRC
 
 Some other tweaks will make Org-mode more beautiful. This includes a new folding icon, some indentation that is not added whitespace.
+#+NAME: beautiful-org-options
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t
         org-startup-align-all-tables t
@@ -2160,9 +2225,23 @@ Some other tweaks will make Org-mode more beautiful. This includes a new folding
         org-ellipsis "  ")
 #+END_SRC
 
-Finally, let’s limit the width of images inlined in org buffers to 400px:
+Let’s limit the width of images inlined in org buffers to 400px:
+#+NAME: beautiful-org-images
 #+BEGIN_SRC emacs-lisp
   (setq org-image-actual-width 400)
+#+END_SRC
+
+Visually, I prefer to hide the markers of macros, so let’s do that:
+#+NAME: beautiful-org-hide-macro-markers
+#+BEGIN_SRC emacs-lisp
+  (setq org-hide-macro-markers t)
+#+END_SRC
+
+I also have an issue where small dots precede my org headers. Let’s fix that:
+#+NAME: beautiful-org-hide-dots
+#+BEGIN_SRC emacs-lisp
+  (setq org-hide-leading-stars nil
+        org-superstar-leading-bullet ?\s)
 #+END_SRC
 
 **** Capture
@@ -2170,16 +2249,16 @@ Finally, let’s limit the width of images inlined in org buffers to 400px:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
 :END:
 Org-capture is an amazing feature of Org-mode which allows me to quickly save links, resources, reminders, and notes in neatly organized org files. Here they are described:
+#+NAME: org-capture-target-files
 #+BEGIN_SRC emacs-lisp
-  (setq
-   org-conlanging-file "~/org/conlanging.org"
-   org-default-notes-file "~/org/notes.org"
-   org-journal-file "~/org/journal.org"
-   org-linguistics-notes-file "~/org/linguistics-notes.org"
-   org-novel-notes-file "~/org/novel-notes.org"
-   org-private-agenda-file "~/org/agenda/private.org"
-   org-school-agenda-file "~/org/agenda/school.org"
-   org-wordbuilding-file "~/org/worldbuilding.org")
+  (defvar org-conlanging-file "~/org/conlanging.org")
+  (defvar org-default-notes-file "~/org/notes.org")
+  (defvar org-journal-file "~/org/journal.org")
+  (defvar org-linguistics-notes-file "~/org/linguistics-notes.org")
+  (defvar org-novel-notes-file "~/org/novel-notes.org")
+  (defvar org-private-agenda-file "~/org/agenda/private.org")
+  (defvar org-school-agenda-file "~/org/agenda/school.org")
+  (defvar org-wordbuilding-file "~/org/worldbuilding.org")
 #+END_SRC
 
 With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~. It will then ask which template I wish to use. In the table below are described the shortcuts that are available after ~SPC a o c~ is invoked. The /name/ will be the one displayed in Org capture’s interface, the /title/ is the headline where to save the capture (if it does not differ from the capture’s name, the cell will be blank). The /insertion mode/ tells Emacs how to add the capture to the /file/, using which /template/. A line with no insertion mode, file, or template is just a category. All of the following insert entries to their org files, that is a new org node with a headline and some content.
@@ -2216,7 +2295,8 @@ With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~. It 
 
 The following code snipped is not tangled into my configuration file, but instead creates the equivalent to the table above into EmacsLisp code found in the next code snippet.
 #+NAME: org-capture-shortcut-gen
-#+BEGIN_SRC emacs-lisp :tangle no :var table=org-capture-shortcuts-table :exports code :cache yes :results replace
+#+header: :exports code :cache yes :results replace
+#+BEGIN_SRC emacs-lisp :var table=org-capture-shortcuts-table
   (mapconcat (lambda (entry)
                (let* ((shortcut   (nth 0 entry))
                       (name       (nth 1 entry))
@@ -2308,6 +2388,7 @@ The following code snipped is not tangled into my configuration file, but instea
 #+end_example
 
 Below you can find the equivalent code as described above.
+#+NAME: org-capture-templates
 #+BEGIN_SRC emacs-lisp :noweb yes
   (setq
    org-capture-templates
@@ -2518,6 +2599,7 @@ We begin with a couple of custom functions that I use in my org-mode files.
 :CUSTOM_ID: User_Configuration-Org-mode-Custom_org-mode_functions-Custom_and_unique_headings_ID-44d2beaf
 :END:
 The first ones are dedicated to provide org-mode headings a fixed and unique ID that won’t change over time. This code was taken from [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][https://writequit.org/articles/emacs-org-mode-generate-ids.html]]. The first function’s job is to create these unique IDs
+#+NAME: org-better-id-new
 #+BEGIN_SRC emacs-lisp
   (defun eos/org-id-new (&optional prefix)
     "Create a new globally unique ID.
@@ -2558,6 +2640,7 @@ The first ones are dedicated to provide org-mode headings a fixed and unique ID 
 #+END_SRC
 
 Now, let’s see the function that will be used to get the custom id of a heading at point. If the function does not detect any custom ID, then one should be created and inserted.
+#+NAME: org-better-id-get
 #+BEGIN_SRC emacs-lisp
   (defun eos/org-custom-id-get (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker POM.
@@ -2592,6 +2675,7 @@ Now, let’s see the function that will be used to get the custom id of a headin
 #+END_SRC
 
 Finally, this is the function that gets called on file saves. If the function detects ~auto-id:t~ among the org options in the ~#+OPTIONS:~ header, then the above function is called.
+#+NAME: org-better-id-add-ids
 #+BEGIN_SRC emacs-lisp
   (defun eos/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file
@@ -2608,6 +2692,7 @@ Finally, this is the function that gets called on file saves. If the function de
 #+END_SRC
 
 Let’s add a hook to the above function so it is called automatically on save, and only in read-write functions.
+#+NAME: org-better-id-hooks
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook
             (lambda ()
@@ -2622,17 +2707,30 @@ Let’s add a hook to the above function so it is called automatically on save, 
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_files_exports-1e194169
 :END:
+I want to disable by default behavior of ~^~ and ~_~ for only one character, making it compulsory to use instead ~^{}~ and ~_{}~ respectively. This is due to my frequent usage of the underscore in my org files as a regular character and not a markup one, especially when describing phonetics evolution. So, let’s disable it:
+#+NAME: org-use-sub-superscripts
+#+BEGIN_SRC emacs-lisp
+  (setq org-use-sub-superscripts (quote {}))
+#+END_SRC
+
+***** LaTeX
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-File-export-LaTeX-92bbd6f3
+:END:
 When it comes to exports, I want the LaTeX and PDF exports to be done with XeLaTeX only. This implies the modification of the following variable:
+#+NAME: org-latex-compiler
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-compiler "xelatex")
 #+END_SRC
 
 I also want to get by default ~minted~ for LaTeX listings so I can have syntax highlights:
+#+NAME: org-latex-listings
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-listings 'minted)
 #+END_SRC
 
 The default packages break my LaTeX exports: for some reasons, images are not loaded and exported in PDFs, so I needed to redifine the default packages excluding the one that broke my exports. I also added two default packages, ~minted~ and ~xeCJK~ for syntax highlighting and Japanese (and additionally Chinese and Korean) support.
+#+NAME: org-latex-default-packages
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-default-packages-alist '((""         "graphicx"  t)
                                            ("T1"       "fontspec"  t ("pdflatex"))
@@ -2650,11 +2748,13 @@ The default packages break my LaTeX exports: for some reasons, images are not lo
 #+END_SRC
 
 By the way, reference links in LaTeX should be written in this format:
+#+NAME: org-export-latex-hyperref-format
 #+BEGIN_SRC emacs-lisp
   (setq org-export-latex-hyperref-format "\\ref{%s}")
 #+END_SRC
 
 When it comes to the export itself, the latex file needs to be processed several times through XeLaTeX.
+#+NAME: org-latex-pdf-process
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-pdf-process
         '("xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
@@ -2662,17 +2762,18 @@ When it comes to the export itself, the latex file needs to be processed several
           "xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+END_SRC
 
+***** HTML
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-File-export-HTML-192cba41
+:END:
 For Reveal.JS exports, I need to set where to find the framework by default:
+#+NAME: org-re-reveal-root
 #+BEGIN_SRC emacs-lisp
-  (setq org-reveal-root "file:///home/phundrak/fromGIT/reveal.js")
-#+END_SRC
-
-I also want to disable by default behavior of ~^~ and ~_~ for only one character, making it compulsory to use instead ~^{}~ and ~_{}~ respectively. This is due to my frequent usage of the underscore in my org files as a regular character and not a markup one. So, let’s disable it:
-#+BEGIN_SRC emacs-lisp
-  (setq org-use-sub-superscripts (quote {}))
+  (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 #+END_SRC
 
 On HTML exports, Org-mode tries to include a validation link for the exported HTML. Let’s disable that since I never use it.
+#+NAME: org-html-validation
 #+BEGIN_SRC emacs-lisp
   (setq org-html-validation-link nil)
 #+END_SRC
@@ -2685,7 +2786,7 @@ I currently have two custom formats for my Org-mode exports: one for general use
 
 Below is the declaration of the ~conlang~ LaTeX class:
 #+NAME: org-latex-class-conlang
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   '("conlang"
     "\\documentclass{book}"
     ("\\chapter{%s}" . "\\chapter*{%s}")
@@ -2696,7 +2797,7 @@ Below is the declaration of the ~conlang~ LaTeX class:
 
 And here is the declaration of the ~beamer~ class:
 #+NAME: org-latex-class-beamer
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   `("beamer"
     ,(concat "\\documentclass[presentation]{beamer}\n"
              "[DEFAULT-PACKAGES]"
@@ -2708,6 +2809,7 @@ And here is the declaration of the ~beamer~ class:
 #+END_SRC
 
 Both these classes have to be added to ~org-latex-classes~ like so:
+#+NAME: org-latex-classes
 #+BEGIN_SRC emacs-lisp :noweb yes
   (eval-after-load "ox-latex"
     '(progn
@@ -2724,6 +2826,7 @@ Both these classes have to be added to ~org-latex-classes~ like so:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_projects-5be088cd
 :END:
 Another great features of Org-mode is the Org projects that allow the user to easily publish a bunch of org files to a remote location. Here is the current declaration of my projects, which will be detailed later:
+#+NAME: org-publish-projects
 #+BEGIN_SRC emacs-lisp :noweb yes
   <<org-proj-config-setup>>
   <<org-proj-lang-setup>>
@@ -2763,7 +2866,7 @@ And before we get into the actual configuration, I would like to introduce a cou
 
 Now, here is my configuration. In this snippet, my org files located in my source directory get exported in the HTML format and published to my target directory on my remote server through RSYNC via TRAMP. A sitemap is automatically generated, which comes in handy with the online sitemap that is available through the navigation bar.
 #+NAME: org-proj-config-html
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("config-website-org"
    :base-directory ,phundrak//projects-config-source
    :base-extension "org"
@@ -2778,7 +2881,7 @@ Now, here is my configuration. In this snippet, my org files located in my sourc
 
 We also have the component for all the static files needed to run the website (mostly images tbh).
 #+NAME: org-proj-config-static
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("config-website-static"
    :base-directory ,phundrak//projects-config-source
    :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub\\|md"
@@ -2790,7 +2893,7 @@ We also have the component for all the static files needed to run the website (m
 
 The project is then defined like so:
 #+NAME: org-proj-config
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("config-website"
    :components ("config-website-org"
                 "config-website-static"))
@@ -2802,7 +2905,7 @@ The project is then defined like so:
 :END:
 My linguistics website is made out of three projects. As for the previous project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (defvar phundrak//projects-conlanging-target
     "/rsync:Tilo:~/www/phundrak.com/langue/"
     "Points to where exported files for langue.phundrak.com should be put")
@@ -2819,7 +2922,7 @@ My linguistics website is made out of three projects. As for the previous projec
 
 The first component is the one generating the HTML files from the org files.
 #+NAME: org-proj-lang-html
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("langue-phundrak-com-org"
    :base-directory ,phundrak//projects-conlanging-source
    :base-extension "org"
@@ -2835,7 +2938,7 @@ The first component is the one generating the HTML files from the org files.
 
 We also have the component for the LaTeX and PDF part of the website:
 #+NAME: org-proj-lang-pdf
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("langue-phundrak-com-pdf"
    :base-directory ,phundrak//projects-conlanging-source
    :base-extension "org"
@@ -2850,7 +2953,7 @@ We also have the component for the LaTeX and PDF part of the website:
 
 And lastly, we have the component for all the static files needed to run the website:
 #+NAME: org-proj-lang-static
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("langue-phundrak-com-static"
    :base-directory ,phundrak//projects-conlanging-source
    :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
@@ -2862,16 +2965,11 @@ And lastly, we have the component for all the static files needed to run the web
 
 The project is then defined like so:
 #+NAME: org-proj-lang
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   ("langue-phundrak-com"
    :components ("langue-phundrak-com-org"
                 "langue-phundrak-com-static"
                 "langue-phundrak-com-pdf"))
-#+END_SRC
-
-# Don’t delete this, this code block is here to wrap the org configuration
-#+BEGIN_SRC emacs-lisp :exports none
-    )
 #+END_SRC
 
 **** Variables
@@ -2883,11 +2981,13 @@ The project is then defined like so:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
 :END:
 Something really neat I learned about is the ability of org headers to inherit properties from parent headers. Let’s enable that!
+#+NAME: org-use-property-inheritance
 #+BEGIN_SRC emacs-lisp
   (setq org-use-property-inheritance t)
 #+END_SRC
 
 Sometimes, I also want to have alphabetical lists in org-mode:
+#+NAME: org-list-allow-alphabetical
 #+BEGIN_SRC emacs-lisp
   (setq org-list-allow-alphabetical t)
 #+END_SRC
@@ -2903,7 +3003,7 @@ LSP can work in source blocks, but some work is needed (shamelessly stolen [[htt
 #+NAME: org-lsp-languages-src-blocks-gen
 #+header: :cache yes :results replace
 #+header: :var languages=org-lsp-languages-src-blocks-table[,0]
-#+BEGIN_SRC emacs-lisp :tangle no :exports none
+#+BEGIN_SRC emacs-lisp :exports none
   (mapconcat (lambda (lang)
                (format "\"%s\"" lang))
              languages
@@ -2913,6 +3013,8 @@ LSP can work in source blocks, but some work is needed (shamelessly stolen [[htt
 #+RESULTS[cbfba838da4510647d09bfd0fd2f20996c8cad38]: org-lsp-languages-src-blocks-gen
 : "c" "c++" "dart" "python" "rust"
 
+And here is the code to activate that:
+#+NAME: org-src-block-lsp
 #+BEGIN_SRC emacs-lisp :noweb yes
   (cl-defmacro lsp-org-babel-enable (lang)
     "Support LANG in org source code block."
@@ -2944,24 +3046,20 @@ LSP can work in source blocks, but some work is needed (shamelessly stolen [[htt
     (eval `(lsp-org-babel-enable ,lang)))
 #+END_SRC
 
-
 Here is one behavior that I really want to see modified: the ability to use ~M-RET~ without slicing the text the marker is on.
+#+NAME: org-M-RET-may-split-line
 #+BEGIN_SRC emacs-lisp
   (setq org-M-RET-may-split-line nil)
 #+END_SRC
 
-I also have added a couple of custom structure templates for Org mode (>= 9.3), mainly for source code blocks.
-#+begin_src emacs-lisp
-  (add-to-list 'org-structure-template-alist '("L" . "src emacs-lisp"))
-#+end_src
-
 Since Org 9.3, Org no longer attempts to restore the window configuration in the frame to which the user returns after editing a source block with ~org-edit-src-code~. This means with the original value of ~org-src-window-setup~ (~reorganize-frame~), the current frame will be split in two between the original org window and the source window, and once we quit the source window only the org window will remain. This is not a desired behavior for me, so I chose to set this variable to ~split-window-right~ in order to keep my windows organization and have a similar behavior to the old one.
+#+NAME: org-src-window-setup
 #+BEGIN_SRC emacs-lisp
-  ;; (setq org-src-window-setup 'split-window-right)
   (setq org-src-window-setup 'split-window-below)
 #+END_SRC
 
 However, it is not rare that I want to change that for an horizontal split, which can be achieved with the value ~split-window-below~. Thus, I have made this function that allows me to switch between the (default) vertical split and the horizontal split.
+#+NAME: org-src-window-toggle
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/toggle-org-src-window-split ()
     "This function allows the user to toggle the behavior of
@@ -2979,9 +3077,10 @@ However, it is not rare that I want to change that for an horizontal split, whic
                "horizontally")))
 #+END_SRC
 
-Lastly, I know this can be a terrible idea, but I want Emacs to just evaluate Org code blocks without asking me. Of course, this could represent some big security issue if not careful enough, but I generaly just open my own org files.
+When creating a link to an Org flie, I want to create an ID only if the link is created interactively, and only if there is no custom ID already created.
+#+NAME: org-id-link-to-org
 #+BEGIN_SRC emacs-lisp
-  (setq org-confirm-babel-evaluate nil)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 #+END_SRC
 
 ***** User information
@@ -2990,35 +3089,12 @@ Lastly, I know this can be a terrible idea, but I want Emacs to just evaluate Or
 :END:
 Some  variables  about  myself  need  to be  set  so  Org-mode  knows  what
 information to include in exported files.
+#+NAME: org-user-information
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Lucien Cartier-Tilet"
         user-real-login-name "Lucien Cartier-Tilet"
         user-login-name "phundrak"
         user-mail-address "lucien@phundrak.com")
-#+END_SRC
-
-***** Visual settings
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Visual_settings-5d02f4c0
-:END:
-Visually, I prefer to hide the markers of macros, so let’s do that:
-#+BEGIN_SRC emacs-lisp
-  (setq org-hide-macro-markers t)
-#+END_SRC
-
-I also have an issue where small dots precede my org headers. Let’s fix that:
-#+BEGIN_SRC emacs-lisp
-  (setq org-hide-leading-stars nil
-        org-superstar-leading-bullet ?\s)
-#+END_SRC
-
-***** Miscellaneous
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Miscellaneous-ddcb568a
-:END:
-When creating a link to an Org flie, I want to create an ID only if the link is created interactively, and only if there is no custom ID already created.
-#+BEGIN_SRC emacs-lisp
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 #+END_SRC
 
 ** Editing and modes

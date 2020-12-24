@@ -1,28 +1,35 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
+(defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/")
+(defvar phundrak//dotspacemacs-src "~/org/config/emacs.org")
+(defvar phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init"))
+(defvar phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers"))
+(defvar phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config"))
+(defvar phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
+(defvar phundrak//dotspacemacs-files (list phundrak//dotspacemacs-si phundrak//dotspacemacs-sl
+                                           phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
+
+(defun phundrak/update-config-files-p (&optional compiled?)
+  (catch 'ret
+    (dolist (file phundrak//dotspacemacs-files)
+      (when (file-newer-than-file-p phundrak//dotspacemacs-src
+                                    (format "%s.%s"
+                                            file
+                                            (if compiled? "elc" "el")))
+        (throw 'ret t)))))
+
 (defun dotspacemacs/init ()
   "Initialization:
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
-  (setq phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
-        phundrak//dotspacemacs-src "~/org/config/emacs.org"
-        phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init")
-        phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers")
-        phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config")
-        phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
-  (when (or (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-si ".el"))
-            (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-sl ".el"))
-            (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-ui ".el"))
-            (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-uc ".el")))
+
+  (when (phundrak/update-config-files-p)
     (message "Exporting new Emacs configuration from spacemacs.org through org-babel...")
-    (with-temp-buffer
-      (shell-command (format "emacs -Q --batch %s %s %s"
-                             "--eval \"(require 'ob-tangle)\""
-                             "--eval \"(setq org-confirm-babel-evaluate nil)\""
-                             (format "--eval '(org-babel-tangle-file \"%s\")'"
-                                     phundrak//dotspacemacs-src))
-                     (current-buffer)))
-    (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done")
+    (require 'ob-tangle)
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle-file phundrak//dotspacemacs-src))
+    (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done"))
+  (when (phundrak/update-config-files-p t)
     (with-temp-buffer
       (byte-recompile-directory phundrak//dotspacemacs-src-dir
                                 0 t)))
