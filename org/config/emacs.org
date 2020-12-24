@@ -2246,10 +2246,10 @@ Some other tweaks will make Org-mode more beautiful. This includes a new folding
         org-ellipsis "  ")
 #+END_SRC
 
-Let’s limit the width of images inlined in org buffers to 400px:
+Let’s limit the width of images inlined in org buffers to 550px. It roughly corresponds to the width of a paragraph on which ~org-fill-paragraph~ is called.
 #+NAME: beautiful-org-images
 #+BEGIN_SRC emacs-lisp
-  (setq org-image-actual-width 400)
+  (setq org-image-actual-width 550)
 #+END_SRC
 
 Visually, I prefer to hide the markers of macros, so let’s do that:
