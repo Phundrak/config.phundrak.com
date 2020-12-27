@@ -2914,11 +2914,12 @@ By the way, reference links in LaTeX should be written in this format:
   (setq org-export-latex-hyperref-format "\\ref{%s}")
 #+END_SRC
 
-When it comes to the export itself, the latex file needs to be processed several times through XeLaTeX.
+When it comes to the export itself, the latex file needs to be processed several times through XeLaTeX in order to get some references right. Don’t forget to also run bibtex!
 #+NAME: org-latex-pdf-process
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-pdf-process
         '("xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "bibtex %b"
           "xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
           "xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+END_SRC
