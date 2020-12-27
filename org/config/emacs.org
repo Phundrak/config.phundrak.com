@@ -2082,38 +2082,41 @@ One of the amazing features of org-mode is its literary programming capacities b
 | sass       |
 | scheme     |
 | shell      |
+| swift      |
 
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
 #+header: :var languages=org-babel-languages-table[,0]
 #+BEGIN_SRC emacs-lisp :exports none
-  (mapconcat (lambda ($language) (format "(%s . t)" $language))
-             languages
-             "\n")
+  (format "'(%s)"
+          (mapconcat (lambda ($language)
+                       (format "(%s . t)" $language))
+                     languages
+                     "\n  "))
 #+END_SRC
 
-#+RESULTS[0e796575005954e09cc4c2ce54d4bbf93364e45d]: org-babel-languages-gen
-#+begin_example
-(C . t)
-(dot . t)
-(emacs-lisp . t)
-(gnuplot . t)
-(latex . t)
-(makefile . t)
-(plantuml . t)
-(python . t)
-(sass . t)
-(scheme . t)
-(shell . t)
-#+end_example
+#+RESULTS[498fc46efb1de59954f758ca3d9869ea6a73dad9]: org-babel-languages-gen
+#+begin_src emacs-lisp
+'((C . t)
+  (dot . t)
+  (emacs-lisp . t)
+  (gnuplot . t)
+  (latex . t)
+  (makefile . t)
+  (plantuml . t)
+  (python . t)
+  (sass . t)
+  (scheme . t)
+  (shell . t)
+  (swift . t))
+#+end_src
 
 The corresponding code is as follows:
 #+NAME: org-babel-load-languages
 #+BEGIN_SRC emacs-lisp :noweb yes
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '(
-     <<org-babel-languages-gen()>>))
+   <<org-babel-languages-gen()>>)
 #+END_SRC
 
 Scheme requires a default implementation for geiser:
@@ -2458,94 +2461,95 @@ The following code snipped is not tangled into my configuration file, but instea
 #+NAME: org-capture-shortcut-gen
 #+header: :exports code :cache yes :results replace
 #+BEGIN_SRC emacs-lisp :var table=org-capture-shortcuts-table
-  (mapconcat (lambda (entry)
-               (let* ((shortcut   (nth 0 entry))
-                      (name       (nth 1 entry))
-                      (title      (nth 2 entry))
-                      (insertmode (nth 3 entry))
-                      (fileinsert (nth 4 entry))
-                      (sourceorg  (nth 5 entry)))
-                 (if (string= "" insertmode)
-                     (format "(\"%s\" \"%s\")" shortcut name)
-                   (concat (format "(\"%s\" \"%s\" entry\n" shortcut name)
-                           (format "  (%s %s%s)\n" insertmode fileinsert
-                                   (if (string= "file+datetree" insertmode) ""
-                                     (format " \"%s\"" (if (string= "" title) name title))))
-                           (format "  (file \"~/org/capture/%s\"))" sourceorg)))) )
-             table "\n")
+  (format "'(%s)"
+          (mapconcat (lambda (entry)
+                       (let* ((shortcut   (nth 0 entry))
+                              (name       (nth 1 entry))
+                              (title      (nth 2 entry))
+                              (insertmode (nth 3 entry))
+                              (fileinsert (nth 4 entry))
+                              (sourceorg  (nth 5 entry)))
+                         (if (string= "" insertmode)
+                             (format "(\"%s\" \"%s\")" shortcut name)
+                           (concat (format "(\"%s\" \"%s\" entry\n" shortcut name)
+                                   (format "    (%s %s%s)\n" insertmode fileinsert
+                                           (if (string= "file+datetree" insertmode) ""
+                                             (format " \"%s\"" (if (string= "" title) name title))))
+                                   (format "    (file \"~/org/capture/%s\"))" sourceorg)))) )
+                     table "\n  "))
 #+END_SRC
 
-#+RESULTS[5826faa0521c58664ddeedcf44b88910dbd344b6]: org-capture-shortcut-gen
+#+RESULTS[1fec26dc1d0158ebcaf9b282eb997901321593fa]: org-capture-shortcut-gen
 #+begin_example
-("e" "Email")
-("ew" "Write Email" entry
-  (file+headline org-default-notes-file "Emails")
-  (file "~/org/capture/emails.orgcaptmpl"))
-("j" "Journal" entry
-  (file+datetree org-journal-file)
-  (file "~/org/capture/journal.orgcaptmpl"))
-("l" "Link")
-("ll" "General" entry
-  (file+headline org-default-notes-file "General")
-  (file "~/org/capture/"))
-("ly" "YouTube" entry
-  (file+headline org-default-notes-file "YouTube")
-  (file "~/org/capture/youtube.orgcaptmpl"))
-("L" "Protocol Link" entry
-  (file+headline org-default-notes-file "Link")
-  (file "~/org/capture/protocol-link.orgcaptmpl"))
-("n" "Notes")
-("nc" "Conlanging" entry
-  (file+headline org-conlanging-file "Note")
-  (file "~/org/capture/notes.orgcaptmpl"))
-("nn" "General" entry
-  (file+headline org-default-notes-file "General")
-  (file "~/org/capture/notes.orgcaptmpl"))
-("nN" "Novel" entry
-  (file+headline org-novel-notes-file "Note")
-  (file "~/org/capture/notes.orgcaptmpl"))
-("nq" "Quote" entry
-  (file+headline org-default-notes-file "Quote")
-  (file "~/org/capture/notes-quote.orgcaptmpl"))
-("nw" "Worldbuilding" entry
-  (file+headline org-wordbuilding-file "Note")
-  (file "~/org/capture/notes.orgcaptmpl"))
-("N" "Novel")
-("Ni" "Ideas" entry
-  (file+headline org-novel-notes-file "Ideas")
-  (file "~/org/capture/notes.orgcaptmpl"))
-("p" "Protocol" entry
-  (file+headline org-default-notes-file "Link")
-  (file "~/org/capture/protocol.orgcaptmpl"))
-("r" "Resources")
-("rc" "Conlanging" entry
-  (file+headline org-conlanging-file "Resource")
-  (file "~/org/capture/resource.orgcaptmpl"))
-("re" "Emacs" entry
-  (file+headline org-default-notes-file "Emacs")
-  (file "~/org/capture/resource.orgcaptmpl"))
-("ri" "Informatique" entry
-  (file+headline org-default-notes-file "Informatique")
-  (file "~/org/capture/resource.orgcaptmpl"))
-("rl" "Linguistics" entry
-  (file+headline org-default-notes-file "Linguistics")
-  (file "~/org/capture/resource.orgcaptmpl"))
-("rw" "Worldbuilding" entry
-  (file+headline org-wordbuilding-file "Resource")
-  (file "~/org/capture/resource.orgcaptmpl"))
-("t" "Tasks")
-("tb" "Birthday" entry
-  (file+headline org-private-agenda-file "Birthday")
-  (file "~/org/capture/birthday.orgcaptmpl"))
-("te" "Event" entry
-  (file+headline org-private-agenda-file "Event")
-  (file "~/org/capture/event.orgcaptmpl"))
-("th" "Health" entry
-  (file+headline org-private-agenda-file "Health")
-  (file "~/org/capture/health.orgcaptmpl"))
-("ti" "Informatique" entry
-  (file+headline org-private-agenda-file "Informatique")
-  (file "~/org/capture/informatique.orgcaptmpl"))
+'(("e" "Email")
+  ("ew" "Write Email" entry
+    (file+headline org-default-notes-file "Emails")
+    (file "~/org/capture/emails.orgcaptmpl"))
+  ("j" "Journal" entry
+    (file+datetree org-journal-file)
+    (file "~/org/capture/journal.orgcaptmpl"))
+  ("l" "Link")
+  ("ll" "General" entry
+    (file+headline org-default-notes-file "General")
+    (file "~/org/capture/"))
+  ("ly" "YouTube" entry
+    (file+headline org-default-notes-file "YouTube")
+    (file "~/org/capture/youtube.orgcaptmpl"))
+  ("L" "Protocol Link" entry
+    (file+headline org-default-notes-file "Link")
+    (file "~/org/capture/protocol-link.orgcaptmpl"))
+  ("n" "Notes")
+  ("nc" "Conlanging" entry
+    (file+headline org-conlanging-file "Note")
+    (file "~/org/capture/notes.orgcaptmpl"))
+  ("nn" "General" entry
+    (file+headline org-default-notes-file "General")
+    (file "~/org/capture/notes.orgcaptmpl"))
+  ("nN" "Novel" entry
+    (file+headline org-novel-notes-file "Note")
+    (file "~/org/capture/notes.orgcaptmpl"))
+  ("nq" "Quote" entry
+    (file+headline org-default-notes-file "Quote")
+    (file "~/org/capture/notes-quote.orgcaptmpl"))
+  ("nw" "Worldbuilding" entry
+    (file+headline org-wordbuilding-file "Note")
+    (file "~/org/capture/notes.orgcaptmpl"))
+  ("N" "Novel")
+  ("Ni" "Ideas" entry
+    (file+headline org-novel-notes-file "Ideas")
+    (file "~/org/capture/notes.orgcaptmpl"))
+  ("p" "Protocol" entry
+    (file+headline org-default-notes-file "Link")
+    (file "~/org/capture/protocol.orgcaptmpl"))
+  ("r" "Resources")
+  ("rc" "Conlanging" entry
+    (file+headline org-conlanging-file "Resource")
+    (file "~/org/capture/resource.orgcaptmpl"))
+  ("re" "Emacs" entry
+    (file+headline org-default-notes-file "Emacs")
+    (file "~/org/capture/resource.orgcaptmpl"))
+  ("ri" "Informatique" entry
+    (file+headline org-default-notes-file "Informatique")
+    (file "~/org/capture/resource.orgcaptmpl"))
+  ("rl" "Linguistics" entry
+    (file+headline org-default-notes-file "Linguistics")
+    (file "~/org/capture/resource.orgcaptmpl"))
+  ("rw" "Worldbuilding" entry
+    (file+headline org-wordbuilding-file "Resource")
+    (file "~/org/capture/resource.orgcaptmpl"))
+  ("t" "Tasks")
+  ("tb" "Birthday" entry
+    (file+headline org-private-agenda-file "Birthday")
+    (file "~/org/capture/birthday.orgcaptmpl"))
+  ("te" "Event" entry
+    (file+headline org-private-agenda-file "Event")
+    (file "~/org/capture/event.orgcaptmpl"))
+  ("th" "Health" entry
+    (file+headline org-private-agenda-file "Health")
+    (file "~/org/capture/health.orgcaptmpl"))
+  ("ti" "Informatique" entry
+    (file+headline org-private-agenda-file "Informatique")
+    (file "~/org/capture/informatique.orgcaptmpl")))
 #+end_example
 
 Below you can find the equivalent code as described above.
@@ -2553,9 +2557,7 @@ Below you can find the equivalent code as described above.
 #+BEGIN_SRC emacs-lisp :noweb yes
   (setq
    org-capture-templates
-   '(
-     <<org-capture-shortcut-gen()>>
-     ))
+   <<org-capture-shortcut-gen()>>)
 #+END_SRC
 
 You may notice a capture entry for my journal, and this is due to the fact I do not use ~org-journal~ anymore: it was too overpowered for me, and I prefer to keep it simple with a single file. And as you can see, and unlike a lot of other Emacs configurations, the content of the template is not set in the variable, but in external files which can be modified freely as actual Org buffers instead of trying to get a proper one with loads of ~\n~ characters and such. All these templates are declared below.
