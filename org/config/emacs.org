@@ -2266,6 +2266,145 @@ I also have an issue where small dots precede my org headers. Let’s fix that:
         org-superstar-leading-bullet ?\s)
 #+END_SRC
 
+**** Behavior
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
+:END:
+Something really neat I learned about is the ability of org headers to inherit properties from parent headers. Let’s enable that!
+#+NAME: org-use-property-inheritance
+#+BEGIN_SRC emacs-lisp
+  (setq org-use-property-inheritance t)
+#+END_SRC
+
+Sometimes, I also want to have alphabetical lists in org-mode:
+#+NAME: org-list-allow-alphabetical
+#+BEGIN_SRC emacs-lisp
+  (setq org-list-allow-alphabetical t)
+#+END_SRC
+
+LSP can work in source blocks, but some work is needed (shamelessly stolen [[https://tecosaur.github.io/emacs-config/config.html#lsp-support-src][from here]], though modified a tiny bit). Here are the languages I want to activate LSP for in this environment:
+#+NAME: org-lsp-languages-src-blocks-table
+| c      |
+| c++    |
+| dart   |
+| python |
+| rust   |
+
+#+NAME: org-lsp-languages-src-blocks-gen
+#+header: :cache yes :results replace
+#+header: :var languages=org-lsp-languages-src-blocks-table[,0]
+#+BEGIN_SRC emacs-lisp :exports none
+  (mapconcat (lambda (lang)
+               (format "\"%s\"" lang))
+             languages
+             " ")
+#+END_SRC
+
+#+RESULTS[cbfba838da4510647d09bfd0fd2f20996c8cad38]: org-lsp-languages-src-blocks-gen
+: "c" "c++" "dart" "python" "rust"
+
+And here is the code to activate that:
+#+NAME: org-src-block-lsp
+#+BEGIN_SRC emacs-lisp :noweb yes
+  (cl-defmacro lsp-org-babel-enable (lang)
+    "Support LANG in org source code block."
+    (setq centaur-lsp 'lsp-mode)
+    (cl-check-type lang stringp)
+    (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+           (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+      `(progn
+         (defun ,intern-pre (info)
+           (let ((file-name (->> info caddr (alist-get :file))))
+             (unless file-name
+               (setq file-name (make-temp-file "babel-lsp-")))
+             (setq buffer-file-name file-name)
+             (lsp-deferred)))
+         (put ',intern-pre 'function-documentation
+              (format "Enable lsp-mode in the buffer of org source block (%s)."
+                      (upcase ,lang)))
+         (if (fboundp ',edit-pre)
+             (advice-add ',edit-pre :after ',intern-pre)
+           (progn
+             (defun ,edit-pre (info)
+               (,intern-pre info))
+             (put ',edit-pre 'function-documentation
+                  (format "Prepare local buffer environment for org source block (%s)."
+                          (upcase ,lang))))))))
+  (defvar org-babel-lsp-lang-list
+    '(<<org-lsp-languages-src-blocks-gen()>>))
+  (dolist (lang org-babel-lsp-lang-list)
+    (eval `(lsp-org-babel-enable ,lang)))
+#+END_SRC
+
+Here is one behavior that I really want to see modified: the ability to use ~M-RET~ without slicing the text the marker is on.
+#+NAME: org-M-RET-may-split-line
+#+BEGIN_SRC emacs-lisp
+  (setq org-M-RET-may-split-line nil)
+#+END_SRC
+
+Since Org 9.3, Org no longer attempts to restore the window configuration in the frame to which the user returns after editing a source block with ~org-edit-src-code~. This means with the original value of ~org-src-window-setup~ (~reorganize-frame~), the current frame will be split in two between the original org window and the source window, and once we quit the source window only the org window will remain. This is not a desired behavior for me, so I chose to set this variable to ~split-window-right~ in order to keep my windows organization and have a similar behavior to the old one.
+#+NAME: org-src-window-setup
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'split-window-below)
+#+END_SRC
+
+However, it is not rare that I want to change that for an horizontal split, which can be achieved with the value ~split-window-below~. Thus, I have made this function that allows me to switch between the (default) vertical split and the horizontal split.
+#+NAME: org-src-window-toggle
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/toggle-org-src-window-split ()
+    "This function allows the user to toggle the behavior of
+  `org-edit-src-code'. If the variable `org-src-window-setup' has
+  the value `split-window-right', then it will be changed to
+  `split-window-below'. Otherwise, it will be set back to
+  `split-window-right'"
+    (interactive)
+    (if (equal org-src-window-setup 'split-window-right)
+        (setq org-src-window-setup 'split-window-below)
+      (setq org-src-window-setup 'split-window-right))
+    (message "Org-src buffers will now split %s"
+             (if (equal org-src-window-setup 'split-window-right)
+                 "vertically"
+               "horizontally")))
+#+END_SRC
+
+When creating a link to an Org flie, I want to create an ID only if the link is created interactively, and only if there is no custom ID already created.
+#+NAME: org-id-link-to-org
+#+BEGIN_SRC emacs-lisp
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+#+END_SRC
+
+The tag ~:noexport:~ is fine and all, but it doesn’t allow for hidden org structures, that is headers that are visible in the org buffer but once the file is exported to another format the header disappears but its content stays. ~ox-extra~ has such a feature through ~ignore-headlines~.
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines))
+#+END_SRC
+This gives us access to the ~:ignore:~ tag which allows the behavior above mentioned. To give you an idea, the org buffer
+#+BEGIN_SRC org
+  ,* Headline 1
+  Blah
+
+  ,** Headline 2
+  Blah
+
+  ,*** Hidden headline 3-1                                              :ignore:
+  Blabla
+
+  ,*** Hidden headline 3-2                                              :ignore:
+  Blahblah
+#+END_SRC
+Will be exported as if it were the buffer
+#+BEGIN_SRC org
+  ,* Headline 1
+  Blah
+
+  ,** Headline 2
+  Blah
+
+  Blabla
+
+  Blahblah
+#+END_SRC
+
 **** Capture
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
@@ -2994,118 +3133,7 @@ The project is then defined like so:
                 "langue-phundrak-com-pdf"))
 #+END_SRC
 
-**** Variables
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-97587637
-:END:
-***** Behavior
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
-:END:
-Something really neat I learned about is the ability of org headers to inherit properties from parent headers. Let’s enable that!
-#+NAME: org-use-property-inheritance
-#+BEGIN_SRC emacs-lisp
-  (setq org-use-property-inheritance t)
-#+END_SRC
-
-Sometimes, I also want to have alphabetical lists in org-mode:
-#+NAME: org-list-allow-alphabetical
-#+BEGIN_SRC emacs-lisp
-  (setq org-list-allow-alphabetical t)
-#+END_SRC
-
-LSP can work in source blocks, but some work is needed (shamelessly stolen [[https://tecosaur.github.io/emacs-config/config.html#lsp-support-src][from here]], though modified a tiny bit). Here are the languages I want to activate LSP for in this environment:
-#+NAME: org-lsp-languages-src-blocks-table
-| c      |
-| c++    |
-| dart   |
-| python |
-| rust   |
-
-#+NAME: org-lsp-languages-src-blocks-gen
-#+header: :cache yes :results replace
-#+header: :var languages=org-lsp-languages-src-blocks-table[,0]
-#+BEGIN_SRC emacs-lisp :exports none
-  (mapconcat (lambda (lang)
-               (format "\"%s\"" lang))
-             languages
-             " ")
-#+END_SRC
-
-#+RESULTS[cbfba838da4510647d09bfd0fd2f20996c8cad38]: org-lsp-languages-src-blocks-gen
-: "c" "c++" "dart" "python" "rust"
-
-And here is the code to activate that:
-#+NAME: org-src-block-lsp
-#+BEGIN_SRC emacs-lisp :noweb yes
-  (cl-defmacro lsp-org-babel-enable (lang)
-    "Support LANG in org source code block."
-    (setq centaur-lsp 'lsp-mode)
-    (cl-check-type lang stringp)
-    (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-           (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-      `(progn
-         (defun ,intern-pre (info)
-           (let ((file-name (->> info caddr (alist-get :file))))
-             (unless file-name
-               (setq file-name (make-temp-file "babel-lsp-")))
-             (setq buffer-file-name file-name)
-             (lsp-deferred)))
-         (put ',intern-pre 'function-documentation
-              (format "Enable lsp-mode in the buffer of org source block (%s)."
-                      (upcase ,lang)))
-         (if (fboundp ',edit-pre)
-             (advice-add ',edit-pre :after ',intern-pre)
-           (progn
-             (defun ,edit-pre (info)
-               (,intern-pre info))
-             (put ',edit-pre 'function-documentation
-                  (format "Prepare local buffer environment for org source block (%s)."
-                          (upcase ,lang))))))))
-  (defvar org-babel-lsp-lang-list
-    '(<<org-lsp-languages-src-blocks-gen()>>))
-  (dolist (lang org-babel-lsp-lang-list)
-    (eval `(lsp-org-babel-enable ,lang)))
-#+END_SRC
-
-Here is one behavior that I really want to see modified: the ability to use ~M-RET~ without slicing the text the marker is on.
-#+NAME: org-M-RET-may-split-line
-#+BEGIN_SRC emacs-lisp
-  (setq org-M-RET-may-split-line nil)
-#+END_SRC
-
-Since Org 9.3, Org no longer attempts to restore the window configuration in the frame to which the user returns after editing a source block with ~org-edit-src-code~. This means with the original value of ~org-src-window-setup~ (~reorganize-frame~), the current frame will be split in two between the original org window and the source window, and once we quit the source window only the org window will remain. This is not a desired behavior for me, so I chose to set this variable to ~split-window-right~ in order to keep my windows organization and have a similar behavior to the old one.
-#+NAME: org-src-window-setup
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-window-setup 'split-window-below)
-#+END_SRC
-
-However, it is not rare that I want to change that for an horizontal split, which can be achieved with the value ~split-window-below~. Thus, I have made this function that allows me to switch between the (default) vertical split and the horizontal split.
-#+NAME: org-src-window-toggle
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/toggle-org-src-window-split ()
-    "This function allows the user to toggle the behavior of
-  `org-edit-src-code'. If the variable `org-src-window-setup' has
-  the value `split-window-right', then it will be changed to
-  `split-window-below'. Otherwise, it will be set back to
-  `split-window-right'"
-    (interactive)
-    (if (equal org-src-window-setup 'split-window-right)
-        (setq org-src-window-setup 'split-window-below)
-      (setq org-src-window-setup 'split-window-right))
-    (message "Org-src buffers will now split %s"
-             (if (equal org-src-window-setup 'split-window-right)
-                 "vertically"
-               "horizontally")))
-#+END_SRC
-
-When creating a link to an Org flie, I want to create an ID only if the link is created interactively, and only if there is no custom ID already created.
-#+NAME: org-id-link-to-org
-#+BEGIN_SRC emacs-lisp
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-#+END_SRC
-
-***** User information
+**** User information
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-User_information-6c7d5e3f
 :END:
