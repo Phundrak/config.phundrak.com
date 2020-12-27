@@ -2220,6 +2220,7 @@ Fonts will play an important part in this, but so will colors and font size. The
      `(org-property-value        ((t (,@fixed))) t)
      `(org-drawer                ((t (,@fixed :foreground ,phundrak/nord10))) t)
      `(org-table                 ((t (,@fixed :foreground ,phundrak/nord14))) t)
+     `(org-date                  ((t (,@fixed :foreground ,phundrak/nord13))) t)
      '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
      '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
      '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
