@@ -1268,6 +1268,40 @@ A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in
   end
 #+END_SRC
 
+* ytplay
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytplay
+:CUSTOM_ID: Weather-4ed00bb0
+:END:
+~ytplay~ is a simple script I’ve written that allows me to play in mpv any YouTube video at the desired resolution. The script relies on ~dmenu~ (or ~rofi~ in dmenu-mode), ~youtube-dl~ and of course ~mpv~ itself.
+#+BEGIN_SRC fish
+  set URL (rofi -dmenu -i -p "Video URL")
+  if test -n "$URL"
+      set FORMAT                              \
+          (youtube-dl --list-formats "$URL" | \
+          egrep "webm.*[0-9]+x[0-9]+"       | \
+          awk '{print $3 " " $1}'           | \
+          sort -gu                          | \
+          rofi -dmenu -i -p "Resolution"    | \
+          string split " ")
+      set FCODE $FORMAT[2]
+      mpv --ytdl-format=$FCODE "$URL"
+  end
+#+END_SRC
+
+I’ll even add a ~.desktop~ entry for this script:
+#+BEGIN_SRC conf-desktop :tangle ~/.local/share/applications/ytplay.desktop :mkdirp yes
+  [Desktop Entry]
+  Type=Application
+  Version=1.0
+  Name=ytplay (YouTube in mpv)
+  Comment=Play YouTube videos in mpv
+  Exec=/home/phundrak/.local/bin/ytplay
+  Path=/home/phundrak/.local/bin
+  Terminal=false
+  Categories=Media
+#+END_SRC
+
 * ytdl - a ~youtube-dl~ wrapper
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytdl
