@@ -3702,7 +3702,7 @@ Pinentry should use the ~loopback~ mode when communicating with GnuPG. Let’s s
 (setq epg-pinentry-mode 'loopback)
 #+END_SRC
 
-*** Wttr.in cities
+*** Wttr.in
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Miscellaneous-Wttr.in_cities-dd24f8c5
 :END:
@@ -3710,6 +3710,23 @@ Thanks to the wttrin package, I can get the weather forecast in Emacs for a coup
 #+BEGIN_SRC emacs-lisp
   (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
                                 "Saint Agrève"))
+#+END_SRC
+
+However, the package is currently broken (it was last updated in 2017): wttr.in now returns by default an HTML page instead of an ASCII result. In order to fix it, a ~?A~ must be added at the end of the request in order to get a nice output. Also, let’s use the HTTPS protocol while we’re at it.
+#+BEGIN_SRC emacs-lisp
+  (defun wttrin-fetch-raw-string (query)
+    "Get the weather information based on your QUERY."
+    (let ((url-user-agent "curl"))
+      (add-to-list 'url-request-extra-headers wttrin-default-accept-language)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           (format "http%s://wttr.in/%s?A"
+                   (if (gnutls-available-p) "s" "")
+                   query)
+           (lambda (status)
+             (switch-to-buffer (current-buffer))))
+        (decode-coding-string (buffer-string)
+                              'utf-8))))
 #+END_SRC
 
 ** Visual configuration
