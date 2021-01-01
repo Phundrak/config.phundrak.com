@@ -1579,15 +1579,6 @@ Finally, let’s enable globally ~diredfl~ so we can get a colourful Dired buffe
   (diredfl-global-mode 1)
 #+END_SRC
 
-*** Emacs Lisp
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Emacs-builtins-Emacs-Lisp-36d134d8
-:END:
-This chapter will be really short, as most of the defaults I get with Emacs quite fit my needs. However, I wish to declare a custom leader key chord for evil-lisp-state:
-#+BEGIN_SRC emacs-lisp
-  (evil-lisp-state-leader ", l")
-#+END_SRC
-
 *** Eshell
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-3012e67e
