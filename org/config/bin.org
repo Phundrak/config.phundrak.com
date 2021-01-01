@@ -1285,7 +1285,7 @@ A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in
           rofi -dmenu -i -p "Resolution"    | \
           string split " ")
       set FCODE $FORMAT[2]
-      mpv --ytdl-format=$FCODE "$URL"
+      mpv --ytdl-format=$FCODE+bestaudio/best "$URL"
   end
 #+END_SRC
 
