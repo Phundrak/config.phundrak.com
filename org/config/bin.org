@@ -24,7 +24,7 @@ Because I sometimes switch from window manager to window manager, creating a scr
 #+NAME: autostart-table
 | Command       | Arguments                                                     | Run once? |
 |---------------+---------------------------------------------------------------+-----------|
-| ~set-screens~ |                                                               |           |
+| ~set-screens~ |                                                               | no        |
 | ~pumopm~      |                                                               | yes       |
 | ~xfce-polkit~ |                                                               | yes       |
 | ~xss-lock~    | ~plock~                                                       | yes       |
@@ -32,9 +32,8 @@ Because I sometimes switch from window manager to window manager, creating a scr
 | ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
 | ~nm-applet~   |                                                               | yes       |
 | ~numlockx~    | ~on~                                                          | yes       |
-| ~nitrogen~    | ~--restore~                                                   | no        |
 | ~mpc~         | ~stop~                                                        | no        |
-| ~emacsclient~ | ~-c -e "(delete-frame)"~                                      | no        |
+| ~xwallpaper~  | ~--zoom $HOME/.cache/wallpaper~~                              | no        |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
@@ -51,43 +50,39 @@ Because I sometimes switch from window manager to window manager, creating a scr
              "\n")
 #+END_SRC
 
-#+RESULTS[2dc7d381730eee5658caea010f3f0db75749107a]: autostart-gen
+#+RESULTS[0221ee62b690b66ba97566fdfdb724c62288df98]: autostart-gen
 #+begin_example
 set-screens  &
 
 if ! test (pgrep pumopm 2&> /dev/null)
-  pumopm & && disown
+	pumopm & && disown
 end
 
 if ! test (pgrep xfce-polkit 2&> /dev/null)
-  xfce-polkit & && disown
+	xfce-polkit & && disown
 end
 
 if ! test (pgrep xss-lock 2&> /dev/null)
-  xss-lock plock & && disown
+	xss-lock plock & && disown
 end
 
 if ! test (pgrep picom 2&> /dev/null)
-  picom --experimental-backends & && disown
+	picom --experimental-backends & && disown
 end
 
 if ! test (pgrep xidlehook 2&> /dev/null)
-  xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
+	xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
 end
 
 if ! test (pgrep nm-applet 2&> /dev/null)
-  nm-applet & && disown
+	nm-applet & && disown
 end
 
 if ! test (pgrep numlockx 2&> /dev/null)
-  numlockx on & && disown
+	numlockx on & && disown
 end
 
-nitrogen --restore &
-
 mpc stop &
-
-emacsclient -c -e "(delete-frame)" &
 #+end_example
 
 #+BEGIN_SRC fish :noweb yes
@@ -96,38 +91,11 @@ emacsclient -c -e "(delete-frame)" &
   <<autostart-gen()>>
 #+END_SRC
 
-* awiki
+* cli utilities
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
-:CUSTOM_ID: awiki-7ac5e1d5
+:CUSTOM_ID: cli-utilities-ec2120b0
 :END:
-~awiki~ is a simple script used with ~rofi~ that relies on the ~arch-wiki-docs~ package in order to provide the user a way to quickly find and display any English page from the Arch Wiki in a browser. The advantage of using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is you get instant suggestion in rofi using fuzzy-search. The downside is rofi will only help you find pages by their title, and it will not help you find keywords in the content of said pages.
-
-The first step is to create the list of all the pages that are currently stored on disk. ~arch-wiki-docs~ stores them in ~/usr/share/doc/arch-wiki/html/en~. A simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then pipe that into rofi in dmenu mode in order to choose the page we want to display. By the way, setting the location of the HTML files will come in handy later.
-#+BEGIN_SRC fish
-  set WLOCATION /usr/share/doc/arch-wiki/html/en/
-  set WPAGE (/bin/ls $WLOCATION                              | \
-      sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
-      rofi -dmenu -p "Arch Wiki" -i)
-  set WPAGE (echo $WPAGE | sed -r 's/\s+/_/g')
-#+END_SRC
-
-Now, all I need to do is to send this list into rofi and tell it to open the result with our favorite browser with ~xdg-open~.
-#+BEGIN_SRC fish
-  xdg-open $WLOCATION$WPAGE.html
-#+END_SRC
-
-* Askpass
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
-:CUSTOM_ID: Askpass-d0d7a8c0
-:END:
-Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As you can see, this is a oneliner if we ignore the initial shebang. This executable is pointed at by the
-#+BEGIN_SRC fish
-  rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
-#+END_SRC
-
-* Backup
+** Backup
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
 :CUSTOM_ID: Backup-68c7c63e
@@ -137,33 +105,11 @@ Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the us
   cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
 #+END_SRC
 
-* ConnectWifi                                                      :noexport:
+** Development
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
-:CUSTOM_ID: ConnectWifi-16e5e24a
+:CUSTOM_ID: cli-utilities-Development-baec808a
 :END:
-~connect-wifi~ is a small utility tool that allows the user to connect to available WiFi networks. The first thing to do is to select the WiFi we want to connect to. We’ll use the ~nmcli c s~ command to get the list of the available networks, and we’ll chose one with ~rofi~.
-#+BEGIN_SRC fish
-  set SELECTEDWIFI (nmcli d w l | \
-  egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
-  egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
-  rofi -dmenu -p "Select your WiFi network")
-#+END_SRC
-Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
-let’s just send a notification no network was selected.
-#+BEGIN_SRC fish
-  if test -z $SELECTEDWIFI
-      notify-send "No WiFi network selected" -u low && exit
-  end
-  nmcli c u $SELECTEDWIFI
-#+END_SRC
-
-** TODO fix it
-:PROPERTIES:
-:CUSTOM_ID: ConnectWifi-fix_it-a4b11503
-:END:
-
-* Cppnew                                                           :noexport:
+*** Cppnew                                                       :noexport:
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
 :CUSTOM_ID: Cppnew-964e697b
@@ -185,7 +131,7 @@ First of all, if no arguments were passed, return an error.
 
 Now, let’s set a couple of variables which will prove useful later on when trying to set up our project.
 
-* Cnew
+*** Cnew
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/cnew
 :CUSTOM_ID: Cnew-d9ec9cc4
@@ -242,7 +188,7 @@ Now, let’s create a git repository and initialize it.
 
 And we’re done!
 
-* Dart Language Server
+*** Dart Language Server
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dart_language_server
 :CUSTOM_ID: Dart_Language_Server-18c256b1
@@ -254,770 +200,27 @@ Spacemacs' recommendations on how to use Dart with LSP is outdated, since [[http
 
 So, instead of using the obsolete executable, instead we will be calling the analysis server as requested.
 
-* Dmenu
+*** UpdateFlutter
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
-:CUSTOM_ID: Dmenu-527edf04
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
+:CUSTOM_ID: UpdateFlutter-1e8fbeb7
 :END:
-I wrote this very simple script in order to replace =dmenu= with rofi’s emulation of dmenu, since I prefer rofi’s appearance. It basically calls rofi’s dmenu emulation with the arguments initially passed to dmenu.
+This is a simple utility to be ran when the ~flutter~ package is updated.
 #+BEGIN_SRC fish
-  rofi -dmenu $argv
+  sudo chown -R :flutterusers /opt/flutter
+  sudo chmod -R g+w /opt/flutter
+  sudo chmod a+rw /opt/flutter/version
+  sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
 #+END_SRC
 
-* Emacsmail
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
-:CUSTOM_ID: Emacsmail-afffb7cd
-:END:
-This short script is used in my =~/.local/share/applications/mu4e.desktop= file in order to send to Emacs any ~mailto:~ requests made in my system.
-#+BEGIN_SRC bash
-  emacsclient -c --eval "(browse-url-mail \"$@\")"
-#+END_SRC
-
-* Emoji picker
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
-:CUSTOM_ID: Emoji_picker-a1c374ec
-:END:
-The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. Once the emoji is selected, it is copied to the clipboard using =xclipboard=.
-#+BEGIN_SRC fish
-  grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
-  awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
-#+END_SRC
-
-Also, let’s send a notification telling the user the emoji has been copied!
-#+BEGIN_SRC fish
-  set emoji (xclip -o -selection clipboard | tr -d '\n')
-  test -z "$emoji" && notify-send "No emoji copied" -u low && exit
-  set -a emoji "copied to clipboard"
-  notify-send -u low $emoji
-#+END_SRC
-
-  It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
-
-* mp42webm
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
-:CUSTOM_ID: mp42webm-aeacca58
-:END:
-This function allows me to convert easily an mp4 video to the webm format. Nothing too fancy here.
-#+BEGIN_SRC fish
-  ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
-#+END_SRC
-
-* pape-update
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
-:CUSTOM_ID: pape-update-bdecbadf
-:END:
-This little tool sets a random wallpaper using nitrogen.
-#+BEGIN_SRC fish
-  set -l PAPESDIR ~/Pictures/Wallpapers
-  set -l PAPES (ls $PAPESDIR)
-  set -l PAPE $PAPESDIR/$PAPES[(random 1 (count $PAPES))]
-  for i in (seq (xrandr --current | grep ' connected' | wc -l))
-      nitrogen --set-zoom-fill $PAPE --head=(math "$i - 1") --save
-  end
-#+END_SRC
-
-* Pinfo                                                            :noexport:
+** Pinfo                                                          :noexport:
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
 :CUSTOM_ID: Pinfo-f3644596
 :END:
 ~pinfo~ is a utility that shows system information
 
-* Plock
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
-:CUSTOM_ID: Lock-635fcb38
-:END:
-~plock~ is a simple script that locks the screen with ~i3lock~ while setting as the background image of the locked screen a corrupted screenshot of the screen before it was locked.
-#+BEGIN_SRC fish
-  set TMPBG /tmp/screen.png
-  scrot $TMPBG
-  corrupter -add 0 $TMPBG $TMPBG
-  i3lock -t -e -f -i $TMPBG
-  rm $TMPBG
-#+END_SRC
-
-* Polybar-launch (Deprecated)
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
-:CUSTOM_ID: Polybar-launch-36789edc
-:END:
-This scripts allows the user to kill polybar and relaunch it, or to simply launch it if polybar isn’t launched yet. First thing to do is kill all polybar processes.
-#+BEGIN_SRC bash
-killall -q polybar
-#+END_SRC
-
-Now we have to wait untill all polybar processes have been shut down.
-#+BEGIN_SRC bash
-while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
-#+END_SRC
-
-Now that our system isn’t running polybar anymore, we’ll launch it again on all of our screens. By the way, I have two bars, so I’ll have to lauch them both.
-#+BEGIN_SRC bash
-  if type "xrandr"; then
-      for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-          MONITOR=$m polybar --reload top &
-          MONITOR=$m polybar --reload bottom &
-      done
-  else
-      polybar --reload top &
-      polybar --reload bottom &
-  fi
-#+END_SRC
-
-And we’re done! Let’s just launch a notification polybar has been relaunched.
-#+BEGIN_SRC bash
-  notify-send "Polybar restarted!" -a "polybar-launch"
-#+END_SRC
-
-* Rofi-mount
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
-:CUSTOM_ID: Rofi-mount-ebbebf68
-:END:
-=rofimount= is a script inspired by [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this one]], based on dmenu, which interactively asks the user what to mount, and where to mount it. What I did was replace dmenu with rofi, and fix a couple of bugs I encountered in the original script.
-
-** Get the mountable elements
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
-:END:
-#+BEGIN_SRC fish
-  begin
-#+END_SRC
-
-What the script does first is detect everything that can be mounted. Between a =begin= and =end=, let’s set =LFS= as a local variable. This si in order to get sane variables in the current block.
-#+BEGIN_SRC fish
-set -l LFS
-#+END_SRC
-
-Now, let’s detect the amount of mountable Android filesystems, and if any are detected, let’s read them into a global variable.
-#+BEGIN_SRC fish
-  set -l a (math (jmtpfs -l | wc -l) - 2)
-  test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
-#+END_SRC
-
-We’ll do the same for external and internal drives and partitions that can be mounted here.
-#+BEGIN_SRC fish
-  lsblk -rpo "name,type,size,mountpoint" | \
-  awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
-  read -zg usbdrives
-#+END_SRC
-
-Finally, we look for any CD drive that could be mounted on our device.
-#+BEGIN_SRC fish
-  blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
-#+END_SRC
-
-And that’s the end of our first block!
-#+BEGIN_SRC fish
-  end
-#+END_SRC
-
-Alright, we’ll save what kind on drives we can mount in a temporary file called =/tmp/drives=. We’ll make sure it’s blank by erasing it then creating it again with =touch=, like so. The =-f= flag on =rm= is here so we get no error if we try to delete a file that doesn’t exist (yet).
-#+BEGIN_SRC fish
-  set -g TMPDRIVES /tmp/drives
-  rm -f $TMPDRIVES
-  touch $TMPDRIVES
-#+END_SRC
-
-Now, let’s write what type of drives we can mount in this temporary file.
-#+BEGIN_SRC fish
-  test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
-  test -n "$cddrives" && echo "CD" >> $TMPDRIVES
-  test -n "$anddrives" && echo "Android" >> $TMPDRIVES
-#+END_SRC
-
-Now, we want to declare where to look for mount directories. For now, we’ll only look in =/media=, but you can add more if you wish.
-#+BEGIN_SRC fish
-  set -g basemount /media
-#+END_SRC
-
-** Get the mount point
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
-:END:
-Now, let’s declare a function that will allow us to chose the drive we want to mount.
-#+BEGIN_SRC fish
-  function getmount
-#+END_SRC
-
-First, we want to get our mount point. We’ll run a =find= command on each of the directories listed in =$basemount= to look for folders on which our drive could be mounted. This list will be passed to rofi from which we will chose our mount point.
-#+BEGIN_SRC fish
-  set -g mp (for d in $basemount
-      find $d -maxdepth 5 -type d
-  end | rofi -dmenu -i -p 'Type in mount point.')
-#+END_SRC
-
-We should verify that something has been actually selected, otherwise we should abort the script.
-#+BEGIN_SRC fish
-  if test -z $mp || test $mp = ""
-      return 1
-  end
-#+END_SRC
-
-Now, if the selected mount point does not exist, we’ll ask the user whether the directory should be created. If no, the script will abort. If yes, an attempt will be made at creating the directory as the user; if that fails, a new attempt will be made as sudo.
-#+BEGIN_SRC fish
-  if test ! -d $mp
-      switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
-          case 'Yes'
-              mkdir -p $mp || sudo -A mkdir -p $mp
-          case '*'
-              return 1
-      end
-  end
-#+END_SRC
-
-Finally, let’s close the function
-#+BEGIN_SRC fish
-  end
-#+END_SRC
-
-** Mount a USB drive, hard drive or partition
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
-:END:
-Alright, we want to mount a partition that answers by the name of =/dev/sdXX=, how do we do that? Let’s create first the function =mountusb= that will take care of it for us.
-#+BEGIN_SRC fish
-function mountusb
-#+END_SRC
-
-Now, the first thing we want to do is select the partition we want to mount. Remember, we stored those in =$usbdrives= earlier, so let’s pipe them into rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
-#+BEGIN_SRC fish
-  set -g chosen (echo $usbdrives | \
-  rofi -dmenu -i -p "Mount which drive?" | \
-  awk '{print $1}')
-#+END_SRC
-
-As usual after a user selection, let’s verify something has actually been selected. If not, let’s abort the script.
-#+BEGIN_SRC fish
-test -z $chosen && return 1
-#+END_SRC
-
-Now, let’s select the mount point of our partition. We’ll call the function =getmount= described in [[#Rofi-mount-Get_the_mount_point-6c4bac06][Get the mount point]] to select it.
-#+BEGIN_SRC fish
-getmount
-#+END_SRC
-
-Let’s verify the variable =mp= set in =getmount= is not empty, otherwise abort the script.
-#+BEGIN_SRC fish
-test -z $mp && return 1
-#+END_SRC
-
-Now, let’s mount it! We’ll use a switch which will detect the filesystem used so we know how to mount the partition.
-#+BEGIN_SRC fish
-switch (lsblk -no "fstype" $chosen)
-#+END_SRC
-
-We have two named case: =vfat= filesystems.
-#+BEGIN_SRC fish
-  case "vfat"
-      sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
-#+END_SRC
-
-And =ntfs= filesystems.
-#+BEGIN_SRC fish
-  case "ntfs"
-      sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
-#+END_SRC
-
-Else, we’ll let =mount= determine which filesystem is used by the partition (generally =ext4=).
-#+BEGIN_SRC fish
-  case '*'
-      sudo -A mount $chosen $mp
-#+END_SRC
-
-We’ll also run a =chown= on this newly mounted filesystem so the user can access it without any issues.
-#+BEGIN_SRC fish
-  sudo -A chown -R $USER:(id -g $USER) $mp
-#+END_SRC
-
-Let’s close the switch block and send a notification the partition has been mounted.
-#+BEGIN_SRC fish
-end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
-#+END_SRC
-
-And let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Mount an Android device
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
-:END:
-The function that manages to mount Android filesystems is =mountandroid=. Let’s declare it.
-#+BEGIN_SRC fish
-function mountandroid -d "Mount an Android device"
-#+END_SRC
-
-We’ll select which Android we want to mount. We will be asked through rofi.
-#+BEGIN_SRC fish
-set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
-#+END_SRC
-
-Now, we need to get the bus of the Android device we want to mount. It will be useful later, after we authorized mounting from our device, to get the path to our partition.
-#+BEGIN_SRC fish
-set bus (echo $chosen | sed 's/,.*//')
-#+END_SRC
-
-Let’s temporarily mount our device.
-#+BEGIN_SRC fish
-jmtpfs -device=$chosen $mp
-#+END_SRC
-
-Now, we need to allow our computer to mount our Android device. Depending on the Android version it is running on, we either need to specify our device is USB connected in order to exchange files, or Android will explicitely ask us if it is OK for our computer to access it. Let’s inform the user of that.
-#+BEGIN_SRC fish
-  echo "OK" | \
-  rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
-#+END_SRC
-
-Now, let’s get the actual path of our Android filesystem we wish to mount, and let’s unmount the previous temporary filesystem.
-#+BEGIN_SRC fish
-  set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
-  sudo -A umount $mp
-#+END_SRC
-
-Now we cam mount the new filesystem and send a notification if everything went well.
-#+BEGIN_SRC fish
-  jmtpfs -device=$newchosen $mp && \
-  notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
-#+END_SRC
-
-And now, we can close our function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Mount a CD drive
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
-:END:
-This part is way easier than the previous functions. As we will see, the function =mountcd='s body is only three lines long. First, let’s declare the function.
-#+BEGIN_SRC fish
-function mountcd
-#+END_SRC
-
-Now, let’s chose the CD drive we want to mount using =rofi=.
-#+BEGIN_SRC fish
-  set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
-#+END_SRC
-
-We’ll also get the mountpoint thanks to the =getmount= function described earlier.
-#+BEGIN_SRC fish
-getmount
-#+END_SRC
-
-And finally, let’s mount it and send the notification everything went well.
-#+BEGIN_SRC fish
-  sudo -A mount $chosen $mp && \
-  notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
-#+END_SRC
-
-Finally, let’s close our function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Ask what type of drive we want to mount
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
-:END:
-The first thing we will be asked if different types of drives are detected is which of these types the user wishes to mount. This is done with the function =asktype= which is declared below.
-#+BEGIN_SRC fish
-function asktype
-#+END_SRC
-
-We will use a switch statement which will use our anwser to rofi about what we wish to mount.
-#+BEGIN_SRC fish
-switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
-#+END_SRC
-
-If we chose the option "USB", we’ll mount a hard drive, partition or USB drive. In which case we’ll call the =mountusb= function.
-#+BEGIN_SRC fish
-  case "USB"
-      mountusb
-#+END_SRC
-
-If we chose the "Android" option, the =mountandroid= function is called.
-#+BEGIN_SRC fish
-  case "Android"
-      mountandroid
-#+END_SRC
-
-Else if we chose the "CD" option, we’ll call the =mountcd= function.
-#+BEGIN_SRC fish
-  case "CD"
-      mountcd
-#+END_SRC
-
-If nothing is selected, the function will naturally exit. Now, let’s close our switch statement and our function.
-#+BEGIN_SRC fish
-end
-end
-#+END_SRC
-
-** Launch the mounting functions
-:PROPERTIES:
-:CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
-:END:
-Now that we have declared our functions and set our variables, we’ll read the temporary file described in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The amount of lines is passed in a switch statement.
-#+BEGIN_SRC fish
-switch (wc -l < $TMPDRIVES)
-#+END_SRC
-
-If the file has no lines, i.e. it is empty, we have no mountable media. Let’s inform our user this is the case.
-#+BEGIN_SRC fish
-  case 0
-      notify-send "No USB drive or Android device or CD detected" -a "dmount"
-#+END_SRC
-
-If we only have one line, we have only one type of mountable media. We’ll pass this line to a second switch statement.
-#+BEGIN_SRC fish
-  case 1
-      switch (cat $TMPDRIVES)
-#+END_SRC
-This will allow the script to automatically detect what type of media it is, and mount the corresponding function.
-#+BEGIN_SRC fish
-  case "USB"
-      mountusb
-  case "Android"
-      mountandroid
-  case "CD"
-      mountCD
-#+END_SRC
-Let’s close this nested switch case.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-If we have more than one line, we’ll have to ask the user what type of media they want to mount.
-#+BEGIN_SRC fish
-  case '*'
-      asktype
-#+END_SRC
-
-Now, let’s end our switch statement!
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-Finally, we’ll delete our temporary file.
-#+BEGIN_SRC fish
-rm -f $TMPDRIVES
-#+END_SRC
-
-And with that, this is the end of our script!
-
-* Rofi-pass
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
-:CUSTOM_ID: Rofi-pass-8335357f
-:END:
-=rofi-pass= is a simple utility that gets a password stored in the [[https://www.passwordstore.org/][=pass=]] password manager with rofi as its interface, and then stores the password in the clipboard.
-
-Let’s parse all the arguments passed to the script. If one of them is =--type=, =-t= or =type=, the script will attempt to type the password to the text area already selected without pasting the password to the clipboard.
-#+BEGIN_SRC fish
-  for arg in $argv
-      switch $arg
-          case '--type' '-t' 'type'
-              set -g TYPE "yes"
-          case '*'
-              printf 'Unknown argument: %s\n.' $arg
-              exit 1
-      end
-  end
-#+END_SRC
-
-Now, let’s get the list of the passwords that exist in our =pass= repository.
-#+BEGIN_SRC fish
-  set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
-  string replace -r ".*.password-store/" "" | \
-  string replace -r ".gpg" "" | sort)
-#+END_SRC
-
-Let the user choose which password they wish to select.
-#+BEGIN_SRC fish
-  set password (for elem in $passwords
-      echo $elem
-  end | rofi -dmenu -i -p "Select your password")
-#+END_SRC
-
-Let’s verify we actually selected a password and not just exited. If no password was selected, let’s simply exit the script.
-#+BEGIN_SRC fish
-  if test -z $password
-      exit
-  end
-#+END_SRC
-
-Depending on the arguments passed earlier, we might want some different behavior.
-#+BEGIN_SRC fish :noweb yes
-  if test $TYPE = "yes"
-      <<rofi-pass-type>>
-  else
-      <<rofi-pass-copy>>
-  end
-#+END_SRC
-
-The default behavior is to copy the password to the clipboard for 45 seconds, so let’s do that.
-#+NAME: rofi-pass-copy
-#+BEGIN_SRC fish :noweb yes :tangle no
-  pass show -c $password 2> /dev/null
-#+END_SRC
-
-Else, if we passed =--type=, =-t= or =type= as an argument of the script, we want it to attempt to type our password in the currently selected text input. Let’s do that.
-#+NAME: rofi-pass-type
-#+BEGIN_SRC fish :noweb yes :tangle no
-  set -l IFS
-  <<rofi-pass-type-get-password>>
-  printf %s $pass | xvkbd -file -
-#+END_SRC
-
-To correctly get the password from ~pass~, we need to parse the output and only get the first line, hence the following command.
-#+NAME: rofi-pass-type-get-password
-#+BEGIN_SRC fish :tangle no
-set pass (pass show $password | string split -n \n)[1]
-#+END_SRC
-
-* Rofi-umount
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
-:CUSTOM_ID: Rofi-umount-ddde1667
-:END:
-~rofiumount~ is the counterpart of ~rofimount~ for unmounting our mounted partitions.
-
-** Get the unmountable drives
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
-:END:
-First, we will need to list all the drives that can be safely unmounted. Let’s run this.
-#+BEGIN_SRC fish
-  set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
-  awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
-#+END_SRC
-
-Now, let’s get the android devices that are mounted.
-#+BEGIN_SRC fish
-set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
-#+END_SRC
-
-And let’s get the CD drives that are mounted.
-#+BEGIN_SRC fish
-set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
-#+END_SRC
-
-We’ll store all of our information in a temporary file, =/tmp/undrives=.
-#+BEGIN_SRC fish
-set -g undrivefile /tmp/undrives
-#+END_SRC
-
-Let’s make sure we begin with a clean, empty file.
-#+BEGIN_SRC fish
-  rm -f $undrivefile
-  touch $undrivefile
-#+END_SRC
-
-Depending on if the related variables are set, write the different types of mounted drives in the temporary file.
-#+BEGIN_SRC fish
-  test -n "$drives" && echo "USB" >> $undrivefile
-  test -n "$cds" && echo "CD" >> $undrivefile
-  test -n "$androids" && echo "Android" >> $undrivefile
-#+END_SRC
-
-** Unmount disk partitions
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
-:END:
-The function =unmountusb= will take care of unmounting any drive we can safely unmount. First, let’s declare the function.
-#+BEGIN_SRC fish
-function unmountusb
-#+END_SRC
-
-Let’s chose the drive to unmount with rofi.
-#+BEGIN_SRC fish
-  set chosen (echo $drives | \
-  rofi -dmenu -i -p "Unmount which drive?" | \
-  awk '{print $1}')
-#+END_SRC
-
-Let’s verify if the user actually selected any drive. If no, let’s abort the script.
-#+BEGIN_SRC fish
-test -z "$chosen" && exit 0
-#+END_SRC
-
-Now, let’s unmount the chosen drive and send a notification if it has been done.
-#+BEGIN_SRC fish
-  sudo -A umount $chosen && \
-  notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Now, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Unmount Android device
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
-:END:
-The function =unmountandroid= will take care of unmounting any mounted Android device. First, let’s declare our function.
-#+BEGIN_SRC fish
-function unmountandroid
-#+END_SRC
-
-Let the user choose which Android device to unmount.
-#+BEGIN_SRC fish
-set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
-#+END_SRC
-
-We’ll verify the user chose any device.
-#+BEGIN_SRC fish
-  test -z "$chosen" && exit 0
-#+END_SRC
-
-If a device has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
-#+BEGIN_SRC fish
-  sudo -A umount -l $chosen && \
-  notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Finally, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Unmount CD drive
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
-:END:
-=unmountcd= will take care of unmounting any mounted CD drive. Let’s declare this function.
-#+BEGIN_SRC fish
-function unmountcd
-#+END_SRC
-
-As before, let the user chose which CD drive to unmount.
-#+BEGIN_SRC fish
-set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
-#+END_SRC
-
-We’ll verify the user chose any device.
-#+BEGIN_SRC fish
-  test -z "$chosen" && exit 0
-#+END_SRC
-
-If a drive has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
-#+BEGIN_SRC fish
-  sudo -A umount -l $chosen && \
-  notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Now, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Ask what type of drive to unmount
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
-:END:
-If several types of unmountable drives are available, let’s ask the user which type to unmount based on the content of the temporary file declared in [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
-#+BEGIN_SRC fish
-function asktype
-#+END_SRC
-
-Let’s create a switch statement to which will be passed the selection of the user from rofi.
-#+BEGIN_SRC fish
-  switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
-#+END_SRC
-
-Three types of values can be returned: "USB", "CD", or "Android". These values will be used to launch their corresponding function.
-#+BEGIN_SRC fish
-  case 'USB'
-      unmountusb
-  case 'CD'
-      unmountcd
-  case 'Android'
-      unmountandroid
-#+END_SRC
-
-Let’s close the switch statement.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-Let’s now close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-** Launch the unmounting functions
-:PROPERTIES:
-:CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
-:END:
-Now back to the body of our script, let’s input in a switch case the number of lines contained in our temporary file.
-#+BEGIN_SRC fish
-switch (wc -l < $undrivefile)
-#+END_SRC
-
-If the file containes no lines. i.e. it is empty, nothing is to be unmounted. Let’s inform the user of that.
-#+BEGIN_SRC fish
-  case 0
-      notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
-#+END_SRC
-
-Else, if there is only one type of drive, we’ll automatically let our script choose based on the content of this sole line.
-#+BEGIN_SRC fish
-  case 1
-      switch (cat $undrivefile)
-          case 'USB'
-              unmountusb
-          case 'CD'
-              unmountcd
-          case 'Android'
-              unmountandroid
-      end
-#+END_SRC
-
-And if there are more types than one, let’s ask the user.
-#+BEGIN_SRC fish
-case '*'
-     asktype
-#+END_SRC
-
-Let’s close our main switch statement.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-And finally, let’s delete our temporary file.
-#+BEGIN_SRC fish
-rm -f $undrivefile
-#+END_SRC
-
-* rofi-ytdl
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-ytdl
-:CUSTOM_ID: rofi-ytdl-ff8f789d
-:END:
-This is just a simple wrapper around [[#ytdl-a-youtube-dl-wrapper-03bd63e0][ytdl]] so I can easily download a video from rofi, which we’ll use first to retrieve the URL of the video we want to download, be it from YouTube or other website supported by ~youtube-dl~.
-#+BEGIN_SRC bash
-  URL=$(echo "Video to download:" | rofi -dmenu -i -p "Video to download:")
-#+END_SRC
-
-Now, if the variable ~URL~ is not empty (i.e. the user specified a link and did not abort the operation), we’ll proceed to teh download. Before it begins, we’ll send a notification saying the download is about to begin. When the ~ytdl~ process ends, we’ll also send a notification notifying the user on the success or failure of the download.
-#+BEGIN_SRC bash
-  if [ -n "$URL" ]; then
-      notify-send -u normal "YTDL" "Starting downloading\n$URL"
-      ytdl "$URL" \
-          && notify-send -u normal "YTDL" "Finished downloading!" \
-              || notify-send -u critical "YTDL" "Failed downloading\n$URL"
-  fi
-#+END_SRC
-
-* set-screens
+** set-screens
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
 :CUSTOM_ID: set-screens-01bd989a
@@ -1037,7 +240,7 @@ Now, let’s set the ~DETECTEDSCREEN~ variable with a simple ~grep~. If the vari
   end
 #+END_SRC
 
-* sshbind
+** sshbind
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
 :CUSTOM_ID: sshbind-756fabb1
@@ -1047,7 +250,7 @@ Something that I did not know for quite some time but that is actually crazy use
   ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
 #+END_SRC
 
-* Starwars
+** Starwars
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
 :CUSTOM_ID: Starwars-654f8637
@@ -1057,7 +260,7 @@ This is a one-liner that allows you to watch Star Wars episode 4 in ASCII art in
   telnet towel.blinkenlights.nl
 #+END_SRC
 
-* Toggle touchpad tapping
+** Toggle touchpad tapping
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
 :CUSTOM_ID: Toggle_touchpad_tapping-23348b00
@@ -1090,27 +293,14 @@ Finally, let’s update the touchpad’s options:
   xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
 #+END_SRC
 
-* UpdateFlutter
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
-:CUSTOM_ID: UpdateFlutter-1e8fbeb7
-:END:
-This is a simple utility to be ran when the ~flutter~ package is updated.
-#+BEGIN_SRC fish
-  sudo chown -R :flutterusers /opt/flutter
-  sudo chmod -R g+w /opt/flutter
-  sudo chmod a+rw /opt/flutter/version
-  sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
-#+END_SRC
-
-* Wacom setup
+** Wacom setup
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
 :CUSTOM_ID: Wacom_setup-331fb024
 :END:
 I made a small and quick utility to set up my Wacom tablet so it is only bound to one screen.
 
-** Set our variables
+*** Set our variables
 :PROPERTIES:
 :CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
 :END:
@@ -1148,7 +338,7 @@ Now let’s close our function.
 end
 #+END_SRC
 
-** Select our screen
+*** Select our screen
 :PROPERTIES:
 :CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
 :END:
@@ -1196,7 +386,7 @@ Let’s close our function now.
 end
 #+END_SRC
 
-** Adjust the tablet
+*** Adjust the tablet
 :PROPERTIES:
 :CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
 :END:
@@ -1243,7 +433,7 @@ Now, let’s close the function.
 end
 #+END_SRC
 
-** Lauch the functions
+*** Lauch the functions
 :PROPERTIES:
 :CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
 :END:
@@ -1254,22 +444,35 @@ Back to the main body of the script, we can now launch the functions sequenciall
   adjust_device
 #+END_SRC
 
-* Weather
+* Emacsmail
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
-:CUSTOM_ID: Weather-4ed00bb0
+:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
+:CUSTOM_ID: Emacsmail-afffb7cd
 :END:
-A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a weather forecast in the terminal. By default, I want the request to be about the city I live in, but it is also possible for the script to accept as its arguments a search inquiry.
-#+BEGIN_SRC fish
-  if count $argv > /dev/null
-      set -l SEARCH (string join '+' $argv)
-      curl http://v2.wttr.in/~$SEARCH
-  else
-      curl http://v2.wttr.in/Aubervilliers
-  end
+This short script is used in my =~/.local/share/applications/mu4e.desktop= file in order to send to Emacs any ~mailto:~ requests made in my system.
+#+BEGIN_SRC bash
+  emacsclient -c --eval "(browse-url-mail \"$@\")"
 #+END_SRC
 
-* ytplay
+* Media
+:PROPERTIES:
+:CUSTOM_ID: Media-f869f942
+:END:
+** mp42webm
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
+:CUSTOM_ID: mp42webm-aeacca58
+:END:
+This function allows me to convert easily an mp4 video to the webm format. Nothing too fancy here.
+#+BEGIN_SRC fish
+  ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
+#+END_SRC
+
+** youtube-dl wrappers
+:PROPERTIES:
+:CUSTOM_ID: Media-youtube-dl-wrappers-8d8f5f71
+:END:
+*** ytplay
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytplay
 :CUSTOM_ID: Weather-4ed00bb0
@@ -1303,7 +506,7 @@ I’ll even add a ~.desktop~ entry for this script:
   Categories=Media
 #+END_SRC
 
-* ytdl - a ~youtube-dl~ wrapper
+*** ytdl - a ~youtube-dl~ wrapper
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytdl
 :HEADER-ARGS:EMACS-LISP: :exports none :tangle no
@@ -1313,7 +516,7 @@ This script is a wrapper around ~youtube-dl~ which I use mainly for archiving Yo
 
 Be aware this script was written for the Fish shell (3.1.0 and above),  and makes use of youtube-dl 2020.03.24 and above, [[https://github.com/jorgebucaran/fish-getopts][Fish getopts]] and [[https://github.com/BurntSushi/ripgrep][ripgrep]].
 
-** Setting default values
+**** Setting default values
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Setting-default-values-da404639
 :END:
@@ -1370,7 +573,7 @@ We’ll also create the directory pointed at by ~YTDL_SHARED_DIR~ if it doesn’
   mkdir -p $YTDL_SHARED_DIR
 #+END_SRC
 
-** Help message
+**** Help message
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Help-message-3773aacd
 :END:
@@ -1436,7 +639,7 @@ We also have the function ~_ytdl_version~ to display the current version of ~ytd
   end
 #+END_SRC
 
-** Arguments Handling
+**** Arguments Handling
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Arguments-Handling-1daebbe8
 :END:
@@ -1570,7 +773,7 @@ Both these code blocks are executed in ~_ytdl_parse_ops~:
   end
 #+END_SRC
 
-** Logging
+**** Logging
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Logging-f4b9815e
 :END:
@@ -1587,7 +790,7 @@ Both these code blocks are executed in ~_ytdl_parse_ops~:
   end
 #+END_SRC
 
-** Download a Single Video
+**** Download a Single Video
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-a-Single-Video-afedf321
 :END:
@@ -1611,7 +814,7 @@ The first argument of the function is the video ID from YouTube, the second argu
 
 /Note that this function is not meant to be called without any checks before./ It is meant to be called by ~_ytdl_download_queue~ described below.
 
-** Download a Queue of Videos
+**** Download a Queue of Videos
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-a-Queue-of-Videos-6ef8d51f
 :END:
@@ -1627,7 +830,7 @@ One of the main goals of this tool is to check if a video has already been downl
   end
 #+END_SRC
 
-** Download Videos From Arguments
+**** Download Videos From Arguments
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-Videos-From-Arguments-57a5dac1
 :END:
@@ -1643,7 +846,7 @@ The main aim of this function is to transform the URLs contained in the argument
   end
 #+END_SRC
 
-** Download Videos From a Batch File
+**** Download Videos From a Batch File
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Download-Videos-From-a-Batch-File-0f1382c4
 :END:
@@ -1676,7 +879,7 @@ What this function does is for each line, it will fetch the entierty of the vide
   end
 #+END_SRC
 
-** Main Body
+**** Main Body
 :PROPERTIES:
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-Main-Body-8a06cb9e
 :END:
@@ -1688,3 +891,831 @@ Now that we have all our functions declared, let’s call them! First, we need t
 #+END_SRC
 
 And that’s all! If you’re interested with a very simple interface for downloading one video once, I wrote a small [[#rofi-ytdl-ff8f789d][~rofi-ytdl~]] script that calls the ~rofi~ utility to specify a single link and download it.
+* Plock
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
+:CUSTOM_ID: Lock-635fcb38
+:END:
+~plock~ is a simple script that locks the screen with ~i3lock~ while setting as the background image of the locked screen a corrupted screenshot of the screen before it was locked.
+#+BEGIN_SRC fish
+  set TMPBG /tmp/screen.png
+  scrot $TMPBG
+  corrupter -add 0 $TMPBG $TMPBG
+  i3lock -t -e -f -i $TMPBG
+  rm $TMPBG
+#+END_SRC
+
+* Polybar-launch (Deprecated)                                      :noexport:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
+:CUSTOM_ID: Polybar-launch-36789edc
+:END:
+This scripts allows the user to kill polybar and relaunch it, or to simply launch it if polybar isn’t launched yet. First thing to do is kill all polybar processes.
+#+BEGIN_SRC bash
+killall -q polybar
+#+END_SRC
+
+Now we have to wait untill all polybar processes have been shut down.
+#+BEGIN_SRC bash
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+#+END_SRC
+
+Now that our system isn’t running polybar anymore, we’ll launch it again on all of our screens. By the way, I have two bars, so I’ll have to lauch them both.
+#+BEGIN_SRC bash
+  if type "xrandr"; then
+      for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+          MONITOR=$m polybar --reload top &
+          MONITOR=$m polybar --reload bottom &
+      done
+  else
+      polybar --reload top &
+      polybar --reload bottom &
+  fi
+#+END_SRC
+
+And we’re done! Let’s just launch a notification polybar has been relaunched.
+#+BEGIN_SRC bash
+  notify-send "Polybar restarted!" -a "polybar-launch"
+#+END_SRC
+
+* Rofi utilities
+:PROPERTIES:
+:CUSTOM_ID: Rofi-utilities-650338d1
+:END:
+** askpass
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
+:CUSTOM_ID: Askpass-d0d7a8c0
+:END:
+Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As you can see, this is a oneliner if we ignore the initial shebang. This executable is pointed at by the
+#+BEGIN_SRC fish
+  rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
+#+END_SRC
+
+** awiki
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
+:CUSTOM_ID: awiki-7ac5e1d5
+:END:
+~awiki~ is a simple script used with ~rofi~ that relies on the ~arch-wiki-docs~ package in order to provide the user a way to quickly find and display any English page from the Arch Wiki in a browser. The advantage of using this over the ~wiki-search~ utility from the ~arch-wiki-lite~ package is you get instant suggestion in rofi using fuzzy-search. The downside is rofi will only help you find pages by their title, and it will not help you find keywords in the content of said pages.
+
+The first step is to create the list of all the pages that are currently stored on disk. ~arch-wiki-docs~ stores them in ~/usr/share/doc/arch-wiki/html/en~. A simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then pipe that into rofi in dmenu mode in order to choose the page we want to display. By the way, setting the location of the HTML files will come in handy later.
+#+BEGIN_SRC fish
+  set WLOCATION /usr/share/doc/arch-wiki/html/en/
+  set WPAGE (/bin/ls $WLOCATION                              | \
+      sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
+      rofi -dmenu -p "Arch Wiki" -i)
+  set WPAGE (echo $WPAGE | sed -r 's/\s+/_/g')
+#+END_SRC
+
+Now, all I need to do is to send this list into rofi and tell it to open the result with our favorite browser with ~xdg-open~.
+#+BEGIN_SRC fish
+  xdg-open $WLOCATION$WPAGE.html
+#+END_SRC
+
+** ConnectWifi                                                    :noexport:
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
+:CUSTOM_ID: ConnectWifi-16e5e24a
+:END:
+~connect-wifi~ is a small utility tool that allows the user to connect to available WiFi networks. The first thing to do is to select the WiFi we want to connect to. We’ll use the ~nmcli c s~ command to get the list of the available networks, and we’ll chose one with ~rofi~.
+#+BEGIN_SRC fish
+  set SELECTEDWIFI (nmcli d w l | \
+  egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
+  egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
+  rofi -dmenu -p "Select your WiFi network")
+#+END_SRC
+Now, if  a network was  selected, let’s attempt  to connect to  it. Otherwise,
+let’s just send a notification no network was selected.
+#+BEGIN_SRC fish
+  if test -z $SELECTEDWIFI
+      notify-send "No WiFi network selected" -u low && exit
+  end
+  nmcli c u $SELECTEDWIFI
+#+END_SRC
+
+*** TODO fix it
+:PROPERTIES:
+:CUSTOM_ID: ConnectWifi-fix_it-a4b11503
+:END:
+
+** dmenu
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
+:CUSTOM_ID: Dmenu-527edf04
+:END:
+I wrote this very simple script in order to replace =dmenu= with rofi’s emulation of dmenu, since I prefer rofi’s appearance. It basically calls rofi’s dmenu emulation with the arguments initially passed to dmenu.
+#+BEGIN_SRC fish
+  rofi -dmenu $argv
+#+END_SRC
+
+** Emoji picker
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
+:CUSTOM_ID: Emoji_picker-a1c374ec
+:END:
+The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. Once the emoji is selected, it is copied to the clipboard using =xclipboard=.
+#+BEGIN_SRC fish
+  grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
+  awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+#+END_SRC
+
+Also, let’s send a notification telling the user the emoji has been copied!
+#+BEGIN_SRC fish
+  set emoji (xclip -o -selection clipboard | tr -d '\n')
+  test -z "$emoji" && notify-send "No emoji copied" -u low && exit
+  set -a emoji "copied to clipboard"
+  notify-send -u low $emoji
+#+END_SRC
+
+  It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
+
+** Partition mounting and unmounting
+:PROPERTIES:
+:CUSTOM_ID: Rofi-utilities-Partition-mounting-and-unmounting-9492ff60
+:END:
+*** Rofi-mount
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
+:CUSTOM_ID: Rofi-mount-ebbebf68
+:END:
+=rofimount= is a script inspired by [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this one]], based on dmenu, which interactively asks the user what to mount, and where to mount it. What I did was replace dmenu with rofi, and fix a couple of bugs I encountered in the original script.
+
+**** Get the mountable elements
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Get_the_mountable_elements-24db7834
+:END:
+#+BEGIN_SRC fish
+  begin
+#+END_SRC
+
+What the script does first is detect everything that can be mounted. Between a =begin= and =end=, let’s set =LFS= as a local variable. This si in order to get sane variables in the current block.
+#+BEGIN_SRC fish
+set -l LFS
+#+END_SRC
+
+Now, let’s detect the amount of mountable Android filesystems, and if any are detected, let’s read them into a global variable.
+#+BEGIN_SRC fish
+  set -l a (math (jmtpfs -l | wc -l) - 2)
+  test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
+#+END_SRC
+
+We’ll do the same for external and internal drives and partitions that can be mounted here.
+#+BEGIN_SRC fish
+  lsblk -rpo "name,type,size,mountpoint" | \
+  awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
+  read -zg usbdrives
+#+END_SRC
+
+Finally, we look for any CD drive that could be mounted on our device.
+#+BEGIN_SRC fish
+  blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
+#+END_SRC
+
+And that’s the end of our first block!
+#+BEGIN_SRC fish
+  end
+#+END_SRC
+
+Alright, we’ll save what kind on drives we can mount in a temporary file called =/tmp/drives=. We’ll make sure it’s blank by erasing it then creating it again with =touch=, like so. The =-f= flag on =rm= is here so we get no error if we try to delete a file that doesn’t exist (yet).
+#+BEGIN_SRC fish
+  set -g TMPDRIVES /tmp/drives
+  rm -f $TMPDRIVES
+  touch $TMPDRIVES
+#+END_SRC
+
+Now, let’s write what type of drives we can mount in this temporary file.
+#+BEGIN_SRC fish
+  test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
+  test -n "$cddrives" && echo "CD" >> $TMPDRIVES
+  test -n "$anddrives" && echo "Android" >> $TMPDRIVES
+#+END_SRC
+
+Now, we want to declare where to look for mount directories. For now, we’ll only look in =/media=, but you can add more if you wish.
+#+BEGIN_SRC fish
+  set -g basemount /media
+#+END_SRC
+
+**** Get the mount point
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Get_the_mount_point-6c4bac06
+:END:
+Now, let’s declare a function that will allow us to chose the drive we want to mount.
+#+BEGIN_SRC fish
+  function getmount
+#+END_SRC
+
+First, we want to get our mount point. We’ll run a =find= command on each of the directories listed in =$basemount= to look for folders on which our drive could be mounted. This list will be passed to rofi from which we will chose our mount point.
+#+BEGIN_SRC fish
+  set -g mp (for d in $basemount
+      find $d -maxdepth 5 -type d
+  end | rofi -dmenu -i -p 'Type in mount point.')
+#+END_SRC
+
+We should verify that something has been actually selected, otherwise we should abort the script.
+#+BEGIN_SRC fish
+  if test -z $mp || test $mp = ""
+      return 1
+  end
+#+END_SRC
+
+Now, if the selected mount point does not exist, we’ll ask the user whether the directory should be created. If no, the script will abort. If yes, an attempt will be made at creating the directory as the user; if that fails, a new attempt will be made as sudo.
+#+BEGIN_SRC fish
+  if test ! -d $mp
+      switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
+          case 'Yes'
+              mkdir -p $mp || sudo -A mkdir -p $mp
+          case '*'
+              return 1
+      end
+  end
+#+END_SRC
+
+Finally, let’s close the function
+#+BEGIN_SRC fish
+  end
+#+END_SRC
+
+**** Mount a USB drive, hard drive or partition
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_a_USB_drive,_hard_drive_or_partition-f5431dbe
+:END:
+Alright, we want to mount a partition that answers by the name of =/dev/sdXX=, how do we do that? Let’s create first the function =mountusb= that will take care of it for us.
+#+BEGIN_SRC fish
+function mountusb
+#+END_SRC
+
+Now, the first thing we want to do is select the partition we want to mount. Remember, we stored those in =$usbdrives= earlier, so let’s pipe them into rofi so we can chose from it. Also, =awk= will get their path in =/dev=.
+#+BEGIN_SRC fish
+  set -g chosen (echo $usbdrives | \
+  rofi -dmenu -i -p "Mount which drive?" | \
+  awk '{print $1}')
+#+END_SRC
+
+As usual after a user selection, let’s verify something has actually been selected. If not, let’s abort the script.
+#+BEGIN_SRC fish
+test -z $chosen && return 1
+#+END_SRC
+
+Now, let’s select the mount point of our partition. We’ll call the function =getmount= described in [[#Rofi-mount-Get_the_mount_point-6c4bac06][Get the mount point]] to select it.
+#+BEGIN_SRC fish
+getmount
+#+END_SRC
+
+Let’s verify the variable =mp= set in =getmount= is not empty, otherwise abort the script.
+#+BEGIN_SRC fish
+test -z $mp && return 1
+#+END_SRC
+
+Now, let’s mount it! We’ll use a switch which will detect the filesystem used so we know how to mount the partition.
+#+BEGIN_SRC fish
+switch (lsblk -no "fstype" $chosen)
+#+END_SRC
+
+We have two named case: =vfat= filesystems.
+#+BEGIN_SRC fish
+  case "vfat"
+      sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
+#+END_SRC
+
+And =ntfs= filesystems.
+#+BEGIN_SRC fish
+  case "ntfs"
+      sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
+#+END_SRC
+
+Else, we’ll let =mount= determine which filesystem is used by the partition (generally =ext4=).
+#+BEGIN_SRC fish
+  case '*'
+      sudo -A mount $chosen $mp
+#+END_SRC
+
+We’ll also run a =chown= on this newly mounted filesystem so the user can access it without any issues.
+#+BEGIN_SRC fish
+  sudo -A chown -R $USER:(id -g $USER) $mp
+#+END_SRC
+
+Let’s close the switch block and send a notification the partition has been mounted.
+#+BEGIN_SRC fish
+end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
+#+END_SRC
+
+And let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Mount an Android device
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_an_Android_device-5321f9cd
+:END:
+The function that manages to mount Android filesystems is =mountandroid=. Let’s declare it.
+#+BEGIN_SRC fish
+function mountandroid -d "Mount an Android device"
+#+END_SRC
+
+We’ll select which Android we want to mount. We will be asked through rofi.
+#+BEGIN_SRC fish
+set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
+#+END_SRC
+
+Now, we need to get the bus of the Android device we want to mount. It will be useful later, after we authorized mounting from our device, to get the path to our partition.
+#+BEGIN_SRC fish
+set bus (echo $chosen | sed 's/,.*//')
+#+END_SRC
+
+Let’s temporarily mount our device.
+#+BEGIN_SRC fish
+jmtpfs -device=$chosen $mp
+#+END_SRC
+
+Now, we need to allow our computer to mount our Android device. Depending on the Android version it is running on, we either need to specify our device is USB connected in order to exchange files, or Android will explicitely ask us if it is OK for our computer to access it. Let’s inform the user of that.
+#+BEGIN_SRC fish
+  echo "OK" | \
+  rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
+#+END_SRC
+
+Now, let’s get the actual path of our Android filesystem we wish to mount, and let’s unmount the previous temporary filesystem.
+#+BEGIN_SRC fish
+  set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
+  sudo -A umount $mp
+#+END_SRC
+
+Now we cam mount the new filesystem and send a notification if everything went well.
+#+BEGIN_SRC fish
+  jmtpfs -device=$newchosen $mp && \
+  notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
+#+END_SRC
+
+And now, we can close our function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Mount a CD drive
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Mount_a_CD_drive-27278199
+:END:
+This part is way easier than the previous functions. As we will see, the function =mountcd='s body is only three lines long. First, let’s declare the function.
+#+BEGIN_SRC fish
+function mountcd
+#+END_SRC
+
+Now, let’s chose the CD drive we want to mount using =rofi=.
+#+BEGIN_SRC fish
+  set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
+#+END_SRC
+
+We’ll also get the mountpoint thanks to the =getmount= function described earlier.
+#+BEGIN_SRC fish
+getmount
+#+END_SRC
+
+And finally, let’s mount it and send the notification everything went well.
+#+BEGIN_SRC fish
+  sudo -A mount $chosen $mp && \
+  notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
+#+END_SRC
+
+Finally, let’s close our function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Ask what type of drive we want to mount
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Ask_what_type_of_drive_we_want_to_mount-0c15cffa
+:END:
+The first thing we will be asked if different types of drives are detected is which of these types the user wishes to mount. This is done with the function =asktype= which is declared below.
+#+BEGIN_SRC fish
+function asktype
+#+END_SRC
+
+We will use a switch statement which will use our anwser to rofi about what we wish to mount.
+#+BEGIN_SRC fish
+switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
+#+END_SRC
+
+If we chose the option "USB", we’ll mount a hard drive, partition or USB drive. In which case we’ll call the =mountusb= function.
+#+BEGIN_SRC fish
+  case "USB"
+      mountusb
+#+END_SRC
+
+If we chose the "Android" option, the =mountandroid= function is called.
+#+BEGIN_SRC fish
+  case "Android"
+      mountandroid
+#+END_SRC
+
+Else if we chose the "CD" option, we’ll call the =mountcd= function.
+#+BEGIN_SRC fish
+  case "CD"
+      mountcd
+#+END_SRC
+
+If nothing is selected, the function will naturally exit. Now, let’s close our switch statement and our function.
+#+BEGIN_SRC fish
+end
+end
+#+END_SRC
+
+**** Launch the mounting functions
+:PROPERTIES:
+:CUSTOM_ID: Rofi-mount-Launch_the_mounting_functions-218ad001
+:END:
+Now that we have declared our functions and set our variables, we’ll read the temporary file described in [[#Rofi-mount-Get_the_mountable_elements-24db7834][Get the mountable elements]]. The amount of lines is passed in a switch statement.
+#+BEGIN_SRC fish
+switch (wc -l < $TMPDRIVES)
+#+END_SRC
+
+If the file has no lines, i.e. it is empty, we have no mountable media. Let’s inform our user this is the case.
+#+BEGIN_SRC fish
+  case 0
+      notify-send "No USB drive or Android device or CD detected" -a "dmount"
+#+END_SRC
+
+If we only have one line, we have only one type of mountable media. We’ll pass this line to a second switch statement.
+#+BEGIN_SRC fish
+  case 1
+      switch (cat $TMPDRIVES)
+#+END_SRC
+This will allow the script to automatically detect what type of media it is, and mount the corresponding function.
+#+BEGIN_SRC fish
+  case "USB"
+      mountusb
+  case "Android"
+      mountandroid
+  case "CD"
+      mountCD
+#+END_SRC
+Let’s close this nested switch case.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+If we have more than one line, we’ll have to ask the user what type of media they want to mount.
+#+BEGIN_SRC fish
+  case '*'
+      asktype
+#+END_SRC
+
+Now, let’s end our switch statement!
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+Finally, we’ll delete our temporary file.
+#+BEGIN_SRC fish
+rm -f $TMPDRIVES
+#+END_SRC
+
+And with that, this is the end of our script!
+
+*** Rofi-umount
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
+:CUSTOM_ID: Rofi-umount-ddde1667
+:END:
+~rofiumount~ is the counterpart of ~rofimount~ for unmounting our mounted partitions.
+
+**** Get the unmountable drives
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Get_the_unmountable_drives-89c71040
+:END:
+First, we will need to list all the drives that can be safely unmounted. Let’s run this.
+#+BEGIN_SRC fish
+  set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
+  awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
+#+END_SRC
+
+Now, let’s get the android devices that are mounted.
+#+BEGIN_SRC fish
+set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
+#+END_SRC
+
+And let’s get the CD drives that are mounted.
+#+BEGIN_SRC fish
+set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
+#+END_SRC
+
+We’ll store all of our information in a temporary file, =/tmp/undrives=.
+#+BEGIN_SRC fish
+set -g undrivefile /tmp/undrives
+#+END_SRC
+
+Let’s make sure we begin with a clean, empty file.
+#+BEGIN_SRC fish
+  rm -f $undrivefile
+  touch $undrivefile
+#+END_SRC
+
+Depending on if the related variables are set, write the different types of mounted drives in the temporary file.
+#+BEGIN_SRC fish
+  test -n "$drives" && echo "USB" >> $undrivefile
+  test -n "$cds" && echo "CD" >> $undrivefile
+  test -n "$androids" && echo "Android" >> $undrivefile
+#+END_SRC
+
+**** Unmount disk partitions
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_disk_partitions-0d425a47
+:END:
+The function =unmountusb= will take care of unmounting any drive we can safely unmount. First, let’s declare the function.
+#+BEGIN_SRC fish
+function unmountusb
+#+END_SRC
+
+Let’s chose the drive to unmount with rofi.
+#+BEGIN_SRC fish
+  set chosen (echo $drives | \
+  rofi -dmenu -i -p "Unmount which drive?" | \
+  awk '{print $1}')
+#+END_SRC
+
+Let’s verify if the user actually selected any drive. If no, let’s abort the script.
+#+BEGIN_SRC fish
+test -z "$chosen" && exit 0
+#+END_SRC
+
+Now, let’s unmount the chosen drive and send a notification if it has been done.
+#+BEGIN_SRC fish
+  sudo -A umount $chosen && \
+  notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
+
+Now, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Unmount Android device
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_Android_device-ae1d5904
+:END:
+The function =unmountandroid= will take care of unmounting any mounted Android device. First, let’s declare our function.
+#+BEGIN_SRC fish
+function unmountandroid
+#+END_SRC
+
+Let the user choose which Android device to unmount.
+#+BEGIN_SRC fish
+set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
+#+END_SRC
+
+We’ll verify the user chose any device.
+#+BEGIN_SRC fish
+  test -z "$chosen" && exit 0
+#+END_SRC
+
+If a device has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
+#+BEGIN_SRC fish
+  sudo -A umount -l $chosen && \
+  notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
+
+Finally, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Unmount CD drive
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Unmount_CD_drive-369a2f61
+:END:
+=unmountcd= will take care of unmounting any mounted CD drive. Let’s declare this function.
+#+BEGIN_SRC fish
+function unmountcd
+#+END_SRC
+
+As before, let the user chose which CD drive to unmount.
+#+BEGIN_SRC fish
+set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
+#+END_SRC
+
+We’ll verify the user chose any device.
+#+BEGIN_SRC fish
+  test -z "$chosen" && exit 0
+#+END_SRC
+
+If a drive has been chosen, let’s unmount it and send a notification it has been successfuly unmounted.
+#+BEGIN_SRC fish
+  sudo -A umount -l $chosen && \
+  notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
+#+END_SRC
+
+Now, let’s close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Ask what type of drive to unmount
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Ask_what_type_of_drive_to_unmount-6287af48
+:END:
+If several types of unmountable drives are available, let’s ask the user which type to unmount based on the content of the temporary file declared in [[#Rofi-umount-Get_the_unmountable_drives-89c71040][Get the unmountable drives]]. First, let’s declare the function.
+#+BEGIN_SRC fish
+function asktype
+#+END_SRC
+
+Let’s create a switch statement to which will be passed the selection of the user from rofi.
+#+BEGIN_SRC fish
+  switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
+#+END_SRC
+
+Three types of values can be returned: "USB", "CD", or "Android". These values will be used to launch their corresponding function.
+#+BEGIN_SRC fish
+  case 'USB'
+      unmountusb
+  case 'CD'
+      unmountcd
+  case 'Android'
+      unmountandroid
+#+END_SRC
+
+Let’s close the switch statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+Let’s now close the function.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Launch the unmounting functions
+:PROPERTIES:
+:CUSTOM_ID: Rofi-umount-Launch_the_unmounting_functions-7c48a928
+:END:
+Now back to the body of our script, let’s input in a switch case the number of lines contained in our temporary file.
+#+BEGIN_SRC fish
+switch (wc -l < $undrivefile)
+#+END_SRC
+
+If the file containes no lines. i.e. it is empty, nothing is to be unmounted. Let’s inform the user of that.
+#+BEGIN_SRC fish
+  case 0
+      notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
+#+END_SRC
+
+Else, if there is only one type of drive, we’ll automatically let our script choose based on the content of this sole line.
+#+BEGIN_SRC fish
+  case 1
+      switch (cat $undrivefile)
+          case 'USB'
+              unmountusb
+          case 'CD'
+              unmountcd
+          case 'Android'
+              unmountandroid
+      end
+#+END_SRC
+
+And if there are more types than one, let’s ask the user.
+#+BEGIN_SRC fish
+case '*'
+     asktype
+#+END_SRC
+
+Let’s close our main switch statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+And finally, let’s delete our temporary file.
+#+BEGIN_SRC fish
+rm -f $undrivefile
+#+END_SRC
+
+** Rofi-pass
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
+:CUSTOM_ID: Rofi-pass-8335357f
+:END:
+=rofi-pass= is a simple utility that gets a password stored in the [[https://www.passwordstore.org/][=pass=]] password manager with rofi as its interface, and then stores the password in the clipboard.
+
+Let’s parse all the arguments passed to the script. If one of them is =--type=, =-t= or =type=, the script will attempt to type the password to the text area already selected without pasting the password to the clipboard.
+#+BEGIN_SRC fish
+  for arg in $argv
+      switch $arg
+          case '--type' '-t' 'type'
+              set -g TYPE "yes"
+          case '*'
+              printf 'Unknown argument: %s\n.' $arg
+              exit 1
+      end
+  end
+#+END_SRC
+
+Now, let’s get the list of the passwords that exist in our =pass= repository.
+#+BEGIN_SRC fish
+  set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
+  string replace -r ".*.password-store/" "" | \
+  string replace -r ".gpg" "" | sort)
+#+END_SRC
+
+Let the user choose which password they wish to select.
+#+BEGIN_SRC fish
+  set password (for elem in $passwords
+      echo $elem
+  end | rofi -dmenu -i -p "Select your password")
+#+END_SRC
+
+Let’s verify we actually selected a password and not just exited. If no password was selected, let’s simply exit the script.
+#+BEGIN_SRC fish
+  if test -z $password
+      exit
+  end
+#+END_SRC
+
+Depending on the arguments passed earlier, we might want some different behavior.
+#+BEGIN_SRC fish :noweb yes
+  if test $TYPE = "yes"
+      <<rofi-pass-type>>
+  else
+      <<rofi-pass-copy>>
+  end
+#+END_SRC
+
+The default behavior is to copy the password to the clipboard for 45 seconds, so let’s do that.
+#+NAME: rofi-pass-copy
+#+BEGIN_SRC fish :noweb yes :tangle no
+  pass show -c $password 2> /dev/null
+#+END_SRC
+
+Else, if we passed =--type=, =-t= or =type= as an argument of the script, we want it to attempt to type our password in the currently selected text input. Let’s do that.
+#+NAME: rofi-pass-type
+#+BEGIN_SRC fish :noweb yes :tangle no
+  set -l IFS
+  <<rofi-pass-type-get-password>>
+  printf %s $pass | xvkbd -file -
+#+END_SRC
+
+To correctly get the password from ~pass~, we need to parse the output and only get the first line, hence the following command.
+#+NAME: rofi-pass-type-get-password
+#+BEGIN_SRC fish :tangle no
+set pass (pass show $password | string split -n \n)[1]
+#+END_SRC
+
+** rofi-ytdl
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-ytdl
+:CUSTOM_ID: rofi-ytdl-ff8f789d
+:END:
+This is just a simple wrapper around [[#ytdl-a-youtube-dl-wrapper-03bd63e0][ytdl]] so I can easily download a video from rofi, which we’ll use first to retrieve the URL of the video we want to download, be it from YouTube or other website supported by ~youtube-dl~.
+#+BEGIN_SRC bash
+  URL=$(echo "Video to download:" | rofi -dmenu -i -p "Video to download:")
+#+END_SRC
+
+Now, if the variable ~URL~ is not empty (i.e. the user specified a link and did not abort the operation), we’ll proceed to teh download. Before it begins, we’ll send a notification saying the download is about to begin. When the ~ytdl~ process ends, we’ll also send a notification notifying the user on the success or failure of the download.
+#+BEGIN_SRC bash
+  if [ -n "$URL" ]; then
+      notify-send -u normal "YTDL" "Starting downloading\n$URL"
+      ytdl "$URL" \
+          && notify-send -u normal "YTDL" "Finished downloading!" \
+              || notify-send -u critical "YTDL" "Failed downloading\n$URL"
+  fi
+#+END_SRC
+
+* Wallpaper utilities
+:PROPERTIES:
+:CUSTOM_ID: Wallpaper-utilities-5c05d470
+:END:
+** pape-update
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/pape-update
+:CUSTOM_ID: pape-update-bdecbadf
+:END:
+This little tool sets a random wallpaper using xwallpaper.
+#+BEGIN_SRC fish
+  set -l PAPESDIR ~/Pictures/Wallpapers
+  set -l PAPES (ls $PAPESDIR)
+  set -l PAPE $PAPESDIR/$PAPES[(random 1 (count $PAPES))]
+  echo $PAPE > $HOME/.cache/wallpaper
+  xwallpaper --zoom $PAPE
+#+END_SRC
+
+** Select wallpaper
+:PROPERTIES:
+:CUSTOM_ID: Wallpaper-utilities-Select-wallpaper-42f477a9
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/select-pape
+:END:
+This script is base on what sxiv can do as an image viewer as well as xwallpaper.
+#+BEGIN_SRC sh
+  xwallpaper --zoom $(sxiv -orbft ~/Pictures/Wallpapers/*)
+#+END_SRC
+
+* Weather
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
+:CUSTOM_ID: Weather-4ed00bb0
+:END:
+A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a weather forecast in the terminal. By default, I want the request to be about the city I live in, but it is also possible for the script to accept as its arguments a search inquiry.
+#+BEGIN_SRC fish
+  if count $argv > /dev/null
+      set -l SEARCH (string join '+' $argv)
+      curl http://v2.wttr.in/~$SEARCH
+  else
+      curl http://v2.wttr.in/Aubervilliers
+  end
+#+END_SRC
