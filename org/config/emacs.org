@@ -2428,36 +2428,36 @@ Org-capture is an amazing feature of Org-mode which allows me to quickly save li
 
 With Spacemacs, an Org capture can be invoked with the shortcut ~SPC a o c~. It will then ask which template I wish to use. In the table below are described the shortcuts that are available after ~SPC a o c~ is invoked. The /name/ will be the one displayed in Org capture’s interface, the /title/ is the headline where to save the capture (if it does not differ from the capture’s name, the cell will be blank). The /insertion mode/ tells Emacs how to add the capture to the /file/, using which /template/. A line with no insertion mode, file, or template is just a category. All of the following insert entries to their org files, that is a new org node with a headline and some content.
 #+NAME: org-capture-shortcuts-table
-| Shortcut | Name          | Title    | Insertion mode | file                    | template                 |
-|----------+---------------+----------+----------------+-------------------------+--------------------------|
-| e        | Email         |          |                |                         |                          |
-| ew       | Write Email   | Emails   | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
-| j        | Journal       |          | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
-| l        | Link          |          |                |                         |                          |
-| ll       | General       |          | file+headline  | org-default-notes-file  | link.orgcaptmpl          |
-| ly       | YouTube       |          | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
-| L        | Protocol Link | Link     | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
-| n        | Notes         |          |                |                         |                          |
-| nc       | Conlanging    | Note     | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
-| nn       | General       |          | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
-| nN       | Novel         | Note     | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
-| nq       | Quote         |          | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
-| nw       | Worldbuilding | Note     | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
-| N        | Novel         |          |                |                         |                          |
-| Ni       | Ideas         |          | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
-| p        | Protocol      | Link     | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
-| r        | Resources     |          |                |                         |                          |
-| rc       | Conlanging    | Resource | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
-| re       | Emacs         |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-| ri       | Informatique  |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-| rl       | Linguistics   |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-| rL       | Linux         |          | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
-| rw       | Worldbuilding | Resource | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
-| t        | Tasks         |          |                |                         |                          |
-| tb       | Birthday      |          | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
-| te       | Event         |          | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
-| th       | Health        |          | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
-| ti       | Informatique  |          | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
+| Shortcut | Name          | Title     | Insertion mode | file                    | template                 |
+|----------+---------------+-----------+----------------+-------------------------+--------------------------|
+| e        | Email         |           |                |                         |                          |
+| ew       | Write Email   | Emails    | file+headline  | org-default-notes-file  | emails.orgcaptmpl        |
+| j        | Journal       |           | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
+| l        | Link          |           |                |                         |                          |
+| ll       | General       |           | file+headline  | org-default-notes-file  | link.orgcaptmpl          |
+| ly       | YouTube       |           | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
+| L        | Protocol Link | Link      | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
+| n        | Notes         |           |                |                         |                          |
+| nc       | Conlanging    | Note      | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
+| nn       | General       |           | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+| nN       | Novel         | Note      | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+| nq       | Quote         |           | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
+| nw       | Worldbuilding | Note      | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
+| N        | Novel         |           |                |                         |                          |
+| Ni       | Ideas         |           | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+| p        | Protocol      | Link      | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
+| r        | Resources     |           |                |                         |                          |
+| rc       | Conlanging    | Resources | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
+| re       | Emacs         |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| ri       | Informatique  |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rl       | Linguistics   |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rL       | Linux         |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rw       | Worldbuilding | Resources | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
+| t        | Tasks         |           |                |                         |                          |
+| tb       | Birthday      |           | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
+| te       | Event         |           | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
+| th       | Health        |           | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
+| ti       | Informatique  |           | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
 
 The following code snipped is not tangled into my configuration file, but instead creates the equivalent to the table above into EmacsLisp code found in the next code snippet.
 #+NAME: org-capture-shortcut-gen
@@ -2481,7 +2481,7 @@ The following code snipped is not tangled into my configuration file, but instea
                      table "\n  "))
 #+END_SRC
 
-#+RESULTS[d5195b883b39aa51a31e7e572d2eaf8b09c434cd]: org-capture-shortcut-gen
+#+RESULTS[ec10a65e789d0f3d318de419a7c08e1f41dcb65a]: org-capture-shortcut-gen
 #+begin_example
 '(("e" "Email")
   ("ew" "Write Email" entry
@@ -2525,7 +2525,7 @@ The following code snipped is not tangled into my configuration file, but instea
     (file "~/org/capture/protocol.orgcaptmpl"))
   ("r" "Resources")
   ("rc" "Conlanging" entry
-    (file+headline org-conlanging-file "Resource")
+    (file+headline org-conlanging-file "Resources")
     (file "~/org/capture/resource.orgcaptmpl"))
   ("re" "Emacs" entry
     (file+headline org-default-notes-file "Emacs")
@@ -2540,7 +2540,7 @@ The following code snipped is not tangled into my configuration file, but instea
     (file+headline org-default-notes-file "Linux")
     (file "~/org/capture/resource.orgcaptmpl"))
   ("rw" "Worldbuilding" entry
-    (file+headline org-wordbuilding-file "Resource")
+    (file+headline org-wordbuilding-file "Resources")
     (file "~/org/capture/resource.orgcaptmpl"))
   ("t" "Tasks")
   ("tb" "Birthday" entry
