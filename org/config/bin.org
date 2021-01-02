@@ -106,9 +106,10 @@ emacsclient -c -e "(delete-frame)" &
 The first step is to create the list of all the pages that are currently stored on disk. ~arch-wiki-docs~ stores them in ~/usr/share/doc/arch-wiki/html/en~. A simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then pipe that into rofi in dmenu mode in order to choose the page we want to display. By the way, setting the location of the HTML files will come in handy later.
 #+BEGIN_SRC fish
   set WLOCATION /usr/share/doc/arch-wiki/html/en/
-  set WPAGE (/bin/ls $WLOCATION | \
-  sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
-  rofi -dmenu -p "Arch Wiki" -i | sed 's/ +/_/g')
+  set WPAGE (/bin/ls $WLOCATION                              | \
+      sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
+      rofi -dmenu -p "Arch Wiki" -i)
+  set WPAGE (echo $WPAGE | sed -r 's/\s+/_/g')
 #+END_SRC
 
 Now, all I need to do is to send this list into rofi and tell it to open the result with our favorite browser with ~xdg-open~.
