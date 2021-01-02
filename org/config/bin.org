@@ -33,56 +33,37 @@ Because I sometimes switch from window manager to window manager, creating a scr
 | ~nm-applet~   |                                                               | yes       |
 | ~numlockx~    | ~on~                                                          | yes       |
 | ~mpc~         | ~stop~                                                        | no        |
-| ~xwallpaper~  | ~--zoom $HOME/.cache/wallpaper~~                              | no        |
+| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~                        | no        |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
-  (mapconcat (lambda ($start-command)
-               (let* (($command (s-replace "~" "" (nth 0 $start-command)))
-                      ($arguments (s-replace "~" "" (nth 1 $start-command)))
-                      ($once? (string= "yes" (nth 2 $start-command))))
-                 (if $once?
-                     (concat (format "if ! test (pgrep %s 2&> /dev/null)\n\t" $command)
-                             (s-collapse-whitespace (format "%s %s & && disown" $command $arguments))
-                             "\nend\n")
-                   (format "%s %s &\n" $command $arguments))))
+  (mapconcat (lambda (start-command)
+               (let* ((command   (s-replace "~" "" (nth 0 start-command)))
+                      (arguments (s-replace "~" "" (nth 1 start-command)))
+                      (once?     (string= "yes"    (nth 2 start-command))))
+                 (if once?
+                     (format "pgrep -x %s 2&>/dev/null || echo (%s) 2&>/dev/null"
+                             command
+                             (s-collapse-whitespace (format "%s %s & && disown"
+                                                            command
+                                                            arguments)))
+                   (format "%s %s &" command arguments))))
              table
              "\n")
 #+END_SRC
 
-#+RESULTS[0221ee62b690b66ba97566fdfdb724c62288df98]: autostart-gen
+#+RESULTS[f7292981c73e9183edab2951f3a5dcfa6d073025]: autostart-gen
 #+begin_example
 set-screens  &
-
-if ! test (pgrep pumopm 2&> /dev/null)
-	pumopm & && disown
-end
-
-if ! test (pgrep xfce-polkit 2&> /dev/null)
-	xfce-polkit & && disown
-end
-
-if ! test (pgrep xss-lock 2&> /dev/null)
-	xss-lock plock & && disown
-end
-
-if ! test (pgrep picom 2&> /dev/null)
-	picom --experimental-backends & && disown
-end
-
-if ! test (pgrep xidlehook 2&> /dev/null)
-	xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown
-end
-
-if ! test (pgrep nm-applet 2&> /dev/null)
-	nm-applet & && disown
-end
-
-if ! test (pgrep numlockx 2&> /dev/null)
-	numlockx on & && disown
-end
-
+pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
+pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
+pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
+pgrep -x picom 2&>/dev/null || echo (picom --experimental-backends & && disown) 2&>/dev/null
+pgrep -x xidlehook 2&>/dev/null || echo (xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown) 2&>/dev/null
+pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
+pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
 mpc stop &
+xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
 #+end_example
 
 #+BEGIN_SRC fish :noweb yes
@@ -1702,7 +1683,9 @@ This little tool sets a random wallpaper using xwallpaper.
 :END:
 This script is base on what sxiv can do as an image viewer as well as xwallpaper.
 #+BEGIN_SRC sh
-  xwallpaper --zoom $(sxiv -orbft ~/Pictures/Wallpapers/*)
+  PAPE=$(sxiv -orbft ~/Pictures/Wallpapers/*)
+  echo $PAPE > ~/.cache/wallpaper
+  xwallpaper --zoom $PAPE
 #+END_SRC
 
 * Weather
