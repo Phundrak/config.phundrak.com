@@ -158,7 +158,7 @@ The following declares the default Modkey. Usually, ~Mod4~ is the Super key, sit
 :PROPERTIES:
 :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
 :END:
-This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in my custom scripts. This depends on [[https://github.com/l3ib/nitrogen/][Nitrogen]].
+This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in my custom scripts.
 #+BEGIN_SRC lua
   local function set_random_pape()
     awful.spawn.with_shell("pape-update")
@@ -939,6 +939,7 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | q   | modkey, shift          | no      | awesome.quit              | quit awesome            | awesome |
 | r   | modkey, shift, control | no      | awesome.restart           | reload awesome          | awesome |
 | w   | modkey                 | no      | set_random_pape           | set random wallpaper    | awesome |
+| w   | modkey, shift          | spawn   | select-pape               | set wallpaper           | awesome |
 | x   | modkey                 | no      | invoke_lua_execute_prompt | lua execute prompt      | awesome |
 | F4  | modkey, control        | spawn   | systemctl hibernate       | hibernate computer      | awesome |
 | F4  | modkey, shift          | spawn   | systemctl suspend         | suspend to RAM computer | awesome |

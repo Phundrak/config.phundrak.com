@@ -210,7 +210,7 @@ Let’s set in a custom varible what packages we’ll be needing.
   jfsutils jmtpfs lain-git libxft-bgra linux-headers lldb logrotate ly meson \
   minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools \
   nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
-  network-manager-applet networkmanager networkmanager-openvpn nitrogen \
+  network-manager-applet networkmanager networkmanager-openvpn \
   nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
   noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
   otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
@@ -228,8 +228,8 @@ Let’s set in a custom varible what packages we’ll be needing.
   typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
   vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
   x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
-  xorg-drivers xorg-server xorg-xinit xss-lock xvkbd yaml-language-server-bin \
-  zeal
+  xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
+  yaml-language-server-bin zeal
 #+END_SRC
 
 These are the minimum I would have in my own installation. You can edit it however you want. Let’s install those.
