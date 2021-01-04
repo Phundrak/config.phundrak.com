@@ -24,16 +24,16 @@ Because I sometimes switch from window manager to window manager, creating a scr
 #+NAME: autostart-table
 | Command       | Arguments                                                     | Run once? |
 |---------------+---------------------------------------------------------------+-----------|
+| ~mpc~         | ~stop~                                                        | no        |
 | ~set-screens~ |                                                               | no        |
+| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~                         | no        |
+| ~picom~       | ~--experimental-backends~                                     | yes       |
 | ~pumopm~      |                                                               | yes       |
 | ~xfce-polkit~ |                                                               | yes       |
 | ~xss-lock~    | ~plock~                                                       | yes       |
-| ~picom~       | ~--experimental-backends~                                     | yes       |
 | ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
 | ~nm-applet~   |                                                               | yes       |
 | ~numlockx~    | ~on~                                                          | yes       |
-| ~mpc~         | ~stop~                                                        | no        |
-| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~                        | no        |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
