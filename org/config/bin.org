@@ -1671,7 +1671,7 @@ This little tool sets a random wallpaper using xwallpaper.
 #+BEGIN_SRC sh
   PAPESDIR=$HOME/Pictures/Wallpapers
   PAPE=$(find $PAPESDIR -type f | sort -R | tail -1)
-  [[ -f $PAPE ]] && echo $PAPE > $HOME/.cache/wallpaper && xwallpaper --zoom $PAPE
+  set-pape $PAPE
 #+END_SRC
 
 ** Select wallpaper
@@ -1682,7 +1682,21 @@ This little tool sets a random wallpaper using xwallpaper.
 This script is base on what sxiv can do as an image viewer as well as xwallpaper.
 #+BEGIN_SRC sh
   PAPE=$(sxiv -orbft ~/Pictures/Wallpapers/*)
-  [[ -f $PAPE ]] && echo $PAPE > ~/.cache/wallpaper && xwallpaper --zoom $PAPE
+  set-pape $PAPE
+#+END_SRC
+
+** Set a wallpaper
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/set-pape
+:CUSTOM_ID: Wallpaper-utilities-Set-a-wallpaper-27eda9e6
+:END:
+This utility is not meant to be called by the user directly, but rather by scripts that may be written by the user. Its role is simple: check if the provided wallpaper exists and if it is an image. If both requirements are met, the path to this image is then stored in ~$XDG_CACHE_HOME/wallpaper~, or if this variable is empty in ~$HOME/.cache/wallpaper~.
+#+BEGIN_SRC sh
+  CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo $XDG_CACHE_HOME/wallpaper || echo $HOME/.cache/wallpaper)
+  [[ -f $1 ]] &&                              \
+      grep image <(file -b --mime-type $1) && \
+      echo $1 > $CACHEFILE                    \
+      && xwallpaper --zoom $1
 #+END_SRC
 
 * Weather
