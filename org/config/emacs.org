@@ -69,27 +69,28 @@ However, I do have additional packages I installed either from the Elpa or the M
 
 With the variable ~dotspacemacs-additional-packages~, it is possible to install extra packages which are not already included in any layers. Dependencies should be explicitly included as they won’t be resolved automatically. Here is a table of all the extra packages I use:
 #+NAME: extra-packages
-| name of the package | why is it installed                                  |
-|---------------------+------------------------------------------------------|
-| caddyfile-mode      | Major mode for editing Caddyfiles                    |
-| dired-git-info      | Git information in Dired buffers                     |
-| diredfl             | Extra font lock rules for a more colourful dired     |
-| edit-indirect       | edit region in separate buffer                       |
-| elcord              | rich integration of Emacs in Discord                 |
-| info-colors         | Extra colors for Emacs's Info-mode                   |
-| magit-gitflow       | integrate gitflow in Magit                           |
-| multiple-cursors    | I don’t like the layer, I prefer this package alone  |
-| ob-swift            | org-babel package for Swift                          |
-| org-sidebar         | display on the side the outline of an Org buffer     |
-| org-tree-slide      | presentation tool for org-mode                       |
-| outorg              | edit comments as Org-mode buffers                    |
-| pinentry            | enter a GPG password from Emacs                      |
-| s                   | The long lost Emacs string manipulation library.     |
-| sicp                | Texinfo version of the [[https://mitpress.mit.edu/sites/default/files/sicp/index.html][SICP]]                          |
-| visual-fill-column  | allow the use of ~fill-column~ in ~visual-line-mode~ |
-| wrap-region         | easily wrap region with delimiters                   |
-| wttrin              | weather in Emacs                                     |
-| yasnippet-snippets  | snippets for YaSnippet                               |
+| name of the package        | why is it installed                                  |
+|----------------------------+------------------------------------------------------|
+| caddyfile-mode             | Major mode for editing Caddyfiles                    |
+| dired-git-info             | Git information in Dired buffers                     |
+| diredfl                    | Extra font lock rules for a more colourful dired     |
+| edit-indirect              | edit region in separate buffer                       |
+| elcord                     | rich integration of Emacs in Discord                 |
+| eshell-syntax-highlighting | Syntax highlighting for Eshell                       |
+| info-colors                | Extra colors for Emacs's Info-mode                   |
+| magit-gitflow              | integrate gitflow in Magit                           |
+| multiple-cursors           | I don’t like the layer, I prefer this package alone  |
+| ob-swift                   | org-babel package for Swift                          |
+| org-sidebar                | display on the side the outline of an Org buffer     |
+| org-tree-slide             | presentation tool for org-mode                       |
+| outorg                     | edit comments as Org-mode buffers                    |
+| pinentry                   | enter a GPG password from Emacs                      |
+| s                          | The long lost Emacs string manipulation library.     |
+| sicp                       | Texinfo version of the [[https://mitpress.mit.edu/sites/default/files/sicp/index.html][SICP]]                          |
+| visual-fill-column         | allow the use of ~fill-column~ in ~visual-line-mode~ |
+| wrap-region                | easily wrap region with delimiters                   |
+| wttrin                     | weather in Emacs                                     |
+| yasnippet-snippets         | snippets for YaSnippet                               |
 
 #+name: make-extra-pkg
 #+begin_src emacs-lisp :var packages=extra-packages[,0] :tangle no :exports none
@@ -1953,6 +1954,11 @@ Now, let’s declare our prompt regexp and our prompt functions:
 I also don't want the banner to be displayed, I know I entered the Elisp shell, no need to remind me. Maybe I’ll do something with it one day.
 #+BEGIN_SRC emacs-lisp
   (setq eshell-banner-message "")
+#+END_SRC
+
+Finally, let’s enable some fish-like syntax highlighting:
+#+BEGIN_SRC emacs-lisp
+  (eshell-syntax-highlighting-global-mode +1)
 #+END_SRC
 
 **** Visual commands
