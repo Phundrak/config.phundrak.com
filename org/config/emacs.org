@@ -3288,6 +3288,11 @@ The following, I use it rarely, it can launch an external command from Emacs to 
   (spacemacs/set-leader-keys "or" 'helm-run-external-command)
 #+END_SRC
 
+However this one I use often, generally in org or text buffers.
+#+BEGIN_SRC emacs-lisp
+  (spacemacs/set-leader-keys "os" 'sort-lines)
+#+END_SRC
+
 *** Applications
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Shortcuts-Applications-af8730b1
