@@ -182,6 +182,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-block-begin-line ((t (:inherit fixed-pitch :height 0.8))))
  '(org-checkbox ((t (:inherit (org-todo shadow fixed-pitch)))))
  '(org-code ((t (:inherit (shadow fixed-pitch)))))
+ '(org-date ((t (:inherit fixed-pitch :height 0.8 :foreground "#ebcb8b"))))
  '(org-document-info ((t (:foreground "#d08770"))))
  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
  '(org-document-title ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#bf616a" :height 2.0 :italic t))))
