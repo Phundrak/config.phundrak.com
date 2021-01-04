@@ -42,50 +42,52 @@ set recolor-reverse-video
 set guioptions ""
 
 # keybindings
-unmap a
 unmap <C-c>
+unmap <C-d>
+unmap <C-j>
+unmap <C-k>
+unmap <C-r>
+unmap <C-t>
+unmap <C-u>
+unmap <C-y>
+unmap <F5>
+unmap H
+unmap J
+unmap K
+unmap L
+unmap R
+unmap a
+unmap h
+unmap j
+unmap k
+unmap l
+unmap r
+unmap s
+unmap t
+unmap y
+
 map c scroll left
 map C scroll full-left
 map <C-c> scroll half-left
-unmap <C-d>
-map <C-g> abort
-unmap h
-unmap H
-unmap j
-unmap J
-unmap <C-j>
-unmap k
-unmap K
-unmap <C-k>
-unmap l
-unmap L
-map <A-p> print
-unmap r
-unmap R
-unmap <C-r>
-map r scroll right
-map R scroll full-right
-map <C-r> scroll half-right
-unmap s
-map s scroll up
-map S navigate previous
-map <C-s> scroll half-up
-map <A-s> scroll page-top
-unmap t
-unmap <C-t>
 map t scroll down
 map T navigate next
 map <C-t> scroll half-down
 map <A-t> scroll page-bottom
-unmap <C-u>
+map s scroll up
+map S navigate previous
+map <C-s> scroll half-up
+map <A-s> scroll page-top
+map r scroll right
+map R scroll full-right
+map <C-r> scroll half-right
+
+map <C-g> abort
+map <A-p> print
 map w adjust_window width
 map W adjust_window best-fit
-unmap y
-unmap <C-y>
 map <F2> rotate rotate-ccw
 map <F3> rotate rotate-cw
 map <F4> recolor
-unmap <F5>
 map <F5> reload
 map <F6> jumplist backward
 map <F7> jumplist forward
@@ -104,14 +106,14 @@ map fullscreen t navigate next
 map fullscreen <F11> change_mode normal
 
 # Index mode
-map index c navigate_index collapse
-map index C navigate_index collapse-al
 unmap index h
 unmap index H
 unmap index j
 unmap index k
 unmap index l
 unmap index L
+map index c navigate_index collapse
+map index C navigate_index collapse-al
 map index r navigate_index expand
 map index R navigate_index expand-all
 map index s navigate_index up
