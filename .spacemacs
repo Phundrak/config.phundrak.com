@@ -36,10 +36,6 @@ It should only modify the values of Spacemacs settings."
     (let ((org-confirm-babel-evaluate nil))
       (org-babel-tangle-file phundrak//dotspacemacs-src))
     (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done"))
-  (when (phundrak/update-config-files-p t)
-    (with-temp-buffer
-      (byte-recompile-directory phundrak//dotspacemacs-src-dir
-                                0 t)))
   (load phundrak//dotspacemacs-si))
 
 (defun dotspacemacs/layers ()
