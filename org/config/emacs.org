@@ -3302,13 +3302,14 @@ As this is a new category, let’s declare its prefix:
   (spacemacs/declare-prefix "oa" "applications")
 #+END_SRC
 
-Now, let’s also declare the keybindings in this category. ~oac~ will invoke Emacs’ calculator, while ~oac~ invokes the calendar, ~oae~ invokes the Eww web browser, ~oaw~ invokes ~woman~ (actually ~helm-man-woman~), and ~oaW~ invokes the weather forecast. Lastly, the apostrophe in ~oa'~ will invoke Eshell directly, without any popup window as with ~,'~.
+Now, let’s also declare the keybindings in this category. ~oac~ will invoke Emacs’ calculator, while ~oac~ invokes the calendar, ~oae~ invokes the Eww web browser, ~oaw~ invokes ~woman~ (actually ~helm-man-woman~), and ~oaW~ invokes the weather forecast. Lastly, the apostrophe in ~oa'~ will invoke Eshell directly, without any popup window as with ~,'~ while ~oan~ will open a new eshell buffer if another one already exists.
 #+BEGIN_SRC emacs-lisp
   (spacemacs/set-leader-keys
     "oa'" 'eshell
     "oac" 'calc
     "oaC" 'calendar
     "oae" 'eww
+    "oan" 'eshell-new
     "oaw" 'helm-man-woman
     "oaW" 'wttrin)
 #+END_SRC
