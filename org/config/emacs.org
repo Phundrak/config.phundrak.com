@@ -1369,7 +1369,7 @@ With this established, let’s write some emacs-lisp that will allow me to get a
       (s-split "\n"
                (mapconcat (lambda (path)
                             (shell-command-to-string
-                             (format "fd . %s -e org" path)))
+                             (format "fd . %s -e org -c never" path)))
                           phundrak/org-directories
                           "\n")))))
 #+END_SRC
