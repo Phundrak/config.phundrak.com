@@ -3641,12 +3641,6 @@ Now this hook is added so I can get a maximal width for the text of my emails, I
   (add-hook 'mu4e-view-mode-hook 'visual-fill-column-mode)
 #+END_SRC
 
-On modern-day computers, with wide screens almost everywhere, there is no reason for the email buffer to open below the email directory and not on its right, which is why I set the split view to be vertical instead of horizontal. And to make it more readable, the header window will only occupy 40% of Emacs’ frame, the rest will be given to emails. As you can see, the width of the mu4e headers is evaluated each time we enter it, so it can react to the frame being potentially not the same width than earlier or the window not taking the entire frame. It has to have a minimal size though, I’d say 80 characters is enough for that.
-#+BEGIN_SRC emacs-lisp
-  (setq mu4e-split-view 'vertical)
-  (setq mu4e-headers-visible-columns 80)
-#+END_SRC
-
 Icons are nice and all, but my current font does not display some of the default icons set by mu4e. Due to this, I will define back these icons to the original characters defined by mu4e:
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-headers-draft-mark     '("D"  . "D")
