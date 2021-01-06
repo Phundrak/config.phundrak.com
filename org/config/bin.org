@@ -833,7 +833,7 @@ The main aim of this function is to transform the URLs contained in the argument
 :END:
 The final function to declare before the main body of the script is ~_ytdl_download_batch~: it will look for each line, ignoring the ones beginning by ~#~, ~;~ and ~]~ (just like ~youtube-dl~) and will download them, assuming these are channel URLs or playlist URLs, however it should also work with direct video URLs.
 
-What this function does is for each line, it will fetch the entierty of the video IDs found in a playlist or channel. Then, it will look each ID up the list of already downloaded videos and will add all new IDs to a queue of videos to be downloaded. It will then pass each new video ID to ~_ytdl_download_video~ directly.
+What this function does is for each line, it will fetch the entierty of the video IDs found in a playlist or channel. Then, it will look each ID up the list of already downloaded videos and will add all new IDs to a queue of videos to be downloaded. It will then pass each new video ID to ~_ytdl_download_video~ directly. Beware that if you pass directly the URL of the channel, such as ~https://www.youtube.com/user/enyay~ if you want to download Tom Scott’s videos, it will download everything on the main page of their channel, which means it will even download videos from playlists they decided to put on their channel’s front page, even if it is not theirs. So in that case, we need to append ~/videos~ to any channel URL.
 #+BEGIN_SRC fish
   function _ytdl_download_batch
       set -q $FILE
@@ -842,7 +842,11 @@ What this function does is for each line, it will fetch the entierty of the vide
           set CHANNELS (cat $FILE | grep -vE "#|;|\]")
           for c in $CHANNELS
               _ytdl_log "INFO" "Getting IDs for channel $c"
-              set IDS (youtube-dl --get-id $c)
+              if test (egrep '\/c\/|user|channel' (echo $c |psub))
+                  set -g IDS (youtube-dl --get-id "$c/videos")
+              else
+                  set -g IDS (youtube-dl --get-id $c)
+              end
               _ytdl_log "INFO" "Fetching new videos from channel"
               for i in (seq (count $IDS))
                   printf "\rsearching (%d/%d)" $IDn (count $IDS)
