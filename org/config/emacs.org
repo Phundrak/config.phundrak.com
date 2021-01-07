@@ -3448,7 +3448,7 @@ Now, onto some shortcuts related to org-mode. Let’s first declare the category
 
 #+BEGIN_SRC emacs-lisp
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "ob" 'phundrak/blog-publish)
-  (spacemacs/declare-prefix-for-mode 'org-mode "ob" "blog")
+  (spacemacs/declare-prefix-for-mode 'org-mode "ob" "publish blog")
 #+END_SRC
 
 Now, I have a couple of shortcuts I use regularly:
