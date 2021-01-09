@@ -66,10 +66,18 @@ mpc stop &
 xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
 #+end_example
 
+I also have an external sound card, a Scarlet 2i2 G3, that I would like to use as my default audio output. However, it might not be always connected, hence the following code:
+#+NAME: default-soundcard
+#+BEGIN_SRC fish :tangle no
+  set SOUNDCARD "alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8KJ6NH094EF1C-00.analog-stereo"
+  pactl list short sinks | grep $SOUNDCARD 2&> /dev/null && pactl set-default-sink $SOUNDCARD
+#+END_SRC
+
 #+BEGIN_SRC fish :noweb yes
   set -l PATH $PATH /usr/lib/xfce-polkit
 
   <<autostart-gen()>>
+  <<default-soundcard>>
 #+END_SRC
 
 * cli utilities
