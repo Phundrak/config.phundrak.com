@@ -4236,28 +4236,21 @@ Sometimes, some visual properties just don’t fit right for me and I need to ed
         )
     (custom-theme-set-faces
      'user
+     <<face-generate(input=mu4e-faces)>>
      <<face-generate(input=org-faces)>>
      ))
 #+END_SRC
 
-**** Mu4e                                                       :noexport:
+**** Mu4e
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Visual-configuration-Better-faces-Mu4e-7b52d940
 :END:
-Something that irks me with the ~doom-nord~ theme is that emails I replied to are the same color as unread emails, and I wish to change this color. Luckily, I can change that! The foreground color of emails I replied to will now be [[#User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99][Nord15]]. The same goes for forwarded emails that will get the Nord14 foreground text color. And please, no underligning. First, we have a common property to set up.
-#+tblname: mu4e-common-faces
-| /           | <                                                 |        |           |                 |
-| Name        | inherit                                           | weight | underline | background      |
-|-------------+---------------------------------------------------+--------+-----------+-----------------|
-| mu4e-common | mu4e-header-highlight-face font-lock-builtin-face | normal | nil       | ,phundrak/nord0 |
-
-Next, let’s declare the faces I want to fix for mu4e:
+The nord theme is great and all, but for some reason some faces in mu4e aren’t displayed properly, such as the ~mu4e-highlight-face~. Let’s fix that!
 #+tblname: mu4e-faces
-| /                   | <             |                  |
-| Name                | additional    | foreground       |
-|---------------------+---------------+------------------|
-| mu4e-replied-face   | ,@mu4e-common | ,phundrak/nord14 |
-| mu4e-forwarded-face | ,@mu4e-common | ,phundrak/nord15 |
+| /                   |                 |                 |
+| Name                | background      | foreground      |
+|---------------------+-----------------+-----------------|
+| mu4e-highlight-face | ,phundrak/nord9 | ,phundrak/nord0 |
 
 **** Org-mode
 :PROPERTIES:
@@ -4286,9 +4279,9 @@ Fonts will play an important part in this, but so will colors and font size. The
 | org-level-8               | ,@orgfont ,@head |                                      | ,phundrak/nord6  |                 |        |        | t      |           |
 | org-document-title        | ,@orgfont ,@head |                                      | ,phundrak/nord11 |                 | 2.0    |        | t      |           |
 | variable-pitch            | ,@orgfont        |                                      |                  |                 |        |        |        |           |
-| org-block                 | ,@fixed          |                                      |                  | ,phundrak/nord2 |        |        |        |           |
-| org-block-begin-line      | ,@fixed          |                                      |                  | ,phundrak/nord2 |        |        |        |           |
-| org-block-end-line        | ,@fixed          |                                      |                  | ,phundrak/nord2 |        |        |        |           |
+| org-block                 | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
+| org-block-begin-line      | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
+| org-block-end-line        | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
 | org-indent                | ,@fixed          |                                      |                  |                 |        |        |        |           |
 | org-formula               | ,@fixed          |                                      |                  |                 |        |        |        |           |
 | org-macro                 | ,@fixed          |                                      |                  |                 |        |        |        |           |
