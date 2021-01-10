@@ -4290,10 +4290,10 @@ Fonts will play an important part in this, but so will colors and font size. The
 | org-drawer                | ,@fixed          |                                      | ,phundrak/nord10 |                 |        |        |        |           |
 | org-table                 | ,@fixed          |                                      | ,phundrak/nord14 |                 |        |        |        |           |
 | org-date                  | ,@fixed          |                                      | ,phundrak/nord13 |                 |        |        |        |           |
-| org-code                  |                  | (shadow fixed-pitch)                 |                  |                 |        |        |        |           |
-| org-verbatim              |                  | (shadow fixed-pitch)                 |                  |                 |        |        |        |           |
-| org-document-info-keyword |                  | (shadow fixed-pitch)                 |                  |                 |        |        |        |           |
-| org-tag                   |                  | (shadow fixed-pitch)                 |                  |                 |        | bold   |        |           |
+| org-code                  | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
+| org-verbatim              | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
+| org-document-info-keyword | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
+| org-tag                   | ,@fixed          | shadow                               |                  |                 |        | bold   |        |           |
 | org-meta-line             | ,@fixed          | (font-lock-comment-face fixed-pitch) |                  |                 | 0.8    |        |        |           |
 | org-special-keyword       |                  | (font-lock-comment-face fixed-pitch) | ,phundrak/nord15 |                 | 0.8    |        |        |           |
 | org-checkbox              |                  | (org-todo shadow fixed-pitch)        |                  |                 |        |        |        |           |
