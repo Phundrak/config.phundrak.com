@@ -74,28 +74,6 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (load phundrak//dotspacemacs-uc))
 
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
- '(evil-want-Y-yank-to-eol nil)
- '(org-export-headline-levels 4)
- '(package-selected-packages
-   '(xkcd vmd-mode visual-fill-column typit mmt sudoku restclient-helm pony-mode pacmacs ox-reveal outorg ob-restclient ob-http meson-mode ibuffer-projectile lv helm-w3m w3m graphviz-dot-mode flycheck-gometalinter transient ess-smart-equals ess-R-data-view ctable ess julia-mode eshell-git-prompt emoji-cheat-sheet-plus edit-indirect dockerfile-mode docker docker-tramp company-restclient restclient know-your-http-well company-quickhelp company-emoji company-emacs-eclim eclim atomic-chrome websocket 2048-game ox-gfm slime-company slime common-lisp-snippets erlang insert-shebang fish-mode company-shell faceup racket-mode treepy graphql yapfify yaml-mode xterm-color web-beautify twittering-mode toml-mode tagedit stickyfunc-enhance smeargle slim-mode shell-pop selectric-mode scss-mode sass-mode ranger rainbow-identifiers pytest pyenv-mode py-isort pug-mode plantuml-mode phpunit phpcbf php-auto-yasnippets pdf-tools tablist ox-pandoc orgit org-present org-pomodoro alert log4e gntp ob-elixir multi-term markdown-toc magit-gitflow magit-gh-pulls livid-mode live-py-mode json-snatcher js2-refactor js-doc htmlize hlint-refactor hindent helm-pydoc helm-hoogle helm-gitignore helm-css-scss haskell-snippets haml-mode gnuplot glsl-mode gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-messenger gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-rust pos-tip flycheck-mix flycheck-credo eshell-z eshell-prompt-extras esh-help drupal-mode disaster cython-mode dash-functional tern company-ghci company-ghc ghc color-identifiers-mode cmm-mode clang-format cargo auto-dictionary alchemist modern-cpp-font-lock yasnippet-snippets x86-lookup web-mode srefactor racer pyvenv pip-requirements pandoc-mode org-projectile org-category-capture org-mime org-download nasm-mode json-reformat intero imenu-list hy-mode git-timemachine git-link geiser flycheck-pos-tip flycheck-haskell evil-magit emmet-mode cmake-mode anaconda-mode rust-mode elixir-mode flycheck haskell-mode multiple-cursors skewer-mode simple-httpd markdown-mode magit magit-popup git-commit ghub with-editor pythonic emms gmail-message-mode ham-mode html-to-markdown flymd edit-server image-dired+ go-guru go-eldoc company-go go-mode unfill mwim company-web web-completion-data company-tern company-cabal company-c-headers company-auctex company-anaconda elcord xresources-theme sql-indent rainbow-mode php-extras php-mode mmm-mode json-mode js2-mode csv-mode coffee-mode auctex helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -167,40 +145,4 @@ This function is called at the very end of Spacemacs initialization."
  '(vc-annotate-very-old-color nil)
  '(warning-suppress-log-types '((comp)))
  '(warning-suppress-types '((comp))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(mu4e-forwarded-face ((t (:inherit (mu4e-header-highlight-face font-lock-builtin-face) :weight normal :underline nil :background "#2e3440" :foreground "#b48ead"))))
- '(mu4e-replied-face ((t (:inherit (mu4e-header-highlight-face font-lock-builtin-face) :weight normal :underline nil :background "#2e3440" :foreground "#a3be8c"))))
- '(org-block ((t (:font "Cascadia Code" :height 0.8))))
- '(org-block-begin-line ((t (:font "Cascadia Code" :height 0.8))))
- '(org-checkbox ((t (:inherit (org-todo shadow fixed-pitch)))))
- '(org-code ((t (:inherit (shadow fixed-pitch) (\,@ fixed)))))
- '(org-date ((t (:font "Cascadia Code" :height 0.8 :foreground "#ebcb8b"))))
- '(org-document-info ((t (:foreground "#d08770"))))
- '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch) (\,@ fixed)))))
- '(org-document-title ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#bf616a" :height 2.0 :italic t))))
- '(org-drawer ((t (:font "Cascadia Code" :height 0.8 :foreground "#5e81ac"))))
- '(org-formula ((t (:font "Cascadia Code" :height 0.8))))
- '(org-indent ((t (:font "Cascadia Code" :height 0.8))))
- '(org-level-1 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#b48ead" :height 1.75))))
- '(org-level-2 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#5e81ac" :height 1.5))))
- '(org-level-3 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#81a1c1" :height 1.25))))
- '(org-level-4 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#b48ead" :height 1.1))))
- '(org-level-5 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#88c0d0"))))
- '(org-level-6 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#8fbcbb"))))
- '(org-level-7 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#b48ead"))))
- '(org-level-8 ((t (:font "Charis SIL" :height 1.0 :inherit default :weight bold :foreground "#eceff4"))))
- '(org-link ((t (:foreground "#88c0d0" :underline t))))
- '(org-macro ((t (:font "Cascadia Code" :height 0.8))))
- '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch) (\,@ fixed) :height 0.8))))
- '(org-property-value ((t (:font "Cascadia Code" :height 0.8))) t)
- '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch) :font "Cascadia Code" :height 0.8 :height 0.8 :foreground "#b48ead"))))
- '(org-table ((t (:font "Cascadia Code" :height 0.8 :foreground "#a3be8c"))))
- '(org-tag ((t (:inherit (shadow fixed-pitch) (\,@ fixed) :weight bold))))
- '(org-target ((t (:font "Cascadia Code" :height 0.8))))
- '(org-verbatim ((t (:inherit (shadow fixed-pitch) (\,@ fixed)))))
- '(variable-pitch ((t (:font "Charis SIL" :height 1.0 :height 1.3 :weight thin)))))
 )
