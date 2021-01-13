@@ -4266,39 +4266,39 @@ Fonts will play an important part in this, but so will colors and font size. The
 | fixed   |         | Cascadia Code | 0.8    |        |
 
 #+tblname: org-faces
-| /                         | <                |                                      |                  |                 | <l>    |        |        |           |
-| Name                      | additional       | inherit                              | foreground       | background      | height | weight | italic | underline |
-|---------------------------+------------------+--------------------------------------+------------------+-----------------+--------+--------+--------+-----------|
-| org-level-1               | ,@orgfont ,@head |                                      | ,phundrak/nord15 |                 | 1.75   |        | t      |           |
-| org-level-2               | ,@orgfont ,@head |                                      | ,phundrak/nord10 |                 | 1.5    |        | t      |           |
-| org-level-3               | ,@orgfont ,@head |                                      | ,phundrak/nord9  |                 | 1.25   |        | t      |           |
-| org-level-4               | ,@orgfont ,@head |                                      | ,phundrak/nord15 |                 | 1.1    |        | t      |           |
-| org-level-5               | ,@orgfont ,@head |                                      | ,phundrak/nord8  |                 |        |        | t      |           |
-| org-level-6               | ,@orgfont ,@head |                                      | ,phundrak/nord7  |                 |        |        | t      |           |
-| org-level-7               | ,@orgfont ,@head |                                      | ,phundrak/nord15 |                 |        |        | t      |           |
-| org-level-8               | ,@orgfont ,@head |                                      | ,phundrak/nord6  |                 |        |        | t      |           |
-| org-document-title        | ,@orgfont ,@head |                                      | ,phundrak/nord11 |                 | 2.0    |        | t      |           |
-| variable-pitch            | ,@orgfont        |                                      |                  |                 |        |        |        |           |
-| org-block                 | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
-| org-block-begin-line      | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
-| org-block-end-line        | ,@fixed          |                                      |                  | ,phundrak/nord1 |        |        |        |           |
-| org-indent                | ,@fixed          |                                      |                  |                 |        |        |        |           |
-| org-formula               | ,@fixed          |                                      |                  |                 |        |        |        |           |
-| org-macro                 | ,@fixed          |                                      |                  |                 |        |        |        |           |
-| org-target                | ,@fixed          |                                      |                  |                 |        |        |        |           |
-| org-property-value        | ,@fixed          |                                      |                  |                 |        |        |        |           |
-| org-drawer                | ,@fixed          |                                      | ,phundrak/nord10 |                 |        |        |        |           |
-| org-table                 | ,@fixed          |                                      | ,phundrak/nord14 |                 |        |        |        |           |
-| org-date                  | ,@fixed          |                                      | ,phundrak/nord13 |                 |        |        |        |           |
-| org-code                  | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
-| org-verbatim              | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
-| org-document-info-keyword | ,@fixed          | shadow                               |                  |                 |        |        |        |           |
-| org-tag                   | ,@fixed          | shadow                               |                  |                 |        | bold   |        |           |
-| org-meta-line             | ,@fixed          | (font-lock-comment-face fixed-pitch) |                  |                 | 0.8    |        |        |           |
-| org-special-keyword       |                  | (font-lock-comment-face fixed-pitch) | ,phundrak/nord15 |                 | 0.8    |        |        |           |
-| org-checkbox              |                  | (org-todo shadow fixed-pitch)        |                  |                 |        |        |        |           |
-| org-document-info         |                  |                                      | ,phundrak/nord12 |                 |        |        |        |           |
-| org-link                  |                  |                                      | ,phundrak/nord8  |                 |        |        |        | t         |
+| /                         | <                |                               |                  |                 | <l>    |        |        |           |
+| Name                      | additional       | inherit                       | foreground       | background      | height | weight | italic | underline |
+|---------------------------+------------------+-------------------------------+------------------+-----------------+--------+--------+--------+-----------|
+| org-level-1               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 | 1.75   |        | t      |           |
+| org-level-2               | ,@orgfont ,@head |                               | ,phundrak/nord10 |                 | 1.5    |        | t      |           |
+| org-level-3               | ,@orgfont ,@head |                               | ,phundrak/nord9  |                 | 1.25   |        | t      |           |
+| org-level-4               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 | 1.1    |        | t      |           |
+| org-level-5               | ,@orgfont ,@head |                               | ,phundrak/nord8  |                 |        |        | t      |           |
+| org-level-6               | ,@orgfont ,@head |                               | ,phundrak/nord7  |                 |        |        | t      |           |
+| org-level-7               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 |        |        | t      |           |
+| org-level-8               | ,@orgfont ,@head |                               | ,phundrak/nord6  |                 |        |        | t      |           |
+| org-document-title        | ,@orgfont ,@head |                               | ,phundrak/nord11 |                 | 2.0    |        | t      |           |
+| variable-pitch            | ,@orgfont        |                               |                  |                 |        |        |        |           |
+| org-block                 | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
+| org-block-begin-line      | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
+| org-block-end-line        | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
+| org-indent                | ,@fixed          |                               |                  |                 |        |        |        |           |
+| org-formula               | ,@fixed          |                               |                  |                 |        |        |        |           |
+| org-macro                 | ,@fixed          |                               |                  |                 |        |        |        |           |
+| org-target                | ,@fixed          |                               |                  |                 |        |        |        |           |
+| org-property-value        | ,@fixed          |                               |                  |                 |        |        |        |           |
+| org-drawer                | ,@fixed          |                               | ,phundrak/nord10 |                 |        |        |        |           |
+| org-table                 | ,@fixed          |                               | ,phundrak/nord14 |                 |        |        |        |           |
+| org-date                  | ,@fixed          |                               | ,phundrak/nord13 |                 |        |        |        |           |
+| org-code                  | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
+| org-verbatim              | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
+| org-document-info-keyword | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
+| org-tag                   | ,@fixed          | shadow                        |                  |                 |        | bold   |        |           |
+| org-meta-line             | ,@fixed          | font-lock-comment-face        |                  |                 | 0.8    |        |        |           |
+| org-special-keyword       | ,@fixed          | font-lock-comment-face        | ,phundrak/nord15 |                 | 0.8    |        |        |           |
+| org-checkbox              | ,@fixed          | (org-todo shadow fixed-pitch) |                  |                 |        |        |        |           |
+| org-document-info         |                  |                               | ,phundrak/nord12 |                 |        |        |        |           |
+| org-link                  |                  |                               | ,phundrak/nord8  |                 |        |        |        | t         |
 
 *** Info colors
 :PROPERTIES:
