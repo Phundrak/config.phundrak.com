@@ -81,6 +81,7 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | magit-gitflow              | integrate gitflow in Magit                             |
 | multiple-cursors           | I don’t like the layer, I prefer this package alone    |
 | ob-swift                   | org-babel package for Swift                            |
+| ob-latex-as-png            | Inline arbitrary LaTeX snippets as PNGs in Emacs       |
 | org-sidebar                | display on the side the outline of an Org buffer       |
 | org-tree-slide             | presentation tool for org-mode                         |
 | outorg                     | edit comments as Org-mode buffers                      |
@@ -2079,18 +2080,19 @@ I also have a custom command in Org agenda to mark some tasks as daily tasks wit
 :END:
 One of the amazing features of org-mode is its literary programming capacities by running code blocks from within Org-mode itself. But for that, only a couple of languages are supported directly by Org-mode itself, and they need to be activated. Here are the languages I activated in my Org-mode configuration:
 #+NAME: org-babel-languages-table
-| C          |
-| dot        |
-| emacs-lisp |
-| gnuplot    |
-| latex      |
-| makefile   |
-| plantuml   |
-| python     |
-| sass       |
-| scheme     |
-| shell      |
-| swift      |
+| C            |
+| dot          |
+| emacs-lisp   |
+| gnuplot      |
+| latex        |
+| latex-as-png |
+| makefile     |
+| plantuml     |
+| python       |
+| sass         |
+| scheme       |
+| shell        |
+| swift        |
 
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
