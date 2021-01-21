@@ -874,6 +874,7 @@ Most of these keybindings are available at root-level of Awesome and will be dec
 |--------+-----------+---------+-----------------------+-------------------+-------|
 | Return | modkey    | yes     | awful.spawn(terminal) | open a terminal   | app   |
 | n      | modkey    | spawn   | nemo                  | open file manager | app   |
+| g      | modkey    | spawn   | gimp                  | open GIMP         | app   |
 
 *** Internet apps
 :PROPERTIES:
