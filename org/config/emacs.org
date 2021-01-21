@@ -1343,7 +1343,7 @@ This function is used in my Eshell prompt which you can consult [[#User_Configur
 :END:
 There are lots of files which I want to be able to quickly open. I used to have one shortcut for each one of these files, but as their number grew, I decided to switch to helm for my file selector which will be called by only one common shortcut. Most of my files will be located in =~/org=, but I have some conlanging files which are located in =~/Documents/conlanging=, and all my university notes are in =~/Documents/university=. Let’s declare these directories in a variable:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak/org-directories '("~/org" "~/Documents/university" "~/Documents/conlanging")
+  (defvar phundrak/org-directories '("~/org" "~/Documents/university/S8" "~/Documents/conlanging")
     "Directories in which to look for org files with the function `phundrak/find-org-files'")
 #+END_SRC
 
