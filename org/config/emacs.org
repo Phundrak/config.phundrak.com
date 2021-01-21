@@ -1337,18 +1337,6 @@ This function is used in my Eshell prompt which you can consult [[#User_Configur
                            :foreground accent)))))
 #+END_SRC
 
-*** ~phundrak/fill-paragraph~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-fill-paragraph-eb568313
-:END:
-This function was created in order to bind to another keyboard shortcut the already existing ~C-u M-q~ which I cannot type with evil-mode unless I’m in insert mode.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/fill-paragraph ()
-    (interactive)
-    (let* ((current-prefix-arg 4))
-      (call-interactively 'fill-paragraph)))
-#+END_SRC
-
 *** ~phundrak/find-org-files~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-phundrak-find-org-files-a8fd200f
@@ -3494,20 +3482,6 @@ The shortcuts below though allow me to directly switch to one of these three kno
     "otij" (lambda () (interactive) (set-input-method 'japanese))
     "otix" (lambda () (interactive) (set-input-method 'ipa-x-sampa))
     "otiT" (lambda () (interactive) (set-input-method 'tibetan-wylie)))
-#+END_SRC
-
-*** Text
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Shortcuts-Text-8d877c4b
-:END:
-The last category is a text-related category. Let’s declare it:
-#+BEGIN_SRC emacs-lisp
- (spacemacs/declare-prefix "ox" "text")
-#+END_SRC
-
-The only command for now is a command that allows the use of ~C-u M-q~ with the simple shortcut ~oxf~:
-#+BEGIN_SRC emacs-lisp
-  (spacemacs/set-leader-keys "oxf" 'phundrak/fill-paragraph)
 #+END_SRC
 
 ** Mu4e
