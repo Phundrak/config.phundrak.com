@@ -5,5 +5,5 @@
 	path = fromGIT/emacs-packages/conlanging
 	url = https://labs.phundrak.com/phundrak/conlang-layer
 [submodule ".mozilla/firefox/lruehqec.default/chrome"]
-	path = .mozilla/firefox/lruehqec.default/chrome
+	path = fromGIT/blurredfox-nord
 	url = git@labs.phundrak.com:phundrak/blurredfox-nord.git
