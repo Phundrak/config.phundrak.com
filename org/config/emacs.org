@@ -3511,8 +3511,8 @@ This source block is an example of the search queries in mu4e, and part of the r
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-bookmarks
         `((,(s-join " "
-                    '("maildir:/Inbox"
-                      "AND NOT flag:trashed"
+                    '("NOT flag:trashed"
+                      "AND (maildir:/Inbox OR maildir:/Junk)"
                       "AND NOT to:CONLANG@LISTSERV.BROWN.EDU"
                       "AND NOT to:AUXLANG@LISTSERV.BROWN.EDU"
                       "AND NOT to:ateliers-emacs@framalistes.org"
@@ -3521,22 +3521,20 @@ This source block is an example of the search queries in mu4e, and part of the r
                       "AND NOT list:ateliers-paris.emacs-doctor.com"))
            "Inbox" ?i) ;; Inbox without the linguistics mailing lists
           (,(s-join " "
-                    '("maildir:/Inbox"
-                      "AND NOT flag:trashed"
+                    '("NOT flag:trashed"
+                      "AND (maildir:/Inbox OR maildir:/Junk)"
                       "AND (f:/.*up8\.edu|.*univ-paris8.*/"
                       "OR c:/.*up8\.edu|.*univ-paris8.*/"
                       "OR t:/.*up8\.edu|.*univ-paris8.*/)"))
            "University" ?u) ;; University-related emails
           (,(s-join " "
-                    '("maildir:/Inbox"
-                      "AND (to:CONLANG@LISTSERV.BROWN.EDU"
-                      "OR to:AUXLANG@LISTSERV.BROWN.EDU)"))
+                    '("to:CONLANG@LISTSERV.BROWN.EDU"
+                      "OR to:AUXLANG@LISTSERV.BROWN.EDU"))
            "Linguistics" ?l) ;; linguistics mailing lists
           (,(s-join " "
-                    '("maildir:/Inbox"
-                      "AND (list:ateliers-emacs.framalistes.org"
+                    '("list:ateliers-emacs.framalistes.org"
                       "OR to:ateliers-paris@emacs-doctor.com"
-                      "OR list:ateliers-paris.emacs-doctor.com)"))
+                      "OR list:ateliers-paris.emacs-doctor.com"))
            "Emacs" ?e) ;; Emacs mailing list
           ("maildir:/Sent" "Sent messages" ?s)
           ("flag:unread AND NOT flag:trashed" "Unread messages" ?U)
@@ -3563,6 +3561,11 @@ This is the setup I have for my SMTP mail server: I point Emacs’ SMTP services
         smtpmail-smtp-service 587
         smtpmail-stream-type 'starttls
         message-send-mail-function 'smtpmail-send-it)
+#+END_SRC
+
+I wish my emails to be signed by default using PGP/MIME. ~mu4e~ uses ~message~ for composing new emails, so I simply need to add the function that will add the signature to emails to the hook called when creating a new email.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
 #+END_SRC
 
 *** Visual Configuration
