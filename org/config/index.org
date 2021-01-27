@@ -221,7 +221,7 @@ My Xresources file is very short. Indeed, it only contains two lines which are d
 
 I can also set the transparency of st (my terminal emulator) like so:
 #+BEGIN_SRC conf
-  st.alpha: 0.85
+  st.alpha: 0.66
 #+END_SRC
 
 Next is the declaration of my color theme. It is based on the [[https://www.nordtheme.com/][Nord]] theme, from their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
