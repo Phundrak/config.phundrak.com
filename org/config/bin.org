@@ -433,7 +433,20 @@ Back to the main body of the script, we can now launch the functions sequenciall
   adjust_device
 #+END_SRC
 
-* Emacsmail
+* Emacs stuff
+:PROPERTIES:
+:CUSTOM_ID: Emacs-stuff-8e76efd4
+:END:
+** Dired
+:PROPERTIES:
+:CUSTOM_ID: Emacs-stuff-Dired-2eeca9da
+:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/dired
+:END:
+#+BEGIN_SRC bash
+  emacsclient -c -e "(dired \"$@\")"
+#+END_SRC
+
+** Emacsmail
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/emacsmail
 :CUSTOM_ID: Emacsmail-afffb7cd
