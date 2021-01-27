@@ -10,6 +10,9 @@
 (defvar phundrak//dotspacemacs-files (list phundrak//dotspacemacs-si phundrak//dotspacemacs-sl
                                            phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
 
+;; turn off native comp warnings
+(setq comp-async-report-warnings-errors nil)
+
 (defun phundrak/update-config-files-p (&optional compiled?)
   "Verify if any of my exported Elisp configuration files are
 newer than my litterate configuration.
