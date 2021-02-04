@@ -1620,6 +1620,18 @@ giggles, I’ve made it so it is a powerline prompt.
                            :foreground accent)))))
 #+END_SRC
 
+*** ~phundrak/file-to-string~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-file-to-string-efab0fba
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/file-to-string (FILE)
+    "Returns the content of `FILE' as a string"
+    (with-temp-buffer
+      (insert-file-contents FILE)
+      (buffer-string)))
+#+END_SRC
+
 *** ~phundrak/find-org-files~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-phundrak-find-org-files-a8fd200f
@@ -2182,6 +2194,12 @@ And we can now build our banner! Here is our function that does exactly that:
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/eshell-banner ()
     (let* ((partitions        (phundrak/get-mounted-partitions))
+           (os                (replace-regexp-in-string
+                               ".*\"\\(.+\\)\""
+                               "\\1"
+                               (car (-filter (lambda (line)
+                                               (s-contains? "PRETTY_NAME" line))
+                                             (s-lines (phundrak/file-to-string "/etc/os-release"))))))
            (memory            (-map (lambda (line)
                                       (s-split " " line t))
                                     (s-split "\n"
@@ -2199,8 +2217,7 @@ And we can now build our banner! Here is our function that does exactly that:
                       (s-pad-right left-pad "." "OS")
                       (s-pad-right left-column-width
                                    " "
-                                   (with-face (s-replace "\"" ""
-                                                         (s-trim (shell-command-to-string "lsb_release -sd")))
+                                   (with-face (s-trim os)
                                               :weight 'bold))
                       (s-pad-right right-pad "." "Kernel")
                       (with-face (concat "Linux " operating-system-release)
