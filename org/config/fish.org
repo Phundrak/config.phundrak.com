@@ -130,6 +130,11 @@ I also wish to have a kinda different newline prompt, so let’s set it:
   set -g theme_newline_prompt 'λ '
 #+END_SRC
 
+Finally, let’s set our prompt’s theme to the Nord theme.
+#+BEGIN_SRC fish
+  set -g theme_color_scheme nord
+#+END_SRC
+
 * Global variables
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-1c84df8b
