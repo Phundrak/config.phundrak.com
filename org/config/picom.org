@@ -17,12 +17,12 @@ Picom is the successor to Compton, a standalone compositor for Xorg. It provides
 :END:
 The following enables client-side shadows on windows. Note desktop windows (windows with ~_NET_WM_WINDOW_TYPE_DESKTOP~) never get shadow, unless explicitly requested using the wintypes option. I personally deactivated shadows because they don’t work out too well with rounded corners.
 #+BEGIN_SRC conf
-  shadow = false;
+  shadow = true;
 #+END_SRC
 
 The blur radius radius for shadows is measured in pixels, and it defaults to 12px.
 #+BEGIN_SRC conf
-  shadow-radius = 7;
+  shadow-radius = 17;
 #+END_SRC
 
 Picom can also apply some level of opacity on shadows.
@@ -30,24 +30,19 @@ Picom can also apply some level of opacity on shadows.
 | Min value     | ~0.0~  |
 | Max value     | ~1.0~  |
 #+BEGIN_SRC conf
-  shadow-opacity = 0.85
+  shadow-opacity = 0.6
 #+END_SRC
 
 The left and top offsets for shadows are expressed in pixels.
 | Default value | ~-15~ |
 #+BEGIN_SRC conf
-  shadow-offset-x = -5;
-  shadow-offset-y = -5;
+  shadow-offset-x = -12;
+  shadow-offset-y = -12;
 #+END_SRC
 
-The following  values have an  impact on the  shadow’s RGB color.
-| Default value | ~0.0~ |
-| Min value     | ~0.0~ |
-| Max value     | ~1.0~ |
+It is possible to set the color of the shadow with the string contained in ~shadow-color~ with a hexadecimal value. I haven’t included these values in my config, but this value will override any value in ~shadow-red~, ~shadow-green~, or ~shadow-blue~.
 #+BEGIN_SRC conf
-  shadow-red = 0.0;
-  shadow-green = 0.0;
-  shadow-blue = 0.0;
+  shadow-color = "#000000"
 #+END_SRC
 
 It is possible to specify a list  of conditions of windows that should have no
@@ -256,7 +251,7 @@ The following are the parameters for background blurring, see the \*BLUR\* secti
     strength = 7;
     background = false;
     background-frame = false;
-    background-fixed = false;
+    background-fixed = true;
   }
 #+END_SRC
 

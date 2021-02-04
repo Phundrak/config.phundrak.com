@@ -224,22 +224,21 @@ Let’s set in a custom varible what packages we’ll be needing.
   nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
   noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
   otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc \
-  picom-ibhagwan-git powerline-fonts prettier pulseaudio-bluetooth \
-  python-autoflake python-epc python-importmagic python-language-server \
-  python-nose python-pip python-poetry python-ptvsd python-pytest \
-  qt5-imageformats qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv \
-  ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
-  simplescreenrecorder sshfs st-luke-git sxiv texlive-bin texlive-langchinese \
-  texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean \
-  texlive-latexextra texlive-localmanager-git texlive-most tldr tmux tree \
-  ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
-  ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels ttf-koruri \
-  ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
-  typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
-  vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-  x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
-  xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
-  yaml-language-server-bin zeal
+  picom-git powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
+  python-epc python-importmagic python-language-server python-nose python-pip \
+  python-poetry python-ptvsd python-pytest qt5-imageformats qemu r \
+  raw-thumbnailer reflector ripgrep rofi rsync rtv ruby-rb-fsevent ruby-sass \
+  rustup samba scrot sent shadow siji-git simplescreenrecorder sshfs \
+  st-luke-git sxiv texlive-bin texlive-langchinese texlive-langcyrillic \
+  texlive-langgreek texlive-langjapanese texlive-langkorean texlive-latexextra \
+  texlive-localmanager-git texlive-most tldr tmux tree ttf-arphic-uming \
+  ttf-baekmuk ttf-charis-sil ttf-dejavu ttf-google-fonts-opinionated-git \
+  ttf-hanazono ttf-joypixels ttf-koruri ttf-liberation ttf-monapo ttf-sazanami \
+  ttf-tibetan-machine typescript typescript-language-server-bin unicode-emoji \
+  unrar usbutils valgrind vscode-css-languageserver-bin \
+  vscode-html-languageserver-bin w3m wget x11-ssh-askpass xclip \
+  xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs xorg-drivers xorg-server \
+  xorg-xinit xss-lock xvkbd xwallpaper yaml-language-server-bin zeal
 #+END_SRC
 
 These are the minimum I would have in my own installation. You can edit it however you want. Let’s install those.
