@@ -80,7 +80,6 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | info-colors                | Extra colors for Emacs's Info-mode                     |
 | magit-gitflow              | integrate gitflow in Magit                             |
 | multiple-cursors           | I don’t like the layer, I prefer this package alone    |
-| ob-swift                   | org-babel package for Swift                            |
 | ob-latex-as-png            | Inline arbitrary LaTeX snippets as PNGs in Emacs       |
 | org-sidebar                | display on the side the outline of an Org buffer       |
 | org-tree-slide             | presentation tool for org-mode                         |
@@ -421,9 +420,9 @@ I am also currently using the Awesome window manager which requires the Lua prog
        lua-lsp-emmy-enable-file-watchers t)
 #+END_SRC
 
-Unfortunately, I have to write Swift code for one of my university courses, so here is the layer:
+Unfortunately, I have to write Java code for one of my university courses, so here is the layer:
 #+BEGIN_SRC emacs-lisp
-  swift
+  java
 #+END_SRC
 
 *** Readers
@@ -2072,6 +2071,7 @@ One of the amazing features of org-mode is its literary programming capacities b
 | dot          |
 | emacs-lisp   |
 | gnuplot      |
+| java         |
 | latex        |
 | latex-as-png |
 | makefile     |
@@ -2080,7 +2080,6 @@ One of the amazing features of org-mode is its literary programming capacities b
 | sass         |
 | scheme       |
 | shell        |
-| swift        |
 
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
@@ -2093,21 +2092,22 @@ One of the amazing features of org-mode is its literary programming capacities b
                      "\n  "))
 #+END_SRC
 
-#+RESULTS[498fc46efb1de59954f758ca3d9869ea6a73dad9]: org-babel-languages-gen
-#+begin_src emacs-lisp
+#+RESULTS[4d07a2b922a402777cb23301dd35399b4f063f43]: org-babel-languages-gen
+#+begin_example
 '((C . t)
   (dot . t)
   (emacs-lisp . t)
   (gnuplot . t)
+  (java . t)
   (latex . t)
+  (latex-as-png . t)
   (makefile . t)
   (plantuml . t)
   (python . t)
   (sass . t)
   (scheme . t)
-  (shell . t)
-  (swift . t))
-#+end_src
+  (shell . t))
+#+end_example
 
 The corresponding code is as follows:
 #+NAME: org-babel-load-languages
