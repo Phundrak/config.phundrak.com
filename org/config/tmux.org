@@ -10,7 +10,9 @@
 :PROPERTIES:
 :CUSTOM_ID: Presentation-0b37c6c0
 :END:
-I don’t really use tmux often, but I certainly do like a nice presentation and useful features, hence this configuration. This config file is inspired by gpakosz’s tmux configuration repo you can find [[https://github.com/gpakosz/.tmux][here]].
+I don’t really use tmux often, but I certainly do like a nice presentation and
+useful features, hence this configuration. This config file is inspired by
+gpakosz’s tmux configuration repo you can find [[https://github.com/gpakosz/.tmux][here]].
 
 * Windows and pane creation
 :PROPERTIES:
@@ -28,13 +30,15 @@ Whether if a new *pane* should retain the current path. Possible values are:
 #+BEGIN_SRC conf-unix
 tmux_conf_new_window_retain_current_path=true
 #+END_SRC
-Whether or not tmux should attempt to reconnect to the current ssh session. This is still experimental. Possible values are:
+Whether or not tmux should attempt to reconnect to the current ssh session. This
+is still experimental. Possible values are:
 - ~true~
 - ~false~ (default)
 #+BEGIN_SRC conf-unix
 tmux_conf_new_pane_reconnect_ssh=true
 #+END_SRC
-Whether tmux should prompt for new session name when creating a new one. Possible values are:
+Whether tmux should prompt for new session name when creating a new one.
+Possible values are:
 - ~true~
 - ~false~ (default)
 #+BEGIN_SRC conf-unix
@@ -45,7 +49,8 @@ tmux_conf_new_session_prompt=false
 :PROPERTIES:
 :CUSTOM_ID: Display-d5ae1908
 :END:
-Whether to activate RGB 24-bit color support (only available in tmux >= 2.2). Possible values are:
+Whether to activate RGB 24-bit color support (only available in tmux >= 2.2).
+Possible values are:
 - ~true~
 - ~false~ (default)
 #+BEGIN_SRC conf-unix
@@ -56,7 +61,8 @@ These variables are for chosing the window style. I use the default one.
   tmux_conf_theme_window_fg='default'
   tmux_conf_theme_window_bg='default'
 #+END_SRC
-Whether the focused pane should be highlighted (only available in tmux >= 2.1). Possible values are:
+Whether the focused pane should be highlighted (only available in tmux >= 2.1).
+Possible values are:
 - ~true~
 - ~false~ (default)
 #+BEGIN_SRC conf-unix
@@ -72,7 +78,9 @@ Set the terminal title. Built-in variables are:
 #+BEGIN_SRC conf-unix
   tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'
 #+END_SRC
-These variables set the left/right separators between sections. With the current values, you don’t need to install Powerline, but only fonts patched with Powerline symbols or the standalone PowerlineSymbols.otf font.
+These variables set the left/right separators between sections. With the current
+values, you don’t need to install Powerline, but only fonts patched with
+Powerline symbols or the standalone PowerlineSymbols.otf font.
 #+BEGIN_SRC conf-unix
   tmux_conf_theme_left_separator_main='\uE0B0'
   tmux_conf_theme_left_separator_sub='\uE0B1'
@@ -84,7 +92,10 @@ These variables set the left/right separators between sections. With the current
 :PROPERTIES:
 :CUSTOM_ID: Display-Colors_and_style-0994a014
 :END:
-Colors displayed in tmux can be chosen thanks to the following variables. Any color should be formatted as a hexadecimal RGB value preceded by a pound sign =#= (e.g. =#00afff= for light blue) or =default= to let our terminal set it for us.
+Colors displayed in tmux can be chosen thanks to the following variables. Any
+color should be formatted as a hexadecimal RGB value preceded by a pound sign
+=#= (e.g. =#00afff= for light blue) or =default= to let our terminal set it for
+us.
 
 Choose the style of the pane borders. Possible values are:
 - ~thin~ (default)
@@ -92,7 +103,8 @@ Choose the style of the pane borders. Possible values are:
 #+BEGIN_SRC conf-unix
 tmux_conf_theme_pane_border_style=thin
 #+END_SRC
-Declare what the colors of the focused pane should be. The first variable specifies the foreground color, the other the background color.
+Declare what the colors of the focused pane should be. The first variable
+specifies the foreground color, the other the background color.
 #+BEGIN_SRC conf-unix
   tmux_conf_theme_focused_pane_fg='default'
   tmux_conf_theme_focused_pane_bg='#0087d7'
@@ -188,7 +200,8 @@ Sets the window last status style.
   tmux_conf_theme_window_status_last_bg='default'
   tmux_conf_theme_window_status_last_attr='none'
 #+END_SRC
-Sets the left and right content of the status bar of tmux. Sections should be separated with =|=, subsections with =,=. The built-in values are:
+Sets the left and right content of the status bar of tmux. Sections should be
+separated with =|=, subsections with =,=. The built-in values are:
 - =#{battery_bar}=
 - =#{battery_hbar}=
 - =#{battery_percentage}=
@@ -268,7 +281,8 @@ Set the battery bar length in terms of amount of symbols. Possible values are:
 Set the battery bar palette. Possible values are:
 - =gradient= (default)
 - =heat=
-- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB value preceded by a pound symbol =#=.
+- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+  value preceded by a pound symbol =#=.
 #+BEGIN_SRC conf-unix
   tmux_conf_battery_bar_palette='gradient'
   #tmux_conf_battery_bar_palette='#d70000,#e4e4e4,#000000'
@@ -276,14 +290,16 @@ Set the battery bar palette. Possible values are:
 Set the hbar palette. Possible values are:
 - =gradient= (default)
 - =heat=
-- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB value preceded by a pound symbol =#=.
+- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+  value preceded by a pound symbol =#=.
 #+BEGIN_SRC conf-unix
   tmux_conf_battery_hbar_palette='gradient'
 #+END_SRC
 Set the vbar palette. Possible values are:
 - =gradient= (default)
 - =heat=
-- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB value preceded by a pound symbol =#=.
+- =color_full_fg,color_empty_fg,color_bg= with each being an hexadecimal RGB
+  value preceded by a pound symbol =#=.
 #+BEGIN_SRC conf-unix
   tmux_conf_battery_vbar_palette='gradient'
 #+END_SRC
@@ -295,7 +311,9 @@ Set symbols used to indicate whether the battery is charging or discharging.
   # tmux_conf_battery_status_discharging='↓'    # U+2193
   #tmux_conf_battery_status_charging='🔌 '    # U+1F50C
 #+END_SRC
-Set the clock style. If it is displayed on the right side of the status bar, it might be better to use =%I:%M %p= rather than =%R= in =tmux_conf_theme_status_right=.
+Set the clock style. If it is displayed on the right side of the status bar, it
+might be better to use =%I:%M %p= rather than =%R= in
+=tmux_conf_theme_status_right=.
 #+BEGIN_SRC conf-unix
   tmux_conf_theme_clock_colour='#00afff'
   tmux_conf_theme_clock_style='24'
@@ -305,7 +323,8 @@ Set the clock style. If it is displayed on the right side of the status bar, it 
 :PROPERTIES:
 :CUSTOM_ID: Clipboard-66d0d03a
 :END:
-Whether if in copy mode, copying the selection also copies to the OS clipboard. Possible values are:
+Whether if in copy mode, copying the selection also copies to the OS clipboard.
+Possible values are:
 - ~true~
 - ~false~ (default)
 #+BEGIN_SRC conf-unix
@@ -316,7 +335,8 @@ Whether if in copy mode, copying the selection also copies to the OS clipboard. 
 :PROPERTIES:
 :CUSTOM_ID: User_customizations-c913b5d7
 :END:
-Here we can override or undo some setting from settings from tmux. First, we can increase the history size.
+Here we can override or undo some setting from settings from tmux. First, we can
+increase the history size.
 #+BEGIN_SRC conf-unix
   set -g history-limit 10000
 #+END_SRC
@@ -324,12 +344,15 @@ We can also start with mouse mode enabled. But I don’t.
 #+BEGIN_SRC conf-unix
   #set -g mouse on
 #+END_SRC
-Whether or not Vi mode should be enabled. But really, we should rather export the =VISUAL= or =EDITOR= environment variables, see the tmux manual. Although I don’t, as said in my dotfish, I prefer to use Emacs.
+Whether or not Vi mode should be enabled. But really, we should rather export
+the =VISUAL= or =EDITOR= environment variables, see the tmux manual. Although I
+don’t, as said in my dotfish, I prefer to use Emacs.
 #+BEGIN_SRC conf-unix
   #set -g status-keys vi
   #set -g mode-keys vi
 #+END_SRC
-Replace =C-b= by =C-a= instead of using both prefixes. I personally prefer to just use =C-b=, hence why the lines are commented.
+Replace =C-b= by =C-a= instead of using both prefixes. I personally prefer to
+just use =C-b=, hence why the lines are commented.
 #+BEGIN_SRC conf-unix
   # set -gu prefix2
   # unbind C-a

@@ -10,7 +10,9 @@
 :PROPERTIES:
 :CUSTOM_ID: Introduction-465e99fe
 :END:
-The ~.rustfmt.toml~ file located in the ~$HOME~ directory is a global configuration file for Rust’s code formatters, such as ~rustfmt~. In this file, you can find how my Rust code is always formatted.
+The ~.rustfmt.toml~ file located in the ~$HOME~ directory is a global
+configuration file for Rust’s code formatters, such as ~rustfmt~. In this file,
+you can find how my Rust code is always formatted.
 
 * General settings
 :PROPERTIES:
@@ -41,9 +43,12 @@ Merge multiple imports into a single nested import.
 :PROPERTIES:
 :CUSTOM_ID: Structs_and_Enums-6a2a856d
 :END:
-The maximum length of enum variant having discriminant, that gets vertically aligned with others. Variants without discriminants would be ignored for the purpose of alignment.
+The maximum length of enum variant having discriminant, that gets vertically
+aligned with others. Variants without discriminants would be ignored for the
+purpose of alignment.
 
-Note that this is not how much whitespace is inserted, but instead the longest variant name that doesn't get ignored when aligning.
+Note that this is not how much whitespace is inserted, but instead the longest
+variant name that doesn't get ignored when aligning.
 #+BEGIN_SRC toml
   enum_discrim_align_threshold = 20
 #+END_SRC

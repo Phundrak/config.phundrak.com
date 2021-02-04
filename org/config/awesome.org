@@ -11,22 +11,35 @@
 :PROPERTIES:
 :CUSTOM_ID: Introduction-4c41360e
 :END:
-From the Arch Wiki: awesome is a highly configurable, next generation framework window manager for Xorg. It is very fast and extensible. It is primarily targeted at power users, developers and any people dealing with every day computing tasks and who want to have fine-grained control on its graphical environment.
+From the Arch Wiki: awesome is a highly configurable, next generation framework
+window manager for Xorg. It is very fast and extensible. It is primarily
+targeted at power users, developers and any people dealing with every day
+computing tasks and who want to have fine-grained control on its graphical
+environment.
 
-Personally, what really made me want to try Awesome is the fact its configuration file is written with an actual programming language and not just a configuration language like with i3, and by the fact it works with tags and not workspaces which makes window management much more flexible.
+Personally, what really made me want to try Awesome is the fact its
+configuration file is written with an actual programming language and not just a
+configuration language like with i3, and by the fact it works with tags and not
+workspaces which makes window management much more flexible.
 
-This document was written in Emacs with Org-mode and is both the documentation and source code of my configuration file which can be extracted to ~$HOME/.config/awesome/rc.lua~ through a call to ~org-babel-tangle~.
+This document was written in Emacs with Org-mode and is both the documentation
+and source code of my configuration file which can be extracted to
+~$HOME/.config/awesome/rc.lua~ through a call to ~org-babel-tangle~.
 
 * Loading libraries
 :PROPERTIES:
 :CUSTOM_ID: Loading_libraries-4df76999
 :END:
-First of all, some initialization is needed, and this initialization is about math randomness. So, let’s initialize the ~random~ method of the ~math~ library:
+First of all, some initialization is needed, and this initialization is about
+math randomness. So, let’s initialize the ~random~ method of the ~math~ library:
 #+BEGIN_SRC lua
   math.randomseed(os.time())
 #+END_SRC
 
-In order to be able to load libraries properly, I first need to make sure LuaRocks is installed, so I can also make sure the packages our configuration depends on installed through it can be found. If LuaRocks is not installed, then do nothing.
+In order to be able to load libraries properly, I first need to make sure
+LuaRocks is installed, so I can also make sure the packages our configuration
+depends on installed through it can be found. If LuaRocks is not installed, then
+do nothing.
 #+BEGIN_SRC lua
   pcall(require, "luarocks.loader")
 #+END_SRC
@@ -71,7 +84,8 @@ I also want to be able to autofocus the first window when I go to another worksp
   require("awful.autofocus")
 #+END_SRC
 
-And finally, I want to be able to declare some shortcuts specific to some apps thanks to the hotkeys help widget.
+And finally, I want to be able to declare some shortcuts specific to some apps
+thanks to the hotkeys help widget.
 #+BEGIN_SRC lua
   require("awful.hotkeys_popup.keys")
 #+END_SRC
@@ -84,7 +98,8 @@ By the way, let’s initialize the ~random~ method of the ~math~ library:
 :PROPERTIES:
 :CUSTOM_ID: Error_handling-f6a6668f
 :END:
-This code checks if Awesome encountered an error during startup and fell back to another config. This code will only ever execute for the fallback config.
+This code checks if Awesome encountered an error during startup and fell back to
+another config. This code will only ever execute for the fallback config.
 #+BEGIN_SRC lua
   if awesome.startup_errors then
     naughty.notify({ preset = naughty.config.presets.critical,
@@ -118,7 +133,10 @@ And this code handles runtime errors after startup thanks to signals.
 :PROPERTIES:
 :CUSTOM_ID: Variable_definitions-Themes-591886b4
 :END:
-With Awesome, it is possible to load or write custom themes in order to give Awesome a special look that fits the user. I am currently using a custom theme that is not yet included in my dotfiles. I will add it later, along with the images used for the theme.
+With Awesome, it is possible to load or write custom themes in order to give
+Awesome a special look that fits the user. I am currently using a custom theme
+that is not yet included in my dotfiles. I will add it later, along with the
+images used for the theme.
 #+BEGIN_SRC lua
   beautiful.init("/home/phundrak/.config/awesome/nord/theme.lua")
 #+END_SRC
@@ -127,7 +145,9 @@ With Awesome, it is possible to load or write custom themes in order to give Awe
 :PROPERTIES:
 :CUSTOM_ID: Variable_definitions-Default_terminal_and_text_editor-44b84e20
 :END:
-The two following variables are set so that I don’t need to go over my whole config file in order to modify which terminal or text editor I use, not that I do it often though.
+The two following variables are set so that I don’t need to go over my whole
+config file in order to modify which terminal or text editor I use, not that I
+do it often though.
 #+BEGIN_SRC lua
   terminal = "st"
   editor = os.getenv("EDITOR") or "emacsclient -c"
@@ -137,7 +157,11 @@ The two following variables are set so that I don’t need to go over my whole c
 :PROPERTIES:
 :CUSTOM_ID: Variable_definitions-Keys-b8def4ac
 :END:
-The following declares the default Modkey. Usually, ~Mod4~ is the Super key, situated between the Ctrl key and the Alt key with a logo (usually Windows’). Another usual value for this is ~Mod1~, which is the Alt key, but it has greater chances of interfering with other software. I also defined some other obvious variables in order to make my code cleaner later on.
+The following declares the default Modkey. Usually, ~Mod4~ is the Super key,
+situated between the Ctrl key and the Alt key with a logo (usually Windows’).
+Another usual value for this is ~Mod1~, which is the Alt key, but it has greater
+chances of interfering with other software. I also defined some other obvious
+variables in order to make my code cleaner later on.
 #+BEGIN_SRC lua
   modkey = "Mod4"
   shift = "Shift"
@@ -158,7 +182,8 @@ The following declares the default Modkey. Usually, ~Mod4~ is the Super key, sit
 :PROPERTIES:
 :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Set_a_random_wallpaper-104bbeec
 :END:
-This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in my custom scripts.
+This function sets a random wallpaper from the directory
+=~/Pictures/Wallpapers=, see [[file:bin.org::#pape-update-bdecbadf][pape-update]] in my custom scripts.
 #+BEGIN_SRC lua
   local function set_random_pape()
     awful.spawn.with_shell("pape-update")
@@ -172,7 +197,8 @@ This function sets a random wallpaper from the directory =~/Pictures/Wallpapers=
 :PROPERTIES:
 :CUSTOM_ID: Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c
 :END:
-I also wrote the following function that will restore the previously set wallpaper:
+I also wrote the following function that will restore the previously set
+wallpaper:
 #+BEGIN_SRC lua
   local function set_wallpaper(_)
     awful.spawn.with_shell("nitrogen --restore")
@@ -183,7 +209,8 @@ I also wrote the following function that will restore the previously set wallpap
 :PROPERTIES:
 :CUSTOM_ID: Custom_functions-Layout_manipulation-6bc7db06
 :END:
-The following function is used by a shortcut described below in [[#Keybindings-Clients-f9f96d60]].
+The following function is used by a shortcut described below in
+[[#Keybindings-Clients-f9f96d60]].
 #+BEGIN_SRC lua
   local function client_go_back()
     awful.client.focus.history.previous()
@@ -302,7 +329,8 @@ The following function is used by a shortcut described below in [[#Keybindings-C
 :PROPERTIES:
 :CUSTOM_ID: Layouts-be55a7fd
 :END:
-The following is a list of available windows layouts. I only enable some of them, and their order in the table is their order in Awesome.
+The following is a list of available windows layouts. I only enable some of
+them, and their order in the table is their order in Awesome.
 #+NAME: table-layouts
 | Layout          | Enabled? |
 |-----------------+----------|
@@ -358,7 +386,9 @@ Here is the code that activates these layouts:
 :PROPERTIES:
 :CUSTOM_ID: Top_bar-d3117294
 :END:
-The top bar in Awesome is declared thanks to a ~wibar~ widget fro the ~awful~ library. It is comprised of several buttons and widgets that will be declared below.
+The top bar in Awesome is declared thanks to a ~wibar~ widget fro the ~awful~
+library. It is comprised of several buttons and widgets that will be declared
+below.
 
 ** Menus
 :PROPERTIES:
@@ -382,7 +412,9 @@ The top bar in Awesome is declared thanks to a ~wibar~ widget fro the ~awful~ li
 : { "restart", awesome.restart }
 : { "quit", function() awesome.quit() end }
 
-It is possible to create actual menus in Awesome, including the one available at the top-left corner of the screen. First, let’s declare a menu related to Awesome:
+It is possible to create actual menus in Awesome, including the one available at
+the top-left corner of the screen. First, let’s declare a menu related to
+Awesome:
 #+NAME: table-awesome-menu
 | Name        | Command                                                             |
 |-------------+---------------------------------------------------------------------|
@@ -398,7 +430,8 @@ And here is the actual code:
   }
 #+END_SRC
 
-Next, let’s create the main menu that will be used on ~S-w~ and at the top left of the window:
+Next, let’s create the main menu that will be used on ~S-w~ and at the top left
+of the window:
 #+NAME: table-main-menu
 | Name          | Command        | Icon                   |
 |---------------+----------------+------------------------|
@@ -412,7 +445,8 @@ Here is the actual code:
                        }})
 #+END_SRC
 
-For now it only has two entries: the Awesome menu and opening a terminal, I will add some more later probably. Let’s specify it as being our main launcher:
+For now it only has two entries: the Awesome menu and opening a terminal, I will
+add some more later probably. Let’s specify it as being our main launcher:
 #+BEGIN_SRC lua
   launcher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mainmenu })
@@ -441,28 +475,39 @@ Let’s also create a clock widget:
 :PROPERTIES:
 :CUSTOM_ID: Top_bar-Tag_list-d43dbb62
 :END:
-In order to create the taglist (an equivalent to workspaces, but better), we need to create first a local variable that will hold the widget. It will be declared as you can see below:
+In order to create the taglist (an equivalent to workspaces, but better), we
+need to create first a local variable that will hold the widget. It will be
+declared as you can see below:
 #+BEGIN_SRC lua :tangle no
   local tasklist_buttons = gears.table.join(
     -- configuration goes here
   )
 #+END_SRC
 
-~gears.table.join()~ joins several tables together, as described [[https://awesomewm.org/doc/api/libraries/gears.table.html][here]], which will be useful since all its arguments will be tables generated by the ~awful.button~ method which will be useful in order to manage what clicks on the tags should do. First, let’s manage left clicks.
+~gears.table.join()~ joins several tables together, as described [[https://awesomewm.org/doc/api/libraries/gears.table.html][here]], which
+will be useful since all its arguments will be tables generated by the
+~awful.button~ method which will be useful in order to manage what clicks on the
+tags should do. First, let’s manage left clicks.
 
-Left clicks in general are dedicated to tag visibility. A simple left click on a tag should switch this tag as the only visible tag, no matter how many of them were visible beforehand.
+Left clicks in general are dedicated to tag visibility. A simple left click on a
+tag should switch this tag as the only visible tag, no matter how many of them
+were visible beforehand.
 #+NAME: tag-simple-left-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 1, function(t) t:view_only() end)
 #+END_SRC
 
-However, left clicks combined with the modkey will add the clicked tag to the list of visible tags, which allows the user to see windows from several tags at once.
+However, left clicks combined with the modkey will add the clicked tag to the
+list of visible tags, which allows the user to see windows from several tags at
+once.
 #+NAME: tag-mod-left-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ modkey }, 1, awful.tag.viewtoggle)
 #+END_SRC
 
-Right clicks are dedicated to window tagging. A simple right click will untag the currently focused window and tag it again with the clicked tag, moving it effectively from one tag to another.
+Right clicks are dedicated to window tagging. A simple right click will untag
+the currently focused window and tag it again with the clicked tag, moving it
+effectively from one tag to another.
 #+NAME: tag-simple-right-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 3, function(t)
@@ -472,7 +517,8 @@ Right clicks are dedicated to window tagging. A simple right click will untag th
   end)
 #+END_SRC
 
-However, a right click combined with the modkey will add the clicked tag to the currently focused window, making it visible to both tags.
+However, a right click combined with the modkey will add the clicked tag to the
+currently focused window, making it visible to both tags.
 #+NAME: tag-mod-right-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ modkey }, 3, function(t)
@@ -482,7 +528,9 @@ However, a right click combined with the modkey will add the clicked tag to the 
   end)
 #+END_SRC
 
-The scroll wheel is treated as clicks just as any right or left clicks and can be interpreted by Awesome. They can prove useful when it comes to tags. If a scroll up is detected over tags, then Awesome will display the previous tag.
+The scroll wheel is treated as clicks just as any right or left clicks and can
+be interpreted by Awesome. They can prove useful when it comes to tags. If a
+scroll up is detected over tags, then Awesome will display the previous tag.
 #+NAME: tag-simple-scroll-up
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 4, function(t) awful.tag.viewprev(t.screen) end)
@@ -510,14 +558,17 @@ So, here’s the actual configuration code for the taglist:
 :PROPERTIES:
 :CUSTOM_ID: Top_bar-Tasks_list-fb7c9b20
 :END:
-Similarly to the tag list, the task list can display some special behavior depending on the clicks it receives. These clicks are set like so:
+Similarly to the tag list, the task list can display some special behavior
+depending on the clicks it receives. These clicks are set like so:
 #+BEGIN_SRC lua :tangle no
   local tasklist_buttons = gears.table.join(
     -- List of clicks
   )
 #+END_SRC
 
-A left click on a task in the taskbar will simply focus and raise the window linked to it if it is not focused. Otherwise, if the window is focused, the window will be minimized.
+A left click on a task in the taskbar will simply focus and raise the window
+linked to it if it is not focused. Otherwise, if the window is focused, the
+window will be minimized.
 #+NAME: task-simple-left-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 1, function (c)
@@ -533,7 +584,9 @@ A left click on a task in the taskbar will simply focus and raise the window lin
   end)
 #+END_SRC
 
-If the right click is detected, then a list of all the opened clients is invoked so we can switch to another (and if needed switch visible tag). The width of this list will be 250px.
+If the right click is detected, then a list of all the opened clients is invoked
+so we can switch to another (and if needed switch visible tag). The width of
+this list will be 250px.
 #+NAME: task-simple-right-click
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 3, function()
@@ -541,7 +594,8 @@ If the right click is detected, then a list of all the opened clients is invoked
   end)
 #+END_SRC
 
-If a scroll up is detected, then let’s select the previous client in the tasklist.
+If a scroll up is detected, then let’s select the previous client in the
+tasklist.
 #+NAME: task-simple-scroll-up
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 4, function ()
@@ -575,19 +629,26 @@ So, here’s the actual code for the tasklist:
 :PROPERTIES:
 :CUSTOM_ID: Theme_and_display-Screen_update-e162a27a
 :END:
-When a screen’s geometry changes (e.g. when a different resolution is applied), the signal ~property::geometry~ is sent. When this is the case, the wallpaper should be redisplayed since it won’t necessarily fit the new geometry of the screen. And remember, I have a [[#Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c][function that does exactly that]]! Let’s connect this function to the geometry change signal:
+When a screen’s geometry changes (e.g. when a different resolution is applied),
+the signal ~property::geometry~ is sent. When this is the case, the wallpaper
+should be redisplayed since it won’t necessarily fit the new geometry of the
+screen. And remember, I have a [[#Custom_functions-Wallpaper-related_functions-Restore_previous_wallpaper-8b5bc08c][function that does exactly that]]! Let’s connect
+this function to the geometry change signal:
 #+BEGIN_SRC lua
   screen.connect_signal("property::geometry", set_wallpaper)
 #+END_SRC
 
-If a new screen gets connected, it will need to get a new wallpaper. A lot needs to be done, and all the following lines of code will be inside a block like this:
+If a new screen gets connected, it will need to get a new wallpaper. A lot needs
+to be done, and all the following lines of code will be inside a block like
+this:
 #+BEGIN_SRC lua :tangle no
   awful.screen.connect_for_each_screen(function(s)
       -- Code to be executed goes here
   end)
 #+END_SRC
 
-So, due the code block above, if you see any reference to ~s~ in the code blocks below, it will refer to the screen being set up by the function.
+So, due the code block above, if you see any reference to ~s~ in the code blocks
+below, it will refer to the screen being set up by the function.
 
 First, let’s set its wallpaper:
 #+NAME: screen-set-pape
@@ -595,14 +656,17 @@ First, let’s set its wallpaper:
   set_wallpaper()
 #+END_SRC
 
-Next, let’s build a list of tags for the screen. *Be aware that each screen has its own tag table!* The default layout will be the first refered to in
-the layouts list described above]].
+Next, let’s build a list of tags for the screen. *Be aware that each screen has
+its own tag table!* The default layout will be the first refered to in the
+layouts list described above.
 #+NAME: screen-taglist
 #+BEGIN_SRC lua :tangle no
   awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }, s, awful.layout.layouts[1])
 #+END_SRC
 
-Next, let’s create the taglist widget. It will use the ~taglist_buttons~ [[#Top_bar-Tag_list-d43dbb62][declared above]] in order to handle clicks on tags, and due to the filter, all tags will be displayed in the tagbar ([[https://awesomewm.org/apidoc/widgets/awful.widget.taglist.html#List_filters][more about tag filters]]).
+Next, let’s create the taglist widget. It will use the ~taglist_buttons~
+[[#Top_bar-Tag_list-d43dbb62][declared above]] in order to handle clicks on tags, and due to the filter, all
+tags will be displayed in the tagbar ([[https://awesomewm.org/apidoc/widgets/awful.widget.taglist.html#List_filters][more about tag filters]]).
 #+NAME: screen-taglist-widget
 #+BEGIN_SRC lua :tangle no
   s.taglist = awful.widget.taglist {
@@ -612,7 +676,10 @@ Next, let’s create the taglist widget. It will use the ~taglist_buttons~ [[#To
   }
 #+END_SRC
 
-A tasklist widget will also get created thanks with the ~tasklist_button~ [[#Top_bar-Tag_list-d43dbb62][declared above]] that will handle clicks on tasks. Contrarily to the taglist widget above, the tasklist will only display the screen’s current tags thanks to its filter.
+A tasklist widget will also get created thanks with the ~tasklist_button~
+[[#Top_bar-Tag_list-d43dbb62][declared above]] that will handle clicks on tasks. Contrarily to the taglist
+widget above, the tasklist will only display the screen’s current tags thanks to
+its filter.
 #+NAME: screen-tasklist-widget
 #+BEGIN_SRC lua :tangle no
   s.tasklist = awful.widget.tasklist {
@@ -628,7 +695,11 @@ A promptbox will also be created for the screen:
   s.promptbox = awful.widget.prompt()
 #+END_SRC
 
-Then, Let’s create an imagebox widget in which will be contained an icon indicating which layout is being used. We need one per screen. We will also make it clickable: if there is a left click or a scroll up detected above it, the next layout will be loaded; otherwise if a right click or a scroll down is detected, the previous layout will be loaded.
+Then, Let’s create an imagebox widget in which will be contained an icon
+indicating which layout is being used. We need one per screen. We will also make
+it clickable: if there is a left click or a scroll up detected above it, the
+next layout will be loaded; otherwise if a right click or a scroll down is
+detected, the previous layout will be loaded.
 #+NAME: screen-layout-indicator
 #+BEGIN_SRC lua :tangle no
   s.layoutbox = awful.widget.layoutbox(s)
@@ -645,7 +716,10 @@ Now it is time to create the widget, a ~wibox~ that will contain our bar.
   s.wibox = awful.wibar({ position = "top", screen = s })
 #+END_SRC
 
-Finally, let’s set up our bar. Since it is a horizontal bar, its layout will be horizontal too. Our launcher, taglist and promptbox will be part of the left widgets, while the tasklist will be at the center, and the keyboard indicator, the system tray, the clock and the layout indicator will be on the right.
+Finally, let’s set up our bar. Since it is a horizontal bar, its layout will be
+horizontal too. Our launcher, taglist and promptbox will be part of the left
+widgets, while the tasklist will be at the center, and the keyboard indicator,
+the system tray, the clock and the layout indicator will be on the right.
 #+NAME: screen-wibox-setup
 #+BEGIN_SRC lua :tangle no
   s.wibox:setup {
@@ -685,18 +759,23 @@ In the end, our code looks like this:
 :PROPERTIES:
 :CUSTOM_ID: Mouse_bindings-eb4a69a8
 :END:
-It is possible with Awesome to bind some shortcuts to mouse events when the mouse is above Awesome itself (not above some client). Only one is set: the right click opens the Awesome menu.
+It is possible with Awesome to bind some shortcuts to mouse events when the
+mouse is above Awesome itself (not above some client). Only one is set: the
+right click opens the Awesome menu.
 #+BEGIN_SRC lua
   root.buttons(gears.table.join(
                  awful.button({}, 3, function() mainmenu:toggle() end)
   ))
 #+END_SRC
 
-I will  also set three mouse  bindings for when  the mouse is above  a client:
+I will also set three mouse bindings for when the mouse is above a client:
 - A simple click on a client will focus and raise it.
-- A click on a client combined with a modkey press will allow the user to move a client after focusing it and making it floating.
-- A middle click on a client combined with a modkey press will toggle the floating status of the client.
-- A right click combined with the modkey will allow the user to resize a after focusing it and making it a floating client.
+- A click on a client combined with a modkey press will allow the user to move a
+  client after focusing it and making it floating.
+- A middle click on a client combined with a modkey press will toggle the
+  floating status of the client.
+- A right click combined with the modkey will allow the user to resize a after
+  focusing it and making it a floating client.
 
 #+BEGIN_SRC lua
   clientbuttons = gears.table.join(
@@ -723,22 +802,32 @@ I will  also set three mouse  bindings for when  the mouse is above  a client:
 :PROPERTIES:
 :CUSTOM_ID: Keybindings-a4e415b3
 :END:
-Keybindings allow the user to execute some Lua code all across Awesome. They all bear at least a list of modifier keys, the actual key to be pressed, the action they keybinding should yield, a description, and a group. The latter two will be useful for the keybindings help window which will display them all, sorted by group and with the description displayed next to the keybinding itself.
+Keybindings allow the user to execute some Lua code all across Awesome. They all
+bear at least a list of modifier keys, the actual key to be pressed, the action
+they keybinding should yield, a description, and a group. The latter two will be
+useful for the keybindings help window which will display them all, sorted by
+group and with the description displayed next to the keybinding itself.
 
-Here are some keybindings related to Awesome itself. Most of them will be described in tables, but due to some limitations from Org-mode (the Emacs mode used to write this document and generate my Awesome configuration), a few of them will be directly written as Lua code.
+Here are some keybindings related to Awesome itself. Most of them will be
+described in tables, but due to some limitations from Org-mode (the Emacs mode
+used to write this document and generate my Awesome configuration), a few of
+them will be directly written as Lua code.
 
 Here is a description of the tables displayed below:
 - Key :: key which toggles the shortcut
 - Modifiers :: modifier keys that are required to toggle the shortcut
-- Lambda? :: whether or not the ~Action~ should be nested in a lambda function. Possible values are:
+- Lambda? :: whether or not the ~Action~ should be nested in a lambda function.
+  Possible values are:
   - ~no~ :: The value is a Lua function to be executed as is
   - ~yes~ :: The value is to be inserted into a lambda
   - ~spawn~ :: The value is to be inserted in an ~awful.spawn~ call in a lambda
-  - ~shell~ :: The value is to be inserted in an ~awful.spawn.with_shell~ call in a lambda
+  - ~shell~ :: The value is to be inserted in an ~awful.spawn.with_shell~ call
+    in a lambda
 - Action :: code to be executed by the shortcut
 - What it does :: short description of the shortcut’s action
 - Group :: group in which the shortcut will appear in Awesome’s help window
-- Clientkey? :: whether this should be a global shortcut or a shortcut only aimed at clients (value is ~yes~ or ~no~)
+- Clientkey? :: whether this should be a global shortcut or a shortcut only
+  aimed at clients (value is ~yes~ or ~no~)
 
 #+NAME: gen-sc-text
 #+BEGIN_SRC emacs-lisp
@@ -832,7 +921,9 @@ awful.key({modkey, control},"Return",function(c) c:swap(awful.client.getmaster()
                ",\n\n"))
 #+END_SRC
 
-Most of these keybindings are available at root-level of Awesome and will be declared in the ~globalkeys~ variable, which will be added then to ~root.keys~ (see [[https://awesomewm.org/doc/api/libraries/root.html#keys]]).
+Most of these keybindings are available at root-level of Awesome and will be
+declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
+(see [[https://awesomewm.org/doc/api/libraries/root.html#keys]]).
 #+BEGIN_SRC lua :cache yes
   globalkeys = gears.table.join(
     -- Awesome
@@ -950,7 +1041,7 @@ Here will be declared some shortcuts directly related to Awesome itself.
 :PROPERTIES:
 :CUSTOM_ID: Keybindings-Clients-f9f96d60
 :END:
-   These shortcuts are related to clients (aka windows) management.
+These shortcuts are related to clients (aka windows) management.
 #+NAME: sc-client
 | Key | Modifiers              | Lambda? | Action                           | What it does                  | Group  | Clientkey? |
 |-----+------------------------+---------+----------------------------------+-------------------------------+--------+------------|
@@ -1045,7 +1136,9 @@ Here will be declared some shortcuts directly related to Awesome itself.
 | t      | modkey, control | no      | awful.tag.viewprev        | view prev    | tag   |
 | s      | modkey, control | no      | awful.tag.viewnext        | view next    | tag   |
 
-Another set of shortcuts is linked to the number row on the keyboard that allow the manipulation of the default tags that range from ~1~ to ~10~ (the latter is displayed as ~0~). Here is what the possible actions are:
+Another set of shortcuts is linked to the number row on the keyboard that allow
+the manipulation of the default tags that range from ~1~ to ~10~ (the latter is
+displayed as ~0~). Here is what the possible actions are:
 #+NAME: sc-tag-num
 | Key    | Modifiers              | Action                          | What it does                   | Group |
 |--------+------------------------+---------------------------------+--------------------------------+-------|
@@ -1058,7 +1151,10 @@ Another set of shortcuts is linked to the number row on the keyboard that allow 
 :PROPERTIES:
 :CUSTOM_ID: Keybindings-Misc-0b45ce02
 :END:
-In this category you will find other keybindings that do not fit in other categories. For now, the only keybinding that is in this category is for toggling the touchpad’s tapping ability. This is linked to a special script I wrote [[file:bin.org::#Toggle_touchpad_tapping-23348b00][here]].
+In this category you will find other keybindings that do not fit in other
+categories. For now, the only keybinding that is in this category is for
+toggling the touchpad’s tapping ability. This is linked to a special script I
+wrote [[file:bin.org::#Toggle_touchpad_tapping-23348b00][here]].
 #+NAME: sc-misc
 | Key                | Modifiers | Lambda? | Action    | What it does            | Group |
 |--------------------+-----------+---------+-----------+-------------------------+-------|
@@ -1068,7 +1164,10 @@ In this category you will find other keybindings that do not fit in other catego
 :PROPERTIES:
 :CUSTOM_ID: Rules-c6142cdf
 :END:
-With ~awful.rules~, users are able to describe some rules for window clients when the latter spawn, such as their placement, their properties or even execute a script. A rule can be applied through the ~manage~ signal, and they are all stored in ~awful.rules.rules~, the global rules table, as follows:
+With ~awful.rules~, users are able to describe some rules for window clients
+when the latter spawn, such as their placement, their properties or even execute
+a script. A rule can be applied through the ~manage~ signal, and they are all
+stored in ~awful.rules.rules~, the global rules table, as follows:
 #+BEGIN_SRC lua :tangle no
   awful.rules.rules = {
     -- Rules here
@@ -1085,13 +1184,15 @@ With ~awful.rules~, users are able to describe some rules for window clients whe
   }
 #+END_SRC
 
-For more documentation on rules and their syntax, you can read the [[https://awesomewm.org/doc/api/libraries/awful.rules.html][official documentation]].
+For more documentation on rules and their syntax, you can read the [[https://awesomewm.org/doc/api/libraries/awful.rules.html][official
+documentation]].
 
 ** Universal rules
 :PROPERTIES:
 :CUSTOM_ID: Rules-Universal_rules-50aad2ce
 :END:
-The first rule is a universal rule which will match all clients, as you can see with its syntax below:
+The first rule is a universal rule which will match all clients, as you can see
+with its syntax below:
 #+BEGIN_SRC lua :tangle no
   { rule = {},
     properties = {
@@ -1100,7 +1201,8 @@ The first rule is a universal rule which will match all clients, as you can see 
   }
 #+END_SRC
 
-Here is the list of properties with their value to apply to all clients, and a short explanation as to what they do.
+Here is the list of properties with their value to apply to all clients, and a
+short explanation as to what they do.
 #+NAME: rules-universal-properties-table
 | Property      | Value                                                   | What it does                                                            |
 |---------------+---------------------------------------------------------+-------------------------------------------------------------------------|
@@ -1149,7 +1251,8 @@ This is what my universal rules look like:
 :PROPERTIES:
 :CUSTOM_ID: Rules-Floating_clients-49ab582e
 :END:
-Some clients will be declared by default as floating windows. For this, we will declare a rule that will match any of the provided conditions:
+Some clients will be declared by default as floating windows. For this, we will
+declare a rule that will match any of the provided conditions:
 #+NAME: rules-floating-conditions-table
 | Property | Matches      | Comment                                                        |
 |----------+--------------+----------------------------------------------------------------|
@@ -1176,7 +1279,8 @@ Some clients will be declared by default as floating windows. For this, we will 
 : name = { "Event Tester" },
 : role = { "pop-up" }
 
-If any of these conditions is matched, then the client will be set as floating, as you can see below:
+If any of these conditions is matched, then the client will be set as floating,
+as you can see below:
 #+NAME: rules-floating
 #+BEGIN_SRC lua :tangle no
   { rule_any = {
@@ -1200,7 +1304,8 @@ Any normal or dialog client will get a titlebar. This is enabled like so:
 :PROPERTIES:
 :CUSTOM_ID: Rules-Default_tag_for_clients-6ded2a47
 :END:
-With the use of some rules, it is possible to define which client are assigned to which tag by default.
+With the use of some rules, it is possible to define which client are assigned
+to which tag by default.
 #+NAME: rules-default-tags-table
 | Client Property | Value      | Tag |
 |-----------------+------------+-----|
@@ -1240,29 +1345,36 @@ This is what these rules look like:
 :PROPERTIES:
 :CUSTOM_ID: Signals-e32971d6
 :END:
-Signals are a way for Awesome to handle events, such as client creation or deletion.
+Signals are a way for Awesome to handle events, such as client creation or
+deletion.
 
 ** Client creation
 :PROPERTIES:
 :CUSTOM_ID: Signals-Client_creation-8048ac12
 :END:
-When a new client is created, the ~manage~ signal is emited. When so, the following snippet ensures this new client is not off the screen, unless its position was deliberately set by a program or by the user. It will also spawn the new client where the mouse currently is.
+When a new client is created, the ~manage~ signal is emited. When so, the
+following snippet ensures this new client is not off the screen, unless its
+position was deliberately set by a program or by the user. It will also spawn
+the new client where the mouse currently is.
 #+BEGIN_SRC lua
-     client.connect_signal("manage", function (c)
-       awful.client.movetoscreen(c, mouse.screen)
-       if awesome.startup
-           and not c.size_hints.user_position
-           and not c.size_hints.program_position then
-         awful.placement.no_offscreen(c)
-       end
-     end)
-   #+END_SRC
+  client.connect_signal("manage", function (c)
+    awful.client.movetoscreen(c, mouse.screen)
+    if awesome.startup
+        and not c.size_hints.user_position
+        and not c.size_hints.program_position then
+      awful.placement.no_offscreen(c)
+    end
+  end)
+#+END_SRC
 
 ** Titlebar creation
 :PROPERTIES:
 :CUSTOM_ID: Signals-Titlebar_creation-3b1aaa14
 :END:
-It is possible for Awesome to send request signals, such as the request to create titlebar (generally for new clients). The following snippet handles this titlebar creation if titlebar creation was set to ~true~ in the [[#Rules-c6142cdf][rules]]. For a detailed explanation of the code, see below.
+It is possible for Awesome to send request signals, such as the request to
+create titlebar (generally for new clients). The following snippet handles this
+titlebar creation if titlebar creation was set to ~true~ in the [[#Rules-c6142cdf][rules]]. For a
+detailed explanation of the code, see below.
 #+BEGIN_SRC lua
   client.connect_signal("request::titlebars", function(c)
                           local buttons = gears.table.join(
@@ -1273,14 +1385,19 @@ It is possible for Awesome to send request signals, such as the request to creat
   end)
 #+END_SRC
 
-The function has two main parts: the creation of the titlebar buttons (mouse handling on the titlebar), and the creation of the titlebar itself. The creation of the button is done by creating a local variable ~buttons~ which will be a table created by the library ~gears~, in which will be buttons created by the user.
+The function has two main parts: the creation of the titlebar buttons (mouse
+handling on the titlebar), and the creation of the titlebar itself. The creation
+of the button is done by creating a local variable ~buttons~ which will be a
+table created by the library ~gears~, in which will be buttons created by the
+user.
 #+BEGIN_SRC lua :tangle no
   local buttons = gears.table.join(
     -- Buttons declared here
   )
 #+END_SRC
 
-You can see a left click will enable the user to raise the window, but also it will enable the user to move the window (if it is floating of course).
+You can see a left click will enable the user to raise the window, but also it
+will enable the user to move the window (if it is floating of course).
 #+NAME: signal-titlebar-button1
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 1, function()
@@ -1289,7 +1406,8 @@ You can see a left click will enable the user to raise the window, but also it w
   end)
 #+END_SRC
 
-A right click on the titlebar will also raise the window, but will instead allow the user to resize the client.
+A right click on the titlebar will also raise the window, but will instead allow
+the user to resize the client.
 #+NAME: signal-titlebar-button3
 #+BEGIN_SRC lua :tangle no
   awful.button({ }, 3, function()
@@ -1298,7 +1416,9 @@ A right click on the titlebar will also raise the window, but will instead allow
   end)
 #+END_SRC
 
-Next comes the actual creation of the titlebar for the client ~c~. For that, we call ~awful.titlebar()~, tell it where the titlebar should be relative to the client and what its setup should be. The full call should look like so:
+Next comes the actual creation of the titlebar for the client ~c~. For that, we
+call ~awful.titlebar()~, tell it where the titlebar should be relative to the
+client and what its setup should be. The full call should look like so:
 #+NAME: signal-titlebar-create
 #+BEGIN_SRC lua :tangle no
   awful.titlebar(c, {position="left", size = 22}) : setup {
@@ -1306,18 +1426,24 @@ Next comes the actual creation of the titlebar for the client ~c~. For that, we 
   }
 #+END_SRC
 
-In the setup, I need to repeat to Awesome the titlebar should be on the left of the client, and I also tell it the layout alignment of the titlebar will be vertical, because I like vertial titlebars. I also first send it three tables:
+In the setup, I need to repeat to Awesome the titlebar should be on the left of
+the client, and I also tell it the layout alignment of the titlebar will be
+vertical, because I like vertial titlebars. I also first send it three tables:
 - The top or left elements of the titlebar (here the top)
 - The middle elements of the titlebar
 - The bottom or right elements of the titlebar (here the bottom)
-You can notice in the setup’s code below that I haven’t included anything in the middle elements, the only elements I am interested in are the top and bottom elements. In the top elements, I have (top to bottom):
+You can notice in the setup’s code below that I haven’t included anything in the
+middle elements, the only elements I am interested in are the top and bottom
+elements. In the top elements, I have (top to bottom):
 - A close button
 - A maximize button
 - A minimize button
 - And an indication to Awesome these elements should be vertically aligned
-To make Awesome happy, I also must indicate that the middle elements are vertically aligned, and then I can declare my bottom elements:
+To make Awesome happy, I also must indicate that the middle elements are
+vertically aligned, and then I can declare my bottom elements:
 - A button for toggling client floating
-- And again the indication to Awesome these elements should be vertically aligned
+- And again the indication to Awesome these elements should be vertically
+  aligned
 #+NAME: signal-titlebar-setup
 #+BEGIN_SRC lua :tangle no
   { -- Top
@@ -1341,14 +1467,20 @@ To make Awesome happy, I also must indicate that the middle elements are vertica
 :PROPERTIES:
 :CUSTOM_ID: Signals-Changes_of_focus-1b73902c
 :END:
-The default Awesome configuration enables the following snippet of code that makes windows hovered by the user’s mouse focused. Just for completeness’ sake, I included it in this document, but be aware this won’t be tangled into my configuration file and focus will not follow my mouse.
+The default Awesome configuration enables the following snippet of code that
+makes windows hovered by the user’s mouse focused. Just for completeness’ sake,
+I included it in this document, but be aware this won’t be tangled into my
+configuration file and focus will not follow my mouse.
 #+BEGIN_SRC lua :tangle no
   client.connect_signal("mouse::enter", function(c)
                           c:emit_signal("request::activate", "mouse_enter", {raise = false})
   end)
 #+END_SRC
 
-It is also possible to change the color of the borders based on client focus. While my clients don’t have any border, they do have a titlebar which color changes based on the client’s focus. This is handled by the following code snippet:
+It is also possible to change the color of the borders based on client focus.
+While my clients don’t have any border, they do have a titlebar which color
+changes based on the client’s focus. This is handled by the following code
+snippet:
 #+BEGIN_SRC lua
   client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
   client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
@@ -1358,7 +1490,10 @@ It is also possible to change the color of the borders based on client focus. Wh
 :PROPERTIES:
 :CUSTOM_ID: Autostart-f2cf42fe
 :END:
-By simply adding a line requesting to spawn a command, it is possible to create some autolaunch. All of my autolaunched apps are launch through a custom script which you can [[file:~/org/config/bin.org::#Autostart-a99e99e7][find here]]. The command gets called with ~awful.spawn.with_shell()~, as you can see below.
+By simply adding a line requesting to spawn a command, it is possible to create
+some autolaunch. All of my autolaunched apps are launch through a custom script
+which you can [[file:~/org/config/bin.org::#Autostart-a99e99e7][find here]]. The command gets called with
+~awful.spawn.with_shell()~, as you can see below.
 #+BEGIN_SRC lua
   awful.spawn.with_shell("autostart")
 #+END_SRC

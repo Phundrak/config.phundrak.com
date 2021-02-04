@@ -9,9 +9,12 @@
 :PROPERTIES:
 :CUSTOM_ID: Presentation-981f2f04
 :END:
-This is my collection of dotfiles for my daily GNU/Linux environment, tweaked to my liking. If you wish to get the same setup as mine, follow the instructions below.
+This is my collection of dotfiles for my daily GNU/Linux environment, tweaked to
+my liking. If you wish to get the same setup as mine, follow the instructions
+below.
 
-For starters, here is the link to all the pages on my website that you might find interesting. I’ll describe them in more details below.
+For starters, here is the link to all the pages on my website that you might
+find interesting. I’ll describe them in more details below.
 - [[file:installation.org][Arch Linux bootstrap script]]
 - [[file:awesome.org][AwesomeWM configuration]]
 - [[file:bin.org][Custom scripts]]
@@ -26,11 +29,21 @@ For starters, here is the link to all the pages on my website that you might fin
 - [[file:rustfmt.org][Rustfmt configuration]]
 - [[file:tmux.org][Tmux configuration]]
 
-As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] 28.0 (using the ~native-comp~ branch) using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in Insert mode but with Evil in Normal mode) as my main text editor.
+As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] 28.0
+(using the ~native-comp~ branch) using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in
+Insert mode but with Evil in Normal mode) as my main text editor.
 
-When it comes to my graphical UI, I do not have any desktop environment. Instead, I have a tiling window manager, [[https://awesomewm.org/][Awesome]]. I used to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]] fork by [[https://github.com/Airblader/i3][Airblader]], with which I used [[https://polybar.github.io/][Polybar]] as well as [[https://github.com/dylanaraps/pywal][pywal]] to define my system’s color scheme. But now, as said above, I prefer to use Awesome. It has a built-in status bar which I use, and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty much everything I use.
+When it comes to my graphical UI, I do not have any desktop environment.
+Instead, I have a tiling window manager, [[https://awesomewm.org/][Awesome]]. I used to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]]
+fork by [[https://github.com/Airblader/i3][Airblader]], with which I used [[https://polybar.github.io/][Polybar]] as well as [[https://github.com/dylanaraps/pywal][pywal]] to define my
+system’s color scheme. But now, as said above, I prefer to use Awesome. It has a
+built-in status bar which I use, and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty
+much everything I use.
 
-Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is optimized for usage with the Bépo layout set as a software layout. It has also a layer set to emulate a Qwerty layout when using the Bépo software layout due to some games that do not offer to remap keys (I’m looking at you, Among Us).
+Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is
+optimized for usage with the Bépo layout set as a software layout. It has also a
+layer set to emulate a Qwerty layout when using the Bépo software layout due to
+some games that do not offer to remap keys (I’m looking at you, Among Us).
 
 * Features
 :PROPERTIES:
@@ -38,9 +51,15 @@ Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://confi
 :END:
 - Emacs configuration perfectly tailored for my own use
 - Beautiful and comfy i3 and polybar configuration
-- And enough information below to get basically the same distro install as I have on my main computer and my travel laptop.
+- And enough information below to get basically the same distro install as I
+  have on my main computer and my travel laptop.
 
-Most of the org files you will find in this repos are the actual source code of much of my config files. For instance, the bootstrap found in [[file:installation.org][installation.org]] exports almost all of its code snippets to [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x org-babel-tangle= from within Emacs. Below I will also present and comment some of my short config files which do not deserve to have a full org file dedicated to them.
+Most of the org files you will find in this repos are the actual source code of
+much of my config files. For instance, the bootstrap found in [[file:installation.org][installation.org]]
+exports almost all of its code snippets to [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x
+org-babel-tangle= from within Emacs. Below I will also present and comment some
+of my short config files which do not deserve to have a full org file dedicated
+to them.
 
 ** Tiling Window Managers
 :PROPERTIES:
@@ -50,19 +69,25 @@ Most of the org files you will find in this repos are the actual source code of 
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
 :END:
-AwesomeWM is the TWM I use the most on my computer between itself and i3. My configuration for it is documented in detail in its corresponding document, which you can find [[file:awesome.org][here]].
+AwesomeWM is the TWM I use the most on my computer between itself and i3. My
+configuration for it is documented in detail in its corresponding document,
+which you can find [[file:awesome.org][here]].
 
 *** i3 configuration (Deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
 :END:
-The i3 configuration is detailed in its corresponding README which you can find [[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update it until I may someday use it again. This was deprecated on August 22nd, 2020.
+The i3 configuration is detailed in its corresponding README which you can find
+[[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update it until I may
+someday use it again. This was deprecated on August 22nd, 2020.
 
 **** Polybar config (Deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Polybar_config_(Deprecated)-c8f95774
 :END:
-My annotated polybar config can be found [[file:polybar.org][here]], if you wish to use it. Be aware I do not use polybar anymore, and I will not update it until I may someday use it again. This was deprecated on August 22nd, 2020.
+My annotated polybar config can be found [[file:polybar.org][here]], if you wish to use it. Be aware I
+do not use polybar anymore, and I will not update it until I may someday use it
+again. This was deprecated on August 22nd, 2020.
 
 ** Theme and graphical tweaks
 :PROPERTIES:
@@ -81,7 +106,9 @@ My annotated polybar config can be found [[file:polybar.org][here]], if you wish
 :HEADER-ARGS: :mkdirp yes :tangle ~/.gtkrc-2.0
 :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK2-General_configuration-eb1f1f3c
 :END:
-This file is tangled at ~$HOME/.gtkrc-2.0~. This is an equivalent for the GTK3 configuration file you will see below, and it shares most of its settings. First, let’s select the Nordic theme for GTK2. Let’s also set the icon theme.
+This file is tangled at ~$HOME/.gtkrc-2.0~. This is an equivalent for the GTK3
+configuration file you will see below, and it shares most of its settings.
+First, let’s select the Nordic theme for GTK2. Let’s also set the icon theme.
 #+BEGIN_SRC conf-unix
   # -*- mode: unix-config -*-
   gtk-theme-name="Nordic"
@@ -111,12 +138,14 @@ This changes the shortcuts in menu, let’s also make the menus snappier.
   [Filechooser Settings]
 #+END_SRC
 
-The first option alows me to open the file chooser in the current working directory:
+The first option alows me to open the file chooser in the current working
+directory:
 #+BEGIN_SRC conf-unix
   StartupMode=cwd
 #+END_SRC
 
-Next, setting the location mode to ~path-bar~ will show the path as buttons that can be clicked rather than the full path.
+Next, setting the location mode to ~path-bar~ will show the path as buttons that
+can be clicked rather than the full path.
 #+BEGIN_SRC conf-unix
   LocationMode=path-bar
 #+END_SRC
@@ -131,7 +160,8 @@ And we'll also see the size of the visible files.
   ShowSizeColumn=true
 #+END_SRC
 
-Now, let’s choose the geometry of our file picker. These two first lines set where the file picker appears:
+Now, let’s choose the geometry of our file picker. These two first lines set
+where the file picker appears:
 #+BEGIN_SRC conf-unix
   GeometryX=566
   GeometryY=202
@@ -143,7 +173,8 @@ And these two describe the size of the window:
   GeometryHeight=400
 #+END_SRC
 
-With these two lines, we set how our files are sorted: by name, and in the ascending order.
+With these two lines, we set how our files are sorted: by name, and in the
+ascending order.
 #+BEGIN_SRC conf-unix
   SortColumn=name
   SortOrder=ascending
@@ -154,7 +185,8 @@ Our default view mode is a list of files:
   ViewMode=list-view
 #+END_SRC
 
-And finally, setting our icon view scale to ~-1~ sets the icon view to the max size.
+And finally, setting our icon view scale to ~-1~ sets the icon view to the max
+size.
 #+BEGIN_SRC conf-unix
   IconViewScale=-1
 #+END_SRC
@@ -164,12 +196,15 @@ And finally, setting our icon view scale to ~-1~ sets the icon view to the max s
 :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-3.0/settings.ini
 :CUSTOM_ID: Features-Graphical_tweaks-GTK_Settings-GTK3-3d6cba86
 :END:
-The following file helps me choosing the aspect of various GTK+ 3 software, including their theme and icons. First, let’s declare the header:
+The following file helps me choosing the aspect of various GTK+ 3 software,
+including their theme and icons. First, let’s declare the header:
 #+BEGIN_SRC conf-unix
   [Settings]
 #+END_SRC
 
-Now, let’s hint to GTK that I prefer dark themes. This can have an influence also on some websites that can detect this preference and therefore set their own theme to dark by themselves.
+Now, let’s hint to GTK that I prefer dark themes. This can have an influence
+also on some websites that can detect this preference and therefore set their
+own theme to dark by themselves.
 #+BEGIN_SRC conf-unix
   gtk-application-prefer-dark-theme = true
 #+END_SRC
@@ -198,7 +233,8 @@ Now, the general theme for GTK3 is Nordic.
   # gtk-xft-rgba=rgb
 #+END_SRC
 
-Since window decorations are handled by my WMs, I will leave this variable empty.
+Since window decorations are handled by my WMs, I will leave this variable
+empty.
 #+BEGIN_SRC conf-unix
   gtk-decoration-layout=
 #+END_SRC
@@ -207,14 +243,18 @@ Since window decorations are handled by my WMs, I will leave this variable empty
 :PROPERTIES:
 :CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
 :END:
-Picom is a standalone compositor for Xorg, and the successor to Compton, itself successor to xcompmgr-dana, itself a fork of xcompmgr. You can find my Picom configuration [[file:picom.org][here]].
+Picom is a standalone compositor for Xorg, and the successor to Compton, itself
+successor to xcompmgr-dana, itself a fork of xcompmgr. You can find my Picom
+configuration [[file:picom.org][here]].
 
 *** Xresources
 :PROPERTIES:
 :HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
 :CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
 :END:
-My Xresources file is very short. Indeed, it only contains two lines which are dedicated to my =st= terminal to set its font and shell. The font is set as follows.
+My Xresources file is very short. Indeed, it only contains two lines which are
+dedicated to my =st= terminal to set its font and shell. The font is set as
+follows.
 #+BEGIN_SRC conf
   st.font: Fantasque Sans Mono:size=10:antialias=true
 #+END_SRC
@@ -224,7 +264,8 @@ I can also set the transparency of st (my terminal emulator) like so:
   st.alpha: 0.66
 #+END_SRC
 
-Next is the declaration of my color theme. It is based on the [[https://www.nordtheme.com/][Nord]] theme, from their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
+Next is the declaration of my color theme. It is based on the [[https://www.nordtheme.com/][Nord]] theme, from
+their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
 #+BEGIN_SRC conf
   #define nord0 #2E3440
   #define nord1 #3B4252
@@ -275,18 +316,23 @@ Next is the declaration of my color theme. It is based on the [[https://www.nord
 :PROPERTIES:
 :CUSTOM_ID: Features-Text_and_source_code_editing-Emacs_configuration-ef937102
 :END:
-Emacs is my main text editor, which I use for almost everything. Because, you know…
+Emacs is my main text editor, which I use for almost everything. Because, you
+know…
 #+begin_quote
 Emacs is a great operating system, it just lacks a good text editor.
 #+end_quote
 
-You can find my Emacs config, based on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and my user configuration in my [[file:emacs.org][emacs.org]] file.
+You can find my Emacs config, based on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and my
+user configuration in my [[file:emacs.org][emacs.org]] file.
 
 *** Nano (deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Text_and_source_code_editing-Nano-a9d4839f
 :END:
-Although it is a very simple piece of software, nano does offer some customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file. Be aware I do not use nano anymore, and I will not update it until I may someday use it again. This was deprecated on August 28th, 2020.
+Although it is a very simple piece of software, nano does offer some
+customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file. Be aware I do not use nano
+anymore, and I will not update it until I may someday use it again. This was
+deprecated on August 28th, 2020.
 
 *** Rustfmt
 :PROPERTIES:
@@ -298,7 +344,12 @@ You can find my Rustfmt configuration [[file:rustfmt.org][here]].
 :PROPERTIES:
 :CUSTOM_ID: Features-Custom_scripts_in_=PATH=-043e8c8e
 :END:
-I have written some scripts that help me daily accomplish some simple tasks, like mounting and unmounting a drive or Android device, an emoji picker, a utility to set up my Wacom tablet, and so on. You can find them stored in my [[file:bin.org][bin.org]] file along with their detailed explanation in the README placed in the same folder —which is actually their source code once the org-mode file gets tangled.
+I have written some scripts that help me daily accomplish some simple tasks,
+like mounting and unmounting a drive or Android device, an emoji picker, a
+utility to set up my Wacom tablet, and so on. You can find them stored in my
+[[file:bin.org][bin.org]] file along with their detailed explanation in the README placed in the
+same folder —which is actually their source code once the org-mode file gets
+tangled.
 
 ** Terminal configuration
 :PROPERTIES:
@@ -308,13 +359,15 @@ I have written some scripts that help me daily accomplish some simple tasks, lik
 :PROPERTIES:
 :CUSTOM_ID: Features-Fish_configuration_with_useful_abbreviations-c71ffba0
 :END:
-You can also find in my Fish shell configuration in my [[file:~/org/config-website/fish.org][fish.org]] file, which contains my usual abbreviations.
+You can also find in my Fish shell configuration in my [[file:~/org/config-website/fish.org][fish.org]] file, which
+contains my usual abbreviations.
 
 *** Tmux configuration
 :PROPERTIES:
 :CUSTOM_ID: Features-Tmux_configuration-ce76e030
 :END:
-You can find my tmux configuration in [[file:tmux.org][tmux.org]]. It depends on the submodule [[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
+You can find my tmux configuration in [[file:tmux.org][tmux.org]]. It depends on the submodule
+[[https://github.com/gpakosz/.tmux.git][.tmux]] by [[https://pempek.net/][Gregory Pakosz]].
 
 ** And some minor configuration files
 :PROPERTIES:
@@ -340,12 +393,16 @@ This file gets inserted automatically at the end of my emails.
 :HEADER-ARGS: :mkdirp yes :tangle ~/.gitignore_global
 :CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
 :END:
-Sometimes, there are some lines that always reappear in gitignores. So, instead of always adding them, let git now that some elements are to be ignored by default, hence the [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want nano’s backup files.
+Sometimes, there are some lines that always reappear in gitignores. So, instead
+of always adding them, let git now that some elements are to be ignored by
+default, hence the [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want nano’s backup
+files.
 #+BEGIN_SRC text
   ~*
 #+END_SRC
 
-And object files and output binaries generated by =gcc= and the likes aren’t welcome either.
+And object files and output binaries generated by =gcc= and the likes aren’t
+welcome either.
 #+BEGIN_SRC text
   ,*.out
   ,*.o
@@ -355,7 +412,14 @@ And object files and output binaries generated by =gcc= and the likes aren’t w
 :PROPERTIES:
 :CUSTOM_ID: Features-And-some-minor-configuration-files-Paru-1f3ef49e
 :END:
-~paru~ is an AUR helper for Arch Linux which aims to be a replacement for ~yay~. A couple of the options you will see below aim at restoring the behavior of ~yay~ in ~paru~. I also activated the sudo loop so I don’t have to enter my password if one package takes too much time to compile and/or compress. I know it can be a security issue if someone ever get access to my computer while paru is running, but if it ever happens it will be already concerning enough they managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my custom script dired]] so I can use Emacs’ Dired as the file manager for ~paru~.
+~paru~ is an AUR helper for Arch Linux which aims to be a replacement for ~yay~.
+A couple of the options you will see below aim at restoring the behavior of
+~yay~ in ~paru~. I also activated the sudo loop so I don’t have to enter my
+password if one package takes too much time to compile and/or compress. I know
+it can be a security issue if someone ever get access to my computer while paru
+is running, but if it ever happens it will be already concerning enough they
+managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my custom script dired]] so I can use Emacs’ Dired
+as the file manager for ~paru~.
 #+BEGIN_SRC conf-space :tangle ~/.config/paru/paru.conf
   [options]
   BottomUp
@@ -372,37 +436,21 @@ And object files and output binaries generated by =gcc= and the likes aren’t w
   FileManager = dired
 #+END_SRC
 
-* Dependencies
-:PROPERTIES:
-:CUSTOM_ID: Dependencies-ef5057dd
-:END:
-Of course, some dependencies are needed for my dotfiles to work well. Here is a non-exhaustive list of software needed by these configuration files:
-- [[https://www.gnu.org/software/emacs/][GNU/Emacs]] >= 26.2
-  - [[http://spacemacs.org][Spacemacs]] (develop branch)
-  - My [[https://labs.phundrak.com/phundrak/conlang-layer][conlanging layer]]
-  - [[https://github.com/venmos/w3m-layer][Venmos]]’ [[https://github.com/venmos/w3m-layer][w3m layer]]
-- The [[https://fishshell.com/][Fish shell]], using [[https://github.com/jorgebucaran/fisher][fisher]]
-- [[https://lukesmith.xyz/][Luke Smith]]’s [[https://github.com/LukeSmithxyz/st][fork]] of [[https://st.suckless.org/][st]]
-- [[https://tools.suckless.org/dmenu/][dmenu]]
-- [[https://github.com/enkore/j4-dmenu-desktop][j4-dmenu-desktop]]
-- [[https://github.com/davatorium/rofi][Rofi]]
-- [[https://github.com/gpoore/minted][minted]]
-- [[https://www.rust-lang.org/][Rust]] (stable and nightly)
-- [[https://www.latex-project.org/][LaTeX]] and [[http://xetex.sourceforge.net/][XeTeX]] (=texlive= packages on Arch Linux)
-- [[https://github.com/tmux/tmux][tmux]], based on [[https://github.com/gpakosz/.tmux][this repo]]’s configuration by [[https://pempek.net/][Grégory Pakosz]].
-- And a bunch of other stuff, see below
-And some other stuff scattered around in my dotfiles.
-
-BTW, I use Arch.
-
 * Installation
 :PROPERTIES:
 :CUSTOM_ID: Installation-9ec2ae86
 :END:
-For an installation walkthrough of my Arch Linux installation, check out my [[file:installation.org][installation.org]] file where I walk you through the first manual steps and through the bootstrap you can execute to automatically take care of a lot of elements.
+For an installation walkthrough of my Arch Linux installation, check out my
+[[file:installation.org][installation.org]] file where I walk you through the first manual steps and
+through the bootstrap you can execute to automatically take care of a lot of
+elements.
 
 * Licence
 :PROPERTIES:
 :CUSTOM_ID: Licence-48911096
 :END:
-All of my dotfiles (and my dotfiles only) are available under the GNU GPLv3 Licence. Please consult [[file:LICENCE.md]] for more information. In short: you are free to access, edit and redistribute all of my dotfiles under the same licence and as allowed by the licence, and if you fuck up something, it’s your own responsibility.
+All of my dotfiles (and my dotfiles only) are available under the GNU GPLv3
+Licence. Please consult [[file:LICENCE.md]] for more information. In short: you are
+free to access, edit and redistribute all of my dotfiles under the same licence
+and as allowed by the licence, and if you fuck up something, it’s your own
+responsibility.
