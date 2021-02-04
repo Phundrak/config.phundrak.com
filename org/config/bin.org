@@ -293,14 +293,9 @@ I made a small and quick utility to set up my Wacom tablet so it is only bound t
 :PROPERTIES:
 :CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
 :END:
-Let’s first declare our function that will be called to set our variables.
-#+BEGIN_SRC fish
-function set_device
-#+END_SRC
-
 We need some variables in order to correctly set our tablet. First, let’s get declare what the name of our tablet is, and what the name of its touchpad is.
 #+BEGIN_SRC fish
-  set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
+  set -g DEVICE "Wacom Co.,Ltd. Bamboo Pad, USB stylus"
   set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
 #+END_SRC
 
@@ -320,11 +315,6 @@ Now we can get the X and Y areas.
   set -l AREATOT (xsetwacom get "$DEVICE" Area)
   set -g AREAX (echo $AREATOT | awk '{print $3}')
   set -g AREAY (echo $AREATOT | awk '{print $4}')
-#+END_SRC
-
-Now let’s close our function.
-#+BEGIN_SRC fish
-end
 #+END_SRC
 
 *** Select our screen
@@ -428,10 +418,21 @@ end
 :END:
 Back to the main body of the script, we can now launch the functions sequencially.
 #+BEGIN_SRC fish
-  set_device
   set_screen
   adjust_device
 #+END_SRC
+
+*** TODO Fix this script                                         :noexport:
+:PROPERTIES:
+:CUSTOM_ID: cli-utilities-Wacom-setup-Fix-this-script-76ddec7c
+:END:
+When running this script, I get the following error:
+#+BEGIN_SRC text
+  Unable to find an output 'HDMI1'.
+  unable to find device Wacom USB Bamboo PAD Finger touch
+  Cannot find device 'Wacom USB Bamboo PAD Finger touch'.
+#+END_SRC
+The first one is caused by ~xsetwacom~. The second one, I do not know where I should find ~Wacom USB Bamboo PAD Finger touch~.
 
 * Emacs stuff
 :PROPERTIES:
