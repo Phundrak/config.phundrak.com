@@ -235,6 +235,14 @@ So, let’s set our user paths:
                             t t)
 #+END_SRC
 
+Abbreviations are a great way to keep correctly track of which commands are run
+in the shell without polluting the history of the shell with obscure commands.
+When typing an abbreviation, fish will replace it with replace it with its
+expanded equivalent. Below are some of the abbreviations I use. Be aware some of
+them that invoke GUI programs can be invoked through ~devour~ which will make
+the terminal disappear while the program runs, and once the GUI program exists
+the terminal window will come back.
+
 ** System monitoring
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-System_monitoring-bd909755
@@ -274,9 +282,7 @@ The first command is =remove= which removes a package from my system, as well as
 | abbreviation | command            |
 |--------------+--------------------|
 | remove       | sudo pacman -Rscnd |
-| p            | sudo pacman        |
-| purge        | paru -Sc        |
-| search       | paru -Ss        |
+| purge        | paru -Sc           |
 
 #+BEGIN_SRC fish
   <<generate-abbr(table=pm-abbr)>>
@@ -288,9 +294,10 @@ The first command is =remove= which removes a package from my system, as well as
 :END:
 I don’t have the muscle memory of =systemctl=. So instead, I simply type =c= when I want to do something user service related. And if I want to manipulate system services, I can instead type a simple capital =S=.
 #+NAME: service-abbr
-| abbreviation | command   |
-|--------------+-----------|
-| s            | systemctl |
+| abbreviation | command          |
+|--------------+------------------|
+| s            | systemctl        |
+| suser        | systemctl --user |
 
 #+BEGIN_SRC fish
   <<generate-abbr(table=service-abbr)>>
@@ -346,16 +353,17 @@ Here is the corresponding fish configuration:
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Development-Text_editors-5a23df47
 :END:
-I greatly prefer to use Emacsclient as my main text editor; Emacs has basically all I need. So, it's only normal I have an abbreviation to launch a new instance of it. If launched in the terminal, I’ll usually want Emacs to be displayed in CLI mode and not in GUI mode, otherwise I would invoke it with my WM’s shortcut. I also wish to completely stop using other text editors, such as ~vi~, ~vim~, ~nano~ and ~ed~, so let's all add their command as an abbreviation for Emacs.
+I greatly prefer to use Emacsclient as my main text editor; Emacs has basically all I need. So, it's only normal I have an abbreviation to launch a new instance of it. If launched in the terminal, I’ll usually want Emacs to be displayed in CLI mode and not in GUI mode, otherwise I would invoke it with my WM’s shortcut. I also wish to completely stop using other text editors, such as ~vi~, ~vim~, ~nano~ and ~ed~, so let's all add their command as an abbreviation for Emacs. In case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
 
 #+NAME: abbr-text-ed
-| abbreviation | command            |
-|--------------+--------------------|
-| e            | emacsclient -c -nw |
-| vi           | emacsclient -c -nw |
-| vim          | emacsclient -c -nw |
-| nano         | emacsclient -c -nw |
-| ed           | emacsclient -c -nw |
+| abbreviation | command               |
+|--------------+-----------------------|
+| e            | emacsclient -c -nw    |
+| vi           | emacsclient -c -nw    |
+| vim          | emacsclient -c -nw    |
+| nano         | emacsclient -c -nw    |
+| ed           | emacsclient -c -nw    |
+| egui         | devour emacsclient -c |
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish :noweb yes
@@ -440,14 +448,13 @@ Here is the corresponding fish configuration:
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Typos-370bbb27
 :END:
-Let's admit it, we all make typos from time to time in the shell, and some are recurrent enough we make abbreviations or aliases of the correct command. Well, I have some of my abbreviations which were make exactly because of this. Sometimes for some reasons, my brain makes me write ~clean~ instead of ~clear~. So, let's just replace the former by the latter. I'm also very bad at typing ~exit~. And sometimes I suck at typing ~htop~. ~q~ isn't a typo per se, instead just a habit I have.
+Let's admit it, we all make typos from time to time in the shell, and some are recurrent enough we make abbreviations or aliases of the correct command. Well, I have some of my abbreviations which were make exactly because of this. Sometimes for some reasons, my brain makes me write ~clean~ instead of ~clear~. So, let's just replace the former by the latter. I'm also very bad at typing ~exit~. And sometimes I suck at typing ~htop~.
 #+NAME: typo-abbr
 | abbreviation | command |
 |--------------+---------|
 | clean        | clear   |
 | exi          | exit    |
 | exti         | exit    |
-| q            | exit    |
 | hotp         | htop    |
 
 Here is the corresponding fish configuration:
@@ -472,7 +479,7 @@ Here you will find various commands related to media in general. the first one i
 
 When it comes to mpv, I do not want to force it to open a graphical window if for example I want to listen to an audio file. I also do not want any border on that window. So, I declared this abbreviation.
 #+BEGIN_SRC fish
-  abbr mpv 'mpv --no-border --force-window=no'
+  abbr mpv 'devour mpv --no-border --force-window=no'
 #+END_SRC
 
 When I want to download a song from YouTube, I'll just use the command ~flac videoIdentifier~ to get it through ~youtube-dl~.
@@ -480,15 +487,14 @@ When I want to download a song from YouTube, I'll just use the command ~flac vid
   abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
 #+END_SRC
 
-Some sane default options for ~sxiv~, a simple X image Viewer. This includes playing GIFs and not displaying the filename below. Sxiv will also open in fullscreen and will fit the displayed image to the frame. I also abbreviated ~feh~ to sxiv, old habits die hard.
+Some sane default options for ~sxiv~, a simple X image Viewer. This includes playing GIFs and not displaying the filename below. Sxiv will also open in fullscreen and will fit the displayed image to the frame.
 #+BEGIN_SRC fish
-  abbr sxiv 'sxiv -abfs f'
-  abbr feh 'sxiv -abfs f'
+  abbr sxiv 'devour sxiv -abfs f'
 #+END_SRC
 
 Finally, let's declare the following abbreviation that will launch an mpv instance displaying my webcam:
 #+BEGIN_SRC fish
-  abbr webcam 'mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
+  abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
 #+END_SRC
 
 *** Sudo
@@ -532,7 +538,6 @@ It seems it's just like many other people, but I cannot for the life of me remem
 | abbreviation | command                                    |
 |--------------+--------------------------------------------|
 | exa          | exa -halg@ --group-directories-first --git |
-| ls           | exa -halg@ --group-directories-first --git |
 | lsl          | exa -halg@ --group-directories-first --git |
 
 #+BEGIN_SRC fish
