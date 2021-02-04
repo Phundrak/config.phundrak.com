@@ -1027,10 +1027,10 @@ Here will be declared some shortcuts directly related to Awesome itself.
 |-----------------------+--------------+---------+---------------------------------+----------------------------+--------|
 | t                     | modkey, meta | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
 | s                     | modkey, meta | yes     | awful.screen.focus_relative(-1) | focus previous screen      | screen |
-| XF86MonBrightnessDown |              | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
-| Next                  | modkey, meta | shell   | xbacklight -dec 5               | decrease screen brightness | screen |
-| XF86MonBrightnessUp   |              | shell   | xbacklight -inc 5               | increase screen brightness | screen |
-| Prev                  | modkey, meta | shell   | xbacklight -inc 5               | increase screen brightness | screen |
+| XF86MonBrightnessDown |              | shell   | xbacklight -dec 1               | decrease screen brightness | screen |
+| Next                  | modkey, meta | shell   | xbacklight -dec 1               | decrease screen brightness | screen |
+| XF86MonBrightnessUp   |              | shell   | xbacklight -inc 1               | increase screen brightness | screen |
+| Prev                  | modkey, meta | shell   | xbacklight -inc 1               | increase screen brightness | screen |
 | F3                    | modkey       | spawn   | arandr                          | randr graphical frontend   | screen |
 | o                     | modkey       | yes     | awful.screen.focus_relative(1)  | focus next screen          | screen |
 
