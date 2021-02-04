@@ -54,7 +54,7 @@ Now, let’s grab the script. You can check it on [[https://github.com/matmoul/a
   sh archfi
 #+END_SRC
 
-Then, follow the instructions and install Arch Linux. Take the opportunity to install as many packages as you need, mainly ~yay~ which I use as my package manager (it is just a wrapper for ~pacman~) and AUR helper, and ~pacman-contrib~ which will help us installing some packages later.
+Then, follow the instructions and install Arch Linux. Take the opportunity to install as many packages as you need, mainly ~paru~ which I use as my package manager (it is just a wrapper for ~pacman~) and AUR helper, and ~pacman-contrib~ which will help us installing some packages later.
 
 Once your system is installed, reboot and remove your installation media from your computer.
 
@@ -63,9 +63,19 @@ Once your system is installed, reboot and remove your installation media from yo
 :HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
 :CUSTOM_ID: Execute_bootstrap-e37054ef
 :END:
-With the installation of Arch with ~archfi~, I will have [[https://github.com/Jguer/yay][yay]], an AUR helper, installed. This will allow me to have some basic packages installed in order to run the bootstrap described below. So, let’s install ~fish~ (our shell running the script), ~git~, and my dotfiles manager ~yadm~.
+The first thing I will do is add the [[https://github.com/archlinuxcn/repo][ArchLinuxCN]] repository so I can get access to ~paru~.
 #+BEGIN_SRC sh
-  yay -Sy fish git yadm
+  printf '[archlinuxcn]\nServer = https://repo.archlinuxcn.org/$arch\n' | sudo tee -a /etc/pacman.conf
+#+END_SRC
+
+I can now install ~fish~, ~git~, and ~paru~:
+#+BEGIN_SRC sh
+  sudo pacman -S fish git paru
+#+END_SRC
+
+And now that ~paru~ is available, we can install ~yadm~:
+#+BEGIN_SRC sh
+  paru -S yadm
 #+END_SRC
 
 ~yadm~ comes with a very handy feature: its bootstrap script. It can be executed automatically once the dotfiles are cloned with yadm:
@@ -237,7 +247,7 @@ These are the minimum I would have in my own installation. You can edit it howev
   printf "\n# Installing needed packages ##################################################\n\n"
   sudo pacman -Syu
   for pkg in $PACKAGES
-      yay -S --needed $pkg
+      paru -S --needed $pkg
   end
 #+END_SRC
 

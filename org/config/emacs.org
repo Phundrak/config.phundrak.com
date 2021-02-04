@@ -3859,9 +3859,9 @@ The Scheme configuration will be very short, I just need to tell Emacs the name 
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Projectile-06e580f0
 :END:
-Projectile is an awesome utility which helps managing projects within Emacs. It will automatically detect version controlled directories, and will by default assume this is a project I can be working on. However, there are some directories that are version controlled that I do not want to see in my list of projects, namely all the cached AUR packages from my AUR helper, ~yay~. They are all stored in the same parent directory, so let’s ignore that. I will also make Emacs ignore all ~node_modules~ directories it could encounter. And for some reason, =~/.config/emacs= is always in my projects list (I now use XDG-compliant directories), so let’s also ignore that.
+Projectile is an awesome utility which helps managing projects within Emacs. It will automatically detect version controlled directories, and will by default assume this is a project I can be working on. However, there are some directories that are version controlled that I do not want to see in my list of projects, namely all the cached AUR packages from my AUR helper, ~paru~. They are all stored in the same parent directory, so let’s ignore that. I will also make Emacs ignore all ~node_modules~ directories it could encounter. And for some reason, =~/.config/emacs= is always in my projects list (I now use XDG-compliant directories), so let’s also ignore that.
 #+BEGIN_SRC emacs-lisp
-  (setq projectile-ignored-projects '("~/.cache/yay" "~/.config/emacs" "/tmp"))
+  (setq projectile-ignored-projects '("~/.cache/paru" "~/.config/emacs" "/tmp"))
   (add-to-list 'projectile-globally-ignored-directories "node_modules")
 #+END_SRC
 

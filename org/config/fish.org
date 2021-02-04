@@ -268,15 +268,15 @@ I added some of these abbreviations due to how often I have to write the whole t
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-System_management_(packages_and_services)-Package_management-efbcdf0f
 :END:
-The first command is =remove= which removes a package from my system, as well as its dependencies no longer needed. =p=. =pacman='s or =yay='s. This is why I simply type =purge=. And if I want to simply seach among the =pacman= repos, I can type =search=. Otherwise, if I want to include AUR results, I’ll use =yay=.
+The first command is =remove= which removes a package from my system, as well as its dependencies no longer needed. =p=. =pacman='s or =paru='s. This is why I simply type =purge=. And if I want to simply seach among the =pacman= repos, I can type =search=. Otherwise, if I want to include AUR results, I’ll use =paru=.
 
 #+NAME: pm-abbr
 | abbreviation | command            |
 |--------------+--------------------|
 | remove       | sudo pacman -Rscnd |
 | p            | sudo pacman        |
-| purge        | yay -Sc            |
-| search       | yay -Ss            |
+| purge        | paru -Sc        |
+| search       | paru -Ss        |
 
 #+BEGIN_SRC fish
   <<generate-abbr(table=pm-abbr)>>

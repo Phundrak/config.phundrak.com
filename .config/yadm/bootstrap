@@ -100,7 +100,7 @@ yaml-language-server-bin zeal
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
 for pkg in $PACKAGES
-    yay -S --needed $pkg
+    paru -S --needed $pkg
 end
 
 mkdir -p $HOME/.config/awesome
