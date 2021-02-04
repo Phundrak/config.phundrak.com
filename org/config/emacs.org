@@ -78,12 +78,12 @@ With the variable ~dotspacemacs-additional-packages~, it is possible to install 
 | elcord                     | rich integration of Emacs in Discord                   |
 | eshell-syntax-highlighting | Syntax highlighting for Eshell                         |
 | info-colors                | Extra colors for Emacs's Info-mode                     |
-| magit-gitflow              | integrate gitflow in Magit                             |
 | multiple-cursors           | I don’t like the layer, I prefer this package alone    |
 | ob-latex-as-png            | Inline arbitrary LaTeX snippets as PNGs in Emacs       |
 | org-sidebar                | display on the side the outline of an Org buffer       |
 | org-tree-slide             | presentation tool for org-mode                         |
 | outorg                     | edit comments as Org-mode buffers                      |
+| ox-ssh                     | SSH config export for org-mode                         |
 | pinentry                   | enter a GPG password from Emacs                        |
 | nord-theme                 | An arctic, north-bluish clean and elegant Emacs theme. |
 | s                          | The long lost Emacs string manipulation library.       |
@@ -1117,6 +1117,11 @@ et ~read-process-output-max~ when startup finishes. This defines how much data i
 While Emacs and especially Spacemacs loads, I want it to initialize some elements and load some packages. First of all, I want it to load my private Emacs config file:
 #+BEGIN_SRC emacs-lisp
   (load "~/.config/emacs/private/private_emacs")
+#+END_SRC
+
+I’ll also load a package I cloned locally as it is not (yet?) available in the MELPA: [[https://github.com/awth13/org-appear][org-appear]].
+#+BEGIN_SRC emacs-lisp
+  (require 'org-appear "~/fromGIT/emacs-packages/org-appear/org-appear.el")
 #+END_SRC
 
 Then, I want a couple of requires:
@@ -2185,13 +2190,14 @@ And here you can find the source code of this buffer you just saw a screenshot o
   ,******** Header 8
 #+END_SRC
 
-In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why.
+In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~ which seems to stick to Orgmode like hell and I don’t know why. A hook to org-appear’s minor mode will also be added.
 #+NAME: beautiful-org-hooks
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'visual-line-mode)
   (remove-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (auto-fill-mode -1)
+  (add-hook 'org-mode-hook 'org-appear-mode)
 #+END_SRC
 
 You can then see the modified faces for org-mode [[#User-Configuration-Visual-configuration-Better-faces-Org-mode-07754177][here]].
@@ -2230,6 +2236,10 @@ I also have an issue where small dots precede my org headers. Let’s fix that:
         org-superstar-leading-bullet ?\s)
 #+END_SRC
 
+***** TODO Fix org-appear                                      :noexport:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Fix-org-appear-709f555f
+:END:
 **** Behavior
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_variables-Org_behavior-0319db38
