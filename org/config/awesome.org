@@ -149,7 +149,7 @@ The two following variables are set so that I don’t need to go over my whole
 config file in order to modify which terminal or text editor I use, not that I
 do it often though.
 #+BEGIN_SRC lua
-  terminal = "st"
+  terminal = "kitty"
   editor = os.getenv("EDITOR") or "emacsclient -c"
 #+END_SRC
 
