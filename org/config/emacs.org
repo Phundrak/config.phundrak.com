@@ -4968,9 +4968,9 @@ First here are some common properties that will be reused in faces below:
 | /       |         | <             | <l>    |        |
 | Name    | inherit | font          | height | weight |
 |---------+---------+---------------+--------+--------|
-| orgfont |         | Charis SIL    | 120    |        |
+| orgfont |         | DejaVu Serif  | 110    |        |
 | head    | default |               |        | bold   |
-| fixed   |         | Cascadia Code | 0.8    |        |
+| fixed   |         | Cascadia Code |        |        |
 
 #+tblname: org-faces
 | /                         | <                |                               |                  |                 | <l>    |        |        |           |
