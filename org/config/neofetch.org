@@ -1,30 +1,43 @@
 #+title: Neofetch configuration
-#+setupfile: ../headers
+#+setupfile: headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's Neofetch config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's Neofetch config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Neofetch config file of Phundrak" />
 #+PROPERTY: header-args :noweb yes :exports code :tangle no :exports none
-#+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf :exports code :noweb yes :padline no :mkdir yes :shebang "#!/usr/bin/env sh"
+#+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf :exports code :noweb yes :padline no :mkdir yes
 
 * Introduction
 :PROPERTIES:
 :CUSTOM_ID: Introduction-5942aea3
 :END:
-[[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was written in Bash, and thus its configuration file is written as a Bash script too. This document was written with org-mode, and my configuration file is tangled from the source blocks you will see below to ~~/.config/neofetch/config.conf~. This configuration will only contain what I need. For any further information, please refer to the [[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
+[[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was written in
+Bash, and thus its configuration file is written as a Bash script too. This
+document was written with org-mode, and my configuration file is tangled from
+the source blocks you will see below to ~~/.config/neofetch/config.conf~. This
+configuration will only contain what I need. For any further information, please
+refer to the [[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
 
 * The ~print_info~ functions
 :PROPERTIES:
 :CUSTOM_ID: The_print_info_functions-bb30763f
 :END:
-The ~print_info~ function is the function called by Neofetch in order to print the system information it could fetch. In this function, we’ll choose what to display, and how. This function looks like this:
+The ~print_info~ function is the function called by Neofetch in order to print
+the system information it could fetch. In this function, we’ll choose what to
+display, and how. This function looks like this:
 #+BEGIN_SRC sh :tangle no
   print_info() {
       # Print information here…
   }
 #+END_SRC
 
-Generally, what we will display will be shown through the ~info~ function, redefined inside Neofetch (this is not ~info(1)~). This ~info~ function accepts one or two arguments. With one argument, such as with ~info memory~, we can get a result that looks like ~5136MiB / 15873MiB~, while calling it with two arguments will treat the first one as a prefix and the second one as the interesting information; ~info "Memory" memory~ will look like ~Memory: 5136MiB / 15873MiB~. Here is what we want to display:
+Generally, what we will display will be shown through the ~info~ function,
+redefined inside Neofetch (this is not ~info(1)~). This ~info~ function accepts
+one or two arguments. With one argument, such as with ~info memory~, we can get
+a result that looks like ~5136MiB / 15873MiB~, while calling it with two
+arguments will treat the first one as a prefix and the second one as the
+interesting information; ~info "Memory" memory~ will look like
+~Memory: 5136MiB / 15873MiB~. Here is what we want to display:
 #+NAME: info-elements-table
 | Prefix   | Information | What it does                 |
 |----------+-------------+------------------------------|
@@ -32,7 +45,7 @@ Generally, what we will display will be shown through the ~info~ function, redef
 |          | line_break  | Insert a blank line          |
 |          | cols        | System theme                 |
 |          | line_break  | Insert a blank line          |
-| OS       | distro      | Distribution name            |
+| Distro   | distro      | Distribution name            |
 | Kernel   | kernel      | Kernel version               |
 | Uptime   | uptime      | Machine uptime               |
 | Packages | packages    | Number of installed packages |
@@ -88,7 +101,11 @@ Each of these modules can be tuned with the variables presented below.
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-9d4cfe88
 :END:
-Each of the following variable tunes a function that can be called in ~print_info~ described above. It is possible to tune them by modifying this document or the configuration file itself, and they can be overridden by the command line with flags passed to ~neofetch~. I will divide these variables in two main categories: hardware and software-related properties.
+Each of the following variable tunes a function that can be called in
+~print_info~ described above. It is possible to tune them by modifying this
+document or the configuration file itself, and they can be overridden by the
+command line with flags passed to ~neofetch~. I will divide these variables in
+two main categories: hardware and software-related properties.
 
 ** Software
 :PROPERTIES:
@@ -117,6 +134,69 @@ This variable can shorten the output of the ~distro~ function.
 #+end_src
 
 It is possible to display when the distro has been installed on the computer.
+
+***** Distro art or image
+:PROPERTIES:
+:CUSTOM_ID: Information-settings-Software-OS-Distro-Distro-art-or-image-e60cbd1e
+:END:
+By default, Neofetch will display ascii art next to our system information
+representing our distro’s logo. We’ll customize it a bit. First, let’s change
+the ~backend~ value. Note that most of them (except ~off~ of course) support
+shorthands such as ~--kitty~ when passed as arguments from the command line. In
+my case, I will use the Kitty backend since it is the native backend of the
+terminal emulator I use.
+- Default value :: ~"ascii"~
+- Values ::
+  - ~ascii~
+  - ~caca~
+  - ~catimg~
+  - ~chafa~
+  - ~jp2a~
+  - ~iterm2~
+  - ~off~
+  - ~pot~
+  - ~termpix~
+  - ~pixterm~
+  - ~tycat~
+  - ~w3m~
+  - ~kitty~
+  - ~ueberzug~
+  - ~viu~
+- flag :: ~--backend~
+#+BEGIN_SRC sh
+  image_backend="kitty"
+#+END_SRC
+
+Now, since I indicated I wanted an image engine, I’ll indicate neofetch which
+image to find. Note that ~auto~ will pick the best image source for whatever
+image backend is used. In ascii mode, distro ascii art will be used and in an
+image mode, your wallpaper will be used.
+- Default value :: ~auto~
+- Values ::
+  - ~auto~
+  - ~ascii~
+  - ~wallpaper~
+  - ~/path/to/img~
+  - ~/path/to/ascii~
+  - ~/path/to/dir/~
+  - ~command output (neofetch --ascii "$(fortune | cowsay -W 30)")~
+- Flag :: ~--source~
+#+BEGIN_SRC sh
+  image_source="$HOME/org/config/img/leon.png"
+#+END_SRC
+
+The default image size will probably not be correct since it is half the
+terminal width and I have an ultrawide monitor, so I’ll need to set it manually.
+- Default value :: ~auto~
+- Values ::
+  - ~auto~
+  - ~00px~
+  - ~00%~
+  - ~none~
+- Flag :: ~--image-size~ or ~--size~
+#+BEGIN_SRC sh
+  image_size="224px"
+#+END_SRC
 
 **** Kernel
 :PROPERTIES:
@@ -186,9 +266,9 @@ This allows to show either the path of the user’s shell, or simply its name.
 - Examples ::
   - on :: ~/bin/bash~
   - off :: ~bash~
-+begin_src sh
+#+begin_src sh
  shell_path="off"
-+end_src
+#+end_src
 
 ***** Shell version
 :PROPERTIES:
@@ -231,7 +311,8 @@ it a bit, while ~tiny~ shortens it greatly.
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Software-IP_address-26df5e1d
 :END:
-It is possible to display the machine’s public IP address with the function ~ip~. The value below allows the user to change the website used to fetch it.
+It is possible to display the machine’s public IP address with the function
+~ip~. The value below allows the user to change the website used to fetch it.
 - Default value :: ~"http://ident.me"~
 - Value :: ~"url"~
 - Flag :: ~--ip_host~
@@ -255,7 +336,9 @@ It is possible to display the machine’s public IP address with the function ~i
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Software-Theming-ba7f1ccd
 :END:
-This section will allow the user to modify what Neofetch can and cannot display about the machine’s theming —by this, I mean its GTK theme, its icons and its default font.
+This section will allow the user to modify what Neofetch can and cannot display
+about the machine’s theming —by this, I mean its GTK theme, its icons and its
+default font.
 
 **** Shorten output
 :PROPERTIES:
@@ -278,7 +361,8 @@ With this value, it is possible to shorten the output of the computer’s themin
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Software-Theming-Enable_or_disable_theming_display_for_GTK2-f4398571
 :END:
-It is possible to explicitely show or hide the computer’s theming with GTK2 with this variable.
+It is possible to explicitely show or hide the computer’s theming with GTK2 with
+this variable.
 - Default value :: ~"on"~
 - Values ::
   - ~"on"~
@@ -320,8 +404,8 @@ The same variable as above is also available for GTK3.
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-5b25776b
 :END:
-With this variables, it  is possible to show or hide the brand  of a CPU in
-the ~cpu~ output.
+With this variables, it is possible to show or hide the brand of a CPU in the
+~cpu~ output.
 - Default value :: ~"on"~
 - Values ::
   - ~"on"~
@@ -355,7 +439,9 @@ With this variable, it is possible to show or hide the speed of the CPU.
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_type-a24de48f
 :END:
-This allows Neofetch to know what type of speed it has to fetch regarding the machine’s CPU. Any file in ~/sys/devices/system/cpu/cpu0/cpufreq~ can be used as a value.
+This allows Neofetch to know what type of speed it has to fetch regarding the
+machine’s CPU. Any file in ~/sys/devices/system/cpu/cpu0/cpufreq~ can be used as
+a value.
 - Default value :: ~"bios_limit"~
 - Values ::
   - ~"scaling_cur_freq"~
@@ -372,7 +458,8 @@ This allows Neofetch to know what type of speed it has to fetch regarding the ma
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-0d15fe08
 :END:
-This value allows to show sorter CPU speed with less digits. This flag is not supported in systems with CPU speed below 1GHz.
+This value allows to show sorter CPU speed with less digits. This flag is not
+supported in systems with CPU speed below 1GHz.
 - Default value :: ~"off"~
 - Values ::
   - ~"on"~
@@ -389,7 +476,8 @@ This value allows to show sorter CPU speed with less digits. This flag is not su
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_cores-30177354
 :END:
-With this variable, it is possible to display the number of cores that are available in the CPU.
+With this variable, it is possible to display the number of cores that are
+available in the CPU.
 - Default value :: ~"logical"~
 - Values ::
   - ~"logical"~
@@ -409,7 +497,10 @@ With this variable, it is possible to display the number of cores that are avail
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_temperature-a22e522c
 :END:
-This variable allows the user to hide or show the CPU’s temperature, and if shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD and NetBSD-based systems, you’ll need to enable the ~coretemp~ kernel module. This only supports newer Intel processors.
+This variable allows the user to hide or show the CPU’s temperature, and if
+shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD and
+NetBSD-based systems, you’ll need to enable the ~coretemp~ kernel module. This
+only supports newer Intel processors.
 - Default value :: ~"off"~
 - Values ::
   - ~"C"~
@@ -429,13 +520,15 @@ This variable allows the user to hide or show the CPU’s temperature, and if sh
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-GPU-2c842575
 :END:
-The function responsible for displaying information regarding the GPUs is ~gpu~. It will try to list all available GPUs and display what it knows about them.
+The function responsible for displaying information regarding the GPUs is ~gpu~.
+It will try to list all available GPUs and display what it knows about them.
 
 **** GPU brand
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-GPU-GPU_brand-6e2da615
 :END:
-This value allows the user to hide or show the brand of their GPU in the output of ~gpu~.
+This value allows the user to hide or show the brand of their GPU in the output
+of ~gpu~.
 - Default value :: ~"on"~
 - Values ::
   - ~"on"~
@@ -453,7 +546,8 @@ This value allows the user to hide or show the brand of their GPU in the output 
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-GPU-Which_GPU_to_display-f40d3aac
 :END:
-This allows the user to choose which GPU appears in the output of the function ~gpu~.
+This allows the user to choose which GPU appears in the output of the function
+~gpu~.
 - Default value :: ~"all"~
 - Values ::
   - ~"all"~
@@ -464,9 +558,9 @@ This allows the user to choose which GPU appears in the output of the function ~
 - Examples ::
   - all ::
     #+BEGIN_SRC text
-      GPU1: AMD HD 7950
-      GPU2: Intel Integrated Graphics
-   #+END_SRC
+    GPU1: AMD HD 7950
+    GPU2: Intel Integrated Graphics
+    #+END_SRC
   - dedicated :: ~GPU1: AMD HD 7950~
   - integrated :: ~GPU1: Intel Integrated Graphics~
 #+begin_src sh
@@ -477,7 +571,8 @@ This allows the user to choose which GPU appears in the output of the function ~
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-Resolution-b768f865
 :END:
-This will try to list all the connected screens and display their resolution individually. It is possible to display the refresh rate or to hide it.
+This will try to list all the connected screens and display their resolution
+individually. It is possible to display the refresh rate or to hide it.
 - Default value :: ~"off"~
 - Values ::
   - ~"on"~
