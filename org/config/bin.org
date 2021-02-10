@@ -343,6 +343,14 @@ We need some variables in order to correctly set our tablet. First, let’s get
 declare what the name of our tablet is, and what the name of its touchpad is.
 #+BEGIN_SRC fish
   set -g DEVICE "Wacom Co.,Ltd. Bamboo Pad, USB stylus"
+  set -g DEVICETOUCH "Wacom USB Bamboo PAD Finger touch"
+#+END_SRC
+
+We will also modify two settings: the speed of the cursor on the touchpad, and
+the scroll speed. Let’s declare the name of these two settings.
+#+BEGIN_SRC fish
+  set -g WACOMPROPTOUCHSPEED "Device Accel Velocity Scaling"
+  set -g WACOMPROPSCROLLPSEED "ScrollDistance"
 #+END_SRC
 
 To get the correct values for the area it can cover, we’ll need to reset our
@@ -365,42 +373,47 @@ Now we can get the X and Y areas.
 This function will allow us to select the screen on which the tablet will be
 active. We can also select the option “desktop” so that all screens are
 selected. Let’s declare our function.
-#+BEGIN_SRC fish :noweb yes
-  function set_screen
-      <<wacom-connected-displays>>
-      <<wacom-get-screen>>
-      <<wacom-get-position>>
-      <<wacom-get-dimensions>>
-  end
+#+BEGIN_SRC fish
+function set_screen
 #+END_SRC
 
 First, let’s set what screens are available, including the desktop option.
-#+NAME: wacom-connected-displays
-#+BEGIN_SRC fish :tangle no
+#+BEGIN_SRC fish
   set CONNECTED_DISPLAYS (xrandr -q --current | \
   sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
 #+END_SRC
 
 Now, let’s select the one we wish to use using rofi.
-#+NAME: wacom-get-screen
-#+BEGIN_SRC fish :tangle no
+#+BEGIN_SRC fish
   set -g SCREEN (for d in $CONNECTED_DISPLAYS
       echo $d
   end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
 #+END_SRC
 
-Now, let’s get the position of the screen:
-#+NAME: wacom-get-position
-#+BEGIN_SRC fish :tangle no
-  set -g POSITION (xrandr -q --current | sed -nr "s/^$SCREEN connected (primary )*([0-9x\+]+).*/\2/p")
+Now, let’s get the resolution of our selected screen.
+#+BEGIN_SRC fish
+  set -l LINE (xrandr -q --current | if [ "$SCREEN" = "desktop" ]
+      sed -n 's/^Screen 0:.*, current \([0-9]\+\) x \([0-9]\+\),.*/\1 \2/p'
+  else
+      sed -n "s/^$SCREEN"' connected \(primary \)\{0,1\}\([0-9]\+\)x\([0-9]\+\)+.*/\2 \3/p'
+  end)
 #+END_SRC
 
-We’ll also get the width and the height of the screen so we can set correctly
-the drawing area of the tablet.
-#+NAME: wacom-get-dimensions
-#+BEGIN_SRC fish :tangle no
-  set -g HEIGHT (echo $POSITION | sed -nr 's/[0-9]+x([0-9]+).*/\1/p')
-  set -g WIDTH  (echo $POSITION | sed -nr 's/([0-9]+)x.*/\1/p')
+From that, let’s get the vertical and horizontal resolution of our screen.
+#+BEGIN_SRC fish
+echo $LINE | read -g WIDTH HEIGHT
+#+END_SRC
+
+If any of our ~WIDTH~ ou ~HEIGHT~ it empty, we’ll have to abort the script.
+#+BEGIN_SRC fish
+  if test -z $WIDTH || test -z $HEIGHT
+      exit 1
+  end
+#+END_SRC
+
+Let’s close our function now.
+#+BEGIN_SRC fish
+end
 #+END_SRC
 
 *** Adjust the tablet
@@ -409,30 +422,23 @@ the drawing area of the tablet.
 :END:
 This function will take care of adjusting our tablet to our screen. Let’s
 declare our function.
-#+BEGIN_SRC fish :noweb yes
-  function adjust_device
-      <<wacom-set-ratio-area>>
-      <<wacom-set-new-area>>
-      <<wacom-set-device-area-and-screen>>
-  end
+#+BEGIN_SRC fish
+function adjust_device
 #+END_SRC
 
 If our screen is too high or too wide for our tablet, we will have to adjust the
 height or width of the area used by the tablet. So let’s get the theoretical new
 height and width of the area.
-#+NAME: wacom-set-ratio-area
-#+BEGIN_SRC fish :tangle no
-  set RATIOAREAY (math ceil "($AREAX * $HEIGHT / $WIDTH)")
-  set RATIOAREAX (math ceil "($AREAY * $WIDTH  / $HEIGHT)")
-
+#+BEGIN_SRC fish
+  set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
+  set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
 #+END_SRC
 
 Now, if the current height of the tablet’s area is greater than the theoretical
 new area, it means the current area is too high. Otherwise, it should be the
 other way around. Let’s set =NEWAREAX= and =NEWAREAY= that will be used to set
 the new area for the tablet.
-#+NAME: wacom-set-new-area
-#+BEGIN_SRC fish :tangle no
+#+BEGIN_SRC fish
   if test $AREAY -gt $RATIOAREAY
       set -g NEWAREAX $AREAX
       set -g NEWAREAY $RATIOAREAY
@@ -443,10 +449,24 @@ the new area for the tablet.
 #+END_SRC
 
 Alright, now let’s set the new area with these new variables.
-#+NAME: wacom-set-device-area-and-screen
-#+BEGIN_SRC fish :tangle no
+#+BEGIN_SRC fish
   xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
-  xsetwacom set "$DEVICE" MapToOutput "$POSITION"
+  xsetwacom set "$DEVICE" MapToOutput "$SCREEN"
+#+END_SRC
+
+Let’s slow down the cursor’s speed on the touchpad.
+#+BEGIN_SRC fish
+  xinput set-float-prop $DEVICETOUCH $WACOMPROPTOUCHSPEED 0.5
+#+END_SRC
+
+Let’s also slow down the scroll speed of the touchpad.
+#+BEGIN_SRC fish
+  xsetwacom set $DEVICETOUCH $WACOMPROPSCROLLPSEED "90"
+#+END_SRC
+
+Now, let’s close the function.
+#+BEGIN_SRC fish
+  end
 #+END_SRC
 
 *** Lauch the functions
@@ -459,6 +479,19 @@ sequencially.
   set_screen
   adjust_device
 #+END_SRC
+
+*** TODO Fix this script                                         :noexport:
+:PROPERTIES:
+:CUSTOM_ID: cli-utilities-Wacom-setup-Fix-this-script-76ddec7c
+:END:
+When running this script, I get the following error:
+#+BEGIN_SRC text
+  Unable to find an output 'HDMI1'.
+  unable to find device Wacom USB Bamboo PAD Finger touch
+  Cannot find device 'Wacom USB Bamboo PAD Finger touch'.
+#+END_SRC
+The first one is caused by ~xsetwacom~. The second one, I do not know where I
+should find ~Wacom USB Bamboo PAD Finger touch~.
 
 * Emacs stuff
 :PROPERTIES:
