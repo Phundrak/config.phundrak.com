@@ -4178,6 +4178,19 @@ signature to emails to the hook called when creating a new email.
   (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
 #+END_SRC
 
+Lastly, some emails are better displayed in a browser than in Emacs. My Emacs
+build has the webkit browser enabled, so I’ll add an option to open with it
+emails.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/mu4e-view-in-browser (msg)
+    (xwidget-webkit-browse-url (concat "file://"
+                                       (mu4e~write-body-to-html msg))))
+
+  (add-to-list 'mu4e-view-actions
+               '("Xwidget Webkit Browser" . phundrak/mu4e-view-in-browser)
+               t)
+#+END_SRC
+
 *** Visual Configuration
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Mu4e-Visual-Configuration-34f56f7e
