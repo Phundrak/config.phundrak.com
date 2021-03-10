@@ -84,6 +84,39 @@ following code:
   <<default-soundcard>>
 #+END_SRC
 
+* Screen utilities
+:PROPERTIES:
+:CUSTOM_ID: Screen-utilities-f237c566
+:END:
+** set-screens
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
+:CUSTOM_ID: set-screens-01bd989a
+:END:
+~set-screens~ is a small script that allows the user to automatically set up an
+external monitor. First, let’s set some variables so we don’t have to type in
+hidden places some values that should be easily modifiable.
+#+BEGIN_SRC fish
+  set internal "eDP1"
+  set external "HDMI1"
+#+END_SRC
+
+Now, let’s set the ~DETECTEDSCREEN~ variable with a simple ~grep~. If the
+variable turns out to be empty, this means the display was not detected.
+However, if it’s not, then it will be an array with its second value that holds
+the maximum resolution the display can handle. It needs to be passed through
+~awk~ in order to get only the resolution itself and not the refresh rate, but
+once we’ve got that, we can set our external monitor as the main monitor with
+its maximum resolution. i3 is also restarted in order to properly display the
+wallpaper and Polybar on the new screen.
+#+BEGIN_SRC fish
+  set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
+  if test -n "$externaldisplay"
+      set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
+      xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
+  end
+#+END_SRC
+
 * cli utilities
 :PROPERTIES:
 :CUSTOM_ID: cli-utilities-ec2120b0
@@ -228,35 +261,6 @@ This is a simple utility to be ran when the ~flutter~ package is updated.
 :CUSTOM_ID: Pinfo-f3644596
 :END:
 ~pinfo~ is a utility that shows system information
-
-** set-screens
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/set-screens
-:CUSTOM_ID: set-screens-01bd989a
-:END:
-~set-screens~ is a small script that allows the user to automatically set up an
-external monitor. First, let’s set some variables so we don’t have to type in
-hidden places some values that should be easily modifiable.
-#+BEGIN_SRC fish
-  set internal "eDP1"
-  set external "HDMI1"
-#+END_SRC
-
-Now, let’s set the ~DETECTEDSCREEN~ variable with a simple ~grep~. If the
-variable turns out to be empty, this means the display was not detected.
-However, if it’s not, then it will be an array with its second value that holds
-the maximum resolution the display can handle. It needs to be passed through
-~awk~ in order to get only the resolution itself and not the refresh rate, but
-once we’ve got that, we can set our external monitor as the main monitor with
-its maximum resolution. i3 is also restarted in order to properly display the
-wallpaper and Polybar on the new screen.
-#+BEGIN_SRC fish
-  set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
-  if test -n "$externaldisplay"
-      set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
-      xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
-  end
-#+END_SRC
 
 ** sshbind
 :PROPERTIES:
