@@ -1,0 +1,24 @@
+#!/usr/bin/fish
+
+while read file
+    set -g FILES "$file" $FILES
+end
+
+switch "$argv[1]"
+    case "d"
+        trash $FILES
+    case "D"
+        rm $FILES
+    case "g"
+        gimp $FILES
+    case "r"
+        echo ROTATE
+        echo $FILES
+        for f in $FILES
+            convert -rotate 90 "$f" "$f"
+        end
+    case "R"
+        for f in $FILES
+            convert -rotate 270 "$f" "$f"
+        end
+end
