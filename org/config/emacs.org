@@ -257,7 +257,6 @@ the cursor is on one.
        org-enable-epub-support t
        org-enable-github-support t
        org-enable-hugo-support t
-       org-enable-roam-support t
        org-enable-reveal-js-support t
        org-enable-sticky-header t
        spaceline-org-clock-p t
