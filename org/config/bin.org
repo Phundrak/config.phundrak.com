@@ -28,18 +28,17 @@ of said command running.
 
 ~set-screens~ is a custom script declared [[*set-screens][below]].
 #+NAME: autostart-table
-| Command       | Arguments                                                     | Run once? |
-|---------------+---------------------------------------------------------------+-----------|
-| ~mpc~         | ~stop~                                                        | no        |
-| ~set-screens~ |                                                               | no        |
-| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~                         | no        |
-| ~picom~       | ~--experimental-backends~                                     | yes       |
-| ~pumopm~      |                                                               | yes       |
-| ~xfce-polkit~ |                                                               | yes       |
-| ~xss-lock~    | ~plock~                                                       | yes       |
-| ~xidlehook~   | ~--not-when-audio --not-when-fullscreen --timer 3600 lock ''~ | yes       |
-| ~nm-applet~   |                                                               | yes       |
-| ~numlockx~    | ~on~                                                          | yes       |
+| Command       | Arguments                             | Run once? |
+|---------------+---------------------------------------+-----------|
+| ~mpc~         | ~stop~                                | no        |
+| ~xss-lock~    | ~plock~                               | yes       |
+| ~set-screens~ |                                       | no        |
+| ~picom~       |                                       | yes       |
+| ~pumopm~      |                                       | yes       |
+| ~xfce-polkit~ |                                       | yes       |
+| ~nm-applet~   |                                       | yes       |
+| ~numlockx~    | ~on~                                  | yes       |
+| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~ | no        |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
@@ -58,19 +57,16 @@ of said command running.
              "\n")
 #+END_SRC
 
-#+RESULTS[f7292981c73e9183edab2951f3a5dcfa6d073025]: autostart-gen
-#+begin_example
-set-screens  &
-pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
-pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
-pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
-pgrep -x picom 2&>/dev/null || echo (picom --experimental-backends & && disown) 2&>/dev/null
-pgrep -x xidlehook 2&>/dev/null || echo (xidlehook --not-when-audio --not-when-fullscreen --timer 3600 lock '' & && disown) 2&>/dev/null
-pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
-pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
-mpc stop &
-xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
-#+end_example
+#+RESULTS[db0a64491cfacdcecad8ad71beed0e6b48b5af06]: autostart-gen
+: mpc stop &
+: pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
+: set-screens  &
+: pgrep -x picom 2&>/dev/null || echo (picom & && disown) 2&>/dev/null
+: pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
+: pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
+: pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
+: pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
+: xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
 
 I also have an external sound card, a Scarlet 2i2 G3, that I would like to use
 as my default audio output. However, it might not be always connected, hence the
