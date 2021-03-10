@@ -4229,6 +4229,14 @@ characters defined by mu4e:
         mu4e-headers-unread-mark    '("u"  . "u"))
 #+END_SRC
 
+I don’t like the American time format. I really don’t. I prefer much more
+something more standard, like ISO8601 standard. Not exactly ISO8601, but close
+to it. Also, fuck the paywalls imposed by ISO.
+#+BEGIN_SRC emacs-lisp
+  (setq mu4e-view-date-format "%Y-%m-%d %R"
+        mu4e-headers-date-format  "%Y-%m-%d")
+#+END_SRC
+
 *** Misc
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Mu4e-Misc-9c7a4f5b
@@ -4239,14 +4247,6 @@ text. However, I do not wish to discourage opening HTML emails since I can open
 them in the browser.
 #+BEGIN_SRC emacs-lisp
   (setq mm-discouraged-alternatives '("text/richtext"))
-#+END_SRC
-
-I am still unsure about this variable and if it has an effect on mu4e, but I
-wish to set a default web viewer for my HTML emails: w3m. This is not as
-effective as sending the email in the browser or rendering it as a PDF file, but
-it can be effective enough for some emails.
-#+BEGIN_SRC emacs-lisp
-  (setq mm-text-html-renderer 'w3m)
 #+END_SRC
 
 ** Miscellaneous
@@ -4980,9 +4980,9 @@ First here are some common properties that will be reused in faces below:
 | /       |         | <             | <l>    |        |
 | Name    | inherit | font          | height | weight |
 |---------+---------+---------------+--------+--------|
-| orgfont |         | DejaVu Serif  | 110    |        |
+| orgfont |         | Charis SIL    | 120    |        |
 | head    | default |               |        | bold   |
-| fixed   |         | Cascadia Code |        |        |
+| fixed   |         | Cascadia Code | 0.8    |        |
 
 #+tblname: org-faces
 | /                         | <                |                               |                  |                 | <l>    |        |        |           |
