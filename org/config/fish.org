@@ -163,6 +163,14 @@ get the sudo password. So, let’s declare it.
   set -gx SUDO_ASKPASS ~/.local/bin/askpass
 #+END_SRC
 
+In general, I prefer using ~bat~ to ~less~, although the former relies on the
+latter, but ~bat~ provides nice wrapping around ~less~, including syntax
+highlighting. Let’s set the manpager to bat then:
+#+BEGIN_SRC fish
+  set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+#+END_SRC
+
+
 ** Development
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-Development-76b3ff13
