@@ -1313,9 +1313,9 @@ to which tag by default.
 | class           | firefox    |   3 |
 | class           | Nemo       |   4 |
 | class           | Gimp*      |   5 |
+| class           | Steam      |   9 |
 | class           | discord    |   0 |
 | class           | mattermost |   0 |
-| class           | Steam      |   9 |
 
 #+NAME: rules-default-tags-generate
 #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var tags=rules-default-tags-table

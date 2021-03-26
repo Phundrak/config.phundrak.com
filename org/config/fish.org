@@ -170,7 +170,6 @@ highlighting. Let’s set the manpager to bat then:
   set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 #+END_SRC
 
-
 ** Development
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-Development-76b3ff13
