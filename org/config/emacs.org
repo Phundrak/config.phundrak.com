@@ -4837,12 +4837,11 @@ updated with it. Now, let’s indicate LSP that I want to use that instead of
 
 Finally, I wish to enable ~electric-pair-mode~ and ~indent-guide-mode~ for Rust
 files, so let’s enable that through the use of a hook:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (add-hook 'rust-mode-hook
             '(lambda ()
                (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
-               (electric-pair-mode 1)
-               (indent-guide-mode 1)))
+               (electric-pair-mode 1)))
 #+END_SRC
 
 *** Scheme
