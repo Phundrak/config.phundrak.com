@@ -1524,21 +1524,6 @@ success, otherwise it is a failure. Note that empty lists will always return
       t))
 #+END_SRC
 
-*** ~phundrak/add-all-to-list~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
-:END:
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/add-all-to-list ($list &rest $elements)
-    "Add all $elements from `$elements' to the $list `$list'. If an
-  element from `$elements' is already part of `$list', it will be
-  ignored."
-    (dolist ($e $elements)
-      (unless (member $e $list)
-        (add-to-list '$list $e)))
-    $list)
-#+END_SRC
-
 *** ~phundrak/blog-publish~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
