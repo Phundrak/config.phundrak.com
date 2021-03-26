@@ -5283,12 +5283,12 @@ I’ll get into more detail below this code block.
 Apparently, diff and Magit faces do not follow the nord theme’s color scheme, so
 let’s redefine their background and sometimes their foreground.
 #+tblname: diff-faces
-| /                    |                  |            |
-| Name                 | background       | foreground |
-|----------------------+------------------+------------|
-| ediff-current-diff-A | ,phundrak/nord11 |            |
-| ediff-current-diff-C | ,phundrak/nord13 |            |
-| ediff-current-diff-C | ,phundrak/nord14 |            |
+| /                    |                  |
+| Name                 | background       |
+|----------------------+------------------|
+| ediff-current-diff-A | ,phundrak/nord11 |
+| ediff-current-diff-C | ,phundrak/nord13 |
+| ediff-current-diff-C | ,phundrak/nord14 |
 
 **** Mu4e
 :PROPERTIES:
