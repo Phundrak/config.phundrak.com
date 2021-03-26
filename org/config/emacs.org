@@ -259,6 +259,7 @@ the cursor is on one.
        org-enable-hugo-support t
        org-enable-reveal-js-support t
        org-enable-sticky-header t
+       org-enable-appear-support t
        spaceline-org-clock-p t
        org-projectile-file "TODOs.org"
        org-download-image-dir "~/Pictures/org/"
@@ -1374,12 +1375,6 @@ elements and load some packages. First of all, I want it to load my private
 Emacs config file:
 #+BEGIN_SRC emacs-lisp
   (load "~/.config/emacs/private/private_emacs")
-#+END_SRC
-
-I’ll also load a package I cloned locally as it is not (yet?) available in the
-MELPA: [[https://github.com/awth13/org-appear][org-appear]].
-#+BEGIN_SRC emacs-lisp
-  (require 'org-appear "~/fromGIT/emacs-packages/org-appear/org-appear.el")
 #+END_SRC
 
 Then, I want a couple of requires:
