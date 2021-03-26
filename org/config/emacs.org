@@ -1427,84 +1427,11 @@ in Elisp code.
 Almost all of my code snippets will be prefixed by either my name or the name of
 the package or layer they are part of, unless they are an explicit overwrite of
 a function that already exists.
-
-*** Nord theming variables
+*** Predicates
 :PROPERTIES:
-:CUSTOM_ID: User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
 :END:
-Yes, I do use a preconfigured theme, as mentioned above, but for some elements
-such as Eshell, I need to define some variables for color, and I’ll do it here.
-#+BEGIN_SRC emacs-lisp
-  (defvar phundrak/nord0  "#2e3440")
-  (defvar phundrak/nord1  "#3b4252")
-  (defvar phundrak/nord2  "#434c5e")
-  (defvar phundrak/nord3  "#4c566a")
-  (defvar phundrak/nord4  "#d8dee9")
-  (defvar phundrak/nord5  "#e5e9f0")
-  (defvar phundrak/nord6  "#eceff4")
-  (defvar phundrak/nord7  "#8fbcbb")
-  (defvar phundrak/nord8  "#88c0d0")
-  (defvar phundrak/nord9  "#81a1c1")
-  (defvar phundrak/nord10 "#5e81ac")
-  (defvar phundrak/nord11 "#bf616a")
-  (defvar phundrak/nord12 "#d08770")
-  (defvar phundrak/nord13 "#ebcb8b")
-  (defvar phundrak/nord14 "#a3be8c")
-  (defvar phundrak/nord15 "#b48ead")
-#+END_SRC
-
-*** ~with-face~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-with-face-7974e15f
-:END:
-~with-face~ is a simple yet very useful macro that allows me to easily create
-strings with faces defined as properties to the string passed as the first
-argument. Here is how it is implemented:
-#+BEGIN_SRC emacs-lisp
-  (defmacro with-face ($str &rest $properties)
-    "Helper macro for creating strings with faces"
-    `(propertize ,$str 'face (list ,@$properties)))
-#+END_SRC
-
-*** ~phundrak/abbr-path~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
-:END:
-The following is a nice little function I use in my Eshell prompt. It shortens
-the name of all the parent directories of the current one in its path, but
-leaves the current one written in full. It also abbreviates the equivalent of
-the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/abbr-path ($path &optional $abbreviate)
-    "Abbreviate `$path'. If `$abbreviate' is `t', then all parent
-  directories of the current directory will be abbreviated to one
-  letter only. If a parent directory is a hidden directory (i.e.
-  preceeded by a dot), the directory will be abbreviated to the dot
-  plus the first letter of the name of the directory (e.g.
-  \".config\" -> \".c\").
-
-  For public use of the function, `$path' should be a string
-  representing a UNIX path. For internal use, `$path' can also be a
-  list. If `$path' is neither of those, an error will be thrown by
-  the function."
-    (cond
-     ((stringp $path) (f-short
-                       (if $abbreviate
-                           (phundrak/abbr-path (f-split (phundrak/abbr-path $path)))
-                         $path)))
-     ((null $path) "")
-     ((listp $path)
-      (f-join (cond ((= 1 (length $path)) (car $path))
-                    (t (let* ((dir (car $path))
-                              (first-char (s-left 1 dir)))
-                         (if (string= "." first-char)
-                             (s-left 2 dir)
-                           first-char))))
-              (phundrak/abbr-path (cdr $path))))
-     (t (error "Invalid argument %s, neither stringp nor listp" $path))))
-#+END_SRC
-
-*** ~phundrak/all?~
+**** ~phundrak/all?~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
 :END:
@@ -1524,31 +1451,29 @@ success, otherwise it is a failure. Note that empty lists will always return
       t))
 #+END_SRC
 
-*** ~phundrak/blog-publish~
+**** ~phundrak/none?~
 :PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
 :END:
-This function is quite a simple function made to automatically publish [[https://blog.phundrak.com][my blog]]
-based on Hugo. After exporting my blog using ~ox-hugo~, I simply have to call
-this function which will look for all files located in =~/org/blog/public= and
-copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
+In the same vein as ~phundrak/all?~, ~phundrak/none?~ checks if all elements of
+~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
+return ~t~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/blog-publish ()
-    (interactive)
-    (let* ((blog-path "~/org/blog")
-           (public-path (concat blog-path "/public"))
-           (target-path "/rsync:Tilo:/home/phundrak/www/phundrak.com/blog"))
-      (shell-command (format "cd %s && hugo" blog-path))
-      (let ((files (mapcar (lambda (file)
-                             (f-relative file public-path))
-                           (f-files (format "%s/public" blog-path) nil t))))
-        (dolist (file files)
-          (copy-file (concat public-path "/" file)
-                     (concat target-path "/" file)
-                     t nil t)))))
+  (defun phundrak/none? (fn seq)
+    "Check if all members of `SEQ' do not satisfy predicate `FN'.
+  Note that it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (not (funcall fn (car seq)))
+             (phundrak/none? fn (cdr seq)))
+      t))
 #+END_SRC
 
-*** ~phundrak/eshell-git-status~
+*** Eshell prompt-related functions
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Eshell-prompt-related-functions-79d07f21
+:END:
+**** ~phundrak/eshell-git-status~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-eshell-git-status-28f16e94
 :END:
@@ -1560,11 +1485,13 @@ git prompt that will be inserted in my Eshell prompt. And just for shit and
 giggles, I’ve made it so it is a powerline prompt.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/eshell-git-status ($path &optional $background-color)
-    "Returns a string indicating the status of the current
-  repository if it exists. It should also append the name of the
-  current branch if it is not `master' or `main'. The theme is
-  inspired by the bobthefish theme for the fish shell which you can
-  find here: https://github.com/oh-my-fish/theme-bobthefish
+    "Returns a string indicating the status of the repository located
+  in `$PATH' if it exists. It should also append the name of the
+  current branch if it is not `master' or `main'.
+  `$BACKGROUND-COLOR' allows to choose the color that will be
+  visible behind the powerline characters. The theme is inspired by
+  the bobthefish theme for the fish shell which you can find here:
+  https://github.com/oh-my-fish/theme-bobthefish
 
   Color code:
   - green:
@@ -1622,19 +1549,94 @@ giggles, I’ve made it so it is a powerline prompt.
                            :foreground accent)))))
 #+END_SRC
 
-*** ~phundrak/file-to-string~
+**** ~phundrak/git-repo-root~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-git-repo-root-f7cf3bb9
+:END:
+This function detects if the path passed as an argument points to a git
+directory or to one of its subdirectories. If it is, it will return the path to
+the root of the git repository, else it will return ~nil~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/git-repo-root ($path)
+    "Return `$PATH' if it points to a git repository or one of its
+  subdirectories."
+    (when $path
+      (if (f-dir? (concat $path "/.git"))
+          $path
+        (phundrak/git-repo-root (f-parent $path)))))
+#+END_SRC
+
+**** ~phundrak/prompt-toggle-abbreviation~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defvar phundrak/prompt--abbreviate t
+    "Whether or not to abbreviate the displayed path in the Eshell
+  prompt.")
+
+  (defun phundrak/prompt-toggle-abbreviation ()
+    "Toggles whether the Eshell prompt should shorten the name of
+  the parent directories or not. See `phundrak/eshell-prompt'."
+    (interactive)
+    (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
+#+END_SRC
+
+**** ~phundrak/abbr-path~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
+:END:
+The following is a nice little function I use in my Eshell prompt. It shortens
+the name of all the parent directories of the current one in its path, but
+leaves the current one written in full. It also abbreviates the equivalent of
+the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/abbr-path ($path &optional $abbreviate)
+    "Abbreviate `$PATH'. If `$ABBREVIATE' is t, then all parent
+  directories of the current directory will be abbreviated to one
+  letter only. If a parent directory is a hidden directory (i.e.
+  preceeded by a dot), the directory will be abbreviated to the dot
+  plus the first letter of the name of the directory (e.g.
+  \".config\" -> \".c\").
+
+  For public use of the function, `$PATH' should be a string
+  representing a UNIX path. For internal use, `$PATH' can also be a
+  list. If `$PATH' is neither of those, an error will be thrown by
+  the function."
+    (cond
+     ((stringp $path) (f-short
+                       (if $abbreviate
+                           (phundrak/abbr-path (f-split (phundrak/abbr-path $path)))
+                         $path)))
+     ((null $path) "")
+     ((listp $path)
+      (f-join (cond ((= 1 (length $path)) (car $path))
+                    (t (let* ((dir (car $path))
+                              (first-char (s-left 1 dir)))
+                         (if (string= "." first-char)
+                             (s-left 2 dir)
+                           first-char))))
+              (phundrak/abbr-path (cdr $path))))
+     (t (error "Invalid argument %s, neither stringp nor listp" $path))))
+#+END_SRC
+
+*** Files-related functions
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Files-related-functions-0b66f353
+:END:
+**** ~phundrak/file-to-string~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-file-to-string-efab0fba
 :END:
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/file-to-string (FILE)
-    "Returns the content of `FILE' as a string"
+    "Returns the content of `FILE' as a string."
     (with-temp-buffer
       (insert-file-contents FILE)
       (buffer-string)))
 #+END_SRC
 
-*** ~phundrak/find-org-files~
+**** ~phundrak/find-org-files~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-phundrak-find-org-files-a8fd200f
 :END:
@@ -1646,8 +1648,11 @@ conlanging files which are located in =~/Documents/conlanging=, and all my
 university notes are in =~/Documents/university=. Let’s declare these
 directories in a variable:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak/org-directories '("~/org" "~/Documents/university/S8" "~/Documents/conlanging")
-    "Directories in which to look for org files with the function `phundrak/find-org-files'")
+  (defvar phundrak/org-directories '("~/org"
+                                     "~/Documents/university/S8"
+                                     "~/Documents/conlanging")
+    "Directories in which to look for org files with the function
+  `phundrak/find-org-files'.")
 #+END_SRC
 
 With this established, let’s write some emacs-lisp that will allow me to get a
@@ -1671,58 +1676,7 @@ as [[https://github.com/sharkdp/fd][fd]].
                           "\n")))))
 #+END_SRC
 
-*** ~phundrak/git-repo-root~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-git-repo-root-f7cf3bb9
-:END:
-This function detects if the path passed as an argument points to a git
-directory or to one of its subdirectories. If it is, it will return the path to
-the root of the git repository, else it will return ~nil~.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/git-repo-root ($path)
-    "Return `$path' if it points to a git repository or one of its
-  subdirectories"
-    (when $path
-      (if (f-dir? (concat $path "/.git"))
-          $path
-        (phundrak/git-repo-root (f-parent $path)))))
-#+END_SRC
-
-*** ~phundrak/none?~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
-:END:
-In the same vein as ~phundrak/all?~, ~phundrak/none?~ checks if all elements of
-~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
-return ~t~.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/none? (fn seq)
-    "Check if all members of `SEQ' do not satisfy predicate `FN'.
-  Note that it will return t if `SEQ' is nil."
-    (declare (pure t) (side-effect-free t))
-    (if seq
-        (and (not (funcall fn (car seq)))
-             (phundrak/none? fn (cdr seq)))
-      t))
-#+END_SRC
-
-*** ~phundrak/prompt-toggle-abbreviation~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
-:END:
-#+BEGIN_SRC emacs-lisp
-  (defvar phundrak/prompt--abbreviate t
-    "Whether or not to abbreviate the displayed path in the Eshell
-  prompt")
-
-  (defun phundrak/prompt-toggle-abbreviation ()
-    "Toggles whether the Eshell prompt should shorten the name of
-  the parent directories or not. See `phundrak/eshell-prompt'"
-    (interactive)
-    (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
-#+END_SRC
-
-*** ~phundrak/open-marked-files~
+**** ~phundrak/open-marked-files~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-open-marked-files-b87d37f7
 :END:
@@ -1731,6 +1685,8 @@ multiple files. This function will basically look for all marked files in the
 current dired buffer and open each one of them in their individual buffer.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/open-marked-files ()
+    "This function allows the user to open all marked files in a
+  Dired buffer at once."
     (interactive)
     (let ((file-list (if (string= major-mode "dired-mode")
                          (dired-get-marked-files)
@@ -1738,6 +1694,105 @@ current dired buffer and open each one of them in their individual buffer.
       (mapc (lambda (file)
               (find-file file))
             file-list)))
+#+END_SRC
+
+**** ~xah/open-in-external-app~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-xah-open-in-external-app-2655f31c
+:END:
+Here is another of Xah’s functions, this time to open a file externally to
+Emacs. For instance, I sometimes want to open a PDF in Zathura rather than in
+Emacs, or an HTML file in Firefox. With this function, it is now possible!
+#+BEGIN_SRC emacs-lisp
+  (defun xah/open-in-external-app (&optional files)
+    "Open the current file or dired marked files in external app.
+  The app is chosen from your OS’ preference.
+
+  When called in emacs lisp, if `FILES' is given, open that.
+
+  URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+  Version 2019-01-18"
+    (interactive)
+    (let* (($file-list (if files
+                           (progn (list files))
+                         (if (string-equal major-mode "dired-mode")
+                             (dired-get-marked-files)
+                           (list (buffer-file-name)))))
+           ($do-it-p (if (<= (length $file-list) 5)
+                         t
+                       (y-or-n-p "Open more than 5 files? "))))
+      (when $do-it-p
+        (mapc (lambda ($fpath)
+                (let ((process-connection-type nil))
+                  (start-process "" nil "xdg-open" $fpath)))
+              $file-list))))
+#+END_SRC
+
+*** Theming
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Theming-7ad4dc46
+:END:
+**** Nord theming variables
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Custom_functions_and_variables-Some_theming_variables-9b853a99
+:END:
+Yes, I do use a preconfigured theme, as mentioned above, but for some elements
+such as Eshell, I need to define some variables for color, and I’ll do it here.
+#+BEGIN_SRC emacs-lisp
+  (defvar phundrak/nord0  "#2e3440")
+  (defvar phundrak/nord1  "#3b4252")
+  (defvar phundrak/nord2  "#434c5e")
+  (defvar phundrak/nord3  "#4c566a")
+  (defvar phundrak/nord4  "#d8dee9")
+  (defvar phundrak/nord5  "#e5e9f0")
+  (defvar phundrak/nord6  "#eceff4")
+  (defvar phundrak/nord7  "#8fbcbb")
+  (defvar phundrak/nord8  "#88c0d0")
+  (defvar phundrak/nord9  "#81a1c1")
+  (defvar phundrak/nord10 "#5e81ac")
+  (defvar phundrak/nord11 "#bf616a")
+  (defvar phundrak/nord12 "#d08770")
+  (defvar phundrak/nord13 "#ebcb8b")
+  (defvar phundrak/nord14 "#a3be8c")
+  (defvar phundrak/nord15 "#b48ead")
+#+END_SRC
+
+**** ~with-face~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-with-face-7974e15f
+:END:
+~with-face~ is a simple yet very useful macro that allows me to easily create
+strings with faces defined as properties to the string passed as the first
+argument. Here is how it is implemented:
+#+BEGIN_SRC emacs-lisp
+  (defmacro with-face ($str &rest $properties)
+    "Helper macro for creating strings `$STR' with `$PROPERTIES'"
+    `(propertize ,$str 'face (list ,@$properties)))
+#+END_SRC
+
+*** ~phundrak/blog-publish~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
+:END:
+This function is quite a simple function made to automatically publish [[https://blog.phundrak.com][my blog]]
+based on Hugo. After exporting my blog using ~ox-hugo~, I simply have to call
+this function which will look for all files located in =~/org/blog/public= and
+copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/blog-publish ()
+    "Publish my blog through Hugo and rsync to my remote server."
+    (interactive)
+    (let* ((blog-path "~/org/blog")
+           (public-path (concat blog-path "/public"))
+           (target-path "/rsync:Tilo:/home/phundrak/www/phundrak.com/blog"))
+      (shell-command (format "cd %s && hugo" blog-path))
+      (let ((files (mapcar (lambda (file)
+                             (f-relative file public-path))
+                           (f-files (format "%s/public" blog-path) nil t))))
+        (dolist (file files)
+          (copy-file (concat public-path "/" file)
+                     (concat target-path "/" file)
+                     t nil t)))))
 #+END_SRC
 
 *** ~phundrak/var-or-if-nil~
@@ -1748,8 +1803,8 @@ This simple function helps me return either the value ~var~ holds, or if it is
 ~nil~ it will return the value ~value~ holds (or will return).
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/var-or-if-nil ($var $value)
-    "Return the result yield by `$value' if `$var' is `nil', return
-  `$var' otherwise"
+    "Return the result yield by `$VALUE' if `$VAR' is nil, return
+  `$VAR' otherwise"
     (if (null $var)
         $value
       $var))
@@ -1766,7 +1821,8 @@ new parameters in the ~new~ function. It also comes with a helper function that
 parses the arguments given to the ~new~ function.
 #+BEGIN_SRC emacs-lisp
   (defun phundrak//yas-snippet-split-rust-args ($arg-string)
-    "Split a Rust argument string into ((name, default)...) tuples"
+    "Split a Rust argument string `$ARG-STRING' into ((name,
+  default)...) tuples"
     (mapcar (lambda ($elem)
               (split-string $elem "[[:blank:]]*:[[:blank:]]*" t))
             (split-string $arg-string "[[:blank:]]*,[[:blank:]]*" t)))
@@ -1806,20 +1862,6 @@ Cairo. The function definition was taken [[https://github.com/caiohcs/my-emacs#s
       (message filename)))
 #+END_SRC
 
-*** ~terminal-here-default-terminal-command~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-terminal-here-default-terminal-command-9baa3715
-:END:
-This function is actually an overwrite of the default one which apparently does
-not work on my machine. This function is called by ~terminal-here-launch~ and
-spawns an external terminal emulator in the directory emacs was in when the
-terminal was invoked. I simply point out to this function the name of my
-terminal emulator. Here is the code:
-#+BEGIN_SRC emacs-lisp
-  (defun terminal-here-default-terminal-command (_dir)
-    '("st"))
-#+END_SRC
-
 *** ~xah/dired-sort~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-xah-dired-sort-28bde838
@@ -1845,38 +1887,6 @@ files in a dired buffer depending on four factors:
        ((equal $sort-by "extension") (setq $arg "-ahlD -X --group-directories-first"))
        (t (error "logic error 09535" )))
       (dired-sort-other $arg )))
-#+END_SRC
-
-*** ~xah/open-in-external-app~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-xah-open-in-external-app-2655f31c
-:END:
-Here is another of Xah’s functions, this time to open a file externally to
-Emacs. For instance, I sometimes want to open a PDF in Zathura rather than in
-Emacs, or an HTML file in Firefox. With this function, it is now possible!
-#+BEGIN_SRC emacs-lisp
-  (defun xah/open-in-external-app (&optional files)
-    "Open the current file or dired marked file in external app.
-  The app is chosen from your OS’ preference.
-
-  When called in emacs lisp, if files is given, open that.
-
-  URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
-  Version 2019-01-18"
-    (interactive)
-    (let* (($file-list (if files
-                           (progn (list files))
-                         (if (string-equal major-mode "dired-mode")
-                             (dired-get-marked-files)
-                           (list (buffer-file-name)))))
-           ($do-it-p (if (<= (length $file-list) 5)
-                         t
-                       (y-or-n-p "Open more than 5 files? "))))
-      (when $do-it-p
-        (mapc (lambda ($fpath)
-                (let ((process-connection-type nil))
-                  (start-process "" nil "xdg-open" $fpath)))
-              $file-list))))
 #+END_SRC
 
 ** Emacs builtins
