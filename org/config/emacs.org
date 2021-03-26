@@ -2416,10 +2416,13 @@ such as with this document.
     <<org-confirm-babel>>
     ;; Beautiful org
     <<beautiful-org-hooks>>
-    <<beautiful-org-faces>>
     <<beautiful-org-options>>
+    <<beautiful-org-fontify-blocks>>
+    <<beautiful-org-fontify-inline>>
     <<beautiful-org-images>>
-    <<beautiful-org-hide-macro-markers>>
+    <<beautiful-org-latex-inline>>
+    <<beautiful-org-latex-inline-transparent>>
+    <<beautiful-org-macro-ellipsis-markers>>
     <<beautiful-org-hide-dots>>
     ;; Capture
     <<org-capture-target-files>>
@@ -2629,46 +2632,219 @@ of:
 
 In order to make org-mode even sexier, let’s enable ~variable-pitch-mode~ for
 org-mode so we can get some proportional font. I’ll also remove ~auto-fill-mode~
-which seems to stick to Orgmode like hell and I don’t know why. A hook to
-org-appear’s minor mode will also be added.
+which seems to stick to Orgmode like hell and I don’t know why.
 #+NAME: beautiful-org-hooks
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'visual-line-mode)
   (remove-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (auto-fill-mode -1)
-  (add-hook 'org-mode-hook 'org-appear-mode)
 #+END_SRC
 
 You can then see the modified faces for org-mode [[#User-Configuration-Visual-configuration-Better-faces-Org-mode-07754177][here]].
 
-Some other tweaks will make Org-mode more beautiful. This includes a new folding
-icon, some indentation that is not added whitespace.
+By default, I would like my org-mode buffers to be indented and tables to be
+aligned.
 #+NAME: beautiful-org-options
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t
-        org-startup-align-all-tables t
-        org-pretty-entities t
-        org-fontify-whole-heading-line t
-        org-fontify-done-headline t
-        org-fontify-quote-and-verse-blocks t
-        org-display-inline-images t
-        org-redisplay-inline-images t
-        org-startup-with-inline-images "inlineimages"
-        org-ellipsis "  ")
+        org-startup-align-all-tables t)
 #+END_SRC
 
-Let’s limit the width of images inlined in org buffers to 550px. It roughly
-corresponds to the width of a paragraph on which ~org-fill-paragraph~ is called.
+***** Fontifying parts of org-mode
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Fontifying-parts-of-org-mode-f690ee40
+:END:
+Some blocks of org-mode should have their own face, such as the whole heading
+line, the done headline, the quote and the verse blocks,… actually, let’s enable
+that for all of them.
+#+name: beautiful-org-fontify-blocks
+#+BEGIN_SRC emacs-lisp
+(setq org-pretty-entities t
+      org-fontify-whole-heading-line t
+      org-fontify-done-headline t
+      org-fontify-quote-and-verse-blocks t)
+#+END_SRC
+
+***** Fontifying inline src blocks
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Fontifying-inline-src-blocks-bf879724
+:END:
+When it comes to source blocks in org-mode, Emacs handle them really well with
+some beautiful syntax highlight thanks to the the languages’ major mode and
+their font-locks. But inline src blocks are the forgotten child and get next to
+no love, which is really sad ; I want it to feel loved, to stand out from the
+crowd and to give me what its brother gives me already!
+
+Enters [[https://tecosaur.github.io/emacs-config/config.html#fontifying-inline-src][Tecosaur’s config]]! With ~org-src-font-lock-fontify-block~, anything’s
+possible! And ~{{{results(...)}}}~ can also have the ~org-block~ face applied to
+match and make org-mode even more beautiful! Let’s do it:
+#+name: beautiful-org-fontify-inline
+#+BEGIN_SRC emacs-lisp
+  (defvar org-prettify-inline-results t
+    "Whether to use (ab)use prettify-symbols-mode on
+  {{{results(...)}}}.")
+
+  (defun org-fontify-inline-src-blocks (limit)
+    "Try to apply `org-fontify-inline-src-blocks-1'."
+    (condition-case nil
+        (org-fontify-inline-src-blocks-1 limit)
+      (error (message "Org mode fontification error in %S at %d"
+                      (current-buffer)
+                      (line-number-at-pos)))))
+
+  (defun org-fontify-inline-src-blocks-1 (limit)
+    "Fontify inline src_LANG blocks, from `point' up to `LIMIT'."
+    (let ((case-fold-search t))
+      (when
+          ; stolen from `org-element-inline-src-block-parser'
+          (re-search-forward "\\_<src_\\([^ \t\n[{]+\\)[{[]?" limit t)
+        (let ((beg (match-beginning 0))
+              pt
+              (lang-beg (match-beginning 1))
+              (lang-end (match-end 1)))
+          (remove-text-properties beg lang-end '(face nil))
+          (font-lock-append-text-property lang-beg lang-end 'face 'org-meta-line)
+          (font-lock-append-text-property beg lang-beg 'face 'shadow)
+          (font-lock-append-text-property beg lang-end 'face 'org-block)
+          (setq pt (goto-char lang-end))
+          (when (org-element--parse-paired-brackets ?\[)
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt
+                                            (point)
+                                            'face
+                                            'org-block)
+            (setq pt (point)))
+          (when (org-element--parse-paired-brackets ?\{)
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt
+                                            (1+ pt)
+                                            'face
+                                            '(org-block shadow))
+            (unless (= (1+ pt) (1- (point)))
+              (if org-src-fontify-natively
+                  (org-src-font-lock-fontify-block
+                   (buffer-substring-no-properties lang-beg
+                                                   lang-end)
+                   (1+ pt)
+                   (1- (point)))
+                (font-lock-append-text-property (1+ pt)
+                                                (1- (point))
+                                                'face
+                                                'org-block)))
+            (font-lock-append-text-property (1- (point))
+                                            (point)
+                                            'face
+                                            '(org-block shadow))
+            (setq pt (point)))
+          (when (and org-prettify-inline-results
+                     (re-search-forward "\\= {{{results(" limit t))
+            (font-lock-append-text-property pt
+                                            (1+ pt)
+                                            'face
+                                            'org-block)
+            (goto-char pt))))
+      (when (and org-prettify-inline-results
+                 (re-search-forward "{{{results(\\(.+?\\))}}}"
+                                    limit t))
+        (remove-list-of-text-properties (match-beginning 0)
+                                        (point)
+                                        '(composition prettify-symbols-start prettify-symbols-end))
+        (font-lock-append-text-property (match-beginning 0)
+                                        (match-end 0)
+                                        'face
+                                        'org-block)
+        (let ((start (match-beginning 0))
+              (end (match-beginning 1)))
+          (with-silent-modifications (compose-region start end "⟨")
+                                     (add-text-properties start
+                                                          end
+                                                          `(prettify-symbols-start ,start prettify-symbols-end
+                                                                                   ,end))))
+        (let ((start (match-end 1))
+              (end (point)))
+          (with-silent-modifications (compose-region start end "⟩")
+                                     (add-text-properties start
+                                                          end
+                                                          `(prettify-symbols-start ,start prettify-symbols-end
+                                                                                   ,end)))))))
+
+  (defun org-fontify-inline-src-blocks-enable ()
+    "Add inline src fontification to font-lock in Org.
+  Must be run as part of `org-font-lock-set-keywords-hook'."
+    (setq org-font-lock-extra-keywords
+          (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
+
+  (add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
+#+END_SRC
+
+***** Images in org-mode
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Images-in-org-mode-8cf9bb6c
+:END:
+By default, images should be displayed inline, but not with a too large width. I
+found that 550px fits well, since that is roughly the average width of the text
+when ~org-fill-paragraph~ is called. Let’s also tell org-mode to display images
+as inline images and redisplay them when needed.
 #+NAME: beautiful-org-images
 #+BEGIN_SRC emacs-lisp
-  (setq org-image-actual-width 550)
+  (setq org-image-actual-width 550
+        org-redisplay-inline-images t
+        org-display-inline-images t
+        org-startup-with-inline-images "inlineimages")
 #+END_SRC
 
-Visually, I prefer to hide the markers of macros, so let’s do that:
-#+NAME: beautiful-org-hide-macro-markers
+***** Prettier LaTeX inline rendering
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Prettier-LaTeX-inline-rendering-66605d3c
+:END:
+[[https://tecosaur.github.io/emacs-config/config.html#prettier-rendering][Tecosaur strikes again]]! Let’s admit it, inline LaTeX code looks cool, properly
+formatted LaTeX inline fragments look rad! Let’s fix their appearance:
+#+name: beautiful-org-latex-inline
 #+BEGIN_SRC emacs-lisp
-  (setq org-hide-macro-markers t)
+  (setq org-format-latex-header "\\documentclass{article}
+  \\usepackage[usenames]{color}
+
+  \\usepackage[T1]{fontenc}
+
+  \\usepackage{booktabs}
+
+  \\pagestyle{empty}             % do not remove
+  % The settings below are copied from fullpage.sty
+  \\setlength{\\textwidth}{\\paperwidth}
+  \\addtolength{\\textwidth}{-3cm}
+  \\setlength{\\oddsidemargin}{1.5cm}
+  \\addtolength{\\oddsidemargin}{-2.54cm}
+  \\setlength{\\evensidemargin}{\\oddsidemargin}
+  \\setlength{\\textheight}{\\paperheight}
+  \\addtolength{\\textheight}{-\\headheight}
+  \\addtolength{\\textheight}{-\\headsep}
+  \\addtolength{\\textheight}{-\\footskip}
+  \\addtolength{\\textheight}{-3cm}
+  \\setlength{\\topmargin}{1.5cm}
+  \\addtolength{\\topmargin}{-2.54cm}
+  % my custom stuff
+  \\usepackage[nofont,plaindd]{bmc-maths}
+  \\usepackage{arev}
+  ")
+#+END_SRC
+
+And I much prefer when LaTeX fragments are transparent, so let’s make them.
+#+name: beautiful-org-latex-inline-transparent
+#+BEGIN_SRC emacs-lisp
+(setq org-format-latex-options
+      (plist-put org-format-latex-options :background "Transparent"))
+#+END_SRC
+
+***** Symbols
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Org-mode-Beautify-Org-mode-Symbols-042d7374
+:END:
+I visually prefer to have a nicer folding icon in Emacs and the markers of macros hidden.
+#+NAME: beautiful-org-macro-ellipsis-markers
+#+BEGIN_SRC emacs-lisp
+  (setq org-hide-macro-markers t
+        org-ellipsis " ")
 #+END_SRC
 
 I also have an issue where small dots precede my org headers. Let’s fix that:
@@ -2843,7 +3019,7 @@ Will be exported as if it were the buffer
 **** Capture
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Org-mode-Org_capture-f58979cf
-:header-args:org: :mkdirp yes
+:header-args:org: :mkdirp yes :padline no
 :END:
 Org-capture is an amazing feature of Org-mode which allows me to quickly save
 links, resources, reminders, and notes in neatly organized org files. Here they
@@ -3404,7 +3580,6 @@ Chinese and Korean) support.
                                            (""         "amssymb"   t)
                                            (""         "capt-of"   nil)
                                            (""         "minted"    nil)
-                                           (""         "xeCJK"     nil)
                                            (""         "hyperref"  nil)))
 #+END_SRC
 
@@ -3441,6 +3616,65 @@ HTML. Let’s disable that since I never use it.
 #+NAME: org-html-validation
 #+BEGIN_SRC emacs-lisp
   (setq org-html-validation-link nil)
+#+END_SRC
+
+However, something I very often use are metadata information in my HTML files. I
+just want to automate that. Fortunately, [[https://tecosaur.github.io/emacs-config/config.html#extra-header-content,code--3][Tecosaur comes to the rescue]]! First,
+here is our function that will generate all the meta tags in our HTML:
+#+BEGIN_SRC emacs-lisp
+  (defun org-html-meta-tags-fancy (info)
+    "Use the INFO plist to construct the meta tags, as described in
+  `org-html-meta-tags'."
+    (message "%s" info)
+    (let ((title (org-html-plain-text
+                  (org-element-interpret-data (plist-get info :title)) info))
+          (author (and (plist-get info :with-author)
+                       (let ((auth (plist-get info :author)))
+                         ;; Return raw Org syntax.
+                         (and auth (org-html-plain-text
+                                    (org-element-interpret-data auth) info))))))
+      (list
+       (when (org-string-nw-p author)
+         (list "name" "author" author))
+       (when (org-string-nw-p (plist-get info :description))
+         (list "name" "description"
+               (plist-get info :description)))
+       '("name" "generator" "org mode (Emacs)")
+       '("name" "theme-color" "#3b4252")
+       '("property" "og:type" "article")
+       (list "property" "og:title" title)
+       (let ((subtitle (org-export-data (plist-get info :subtitle) info)))
+         (when (org-string-nw-p subtitle)
+           (list "property" "og:description" subtitle)))
+       (let ((meta-image (org-export-data (plist-get info :metaimage) info)))
+         (when (org-string-nw-p meta-image)
+           (list "property" "og:image" meta-image)))
+       (let ((meta-image-type (org-export-data (plist-get info :metaimagetype) info)))
+         (when (org-string-nw-p meta-image-type)
+           (list "property" "og:image:type" meta-image-type)))
+       (let ((meta-image-width (org-export-data (plist-get info :metaimagewidth) info)))
+         (when (org-string-nw-p meta-image-width)
+           (list "property" "og:image:width" meta-image-width)))
+       (let ((meta-image-height  (org-export-data (plist-get info :metaimageheight) info)))
+         (when (org-string-nw-p meta-image-height)
+           (list "property" "og:image:height" meta-image-height)))
+       (let ((meta-image-alt  (org-export-data (plist-get info :metaimagealt) info)))
+         (when (org-string-nw-p meta-image-alt)
+           (list "property" "og:image:alt" meta-image-alt)))
+       (when (org-string-nw-p author)
+         (list "property" "og:article:author:first_name" (car (s-split-up-to " " author 2))))
+       (when (and (org-string-nw-p author) (s-contains-p " " author))
+         (list "property" "og:article:author:last_name" (cadr (s-split-up-to " " author 2))))
+       (list "property" "og:article:published_time" (format-time-string "%FT%T%z")))))
+#+END_SRC
+
+This will use some special keywords in our org buffer and insert their content in
+
+Now let’s bind it to when we export our org buffer to HTML:
+#+BEGIN_SRC emacs-lisp
+  (unless (functionp #'org-html-meta-tags-default)
+    (defalias 'org-html-meta-tags-default #'ignore))
+  (setq org-html-meta-tags #'org-html-meta-tags-fancy)
 #+END_SRC
 
 **** LaTeX formats
