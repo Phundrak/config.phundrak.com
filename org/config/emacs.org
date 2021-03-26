@@ -4102,18 +4102,35 @@ As this is a new category, let’s declare its prefix:
 Now, let’s also declare the keybindings in this category. ~oac~ will invoke
 Emacs’ calculator, while ~oac~ invokes the calendar, ~oae~ invokes the Eww web
 browser, ~oaw~ invokes ~woman~ (actually ~helm-man-woman~), and ~oaW~ invokes
-the weather forecast. Lastly, the apostrophe in ~oa'~ will invoke Eshell
+the weather forecast. Lastly, the apostrophe in ~o'~ will invoke Eshell
 directly, without any popup window as with ~,'~ while ~oan~ will open a new
 eshell buffer if another one already exists.
 #+BEGIN_SRC emacs-lisp
   (spacemacs/set-leader-keys
-    "oa'" 'eshell
+    "o'" 'eshell
     "oac" 'calc
     "oaC" 'calendar
     "oae" 'eww
     "oan" 'eshell-new
     "oaw" 'helm-man-woman
     "oaW" 'wttrin)
+#+END_SRC
+
+**** Image mode
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Keybindings-Applications-Image-mode-e5df694e
+:END:
+Viewing images in Emacs is nice, but I want to be able to do more than just view
+them, such as opening them in GIMP. I’ll also declare a couple of keybindings
+that make sense to me.
+#+BEGIN_SRC emacs-lisp
+  (spacemacs/declare-prefix-for-mode 'image-mode "G" "Open in GIMP")
+  (spacemacs/declare-prefix-for-mode 'image-mode "o" "Open in external viewer")
+  (spacemacs/declare-prefix-for-mode 'image-mode "r" "Rotate clockwise")
+  (spacemacs/set-leader-keys-for-major-mode 'image-mode
+    "G" (lambda () (interactive) (start-process "" nil "gimp" (buffer-name)))
+    "o" (lambda () (interactive) (start-process "" nil "xdg-open" (buffer-name)))
+    "r" 'image-rotate)
 #+END_SRC
 
 **** Org tree slide
