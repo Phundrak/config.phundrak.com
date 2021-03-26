@@ -3902,6 +3902,36 @@ include in exported files.
         user-mail-address "lucien@phundrak.com")
 #+END_SRC
 
+*** Recentf
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Recentf-b00d8ddd
+:END:
+~recentf-mode~ allows Emacs to list all recent files it read. It is also used by
+Spacemacs to display a list of recent files so they can be quickly opened by the
+user. Unfortunately, a lot of these files are just noise I don’t care about, but
+fortunately we can ignore files with the variable ~recentf-exclude~. So, I will
+ignore these paths:
+#+name: recentf-ignored-paths
+| =~/.mail/=        |
+| =~/.emacs.d/=     |
+| =~/.elfeed/index= |
+| =/tmp/=           |
+
+#+name: recentf-ignored-paths-gen
+#+header: :var paths=recentf-ignored-paths
+#+BEGIN_SRC emacs-lisp :tangle no :exports none
+  (mapconcat (lambda (path)
+               (format "(add-to-list 'recentf-exclude\n             (expand-file-name \"%s\"))"
+                       (replace-regexp-in-string "=" "" (car path))))
+             paths
+             "\n")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :noweb yes
+  (with-eval-after-load 'recentf
+    <<recentf-ignored-paths-gen()>>)
+#+END_SRC
+
 ** Editing and modes
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
