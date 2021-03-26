@@ -468,7 +468,7 @@ sequencially.
 :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/dired
 :END:
 #+BEGIN_SRC bash
-  emacsclient -c -e "(dired \"$@\")"
+  emacsclient -c -a emacs -e "(dired \"$@\")"
 #+END_SRC
 
 ** Emacsmail
@@ -479,7 +479,7 @@ sequencially.
 This short script is used in my =~/.local/share/applications/mu4e.desktop= file
 in order to send to Emacs any ~mailto:~ requests made in my system.
 #+BEGIN_SRC bash
-  emacsclient -c --eval "(browse-url-mail \"$@\")"
+  emacsclient -c -n -a emacs -e "(browse-url-mail \"$@\")"
 #+END_SRC
 
 * Media
