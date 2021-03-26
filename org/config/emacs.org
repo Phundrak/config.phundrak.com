@@ -163,8 +163,8 @@ Typically, the variable will be set like so:
                   helm
                   multiple-cursors
                   org
-                  (shell :variables shell-default-height
-                         30 shell-default-position 'bottom)
+                  (shell :variables shell-default-height 30
+                                    shell-default-position 'bottom)
                   treemacs))
 #+END_SRC
 
@@ -497,10 +497,10 @@ programming language, so here it is.
        lua-lsp-emmy-enable-file-watchers t)
 #+END_SRC
 
-Unfortunately, I have to write Java code for one of my university courses, so
-here is the layer:
+Unfortunately, I have to write Java and Scala code for one of my university
+courses, so here are the layers:
 #+BEGIN_SRC emacs-lisp
-  java
+  java scala
 #+END_SRC
 
 *** Readers
@@ -1054,7 +1054,10 @@ control:
 When used in a plist, ~visual~ takes precendence over ~relative~.
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-line-numbers '(:relative nil
-                                            :enabled-for-modes prog-mode))
+                                            :visual nil
+                                            :disabled-for-modes org-mode pdf-view-mode
+                                                                dired-mode doc-view-mode
+                                                                text-mode))
 #+END_SRC
 
 Select a scope to highlight delimiter. Possible values are:
