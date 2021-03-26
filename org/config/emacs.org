@@ -4809,8 +4809,8 @@ Emacs throws me an error about the python interpreter, let’s silence it:
 I need to point to racer where the source code of Rust is located so I can get
 some documentation. This is installed with the ~rust-src~ component you can get
 through ~rustup~. To install it, simply run
-#+BEGIN_SRC shell :tangle no :exports code
-  $ rustup component add rust-src
+#+BEGIN_SRC sh :tangle no :exports code
+  rustup component add rust-src
 #+END_SRC
 
 Now, the source code for Rust should be included in your installation. I
@@ -4824,8 +4824,8 @@ search for documentation in the stable sources:
 Rust’s default ~cargo check~ command is already very good, however I also enjoy
 getting some more hints while developping, and ~clippy~ does a very good job at
 it. To get clippy, I need to run the following to install it:
-#+BEGIN_SRC shell
-  $ rustup compontent add clippy
+#+BEGIN_SRC sh :tangle no :exports code
+  rustup compontent add clippy
 #+END_SRC
 
 And this will get it installed with all of my Rust toolchain, and it will be
@@ -5025,6 +5025,7 @@ The user can also add some tags if they wish to.
 *** Org blocks
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Snippets-org-mode_snippets-Org_blocks-e4dfc448
+:HEADER-ARGS:snippet: :padline no :mkdirp yes
 :END:
 Now, Let’s write some snippets for org blocks. The first one is for a comment
 block, then two snippets for an unnamed and a named Elisp source block, and two
