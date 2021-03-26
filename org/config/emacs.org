@@ -1504,6 +1504,26 @@ the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
      (t (error "Invalid argument %s, neither stringp nor listp" $path))))
 #+END_SRC
 
+*** ~phundrak/all?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
+:END:
+This function is inspired by dash’s ~-all?~ function: it will test all the
+elements of the list ~seq~ against the predicate ~fn~ which should return either
+~t~ or ~nil~. If all of them return something else than ~nil~, then it is a
+success, otherwise it is a failure. Note that empty lists will always return
+~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/all? (fn seq)
+    "Check if all members of `SEQ' satisfy predicate `FN'. Note that
+  it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (funcall fn (car seq))
+             (phundrak/all? fn (cdr seq)))
+      t))
+#+END_SRC
+
 *** ~phundrak/add-all-to-list~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-add-all-to-list-a8b2680d
@@ -1681,6 +1701,24 @@ the root of the git repository, else it will return ~nil~.
       (if (f-dir? (concat $path "/.git"))
           $path
         (phundrak/git-repo-root (f-parent $path)))))
+#+END_SRC
+
+*** ~phundrak/none?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
+:END:
+In the same vein as ~phundrak/all?~, ~phundrak/none?~ checks if all elements of
+~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
+return ~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/none? (fn seq)
+    "Check if all members of `SEQ' do not satisfy predicate `FN'.
+  Note that it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (not (funcall fn (car seq)))
+             (phundrak/none? fn (cdr seq)))
+      t))
 #+END_SRC
 
 *** ~phundrak/prompt-toggle-abbreviation~
