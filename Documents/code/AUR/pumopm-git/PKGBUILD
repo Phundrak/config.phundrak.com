@@ -1,0 +1,43 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+pkgname=pumopm-git
+pkgver=0.1.1.r1.g4fd33bf
+pkgrel=3
+pkgdesc="A tiny power manager written in Rust"
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url="https://labs.phundrak.com/phundrak/pumopm"
+license=('GPL3')
+depends=()
+makedepends=('rustup' 'git')
+options=('strip' 'zipman')
+source=("$pkgname::git+https://labs.phundrak.com/phundrak/pumopm.git#branch=develop")
+md5sums=('SKIP')
+conflicts=('pumopm' 'pumopm-bin')
+# If Phundrak’s Gitea takes too long to answer, or if it is down, use the
+# Github mirror
+# source=("$pkgname}::git+https://github.com/Phundrak/pumopm.git#branch=develop")
+
+pkgver() {
+	cd "$pkgname"
+  git describe --tags --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "$pkgname"
+  if command -v rustup >/dev/null 2>&1; then
+    RUSTFLAGS="-C target-cpu=native" rustup run stable cargo build --release
+  elif rustc --version | grep -q stable; then
+    RUSTFLAGS="-C target-cpu=native" cargo build --release
+  else
+    cargo build --release
+  fi
+}
+
+package() {
+  cd "$pkgname"
+  install -Dm755 "target/release/pumopm" "$pkgdir/usr/bin/pumopm"
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "pumopm.1" "$pkgdir/usr/share/man/man1/pumopm.1"
+  install -Dm644 "pumopm.service" "$pkgdir/usr/lib/systemd/system/pumopm.service"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,52 @@
+# Maintainer: Jason Ryan <jasonwryan@gmail.com>
+# Contributor: Steven Allen <steven@stebalien.com>
+# Contributor: Army
+# Contributor: Bastien Dejean <baskerville@lavabit.com>
+
+_name=sxiv
+pkgname="${_name}-bepo-git"
+pkgver=2020.01.16
+pkgrel=2
+pkgdesc="Simple (or small or suckless) X Image Viewer"
+arch=('i686' 'x86_64')
+url="https://github.com/muennich/${_name}"
+license=('GPL2')
+depends=('imlib2' 'libexif' 'libxft' 'hicolor-icon-theme')
+makedepends=('git')
+provides=("${_name}")
+conflicts=("${_name}" "${_name}-git")
+source=("${_name}::git+${url}.git" config.h)
+md5sums=('SKIP'
+         '0a944f532b962cac835ee65d616be61b')
+
+
+pkgver() {
+  cd "${srcdir}/${_name}"
+  git log -1 --format="%cd" --date=short | sed 's/-/./g'
+}
+
+prepare() {
+  # echo =====================
+  # echo srcdir $srcdir
+  cd "${srcdir}/${_name}"
+  # use your customisations if present
+  [[ -f $srcdir/config.h ]] && cp $srcdir/config.h .
+
+  # Allow custom FLAGS
+  sed -i Makefile -e 's|^CFLAGS\s*=|CFLAGS +=|' -e 's|^LDFLAGS\s*=|LDFLAGS +=|'
+}
+
+build() {
+  cd "$srcdir/${_name}"
+  export CFLAGS="$CFLAGS $CPPFLAGS"
+  make PREFIX="/usr"
+}
+
+package() {
+  cd "$srcdir/${_name}"
+  make PREFIX="/usr" DESTDIR="$pkgdir" install
+  make -C icon PREFIX="/usr" DESTDIR="$pkgdir" install
+  install -Dm644 sxiv.desktop "$pkgdir/usr/share/applications/${_name}.desktop"
+}
+
+# vim:set ts=2 sw=2 et:

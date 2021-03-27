@@ -1,0 +1,42 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+
+_pkgname=sent
+pkgname=${_pkgname}-phundrak-git
+pkgver=r130.0a30ccc
+pkgrel=1
+pkgdesc="Simple plain-text presentation tool"
+arch=('i686' 'x86_64')
+url="http://tools.suckless.org/${_pkgname}"
+license=('MIT')
+depends=('fontconfig' 'libxft')
+optdepends=('farbfeld: PNG and JPEG support')
+makedepends=('git')
+conflicts=('sent' 'sent-git')
+source=("$pkgname::git+https://labs.phundrak.com/phundrak/sent")
+sha256sums=('SKIP')
+#        "config.h")
+#            'SKIP')
+
+pkgver() {
+	cd "${pkgname}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/${pkgname}"
+	if [ -f "${srcdir}/config.h" ]; then
+		cp "${srcdir}/config.h" .
+	fi
+}
+
+build() {
+	make -C "${srcdir}/${pkgname}"
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make PREFIX="/usr" \
+		 DESTDIR="${pkgdir}" \
+		 install
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
