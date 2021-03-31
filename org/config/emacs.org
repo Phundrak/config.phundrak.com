@@ -559,11 +559,16 @@ enabled support for the ~cmake-ide~ package.
 #+END_SRC
 
 Next, we have the Docker, Nginx, Pass (the standard Unix password manager),
-Prettier, Systemd, Meson, Imenu-list, Web-beautify, Dap, Helpful, and LSP layers
-enabled.
+Prettier, Systemd, Meson, Imenu-list, Web-beautify, Dap, and Helpful.
 #+BEGIN_SRC emacs-lisp
-  dap docker helpful imenu-list lsp meson nginx pass prettier systemd
-  web-beautify
+  dap docker helpful imenu-list meson nginx pass prettier systemd web-beautify
+#+END_SRC
+
+Of course, let’s not forget about the awesome LSP layer:
+#+BEGIN_SRC emacs-lisp
+  (lsp :variables lsp-lens-enable t
+                  lsp-use-lsp-ui t
+                  lsp-rust-server 'rust-analyzer)
 #+END_SRC
 
 We also have the RestClient layer enabled for which I enabled the Org
