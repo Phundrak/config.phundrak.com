@@ -253,9 +253,9 @@ Let’s set in a custom varible what packages we’ll be needing.
   fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
   gnuplot go go-tools golangci-lint-bin graphviz htop hugo i3lock-color \
   inetutils isync inter-font javascript-typescript-langserver js-beautify \
-  jfsutils jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate ly \
-  meson minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv \
-  mupdf-tools nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
+  jfsutils jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
+  minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools \
+  nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
   network-manager-applet networkmanager networkmanager-openvpn \
   nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
   noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
@@ -559,18 +559,6 @@ Let’s ask the question.
       printf "\n# Enabling ssh server #########################################################\n\n"
       sudo systemctl enable --now sshd
   end
-#+END_SRC
-
-*** Ly
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Ly-f4b161c0
-:END:
-Ly is a display manager based on ncurses which I find nice enough for me to use
-(I generally don’t like using display managers). Let’s enable it, and let’s
-disable tty2 while we’re at it (Ly uses it to run X).
-#+BEGIN_SRC fish
-  sudo systemctl disable getty@tty2
-  sudo systemctl enable --now ly
 #+END_SRC
 
 *** Acpilight
