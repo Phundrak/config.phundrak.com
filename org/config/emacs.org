@@ -1951,6 +1951,16 @@ each time we open one:
   (diredfl-global-mode 1)
 #+END_SRC
 
+*** Emacs Lisp
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Emacs-Lisp-219d4260
+:END:
+For some reason, =flycheck-mode= is not enabled by default when in an elisp
+buffer. Let’s add that:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+#+END_SRC
+
 *** Eshell
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-3012e67e
