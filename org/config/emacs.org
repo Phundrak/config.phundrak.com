@@ -3940,10 +3940,11 @@ user. Unfortunately, a lot of these files are just noise I don’t care about, b
 fortunately we can ignore files with the variable ~recentf-exclude~. So, I will
 ignore these paths:
 #+name: recentf-ignored-paths
-| =~/.mail/=        |
-| =~/.emacs.d/=     |
-| =~/.elfeed/index= |
-| =/tmp/=           |
+| =~/.mail/=         |
+| =~/.emacs.d/=      |
+| =~/.config/emacs/= |
+| =~/.elfeed/index=  |
+| =/tmp/=            |
 
 #+name: recentf-ignored-paths-gen
 #+header: :var paths=recentf-ignored-paths
