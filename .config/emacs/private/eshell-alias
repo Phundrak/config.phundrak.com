@@ -36,7 +36,7 @@ alias mp3        youtube-dl -x --audio-format flac --audio-quality 0 $*
 alias wget       wget -c $*
 alias rsync      rsync -ruvtEhl --progress $*
 
-alias remove     sudo pacman -Rscnd $*
+alias remove     sudo pacman -Rsc $*
 
 alias gpumeminfo grep -i --color memory /var/log/Xorg.0.log
 alias diskspace  sudo df -h | grep -E "sd|lv|Size" | sort

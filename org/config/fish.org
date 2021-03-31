@@ -322,10 +322,10 @@ simply type =purge=. And if I want to simply seach among the =pacman= repos, I
 can type =search=. Otherwise, if I want to include AUR results, I’ll use =paru=.
 
 #+NAME: pm-abbr
-| abbreviation | command            |
-|--------------+--------------------|
-| remove       | sudo pacman -Rscnd |
-| purge        | paru -Sc           |
+| abbreviation | command          |
+|--------------+------------------|
+| remove       | sudo pacman -Rsc |
+| purge        | paru -Sc         |
 
 #+BEGIN_SRC fish
   <<generate-abbr(table=pm-abbr)>>
