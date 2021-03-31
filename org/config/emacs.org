@@ -2631,12 +2631,12 @@ of:
   :END:
   # A regular comment
   This is an example org file, with [[https://config.phundrak.com/emacs][a link]], a {{{macro(with arguments)}}}, an <<anchor>>, /text in italic/, __undelined__, *bold*, +striken through+, some ~code~ and =verbatim=, some^{superscript} and_{subscript}, a code block and a bullet list:
+   ,* Element 1
+   ,* Element 2
   ,#+header :export code
   ,#+BEGIN_SRC emacs-lisp
     (message "Hello World!")
   ,#+END_SRC
-   ,* Element 1
-   ,* Element 2
   | /    |     <r> |   <c>    | <     |
   | This |      is |    a     | table |
   |------+---------+----------+-------|
