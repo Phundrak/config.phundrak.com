@@ -74,7 +74,7 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-phundrak-git"
-pkgver=28.0.50.147467
+pkgver=28.0.50.147540
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch. Phundrak’s tweaks."
 arch=('x86_64' )
@@ -95,8 +95,8 @@ md5sums=('SKIP')
 
 ################################################################################
 
-CFLAGS+=" -O2 -march=native"
-CXXFLAGS+=" -O2 -march=native"
+CFLAGS+=" -O3 -march=skylake"
+CXXFLAGS+=" -O3 -march=skylake"
 
 if [[ $LTO == "YES" ]]; then
   CFLAGS+=" -flto"
