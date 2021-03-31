@@ -1432,49 +1432,7 @@ in Elisp code.
 Almost all of my code snippets will be prefixed by either my name or the name of
 the package or layer they are part of, unless they are an explicit overwrite of
 a function that already exists.
-*** Predicates
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
-:END:
-**** ~phundrak/all?~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
-:END:
-This function is inspired by dash’s ~-all?~ function: it will test all the
-elements of the list ~seq~ against the predicate ~fn~ which should return either
-~t~ or ~nil~. If all of them return something else than ~nil~, then it is a
-success, otherwise it is a failure. Note that empty lists will always return
-~t~.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/all? (fn seq)
-    "Check if all members of `SEQ' satisfy predicate `FN'. Note that
-  it will return t if `SEQ' is nil."
-    (declare (pure t) (side-effect-free t))
-    (if seq
-        (and (funcall fn (car seq))
-             (phundrak/all? fn (cdr seq)))
-      t))
-#+END_SRC
-
-**** ~phundrak/none?~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
-:END:
-In the same vein as ~phundrak/all?~, ~phundrak/none?~ checks if all elements of
-~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
-return ~t~.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/none? (fn seq)
-    "Check if all members of `SEQ' do not satisfy predicate `FN'.
-  Note that it will return t if `SEQ' is nil."
-    (declare (pure t) (side-effect-free t))
-    (if seq
-        (and (not (funcall fn (car seq)))
-             (phundrak/none? fn (cdr seq)))
-      t))
-#+END_SRC
-
-*** Eshell prompt-related functions
+*** Eshell Prompt-Related Functions
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Eshell-prompt-related-functions-79d07f21
 :END:
@@ -1625,7 +1583,7 @@ the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
      (t (error "Invalid argument %s, neither stringp nor listp" $path))))
 #+END_SRC
 
-*** Files-related functions
+*** Files-Related Functions
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Files-related-functions-0b66f353
 :END:
@@ -1775,6 +1733,81 @@ argument. Here is how it is implemented:
     `(propertize ,$str 'face (list ,@$properties)))
 #+END_SRC
 
+*** Elisp Utilities and Predicates
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
+:END:
+**** ~phundrak/all?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
+:END:
+This function is inspired by dash’s ~-all?~ function: it will test all the
+elements of the list ~seq~ against the predicate ~fn~ which should return either
+~t~ or ~nil~. If all of them return something else than ~nil~, then it is a
+success, otherwise it is a failure. Note that empty lists will always return
+~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/all? (fn seq)
+    "Check if all members of `SEQ' satisfy predicate `FN'. Note that
+  it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (funcall fn (car seq))
+             (phundrak/all? fn (cdr seq)))
+      t))
+#+END_SRC
+
+**** ~phundrak/none?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
+:END:
+In the same vein as ~phundrak-all?~, ~phundrak-none?~ checks if all elements of
+~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
+return ~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/none? (fn seq)
+    "Check if all members of `SEQ' do not satisfy predicate `FN'.
+  Note that it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (not (funcall fn (car seq)))
+             (phundrak/none? fn (cdr seq)))
+      t))
+#+END_SRC
+
+**** ~phundrak/var-or-if-nil~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
+:END:
+This simple function helps me return either the value ~var~ holds, or if it is
+~nil~ it will return the value ~value~ holds (or will return).
+#+BEGIN_SRC emacs-lisp
+  (defmacro phundrak/var-or-if-nil (var value)
+    "Return the result yield by `VALUE' if `VAR' is nil, return `VAR' otherwise."
+    (if (null var)
+        value
+      var))
+#+END_SRC
+
+**** ~phundrak/zip~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-zip-8a49b20f
+:END:
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak/zip (&rest lists)
+    "Zip `LISTS' together.
+
+  Be aware only the amount of elements of the smallest list will be zipped."
+    (declare (pure t) (side-effect-free t))
+    (when lists
+      (let ((lists (if (= 1 (length lists)) ; only one element => a list of lists was passed
+                       (car lists)
+                     lists)))
+        (when (phundrak-none? 'null lists)
+          (cons (mapcar 'car lists)
+                (phundrak/zip (mapcar 'cdr lists)))))))
+#+END_SRC
+
 *** ~phundrak/blog-publish~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
@@ -1798,21 +1831,6 @@ copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
           (copy-file (concat public-path "/" file)
                      (concat target-path "/" file)
                      t nil t)))))
-#+END_SRC
-
-*** ~phundrak/var-or-if-nil~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
-:END:
-This simple function helps me return either the value ~var~ holds, or if it is
-~nil~ it will return the value ~value~ holds (or will return).
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak/var-or-if-nil ($var $value)
-    "Return the result yield by `$VALUE' if `$VAR' is nil, return
-  `$VAR' otherwise"
-    (if (null $var)
-        $value
-      $var))
 #+END_SRC
 
 *** ~phundrak/yas-rust-new-assignments~
