@@ -84,17 +84,17 @@ powerline-fonts prettier pulseaudio-bluetooth python-autoflake python-epc \
 python-importmagic python-language-server python-nose python-pip python-poetry \
 python-ptvsd python-pytest qt5-imageformats qemu r raw-thumbnailer reflector \
 ripgrep rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent \
-shadow siji-git simplescreenrecorder sshfs sxiv texlive-bin \
-texlive-langchinese texlive-langcyrillic texlive-langgreek \
-texlive-langjapanese texlive-langkorean texlive-latexextra \
-texlive-localmanager-git texlive-most tldr tmux tree ttf-arphic-uming \
-ttf-baekmuk ttf-charis-sil ttf-dejavu ttf-google-fonts-opinionated-git \
-ttf-hanazono ttf-joypixels ttf-koruri ttf-liberation ttf-monapo ttf-sazanami \
-ttf-tibetan-machine typescript typescript-language-server-bin unicode-emoji \
-unrar usbutils valgrind vscode-css-languageserver-bin \
-vscode-html-languageserver-bin w3m wget x11-ssh-askpass xclip \
-xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs xorg-drivers xorg-server \
-xorg-xinit xss-lock xvkbd xwallpaper yaml-language-server-bin zeal
+shadow siji-git simplescreenrecorder sshfs sxiv texlive-bibtexextra \
+texlive-fontsextra texlive-formatsextra texlive-humanities \
+texlive-langjapanese texlive-pictures texlive-pstricks texlive-publishers \
+texlive-science tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil \
+ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
+ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
+typescript typescript-language-server-bin unicode-emoji unrar usbutils \
+valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
+xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
+yaml-language-server-bin zeal
 
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
