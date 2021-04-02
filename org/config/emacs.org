@@ -2565,6 +2565,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | makefile     |
 | plantuml     |
 | python       |
+| restclient   |
 | sass         |
 | scheme       |
 | shell        |
@@ -2580,7 +2581,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
                      "\n  "))
 #+END_SRC
 
-#+RESULTS[4d07a2b922a402777cb23301dd35399b4f063f43]: org-babel-languages-gen
+#+RESULTS[27e5ca97338f4a5e6874ece62f4e34c854284c59]: org-babel-languages-gen
 #+begin_example
 '((C . t)
   (dot . t)
@@ -2592,6 +2593,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
   (makefile . t)
   (plantuml . t)
   (python . t)
+  (restclient . t)
   (sass . t)
   (scheme . t)
   (shell . t))
