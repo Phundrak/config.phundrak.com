@@ -1,27 +1,27 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
-(defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
+(defvar phundrak--dotspacemacs-src-dir "~/.config/emacs/private/"
   "Directory for my exported Elisp configuration files")
-(defvar phundrak//dotspacemacs-src "~/org/config/emacs.org"
+(defvar phundrak--dotspacemacs-src "~/org/config/emacs.org"
   "My litterate config file for Emacs")
-(defvar phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init"))
-(defvar phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers"))
-(defvar phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config"))
-(defvar phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
-(defvar phundrak//dotspacemacs-files (list phundrak//dotspacemacs-si phundrak//dotspacemacs-sl
-                                           phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
+(defvar phundrak--dotspacemacs-si (concat phundrak--dotspacemacs-src-dir "spacemacs-init"))
+(defvar phundrak--dotspacemacs-sl (concat phundrak--dotspacemacs-src-dir "spacemacs-layers"))
+(defvar phundrak--dotspacemacs-uc (concat phundrak--dotspacemacs-src-dir "user-config"))
+(defvar phundrak--dotspacemacs-ui (concat phundrak--dotspacemacs-src-dir "user-init"))
+(defvar phundrak--dotspacemacs-files (list phundrak--dotspacemacs-si phundrak--dotspacemacs-sl
+                                           phundrak--dotspacemacs-uc phundrak--dotspacemacs-ui))
 
 ;; turn off native comp warnings
 (setq comp-async-report-warnings-errors nil)
 
-(defun phundrak/update-config-files-p (&optional compiled?)
+(defun phundrak-update-config-files-p (&optional compiled?)
   "Verify if any of my exported Elisp configuration files are
 newer than my litterate configuration.
 
 If `compiled?' is `t', check the `.elc' files instead of the
 `.el' files."
   (catch 'ret
-    (dolist (file phundrak//dotspacemacs-files)
-      (when (file-newer-than-file-p phundrak//dotspacemacs-src
+    (dolist (file phundrak--dotspacemacs-files)
+      (when (file-newer-than-file-p phundrak--dotspacemacs-src
                                     (format "%s.%s"
                                             file
                                             (if compiled? "elc" "el")))
@@ -33,18 +33,18 @@ This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
 
-  (when (phundrak/update-config-files-p)
+  (when (phundrak-update-config-files-p)
     (message "Exporting new Emacs configuration from spacemacs.org through org-babel...")
     (require 'ob-tangle)
     (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle-file phundrak//dotspacemacs-src))
+      (org-babel-tangle-file phundrak--dotspacemacs-src))
     (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done"))
-  (load phundrak//dotspacemacs-si))
+  (load phundrak--dotspacemacs-si))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
-  (load phundrak//dotspacemacs-sl))
+  (load phundrak--dotspacemacs-sl))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -60,7 +60,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (load phundrak//dotspacemacs-ui))
+  (load phundrak--dotspacemacs-ui))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -75,7 +75,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (load phundrak//dotspacemacs-uc))
+  (load phundrak--dotspacemacs-uc))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.

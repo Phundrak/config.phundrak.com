@@ -655,30 +655,30 @@ about how I manage writing a litterate config for Spacemacs and ensure Emacs
 starts with an up-to-date configuration from said litterate config. For that, I
 actually declared a couple of variables:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak//dotspacemacs-src-dir "~/.config/emacs/private/"
+  (defvar phundrak--dotspacemacs-src-dir "~/.config/emacs/private/"
     "Directory for my exported Elisp configuration files")
-  (defvar phundrak//dotspacemacs-src "~/org/config/emacs.org"
+  (defvar phundrak--dotspacemacs-src "~/org/config/emacs.org"
     "My litterate config file for Emacs")
-  (defvar phundrak//dotspacemacs-si (concat phundrak//dotspacemacs-src-dir "spacemacs-init"))
-  (defvar phundrak//dotspacemacs-sl (concat phundrak//dotspacemacs-src-dir "spacemacs-layers"))
-  (defvar phundrak//dotspacemacs-uc (concat phundrak//dotspacemacs-src-dir "user-config"))
-  (defvar phundrak//dotspacemacs-ui (concat phundrak//dotspacemacs-src-dir "user-init"))
-  (defvar phundrak//dotspacemacs-files (list phundrak//dotspacemacs-si phundrak//dotspacemacs-sl
-                                             phundrak//dotspacemacs-uc phundrak//dotspacemacs-ui))
+  (defvar phundrak--dotspacemacs-si (concat phundrak--dotspacemacs-src-dir "spacemacs-init"))
+  (defvar phundrak--dotspacemacs-sl (concat phundrak--dotspacemacs-src-dir "spacemacs-layers"))
+  (defvar phundrak--dotspacemacs-uc (concat phundrak--dotspacemacs-src-dir "user-config"))
+  (defvar phundrak--dotspacemacs-ui (concat phundrak--dotspacemacs-src-dir "user-init"))
+  (defvar phundrak--dotspacemacs-files (list phundrak--dotspacemacs-si phundrak--dotspacemacs-sl
+                                             phundrak--dotspacemacs-uc phundrak--dotspacemacs-ui))
 #+END_SRC
 I also declared the following function that tells me if my Elisp files are more
 recent than my ~emacs.org~ file. The ~compiled?~ argument lets me compare either
 the ~.el~ files if it is ~nil~, or the ~.elc~ files if it is ~t~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/update-config-files-p (&optional compiled?)
+  (defun phundrak-update-config-files-p (&optional compiled?)
     "Verify if any of my exported Elisp configuration files are
   newer than my litterate configuration.
 
-  If `compiled?' is `t', check the `.elc' files instead of the
+  If `COMPILED?' is `t', check the `.elc' files instead of the
   `.el' files."
     (catch 'ret
-      (dolist (file phundrak//dotspacemacs-files)
-        (when (file-newer-than-file-p phundrak//dotspacemacs-src
+      (dolist (file phundrak--dotspacemacs-files)
+        (when (file-newer-than-file-p phundrak--dotspacemacs-src
                                       (format "%s.%s"
                                               file
                                               (if compiled? "elc" "el")))
@@ -692,21 +692,21 @@ missed tangling its configuration before launching, so if any of my ~si~, ~sl~,
 and since my user config is growing longer and longer, I want Emacs to be able
 to parse it fast next time it boots, so let’s compile my exported ~.el~ files!
 #+BEGIN_SRC emacs-lisp
-  (when (or (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-si ".el"))
-              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-sl ".el"))
-              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-ui ".el"))
-              (file-newer-than-file-p phundrak//dotspacemacs-src (concat phundrak//dotspacemacs-uc ".el")))
+  (when (or (file-newer-than-file-p phundrak--dotspacemacs-src (concat phundrak--dotspacemacs-si ".el"))
+              (file-newer-than-file-p phundrak--dotspacemacs-src (concat phundrak--dotspacemacs-sl ".el"))
+              (file-newer-than-file-p phundrak--dotspacemacs-src (concat phundrak--dotspacemacs-ui ".el"))
+              (file-newer-than-file-p phundrak--dotspacemacs-src (concat phundrak--dotspacemacs-uc ".el")))
       (message "Exporting new Emacs configuration from spacemacs.org through org-babel...")
       (with-temp-buffer
         (shell-command (format "emacs -Q --batch %s %s %s"
                                "--eval \"(require 'ob-tangle)\""
                                "--eval \"(setq org-confirm-babel-evaluate nil)\""
                                (format "--eval '(org-babel-tangle-file \"%s\")'"
-                                       phundrak//dotspacemacs-src))
+                                       phundrak--dotspacemacs-src))
                        (current-buffer)))
       (message "Exporting new Emacs configuration from spacemacs.org through org-babel...done")
       (with-temp-buffer
-        (byte-recompile-directory phundrak//dotspacemacs-src-dir
+        (byte-recompile-directory phundrak--dotspacemacs-src-dir
                                   0 t)))
 #+END_SRC
 All that’s left to do in the Spacemacs functions is to call ~load~ on ~si~,
@@ -1436,7 +1436,7 @@ a function that already exists.
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Eshell-prompt-related-functions-79d07f21
 :END:
-**** ~phundrak/eshell-git-status~
+**** ~phundrak-eshell-git-status~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-eshell-git-status-28f16e94
 :END:
@@ -1447,7 +1447,7 @@ calls, the function will know what it needs to know about the repo to build a
 git prompt that will be inserted in my Eshell prompt. And just for shit and
 giggles, I’ve made it so it is a powerline prompt.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/eshell-git-status ($path &optional $background-color)
+  (defun phundrak-eshell-git-status ($path &optional $background-color)
     "Returns a string indicating the status of the repository located
   in `$PATH' if it exists. It should also append the name of the
   current branch if it is not `master' or `main'.
@@ -1496,23 +1496,23 @@ giggles, I’ve made it so it is a powerline prompt.
                             (when stashstat "$")
                             " "))
             (accent (cond
-                     (dirty phundrak/nord11)
-                     (staged phundrak/nord13)
-                     (t phundrak/nord14)))
-            (background (phundrak/var-or-if-nil $background-color
-                                                phundrak/nord0)))
+                     (dirty phundrak-nord11)
+                     (staged phundrak-nord13)
+                     (t phundrak-nord14)))
+            (background (phundrak-var-or-if-nil $background-color
+                                                phundrak-nord0)))
         (concat (with-face ""
                            :background accent
                            :foreground background)
                 (with-face prompt
                            :background accent
-                           :foreground (if dirty phundrak/nord6 background))
+                           :foreground (if dirty phundrak-nord6 background))
                 (with-face ""
                            :background background
                            :foreground accent)))))
 #+END_SRC
 
-**** ~phundrak/git-repo-root~
+**** ~phundrak-git-repo-root~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-git-repo-root-f7cf3bb9
 :END:
@@ -1520,32 +1520,32 @@ This function detects if the path passed as an argument points to a git
 directory or to one of its subdirectories. If it is, it will return the path to
 the root of the git repository, else it will return ~nil~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/git-repo-root ($path)
+  (defun phundrak-git-repo-root ($path)
     "Return `$PATH' if it points to a git repository or one of its
   subdirectories."
     (when $path
       (if (f-dir? (concat $path "/.git"))
           $path
-        (phundrak/git-repo-root (f-parent $path)))))
+        (phundrak-git-repo-root (f-parent $path)))))
 #+END_SRC
 
-**** ~phundrak/prompt-toggle-abbreviation~
+**** ~phundrak-prompt-toggle-abbreviation~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-prompt-toggle-abbreviation-753ca549
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak/prompt--abbreviate t
+  (defvar phundrak-prompt--abbreviate t
     "Whether or not to abbreviate the displayed path in the Eshell
   prompt.")
 
-  (defun phundrak/prompt-toggle-abbreviation ()
+  (defun phundrak-prompt-toggle-abbreviation ()
     "Toggles whether the Eshell prompt should shorten the name of
-  the parent directories or not. See `phundrak/eshell-prompt'."
+  the parent directories or not. See `phundrak-eshell-prompt'."
     (interactive)
-    (setq phundrak/prompt--abbreviate (not phundrak/prompt--abbreviate)))
+    (setq phundrak-prompt--abbreviate (not phundrak-prompt--abbreviate)))
 #+END_SRC
 
-**** ~phundrak/abbr-path~
+**** ~phundrak-abbr-path~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3
 :END:
@@ -1554,7 +1554,7 @@ the name of all the parent directories of the current one in its path, but
 leaves the current one written in full. It also abbreviates the equivalent of
 the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/abbr-path ($path &optional $abbreviate)
+  (defun phundrak-abbr-path ($path &optional $abbreviate)
     "Abbreviate `$PATH'. If `$ABBREVIATE' is t, then all parent
   directories of the current directory will be abbreviated to one
   letter only. If a parent directory is a hidden directory (i.e.
@@ -1569,7 +1569,7 @@ the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
     (cond
      ((stringp $path) (f-short
                        (if $abbreviate
-                           (phundrak/abbr-path (f-split (phundrak/abbr-path $path)))
+                           (phundrak-abbr-path (f-split (phundrak-abbr-path $path)))
                          $path)))
      ((null $path) "")
      ((listp $path)
@@ -1579,7 +1579,7 @@ the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
                          (if (string= "." first-char)
                              (s-left 2 dir)
                            first-char))))
-              (phundrak/abbr-path (cdr $path))))
+              (phundrak-abbr-path (cdr $path))))
      (t (error "Invalid argument %s, neither stringp nor listp" $path))))
 #+END_SRC
 
@@ -1587,19 +1587,19 @@ the ~$HOME~ (~/home/<username>/~) directory to a simple =~=.
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Files-related-functions-0b66f353
 :END:
-**** ~phundrak/file-to-string~
+**** ~phundrak-file-to-string~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-file-to-string-efab0fba
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/file-to-string (FILE)
+  (defun phundrak-file-to-string (FILE)
     "Returns the content of `FILE' as a string."
     (with-temp-buffer
       (insert-file-contents FILE)
       (buffer-string)))
 #+END_SRC
 
-**** ~phundrak/find-org-files~
+**** ~phundrak-find-org-files~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-phundrak-find-org-files-a8fd200f
 :END:
@@ -1611,11 +1611,11 @@ conlanging files which are located in =~/Documents/conlanging=, and all my
 university notes are in =~/Documents/university=. Let’s declare these
 directories in a variable:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak/org-directories '("~/org"
+  (defvar phundrak-org-directories '("~/org"
                                      "~/Documents/university/S8"
                                      "~/Documents/conlanging")
     "Directories in which to look for org files with the function
-  `phundrak/find-org-files'.")
+  `phundrak-find-org-files'.")
 #+END_SRC
 
 With this established, let’s write some emacs-lisp that will allow me to get a
@@ -1623,9 +1623,9 @@ list of all these files and select them through helm. Be aware that I will be
 using some functions from third party packages, such as [[https://github.com/magnars/s.el][s.el]] and [[https://github.com/magnars/dash.el][dash]], as well
 as [[https://github.com/sharkdp/fd][fd]].
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/find-org-files ()
+  (defun phundrak-find-org-files ()
     "Find all org files in the directories listed in
-  `phundrak/org-directories', then list them in an ido buffer where
+  `phundrak-org-directories', then list them in an ido buffer where
   the user can match one and open it."
     (interactive)
     (find-file
@@ -1635,11 +1635,11 @@ as [[https://github.com/sharkdp/fd][fd]].
                (mapconcat (lambda (path)
                             (shell-command-to-string
                              (format "fd . %s -e org -c never" path)))
-                          phundrak/org-directories
+                          phundrak-org-directories
                           "\n")))))
 #+END_SRC
 
-**** ~phundrak/open-marked-files~
+**** ~phundrak-open-marked-files~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-open-marked-files-b87d37f7
 :END:
@@ -1647,7 +1647,7 @@ This function is particularly useful in Dired buffers when someone wants to open
 multiple files. This function will basically look for all marked files in the
 current dired buffer and open each one of them in their individual buffer.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/open-marked-files ()
+  (defun phundrak-open-marked-files ()
     "This function allows the user to open all marked files in a
   Dired buffer at once."
     (interactive)
@@ -1702,22 +1702,22 @@ Emacs, or an HTML file in Firefox. With this function, it is now possible!
 Yes, I do use a preconfigured theme, as mentioned above, but for some elements
 such as Eshell, I need to define some variables for color, and I’ll do it here.
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak/nord0  "#2e3440")
-  (defvar phundrak/nord1  "#3b4252")
-  (defvar phundrak/nord2  "#434c5e")
-  (defvar phundrak/nord3  "#4c566a")
-  (defvar phundrak/nord4  "#d8dee9")
-  (defvar phundrak/nord5  "#e5e9f0")
-  (defvar phundrak/nord6  "#eceff4")
-  (defvar phundrak/nord7  "#8fbcbb")
-  (defvar phundrak/nord8  "#88c0d0")
-  (defvar phundrak/nord9  "#81a1c1")
-  (defvar phundrak/nord10 "#5e81ac")
-  (defvar phundrak/nord11 "#bf616a")
-  (defvar phundrak/nord12 "#d08770")
-  (defvar phundrak/nord13 "#ebcb8b")
-  (defvar phundrak/nord14 "#a3be8c")
-  (defvar phundrak/nord15 "#b48ead")
+  (defvar phundrak-nord0  "#2e3440")
+  (defvar phundrak-nord1  "#3b4252")
+  (defvar phundrak-nord2  "#434c5e")
+  (defvar phundrak-nord3  "#4c566a")
+  (defvar phundrak-nord4  "#d8dee9")
+  (defvar phundrak-nord5  "#e5e9f0")
+  (defvar phundrak-nord6  "#eceff4")
+  (defvar phundrak-nord7  "#8fbcbb")
+  (defvar phundrak-nord8  "#88c0d0")
+  (defvar phundrak-nord9  "#81a1c1")
+  (defvar phundrak-nord10 "#5e81ac")
+  (defvar phundrak-nord11 "#bf616a")
+  (defvar phundrak-nord12 "#d08770")
+  (defvar phundrak-nord13 "#ebcb8b")
+  (defvar phundrak-nord14 "#a3be8c")
+  (defvar phundrak-nord15 "#b48ead")
 #+END_SRC
 
 **** ~with-face~
@@ -1737,7 +1737,30 @@ argument. Here is how it is implemented:
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
 :END:
-**** ~phundrak/all?~
+**** ~phundrak-filter~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-filter-2d3c5a5b
+:END:
+#+BEGIN_SRC emacs-lisp
+(defun phundrak-filter (fn list)
+  "Filter `LIST' according to the predicate `FN'.
+
+All elements from `LIST' that do not satisfy the predicate `FN'
+will be left out of the result, while all elements that do
+satisfy it will be included in the resulting list. This function
+also preserves the relative position between elements that
+satisfy the predicate."
+  (declare (pure t) (side-effect-free t))
+  (when list
+    (let ((rest (phundrak-filter fn
+                                 (cdr list))))
+      (if (funcall fn
+                   (car list))
+          (cons (car list) rest)
+        rest))))
+#+END_SRC
+
+**** ~phundrak-all?~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
 :END:
@@ -1747,17 +1770,17 @@ elements of the list ~seq~ against the predicate ~fn~ which should return either
 success, otherwise it is a failure. Note that empty lists will always return
 ~t~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/all? (fn seq)
+  (defun phundrak-all? (fn seq)
     "Check if all members of `SEQ' satisfy predicate `FN'. Note that
   it will return t if `SEQ' is nil."
     (declare (pure t) (side-effect-free t))
     (if seq
         (and (funcall fn (car seq))
-             (phundrak/all? fn (cdr seq)))
+             (phundrak-all? fn (cdr seq)))
       t))
 #+END_SRC
 
-**** ~phundrak/none?~
+**** ~phundrak-none?~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
 :END:
@@ -1765,36 +1788,36 @@ In the same vein as ~phundrak-all?~, ~phundrak-none?~ checks if all elements of
 ~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
 return ~t~.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/none? (fn seq)
+  (defun phundrak-none? (fn seq)
     "Check if all members of `SEQ' do not satisfy predicate `FN'.
   Note that it will return t if `SEQ' is nil."
     (declare (pure t) (side-effect-free t))
     (if seq
         (and (not (funcall fn (car seq)))
-             (phundrak/none? fn (cdr seq)))
+             (phundrak-none? fn (cdr seq)))
       t))
 #+END_SRC
 
-**** ~phundrak/var-or-if-nil~
+**** ~phundrak-var-or-if-nil~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
 :END:
 This simple function helps me return either the value ~var~ holds, or if it is
 ~nil~ it will return the value ~value~ holds (or will return).
 #+BEGIN_SRC emacs-lisp
-  (defmacro phundrak/var-or-if-nil (var value)
+  (defmacro phundrak-var-or-if-nil (var value)
     "Return the result yield by `VALUE' if `VAR' is nil, return `VAR' otherwise."
     (if (null var)
         value
       var))
 #+END_SRC
 
-**** ~phundrak/zip~
+**** ~phundrak-zip~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-zip-8a49b20f
 :END:
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/zip (&rest lists)
+  (defun phundrak-zip (&rest lists)
     "Zip `LISTS' together.
 
   Be aware only the amount of elements of the smallest list will be zipped."
@@ -1805,10 +1828,10 @@ This simple function helps me return either the value ~var~ holds, or if it is
                      lists)))
         (when (phundrak-none? 'null lists)
           (cons (mapcar 'car lists)
-                (phundrak/zip (mapcar 'cdr lists)))))))
+                (phundrak-zip (mapcar 'cdr lists)))))))
 #+END_SRC
 
-*** ~phundrak/blog-publish~
+*** ~phundrak-blog-publish~
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-blog-publish-99c96b2d
 :END:
@@ -1817,7 +1840,7 @@ based on Hugo. After exporting my blog using ~ox-hugo~, I simply have to call
 this function which will look for all files located in =~/org/blog/public= and
 copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/blog-publish ()
+  (defun phundrak-blog-publish ()
     "Publish my blog through Hugo and rsync to my remote server."
     (interactive)
     (let* ((blog-path "~/org/blog")
@@ -1833,7 +1856,7 @@ copy them to my remote server once ~hugo~ has been executed in =~/org/blog=.
                      t nil t)))))
 #+END_SRC
 
-*** ~phundrak/yas-rust-new-assignments~
+*** ~phundrak-yas-rust-new-assignments~
 :PROPERTIES:
 :CUSTOM_ID: Custom-functions-yas-rust-new-assignments-4ad16bde
 :END:
@@ -1843,14 +1866,14 @@ function, it will automatically write assignments to my new struct as I write
 new parameters in the ~new~ function. It also comes with a helper function that
 parses the arguments given to the ~new~ function.
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak//yas-snippet-split-rust-args ($arg-string)
+  (defun phundrak--yas-snippet-split-rust-args ($arg-string)
     "Split a Rust argument string `$ARG-STRING' into ((name,
   default)...) tuples"
     (mapcar (lambda ($elem)
               (split-string $elem "[[:blank:]]*:[[:blank:]]*" t))
             (split-string $arg-string "[[:blank:]]*,[[:blank:]]*" t)))
 
-  (defun phundrak/yas-rust-new-assignments ($arg-string)
+  (defun phundrak-yas-rust-new-assignments ($arg-string)
     "Return a typical new assignment for arguments.
 
   Inspired from elpy’s functions https://github.com/jorgenschaefer/elpy"
@@ -1862,7 +1885,7 @@ parses the arguments given to the ~new~ function.
                    (if (string-match "^\\*" (car $elem))
                        ""
                      (format "%s,\n%s" (car $elem) indentation)))
-                 (phundrak//yas-snippet-split-rust-args $arg-string)
+                 (phundrak--yas-snippet-split-rust-args $arg-string)
                  "")))
 #+END_SRC
 
@@ -2133,7 +2156,7 @@ Now, we can get our partitions. For this, we’ll make a call to the shell comma
 ~/dev~, for instance on ~/dev/sda~. And as mentioned above, if the mount path of
 the partition exceeds the length specified by
 ~phundrak//eshell-banner--max-length-part~, it will get abbreviated by
-[[#User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3][~phundrak/abbr-path~]].
+[[#User-Configuration-Custom-functions-macros-and-variables-phundrak-abbr-path-559b46e3][~phundrak-abbr-path~]].
 #+BEGIN_SRC emacs-lisp
   (defun phundrak/get-mounted-partitions ()
     (let ((partitions (s-split "\n"
@@ -2150,7 +2173,7 @@ the partition exceeds the length specified by
                    (make-phundrak/mounted-partitions
                     :path (if (> phundrak//eshell-banner--max-length-part (length mount))
                               mount
-                            (phundrak/abbr-path mount t))
+                            (phundrak-abbr-path mount t))
                     :size size
                     :used used
                     :percent (string-to-number (s-chop-suffix "%" percent))))))
@@ -2188,13 +2211,13 @@ consider this a warning, and the percentage will be displayed in orange. Above
   (defun phundrak//eshell-banner--color-percentage (percentage)
     (cond
      ((> percentage phundrak//eshell-banner--critical-percentage)
-      (with-face (format "%2d" percentage) :foreground phundrak/nord11))
+      (with-face (format "%2d" percentage) :foreground phundrak-nord11))
      ((> percentage phundrak//eshell-banner--warning-percentage)
-      (with-face (format "%2d" percentage) :foreground phundrak/nord12))
+      (with-face (format "%2d" percentage) :foreground phundrak-nord12))
      ((> percentage phundrak//eshell-banner--notice-percentage)
-      (with-face (format "%2d" percentage) :foreground phundrak/nord13))
+      (with-face (format "%2d" percentage) :foreground phundrak-nord13))
      (t
-      (with-face (format "%2d" percentage) :foreground phundrak/nord14))))
+      (with-face (format "%2d" percentage) :foreground phundrak-nord14))))
 #+END_SRC
 
 This function will be used when displaying progress bars. These will be used for
@@ -2210,13 +2233,13 @@ the percentage should be between 0 and 100.
            (length-red   (- length length-green)))
       (concat (with-face "[" :weight 'bold)
               (with-face (s-repeat length-green "=")
-                         :weight 'bold :foreground phundrak/nord14)
+                         :weight 'bold :foreground phundrak-nord14)
               (with-face (s-repeat length-red "=")
-                         :weight 'bold :foreground phundrak/nord11)
+                         :weight 'bold :foreground phundrak-nord11)
               (with-face "]" :weight 'bold))))
 #+END_SRC
 
-This function will be used in two distinct functions: ~phundrak/eshell-banner~
+This function will be used in two distinct functions: ~phundrak-eshell-banner~
 which we will see later, and ~phundrak//eshell-banner--display-memory~ which we
 will see now. This function displays information for the two types of memory we
 have, RAM and Swap memory. Here is the definition of this function:
@@ -2255,14 +2278,14 @@ quite similar to the above one:
 
 And we can now build our banner! Here is our function that does exactly that:
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/eshell-banner ()
+  (defun phundrak-eshell-banner ()
     (let* ((partitions        (phundrak/get-mounted-partitions))
            (os                (replace-regexp-in-string
                                ".*\"\\(.+\\)\""
                                "\\1"
                                (car (-filter (lambda (line)
                                                (s-contains? "PRETTY_NAME" line))
-                                             (s-lines (phundrak/file-to-string "/etc/os-release"))))))
+                                             (s-lines (phundrak-file-to-string "/etc/os-release"))))))
            (memory            (-map (lambda (line)
                                       (s-split " " line t))
                                     (s-split "\n"
@@ -2316,13 +2339,13 @@ And we can now build our banner! Here is our function that does exactly that:
 #+END_SRC
 
 We now only have to set the result of this function as our Eshell banner. Since
-a simple ~setq~ would only run ~phundrak/eshell-banner~ once when Emacs starts,
+a simple ~setq~ would only run ~phundrak-eshell-banner~ once when Emacs starts,
 we’ll actually make Emacs set the value of ~eshell-banner-message~ each time it
 is required by Eshell with a hook:
 #+BEGIN_SRC emacs-lisp
   (add-hook 'eshell-banner-load-hook
             (lambda ()
-              (setq eshell-banner-message (phundrak/eshell-banner))))
+              (setq eshell-banner-message (phundrak-eshell-banner))))
 #+END_SRC
 
 **** Eshell theme
@@ -2333,15 +2356,15 @@ As with most shells, again, it is possible to customize the appearance of the
 Eshell prompt. As you can see, my prompt has some Nord colors, a shortened path,
 a git prompt, and an indicator of whether the previous command succeeded or
 failed. Note however that the abbreviation of the current path depends on the
-value of ~phundrak/prompt--abbreviate~, if it is ~t~ it is abbreviated;
+value of ~phundrak-prompt--abbreviate~, if it is ~t~ it is abbreviated;
 otherwise, it is kept in full. It can be toggled with a keyboard shortcut, see
 [[#User_Configuration-Shortcuts-Toggle-d53c27ef][Keybindings: Toggle]].
 #+BEGIN_SRC emacs-lisp
-  (defun phundrak/eshell-prompt ()
+  (defun phundrak-eshell-prompt ()
     "Definition of my prompt for Eshell
 
   It displays a powerline prompt, with first an abbreviated path to
-  the current directory. If `phundrak/prompt--abbreviate' is `t',
+  the current directory. If `phundrak-prompt--abbreviate' is `t',
   then all preceding directories will be abbreviated to one
   character, except hidden directory which first character will be
   preceded by a dot. Otherwise, the full name of the directories is
@@ -2349,30 +2372,30 @@ otherwise, it is kept in full. It can be toggled with a keyboard shortcut, see
 
   Then, if the current directory is a git repository or one of its
   subdirectories, it will display the current state of the
-  repository. See `phundrak/eshell-git-status'
+  repository. See `phundrak-eshell-git-status'
 
   Finally, a lambda character is displayed, either in blue or in
   red depending on if the last eshell command was a success or a
   failure respectively."
-    (let* ((header-bg   phundrak/nord0)
-           ($path       (phundrak/abbr-path (eshell/pwd)))
-           ($git-path   (phundrak/git-repo-root $path))
-           ($abbr-path  (phundrak/abbr-path $path phundrak/prompt--abbreviate))
-           ($background phundrak/nord1)
-           ($foreground phundrak/nord14)
-           ($success    phundrak/nord10)
-           ($error      phundrak/nord11))
+    (let* ((header-bg   phundrak-nord0)
+           ($path       (phundrak-abbr-path (eshell/pwd)))
+           ($git-path   (phundrak-git-repo-root $path))
+           ($abbr-path  (phundrak-abbr-path $path phundrak-prompt--abbreviate))
+           ($background phundrak-nord1)
+           ($foreground phundrak-nord14)
+           ($success    phundrak-nord10)
+           ($error      phundrak-nord11))
       (concat (with-face (concat " "
-                                 (phundrak/abbr-path (phundrak/var-or-if-nil $git-path $path)
-                                                     phundrak/prompt--abbreviate)
+                                 (phundrak-abbr-path (phundrak-var-or-if-nil $git-path $path)
+                                                     phundrak-prompt--abbreviate)
                                  " ")
                          :foreground $foreground
                          :background $background)
               (when $git-path
-                (concat (phundrak/eshell-git-status $path $background)
+                (concat (phundrak-eshell-git-status $path $background)
                         (with-face (format "%s "
-                                           (let (($in-git-path (phundrak/abbr-path (f-relative $path $git-path)
-                                                                                   phundrak/prompt--abbreviate)))
+                                           (let (($in-git-path (phundrak-abbr-path (f-relative $path $git-path)
+                                                                                   phundrak-prompt--abbreviate)))
                                              (if (string= "." $in-git-path)
                                                  ""
                                                (concat " " $in-git-path))))
@@ -2390,7 +2413,7 @@ otherwise, it is kept in full. It can be toggled with a keyboard shortcut, see
 Now, let’s declare our prompt regexp and our prompt functions:
 #+BEGIN_SRC emacs-lisp
   (setq eshell-prompt-regexp "^[^\n]*λ  "
-        eshell-prompt-function 'phundrak/eshell-prompt)
+        eshell-prompt-function 'phundrak-eshell-prompt)
 #+END_SRC
 
 I also don't want the banner to be displayed, I know I entered the Elisp shell,
@@ -4239,7 +4262,7 @@ A couple of other useful utilities, sach as opening all marked files, sorting
 files, opening them externally and renaming them, are also bound to a simple key
 press:
 #+BEGIN_SRC emacs-lisp
-  (define-key dired-mode-map (kbd "f") 'phundrak/open-marked-files)
+  (define-key dired-mode-map (kbd "f") 'phundrak-open-marked-files)
   (define-key dired-mode-map (kbd "F") 'xah/open-in-external-app)
   (define-key dired-mode-map (kbd "s") 'xah/dired-sort)
 #+END_SRC
@@ -4250,7 +4273,7 @@ press:
 :END:
 #+BEGIN_SRC emacs-lisp
   (spacemacs/declare-prefix "of" "open org file")
-  (spacemacs/set-leader-keys "of" 'phundrak/find-org-files)
+  (spacemacs/set-leader-keys "of" 'phundrak-find-org-files)
 #+END_SRC
 
 I also have a shortcut for ~helm-locate~ in case I need to find a file that is
@@ -4320,7 +4343,7 @@ Now, onto some shortcuts related to org-mode. Let’s first declare the category
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "ob" 'phundrak/blog-publish)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "ob" 'phundrak-blog-publish)
   (spacemacs/declare-prefix-for-mode 'org-mode "ob" "publish blog")
 #+END_SRC
 
@@ -4393,7 +4416,7 @@ Emacs:
     "otd" 'elcord-mode
     "otf" 'flycheck-mode
     "ots" 'prettify-symbols-mode
-    "otS" 'phundrak/prompt-toggle-abbreviation)
+    "otS" 'phundrak-prompt-toggle-abbreviation)
 #+END_SRC
 
 We also have some input methods-related shortcuts in a sub-category: ~oti~. The
@@ -4983,7 +5006,7 @@ passed to the method to members of the struct. It relies on the custom function
   fn new(${1:args}) -> Self {
     $0
     Self {
-      ${1:$(phundrak/yas-rust-new-assignments yas-text)}
+      ${1:$(phundrak-yas-rust-new-assignments yas-text)}
     }
   }
 #+END_SRC
@@ -5238,15 +5261,15 @@ I want to see by default how much battery my computer has, so let’s enable it:
 :CUSTOM_ID: User-Configuration-Visual-configuration-Better-faces-5d73fe9c
 :END:
 #+NAME: face-generate
-#+BEGIN_SRC emacs-lisp :tangle no :results replace :exports none :var input=[] :var makeface="yes"
+#+BEGIN_SRC emacs-lisp :tangle no :results replace :exports none :var input=mu4e-faces :var makeface="yes"
   (let* ((makeface (string= "yes" makeface))
          (headers (cadr input))
          (faces (-map (lambda (face)
-                        (-filter (lambda (elem)
-                                   (or (numberp (cadr elem))
-                                       (not (string= ""
-                                                     (cadr elem)))))
-                                 (-zip-lists headers face)))
+                        (phundrak-filter (lambda (elem)
+                                           (or (numberp (cadr elem))
+                                               (not (string= ""
+                                                             (cadr elem)))))
+                                         (phundrak-zip headers face)))
                       (cddr input))))
     (mapconcat (lambda (face)
                  (concat
@@ -5312,9 +5335,9 @@ let’s redefine their background and sometimes their foreground.
 | /                    |                  |
 | Name                 | background       |
 |----------------------+------------------|
-| ediff-current-diff-A | ,phundrak/nord11 |
-| ediff-current-diff-C | ,phundrak/nord13 |
-| ediff-current-diff-C | ,phundrak/nord14 |
+| ediff-current-diff-A | ,phundrak-nord11 |
+| ediff-current-diff-C | ,phundrak-nord13 |
+| ediff-current-diff-C | ,phundrak-nord14 |
 
 **** Mu4e
 :PROPERTIES:
@@ -5326,7 +5349,7 @@ displayed properly, such as the ~mu4e-highlight-face~. Let’s fix that!
 | /                   |                 |                 |
 | Name                | background      | foreground      |
 |---------------------+-----------------+-----------------|
-| mu4e-highlight-face | ,phundrak/nord9 | ,phundrak/nord0 |
+| mu4e-highlight-face | ,phundrak-nord9 | ,phundrak-nord0 |
 
 **** Org-mode
 :PROPERTIES:
@@ -5347,36 +5370,36 @@ First here are some common properties that will be reused in faces below:
 | /                         | <                |                               |                  |                 | <l>    |        |        |           |
 | Name                      | additional       | inherit                       | foreground       | background      | height | weight | italic | underline |
 |---------------------------+------------------+-------------------------------+------------------+-----------------+--------+--------+--------+-----------|
-| org-level-1               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 | 1.75   |        | t      |           |
-| org-level-2               | ,@orgfont ,@head |                               | ,phundrak/nord10 |                 | 1.5    |        | t      |           |
-| org-level-3               | ,@orgfont ,@head |                               | ,phundrak/nord9  |                 | 1.25   |        | t      |           |
-| org-level-4               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 | 1.1    |        | t      |           |
-| org-level-5               | ,@orgfont ,@head |                               | ,phundrak/nord8  |                 |        |        | t      |           |
-| org-level-6               | ,@orgfont ,@head |                               | ,phundrak/nord7  |                 |        |        | t      |           |
-| org-level-7               | ,@orgfont ,@head |                               | ,phundrak/nord15 |                 |        |        | t      |           |
-| org-level-8               | ,@orgfont ,@head |                               | ,phundrak/nord6  |                 |        |        | t      |           |
-| org-document-title        | ,@orgfont ,@head |                               | ,phundrak/nord11 |                 | 2.0    |        | t      |           |
+| org-level-1               | ,@orgfont ,@head |                               | ,phundrak-nord15 |                 | 1.75   |        | t      |           |
+| org-level-2               | ,@orgfont ,@head |                               | ,phundrak-nord10 |                 | 1.5    |        | t      |           |
+| org-level-3               | ,@orgfont ,@head |                               | ,phundrak-nord9  |                 | 1.25   |        | t      |           |
+| org-level-4               | ,@orgfont ,@head |                               | ,phundrak-nord15 |                 | 1.1    |        | t      |           |
+| org-level-5               | ,@orgfont ,@head |                               | ,phundrak-nord8  |                 |        |        | t      |           |
+| org-level-6               | ,@orgfont ,@head |                               | ,phundrak-nord7  |                 |        |        | t      |           |
+| org-level-7               | ,@orgfont ,@head |                               | ,phundrak-nord15 |                 |        |        | t      |           |
+| org-level-8               | ,@orgfont ,@head |                               | ,phundrak-nord6  |                 |        |        | t      |           |
+| org-document-title        | ,@orgfont ,@head |                               | ,phundrak-nord11 |                 | 2.0    |        | t      |           |
 | variable-pitch            | ,@orgfont        |                               |                  |                 |        |        |        |           |
-| org-block                 | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
-| org-block-begin-line      | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
-| org-block-end-line        | ,@fixed          |                               |                  | ,phundrak/nord1 |        |        |        |           |
+| org-block                 | ,@fixed          |                               |                  | ,phundrak-nord1 |        |        |        |           |
+| org-block-begin-line      | ,@fixed          |                               |                  | ,phundrak-nord1 |        |        |        |           |
+| org-block-end-line        | ,@fixed          |                               |                  | ,phundrak-nord1 |        |        |        |           |
 | org-indent                | ,@fixed          |                               |                  |                 |        |        |        |           |
 | org-formula               | ,@fixed          |                               |                  |                 |        |        |        |           |
 | org-macro                 | ,@fixed          |                               |                  |                 |        |        |        |           |
 | org-target                | ,@fixed          |                               |                  |                 |        |        |        |           |
 | org-property-value        | ,@fixed          |                               |                  |                 |        |        |        |           |
-| org-drawer                | ,@fixed          |                               | ,phundrak/nord10 |                 |        |        |        |           |
-| org-table                 | ,@fixed          |                               | ,phundrak/nord14 |                 |        |        |        |           |
-| org-date                  | ,@fixed          |                               | ,phundrak/nord13 |                 |        |        |        |           |
+| org-drawer                | ,@fixed          |                               | ,phundrak-nord10 |                 |        |        |        |           |
+| org-table                 | ,@fixed          |                               | ,phundrak-nord14 |                 |        |        |        |           |
+| org-date                  | ,@fixed          |                               | ,phundrak-nord13 |                 |        |        |        |           |
 | org-code                  | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
 | org-verbatim              | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
 | org-document-info-keyword | ,@fixed          | shadow                        |                  |                 |        |        |        |           |
 | org-tag                   | ,@fixed          | shadow                        |                  |                 |        | bold   |        |           |
 | org-meta-line             | ,@fixed          | font-lock-comment-face        |                  |                 | 0.8    |        |        |           |
-| org-special-keyword       | ,@fixed          | font-lock-comment-face        | ,phundrak/nord15 |                 | 0.8    |        |        |           |
+| org-special-keyword       | ,@fixed          | font-lock-comment-face        | ,phundrak-nord15 |                 | 0.8    |        |        |           |
 | org-checkbox              | ,@fixed          | (org-todo shadow fixed-pitch) |                  |                 |        |        |        |           |
-| org-document-info         |                  |                               | ,phundrak/nord12 |                 |        |        |        |           |
-| org-link                  |                  |                               | ,phundrak/nord8  |                 |        |        |        | t         |
+| org-document-info         |                  |                               | ,phundrak-nord12 |                 |        |        |        |           |
+| org-link                  |                  |                               | ,phundrak-nord8  |                 |        |        |        | t         |
 
 *** Info colors
 :PROPERTIES:
