@@ -21,4 +21,8 @@ switch "$argv[1]"
         for f in $FILES
             convert -rotate 270 "$f" "$f"
         end
+    case "y"
+        set FILE $FILES[1]
+        set TYPE (file -i $FILE | sed -r 's|.*(image/[a-z]+);.*|\1|')
+        xclip -sel clip -t "$TYPE" -i "$FILE"
 end
