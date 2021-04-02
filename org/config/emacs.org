@@ -3105,11 +3105,8 @@ is a new org node with a headline and some content.
 | th       | Health        |           | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
 | ti       | Informatique  |           | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
 
-The following code snipped is not tangled into my configuration file, but
-instead creates the equivalent to the table above into EmacsLisp code found in
-the next code snippet.
 #+NAME: org-capture-shortcut-gen
-#+header: :exports code :cache yes :results replace
+#+header: :exports none :cache yes :results replace
 #+BEGIN_SRC emacs-lisp :var table=org-capture-shortcuts-table
   (format "'(%s)"
           (mapconcat (lambda (entry)
