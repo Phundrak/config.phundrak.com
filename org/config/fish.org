@@ -669,3 +669,26 @@ By default, continue a download that was interupted.
 #+BEGIN_SRC fish
   abbr wget 'wget -c'
 #+END_SRC
+
+* Last thing before we’re done
+:PROPERTIES:
+:CUSTOM_ID: Last-thing-before-we-re-done-670f1461
+:END:
+For some reason, Fish began searching for packages when I enter a command name
+wrong. For instance, if I type ~vim~, I get something like this:
+#+BEGIN_SRC text :tangle no
+$ vim
+fish: Unknown command: vim
+usr/bin/vim is owned by extra/gvim 8.2.2653-1
+usr/bin/vim is owned by extra/vim 8.2.2653-1
+#+END_SRC
+
+But I don’t want that, it slows down my shell. So, in order to fix that, we need
+the following lines:
+#+BEGIN_SRC fish
+function fish_command_not_found
+    __fish_default_command_not_found_handler $argv
+end
+#+END_SRC
+
+Tadah! No more package suggestions from fish!
