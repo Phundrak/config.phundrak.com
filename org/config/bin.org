@@ -30,6 +30,7 @@ of said command running.
 #+NAME: autostart-table
 | Command       | Arguments                             | Run once? |
 |---------------+---------------------------------------+-----------|
+| ~xrdb~        | ~-merge ~/.Xresources~                | no        |
 | ~mpc~         | ~stop~                                | no        |
 | ~xss-lock~    | ~plock~                               | yes       |
 | ~set-screens~ |                                       | no        |
