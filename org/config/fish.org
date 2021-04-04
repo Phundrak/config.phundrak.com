@@ -405,18 +405,12 @@ I greatly prefer to use Emacsclient as my main text editor; Emacs has basically
 all I need. So, it's only normal I have an abbreviation to launch a new instance
 of it. If launched in the terminal, I’ll usually want Emacs to be displayed in
 CLI mode and not in GUI mode, otherwise I would invoke it with my WM’s shortcut.
-I also wish to completely stop using other text editors, such as ~vi~, ~vim~,
-~nano~ and ~ed~, so let's all add their command as an abbreviation for Emacs. In
-case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
+In case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
 
 #+NAME: abbr-text-ed
 | abbreviation | command               |
 |--------------+-----------------------|
 | e            | emacsclient -c -nw    |
-| vi           | emacsclient -c -nw    |
-| vim          | emacsclient -c -nw    |
-| nano         | emacsclient -c -nw    |
-| ed           | emacsclient -c -nw    |
 | egui         | devour emacsclient -c |
 
 Here is the corresponding fish configuration:
