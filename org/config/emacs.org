@@ -1511,8 +1511,9 @@ giggles, I’ve made it so it is a powerline prompt.
                      (dirty phundrak-nord11)
                      (staged phundrak-nord13)
                      (t phundrak-nord14)))
-            (background (phundrak-var-or-if-nil $background-color
-                                                phundrak-nord0)))
+            (background (if $background-color
+                            $background-color
+                          phundrak-nord0)))
         (concat (with-face ""
                            :background accent
                            :foreground background)
@@ -1810,20 +1811,6 @@ return ~t~.
         (and (not (funcall fn (car seq)))
              (phundrak-none? fn (cdr seq)))
       t))
-#+END_SRC
-
-**** ~phundrak-var-or-if-nil~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-var-or-if-nil-40e2e54a
-:END:
-This simple function helps me return either the value ~var~ holds, or if it is
-~nil~ it will return the value ~value~ holds (or will return).
-#+BEGIN_SRC emacs-lisp
-  (defmacro phundrak-var-or-if-nil (var value)
-    "Return the result yield by `VALUE' if `VAR' is nil, return `VAR' otherwise."
-    (if (null var)
-        value
-      var))
 #+END_SRC
 
 **** ~phundrak-zip~
@@ -2486,7 +2473,7 @@ is required by Eshell with a hook:
               (setq eshell-banner-message (phundrak-eshell-banner))))
 #+END_SRC
 
-**** Eshell theme
+**** Eshell theme and prompt
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-Eshell_theme-a06715a9
 :END:
@@ -2524,7 +2511,9 @@ otherwise, it is kept in full. It can be toggled with a keyboard shortcut, see
            ($success    phundrak-nord10)
            ($error      phundrak-nord11))
       (concat (with-face (concat " "
-                                 (phundrak-abbr-path (phundrak-var-or-if-nil $git-path $path)
+                                 (phundrak-abbr-path (if $git-path
+                                                         $git-path
+                                                       $path)
                                                      phundrak-prompt--abbreviate)
                                  " ")
                          :foreground $foreground
