@@ -614,7 +614,10 @@ twitter
 Lastly, one custom layers have been enabled: my custom layer for conlanging
 tools.
 #+BEGIN_SRC emacs-lisp
-conlanging
+  conlanging
+  (exwm :variables
+        exwm-enable-systray t
+        exwm-locking-command "plock")
 #+END_SRC
 
 # Don’t delete this code block, it wraps the layers
@@ -1947,6 +1950,125 @@ files in a dired buffer depending on four factors:
       (dired-sort-other $arg )))
 #+END_SRC
 
+** Editing and modes
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
+:END:
+*** Default modes
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Default_modes-50d4e086
+:END:
+Some buffers sometimes won’t have a default mode at all, such as the ~*scratch*~
+buffer. In any vanilla configuration, they will then default to ~text-mode~. I
+personally prefer ~org-mode~ to be my default mode, so let’s set it so!
+#+BEGIN_SRC emacs-lisp
+  (setq edit-server-default-major-mode 'org-mode)
+#+END_SRC
+
+*** Evil
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Evil-3cedaaee
+:END:
+As a user of Evil, I’m sometimes pissed when I accidentally press ~C-u~ and it
+gets me to the top of the document. So, let’s disable it:
+#+BEGIN_SRC emacs-lisp
+  (setq evil-want-C-u-scroll nil)
+#+END_SRC
+
+*** File extensions
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-File_extensions-f76fe752
+:END:
+Sometimes, Emacs doesn’t recognize or misrecognizes some extensions, resulting
+in a wrong mode set for said file. Let’s fix that by associating the extension
+with the desired mode:
+#+BEGIN_SRC emacs-lisp
+  (dolist (e '(("xml" . web-mode)
+               ("xinp" . web-mode)
+               ("aiml" . web-mode)
+               ("C" . c++-mode)
+               ("dconf" . conf-mode)
+               ("yy" . bison-mode)
+               ("ll" . flex-mode)
+               ("s" . asm-mode)
+               ("pl" . prolog-mode)
+               ("l" . scheme-mode)
+               ("vs" . glsl-mode)
+               ("fs" . glsl-mode)))
+    (push (cons (concat "\\."
+                        (car e)
+                        "\\'") (cdr e))
+          auto-mode-alist))
+#+END_SRC
+
+We also have a couple of extensions which should all be in ~conf-unix-mode~,
+let’s indicate that to Emacs:
+#+BEGIN_SRC emacs-lisp
+  (dolist (e '("service" "timer" "target" "mount" "automount"
+               "slice" "socket" "path" "netdev" "network"
+               "link"))
+    (push (cons (concat "\\." e "\\'") 'conf-unix-mode)
+          auto-mode-alist))
+#+END_SRC
+
+*** Hooks
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Hooks-86da2da0
+:END:
+I also have some hooks I use for enabling some major and minor modes. The first
+one here allows the execution of the deletion of trailing space each time I save
+a file.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
+I also want to always be in ~visual-line-mode~ so Emacs soft-wraps lines that
+are too long for the buffer they are displayed in. This will also be enabled for
+Elfeed.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'prog-mode-hook 'visual-line-mode)
+  (add-hook 'elfeed-read-mode-hook 'visual-line-mode)
+#+END_SRC
+
+I also want for some non-programming modes to enable a hard-limit in terms of
+how many characters can fit on one line. The modes that benefit are
+~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
+#+BEGIN_SRC emacs-lisp
+  (mapc (lambda (x)
+       (add-hook x 'visual-line-mode))
+     '(message-mode-hook
+       text-mode-hook
+       markdown-mode-hook))
+#+END_SRC
+
+*** Twittering mode
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Miscellaneous-Twittering_mode-b97d9327
+:END:
+For ~twittering-mode~, a Twitter major mode for Emacs, I want to encrypt my data
+using a master password, which I do thanks to this option:
+#+BEGIN_SRC emacs-lisp
+  (setq twittering-use-master-password t)
+#+END_SRC
+
+*** Wrapping regions
+:PROPERTIES:
+:CUSTOM_ID: User_Configuration-Editing_and_modes-Wrapping_regions-2250281e
+:END:
+I really like the ~M-(~ keybinding for wrapping a selected region between
+parenthesis. However, parenthesis are not everything (even in Lisp dialects),
+and other wrappers could be nice. And they are! Here is how they are declared:
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-[") 'insert-pair)
+  (global-set-key (kbd "M-{") 'insert-pair)
+  (global-set-key (kbd "M-<") 'insert-pair)
+  (global-set-key (kbd "M-'") 'insert-pair)
+  (global-set-key (kbd "M-`") 'insert-pair)
+  (global-set-key (kbd "M-\"") 'insert-pair)
+#+END_SRC
+
+For the record, this is from [[http://www.howardism.org/][Howard Abram]]’s [[https://github.com/howardabrams/dot-files][dotfiles]].
+
 ** Emacs builtins
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Emacs_builtins-7822b8dd
@@ -2129,6 +2251,10 @@ The ~EDITOR~ variable also needs to be set for git commands, especially the
 ~yadm~ commands.
 #+BEGIN_SRC emacs-lisp
   (setenv "EDITOR" "emacsclient -c")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (setenv "SHELL" "/bin/sh")
 #+END_SRC
 
 **** Eshell banner
@@ -3995,124 +4121,13 @@ ignore these paths:
     <<recentf-ignored-paths-gen()>>)
 #+END_SRC
 
-** Editing and modes
+** EXWM
 :PROPERTIES:
-:CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
+:CUSTOM_ID: User-Configuration-EXWM-12e1cca6
 :END:
-*** Default modes
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Editing_and_modes-Default_modes-50d4e086
-:END:
-Some buffers sometimes won’t have a default mode at all, such as the ~*scratch*~
-buffer. In any vanilla configuration, they will then default to ~text-mode~. I
-personally prefer ~org-mode~ to be my default mode, so let’s set it so!
 #+BEGIN_SRC emacs-lisp
-  (setq edit-server-default-major-mode 'org-mode)
+  (setq exwm-workspace-number 10)
 #+END_SRC
-
-*** Evil
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Editing_and_modes-Evil-3cedaaee
-:END:
-As a user of Evil, I’m sometimes pissed when I accidentally press ~C-u~ and it
-gets me to the top of the document. So, let’s disable it:
-#+BEGIN_SRC emacs-lisp
-  (setq evil-want-C-u-scroll nil)
-#+END_SRC
-
-*** File extensions
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-File_extensions-f76fe752
-:END:
-Sometimes, Emacs doesn’t recognize or misrecognizes some extensions, resulting
-in a wrong mode set for said file. Let’s fix that by associating the extension
-with the desired mode:
-#+BEGIN_SRC emacs-lisp
-  (dolist (e '(("xml" . web-mode)
-               ("xinp" . web-mode)
-               ("aiml" . web-mode)
-               ("C" . c++-mode)
-               ("dconf" . conf-mode)
-               ("yy" . bison-mode)
-               ("ll" . flex-mode)
-               ("s" . asm-mode)
-               ("pl" . prolog-mode)
-               ("l" . scheme-mode)
-               ("vs" . glsl-mode)
-               ("fs" . glsl-mode)))
-    (push (cons (concat "\\."
-                        (car e)
-                        "\\'") (cdr e))
-          auto-mode-alist))
-#+END_SRC
-
-We also have a couple of extensions which should all be in ~conf-unix-mode~,
-let’s indicate that to Emacs:
-#+BEGIN_SRC emacs-lisp
-  (dolist (e '("service" "timer" "target" "mount" "automount"
-               "slice" "socket" "path" "netdev" "network"
-               "link"))
-    (push (cons (concat "\\." e "\\'") 'conf-unix-mode)
-          auto-mode-alist))
-#+END_SRC
-
-*** Hooks
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Miscellaneous-Hooks-86da2da0
-:END:
-I also have some hooks I use for enabling some major and minor modes. The first
-one here allows the execution of the deletion of trailing space each time I save
-a file.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+END_SRC
-
-I also want to always be in ~visual-line-mode~ so Emacs soft-wraps lines that
-are too long for the buffer they are displayed in. This will also be enabled for
-Elfeed.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'prog-mode-hook 'visual-line-mode)
-  (add-hook 'elfeed-read-mode-hook 'visual-line-mode)
-#+END_SRC
-
-I also want for some non-programming modes to enable a hard-limit in terms of
-how many characters can fit on one line. The modes that benefit are
-~message-mode~, ~org-mode~, ~text-mode~ and ~markdown-mode~.
-#+BEGIN_SRC emacs-lisp
-  (mapc (lambda (x)
-       (add-hook x 'visual-line-mode))
-     '(message-mode-hook
-       text-mode-hook
-       markdown-mode-hook))
-#+END_SRC
-
-*** Twittering mode
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Miscellaneous-Twittering_mode-b97d9327
-:END:
-For ~twittering-mode~, a Twitter major mode for Emacs, I want to encrypt my data
-using a master password, which I do thanks to this option:
-#+BEGIN_SRC emacs-lisp
-  (setq twittering-use-master-password t)
-#+END_SRC
-
-*** Wrapping regions
-:PROPERTIES:
-:CUSTOM_ID: User_Configuration-Editing_and_modes-Wrapping_regions-2250281e
-:END:
-I really like the ~M-(~ keybinding for wrapping a selected region between
-parenthesis. However, parenthesis are not everything (even in Lisp dialects),
-and other wrappers could be nice. And they are! Here is how they are declared:
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-[") 'insert-pair)
-  (global-set-key (kbd "M-{") 'insert-pair)
-  (global-set-key (kbd "M-<") 'insert-pair)
-  (global-set-key (kbd "M-'") 'insert-pair)
-  (global-set-key (kbd "M-`") 'insert-pair)
-  (global-set-key (kbd "M-\"") 'insert-pair)
-#+END_SRC
-
-For the record, this is from [[http://www.howardism.org/][Howard Abram]]’s [[https://github.com/howardabrams/dot-files][dotfiles]].
 
 ** Keybindings
 :PROPERTIES:
