@@ -1371,8 +1371,12 @@ for lsp servers in emacs 27.
 
 * User Initialization
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent :lexical t
 :CUSTOM_ID: User_Initialization-e0d21089
+:END:
+** User Init
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent :lexical t
+:CUSTOM_ID: User-Initialization-User-Init-a86829cf
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
   ;; -*- lexical-binding: t -*-
@@ -1383,16 +1387,6 @@ elements and load some packages. First of all, I want it to load my private
 Emacs config file:
 #+BEGIN_SRC emacs-lisp
   (load "~/.config/emacs/private/private_emacs")
-#+END_SRC
-
-Then, I want a couple of requires:
-#+BEGIN_SRC emacs-lisp
-  (require 'org-id)
-  (require 'org-protocol)
-  (require 'package)
-  (require 'ox-latex)
-  (require 'ox-publish)
-  (require 'tramp)
 #+END_SRC
 
 I would also like to enable the setup of flycheck for Rust when Flycheck is
@@ -1411,6 +1405,21 @@ hosts if I don’t have this code snippet.
 #+BEGIN_SRC emacs-lisp
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+#+END_SRC
+** User Load
+:PROPERTIES:
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-load.el :exports code :results silent :lexical t
+:CUSTOM_ID: User-Initialization-User-Load-488cf687
+:END:
+Then, I want a couple of requires:
+#+BEGIN_SRC emacs-lisp
+  (require 'org-id)
+  (require 'org-protocol)
+  (require 'package)
+  (require 'ox-latex)
+  (require 'ox-publish)
+  (require 'tramp)
+  (require 'exwm)
 #+END_SRC
 
 * User Configuration

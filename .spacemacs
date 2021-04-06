@@ -7,8 +7,10 @@
 (defvar phundrak--dotspacemacs-sl (concat phundrak--dotspacemacs-src-dir "spacemacs-layers"))
 (defvar phundrak--dotspacemacs-uc (concat phundrak--dotspacemacs-src-dir "user-config"))
 (defvar phundrak--dotspacemacs-ui (concat phundrak--dotspacemacs-src-dir "user-init"))
+(defvar phundrak--dotspacemacs-ul (concat phundrak--dotspacemacs-src-dir "user-load"))
 (defvar phundrak--dotspacemacs-files (list phundrak--dotspacemacs-si phundrak--dotspacemacs-sl
-                                           phundrak--dotspacemacs-uc phundrak--dotspacemacs-ui))
+                                           phundrak--dotspacemacs-uc phundrak--dotspacemacs-ui
+                                           phundrak--dotspacemacs-ul))
 
 ;; turn off native comp warnings
 (setq comp-async-report-warnings-errors nil)
@@ -67,7 +69,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-  )
+  (load phundrak--dotspacemacs-ul))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
