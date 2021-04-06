@@ -1741,6 +1741,7 @@ argument. Here is how it is implemented:
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-filter-2d3c5a5b
 :END:
+#+name: elisp-phundrak-filter
 #+BEGIN_SRC emacs-lisp
 (defun phundrak-filter (fn list)
   "Filter `LIST' according to the predicate `FN'.
@@ -1787,6 +1788,7 @@ success, otherwise it is a failure. Note that empty lists will always return
 In the same vein as ~phundrak-all?~, ~phundrak-none?~ checks if all elements of
 ~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
 return ~t~.
+#+name: elisp-phundrak-none
 #+BEGIN_SRC emacs-lisp
   (defun phundrak-none? (fn seq)
     "Check if all members of `SEQ' do not satisfy predicate `FN'.
@@ -1816,6 +1818,7 @@ This simple function helps me return either the value ~var~ holds, or if it is
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-zip-8a49b20f
 :END:
+#+name: elisp-phundrak-zip
 #+BEGIN_SRC emacs-lisp
   (defun phundrak-zip (&rest lists)
     "Zip `LISTS' together.
@@ -5263,16 +5266,23 @@ I want to see by default how much battery my computer has, so let’s enable it:
 :CUSTOM_ID: User-Configuration-Visual-configuration-Better-faces-5d73fe9c
 :END:
 #+NAME: face-generate
-#+BEGIN_SRC emacs-lisp :tangle no :results replace :exports none :var input=mu4e-faces :var makeface="yes"
+#+headers: :var input=mu4e-faces :var makeface="yes"
+#+BEGIN_SRC emacs-lisp :tangle no :results replace :exports none :noweb yes
+  <<elisp-phundrak-filter>>
+
+  <<elisp-phundrak-none>>
+
+  <<elisp-phundrak-zip>>
+
   (let* ((makeface (string= "yes" makeface))
          (headers (cadr input))
-         (faces (-map (lambda (face)
-                        (phundrak-filter (lambda (elem)
-                                           (or (numberp (cadr elem))
-                                               (not (string= ""
-                                                             (cadr elem)))))
-                                         (phundrak-zip headers face)))
-                      (cddr input))))
+         (faces (mapcar (lambda (face)
+                          (phundrak-filter (lambda (elem)
+                                             (or (numberp (cadr elem))
+                                                 (not (string= ""
+                                                               (cadr elem)))))
+                                           (phundrak-zip headers face)))
+                        (cddr input))))
     (mapconcat (lambda (face)
                  (concat
                    ;; (if makeface
