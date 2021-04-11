@@ -30,9 +30,8 @@ of said command running.
 #+NAME: autostart-table
 | Command       | Arguments                             | Run once? |
 |---------------+---------------------------------------+-----------|
-| ~xrdb~        | ~-merge ~/.Xresources~                | no        |
+| ~xrdb~        | ~-merge $HOME/.Xresources~            | no        |
 | ~mpc~         | ~stop~                                | no        |
-| ~xss-lock~    | ~plock~                               | yes       |
 | ~set-screens~ |                                       | no        |
 | ~picom~       |                                       | yes       |
 | ~pumopm~      |                                       | yes       |
@@ -40,6 +39,7 @@ of said command running.
 | ~nm-applet~   |                                       | yes       |
 | ~numlockx~    | ~on~                                  | yes       |
 | ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~ | no        |
+# | ~xss-lock~    | ~plock~                               | yes       |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
@@ -58,9 +58,9 @@ of said command running.
              "\n")
 #+END_SRC
 
-#+RESULTS[db0a64491cfacdcecad8ad71beed0e6b48b5af06]: autostart-gen
+#+RESULTS[6bdde37274cbbcce2fcd7e86690ce9ce7f32c62f]: autostart-gen
+: xrdb -merge $HOME/.Xresources &
 : mpc stop &
-: pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
 : set-screens  &
 : pgrep -x picom 2&>/dev/null || echo (picom & && disown) 2&>/dev/null
 : pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
