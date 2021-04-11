@@ -611,6 +611,8 @@ tools.
   conlanging
   (exwm :variables
         exwm-enable-systray t
+        exwm-custom-init (lambda ()
+                           (exwm/autostart-process "autostart"))
         exwm-locking-command "plock")
 #+END_SRC
 
@@ -1421,7 +1423,6 @@ Then, I want a couple of requires:
   (require 'ox-latex)
   (require 'ox-publish)
   (require 'tramp)
-  (require 'exwm)
 #+END_SRC
 
 * User Configuration

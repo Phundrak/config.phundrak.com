@@ -77,6 +77,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (require 'exwm)
+  (exwm-enable)
   (load phundrak--dotspacemacs-uc))
 
 (defun dotspacemacs/emacs-custom-settings ()
