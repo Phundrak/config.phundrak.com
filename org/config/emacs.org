@@ -58,7 +58,7 @@ file with a supported type is opened. Possible values are:
   it.
 The default value is ~unused~.
 #+BEGIN_SRC emacs-lisp
-  (setq-default dotspacemacs-enable-lazy-installation 'lazy)
+  (setq-default dotspacemacs-enable-lazy-installation nil)
 #+END_SRC
 
 If the following variable is non-nil, Spacemacs will ask for confirmation before
@@ -1409,6 +1409,11 @@ hosts if I don’t have this code snippet.
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org)
+#+END_SRC
+
 ** User Load
 :PROPERTIES:
 :header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-load.el :exports code :results silent :lexical t
