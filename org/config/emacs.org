@@ -497,12 +497,6 @@ programming language, so here it is.
        lua-lsp-emmy-enable-file-watchers t)
 #+END_SRC
 
-Unfortunately, I have to write Java and Scala code for one of my university
-courses, so here are the layers:
-#+BEGIN_SRC emacs-lisp
-  java scala
-#+END_SRC
-
 *** Readers
 :PROPERTIES:
 :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
@@ -2691,7 +2685,6 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | dot          |
 | emacs-lisp   |
 | gnuplot      |
-| java         |
 | latex        |
 | latex-as-png |
 | makefile     |
@@ -2713,13 +2706,12 @@ activated. Here are the languages I activated in my Org-mode configuration:
                      "\n  "))
 #+END_SRC
 
-#+RESULTS[27e5ca97338f4a5e6874ece62f4e34c854284c59]: org-babel-languages-gen
+#+RESULTS[71d98616bf4f1351ca93aea4972be0ba58057230]: org-babel-languages-gen
 #+begin_example
 '((C . t)
   (dot . t)
   (emacs-lisp . t)
   (gnuplot . t)
-  (java . t)
   (latex . t)
   (latex-as-png . t)
   (makefile . t)
