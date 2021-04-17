@@ -611,8 +611,7 @@ tools.
   conlanging
   (exwm :variables
         exwm-enable-systray t
-        exwm-custom-init (lambda ()
-                           (exwm/autostart-process "autostart"))
+        exwm-install-logind-lock-handler t
         exwm-locking-command "plock")
 #+END_SRC
 
