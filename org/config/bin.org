@@ -30,16 +30,16 @@ of said command running.
 #+NAME: autostart-table
 | Command       | Arguments                             | Run once? |
 |---------------+---------------------------------------+-----------|
-| ~xrdb~        | ~-merge $HOME/.Xresources~            | no        |
 | ~mpc~         | ~stop~                                | no        |
-| ~set-screens~ |                                       | no        |
 | ~picom~       |                                       | yes       |
+| ~set-screens~ |                                       | no        |
+| ~numlockx~    | ~on~                                  | yes       |
 | ~pumopm~      |                                       | yes       |
 | ~xfce-polkit~ |                                       | yes       |
 | ~nm-applet~   |                                       | yes       |
-| ~numlockx~    | ~on~                                  | yes       |
 | ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~ | no        |
-# | ~xss-lock~    | ~plock~                               | yes       |
+| ~xss-lock~    | ~plock~                               | yes       |
+| ~xrdb~        | ~-merge $HOME/.Xresources~            | no        |
 
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
