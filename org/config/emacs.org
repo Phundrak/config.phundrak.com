@@ -4945,6 +4945,29 @@ XDG-compliant directories), so let’s also ignore that.
   (add-to-list 'projectile-globally-ignored-directories "node_modules")
 #+END_SRC
 
+** Readers
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Readers-aacb14d4
+:END:
+Thanks to Discord user shanks, I discovered pdf-tools gives us access to a very
+interesting minor mode: ~pdf-view-midnight-minor-mode~. And this is exactly what
+I missed in my Emacs PDF reader from Zathura! I still think Zathura is a
+fantastic tool, but now my PDF reader in Emacs is almost perfect! I just need to
+adjust some colors:
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'pdf-view
+    (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
+#+END_SRC
+
+Let’s also enable dark mode automatically:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
+#+END_SRC
+
+And there we go! A beautiful, dark-mode PDF reader inside Emacs! And with
+Spacemacs, I can enable or disable this minor mode anytime with the shortcut
+~, n~.
+
 ** Security
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Security-21d88555
