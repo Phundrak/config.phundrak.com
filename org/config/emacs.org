@@ -508,7 +508,7 @@ programming language, so here it is.
 In this category, only the ~epub~ and ~pdf~ layers are enabled without any
 special configuration, so I can read these files from Emacs directly.
 #+BEGIN_SRC emacs-lisp
-epub pdf
+  epub pdf
 #+END_SRC
 
 **** Elfeed
@@ -1443,6 +1443,93 @@ in Elisp code.
 Almost all of my code snippets will be prefixed by either my name or the name of
 the package or layer they are part of, unless they are an explicit overwrite of
 a function that already exists.
+*** Elisp Utilities and Predicates
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
+:END:
+**** ~phundrak-filter~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-filter-2d3c5a5b
+:END:
+#+name: elisp-phundrak-filter
+#+BEGIN_SRC emacs-lisp
+(defun phundrak-filter (fn list)
+  "Filter `LIST' according to the predicate `FN'.
+
+All elements from `LIST' that do not satisfy the predicate `FN'
+will be left out of the result, while all elements that do
+satisfy it will be included in the resulting list. This function
+also preserves the relative position between elements that
+satisfy the predicate."
+  (declare (pure t) (side-effect-free t))
+  (when list
+    (let ((rest (phundrak-filter fn
+                                 (cdr list))))
+      (if (funcall fn
+                   (car list))
+          (cons (car list) rest)
+        rest))))
+#+END_SRC
+
+**** ~phundrak-all?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
+:END:
+This function is inspired by dash’s ~-all?~ function: it will test all the
+elements of the list ~seq~ against the predicate ~fn~ which should return either
+~t~ or ~nil~. If all of them return something else than ~nil~, then it is a
+success, otherwise it is a failure. Note that empty lists will always return
+~t~.
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak-all? (fn seq)
+    "Check if all members of `SEQ' satisfy predicate `FN'. Note that
+  it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (funcall fn (car seq))
+             (phundrak-all? fn (cdr seq)))
+      t))
+#+END_SRC
+
+**** ~phundrak-none?~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
+:END:
+In the same vein as ~phundrak-all?~, ~phundrak-none?~ checks if all elements of
+~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
+return ~t~.
+#+name: elisp-phundrak-none
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak-none? (fn seq)
+    "Check if all members of `SEQ' do not satisfy predicate `FN'.
+  Note that it will return t if `SEQ' is nil."
+    (declare (pure t) (side-effect-free t))
+    (if seq
+        (and (not (funcall fn (car seq)))
+             (phundrak-none? fn (cdr seq)))
+      t))
+#+END_SRC
+
+**** ~phundrak-zip~
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-zip-8a49b20f
+:END:
+#+name: elisp-phundrak-zip
+#+BEGIN_SRC emacs-lisp
+  (defun phundrak-zip (&rest lists)
+    "Zip `LISTS' together.
+
+  Be aware only the amount of elements of the smallest list will be zipped."
+    (declare (pure t) (side-effect-free t))
+    (when lists
+      (let ((lists (if (= 1 (length lists)) ; only one element => a list of lists was passed
+                       (car lists)
+                     lists)))
+        (when (phundrak-none? 'null lists)
+          (cons (mapcar 'car lists)
+                (phundrak-zip (mapcar 'cdr lists)))))))
+#+END_SRC
+
 *** Eshell Prompt-Related Functions
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Eshell-prompt-related-functions-79d07f21
@@ -1743,93 +1830,6 @@ argument. Here is how it is implemented:
   (defmacro with-face ($str &rest $properties)
     "Helper macro for creating strings `$STR' with `$PROPERTIES'"
     `(propertize ,$str 'face (list ,@$properties)))
-#+END_SRC
-
-*** Elisp Utilities and Predicates
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Predicates-5598df46
-:END:
-**** ~phundrak-filter~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-filter-2d3c5a5b
-:END:
-#+name: elisp-phundrak-filter
-#+BEGIN_SRC emacs-lisp
-(defun phundrak-filter (fn list)
-  "Filter `LIST' according to the predicate `FN'.
-
-All elements from `LIST' that do not satisfy the predicate `FN'
-will be left out of the result, while all elements that do
-satisfy it will be included in the resulting list. This function
-also preserves the relative position between elements that
-satisfy the predicate."
-  (declare (pure t) (side-effect-free t))
-  (when list
-    (let ((rest (phundrak-filter fn
-                                 (cdr list))))
-      (if (funcall fn
-                   (car list))
-          (cons (car list) rest)
-        rest))))
-#+END_SRC
-
-**** ~phundrak-all?~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-all-0655600c
-:END:
-This function is inspired by dash’s ~-all?~ function: it will test all the
-elements of the list ~seq~ against the predicate ~fn~ which should return either
-~t~ or ~nil~. If all of them return something else than ~nil~, then it is a
-success, otherwise it is a failure. Note that empty lists will always return
-~t~.
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak-all? (fn seq)
-    "Check if all members of `SEQ' satisfy predicate `FN'. Note that
-  it will return t if `SEQ' is nil."
-    (declare (pure t) (side-effect-free t))
-    (if seq
-        (and (funcall fn (car seq))
-             (phundrak-all? fn (cdr seq)))
-      t))
-#+END_SRC
-
-**** ~phundrak-none?~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-phundrak-none-463dee26
-:END:
-In the same vein as ~phundrak-all?~, ~phundrak-none?~ checks if all elements of
-~seq~ do not satify the predicate ~fn~. Again, if the list is empty, it will
-return ~t~.
-#+name: elisp-phundrak-none
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak-none? (fn seq)
-    "Check if all members of `SEQ' do not satisfy predicate `FN'.
-  Note that it will return t if `SEQ' is nil."
-    (declare (pure t) (side-effect-free t))
-    (if seq
-        (and (not (funcall fn (car seq)))
-             (phundrak-none? fn (cdr seq)))
-      t))
-#+END_SRC
-
-**** ~phundrak-zip~
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-Custom-functions-macros-and-variables-Elisp-Utilities-and-Predicates-phundrak-zip-8a49b20f
-:END:
-#+name: elisp-phundrak-zip
-#+BEGIN_SRC emacs-lisp
-  (defun phundrak-zip (&rest lists)
-    "Zip `LISTS' together.
-
-  Be aware only the amount of elements of the smallest list will be zipped."
-    (declare (pure t) (side-effect-free t))
-    (when lists
-      (let ((lists (if (= 1 (length lists)) ; only one element => a list of lists was passed
-                       (car lists)
-                     lists)))
-        (when (phundrak-none? 'null lists)
-          (cons (mapcar 'car lists)
-                (phundrak-zip (mapcar 'cdr lists)))))))
 #+END_SRC
 
 *** ~phundrak-blog-publish~
