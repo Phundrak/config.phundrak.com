@@ -4094,10 +4094,12 @@ user. Unfortunately, a lot of these files are just noise I don’t care about, b
 fortunately we can ignore files with the variable ~recentf-exclude~. So, I will
 ignore these paths:
 #+name: recentf-ignored-paths
+| =~/.authinfo.gpg=  |
 | =~/.mail/=         |
 | =~/.emacs.d/=      |
 | =~/.config/emacs/= |
 | =~/.elfeed/index=  |
+| =~/Documents/mu4e= |
 | =/tmp/=            |
 
 #+name: recentf-ignored-paths-gen
