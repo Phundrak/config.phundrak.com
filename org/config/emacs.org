@@ -2553,6 +2553,15 @@ Finally, let’s enable some fish-like syntax highlighting:
   (eshell-syntax-highlighting-global-mode +1)
 #+END_SRC
 
+***** TODO Fix right column padding                            :noexport:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Eshell-Eshell-theme-and-prompt-Fix-right-column-padding-960cf0cb
+:END:
+The uptime can get longer than allocated in the banner and be longer than the
+theoretical longest line the banner can be. Execute the ~uptime~ command, find
+out the length of the result and compute the padding based on the maximum length
+between the kernel’s name and the uptime’s length.
+
 ***** TODO Add battery level to banner                         :noexport:
 :PROPERTIES:
 :CUSTOM_ID: User-Configuration-Emacs-builtins-Eshell-Eshell-theme-and-prompt-Add-battery-level-to-banner-7ef9bd5a
