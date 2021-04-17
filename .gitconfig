@@ -3,10 +3,9 @@
 	name = Lucien Cartier-Tilet
 	signingkey = BD7789E705CB8DCA
 [core]
-	# editor = vim
+	editor = emacsclient -c -a emacs
 	whitespace = fix,-indent-with-non-tab,trailing-space
 	excludesfile = /home/phundrak/dotfiles/.gitignore_global
-	autocrlf = false
 [web]
 	browser = firefox
 [color]
@@ -73,6 +72,11 @@
 	####
 	u = reset --
 	unstage = reset --
+[sendemail]
+	smtpserver = mail.phundrak.com
+	smtpuser = lucien@phundrak.com
+	smtpencryption = tls
+	smtpserverport = 587
 [magithub]
 	online = true
 [magithub "status"]
