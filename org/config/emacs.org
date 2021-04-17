@@ -2553,6 +2553,14 @@ Finally, let’s enable some fish-like syntax highlighting:
   (eshell-syntax-highlighting-global-mode +1)
 #+END_SRC
 
+***** TODO Add battery level to banner                         :noexport:
+:PROPERTIES:
+:CUSTOM_ID: User-Configuration-Emacs-builtins-Eshell-Eshell-theme-and-prompt-Add-battery-level-to-banner-7ef9bd5a
+:END:
+Add battery level to banner if computer is a laptop, and display if it is
+charging or discharging. See [[https://tecosaur.github.io/emacs-config/config.html#simple-settings][Tecosaur’s config]] for a way to detect if a battery
+is present or not (basically use the function ~battery~).
+
 **** Visual commands
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Eshell-Visual_commands-2b15e0dc
