@@ -20,8 +20,7 @@ compton]] and rounded corners from [[https://github.com/sdhand/picom][sdhand’s
 :END:
 The following enables client-side shadows on windows. Note desktop windows
 (windows with ~_NET_WM_WINDOW_TYPE_DESKTOP~) never get shadow, unless explicitly
-requested using the wintypes option. I personally deactivated shadows because
-they don’t work out too well with rounded corners.
+requested using the wintypes option.
 #+BEGIN_SRC conf
   shadow = true;
 #+END_SRC
@@ -130,9 +129,7 @@ or
 :PROPERTIES:
 :CUSTOM_ID: Rounded_corners-33bfcd20
 :END:
-A great feature added by ibhagwan’s fork of picom is the addition of rounded
-corners from sdhand’s fork, and the Kawase blur (described [[#Background_blurring-55835066][here]]) from
-tryone144’s fork. Here we can see the declaration of the corners’ radius:
+Here we can see the declaration of the corners’ radius:
 #+BEGIN_SRC conf
   corner-radius = 9.0;
 #+END_SRC
