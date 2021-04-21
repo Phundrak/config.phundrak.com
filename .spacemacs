@@ -18,11 +18,13 @@
 (setq comp-async-report-warnings-errors nil)
 
 (defun phundrak-update-config-files-p (&optional compiled?)
-  "Verify if any of my exported Elisp configuration files are
-newer than my litterate configuration.
+  "Check if tangling my config files is needed.
 
-If `compiled?' is `t', check the `.elc' files instead of the
-`.el' files."
+Verify if any of my exported Elisp configuration files are newer
+than my litterate configuration.
+
+If `COMPILED?' is t, check the `.elc' files instead of the `.el'
+files."
   (catch 'ret
     (dolist (file phundrak--dotspacemacs-files)
       (when (file-newer-than-file-p phundrak--dotspacemacs-src
