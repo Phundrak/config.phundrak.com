@@ -1728,8 +1728,8 @@ as [[https://github.com/sharkdp/fd][fd]].
   the user can match one and open it."
     (interactive)
     (find-file
-     (ido-completing-read
-      "Org File:"
+     (ivy-completing-read
+      "Org File: "
       (s-split "\n"
                (mapconcat (lambda (path)
                             (shell-command-to-string
