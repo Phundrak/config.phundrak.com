@@ -1,8 +1,10 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
-(defvar phundrak--dotspacemacs-src-dir "~/.config/emacs/private/"
-  "Directory for my exported Elisp configuration files")
+
+;;; Code:
+(defvar phundrak--dotspacemacs-src-dir "~/.emacs.spacemacs/private/"
+  "Directory for my exported Elisp configuration files.")
 (defvar phundrak--dotspacemacs-src "~/org/config/emacs.org"
-  "My litterate config file for Emacs")
+  "My litterate config file for Emacs.")
 (defvar phundrak--dotspacemacs-si (concat phundrak--dotspacemacs-src-dir "spacemacs-init"))
 (defvar phundrak--dotspacemacs-sl (concat phundrak--dotspacemacs-src-dir "spacemacs-layers"))
 (defvar phundrak--dotspacemacs-uc (concat phundrak--dotspacemacs-src-dir "user-config"))

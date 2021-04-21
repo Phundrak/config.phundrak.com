@@ -7,3 +7,9 @@
 [submodule ".mozilla/firefox/lruehqec.default/chrome"]
 	path = fromGIT/blurredfox-nord
 	url = git@labs.phundrak.com:phundrak/blurredfox-nord.git
+[submodule ".emacs.d"]
+	path = .emacs.d
+	url = git@github.com:plexus/chemacs2.git
+[submodule ".emacs.doom"]
+	path = .emacs.doom
+	url = git@github.com:hlissner/doom-emacs.git

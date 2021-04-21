@@ -20,8 +20,8 @@ older than the Org file, then Emacs tangles them again, and then loads them.
 
 * Spacemacs layers and packages
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-layers.el :exports code :results silent :lexical t
 :CUSTOM_ID: Spacemacs_layers_and_packages-6d318b87
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.emacs.spacemacs/private/spacemacs-layers.el :exports code :results silent :lexical t
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
   ;; -*- lexical-binding: t -*-
@@ -622,7 +622,7 @@ tools.
 
 * Init
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/spacemacs-init.el :exports code :results silent :lexical t
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.emacs.spacemacs/private/spacemacs-init.el :exports code :results silent :lexical t
 :CUSTOM_ID: Init-99a4b561
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
@@ -653,7 +653,7 @@ about how I manage writing a litterate config for Spacemacs and ensure Emacs
 starts with an up-to-date configuration from said litterate config. For that, I
 actually declared a couple of variables:
 #+BEGIN_SRC emacs-lisp
-  (defvar phundrak--dotspacemacs-src-dir "~/.config/emacs/private/"
+  (defvar phundrak--dotspacemacs-src-dir "~/.emacs.spacemacs/private/"
     "Directory for my exported Elisp configuration files")
   (defvar phundrak--dotspacemacs-src "~/org/config/emacs.org"
     "My litterate config file for Emacs")
@@ -738,7 +738,7 @@ sub-directory. To load it when starting Emacs, the parameter ~--dump-file~
 should be added when invoking Emacs 27.1 executable from the command line, for
 instance:
 #+BEGIN_SRC sh :tangle no :exports code
-  ./emacs --dump-file=~/.config/emacs/.cache/dumps/spacemacs.pdmp
+  ./emacs --dump-file=~/.emacs.spacemacs/.cache/dumps/spacemacs.pdmp
 #+END_SRC
 
 The default value of this variable is ~"spacemacs.pdmp"~.
@@ -1373,7 +1373,7 @@ for lsp servers in emacs 27.
 :END:
 ** User Init
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-init.el :exports code :results silent :lexical t
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.emacs.spacemacs/private/user-init.el :exports code :results silent :lexical t
 :CUSTOM_ID: User-Initialization-User-Init-a86829cf
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
@@ -1384,7 +1384,7 @@ While Emacs and especially Spacemacs loads, I want it to initialize some
 elements and load some packages. First of all, I want it to load my private
 Emacs config file:
 #+BEGIN_SRC emacs-lisp
-  (load "~/.config/emacs/private/private_emacs")
+  (load "~/.emacs.spacemacs/private/private_emacs")
 #+END_SRC
 
 I would also like to enable the setup of flycheck for Rust when Flycheck is
@@ -1411,7 +1411,7 @@ hosts if I don’t have this code snippet.
 
 ** User Load
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-load.el :exports code :results silent :lexical t
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.emacs.spacemacs/private/user-load.el :exports code :results silent :lexical t
 :CUSTOM_ID: User-Initialization-User-Load-488cf687
 :END:
 Then, I want a couple of requires:
@@ -1426,7 +1426,7 @@ Then, I want a couple of requires:
 
 * User Configuration
 :PROPERTIES:
-:header-args:emacs-lisp: :mkdirp yes :tangle ~/.config/emacs/private/user-config.el :exports code :results silent :lexical t
+:header-args:emacs-lisp: :mkdirp yes :tangle ~/.emacs.spacemacs/private/user-config.el :exports code :results silent :lexical t
 :CUSTOM_ID: User_Configuration-4a937fe5
 :END:
 #+BEGIN_SRC emacs-lisp :exports none
@@ -2598,7 +2598,7 @@ such as with this document.
     )
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/private/user-config.el :exports none :noweb yes
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.spacemacs/private/user-config.el :exports none :noweb yes
   (with-eval-after-load 'org
     ;; agenda
     <<org-agenda-files>>
@@ -4103,13 +4103,13 @@ user. Unfortunately, a lot of these files are just noise I don’t care about, b
 fortunately we can ignore files with the variable ~recentf-exclude~. So, I will
 ignore these paths:
 #+name: recentf-ignored-paths
-| =~/.authinfo.gpg=  |
-| =~/.mail/=         |
-| =~/.emacs.d/=      |
-| =~/.config/emacs/= |
-| =~/.elfeed/index=  |
-| =~/Documents/mu4e= |
-| =/tmp/=            |
+| =~/.authinfo.gpg=     |
+| =~/.mail/=            |
+| =~/.emacs.d/=         |
+| =~/.emacs.spacemacs/= |
+| =~/.elfeed/index=     |
+| =~/Documents/mu4e=    |
+| =/tmp/=               |
 
 #+name: recentf-ignored-paths-gen
 #+header: :var paths=recentf-ignored-paths
@@ -4947,10 +4947,10 @@ directories that are version controlled that I do not want to see in my list of
 projects, namely all the cached AUR packages from my AUR helper, ~paru~. They
 are all stored in the same parent directory, so let’s ignore that. I will also
 make Emacs ignore all ~node_modules~ directories it could encounter. And for
-some reason, =~/.config/emacs= is always in my projects list (I now use
+some reason, =~/.emacs.spacemacs= is always in my projects list (I now use
 XDG-compliant directories), so let’s also ignore that.
 #+BEGIN_SRC emacs-lisp
-  (setq projectile-ignored-projects '("~/.cache/paru" "~/.config/emacs" "/tmp"))
+  (setq projectile-ignored-projects '("~/.cache/paru" "~/.emacs.spacemacs" "/tmp"))
   (add-to-list 'projectile-globally-ignored-directories "node_modules")
 #+END_SRC
 
@@ -5029,9 +5029,9 @@ break.
 :END:
 Yasnippet’s snippets tool is extremely powerful and allows me to write very
 quickly code. For now, we have snippets for two modes. The files you’ll see
-below are exported to ~$HOME/.config/emacs/private/snippets/~ and to their
+below are exported to ~$HOME/.emacs.spacemacs/private/snippets/~ and to their
 respective mode directory. For instance, my ~caption~ snippet for org-mode will
-be exported to ~$HOME/.config/emacs/private/snippets/org-mode/caption~.
+be exported to ~$HOME/.emacs.spacemacs/private/snippets/org-mode/caption~.
 
 Be aware that on top of these custom snippets, I also use the package
 [[file:awesome.org::#Autostart-f2cf42fe][yasnippet-snippets]] which provide plenty of already made snippets.
@@ -5042,7 +5042,7 @@ Be aware that on top of these custom snippets, I also use the package
 :END:
 I have so far two snippets, the first one is actually just a convenience to make
 it easier to type a ~println!~ macro than the default snippet.
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/println
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/rust-mode/println
   # -*- mode: snippet -*-
   # name: println
   # key: pln
@@ -5054,7 +5054,7 @@ The second one is more interesting: it is used to create a ~new~ method for a
 struct, and it will try to create a function that will assign each argument
 passed to the method to members of the struct. It relies on the custom function
 [[#Custom-functions-yas-rust-new-assignments-4ad16bde][I wrote here]].
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/rust-mode/new
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/rust-mode/new
   # -*- mode: snippet -*-
   # name: new
   # key: _new
@@ -5074,7 +5074,7 @@ passed to the method to members of the struct. It relies on the custom function
 The first two snippets are used to add HTML or LaTeX attributes to elements in
 org-mode. The third also has a similar usage, inserting a ~#+CAPTION~ header
 before an element, as well as the fourth which inserts a ~#+NAME~ header.
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/attr_html
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/attr_html
   # -*- mode: snippet -*-
   # name: ATTR HTML
   # key: <ah
@@ -5082,7 +5082,7 @@ before an element, as well as the fourth which inserts a ~#+NAME~ header.
   ,#+ATTR_HTML: $0
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/attr_latex
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/attr_latex
   # -*- mode: snippet -*-
   # name: ATTR LATEX
   # key: <al
@@ -5090,7 +5090,7 @@ before an element, as well as the fourth which inserts a ~#+NAME~ header.
   ,#+ATTR_LATEX: $0
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/caption
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/caption
   # -*- mode: snippet -*-
   # name: caption
   # key: <ca
@@ -5098,7 +5098,7 @@ before an element, as well as the fourth which inserts a ~#+NAME~ header.
   ,#+CAPTION: $0
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/name
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/name
   # -*- mode: snippet -*-
   # name: name
   # key: <na
@@ -5112,7 +5112,7 @@ default to the buffer’s name capitalized minus the dashes or underscores
 replaced with spaces, it will insert a default author and email based on the
 user’s parameters, and the date at the moment of the creation of these headers.
 The user can also add some tags if they wish to.
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/header
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/header
   # -*- mode: snippet -*-
   # name: header
   # key: header
@@ -5135,7 +5135,7 @@ Now, Let’s write some snippets for org blocks. The first one is for a comment
 block, then two snippets for an unnamed and a named Elisp source block, and two
 others for an unnamed and a named Python source block. There are also two block
 for generic unnamed source blocks and generic named source blocks.
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/comment_block
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/comment_block
   # -*- mode: snippet -*-
   # name: comment block
   # key: <co
@@ -5145,7 +5145,7 @@ for generic unnamed source blocks and generic named source blocks.
   ,#+END_COMMENT
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/emacs-lisp
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/emacs-lisp
   # -*- mode: snippet -*-
   # name: emacs-lisp block
   # key: <el
@@ -5155,7 +5155,7 @@ for generic unnamed source blocks and generic named source blocks.
   ,#+END_SRC
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/emacs-lisp-named
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/emacs-lisp-named
         # -*- mode: snippet -*-
         # name: named emacs-lisp block
         # key: <eln
@@ -5166,7 +5166,7 @@ for generic unnamed source blocks and generic named source blocks.
         ,#+END_SRC
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/python
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/python
   # -*- mode: snippet -*-
   # name: python block
   # key: <py
@@ -5176,7 +5176,7 @@ for generic unnamed source blocks and generic named source blocks.
   ,#+END_SRC
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/python-named
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/python-named
   # -*- mode: snippet -*-
   # name: named python block
   # key: <pyn
@@ -5187,7 +5187,7 @@ for generic unnamed source blocks and generic named source blocks.
   ,#+END_SRC
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/src
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/src
   # -*- mode: snippet -*-
   # name: source block
   # key: <s
@@ -5197,7 +5197,7 @@ for generic unnamed source blocks and generic named source blocks.
   ,#+END_SRC
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/src-named
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/src-named
   # -*- mode: snippet -*-
   # name: named source block
   # key: <sn
@@ -5215,7 +5215,7 @@ for generic unnamed source blocks and generic named source blocks.
 Finally, there are a couple of miscellaneous org snippets that insert macros I
 often use in my conlanging documents. The first one inserts a phonetics macro,
 while the second one inserts a macro used for my Proto-Ñyqy language.
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/phon
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/phon
   # -*- mode: snippet -*-
   # name: phon
   # key: <ph
@@ -5223,7 +5223,7 @@ while the second one inserts a macro used for my Proto-Ñyqy language.
   \{\{\{phon($1)\}\}\} $0
 #+END_SRC
 
-#+BEGIN_SRC snippet :tangle ~/.config/emacs/private/snippets/org-mode/phon
+#+BEGIN_SRC snippet :tangle ~/.emacs.spacemacs/private/snippets/org-mode/phon
   # -*- mode: snippet -*-
   # name: nyqy
   # key: <ny
