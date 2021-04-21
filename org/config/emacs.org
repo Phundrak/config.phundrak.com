@@ -1940,6 +1940,15 @@ files in a dired buffer depending on four factors:
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Editing_and_modes-7dbaf258
 :END:
+There is first a setting I would like to enable to make the navigation through
+text a bit easier which is to enable the subword mode. This allows me to iterate
+through words that are in CamelCase more easily, I don’t have to go either to
+the beginning or the end of the word and then move my cursor a bunch of times to
+get to the subword I want to modify.
+#+BEGIN_SRC emacs-lisp
+  (global-subword-mode 1)
+#+END_SRC
+
 *** Default modes
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Editing_and_modes-Default_modes-50d4e086
@@ -1955,10 +1964,20 @@ personally prefer ~org-mode~ to be my default mode, so let’s set it so!
 :PROPERTIES:
 :CUSTOM_ID: User_Configuration-Editing_and_modes-Evil-3cedaaee
 :END:
-As a user of Evil, I’m sometimes pissed when I accidentally press ~C-u~ and it
-gets me to the top of the document. So, let’s disable it:
+Evil is not really smart by default when I ask it to undo stuff. As an example,
+let’s say I enter insert-mode and write a whole paragraph, and then I exit
+insert-mode back to normal-mode, and I notice a small mistake I made when typing
+my stuff down, like accidentally using a snippet from yasnippet, and I want to
+undo that. My initial reaction would be to press ~u~ to undo, and so would be
+yours too right? That’s the wrong answer with evil, since it considers your
+actions between entering and leaving insert-mode as only one action, and it
+would thus erase your /WHOLE PARAGRAPH/. Fortunately, there is a way to make the
+undo action more granular, but it comes at the cost of increasing the amount of
+undo actions you can do (which shouldn’t really matter if you don’t have a
+potato PC).
 #+BEGIN_SRC emacs-lisp
-  (setq evil-want-C-u-scroll nil)
+  (setq undo-limit 500000
+        evil-want-fine-undo t)
 #+END_SRC
 
 *** File extensions
