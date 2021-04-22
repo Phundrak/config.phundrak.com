@@ -33,7 +33,7 @@
 #
 ################################################################################
 CHECK=            # Run tests. May fail, this is developement after all.
-CLANG="YES"       # Use clang.
+CLANG="NO"        # Use clang.
 LTO="YES"         # Enable link-time optimization. Not that experimental anymore.
                   # Seems fixed in GCC, so I've reenabled binutils support, please
                   # report any bug, to make it use clang by default again.
@@ -74,7 +74,7 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-phundrak-git"
-pkgver=28.0.50.147730
+pkgver=28.0.50.147940
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch. Phundrak’s tweaks."
 arch=('x86_64' )
