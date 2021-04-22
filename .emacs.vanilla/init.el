@@ -29,13 +29,19 @@
 
 ;;; Code:
 
+(setq user-full-name       "Lucien Cartier-Tilet"
+      user-real-login-name "Lucien Cartier-Tilet"
+      user-login-name      "phundrak"
+      user-mail-address    "lucien@phundrak.com")
+
+(setq epa-pinentry-mode 'loopback)
+
 (defvar phundrak/default-font-size 90
   "Default font size.")
 
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
 
 (setq visible-bell t) ; set up visible bell
 
@@ -68,9 +74,13 @@
 (global-display-line-numbers-mode t)
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
-		            term-mode-hook
-		            shell-mode-hook
-		            eshell-mode-hook))
+		term-mode-hook
+		shell-mode-hook
+		eshell-mode-hook
+		vterm-mode-hook
+		special-mode-hook
+		helpful-mode-hook
+		woman-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (setq x-stretch-cursor          t         ; stretch cursor to the glyph’s width
@@ -82,9 +92,6 @@
       truncate-string-ellipsis  "…")
 
 (global-subword-mode 1)
-
-(add-to-list 'default-frame-alist '(height . 24))
-(add-to-list 'default-frame-alist '(width  . 80))
 
 (setq-default major-mode 'org-mode)
 
@@ -109,8 +116,8 @@ the user."
 ;; Initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			                   ("org"   . "https://orgmode.org/elpa/")
-			                   ("elpa"  . "https://elpa.gnu.org/packages/")))
+			 ("org"   . "https://orgmode.org/elpa/")
+			 ("elpa"  . "https://elpa.gnu.org/packages/")))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -137,26 +144,28 @@ the user."
 (setq use-package-always-ensure t)
 
 (use-package command-log-mode
+  :straight (:build t)
   :defer t)
 
 (use-package ivy
+  :straight (:build t)
   :defer t
   :diminish
   :bind (("C-s" . swiper)
-	       :map ivy-minibuffer-map
-	       ("TAB" . ivy-alt-done)
-	       ("C-l" . ivy-alt-done)
-	       ("C-t" . ivy-next-line)
-	       ("C-s" . ivy-previous-line)
-	       :map ivy-switch-buffer-map
-	       ("C-t" . ivy-next-line)
-	       ("C-s" . ivy-previous-line)
-	       ("C-l" . ivy-done)
-	       ("C-d" . ivy-switch-buffer-kill)
-	       :map ivy-reverse-i-search-map
-	       ("C-t" . ivy-next-line)
-	       ("C-s" . ivy-previous-line)
-	       ("C-d" . ivy-reverse-i-search-kill))
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)
+	 ("C-l" . ivy-alt-done)
+	 ("C-t" . ivy-next-line)
+	 ("C-s" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-t" . ivy-next-line)
+	 ("C-s" . ivy-previous-line)
+	 ("C-l" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-t" . ivy-next-line)
+	 ("C-s" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1))
 
@@ -167,22 +176,27 @@ the user."
 ;; M-x all-the-icons-install-fonts
 
 (use-package all-the-icons
+  :straight (:build t)
   :defer t)
 
 (use-package doom-modeline
+  :straight (:build t)
   :defer t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
 (use-package doom-themes
+  :straight (:build t)
   :defer t
   :init (load-theme 'doom-nord t))
 
 (use-package rainbow-delimiters
+  :straight (:build t)
   :defer t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package which-key
+  :straight (:build t)
   :defer t
   :init (which-key-mode)
   :diminish which-key-mode
@@ -190,19 +204,22 @@ the user."
   (setq which-key-idle-delay 0.3))
 
 (use-package ivy-rich
+  :straight (:build t)
   :defer t
   :init
   (ivy-rich-mode 1))
 
 (use-package counsel
+  :straight (:build t)
   :defer t
   :bind (("M-x"     . counsel-M-x)
-	       ("C-x b"   . counsel-ibuffer)
-	       ("C-x C-f" . counsel-find-file)
-	       :map minibuffer-local-map
-	       ("C-r" . 'counsel-minibuffer-history)))
+	 ("C-x b"   . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history)))
 
 (use-package helpful
+  :straight (:build t)
   :defer t
   :custom
   (counsel-describe-function-function #'helpfull-callable)
@@ -214,6 +231,7 @@ the user."
   ([remap describe-key]      . helpful-key))
 
 (use-package bind-map
+  :straight (:build t)
   :ensure t
   :defer )
 
@@ -228,6 +246,7 @@ the user."
 	leader-major-mode-prefix ","))
 
 (use-package evil
+  :straight (:build t)
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -235,48 +254,58 @@ the user."
   (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "t" 'evil-next-visual-line)
   (evil-global-set-key 'motion "s" 'evil-previous-visual-line)
+
   (define-key evil-normal-state-map "c" nil)
   (define-key evil-normal-state-map "C" nil)
+  (define-key evil-normal-state-map "t" nil)
+  (define-key evil-normal-state-map "T" nil)
   (define-key evil-normal-state-map "s" nil)
   (define-key evil-normal-state-map "S" nil)
   (define-key evil-normal-state-map "r" nil)
   (define-key evil-normal-state-map "R" nil)
+  (define-key evil-normal-state-map "h" nil)
+  (define-key evil-normal-state-map "H" nil)
   (define-key evil-normal-state-map "j" nil)
   (define-key evil-normal-state-map "J" nil)
-                                        ;je redéfinis certaines fonctions pour l’état normal
-  (define-key evil-normal-state-map "h" 'evil-change)
-  (define-key evil-normal-state-map "H" 'evil-change-line)
-  (define-key evil-normal-state-map "T" 'evil-join)
-  (define-key evil-normal-state-map "l" 'evil-replace)
-  (define-key evil-normal-state-map "L" 'evil-replace-state)
-  (define-key evil-normal-state-map "k" 'evil-substitute)
-  (define-key evil-normal-state-map "K" 'evil-change-whole-line)
-                                        ;même chose mais cette fois pour l’état motion
+  (define-key evil-normal-state-map "k" nil)
+  (define-key evil-normal-state-map "K" nil)
+  (define-key evil-normal-state-map "l" nil)
+  (define-key evil-normal-state-map "L" nil)
+
+  (define-key evil-motion-state-map "h" 'evil-replace)
+  (define-key evil-motion-state-map "H" 'evil-replace-state)
+  (define-key evil-motion-state-map "j" 'evil-find-char-to)
+  (define-key evil-motion-state-map "J" 'evil-find-char-to-backward)
+  (define-key evil-motion-state-map "k" 'evil-substitute)
+  (define-key evil-motion-state-map "K" 'evil-smart-doc-lookup)
+  (define-key evil-motion-state-map "l" 'evil-change)
+  (define-key evil-motion-state-map "L" 'evil-change-line)
+
   (define-key evil-motion-state-map "c" 'evil-backward-char)
   (define-key evil-motion-state-map "C" 'evil-window-top)
   (define-key evil-motion-state-map "t" 'evil-next-line)
+  (define-key evil-motion-state-map "T" 'evil-join)
   (define-key evil-motion-state-map "s" 'evil-previous-line)
+  (define-key evil-motion-state-map "S" 'evil-lookup)
   (define-key evil-motion-state-map "r" 'evil-forward-char)
   (define-key evil-motion-state-map "R" 'evil-window-bottom)
-  (define-key evil-motion-state-map "j" 'evil-find-char-to)
-  (define-key evil-motion-state-map "J" 'evil-find-char-to-backward)
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-collection
   :after evil
+  :straight (:build t)
   :defer t
   :config
   (evil-collection-init))
 
 (use-package hydra
+  :straight (:build t)
   :defer t)
 
 (defhydra hydra-text-scale (:timeout 4)
@@ -286,6 +315,7 @@ the user."
   ("q" nil "quit" :exit t))
 
 (use-package projectile
+  :straight (:build t)
   :defer t
   :diminish projectile-mode
   :config (projectile-mode)
@@ -294,15 +324,16 @@ the user."
   ("C-c p" . projectile-command-map)
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/Documents/code")
-    (setq projectile-project-search-path '("~/Documents/code")))
+
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
+  :straight (:build t)
   :defer t
   :config (counsel-projectile-mode))
 
 (use-package magit
+  :straight (:build t)
   :defer t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -314,6 +345,7 @@ the user."
 ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
 ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 (use-package forge
+  :straight (:build t)
   :defer t)
 
 (defun phundrak-find-org-files ()
@@ -331,9 +363,16 @@ the user can match one and open it."
                         phundrak-org-directories
                         "\n")))))
 
+(use-package mixed-pitch
+  :defer t
+  :straight t
+  :hook
+  (org-mode . mixed-pitch-mode))
+
 ;;;;;;;;;;;;;;;; Dashboard
 
 (use-package dashboard
+  :straight (:build t)
   :ensure t
   :config
   (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
@@ -343,8 +382,8 @@ the user can match one and open it."
 	dashboard-set-navigator     t
 	dashboard-set-heading-icons t
 	dashboard-set-file-icons    t
-	dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name
-	initial-buffer-choice       (lambda () (get-buffer "*dashboard*")))
+	initial-buffer-choice       (lambda () (get-buffer "*dashboard*"))
+	dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   (setq dashboard-navigator-buttons
 	`(
 	  ((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
@@ -352,7 +391,7 @@ the user can match one and open it."
 	    ""
 	    (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
 
-	  (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
+	   (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
 	    "Config Website"
 	    ""
 	    (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
@@ -363,14 +402,190 @@ the user can match one and open it."
 	    (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
 	   ("!" "Issues" "Show issues" (lambda (&rest _)
 					 (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
-	    warning))))
+	    warning))
+	  ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
+	    "Update packages"
+	    ""
+	    (lambda (&rest _) (progn
+				(require 'straight)
+				(straight-pull-all)))))))
+
   (setq dashboard-items '((recents  . 15)
 			  (projects . 10)))
   (dashboard-setup-startup-hook)
   :init
   (add-hook 'after-init-hook 'dashboard-refresh-buffer))
 
+(use-package vterm
+  :defer t
+  :straight t
+  :ensure t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Email
+
+(use-package mu4e
+  :straight (:build t :location site)
+  :commands mu4e mu4e-compose-new
+  :init
+  (provide 'html2text)
+  (when (or (not (require 'mu4e-meta nil t))
+	    (version< mu4e-mu-version "1.4"))
+    (setq mu4e-maidir                 "~/.mail"
+	  mu4e-trash-folder           "/Trash"
+	  mu4e-refile-folder          "/Archive"
+	  mu4e-sent-folder            "/Sent"
+	  mu4e-drafts-folder          "/Drafts"
+	  mu4e-user-mail-address-list nil))
+  (setq mu4e-attachment-dir
+	(lambda (&rest _)
+	  (expand-file-name ".attachments" (mu4e-roo-maildir))))
+  :config
+  (setq mu4e-get-mail-command         "mbsync -a"
+	mu4e-update-interval          60
+	mu4e-compose-format-flowed    t
+	mu4e-view-show-addresses      t
+	mu4e-sent-messages-behaviour  'sent
+	mu4e-hide-index-messages      t
+	;; try to show images
+	mu4e-view-show-images         t
+	mu4e-view-image-max-width     600
+	;; configuration for sending mail
+	message-send-mail-function    #'smtpmail-send-it
+	smtpmail-stream-type          'starttls
+	message-kill-buffer-on-exit   t                  ; close after sending
+	;; start with the first (default) context
+	mu4e-context-policy           'pick-first
+	;; compose with the current context, or ask
+	mu4e-compose-context-policy   'ask-if-none
+	;; use ivy
+	mu4e-completing-read-function #'ivy-completing-read
+	;; no need to ask
+	mu4e-confirm-quit             t
+	mu4e-header-fields
+	'((:account    . 12)
+	  (:human-date . 12)
+	  (:flags      . 4)
+	  (:from       . 25)
+	  (:subject)))
+
+  ;; set mail user agent
+  (setq mail-user-agent 'mu4e-user-agent)
+
+  ;; Use fancy icons
+  (setq mu4e-use-fancy-chars     t
+	mu4e-headers-draft-mark     `("D" . ,(all-the-icons-faicon "pencil":height 0.8))
+	mu4e-headers-flagged-mark   `("F" . ,(all-the-icons-faicon "flag":height 0.8))
+	mu4e-headers-new-mark       `("N" . ,(all-the-icons-faicon "rss":height 0.8))
+	mu4e-headers-passed-mark    `("P" . ,(all-the-icons-faicon "check":height 0.8))
+	mu4e-headers-replied-mark   `("R" . ,(all-the-icons-faicon "reply":height 0.8))
+	mu4e-headers-seen-mark      `("S" . ,(all-the-icons-faicon "eye":height 0.8))
+	mu4e-headers-unread-mark    `("u" . ,(all-the-icons-faicon "eye-slash":height 0.8))
+	mu4e-headers-trashed-mark   `("T" . ,(all-the-icons-faicon "trash":height 0.8))
+	mu4e-headers-attach-mark    `("a" . ,(all-the-icons-faicon "paperclip":height 0.8))
+        mu4e-headers-encrypted-mark `("x" . ,(all-the-icons-faicon "lock":height 0.8))
+        mu4e-headers-signed-mark    `("s" . ,(all-the-icons-faicon "certificate":height 0.8)))
+
+  (setq mu4e-bookmarks
+        `((,(s-join " "
+                    '("NOT flag:trashed"
+                      "AND (maildir:/Inbox OR maildir:/Junk)"
+                      "AND NOT to:CONLANG@LISTSERV.BROWN.EDU"
+                      "AND NOT to:AUXLANG@LISTSERV.BROWN.EDU"
+                      "AND NOT to:ateliers-emacs@framalistes.org"
+                      "AND NOT to:ateliers-paris@emacs-doctor.com"
+                      "AND NOT list:ateliers-emacs.framalistes.org"
+                      "AND NOT list:ateliers-paris.emacs-doctor.com"))
+           "Inbox" ?i) ;; Inbox without the linguistics mailing lists
+          (,(s-join " "
+                    '("NOT flag:trashed"
+                      "AND (maildir:/Inbox OR maildir:/Junk)"
+                      "AND (f:/.*up8\.edu|.*univ-paris8.*/"
+                      "OR c:/.*up8\.edu|.*univ-paris8.*/"
+                      "OR t:/.*up8\.edu|.*univ-paris8.*/)"))
+           "University" ?u) ;; University-related emails
+          (,(s-join " "
+                    '("to:CONLANG@LISTSERV.BROWN.EDU"
+                      "OR to:AUXLANG@LISTSERV.BROWN.EDU"))
+           "Linguistics" ?l) ;; linguistics mailing lists
+          (,(s-join " "
+                    '("list:ateliers-emacs.framalistes.org"
+                      "OR to:ateliers-paris@emacs-doctor.com"
+                      "OR list:ateliers-paris.emacs-doctor.com"))
+           "Emacs" ?e) ;; Emacs mailing list
+          ("maildir:/Sent" "Sent messages" ?s)
+          ("flag:unread AND NOT flag:trashed" "Unread messages" ?U)
+          ("date:today..now AND NOT flag:trashed" "Today's messages" ?t)
+          ("date:7d..now AND NOT flag:trashed" "Last 7 days" ?w)
+          ("date:1m..now AND NOT flag:trashed" "Last month" ?m)
+          ("date:1y..now AND NOT flag:trashed" "Last year" ?y)
+          ("flag:trashed AND NOT flag:trashed" "Trash" ?T)
+          ("mime:image/* AND NOT flag:trashed" "Messages with images" ?p)))
+
+  ;; Add a column to display what email account the email belongs to.
+  (add-to-list 'mu4e-header-info-custom
+               '(:account
+                 :name "Account"
+                 :shortname "Account"
+                 :help "Which account this email belongs to"
+                 :function
+                 (lambda (msg)
+                   (let ((maildir (mu4e-message-field msg :maildir)))
+                     (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
+
+  (add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser))
+
+  (when (fboundp 'imagemagick-register-types)
+    (imagemagick-register-types)))
+
+(use-package org-msg
+  :straight (:build t)
+  :hook (mu4e-compose-pre . org-msg-mode)
+  :config
+  (setq org-msg-startup              "inlineimages"
+	org-msg-greeting-name-limit  3
+	org-msg-default-alternatives '(html text)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Org
+
+(use-package org-appear
+  :after org
+  :straight (:build t)
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis   t
+	org-appear-autolinks      t
+	org-appear-autosubmarkers t
+	org-appear-autoemphasis   t)
+  (run-at-time nil nil #'org-appear--set-elements)
+  :defer t)
+
+(use-package org-superstar
+  :after org
+  :straight (:build t)
+  :hook (org-mode . org-superstar-mode)
+  :config
+  (setq org-superstar-leading-bullet   ?\s
+	org-superstar-leading-fallback ?\s
+	org-hide-leading-stars         nil
+	org-superstar-todo-bullet-alist
+	'(("TODO" . 9744)
+	  ("[ ]"  . 9744)
+	  ("DONE" . 9745)
+	  ("[X]"  . 9745))))
+
+
+(use-package org-fancy-priorities
+  :straight (:build t)
+  :hook (org-mode        . org-fancy-priorities-mode)
+  :hook (org-agenda-mode . org-fancy-priorities-mode)
+  :config
+  (setq org-fancy-priorities-list `(,(all-the-icons-faicon "flag"     :height 1.1 :v-adjust 0.0)
+				    ,(all-the-icons-faicon "arrow-up" :height 1.1 :v-adjust 0.0)
+				    ,(all-the-icons-faicon "square"   :height 1.1 :v-adjust 0.0))))
+
+(use-package evil-nerd-commenter
+  :straight (:build t)
+  :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;             Keybindings             ;
@@ -405,46 +620,74 @@ the user can match one and open it."
 	     (symbol-value golden-ratio-mode))
     (golden-ratio)))
 
+(defun eshell-new ()
+  "Open a new instance of Eshell."
+  (interactive)
+  (eshell 'N))
+
 (define-key evil-motion-state-map (kbd ",") nil)
 
 (leader/set-keys
-  "b"  "buffers"
-  "bb" #'counsel-ibuffer
-  "bi" #'ibuffer-list-buffers-and-focus
-  "bd" #'kill-this-buffer
-  "bD" #'kill-buffer
+  "SPC" #'counsel-M-x
 
-  "f"  "files"
-  "fi" (lambda ()
-	 (interactive)
-	 (find-file (expand-file-name "init.el" user-emacs-directory)))
-  "ff" #'find-file
-  "fo" #'phundrak-find-org-files
-  "fs" #'save-buffer
+  "a"   "apps"
+  "as"  "shells"
+  "ase" #'eshell-new
+  "asv" #'vterm
 
-  "h"  "help"
+  "b"   "buffers"
+  "bb"  #'counsel-ibuffer
+  "bi"  #'ibuffer-list-buffers-and-focus
+  "bd"  #'kill-this-buffer
+  "bD"  #'kill-buffer
+  "bh"  #'dashboard-refresh-buffer
+  "bs"  (lambda ()
+	  (interactive)
+	  (switch-to-buffer "*scratch*"))
+
+  "c"   "code"
+  "cl"  #'evilnc-comment-or-uncomment-lines
+
+  "e"   "emails"
+  "em"  #'mu4e
+  "ec"  #'mu4e-compose-new
+
+  "f"   "files"
+  "fi"  (lambda ()
+          (interactive)
+          (find-file (expand-file-name "init.el" user-emacs-directory)))
+  "ff"  #'find-file
+  "fo"  #'phundrak-find-org-files
+  "fs"  #'save-buffer
+
+  "h"   "help"
+  "hk"  #'which-key-show-top-level
   "hdf" #'helpful-callable
+  "hdk" #'helpful-key
   "hdv" #'helpful-variable
 
-  "t"  "toggles"
-  "tt" #'counsel-load-theme
+  "t"   "toggles"
+  "tt"  #'counsel-load-theme
 
-  "T"  "text"
-  "Ts" #'hydra-text-scale/body
+  "T"   "text"
+  "Ts"  #'hydra-text-scale/body
 
-  "w"  "windows"
-  "w-" #'split-window-below-and-focus
-  "w/" #'split-window-right-and-focus
-  "wo" #'other-window
-  "wd" #'delete-window
-  "wc" #'evil-window-left
-  "wt" #'evil-window-down
-  "ws" #'evil-window-up
-  "wr" #'evil-window-right
+  "w"   "windows"
+  "w-"  #'split-window-below-and-focus
+  "w/"  #'split-window-right-and-focus
+  "wo"  #'other-window
+  "wd"  #'delete-window
+  "wD"  #'delete-other-windows
 
-  "q"  "quit"
-  "qq" #'kill-emacs
-  )
+  "wc"  #'evil-window-left
+  "wt"  #'evil-window-down
+  "ws"  #'evil-window-up
+  "wr"  #'evil-window-right
+
+  "q"   "quit"
+  "qf"  #'delete-frame
+  "qq"  #'save-buffers-kill-terminal
+  "qQ"  #'kill-emacs)
 
 (leader/set-keys-for-major-mode 'emacs-lisp-mode
   "e" '("eval" . "evaluate expression")
