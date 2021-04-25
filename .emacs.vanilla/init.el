@@ -65,7 +65,7 @@
 	     (format (if (buffer-modified-p) " ◉ %s" "  ●  %s") project-name))))))
 
 ;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escabe-quit)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; Answer with y or n, not yes or not
 (defalias 'yes-or-no-p 'y-or-n-p)
