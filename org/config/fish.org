@@ -551,7 +551,7 @@ When it comes to mpv, I do not want to force it to open a graphical window if
 for example I want to listen to an audio file. I also do not want any border on
 that window. So, I declared this abbreviation.
 #+BEGIN_SRC fish
-  abbr mpv 'devour mpv --no-border --force-window=no'
+  abbr mpv 'mpv --no-border --force-window=no'
 #+END_SRC
 
 When I want to download a song from YouTube, I'll just use the command ~flac
