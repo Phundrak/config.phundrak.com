@@ -880,6 +880,9 @@ the user can match one and open it."
   "hdk" #'helpful-key
   "hdv" #'helpful-variable
 
+  "j"   "jump"
+  "jd"  #'dired-jump
+
   "t"   "toggles"
   "tt"  #'counsel-load-theme
 
@@ -911,6 +914,15 @@ the user can match one and open it."
 (leader/set-keys-for-major-mode 'org-mode
   "b"  "babel"
   "bt" #'org-babel-tangle
+
+  "i"  "insert"
+  "ib" #'org-insert-structure-template
+  "if" #'org-footnote-new
+  "ih" #'org-insert-heading
+  "il" #'org-insert-link
+  "ip" #'org-set-property
+  "it" #'org-set-tags-command
+  "is" #'org-insert-subheading
 
   ","  #'org-ctrl-c-ctrl-c
   "'"  #'org-edit-special)
