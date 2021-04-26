@@ -563,6 +563,19 @@ the user can match one and open it."
   :hook
   (pdf-tools-enabled . pdf-view-midnight-minor-mode))
 
+;;;;;;;;;;;;;;;; Docker
+
+(use-package docker
+  :defer t
+  :straight (:build t))
+
+(use-package dockerfile-mode
+  :defer t
+  :straight (:build t)
+  :init
+  (put 'docker-image-name 'safe-local-variable #'stringp)
+  :mode "Dockerfile\\'")
+
 ;;;;;;;;;;;;;;;; Dashboard
 
 (use-package dashboard
@@ -778,6 +791,12 @@ the user can match one and open it."
   :straight (:build t)
   :defer t)
 
+(use-package yaml-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.yml\\'"
+  :mode "\\.yaml\\'")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;             Keybindings             ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -822,6 +841,7 @@ the user can match one and open it."
   "SPC" #'counsel-M-x
 
   "a"   "apps"
+  "ad"  #'docker
   "as"  "shells"
   "ase" #'eshell-new
   "asv" #'vterm
