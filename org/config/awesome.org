@@ -1448,8 +1448,8 @@ vertically aligned, and then I can declare my bottom elements:
 #+BEGIN_SRC lua :tangle no
   { -- Top
     awful.titlebar.widget.closebutton(c),
-    awful.titlebar.widget.maximizedbutton(c),
     awful.titlebar.widget.minimizebutton(c),
+    awful.titlebar.widget.maximizedbutton(c),
     layout = wibox.layout.fixed.vertical()
   },
   {
