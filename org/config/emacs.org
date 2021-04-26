@@ -5355,9 +5355,6 @@ I want to see by default how much battery my computer has, so let’s enable it:
                         (cddr input))))
     (mapconcat (lambda (face)
                  (concat
-                   ;; (if makeface
-                   ;;     (format "`(%s ((t " (cadr (assoc "Name" face)))
-                   ;;   (format "(%s `" (cadr (assoc "Name" face))))
                    (format (if makeface "`(%s ((t " "(%s `")
                            (cadr (assoc "Name" face)))
                    (format "(%s %s %s %s)"
