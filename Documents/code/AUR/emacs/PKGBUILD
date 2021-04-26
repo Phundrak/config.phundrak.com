@@ -74,7 +74,7 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-phundrak-git"
-pkgver=28.0.50.147940
+pkgver=28.0.50.148050
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch. Phundrak’s tweaks."
 arch=('x86_64' )
@@ -85,7 +85,7 @@ makedepends=('git')
 provides=('emacs' 'emacs-seq')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-git' 'emacs-seq' 'emacs-native-comp-git' 'emacs-pgtk-native-comp-git')
 replaces=('emacs26-git' 'emacs27-git' 'emacs-git' 'emacs-seq')
-source=("emacs-git::git://git.savannah.gnu.org/emacs.git#branch=feature/native-comp")
+source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 md5sums=('SKIP')
 # If Savannah access is blocked for reasons, use Github instead.
 # Edit the config file of your local repo copy as well.
@@ -95,8 +95,8 @@ md5sums=('SKIP')
 
 ################################################################################
 
-CFLAGS+=" -O3 -march=skylake"
-CXXFLAGS+=" -O3 -march=skylake"
+CFLAGS+=" -O3 -march=native -mtune=native"
+CXXFLAGS+=" -O3 -march=native -mtune=native"
 
 if [[ $LTO == "YES" ]]; then
   CFLAGS+=" -flto"
