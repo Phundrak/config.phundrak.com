@@ -107,6 +107,7 @@ the user."
                 t)))
 
 (add-hook 'after-change-major-mode-hook #'modeline-contitional-buffer-encoding)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;               Packages              ;
