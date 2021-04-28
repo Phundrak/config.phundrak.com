@@ -264,15 +264,16 @@ the user."
         ivy-use-selectable-prompt       t))
 
 (use-package ivy-prescient
-  :defer t
+  :after ivy
   :straight (:build t))
 
 (use-package all-the-icons-ivy
   :straight (:build t)
-  :after ivy
+  :after (ivy all-the-icons)
   :hook (after-init . all-the-icons-ivy-setup))
 
 (use-package ivy-posframe
+  :after ivy
   :hook (ivy-mode . ivy-posframe-mode)
   :straight (ivy-posframe :type git
                           :host github
@@ -286,7 +287,7 @@ the user."
 
 (use-package ivy-rich
   :straight (:build t)
-  :defer t
+  :after ivy
   :init
   (ivy-rich-mode 1))
 
@@ -330,14 +331,14 @@ the user."
         company-dabbrev-downcase    nil))
 
 (use-package company-dict
-  :defer t
+  :after company
   :straight (:build t)
   :config
   (setq company-dict-dir (expand-file-name "dicts" user-emacs-directory)))
 
 (use-package company-box
   :straight (:build t)
-  :defer t
+  :after (company all-the-icons)
   :config
   (setq company-box-show-single-candidate t
         company-box-backends-colors       nil
@@ -475,7 +476,7 @@ the user."
 
 (use-package counsel-projectile
   :straight (:build t)
-  :defer t
+  :after (counsel projectile)
   :config (counsel-projectile-mode))
 
 (use-package magit
@@ -491,8 +492,8 @@ the user."
 ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
 ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 (use-package forge
-  :straight (:build t)
-  :defer t)
+  :after magit
+  :straight (:build t))
 
 (defun phundrak-find-org-files ()
   "Find all org files in the directories listed in
@@ -581,6 +582,7 @@ the user can match one and open it."
 (use-package dashboard
   :straight (:build t)
   :ensure t
+  :after all-the-icons
   :config
   (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
         dashboard-startup-banner    'logo
@@ -632,6 +634,7 @@ the user can match one and open it."
 (use-package mu4e
   :straight (:build t :location site)
   :commands mu4e mu4e-compose-new
+  :defer t
   :init
   (provide 'html2text)
   (when (or (not (require 'mu4e-meta nil t))
@@ -744,6 +747,7 @@ the user can match one and open it."
     (imagemagick-register-types)))
 
 (use-package org-msg
+  :after (org mu4e)
   :straight (:build t)
   :hook (mu4e-compose-pre . org-msg-mode)
   :config
@@ -779,6 +783,7 @@ the user can match one and open it."
           ("[X]"  . 9745))))
 
 (use-package org-fancy-priorities
+  :after (org all-the-icons)
   :straight (:build t)
   :hook (org-mode        . org-fancy-priorities-mode)
   :hook (org-agenda-mode . org-fancy-priorities-mode)
@@ -788,8 +793,8 @@ the user can match one and open it."
                                     ,(all-the-icons-faicon "square"   :height 1.1 :v-adjust 0.0))))
 
 (use-package evil-nerd-commenter
-  :straight (:build t)
-  :defer t)
+  :after evil
+  :straight (:build t))
 
 (use-package yaml-mode
   :defer t
