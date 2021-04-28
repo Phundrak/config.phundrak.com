@@ -803,6 +803,26 @@ the user can match one and open it."
   :mode "\\.yml\\'"
   :mode "\\.yaml\\'")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Snippets
+
+(use-package yasnippet
+  :defer t
+  :straight (:build t)
+  :init
+  (yas-global-mode))
+
+(use-package yasnippet-snippets
+  :after yasnippet
+  :straight (:build t))
+
+(use-package yatemplate
+  :after yasnippet
+  :straight (:build t))
+
+(use-package ivy-yasnippet
+  :after (ivy yasnippet)
+  :straight (:build t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                         ;             Keybindings             ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
