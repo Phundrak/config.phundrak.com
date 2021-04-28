@@ -1,3 +1,4 @@
+# -*- after-save-hook: (org-babel-tangle t); -*-
 #+TITLE: Phundrak’s dotfiles
 #+setupfile: headers
 #+OPTIONS: auto-id:t

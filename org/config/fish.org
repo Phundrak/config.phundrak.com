@@ -1,3 +1,4 @@
+# -*- after-save-hook: (org-babel-tangle t); -*-
 #+TITLE: Fish config
 #+setupfile: headers
 #+OPTIONS: auto-id:t

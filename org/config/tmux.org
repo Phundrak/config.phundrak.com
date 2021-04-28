@@ -1,3 +1,4 @@
+# -*- after-save-hook: (org-babel-tangle t); -*-
 #+TITLE: Tmux config
 #+setupfile: headers
 #+OPTIONS: auto-id:t

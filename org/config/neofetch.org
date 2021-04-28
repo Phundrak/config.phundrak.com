@@ -1,3 +1,4 @@
+# -*- after-save-hook: (org-babel-tangle t); -*-
 #+title: Neofetch configuration
 #+setupfile: headers
 #+OPTIONS: auto-id:t
