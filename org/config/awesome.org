@@ -975,7 +975,7 @@ declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
 | Key | Modifiers      | Lambda? | Action                            | What it does       | Group    |
 |-----+----------------+---------+-----------------------------------+--------------------+----------|
 | b   | modkey         | yes     | awful.spawn(os.getenv("BROWSER")) | invoke web browser | internet |
-| d   | control, shift | spawn   | discord-canary                    | launch Discord     | internet |
+| d   | control, shift | spawn   | lightcord                         | launch Discord     | internet |
 
 *** Screenshots
 :PROPERTIES:
@@ -1313,9 +1313,10 @@ to which tag by default.
 | class           | firefox    |   3 |
 | class           | Nemo       |   4 |
 | class           | Gimp*      |   5 |
-| class           | Steam      |   9 |
+| class           | Steam      |   8 |
+| class           | Mattermost |   9 |
 | class           | discord    |   0 |
-| class           | mattermost |   0 |
+| class           | lightcord  |   0 |
 
 #+NAME: rules-default-tags-generate
 #+BEGIN_SRC emacs-lisp :tangle no :exports none :cache yes :var tags=rules-default-tags-table
