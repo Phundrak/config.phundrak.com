@@ -1,14 +1,15 @@
 #+TITLE: Sitemap for project config-website-org
 
-- [[file:installation.org][Arch Linux, Phundrak-flavored]]
+- [[file:bootstrap.org][Arch Linux, Phundrak-flavored]]
 - [[file:awesome.org][AwesomeWM configuration]]
 - [[file:emacs.org][Emacs Configuration]]
 - [[file:bin.org][Executable scripts]]
 - [[file:fish.org][Fish config]]
-- [[file:neofetch.org][Neofetch configuration]]
+- [[file:neofetch.org][Neofetch configuration (WIP)]]
 - [[file:index.org][Phundrak’s dotfiles]]
 - [[file:picom.org][Picom (Compton) Configuration]]
 - [[file:rustfmt.org][Rust format config]]
+- [[file:spacemacs.org][Spacemacs Configuration]]
 - [[file:tmux.org][Tmux config]]
 - Deprecated
   - [[file:Deprecated/nano.org][Nano configuration]]
