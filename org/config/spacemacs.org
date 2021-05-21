@@ -497,6 +497,10 @@ programming language, so here it is.
        lua-lsp-emmy-enable-file-watchers t)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (php :variables php-backend 'lsp)
+#+END_SRC
+
 *** Readers
 :PROPERTIES:
 :CUSTOM_ID: Spacemacs_layers_and_packages-Layers-Readers-65e8e4ae
@@ -609,10 +613,6 @@ Lastly, one custom layers have been enabled: my custom layer for conlanging
 tools.
 #+BEGIN_SRC emacs-lisp
   conlanging
-  (exwm :variables
-        exwm-enable-systray t
-        exwm-install-logind-lock-handler t
-        exwm-locking-command "plock")
 #+END_SRC
 
 # Don’t delete this code block, it wraps the layers
@@ -4143,14 +4143,6 @@ ignore these paths:
 #+BEGIN_SRC emacs-lisp :noweb yes
   (with-eval-after-load 'recentf
     <<recentf-ignored-paths-gen()>>)
-#+END_SRC
-
-** EXWM
-:PROPERTIES:
-:CUSTOM_ID: User-Configuration-EXWM-12e1cca6
-:END:
-#+BEGIN_SRC emacs-lisp
-  (setq exwm-workspace-number 10)
 #+END_SRC
 
 ** Keybindings
