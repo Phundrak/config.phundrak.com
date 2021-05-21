@@ -1,3 +1,4 @@
+# -*- org-confirm-babel-evaluate: nil -*-
 #+title: AwesomeWM configuration
 #+setupfile: headers
 #+OPTIONS: auto-id:t
@@ -993,10 +994,10 @@ declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
 :CUSTOM_ID: Keybindings-Applications-Emacs-95f8f6a4
 :END:
 #+NAME: sc-app-emacs
-| Key | Modifiers     | Lambda? | Action                        | What it does             | Group |
-|-----+---------------+---------+-------------------------------+--------------------------+-------|
-| e   | modkey        | spawn   | emacsclient -c -n             | invoke Emacs             | emacs |
-| e   | modkey, shift | spawn   | emacsclient -c -n -e '(mu4e)' | invoke Emacs mail client | emacs |
+| Key | Modifiers     | Lambda? | Action                       | What it does         | Group |
+|-----+---------------+---------+------------------------------+----------------------+-------|
+| e   | modkey        | spawn   | emacsclient -c -n            | invoke Spacemacs     | emacs |
+| e   | modkey, shift | spawn   | emacs --with-profile vanilla | invoke Vanilla Emacs | emacs |
 
 *** Rofi
 :PROPERTIES:
@@ -1313,8 +1314,8 @@ to which tag by default.
 | class           | firefox    |   3 |
 | class           | Nemo       |   4 |
 | class           | Gimp*      |   5 |
-| class           | Steam      |   8 |
-| class           | Mattermost |   9 |
+| class           | Steam      |   9 |
+| class           | Mattermost |   0 |
 | class           | discord    |   0 |
 | class           | lightcord  |   0 |
 
