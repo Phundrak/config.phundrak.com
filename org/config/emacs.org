@@ -661,6 +661,11 @@ character of my choice!
     (add-to-list 'prettify-symbols-alist symbol))
 #+end_src
 
+Let’s enable this mode for any programming mode:
+#+begin_src emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+#+end_src
+
 *** Rainbow Delimiters
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
