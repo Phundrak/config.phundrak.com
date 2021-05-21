@@ -1259,11 +1259,7 @@ it. The main reason I want ~org-contrib~ is due to ~ox-extra~ that allow
 the usage of the ~:ignore:~ tag in org.
 #+begin_src emacs-lisp
   (use-package org-contrib
-    :straight (org-contrib
-               :type git
-               :host nil
-               :repo "https://git.sr.ht/~bzg/org-contrib"
-               :build t)
+    :straight (:build t)
     :init
     (require 'ox-extra)
     (ox-extras-activate '(latex-header-blocks ignore-headlines)))
