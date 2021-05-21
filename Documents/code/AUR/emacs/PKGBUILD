@@ -74,7 +74,7 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-phundrak-git"
-pkgver=28.0.50.148050
+pkgver=28.0.50.148419
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch. Phundrak’s tweaks."
 arch=('x86_64' )
