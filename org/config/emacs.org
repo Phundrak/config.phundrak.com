@@ -1666,12 +1666,6 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
        "a" #'with-editor-cancel)))
 #+end_src
 
-#+begin_src emacs-lisp
-  (use-package evil-magit
-    :straight (:build t)
-    :after magit)
-#+end_src
-
 *** Forge
 *NOTE*: Make sure to configure a GitHub token before using this
  package!
