@@ -1091,8 +1091,6 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
     :init
     ;; (add-hook 'org-mode-hook #'visual-line-mode)
     (auto-fill-mode -1)
-    (require 'ox-extra)
-    (ox-extras-activate '(ignore-headlines))
 
     :general
     (:states 'normal
@@ -1247,6 +1245,23 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
     (evil-org-set-key-theme '(textobjects navigation calendar additional shift operators))
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
+#+end_src
+
+Since very recently, the ~contrib/lisp/~ directory of org moved out of
+the main repository to [[https://git.sr.ht/~bzg/org-contrib][this repository]]. On the other hand,
+~contrib/scripts/~ moved to [[https://code.orgmode.org/bzg/worg/src/master/code][the worg repository]], but I don’t need
+it. The main reason I want ~org-contrib~ is due to ~ox-extra~ that allow
+the usage of the ~:ignore:~ tag in org.
+#+begin_src emacs-lisp
+  (use-package org-contrib
+    :straight (org-contrib
+               :type git
+               :host nil
+               :repo "https://git.sr.ht/~bzg/org-contrib"
+               :build t)
+    :init
+    (require 'ox-extra)
+    (ox-extras-activate '(latex-header-blocks ignore-headlines)))
 #+end_src
 
 **** Agenda
@@ -2356,7 +2371,7 @@ Undefining some stuff to make keybind prefixes work correctly.
               epa-key-list-mode-map special-mode-map splash-screen-keymap
               undo-tree-visualizer-mode-map magit-blame-read-only-mode-map
               org-agenda-keymap org-agenda-mode-map git-rebase-mode-map
-              Buffer-menu-mode-map custom-mode-map)
+              Buffer-menu-mode-map custom-mode-map gfm-view-mode-map)
    "SPC" nil)
 
   (general-define-key

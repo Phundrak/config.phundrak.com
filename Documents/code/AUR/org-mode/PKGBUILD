@@ -1,0 +1,39 @@
+# contributor: zhuqin <zhuqin83@gmail.com>
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+ 
+pkgname=emacs-org-mode-git
+pkgver=9.4.6.r541.g52b09799c
+pkgrel=1
+epoch=1
+pkgdesc="Emacs Org Mode from git"
+arch=('any')
+url="http://orgmode.org/"
+depends=('emacs')
+makedepends=('git' 'texlive-core' 'perl' 'awk')
+optdepends=('java-environment: for using ditaa.jar in the contrib directory'
+	   'zsh: for using dir2org.zsh in the contrib directory')
+license=('GPL')
+provides=("emacs-org-mode=$pkgver")
+conflicts=('emacs-org-mode')
+install=emacs-org-mode.install
+source=(emacs-org-mode::git+https://code.orgmode.org/bzg/org-mode.git)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ${pkgname%-git}
+  git describe --tags | sed 's+-+.r+' | cut -c9- | tr - .
+}
+
+ build() {
+  cd ${pkgname%-git}
+  make
+}
+
+package () {
+  cd ${pkgname%-git}
+
+  make DESTDIR="$pkgdir" install
+  mkdir -p "$pkgdir"/usr/share/info/orgmode
+  find "$pkgdir"/usr/share/info -maxdepth 1 -type f -exec mv {} "$pkgdir"/usr/share/info/orgmode \;
+  install -d "$pkgdir"/usr/share/emacs/site-lisp/org_contrib
+}
