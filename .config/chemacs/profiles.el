@@ -1,3 +1,5 @@
 (("spacemacs" . ((user-emacs-directory . "~/.emacs.spacemacs")))
+ ("testmacs"  . ((user-emacs-directory . "~/fromGIT/spacemacs")
+                 (dotspacemacs-filepath . "/tmp/.spacemacs")))
  ("vanilla"   . ((user-emacs-directory . "~/.emacs.vanilla")))
  ("doom"      . ((user-emacs-directory . "~/.emacs.doom"))))
