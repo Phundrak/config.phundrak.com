@@ -1274,6 +1274,16 @@ the usage of the ~:ignore:~ tag in org.
   (setq-default org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
+**** Babel
+A package I use from time to time is ~ob-latex-as-png~ which allows me
+to easily convert a LaTeX snippet into a PNG, regardless of the
+exporter I use afterwards. Its installation is pretty simple:
+#+begin_src emacs-lisp
+  (use-package ob-latex-as-png
+    :defer t
+    :straight (:build t))
+#+end_src
+
 **** File export
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
@@ -2274,6 +2284,24 @@ Nginx syntax.
 #+end_src
 
 *** Shells
+**** Shell-pop
+Shell-pop allows the user to easily call for a new shell in a pop-up
+buffer.
+#+begin_src emacs-lisp
+  (use-package shell-pop
+    :defer t
+    :straight (:build t)
+    :custom
+    (shell-pop-default-directory "/home/phundrak")
+    (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+    (shell-pop-window-size 30)
+    (shell-pop-full-span nil)
+    (shell-pop-window-position "bottom")
+    (shell-pop-autocd-to-working-dir t)
+    (shell-pop-restore-window-configuration t)
+    (shell-pop-cleanup-buffer-at-process-exit t))
+#+end_src
+
 **** VTerm
 #+begin_src emacs-lisp
   (use-package vterm
