@@ -2329,6 +2329,7 @@ buffer.
    "S" #'xwidget-webkit-forward
    "R" #'xwidget-webkit-reload)
 #+end_src
+
 *** Wttr.in
 #+begin_src emacs-lisp
   (use-package wttrin
@@ -2375,20 +2376,7 @@ just going to the frame above, then left, left, and up.
 #+begin_src emacs-lisp
   (use-package winum
     :straight (:build t)
-    :init (winum-mode)
-    :general
-    (:states 'normal
-     "SPC 0" #'winum-select-window-0-or-10
-     "SPC 1" #'winum-select-window-1
-     "SPC 2" #'winum-select-window-2
-     "SPC 3" #'winum-select-window-3
-     "SPC 4" #'winum-select-window-4
-     "SPC 5" #'winum-select-window-5
-     "SPC 6" #'winum-select-window-6
-     "SPC 7" #'winum-select-window-7
-     "SPC 8" #'winum-select-window-8
-     "SPC 9" #'winum-select-window-9
-     "SPC $" #'winum-select-window-by-number))
+    :init (winum-mode))
 #+end_src
 
 * Keybindings
@@ -2414,7 +2402,8 @@ Undefining some stuff to make keybind prefixes work correctly.
   (general-define-key
    :keymaps '(diff-mode-map help-mode-map image-mode-map
               dired-mode-map Man-mode-map eww-mode-map magit-mode-map
-              debugger-mode-map dired-mode-map custom-mode-map)
+              debugger-mode-map dired-mode-map custom-mode-map
+              eshell-mode-map)
    :states 'normal
    "SPC" nil)
 
@@ -2456,6 +2445,7 @@ Undefining some stuff to make keybind prefixes work correctly.
    :states 'normal
    :prefix "SPC"
     "SPC" '(counsel-M-x :wk "M-x")
+    "'"   #'shell-pop
 
     "a"   '(nil :wk "apps")
     "ac"  #'calc
@@ -2538,6 +2528,17 @@ Undefining some stuff to make keybind prefixes work correctly.
     "w"   '(nil :wk "windows")
     "w-"  #'split-window-below-and-focus
     "w/"  #'split-window-right-and-focus
+    "w$" #'winum-select-window-by-number
+    "w0" #'winum-select-window-0-or-10
+    "w1" #'winum-select-window-1
+    "w2" #'winum-select-window-2
+    "w3" #'winum-select-window-3
+    "w4" #'winum-select-window-4
+    "w5" #'winum-select-window-5
+    "w6" #'winum-select-window-6
+    "w7" #'winum-select-window-7
+    "w8" #'winum-select-window-8
+    "w9" #'winum-select-window-9
     "wb"  '((lambda ()
             (interactive)
             (progn
@@ -2545,16 +2546,16 @@ Undefining some stuff to make keybind prefixes work correctly.
               (delete-window)))
             :wk "Kill buffer and window")
     "wd"  #'delete-window
-    "wD"  #'delete-other-windows
     "wo"  #'other-window
+    "wD"  #'delete-other-windows
+    "ww"  '(nil :wk "writeroom")
+    "www" #'writeroom-mode
+    "wwb" #'writeroom-buffer-width/body
 
     "wc"  #'evil-window-left
     "wt"  #'evil-window-down
     "ws"  #'evil-window-up
     "wr"  #'evil-window-right
-    "ww"  '(nil :wk "writeroom")
-    "www" #'writeroom-mode
-    "wwb" #'writeroom-buffer-width/body
 
     "T"   '(nil :wk "text")
     "Tz"  #'hydra-zoom/body
