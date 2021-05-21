@@ -1,99 +1,99 @@
 [user]
-	email = lucien@phundrak.com
-	name = Lucien Cartier-Tilet
-	signingkey = BD7789E705CB8DCA
+        email = lucien@phundrak.com
+        name = Lucien Cartier-Tilet
+        signingkey = BD7789E705CB8DCA
 [core]
-	editor = emacsclient -c -a emacs
-	whitespace = fix,-indent-with-non-tab,trailing-space
-	excludesfile = /home/phundrak/dotfiles/.gitignore_global
+        editor = emacsclient -c -a emacs
+        whitespace = fix,-indent-with-non-tab,trailing-space
+        excludesfile = /home/phundrak/dotfiles/.gitignore_global
 [web]
-	browser = firefox
+        browser = firefox
 [color]
-	ui = auto
+        ui = auto
 [alias]
-	a = add --all
-	####
-	b = branch
-	####
-	c = commit -S
-	ca = commit -a
-	cm = commit -m
-	cam = commit -am
-	####
-	co = checkout
-	cob = checkout -b
-	####
-	cl = clone
-	cl1 = clone --depth=1
-	####
-	d = diff -w
-	####
-	l = log --oneline --graph --decorate
-	####
-	ps = push
-	psf = push -f
-	pso = push origin
-	psfo = push -f origin
-	psom = push origin master
-	psfom = push -f origin master
-	####
-	pl = pull
-	pb = pull --rebase
-	####
-	re = reset
-	reh = reset --hard
-	rehh = reset --hard HEAD
-	####
-	r = remote
-	ra = remote add
-	rr = remote rm
-	###
-	rmf = rm -f
-	rmrf = rm -r -f
-	####
-	s = status
-	sm = submodule
-	sms = submodule status
-	sma = submodule add
-	smu = submodule update
-	smui = submodule update --init
-	smuir = submodule update --init --recursive
-	####
-	staged = diff --cached
-	####
-	sc = stash clear
-	sp = stash pop
-	sw = stash show
-	####
-	pushall = !git remote | xargs -L1 git push
-	psl = !git remote | xargs -L1 git push
-	pullall = !git remote | xargs -L1 git pull
-	pll = !git remote | xargs -L1 git pull
-	####
-	u = reset --
-	unstage = reset --
+        a = add --all
+        ####
+        b = branch
+        ####
+        c = commit -S
+        ca = commit -a
+        cm = commit -m
+        cam = commit -am
+        ####
+        co = checkout
+        cob = checkout -b
+        ####
+        cl = clone
+        cl1 = clone --depth=1
+        ####
+        d = diff -w
+        ####
+        l = log --oneline --graph --decorate
+        ####
+        ps = push
+        psf = push -f
+        pso = push origin
+        psfo = push -f origin
+        psom = push origin master
+        psfom = push -f origin master
+        ####
+        pl = pull
+        pb = pull --rebase
+        ####
+        re = reset
+        reh = reset --hard
+        rehh = reset --hard HEAD
+        ####
+        r = remote
+        ra = remote add
+        rr = remote rm
+        ###
+        rmf = rm -f
+        rmrf = rm -r -f
+        ####
+        s = status
+        sm = submodule
+        sms = submodule status
+        sma = submodule add
+        smu = submodule update
+        smui = submodule update --init
+        smuir = submodule update --init --recursive
+        ####
+        staged = diff --cached
+        ####
+        sc = stash clear
+        sp = stash pop
+        sw = stash show
+        ####
+        pushall = !git remote | xargs -L1 git push
+        psl = !git remote | xargs -L1 git push
+        pullall = !git remote | xargs -L1 git pull
+        pll = !git remote | xargs -L1 git pull
+        ####
+        u = reset --
+        unstage = reset --
 [sendemail]
-	smtpserver = mail.phundrak.com
-	smtpuser = lucien@phundrak.com
-	smtpencryption = tls
-	smtpserverport = 587
+        smtpserver = mail.phundrak.com
+        smtpuser = lucien@phundrak.com
+        smtpencryption = tls
+        smtpserverport = 587
 [magithub]
-	online = true
+        online = true
 [magithub "status"]
-	includeStatusHeader = true
-	includePullRequestsSection = true
-	includeIssuesSection = true
+        includeStatusHeader = true
+        includePullRequestsSection = true
+        includeIssuesSection = true
 [gpg]
-	program = gpg2
+        program = gpg2
 [mergetool.ediff]
-	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
+        cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
 [merge]
-	tool = ediff
+        tool = ediff
 [github]
-	user = phundrak
+        user = phundrak
 [commit]
-	gpgsign = true
+        gpgsign = true
 [pull]
-	rebase = false
+        rebase = false
 [init]
-	defaultBranch = main
+        defaultBranch = main
