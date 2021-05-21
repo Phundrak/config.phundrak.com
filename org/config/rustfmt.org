@@ -1,4 +1,4 @@
-# -*- after-save-hook: (org-babel-tangle t); -*-
+# -*- org-confirm-babel-evaluate: nil  -*-
 #+TITLE: Rust format config
 #+setupfile: headers
 #+OPTIONS: auto-id:t
