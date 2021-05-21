@@ -158,8 +158,8 @@ feature on or off. However, its behavior can be changed with
 
 These values controls the opacity change between steps while fading in and out.
 | Default value | ~0.028~ (fade-in), ~0.03~ (fade-out) |
-| Min value     | ~0.01~                               |
-| Max value     | ~1.0~                                |
+| Min value     | ~0.01~                             |
+| Max value     | ~1.0~                              |
 #+BEGIN_SRC conf
   fade-in-step = 0.09;
   fade-out-step = 0.08;

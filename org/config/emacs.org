@@ -32,7 +32,6 @@ still in the process of porting my [[file:spacemacs.org][Spacemacs]] configurati
 
   (setq-default initial-major-mode 'emacs-lisp-mode)
 
-
   (setq display-time-format "%Y-%m-%d %H:%M")
   (display-time-mode 1) ; display time in modeline
 

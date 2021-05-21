@@ -29,15 +29,15 @@ of said command running.
 
 ~set-screens~ is a custom script declared [[*set-screens][below]].
 #+NAME: autostart-table
-| Command       | Arguments                             | Run once? |
-|---------------+---------------------------------------+-----------|
+| Command     | Arguments                           | Run once? |
+|-------------+-------------------------------------+-----------|
 | ~mpc~         | ~stop~                                | no        |
-| ~picom~       |                                       | yes       |
-| ~set-screens~ |                                       | no        |
+| ~picom~       |                                     | yes       |
+| ~set-screens~ |                                     | no        |
 | ~numlockx~    | ~on~                                  | yes       |
-| ~pumopm~      |                                       | yes       |
-| ~xfce-polkit~ |                                       | yes       |
-| ~nm-applet~   |                                       | yes       |
+| ~pumopm~      |                                     | yes       |
+| ~xfce-polkit~ |                                     | yes       |
+| ~nm-applet~   |                                     | yes       |
 | ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~ | no        |
 | ~xss-lock~    | ~plock~                               | yes       |
 | ~xrdb~        | ~-merge $HOME/.Xresources~            | no        |
@@ -732,27 +732,27 @@ associated to them, they will be downloaded as part of a single queue.
 #+RESULTS: ytdl-arg-handling-gen
 #+begin_example
 case 4 ipv4
-	set -g IPV4
+        set -g IPV4
 case 6 ipv6
-	set -g IPV6
+        set -g IPV6
 case a batch-file
-	set -g FILE $value
+        set -g FILE $value
 case c cache
-	set -g DOWNFILE $value
+        set -g DOWNFILE $value
 case d directory
-	set -g ROOTDIR $value
+        set -g ROOTDIR $value
 case e error-file
-	set -g ERRFILE $value
+        set -g ERRFILE $value
 case f format
-	set -g FORMAT $value
+        set -g FORMAT $value
 case l logs
-	set -g LOGFILE $value
+        set -g LOGFILE $value
 case V verbose
-	set -g VERBOSE
+        set -g VERBOSE
 case v version
-	_ytdl_version && exit
+        _ytdl_version && exit
 case h help
-	_ytdl_help && exit
+        _ytdl_help && exit
 #+end_example
 
 The following shows how ~getopts~ is used to catch the options and switches
@@ -790,22 +790,22 @@ passed to the script:
 #+RESULTS: ytdl-arg-set-default-value-gen
 #+begin_example
 if set -q $DOWNFILE
-	set -g DOWNFILE $DOWNFILE_DEFAULT
+        set -g DOWNFILE $DOWNFILE_DEFAULT
 end
 if set -q $ROOTDIR
-	set -g ROOTDIR $ROOTDIR_DEFAULT
+        set -g ROOTDIR $ROOTDIR_DEFAULT
 end
 if set -q $ERRFILE
-	set -g ERRFILE $ERRFILE_DEFAULT
+        set -g ERRFILE $ERRFILE_DEFAULT
 end
 if set -q $FORMAT
-	set -g FORMAT $FORMAT_DEFAULT
+        set -g FORMAT $FORMAT_DEFAULT
 end
 if set -q $LOGFILE
-	set -g LOGFILE $LOGFILE_DEFAULT
+        set -g LOGFILE $LOGFILE_DEFAULT
 end
 if set -q $VERBOSE
-	set -g VERBOSE 1
+        set -g VERBOSE 1
 end
 #+end_example
 

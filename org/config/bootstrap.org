@@ -667,10 +667,10 @@ We’ll need some utilities when developing Rust from Emacs, namely ~rustfmt~ an
 
 We will also need some components for development purposes.
 #+NAME: rust-components-table
-| Component | Why                                         |
-|-----------+---------------------------------------------|
-| rust-src  | Rust documentation in Emacs                 |
-| rls       | LSP backend for Emacs                       |
+| Component | Why                                       |
+|-----------+-------------------------------------------|
+| rust-src  | Rust documentation in Emacs               |
+| rls       | LSP backend for Emacs                     |
 | clippy    | A better version of cargo’s ~check~ command |
 
 #+NAME: rust-components-gen
