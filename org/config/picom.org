@@ -260,7 +260,11 @@ It is also possible to specify a list of conditions of windows that should
 always be considered focused.
 | Default value | ~[]~ |
 #+BEGIN_SRC conf
-  focus-exclude = [ "class_g = 'mpv'" ];
+  focus-exclude = [
+    "class_g = 'mpv'",
+    "class_g = 'qemu'",
+    "class_g = 'Qemu-system-x86_64'"
+  ];
 #+END_SRC
 
 The user can also specify a list of opacity rules, in the format
