@@ -214,7 +214,8 @@ I don’t like the default font I usually have on my machines, I really don’t.
 #+end_src
 
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil :font "Cascadia Code" :height phundrak/default-font-size)
+  (when (equal system-type 'gnu/linux)
+    (set-face-attribute 'default nil :font "Cascadia Code" :height phundrak/default-font-size))
 #+end_src
 
 ** Nice macros from Doom-Emacs
