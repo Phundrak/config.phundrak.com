@@ -311,9 +311,9 @@ copy their code here. First we get the ~after!~ macro:
 | /        |    <c>    |      <c>       |
 | Emphasis | Character | Character code |
 |----------+-----------+----------------|
-| Bold     |    ~*~    |       42       |
-| Italic   |    ~/~    |       47       |
-| Code     |    ~~~    |      126       |
+| Bold     |     ~*~     |       42       |
+| Italic   |     ~/~     |       47       |
+| Code     |     ~~~     |      126       |
 
 #+begin_src emacs-lisp
   (defun org-mode-emphasize-bold ()
@@ -1393,12 +1393,12 @@ path if they aren’t already.
 #+name: table-eshell-env-path
 #+caption: Paths to add to ~PATH~
 | Path                | Relative to ~HOME~? |
-|---------------------+---------------------|
-| .pub-cache/bin      | yes                 |
-| .local/bin          | yes                 |
-| .cargo/bin          | yes                 |
-| .gen/ruby/2.6.0/bin | yes                 |
-| go/bin              | yes                 |
+|---------------------+-------------------|
+| .pub-cache/bin      | yes               |
+| .local/bin          | yes               |
+| .cargo/bin          | yes               |
+| .gen/ruby/2.6.0/bin | yes               |
+| go/bin              | yes               |
 
 #+name: src-eshell-env-path
 #+begin_src emacs-lisp :exports none :tangle no :var paths=table-eshell-env-path :noweb yes
