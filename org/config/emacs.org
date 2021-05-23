@@ -393,9 +393,8 @@ repositories too.
   (setq use-package-always-ensure t)
 #+end_src
 
-* Packages Configuration
-** Keybinding Management
-*** Which-key
+* Keybinding Management
+** Which-key
 #+begin_src emacs-lisp
   (use-package which-key
     :straight (:build t)
@@ -406,7 +405,7 @@ repositories too.
     (setq which-key-idle-delay 0.3))
 #+end_src
 
-*** General
+** General
 #+begin_src emacs-lisp
   (use-package general
     :straight (:build t)
@@ -414,7 +413,7 @@ repositories too.
     (general-auto-unbind-keys))
 #+end_src
 
-*** Evil
+** Evil
 #+begin_src emacs-lisp
   (use-package evil
     :straight (:build t)
@@ -484,14 +483,14 @@ repositories too.
     (global-undo-tree-mode))
 #+end_src
 
-*** Hydra
+** Hydra
 #+begin_src emacs-lisp
   (use-package hydra
     :straight (:build t)
     :defer t)
 #+end_src
 
-**** Hydras
+*** Hydras
 The following hydra allows me to quickly zoom in and out in the
 current buffer.
 #+begin_src emacs-lisp
@@ -545,135 +544,504 @@ grow the ~mu4e-headers~ buffer when viewing an email.
     ("s" mu4e-headers-split-view-grow "enlarge"))
 #+end_src
 
-** Helpful
-As the name tells, ~helpful~ is a really helpful package which greatly
-enhances a couple of built-in functions from Emacs, namely:
-| Vanilla Emacs Function | Helpful Function | Comment                                       |
-|------------------------+------------------+-----------------------------------------------|
-| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
-| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
-| ~describe-function~      | ~helpful-macro~    |                                               |
-| ~describe-command~       | ~helpful-command~  |                                               |
-| ~describe-key~           | ~helpful-key~      |                                               |
-| ~describe-variable~      | ~helpful-variable~ |                                               |
-
+* Packages Configuration
+** Applications
+*** Docker
 #+begin_src emacs-lisp
-  (use-package helpful
-    :straight (:build t)
-    :after (counsel ivy)
-    :custom
-    (counsel-describe-function-function #'helpfull-callable)
-    (counsel-describe-variable-function #'helpfull-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command]  . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key]      . helpful-key))
+  (use-package docker
+    :defer t
+    :straight (:build t))
 #+end_src
 
-** Visual Configuration
-*** Dashboard
 #+begin_src emacs-lisp
-  (use-package dashboard
+  (use-package dockerfile-mode
+    :defer t
     :straight (:build t)
-    :ensure t
-    :after all-the-icons
-    :config
-    (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
-          dashboard-startup-banner    'logo
-          dashboard-center-content    t
-          dashboard-show-shortcuts    t
-          dashboard-set-navigator     t
-          dashboard-set-heading-icons t
-          dashboard-set-file-icons    t
-          initial-buffer-choice       (lambda () (get-buffer "*dashboard*"))
-          dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
-    (setq dashboard-navigator-buttons
-          `(((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
-              "Linguistics website"
-              ""
-              (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
-
-             (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
-              "Config Website"
-              ""
-              (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
-
-            ((,(all-the-icons-octicon "git-branch" :height 1.1 :v-adjust 0.0)
-              "Dotfiles sources"
-              ""
-              (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
-             ("!" "Issues" "Show issues" (lambda (&rest _)
-                                           (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
-              warning))
-            ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
-              "Update packages"
-              ""
-              (lambda (&rest _) (progn
-                                  (require 'straight)
-                                  (straight-pull-all)))))))
-
-    (setq dashboard-items '((recents  . 15)
-                            (projects . 10)))
-    (dashboard-setup-startup-hook)
     :init
-    (add-hook 'after-init-hook 'dashboard-refresh-buffer))
+    (put 'docker-image-name 'safe-local-variable #'stringp)
+    :mode "Dockerfile\\'")
 #+end_src
 
-*** Modeline
+*** Elfeed
+*** Email - Mu4e
 #+begin_src emacs-lisp
-  (use-package doom-modeline
+  (setq message-signature nil
+        mail-signature    nil)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :after all-the-icons
+    :straight (:build t :location site)
+    :commands mu4e mu4e-compose-new
+    :bind (("C-x m" . mu4e-compose-new))
+    :init
+    (progn
+      (setq mu4e-completing-read-function 'completing-read
+            mu4e-use-fancy-chars          t
+            mu4e-view-show-images         t
+            message-kill-buffer-on-exit   t
+            mu4e-org-support              nil)
+      (let ((dir "~/Downloads/mu4e"))
+        (when (file-directory-p dir)
+          (setq mu4e-attachment-dir dir))))
+
+    :config
+    (progn
+      <<mu4e-keybindings>>
+      (setq mu4e-compose-signature nil)
+
+      (when (fboundp 'imagemagick-register-types)
+        (imagemagick-register-types))
+
+      (add-to-list 'mu4e-view-actions
+                   '("View in browser" . mu4e-action-view-in-browser) t)
+
+      (require 'gnus-dired)
+      (setq gnus-dired-mail-mode 'mu4e-user-agent)
+
+      (add-hook 'mu4e-compose-mode-hook
+                (lambda () (use-hard-newlines t 'guess)))
+      (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+      (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
+
+      (setq mu4e-get-mail-command         "mbsync -a"
+            mu4e-maildir                  "~/.mail"
+            mu4e-trash-folder             "/Trash"
+            mu4e-refile-folder            "/Archive"
+            mu4e-sent-folder              "/Sent"
+            mu4e-drafts-folder            "/Drafts"
+            mu4e-update-interval          60
+            mu4e-compose-format-flowed    t
+            mu4e-view-show-addresses      t
+            mu4e-sent-messages-behaviour  'sent
+            mu4e-hide-index-messages      t
+            ;; try to show images
+            mu4e-view-show-images         t
+            mu4e-view-image-max-width     600
+            ;; configuration for sending mail
+            message-send-mail-function    #'smtpmail-send-it
+            smtpmail-stream-type          'starttls
+            message-kill-buffer-on-exit   t                  ; close after sending
+            ;; start with the first (default) context
+            mu4e-context-policy           'pick-first
+            ;; compose with the current context, or ask
+            mu4e-compose-context-policy   'ask-if-none
+            ;; use ivy
+            mu4e-completing-read-function #'ivy-completing-read
+            ;; no need to ask
+            mu4e-confirm-quit             t
+
+
+            mu4e-header-fields
+            '((:account    . 12)
+              (:human-date . 12)
+              (:flags      . 4)
+              (:from       . 25)
+              (:subject)))
+
+      ;; set mail user agent
+      (setq mail-user-agent 'mu4e-user-agent)
+
+      ;; Use fancy icons
+      (setq mu4e-use-fancy-chars     t
+            mu4e-headers-draft-mark     `("D" . ,(all-the-icons-faicon "pencil":height 0.8))
+            mu4e-headers-flagged-mark   `("F" . ,(all-the-icons-faicon "flag":height 0.8))
+            mu4e-headers-new-mark       `("N" . ,(all-the-icons-faicon "rss":height 0.8))
+            mu4e-headers-passed-mark    `("P" . ,(all-the-icons-faicon "check":height 0.8))
+            mu4e-headers-replied-mark   `("R" . ,(all-the-icons-faicon "reply":height 0.8))
+            mu4e-headers-seen-mark      `("S" . ,(all-the-icons-faicon "eye":height 0.8))
+            mu4e-headers-unread-mark    `("u" . ,(all-the-icons-faicon "eye-slash":height 0.8))
+            mu4e-headers-trashed-mark   `("T" . ,(all-the-icons-faicon "trash":height 0.8))
+            mu4e-headers-attach-mark    `("a" . ,(all-the-icons-faicon "paperclip":height 0.8))
+            mu4e-headers-encrypted-mark `("x" . ,(all-the-icons-faicon "lock":height 0.8))
+            mu4e-headers-signed-mark    `("s" . ,(all-the-icons-faicon "certificate":height 0.8)))
+
+      (setq mu4e-bookmarks
+            `((,(s-join " "
+                        '("NOT flag:trashed"
+                          "AND (maildir:/Inbox OR maildir:/Junk)"
+                          "AND NOT to:CONLANG@LISTSERV.BROWN.EDU"
+                          "AND NOT to:AUXLANG@LISTSERV.BROWN.EDU"
+                          "AND NOT to:ateliers-emacs@framalistes.org"
+                          "AND NOT to:ateliers-paris@emacs-doctor.com"
+                          "AND NOT list:ateliers-emacs.framalistes.org"
+                          "AND NOT list:ateliers-paris.emacs-doctor.com"))
+               "Inbox" ?i) ;; Inbox without the linguistics mailing lists
+              (,(s-join " "
+                        '("NOT flag:trashed"
+                          "AND (maildir:/Inbox OR maildir:/Junk)"
+                          "AND (f:/.*up8\.edu|.*univ-paris8.*/"
+                          "OR c:/.*up8\.edu|.*univ-paris8.*/"
+                          "OR t:/.*up8\.edu|.*univ-paris8.*/)"))
+               "University" ?u) ;; University-related emails
+              (,(s-join " "
+                        '("to:CONLANG@LISTSERV.BROWN.EDU"
+                          "OR to:AUXLANG@LISTSERV.BROWN.EDU"))
+               "Linguistics" ?l) ;; linguistics mailing lists
+              (,(s-join " "
+                        '("list:ateliers-emacs.framalistes.org"
+                          "OR to:ateliers-paris@emacs-doctor.com"
+                          "OR list:ateliers-paris.emacs-doctor.com"))
+               "Emacs" ?e) ;; Emacs mailing list
+              ("maildir:/Sent" "Sent messages" ?s)
+              ("flag:unread AND NOT flag:trashed" "Unread messages" ?U)
+              ("date:today..now AND NOT flag:trashed" "Today's messages" ?t)
+              ("date:7d..now AND NOT flag:trashed" "Last 7 days" ?w)
+              ("date:1m..now AND NOT flag:trashed" "Last month" ?m)
+              ("date:1y..now AND NOT flag:trashed" "Last year" ?y)
+              ("flag:trashed AND NOT flag:trashed" "Trash" ?T)
+              ("mime:image/* AND NOT flag:trashed" "Messages with images" ?p)))
+
+      ;; Add a column to display what email account the email belongs to.
+      (add-to-list 'mu4e-header-info-custom
+                   '(:account
+                     :name "Account"
+                     :shortname "Account"
+                     :help "Which account this email belongs to"
+                     :function
+                     (lambda (msg)
+                       (let ((maildir (mu4e-message-field msg :maildir)))
+                         (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
+
+      (setq smtpmail-smtp-server       "mail.phundrak.com"
+            smtpmail-smtp-service      587
+            smtpmail-stream-type       'starttls
+            message-send-mail-function 'smtpmail-send-it)
+
+      (defun mu4e-action-open-as-pdf (msg)
+        "Export and open MSG as pdf."
+        (let* ((date    (mu4e-message-field msg :date))
+               (infile  (mu4e~write-body-to-html msg))
+               (outfile (format-time-string "/tmp/%Y-%m-%d-%H-%M-%S.pdf" date)))
+          (with-temp-buffer
+            (shell-command
+             (format "wkhtmltopdf %s %s" infile outfile) t))
+          (find-file outfile)))
+
+      (add-to-list 'mu4e-view-actions '("PDF view" . mu4e-action-open-as-pdf) t)))
+#+end_src
+
+#+name: mu4e-keybindings
+#+begin_src emacs-lisp :tangle no
+  ;; Unbinding some stuff
+  (general-define-key
+   :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
+   "s" nil)
+  (general-define-key
+   :states 'normal
+   :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
+   "s" nil)
+  (general-define-key
+   :keymaps 'mu4e-view-mode-map
+   "SPC" nil
+   "S"   nil
+   "r"   nil
+   "c"   nil)
+
+  (general-define-key
+   :keymaps 'mu4e-view-mode-map
+   :states 'normal
+   "SPC" nil
+   "S"   nil
+   "r"   nil
+   "c"   nil
+   "gu"  nil)
+
+  ;; View
+  (general-define-key
+   :keymaps 'mu4e-view-mode-map
+   :states 'normal
+   )
+
+  (general-define-key
+   :states 'motion
+   :keymaps 'mu4e-view-mode-map
+   :prefix ","
+   "|"  #'mu4e-view-pipe
+   "."  '(mu4e-headers-split-adjust-width/body :wk "mu4e-headers width")
+
+   "a"  '(nil :wk "attachments")
+   "a|" #'mu4e-view-pipe-attachment
+   "aa" #'mu4e-view-attachment-action
+   "ao" #'mu4e-view-open-attachment
+   "aO" #'mu4e-view-open-attachment-with
+
+   "c"  '(nil :wk "compose")
+   "cc" #'mu4e-compose-new
+   "ce" #'mu4e-compose-edit
+   "cf" #'mu4e-compose-forward
+   "cr" #'mu4e-compose-reply
+   "cR" #'mu4e-compose-resend
+
+   "g"  '(nil :wk "go to")
+   "gu" #'mu4e-view-go-to-url
+   "gX" #'mu4e-view-fetch-url
+
+   "l"  #'mu4e-show-log
+
+   "m"  '(nil :wk "mark")
+   "md" #'mu4e-view-mark-for-trash
+   "mD" #'mu4e-view-mark-for-delete
+   "mm" #'mu4e-view-mark-for-move
+   "mr" #'mu4e-view-mark-for-refile
+   "mR" #'mu4e-view-mark-for-read
+   "mu" #'mu4e-view-mark-for-unread
+   "mU" #'mu4e-view-mark-for-unmark
+
+   "t"  '(nil :wk "thread")
+   "td" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(trash)))
+          :wk "Mark as trash")
+   "tD" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(delete)))
+          :wk "Mark as delete")
+   "tm" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(move)))
+          :wk "Mark as move")
+   "tr" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(refile)))
+          :wk "Mark as refile")
+   "tR" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(read)))
+          :wk "Mark as read")
+   "tu" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(unread)))
+          :wk "Mark as unread")
+   "tU" '((lambda ()
+            (interactive)
+            (mu4e-view-mark-thread '(unmark)))
+          :wk "Mark as unmark")
+
+   "T"  '(nil :wk "toggle")
+   "Tc" #'mu4e-view-toggle-hide-cited
+   "Th" #'mu4e-view-toggle-html
+
+
+   "n"  #'mu4e-view-headers-next
+   "N"  #'mu4e-view-headers-next-unread
+   "p"  #'mu4e-view-headers-prev
+   "P"  #'mu4e-view-headers-prev-unread)
+
+  ;; Headers
+  (general-define-key
+   :prefix ","
+   :keymaps 'mu4e-headers-mode-map
+   :states 'normal
+   "s"  '(nil :wk "search")
+   "ss" #'swiper)
+
+  (general-define-key
+   :keymaps 'mu4e-headers-mode-map
+   :states 'motion
+   "t"   #'evil-next-line
+   "s"   #'evil-previous-line
+   "T"   '((lambda ()
+             (interactive)
+             (mu4e-headers-mark-thread nil '(read)))
+           :wk "Mark as read"))
+
+  ;; Message
+  (general-define-key
+   :states 'normal
+   :keymaps 'message-mode-map
+   :prefix ","
+   "," #'message-send-and-exit
+   "c" #'message-send-and-exit
+   "a" #'message-kill-buffer
+   "k" #'message-kill-buffer
+   "s" #'message-dont-send
+   "f" #'mml-attach-file)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package org-msg
+    :after (org mu4e)
     :straight (:build t)
-    :defer t
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
+    :hook (mu4e-compose-pre . org-msg-mode)
+    :general (:keymaps 'org-msg-edit-mode-map
+              :prefix ","
+              :states 'normal
+              "," #'message-send-and-exit
+              "c" #'message-send-and-exit
+              "a" #'message-kill-buffer
+              "k" #'message-kill-buffer
+              "s" #'message-dont-send
+              "f" #'org-msg-attach)
+
+    :config
+    (progn
+      (defun my/org-msg-signature-convert (orig-fun &rest args)
+        "Tweak my signature when replying as plain/text only."
+        (let ((res (apply orig-fun args)))
+          (when (equal (cadr args) '(text))
+            (setf (alist-get 'signature res)
+                  (replace-regexp-in-string "\n+" "\n" org-msg-signature)))
+          res))
+      (advice-add 'org-msg-composition-parameters
+                  :around 'my/org-msg-signature-convert)
+
+      (setq org-msg-startup              "inlineimages"
+            org-msg-default-alternatives '((new           . (text html))
+                                           (reply-to-html . (text html))
+                                           (reply-to-text . (text)))
+            org-msg-convert-citation     t
+            org-msg-greeting-name-limit  3
+            org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
+                                                 (with-temp-buffer
+                                                   (insert-file-contents mail-signature-file)
+                                                   (buffer-string))))))
 #+end_src
 
-*** Theme
 #+begin_src emacs-lisp
-  (use-package doom-themes
+  (use-package mu4e-alert
     :straight (:build t)
+    :after mu4e)
+#+end_src
+
+*** PDF Tools
+#+begin_src emacs-lisp
+  (use-package pdf-tools
     :defer t
-    :init (load-theme 'doom-nord t))
-#+end_src
-
-*** Icons? Did someone say icons?
-/*YES! ALL OF THEM!*/
-
-Ahem…
-
-The package ~all-the-icons~ allows us to use a wide variety of icons in
-Emacs for various purposes, wherever we want, and /THAT/ is *GREAT*! I’ll
-(ab)use this feature in my config, be warned! *NOTE*: The first time a
-configuration with ~all-the-icons~ is loaded on a machine, the needed
-fonts might not be available, so you’ll need to install them with the
-command ~M-x all-the-icons-install-fonts~.
-#+begin_src emacs-lisp
-  (use-package all-the-icons
-    :defer t)
-#+end_src
-
-~prettify-symbols-mode~ is also a nifty feature of Emacs, and it is
-built-in! With that, I can replace strings of my choice by another
-character of my choice!
-#+begin_src emacs-lisp
-  (dolist (symbol '(("lambda" . 955)
-                    ("mapc" . 8614)))
-    (add-to-list 'prettify-symbols-alist symbol))
-#+end_src
-
-Let’s enable this mode for any programming mode:
-#+begin_src emacs-lisp
-  (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
-#+end_src
-
-*** Rainbow Delimiters
-#+begin_src emacs-lisp
-  (use-package rainbow-delimiters
+    :magic ("%PDF" . pdf-view-mode)
     :straight (:build t)
-    :defer t
-    :hook (prog-mode . rainbow-delimiters-mode))
+    :mode (("\\.pdf\\'" . pdf-view-mode))
+    :config
+    (progn
+      (with-eval-after-load 'pdf-view
+        (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
+
+      (general-define-key
+       :keymaps 'pdf-view-mode-map
+       "SPC" nil)
+      (general-define-key
+       :keymaps 'pdf-view-mode-map
+       :states 'normal
+       "SPC" nil)
+      ;; (define-key 'pdf-view-mode-map (kbd "SPC") nil)
+
+      (general-define-key
+       :states 'normal
+       :keymaps 'pdf-view-mode-map
+       "y" #'pdf-view-kill-ring-save
+       "t" #'evil-collection-pdf-view-next-line-or-next-page
+       "s" #'evil-collection-pdf-view-previous-line-or-previous-page))
+
+      (general-define-key
+       :states 'motion
+       :keymaps 'pdf-view-mode-map
+       :prefix "SPC"
+        "a"  '(nil :which-key "annotations")
+        "aD" #'pdf-annot-delete
+        "at" #'pdf-annot-attachment-dired
+        "ah" #'pdf-annot-add-highlight-markup-annotation
+        "al" #'pdf-annot-list-annotations
+        "am" #'pdf-annot-markup-annotation
+        "ao" #'pdf-annot-add-strikeout-markup-annotation
+        "as" #'pdf-annot-add-squiggly-markup-annotation
+        "at" #'pdf-annot-add-text-annotation
+        "au" #'pdf-annot-add-underline-markup-annotation
+
+        "f"  '(nil :which-key "fit")
+        "fw" #'pdf-view-fit-width-to-window
+        "fh" #'pdf-view-fit-height-to-window
+        "fp" #'pdf-view-fit-page-to-window
+
+        "s"  '(nil :which-key "slice/search")
+        "sb" #'pdf-view-set-slice-from-bounding-box
+        "sm" #'pdf-view-set-slice-using-mouse
+        "sr" #'pdf-view-reset-slice
+        "ss" #'pdf-occur
+
+        "o"  'pdf-outline
+        "m"  'pdf-view-midnight-minor-mode)
+
+    :hook
+    (pdf-tools-enabled . pdf-view-midnight-minor-mode))
 #+end_src
+
+*** Screenshot
+#+begin_src emacs-lisp
+  (use-package screenshot
+    :defer t
+    :straight (screenshot :build t
+                          :type git
+                          :host github
+                          :repo "tecosaur/screenshot"))
+#+end_src
+
+*** Shells
+**** Shell-pop
+Shell-pop allows the user to easily call for a new shell in a pop-up
+buffer.
+#+begin_src emacs-lisp
+  (use-package shell-pop
+    :defer t
+    :straight (:build t)
+    :custom
+    (shell-pop-default-directory "/home/phundrak")
+    (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+    (shell-pop-window-size 30)
+    (shell-pop-full-span nil)
+    (shell-pop-window-position "bottom")
+    (shell-pop-autocd-to-working-dir t)
+    (shell-pop-restore-window-configuration t)
+    (shell-pop-cleanup-buffer-at-process-exit t))
+#+end_src
+
+**** VTerm
+#+begin_src emacs-lisp
+  (use-package vterm
+    :defer t
+    :straight t)
+#+end_src
+
+*** Webkit browser
+#+begin_src emacs-lisp
+  (general-define-key
+   :keymaps 'xwidget-webkit-mode-map
+   :states 'normal
+   "c" #'xwidget-webkit-scroll-backward
+   "t" #'xwidget-webkit-scroll-up
+   "s" #'xwidget-webkit-scroll-down
+   "r" #'xwidget-webkit-scroll-forward
+   "h" #'xwidget-webkit-goto-history
+   "j" nil
+   "k" nil
+   "l" nil
+
+   "H" nil
+   "L" nil
+   "T" #'xwidget-webkit-back
+   "S" #'xwidget-webkit-forward
+   "R" #'xwidget-webkit-reload)
+#+end_src
+
+*** Wttr.in
+#+begin_src emacs-lisp
+  (use-package wttrin
+    :defer t
+    :straight (wttrin :build t
+                      :type git
+                      ;; :host github
+                      ;; :repo "Phundrak/emacs-wttrin"
+                      :local-repo "~/fromGIT/emacs-packages/emacs-wttrin"
+                      )
+    :config
+    (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
+                                  "Saint Agrève")
+          wttrin-use-metric t))
+#+end_src
+
+**** TODO Derive a major mode for wttrin                        :noexport:
+To handle keybindings correctly, a major mode for wttrin could be
+derived from ~fundamental-mode~ and get an associated keymap.
 
 ** Autocompletion
 *** Code Autocompletion
@@ -1025,12 +1393,12 @@ path if they aren’t already.
 #+name: table-eshell-env-path
 #+caption: Paths to add to ~PATH~
 | Path                | Relative to ~HOME~? |
-|---------------------+-------------------|
-| .pub-cache/bin      | yes               |
-| .local/bin          | yes               |
-| .cargo/bin          | yes               |
-| .gen/ruby/2.6.0/bin | yes               |
-| go/bin              | yes               |
+|---------------------+---------------------|
+| .pub-cache/bin      | yes                 |
+| .local/bin          | yes                 |
+| .cargo/bin          | yes                 |
+| .gen/ruby/2.6.0/bin | yes                 |
+| go/bin              | yes                 |
 
 #+name: src-eshell-env-path
 #+begin_src emacs-lisp :exports none :tangle no :var paths=table-eshell-env-path :noweb yes
@@ -1088,7 +1456,7 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
 #+end_src
 
 *** Org-mode
-#+begin_src emacs-lisp :tangle ~/.emacs.vanilla/init.el :noweb tangle
+#+begin_src emacs-lisp :noweb tangle
   (use-package org
     :straight (:build (:not autoloads) :location site)
     :after general
@@ -1235,7 +1603,7 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
       ))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.vanilla/init.el
+#+begin_src emacs-lisp
   (use-package evil-org
     :straight (:build t)
     :after org
@@ -1853,505 +2221,154 @@ Nginx syntax.
    "hh" #'helpful-at-point)
 #+end_src
 
-** Applications
-*** Docker
+** Visual Configuration
+*** Dashboard
 #+begin_src emacs-lisp
-  (use-package docker
-    :defer t
-    :straight (:build t))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package dockerfile-mode
-    :defer t
+  (use-package dashboard
     :straight (:build t)
-    :init
-    (put 'docker-image-name 'safe-local-variable #'stringp)
-    :mode "Dockerfile\\'")
-#+end_src
-
-*** Elfeed
-*** Email - Mu4e
-#+begin_src emacs-lisp
-  (setq message-signature nil
-        mail-signature    nil)
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package mu4e
+    :ensure t
     :after all-the-icons
-    :straight (:build t :location site)
-    :commands mu4e mu4e-compose-new
-    :bind (("C-x m" . mu4e-compose-new))
+    :config
+    (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
+          dashboard-startup-banner    'logo
+          dashboard-center-content    t
+          dashboard-show-shortcuts    t
+          dashboard-set-navigator     t
+          dashboard-set-heading-icons t
+          dashboard-set-file-icons    t
+          initial-buffer-choice       (lambda () (get-buffer "*dashboard*"))
+          dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+    (setq dashboard-navigator-buttons
+          `(((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
+              "Linguistics website"
+              ""
+              (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
+
+             (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
+              "Config Website"
+              ""
+              (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
+
+            ((,(all-the-icons-octicon "git-branch" :height 1.1 :v-adjust 0.0)
+              "Dotfiles sources"
+              ""
+              (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
+             ("!" "Issues" "Show issues" (lambda (&rest _)
+                                           (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
+              warning))
+            ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
+              "Update packages"
+              ""
+              (lambda (&rest _) (progn
+                                  (require 'straight)
+                                  (straight-pull-all)))))))
+
+    (setq dashboard-items '((recents  . 15)
+                            (projects . 10)))
+    (dashboard-setup-startup-hook)
     :init
-    (progn
-      (setq mu4e-completing-read-function 'completing-read
-            mu4e-use-fancy-chars          t
-            mu4e-view-show-images         t
-            message-kill-buffer-on-exit   t
-            mu4e-org-support              nil)
-      (let ((dir "~/Downloads/mu4e"))
-        (when (file-directory-p dir)
-          (setq mu4e-attachment-dir dir))))
-
-    :config
-    (progn
-      <<mu4e-keybindings>>
-      (setq mu4e-compose-signature nil)
-
-      (when (fboundp 'imagemagick-register-types)
-        (imagemagick-register-types))
-
-      (add-to-list 'mu4e-view-actions
-                   '("View in browser" . mu4e-action-view-in-browser) t)
-
-      (require 'gnus-dired)
-      (setq gnus-dired-mail-mode 'mu4e-user-agent)
-
-      (add-hook 'mu4e-compose-mode-hook
-                (lambda () (use-hard-newlines t 'guess)))
-      (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-      (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
-
-      (setq mu4e-get-mail-command         "mbsync -a"
-            mu4e-maildir                  "~/.mail"
-            mu4e-trash-folder             "/Trash"
-            mu4e-refile-folder            "/Archive"
-            mu4e-sent-folder              "/Sent"
-            mu4e-drafts-folder            "/Drafts"
-            mu4e-update-interval          60
-            mu4e-compose-format-flowed    t
-            mu4e-view-show-addresses      t
-            mu4e-sent-messages-behaviour  'sent
-            mu4e-hide-index-messages      t
-            ;; try to show images
-            mu4e-view-show-images         t
-            mu4e-view-image-max-width     600
-            ;; configuration for sending mail
-            message-send-mail-function    #'smtpmail-send-it
-            smtpmail-stream-type          'starttls
-            message-kill-buffer-on-exit   t                  ; close after sending
-            ;; start with the first (default) context
-            mu4e-context-policy           'pick-first
-            ;; compose with the current context, or ask
-            mu4e-compose-context-policy   'ask-if-none
-            ;; use ivy
-            mu4e-completing-read-function #'ivy-completing-read
-            ;; no need to ask
-            mu4e-confirm-quit             t
-
-
-            mu4e-header-fields
-            '((:account    . 12)
-              (:human-date . 12)
-              (:flags      . 4)
-              (:from       . 25)
-              (:subject)))
-
-      ;; set mail user agent
-      (setq mail-user-agent 'mu4e-user-agent)
-
-      ;; Use fancy icons
-      (setq mu4e-use-fancy-chars     t
-            mu4e-headers-draft-mark     `("D" . ,(all-the-icons-faicon "pencil":height 0.8))
-            mu4e-headers-flagged-mark   `("F" . ,(all-the-icons-faicon "flag":height 0.8))
-            mu4e-headers-new-mark       `("N" . ,(all-the-icons-faicon "rss":height 0.8))
-            mu4e-headers-passed-mark    `("P" . ,(all-the-icons-faicon "check":height 0.8))
-            mu4e-headers-replied-mark   `("R" . ,(all-the-icons-faicon "reply":height 0.8))
-            mu4e-headers-seen-mark      `("S" . ,(all-the-icons-faicon "eye":height 0.8))
-            mu4e-headers-unread-mark    `("u" . ,(all-the-icons-faicon "eye-slash":height 0.8))
-            mu4e-headers-trashed-mark   `("T" . ,(all-the-icons-faicon "trash":height 0.8))
-            mu4e-headers-attach-mark    `("a" . ,(all-the-icons-faicon "paperclip":height 0.8))
-            mu4e-headers-encrypted-mark `("x" . ,(all-the-icons-faicon "lock":height 0.8))
-            mu4e-headers-signed-mark    `("s" . ,(all-the-icons-faicon "certificate":height 0.8)))
-
-      (setq mu4e-bookmarks
-            `((,(s-join " "
-                        '("NOT flag:trashed"
-                          "AND (maildir:/Inbox OR maildir:/Junk)"
-                          "AND NOT to:CONLANG@LISTSERV.BROWN.EDU"
-                          "AND NOT to:AUXLANG@LISTSERV.BROWN.EDU"
-                          "AND NOT to:ateliers-emacs@framalistes.org"
-                          "AND NOT to:ateliers-paris@emacs-doctor.com"
-                          "AND NOT list:ateliers-emacs.framalistes.org"
-                          "AND NOT list:ateliers-paris.emacs-doctor.com"))
-               "Inbox" ?i) ;; Inbox without the linguistics mailing lists
-              (,(s-join " "
-                        '("NOT flag:trashed"
-                          "AND (maildir:/Inbox OR maildir:/Junk)"
-                          "AND (f:/.*up8\.edu|.*univ-paris8.*/"
-                          "OR c:/.*up8\.edu|.*univ-paris8.*/"
-                          "OR t:/.*up8\.edu|.*univ-paris8.*/)"))
-               "University" ?u) ;; University-related emails
-              (,(s-join " "
-                        '("to:CONLANG@LISTSERV.BROWN.EDU"
-                          "OR to:AUXLANG@LISTSERV.BROWN.EDU"))
-               "Linguistics" ?l) ;; linguistics mailing lists
-              (,(s-join " "
-                        '("list:ateliers-emacs.framalistes.org"
-                          "OR to:ateliers-paris@emacs-doctor.com"
-                          "OR list:ateliers-paris.emacs-doctor.com"))
-               "Emacs" ?e) ;; Emacs mailing list
-              ("maildir:/Sent" "Sent messages" ?s)
-              ("flag:unread AND NOT flag:trashed" "Unread messages" ?U)
-              ("date:today..now AND NOT flag:trashed" "Today's messages" ?t)
-              ("date:7d..now AND NOT flag:trashed" "Last 7 days" ?w)
-              ("date:1m..now AND NOT flag:trashed" "Last month" ?m)
-              ("date:1y..now AND NOT flag:trashed" "Last year" ?y)
-              ("flag:trashed AND NOT flag:trashed" "Trash" ?T)
-              ("mime:image/* AND NOT flag:trashed" "Messages with images" ?p)))
-
-      ;; Add a column to display what email account the email belongs to.
-      (add-to-list 'mu4e-header-info-custom
-                   '(:account
-                     :name "Account"
-                     :shortname "Account"
-                     :help "Which account this email belongs to"
-                     :function
-                     (lambda (msg)
-                       (let ((maildir (mu4e-message-field msg :maildir)))
-                         (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
-
-      (setq smtpmail-smtp-server       "mail.phundrak.com"
-            smtpmail-smtp-service      587
-            smtpmail-stream-type       'starttls
-            message-send-mail-function 'smtpmail-send-it)
-
-      (defun mu4e-action-open-as-pdf (msg)
-        "Export and open MSG as pdf."
-        (let* ((date    (mu4e-message-field msg :date))
-               (infile  (mu4e~write-body-to-html msg))
-               (outfile (format-time-string "/tmp/%Y-%m-%d-%H-%M-%S.pdf" date)))
-          (with-temp-buffer
-            (shell-command
-             (format "wkhtmltopdf %s %s" infile outfile) t))
-          (find-file outfile)))
-
-      (add-to-list 'mu4e-view-actions '("PDF view" . mu4e-action-open-as-pdf) t)))
+    (add-hook 'after-init-hook 'dashboard-refresh-buffer))
 #+end_src
 
-#+name: mu4e-keybindings
-#+begin_src emacs-lisp :tangle no
-  ;; Unbinding some stuff
-  (general-define-key
-   :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
-   "s" nil)
-  (general-define-key
-   :states 'normal
-   :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
-   "s" nil)
-  (general-define-key
-   :keymaps 'mu4e-view-mode-map
-   "SPC" nil
-   "S"   nil
-   "r"   nil
-   "c"   nil)
-
-  (general-define-key
-   :keymaps 'mu4e-view-mode-map
-   :states 'normal
-   "SPC" nil
-   "S"   nil
-   "r"   nil
-   "c"   nil
-   "gu"  nil)
-
-  ;; View
-  (general-define-key
-   :keymaps 'mu4e-view-mode-map
-   :states 'normal
-   )
-
-  (general-define-key
-   :states 'motion
-   :keymaps 'mu4e-view-mode-map
-   :prefix ","
-   "|"  #'mu4e-view-pipe
-   "."  '(mu4e-headers-split-adjust-width/body :wk "mu4e-headers width")
-
-   "a"  '(nil :wk "attachments")
-   "a|" #'mu4e-view-pipe-attachment
-   "aa" #'mu4e-view-attachment-action
-   "ao" #'mu4e-view-open-attachment
-   "aO" #'mu4e-view-open-attachment-with
-
-   "c"  '(nil :wk "compose")
-   "cc" #'mu4e-compose-new
-   "ce" #'mu4e-compose-edit
-   "cf" #'mu4e-compose-forward
-   "cr" #'mu4e-compose-reply
-   "cR" #'mu4e-compose-resend
-
-   "g"  '(nil :wk "go to")
-   "gu" #'mu4e-view-go-to-url
-   "gX" #'mu4e-view-fetch-url
-
-   "l"  #'mu4e-show-log
-
-   "m"  '(nil :wk "mark")
-   "md" #'mu4e-view-mark-for-trash
-   "mD" #'mu4e-view-mark-for-delete
-   "mm" #'mu4e-view-mark-for-move
-   "mr" #'mu4e-view-mark-for-refile
-   "mR" #'mu4e-view-mark-for-read
-   "mu" #'mu4e-view-mark-for-unread
-   "mU" #'mu4e-view-mark-for-unmark
-
-   "t"  '(nil :wk "thread")
-   "td" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(trash)))
-          :wk "Mark as trash")
-   "tD" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(delete)))
-          :wk "Mark as delete")
-   "tm" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(move)))
-          :wk "Mark as move")
-   "tr" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(refile)))
-          :wk "Mark as refile")
-   "tR" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(read)))
-          :wk "Mark as read")
-   "tu" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(unread)))
-          :wk "Mark as unread")
-   "tU" '((lambda ()
-            (interactive)
-            (mu4e-view-mark-thread '(unmark)))
-          :wk "Mark as unmark")
-
-   "T"  '(nil :wk "toggle")
-   "Tc" #'mu4e-view-toggle-hide-cited
-   "Th" #'mu4e-view-toggle-html
-
-
-   "n"  #'mu4e-view-headers-next
-   "N"  #'mu4e-view-headers-next-unread
-   "p"  #'mu4e-view-headers-prev
-   "P"  #'mu4e-view-headers-prev-unread)
-
-  ;; Headers
-  (general-define-key
-   :prefix ","
-   :keymaps 'mu4e-headers-mode-map
-   :states 'normal
-   "s"  '(nil :wk "search")
-   "ss" #'swiper)
-
-  (general-define-key
-   :keymaps 'mu4e-headers-mode-map
-   :states 'motion
-   "t"   #'evil-next-line
-   "s"   #'evil-previous-line
-   "T"   '((lambda ()
-             (interactive)
-             (mu4e-headers-mark-thread nil '(read)))
-           :wk "Mark as read"))
-
-  ;; Message
-  (general-define-key
-   :states 'normal
-   :keymaps 'message-mode-map
-   :prefix ","
-   "," #'message-send-and-exit
-   "c" #'message-send-and-exit
-   "a" #'message-kill-buffer
-   "k" #'message-kill-buffer
-   "s" #'message-dont-send
-   "f" #'mml-attach-file)
-#+end_src
-
+*** Modeline
 #+begin_src emacs-lisp
-  (use-package org-msg
-    :after (org mu4e)
+  (use-package doom-modeline
     :straight (:build t)
-    :hook (mu4e-compose-pre . org-msg-mode)
-    :general (:keymaps 'org-msg-edit-mode-map
-              :prefix ","
-              :states 'normal
-              "," #'message-send-and-exit
-              "c" #'message-send-and-exit
-              "a" #'message-kill-buffer
-              "k" #'message-kill-buffer
-              "s" #'message-dont-send
-              "f" #'org-msg-attach)
-
-    :config
-    (progn
-      (defun my/org-msg-signature-convert (orig-fun &rest args)
-        "Tweak my signature when replying as plain/text only."
-        (let ((res (apply orig-fun args)))
-          (when (equal (cadr args) '(text))
-            (setf (alist-get 'signature res)
-                  (replace-regexp-in-string "\n+" "\n" org-msg-signature)))
-          res))
-      (advice-add 'org-msg-composition-parameters
-                  :around 'my/org-msg-signature-convert)
-
-      (setq org-msg-startup              "inlineimages"
-            org-msg-default-alternatives '((new           . (text html))
-                                           (reply-to-html . (text html))
-                                           (reply-to-text . (text)))
-            org-msg-convert-citation     t
-            org-msg-greeting-name-limit  3
-            org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
-                                                 (with-temp-buffer
-                                                   (insert-file-contents mail-signature-file)
-                                                   (buffer-string))))))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-    :straight (:build t)
-    :after mu4e)
-#+end_src
-
-*** PDF Tools
-#+begin_src emacs-lisp
-  (use-package pdf-tools
     :defer t
-    :magic ("%PDF" . pdf-view-mode)
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+#+end_src
+
+*** Theme
+#+begin_src emacs-lisp
+  (use-package doom-themes
     :straight (:build t)
-    :mode (("\\.pdf\\'" . pdf-view-mode))
-    :config
-    (progn
-      (with-eval-after-load 'pdf-view
-        (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
-
-      (general-define-key
-       :keymaps 'pdf-view-mode-map
-       "SPC" nil)
-      (general-define-key
-       :keymaps 'pdf-view-mode-map
-       :states 'normal
-       "SPC" nil)
-      ;; (define-key 'pdf-view-mode-map (kbd "SPC") nil)
-
-      (general-define-key
-       :states 'normal
-       :keymaps 'pdf-view-mode-map
-       "y" #'pdf-view-kill-ring-save
-       "t" #'evil-collection-pdf-view-next-line-or-next-page
-       "s" #'evil-collection-pdf-view-previous-line-or-previous-page))
-
-      (general-define-key
-       :states 'motion
-       :keymaps 'pdf-view-mode-map
-       :prefix "SPC"
-        "a"  '(nil :which-key "annotations")
-        "aD" #'pdf-annot-delete
-        "at" #'pdf-annot-attachment-dired
-        "ah" #'pdf-annot-add-highlight-markup-annotation
-        "al" #'pdf-annot-list-annotations
-        "am" #'pdf-annot-markup-annotation
-        "ao" #'pdf-annot-add-strikeout-markup-annotation
-        "as" #'pdf-annot-add-squiggly-markup-annotation
-        "at" #'pdf-annot-add-text-annotation
-        "au" #'pdf-annot-add-underline-markup-annotation
-
-        "f"  '(nil :which-key "fit")
-        "fw" #'pdf-view-fit-width-to-window
-        "fh" #'pdf-view-fit-height-to-window
-        "fp" #'pdf-view-fit-page-to-window
-
-        "s"  '(nil :which-key "slice/search")
-        "sb" #'pdf-view-set-slice-from-bounding-box
-        "sm" #'pdf-view-set-slice-using-mouse
-        "sr" #'pdf-view-reset-slice
-        "ss" #'pdf-occur
-
-        "o"  'pdf-outline
-        "m"  'pdf-view-midnight-minor-mode)
-
-    :hook
-    (pdf-tools-enabled . pdf-view-midnight-minor-mode))
-#+end_src
-
-*** Screenshot
-#+begin_src emacs-lisp
-  (use-package screenshot
     :defer t
-    :straight (screenshot :build t
-                          :type git
-                          :host github
-                          :repo "tecosaur/screenshot"))
+    :init (load-theme 'doom-nord t))
 #+end_src
 
-*** Shells
-**** Shell-pop
-Shell-pop allows the user to easily call for a new shell in a pop-up
-buffer.
+*** Icons? Did someone say icons?
+/*YES! ALL OF THEM!*/
+
+Ahem…
+
+The package ~all-the-icons~ allows us to use a wide variety of icons in
+Emacs for various purposes, wherever we want, and /THAT/ is *GREAT*! I’ll
+(ab)use this feature in my config, be warned! *NOTE*: The first time a
+configuration with ~all-the-icons~ is loaded on a machine, the needed
+fonts might not be available, so you’ll need to install them with the
+command ~M-x all-the-icons-install-fonts~.
 #+begin_src emacs-lisp
-  (use-package shell-pop
+  (use-package all-the-icons
+    :defer t)
+#+end_src
+
+~prettify-symbols-mode~ is also a nifty feature of Emacs, and it is
+built-in! With that, I can replace strings of my choice by another
+character of my choice!
+#+begin_src emacs-lisp
+  (dolist (symbol '(("lambda" . 955)
+                    ("mapc" . 8614)))
+    (add-to-list 'prettify-symbols-alist symbol))
+#+end_src
+
+Let’s enable this mode for any programming mode:
+#+begin_src emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+#+end_src
+
+*** Rainbow Delimiters
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :straight (:build t)
+    :defer t
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+*** Y’all want some more /COLORS/?
+It is possible to make info buffers much more colorful (and imo easier to read) with this simple package:
+#+begin_src emacs-lisp
+  (use-package info-colors
+    :straight (:build t)
+    :commands info-colors-fnontify-node
+    :hook (Info-selection . info-colors-fontify-node)
+    :hook (Info-mode . mixed-pitch-mode))
+#+end_src
+
+** Misc
+*** ~avy~
+~avy~ is a really convenient way of jumping around, but I’ll need some
+configuration to make it bépo-compatible.
+#+begin_src emacs-lisp
+  (use-package avy
     :defer t
     :straight (:build t)
-    :custom
-    (shell-pop-default-directory "/home/phundrak")
-    (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
-    (shell-pop-window-size 30)
-    (shell-pop-full-span nil)
-    (shell-pop-window-position "bottom")
-    (shell-pop-autocd-to-working-dir t)
-    (shell-pop-restore-window-configuration t)
-    (shell-pop-cleanup-buffer-at-process-exit t))
-#+end_src
-
-**** VTerm
-#+begin_src emacs-lisp
-  (use-package vterm
-    :defer t
-    :straight t)
-#+end_src
-
-*** Webkit browser
-#+begin_src emacs-lisp
-  (general-define-key
-   :keymaps 'xwidget-webkit-mode-map
-   :states 'normal
-   "c" #'xwidget-webkit-scroll-backward
-   "t" #'xwidget-webkit-scroll-up
-   "s" #'xwidget-webkit-scroll-down
-   "r" #'xwidget-webkit-scroll-forward
-   "h" #'xwidget-webkit-goto-history
-   "j" nil
-   "k" nil
-   "l" nil
-
-   "H" nil
-   "L" nil
-   "T" #'xwidget-webkit-back
-   "S" #'xwidget-webkit-forward
-   "R" #'xwidget-webkit-reload)
-#+end_src
-
-*** Wttr.in
-#+begin_src emacs-lisp
-  (use-package wttrin
-    :defer t
-    :straight (wttrin :build t
-                      :type git
-                      ;; :host github
-                      ;; :repo "Phundrak/emacs-wttrin"
-                      :local-repo "~/fromGIT/emacs-packages/emacs-wttrin"
-                      )
     :config
-    (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
-                                  "Saint Agrève")
-          wttrin-use-metric t))
+    (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
+    :general
+    (:states 'normal
+     "gl" #'avy-goto-line))
 #+end_src
 
-**** TODO Derive a major mode for wttrin                        :noexport:
-To handle keybindings correctly, a major mode for wttrin could be
-derived from ~fundamental-mode~ and get an associated keymap.
+*** Calc
+Let’s give ~calc-mode~ some better defaults.
+#+begin_src emacs-lisp
+  (setq calc-angle-mode    'rad
+        calc-symbolic-mode t)
+#+end_src
 
-** Other
+*** Elcord
+What’s the point of using Emacs if you can’t tell everyone?
+#+begin_src emacs-lisp
+  (use-package elcord
+    :straight (:built t)
+    :defer t
+    :config
+    (setq elcord-use-major-mode-as-main-icon t
+          elcord-refresh-rate                5
+          elcord-display-elapsed             nil))
+#+end_src
+
 *** ~ivy-quick-find-files.el~
 This package is a small utility package I’ve written in order to
 quickly find files across my filesystem.
@@ -2517,6 +2534,19 @@ Undefining some stuff to make keybind prefixes work correctly.
 
     "j"   '(nil :wk "jump")
     "jd"  #'dired-jump
+
+    "p"   '(nil :wk "project")
+    "p!"  #'projectile-run-shell-command-in-root
+    "p&"  #'projectile-run-async-shell-command-in-root
+    "pb"  #'counsel-projectile-switch-to-buffer
+    "pc"  #'counsel-projectile
+    "pd"  #'counsel-projectile-find-dir
+    "pe"  #'projectile-edit-dir-locals
+    "pf"  #'counsel-projectile-find-file
+    "pg"  #'projectile-find-tag
+    "pk"  #'project-kill-buffers
+    "pp"  #'counsel-projectile-switch-project
+    "pv"  #'projectile-vc
 
     "t"   '(nil :wk "toggles")
     "tt"  #'counsel-load-theme
