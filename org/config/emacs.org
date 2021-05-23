@@ -1162,6 +1162,7 @@ restricted in terms of features compared to ~ivy~.
     (ivy-mode 1)
     (setq ivy-wrap                        t
           ivy-height                      17
+          ivy-sort-max-size               50000
           ivy-fixed-height-minibuffer     t
           ivy-read-action-functions       #'ivy-hydra-read-action
           ivy-read-action-format-function #'ivy-read-action-format-columns
@@ -1966,6 +1967,12 @@ The project is then defined like so:
 #+END_SRC
 
 **** Visual Configuration
+While most modes of Emacs are dedicated to development, and therefore
+are much more comfortable with a fixed-pitch font, more literary modes
+such as org-mode are much more enjoyable if you have a variable pitch
+font enabled. *BUT*, these modes can also require some fixed-pitch fonts
+for some elements of the buffer, such as code blocks with
+org-mode. ~mixed-pitch~ comes to the rescue!
 #+begin_src emacs-lisp
   (use-package mixed-pitch
     :after org
@@ -1976,6 +1983,13 @@ The project is then defined like so:
     (add-hook 'org-agenda-mode-hook (lambda () (mixed-pitch-mode -1))))
 #+end_src
 
+I have an issue with org-mode’s emphasis markers: I find them ugly. I
+can of course hide them if I simply set ~org-hide-emphasis-markers~ to
+~t~, but it makes editing hard since I never know whether I am before or
+after the emphasis marker when editing near the beginning/end of an
+emphasized region. ~org-appear~ fixes this issue so that it shows the
+emphasis markers only when the cursor is in the emphasized region,
+otherwise they will remain hidden! Very cool!
 #+begin_src emacs-lisp
   (use-package org-appear
     :after org
@@ -1990,6 +2004,11 @@ The project is then defined like so:
     (run-at-time nil nil #'org-appear--set-elements))
 #+end_src
 
+Tired of seeing lots of actual stars ~*~ in your headers, and you want a
+fancier remplacement? Or you are still using ~org-bullets~ but just
+found out how out-of-date and abandoned it is? (Last commit was on
+September 18th, 2014… damn…) Search no more, ~org-superstar~ will take
+care of that for you!
 #+begin_src emacs-lisp
   (use-package org-superstar
     :after org
@@ -2006,6 +2025,9 @@ The project is then defined like so:
             ("[X]"  . 9745))))
 #+end_src
 
+~org-fancy-priorities~ change the priority of an org element such such
+as ~#A~ to anything user-defined. Let’s make this anything all-the-icons
+icons!
 #+begin_src emacs-lisp
   (use-package org-fancy-priorities
     :after (org all-the-icons)
