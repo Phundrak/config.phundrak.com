@@ -311,9 +311,9 @@ copy their code here. First we get the ~after!~ macro:
 | /        |    <c>    |      <c>       |
 | Emphasis | Character | Character code |
 |----------+-----------+----------------|
-| Bold     |     ~*~     |       42       |
-| Italic   |     ~/~     |       47       |
-| Code     |     ~~~     |      126       |
+| Bold     |    ~*~    |       42       |
+| Italic   |    ~/~    |       47       |
+| Code     |    ~~~    |      126       |
 
 #+begin_src emacs-lisp
   (defun org-mode-emphasize-bold ()
@@ -1643,6 +1643,22 @@ the usage of the ~:ignore:~ tag in org.
   (setq-default org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
+**** Behavior
+A useful package I like is ~toc-org~ which creates automatically a table
+of contents. My main usage for this however is not just to create a
+table of content of my files to quickly jump around my file (I have
+~counsel-org-goto~ for that), but it is for creating table of contents
+for org files that will be hosted and viewable on Github.
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :after org
+    :straight (:build t)
+    :init
+    (add-to-list 'org-tag-alist '("TOC" . ?T))
+    :hook (org-mode . toc-org-mode)
+    :hook (markdown-mode . toc-org-mode))
+#+end_src
+
 **** Babel
 A package I use from time to time is ~ob-latex-as-png~ which allows me
 to easily convert a LaTeX snippet into a PNG, regardless of the
@@ -2038,8 +2054,67 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
     (magit-status "/yadm::"))
 #+end_src
 
+** Making my life easier
+*** Bufler
+Bufler is a package that organizes and lists buffers in a much better
+way than how they are usually sorted. You can easily and quickly find
+buffers by their group, not only by their name, and THIS is great
+news! Also, no ~helm~ please! And for some reasons the keybindings are
+borked by default, so let’s redefine them, and let’s also rebind ~SPC~
+to ~p~ since it would conflict with my main ~general~ prefix.
+#+begin_src emacs-lisp
+  (use-package bufler
+    :straight (bufler :build t
+                      :files (:defaults (:exclude "helm-bufler.el")))
+    :defer t
+    :general
+    (:keymaps 'bufler-list-mode-map
+     :states  'normal
+     "?"   #'hydra:bufler/body
+     "g"   #'bufler
+     "f"   #'bufler-list-group-frame
+     "F"   #'bufler-list-group-make-frame
+     "N"   #'bufler-list-buffer-name-workspace
+     "k"   #'bufler-list-buffer-kill
+     "p"   #'bufler-list-buffer-peek
+     "s"   #'bufler-list-buffer-save
+     "RET" #'bufler-list-buffer-switch))
+#+end_src
+
+*** Helpful
+As the name tells, ~helpful~ is a really helpful package which greatly
+enhances a couple of built-in functions from Emacs, namely:
+| Vanilla Emacs Function | Helpful Function | Comment                                       |
+|------------------------+------------------+-----------------------------------------------|
+| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
+| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
+| ~describe-function~      | ~helpful-macro~    |                                               |
+| ~describe-command~       | ~helpful-command~  |                                               |
+| ~describe-key~           | ~helpful-key~      |                                               |
+| ~describe-variable~      | ~helpful-variable~ |                                               |
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :straight (:build t)
+    :after (counsel ivy)
+    :custom
+    (counsel-describe-function-function #'helpfull-callable)
+    (counsel-describe-variable-function #'helpfull-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command]  . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key]      . helpful-key))
+#+end_src
+
 ** Project Management
 *** Magit
+Magit is an awesome wrapper around Git for Emacs! Very often, I go
+from disliking to really hating Git GUI clients because they often
+obfuscate which Git commands are used to make things happen. Such a
+thing doesn’t happen with Magit, it’s pretty transparent but it still
+provides some awesome features and visualizations of what you are
+doing and what Git is doing! In short, I absolutely love it!
 #+begin_src emacs-lisp
   (use-package magit
     :straight (:build t)
@@ -2059,6 +2134,17 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
        "," #'with-editor-finish
        "k" #'with-editor-cancel
        "a" #'with-editor-cancel)))
+#+end_src
+
+[[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
+display in the Magit buffer a list of TODOs found in the current
+project to remind you of what to do next.
+#+begin_src emacs-lisp
+  (use-package magit-todos
+    :straight (:build t)
+    :after magit
+    :config
+    (setq magit-todos-ignore-case t))
 #+end_src
 
 *** Forge
@@ -2097,6 +2183,16 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
 DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
 such as SQL.
+
+**** Shells
+Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
+config]]), therefore I need a mode for it.
+#+begin_src emacs-lisp
+  (use-package fish-mode
+    :straight (:build t)
+    :defer t)
+#+end_src
+
 **** Caddy
 [[https://caddyserver.com/][Caddy]] (or /Caddyserver/) is a web server akin to Nginx or Apache which I
 find much easier to configure that the latter two, plus it has
@@ -2406,7 +2502,8 @@ Undefining some stuff to make keybind prefixes work correctly.
               epa-key-list-mode-map special-mode-map splash-screen-keymap
               undo-tree-visualizer-mode-map magit-blame-read-only-mode-map
               org-agenda-keymap org-agenda-mode-map git-rebase-mode-map
-              Buffer-menu-mode-map custom-mode-map gfm-view-mode-map)
+              Buffer-menu-mode-map custom-mode-map gfm-view-mode-map
+              electric-help-map image-mode-map magit-diff-mode-map)
    "SPC" nil)
 
   (general-define-key
@@ -2478,9 +2575,9 @@ Undefining some stuff to make keybind prefixes work correctly.
     "asv" #'vterm
 
     "b"   '(nil :wk "buffers")
-    "bb"  #'counsel-ibuffer
+    "bb"  #'bufler-switch-buffer
     "bB"  #'bury-buffer
-    "bi"  #'ibuffer-list-buffers-and-focus
+    "bl"  #'bufler-switch-buffer
     "bd"  #'kill-this-buffer
     "bD"  #'kill-buffer
     "bh"  #'dashboard-refresh-buffer
@@ -2546,6 +2643,7 @@ Undefining some stuff to make keybind prefixes work correctly.
     "pg"  #'projectile-find-tag
     "pk"  #'project-kill-buffers
     "pp"  #'counsel-projectile-switch-project
+    "pt"  #'ivy-magit-todos
     "pv"  #'projectile-vc
 
     "t"   '(nil :wk "toggles")
