@@ -2040,6 +2040,15 @@ icons!
                                       ,(all-the-icons-faicon "square"   :height 1.1 :v-adjust 0.0))))
 #+end_src
 
+Finally, ~org-sticky-header-mode~ reminds you where you are in your org
+files at the top of your window.
+#+begin_src emacs-lisp
+  (use-package org-sticky-header
+    :straight (:build t)
+    :after org
+    :hook (org-mode . org-sticky-header-mode))
+#+end_src
+
 *** Tramp
 Tramp is an Emacs built-in package that allows the user to connect to
 various hosts using various protocols, such as ~ssh~ and
@@ -2309,8 +2318,11 @@ Nginx syntax.
 
 *** General Programming Languages
 **** EmacsLisp
+This package displays the function’s arglist or variable’s docstring
+in the echo area at the bottom of the frame. Quite useful indeed.
 #+begin_src emacs-lisp
   (use-package eldoc
+    :defer t
     :after company
     :init
     (eldoc-add-command 'company-complete-selection
@@ -2319,6 +2331,17 @@ Nginx syntax.
                        'company-abort))
 #+end_src
 
+~eldoc-box~ takes ~eldoc~ a step further by displaying said information in
+a child frame.
+#+begin_src emacs-lisp
+  (use-package eldoc-box
+    :straight (:build t)
+    :hook (emacs-lisp-mode . eldoc-box-hover-at-point-mode)
+    :after eldoc)
+#+end_src
+
+Let’s also declare some Elisp-dedicated keybindings, prefixed by a
+comma.
 #+begin_src emacs-lisp
   (general-define-key
    :states 'motion
@@ -2599,7 +2622,7 @@ Undefining some stuff to make keybind prefixes work correctly.
     "b"   '(nil :wk "buffers")
     "bb"  #'bufler-switch-buffer
     "bB"  #'bury-buffer
-    "bl"  #'bufler-switch-buffer
+    "bl"  #'bufler
     "bd"  #'kill-this-buffer
     "bD"  #'kill-buffer
     "bh"  #'dashboard-refresh-buffer
