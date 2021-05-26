@@ -8,7 +8,7 @@
 	path = fromGIT/blurredfox-nord
 	url = git@labs.phundrak.com:phundrak/blurredfox-nord.git
 [submodule ".emacs.d"]
-	path = .emacs.d
+	path = .config/emacs
 	url = git@github.com:plexus/chemacs2.git
 [submodule ".emacs.doom"]
 	path = .emacs.doom
