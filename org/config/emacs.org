@@ -1169,7 +1169,9 @@ buffer.
 #+begin_src emacs-lisp
   (use-package vterm
     :defer t
-    :straight t)
+    :straight t
+    :config
+    (setq vterm-shell "/usr/bin/fish"))
 #+end_src
 
 *** XWidgets Webkit Browser
