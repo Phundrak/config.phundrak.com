@@ -555,7 +555,7 @@ repositories too.
     :init (which-key-mode)
     :diminish which-key-mode
     :config
-    (setq which-key-idle-delay 0.3))
+    (setq which-key-idle-delay 1))
 #+end_src
 
 ** General
@@ -1170,14 +1170,17 @@ buffer.
     :straight t)
 #+end_src
 
-*** Webkit browser
+*** XWidgets Webkit Browser
 #+begin_src emacs-lisp
   (general-define-key
    :keymaps 'xwidget-webkit-mode-map
    :states 'normal
+   "<mouse-4>" #'xwidget-webkit-scroll-down-line
+   "<mouse-5>" #'xwidget-webkit-scroll-up-line
+
    "c" #'xwidget-webkit-scroll-backward
-   "t" #'xwidget-webkit-scroll-up
-   "s" #'xwidget-webkit-scroll-down
+   "t" #'xwidget-webkit-scroll-up-line
+   "s" #'xwidget-webkit-scroll-down-line
    "r" #'xwidget-webkit-scroll-forward
    "h" #'xwidget-webkit-goto-history
    "j" nil
@@ -1186,9 +1189,16 @@ buffer.
 
    "H" nil
    "L" nil
-   "T" #'xwidget-webkit-back
-   "S" #'xwidget-webkit-forward
-   "R" #'xwidget-webkit-reload)
+   "T" #'xwidget-webkit-scroll-up
+   "S" #'xwidget-webkit-scroll-down)
+
+  (general-define-key
+   :keymaps 'xwidget-webkit-mode-map
+   :states 'normal
+   :prefix ","
+   "b" #'xwidget-webkit-back
+   "f" #'xwidget-webkit-forward
+   "r" #'xwidget-webkit-reload)
 #+end_src
 
 *** Wttr.in
@@ -1854,6 +1864,9 @@ enhances a couple of built-in functions from Emacs, namely:
     (auto-fill-mode -1)
     :general
     (:states 'normal
+     :keymaps 'org-mode-map
+     "RET" 'org-open-at-point)
+    (:states 'normal
      :prefix ","
      :keymaps 'org-mode-map
      "RET" #'org-ctrl-c-ret
@@ -1877,8 +1890,8 @@ enhances a couple of built-in functions from Emacs, namely:
      "bn"  #'org-babel-next-src-block
      "bo"  #'org-babel-open-src-block-result
      "bp"  #'org-babel-previous-src-block
-     "br"  #'org-babel-goto-named-result
-     "bR"  #'org-babel-remove-result-one-or-many
+     "br"  #'org-babel-remove-result-one-or-many
+     "bR"  #'org-babel-goto-named-result
      "bt"  #'org-babel-tangle
      "bi"  #'org-babel-view-src-block-info
 
@@ -2687,18 +2700,23 @@ comma.
    :keymaps 'emacs-lisp-mode-map
    :prefix ","
 
-   "'"  #'ielm
+   "'"   #'ielm
+   "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
 
-   "c"  '(emacs-lisp-byte-compile :which-key "Byte compile")
+   "e"   '(nil :which-key "eval")
+   "eb"  #'eval-buffer
+   "ed"  #'eval-defun
+   "ee"  #'eval-last-sexp
+   "er"  #'eval-region
 
-   "e"  '(nil :which-key "eval")
-   "eb" #'eval-buffer
-   "ed" #'eval-defun
-   "ee" #'eval-last-sexp
-   "er" #'eval-region
+   "h"   '(nil :which-key "help")
+   "hh"  #'helpful-at-point
 
-   "h"  '(nil :which-key "help")
-   "hh" #'helpful-at-point)
+   "t"   '(nil :wk "toggle")
+   "tP"  '(nil :wk "parinfer")
+   "tPs" #'parinfer-rust-switch-mode
+   "tPd" #'parinfer-rust-mode-disable
+   "tPp" #'parinfer-rust-toggle-paren-mode)
 #+end_src
 
 ** Visual Configuration
@@ -2972,14 +2990,14 @@ Undefining some stuff to make keybind prefixes work correctly.
     "c"   '(nil :wk "code")
     "cl"  #'evilnc-comment-or-uncomment-lines
 
-    "e"  '(nil :wk "email")
-    "ec" #'mu4e-compose-new
-    "em" #'mu4e
+    "e"   '(nil :wk "email")
+    "ec"  #'mu4e-compose-new
+    "em"  #'mu4e
 
     "f"   '(nil :wk "files")
     "fc"  '((lambda ()
-            (interactive)
-            (find-file (concat (getenv "HOME") "/org/config/emacs.org")))
+             (interactive)
+             (find-file (concat (getenv "HOME") "/org/config/emacs.org")))
             :wk "Config file")
     "ff"  #'counsel-find-file
     "fF"  #'ivy-quick-find-files
@@ -3003,7 +3021,7 @@ Undefining some stuff to make keybind prefixes work correctly.
     "gfF" #'magit-find-file
 
     "h"   '(nil :wk "help")
-    "hk"  #'wk-show-top-level
+    "hk"  #'which-key-show-top-level
     "hd"  '(nil :wk "describe")
     "hdc" #'describe-char
     "hdf" #'helpful-callable
@@ -3015,6 +3033,7 @@ Undefining some stuff to make keybind prefixes work correctly.
 
     "j"   '(nil :wk "jump")
     "jd"  #'dired-jump
+    "jD"  #'dired-jump-other-window
 
     "p"   '(nil :wk "project")
     "p!"  #'projectile-run-shell-command-in-root
@@ -3037,26 +3056,28 @@ Undefining some stuff to make keybind prefixes work correctly.
     "tis" #'set-input-mode
 
     "u"   #'universal-argument
+    "U"   #'undo-tree-visualize
 
     "w"   '(nil :wk "windows")
     "w-"  #'split-window-below-and-focus
     "w/"  #'split-window-right-and-focus
-    "w$" #'winum-select-window-by-number
-    "w0" #'winum-select-window-0-or-10
-    "w1" #'winum-select-window-1
-    "w2" #'winum-select-window-2
-    "w3" #'winum-select-window-3
-    "w4" #'winum-select-window-4
-    "w5" #'winum-select-window-5
-    "w6" #'winum-select-window-6
-    "w7" #'winum-select-window-7
-    "w8" #'winum-select-window-8
-    "w9" #'winum-select-window-9
+    "w$"  #'winum-select-window-by-number
+    "w0"  '(winum-select-window-0-or-10 :wk nil)
+    "w1"  '(winum-select-window-1 :wk nil)
+    "w2"  '(winum-select-window-2 :wk nil)
+    "w3"  '(winum-select-window-3 :wk nil)
+    "w4"  '(winum-select-window-4 :wk nil)
+    "w5"  '(winum-select-window-5 :wk nil)
+    "w6"  '(winum-select-window-6 :wk nil)
+    "w7"  '(winum-select-window-7 :wk nil)
+    "w8"  '(winum-select-window-8 :wk nil)
+    "w9"  '(winum-select-window-9 :wk nil)
+
     "wb"  '((lambda ()
-            (interactive)
-            (progn
-              (kill-this-buffer)
-              (delete-window)))
+              (interactive)
+              (progn
+                (kill-this-buffer)
+                (delete-window)))
             :wk "Kill buffer and window")
     "wd"  #'delete-window
     "wo"  #'other-window
