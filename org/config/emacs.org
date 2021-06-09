@@ -6,7 +6,7 @@
 #+html_head: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
 #+html_head: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :results silent :tangle ~/.emacs.vanilla/init.el
+#+property: header-args:emacs-lisp+ :tangle ~/.emacs.vanilla/init.el
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb yes
 
 * Introduction
@@ -27,82 +27,7 @@ missing, and lots of functionnalities are still not implemented. I’m
 still in the process of porting my [[file:spacemacs.org][Spacemacs]] configuration over here.
 
 * Basic configuration
-#+begin_src emacs-lisp
-  (setq visible-bell t)
-
-  (setq-default initial-major-mode 'emacs-lisp-mode)
-
-  (setq display-time-format "%Y-%m-%d %H:%M")
-  (display-time-mode 1) ; display time in modeline
-
-  ;; Display battery in modeline when using a laptop
-  (unless (equal "Battery status not available"
-                 (battery))
-    (display-battery-mode 1))
-
-
-
-  (setq frame-title-format
-        '(""
-          "%b"
-          (:eval
-           (let ((project-name (projectile-project-name)))
-             (unless (string= "-" project-name)
-               (format (if (buffer-modified-p) " ◉ %s" "  ●  %s") project-name))))))
-
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-  ;; Answer with y or n, not yes or not
-  (defalias 'yes-or-no-p 'y-or-n-p)
-
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  comint-mode
-                  term-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook
-                  vterm-mode-hook
-                  special-mode-hook
-                  helpful-mode-hook
-                  woman-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-  (setq x-stretch-cursor          t         ; stretch cursor to the glyph’s width
-        delete-by-moving-to-trash t         ; delete files to trash
-        window-combination-resize t         ; take new window space from all other windows
-        undo-limit                100000000 ; raise undo limit to 100Mb
-        auto-save-default         t
-        truncate-string-ellipsis  "…")
-
-  (global-subword-mode 1)
-  ;; (electric-indent-mode -1)
-
-  (setq-default major-mode 'org-mode)
-
-  (defun modeline-contitional-buffer-encoding ()
-    "Hide \"LF UTF-8\" in modeline.
-
-  It is expected of files to be encoded with LF UTF-8, so only show
-  the encoding in the modeline if the encoding is worth notifying
-  the user."
-    (setq-local doom-modeline-buffer-encoding
-                (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
-                                   '(coding-category-undecided coding-category-utf-8))
-                             (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
-                  t)))
-
-  (add-hook 'after-change-major-mode-hook #'modeline-contitional-buffer-encoding)
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
-  (with-eval-after-load 'org
-    (add-hook 'org-mode-hook (lambda ()
-                               (interactive)
-                               (electric-indent-local-mode -1))))
-#+end_src
-
-** Early init
+** Early Init
 The early init file is the file loaded before anything else in
 Emacs. This is where I put some options in order to disable as quickly
 as possible some built-in features of Emacs before they can be even
@@ -119,46 +44,35 @@ loaded, speeding Emacs up a bit.
   (menu-bar-mode -1)                 ; disable menubar
 #+end_src
 
-** Personal information
-Emacs needs to know its master! For various reasons by the way, some
-packages rely of these variables to know who it is talking to or
-dealing with, such as ~mu4e~ which will guess who you are if you haven’t
-set it up correctly.
+** Emacs Behavior
+*** Editing Text in Emacs
+I *never* want to keep trailing spaces in my files, which is why I’m
+doing this:
 #+begin_src emacs-lisp
-  (setq user-full-name       "Lucien Cartier-Tilet"
-        user-real-login-name "Lucien Cartier-Tilet"
-        user-login-name      "phundrak"
-        user-mail-address    "lucien@phundrak.com")
+  (add-hook 'before-save-hook #'whitespace-cleanup)
 #+end_src
 
-** Stay clean, Emacs!
-As nice as Emacs is, it isn’t very polite or clean by default: open a
-file, and it will create backup files in the same directory. But then,
-when you open your directory with your favorite file manager and see
-almost all of your files duplicated with a =~= appended to the filename,
-it looks really uncomfortable! This is why I prefer to tell Emacs to
-keep its backup files to itself in a directory it only will acces.
+I don’t understand why some people add two spaces behind a full stop,
+I sure don’t. Let’s tell Emacs.
 #+begin_src emacs-lisp
-  (setq backup-directory-alist `(("." . ,(expand-file-name ".temp/backups/" user-emacs-directory))))
+  (setq sentence-end-double-space nil)
 #+end_src
 
-It also loves to litter its ~init.el~ with custom variables here and
-there, but the thing is: I regenerate my ~init.el~ each time I tangle
-this file! How can I keep Emacs from adding stuff that will be almost
-immediately lost? Did someone say /custom file/?
+There is a minor mode in Emacs which allows to have a finer way of
+jumping from word to word: ~global-subword-mode~. It detects if what
+would usually be considered by Emacs a word can be understood as
+several modes, as in camelCase words, and allows us to jump words on
+this finer level.
 #+begin_src emacs-lisp
-  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
-  (when (file-exists-p custom-file) ; Don’t forget to load it, we still need it
-    (load custom-file))
+  (global-subword-mode 1)
 #+end_src
 
-Finally, the scatch buffer always has some message at its beginning, I
-don’t want it!
+Lastly, I want the default mode for Emacs to be Emacs Lisp.
 #+begin_src emacs-lisp
-  (setq-default initial-scratch-message nil)
+  (setq-default initial-major-mode 'emacs-lisp-mode)
 #+end_src
 
-** Editing text in Emacs
+**** Indentation
 I don’t like tabs. They rarely look good, and if I need it I can
 almost always tell Emacs to use them through a ~.dir-locals.el~ file or
 through the config file of my code formatter. So by default, let’s
@@ -199,30 +113,210 @@ I haven’t found a way to automate that in Emacs yet aside from
 formatters’ config file, and tabs look bat in EmacsLisp anyways, so
 I’ll stick with spaces by default and change it where needed.
 
-I *never* want to keep trailing spaces in my files, which is why I’m
-doing this:
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook #'whitespace-cleanup)
+*** Programming Modes
+First off, my definition of what makes a a “programming mode” doesn’t exactly
+fit mine, so on top of ~prog-mode~, let’s add a few other modes.
+#+name: line-number-modes-table
+| Modes      |
+|------------|
+| prog-mode  |
+| latex-mode |
+
+#+name: prog-modes-gen
+#+begin_src emacs-lisp :var modes=line-number-modes-table :exports none :tangle no
+  (mapconcat (lambda (mode) (format "%s-hook" (car mode)))
+             modes
+             " ")
 #+end_src
 
-** Fonts
-I don’t like the default font I usually have on my machines, I really don’t.
+**** Line Number
+Since version 26, Emacs has a built-in capacity of displaying line
+numbers on the left-side of the buffer. This is a fantastic feature
+that should actually be the default for all programming modes.
 
+#+begin_src emacs-lisp
+  (dolist (mode '(<<prog-modes-gen()>>))
+    (add-hook mode #'display-line-numbers-mode))
+#+end_src
+
+**** Folding code
+Most programming languages can usually have their code folded, be it
+code between curly braces, chunks of comments or code on another level
+of indentation (Python, why…?). The minor-mode that enables that is
+~hs-minor-mode~, let’s enable it for all of these programming modes:
+#+begin_src emacs-lisp
+  (dolist (mode '(<<prog-modes-gen()>>))
+    (add-hook mode #'hs-minor-mode))
+#+end_src
+
+*** Stay Clean, Emacs!
+As nice as Emacs is, it isn’t very polite or clean by default: open a
+file, and it will create backup files in the same directory. But then,
+when you open your directory with your favorite file manager and see
+almost all of your files duplicated with a =~= appended to the filename,
+it looks really uncomfortable! This is why I prefer to tell Emacs to
+keep its backup files to itself in a directory it only will acces.
+#+begin_src emacs-lisp
+  (setq backup-directory-alist `(("." . ,(expand-file-name ".tmp/backups/" user-emacs-directory))))
+#+end_src
+
+It also loves to litter its ~init.el~ with custom variables here and
+there, but the thing is: I regenerate my ~init.el~ each time I tangle
+this file! How can I keep Emacs from adding stuff that will be almost
+immediately lost? Did someone say /custom file/?
+#+begin_src emacs-lisp
+  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file) ; Don’t forget to load it, we still need it
+    (load custom-file))
+#+end_src
+
+If we delete a file, we want it moved to the trash, not simply deleted.
+#+begin_src emacs-lisp
+  (setq delete-by-moving-to-trash t)
+#+end_src
+
+Finally, the scatch buffer always has some message at its beginning, I
+don’t want it!
+#+begin_src emacs-lisp
+  (setq-default initial-scratch-message nil)
+#+end_src
+
+*** Stay Polite, Emacs!
+When asking for our opinion on something, Emacs loves asking us to
+answer by “yes” or “no”, but *in full*! That’s very rude! Fortunately,
+we can fix this.
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+This will make Emacs ask us for either hitting the ~y~ key for “yes”, or
+the ~n~ key for “no”. Much more polite!
+
+*** Misc
+Let’s raise Emacs undo memory to 10MB, and make Emacs auto-save our
+files by default.
+#+begin_src emacs-lisp
+  (setq undo-limit        100000000
+        auto-save-default t)
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq window-combination-resize t) ; take new window space from all other windows
+#+end_src
+
+** Personal Information
+Emacs needs to know its master! For various reasons by the way, some
+packages rely of these variables to know who it is talking to or
+dealing with, such as ~mu4e~ which will guess who you are if you haven’t
+set it up correctly.
+#+begin_src emacs-lisp
+  (setq user-full-name       "Lucien Cartier-Tilet"
+        user-real-login-name "Lucien Cartier-Tilet"
+        user-login-name      "phundrak"
+        user-mail-address    "lucien@phundrak.com")
+#+end_src
+
+** Visual Configuration
+The first visual setting in this section will activate the visible
+bell. What it does is I get a visual feedback each time I do something
+Emacs doesn’t agree with, like tring to go up a line when I’m already
+at the top of the buffer.
+#+begin_src emacs-lisp
+  (setq visible-bell t)
+#+end_src
+
+It is nicer to see a cursor cover the actual space of a character.
+#+begin_src emacs-lisp
+  (setq x-stretch-cursor t)
+#+end_src
+
+When text is ellipsed, I want the ellipsis marker to be a single
+character of three dots. Let’s make it so:
+#+begin_src emacs-lisp
+  (setq truncate-string-ellipsis "…")
+#+end_src
+
+*** Modeline Modules
+I sometimes use Emacs in fullscreen, meaning my usual taskbar will be
+hidden. This is why I want the current date and time to be displayed,
+in an ISO-8601 style, although not exactly ISO-8601 (this is the best
+time format, fight me).
+#+begin_src emacs-lisp
+  (setq display-time-format "%Y-%m-%d %H:%M")
+  (display-time-mode 1) ; display time in modeline
+#+end_src
+
+Something my taskbar doesn’t have is a battery indicator. However, I
+want it enabled only if I am on a laptop or if a battery is available.
+#+begin_src emacs-lisp
+  (let ((battery-str (battery)))
+      (unless (or (equal "Battery status not available" battery-str)
+                  (string-match-p (regexp-quote "N/A") battery-str))
+        (display-battery-mode 1)))
+#+end_src
+
+This isn’t a modeline module per se, but we have an indicator of the
+current line in Emacs. And although it is useful, I also often wish to
+know which column I’m on. This can be activated like so:
+#+begin_src emacs-lisp
+  (column-number-mode)
+#+end_src
+
+The following code is, as will several chunks of code in this config,
+borrowed from TEC’s configuration. It hides the encoding information
+of the file if the file itself is a regular UTF-8 file with ~\n~ line
+ending. Be aware the ~doom-modeline-buffer-encoding~ variable is usabel
+here only because I use the Doom modeline as seen below.
+#+begin_src emacs-lisp
+  (defun modeline-contitional-buffer-encoding ()
+    "Hide \"LF UTF-8\" in modeline.
+
+  It is expected of files to be encoded with LF UTF-8, so only show
+  the encoding in the modeline if the encoding is worth notifying
+  the user."
+    (setq-local doom-modeline-buffer-encoding
+                (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
+                                   '(coding-category-undecided coding-category-utf-8))
+                             (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
+                  t)))
+#+end_src
+
+Now, let’s automate the call to this function in order to apply the
+modifications to the modeline each time we open a new file.
+#+begin_src emacs-lisp
+  (add-hook 'after-change-major-mode-hook #'modeline-contitional-buffer-encoding)
+#+end_src
+
+*** Fonts
+I don’t like the default font I usually have on my machines, I really
+don’t. I prefer [[https://github.com/microsoft/cascadia-code][Cascadia Code]], as it also somewhat supports the [[https://www.internationalphoneticassociation.org/][IPA]].
 #+begin_src emacs-lisp
   (defvar phundrak/default-font-size 90
     "Default font size.")
-#+end_src
 
-#+begin_src emacs-lisp
   (when (equal system-type 'gnu/linux)
     (set-face-attribute 'default nil :font "Cascadia Code" :height phundrak/default-font-size))
 #+end_src
 
-** Nice macros from Doom-Emacs
+*** Frame Title
+This is straight-up copied from [[https://tecosaur.github.io/emacs-config/config.html#window-title][TEC]]’s configuration. See their comment
+on the matter.
+#+begin_src emacs-lisp
+  (setq frame-title-format
+        '(""
+          "%b"
+          (:eval
+           (let ((project-name (projectile-project-name)))
+             (unless (string= "-" project-name)
+               (format (if (buffer-modified-p) " ◉ %s" "  ●  %s") project-name))))))
+#+end_src
+
+** Nice Macros From Doom-Emacs
 Doom-Emacs has some really nice macros that can come in really handy,
 but since I prefer to rely on my own configuration, I’ll instead just
 copy their code here. First we get the ~after!~ macro:
 #+begin_src emacs-lisp
+  (require 'cl)
   (defmacro after! (package &rest body)
     "Evaluate BODY after PACKAGE have loaded.
 
@@ -270,6 +364,100 @@ copy their code here. First we get the ~after!~ macro:
 #+end_src
 
 * Custom Elisp
+** Dired functions
+*** ~phundrak/open-marked-files~
+This function allows the user to open all marked files from a dired
+buffer as new Emacs buffers.
+#+begin_src emacs-lisp
+  (defun phundrak/open-marked-files (&optional files)
+    "Open all marked FILES in dired buffer as new Emacs buffers."
+    (interactive)
+    (let* ((file-list (if files
+                          (list files)
+                        (if (equal major-mode "dired-mode")
+                            (dired-get-marked-files)
+                          (list (buffer-file-name))))))
+     (mapc (lambda (file-path)
+             (find-file file-path))
+           (file-list))))
+#+end_src
+
+*** ~xah/open-in-external-app~
+#+begin_src emacs-lisp
+  (defun xah/open-in-external-app (&optional file)
+    "Open FILE or dired marked FILE in external app.
+  The app is chosen from the user’s OS preference."
+    (interactive)
+    (let ((file-list (if file
+                         (list file)
+                       (if (equal major-mode "dired-mode")
+                           (dired-get-marked-files)
+                         (list (buffer-file-name)))))
+          (do-it-p   (if (<= (length file-list) 5)
+                         t
+                       (y-or-n-p "Open more than 5 files? "))))
+      (when do-it-p
+        (mapc (lambda (file-path)
+                (let ((process-connection-type nil))
+                  (start-process "" nil "xdg-open" file-path)))
+              file-list))))
+#+end_src
+
+*** ~xah/dired-sort~
+#+begin_src emacs-lisp
+  (defun xah/dired-sort ()
+    "Sort dired dir listing in different ways.
+  Prompt for a choice."
+    (interactive)
+    (let (sort-by arg)
+      (setq sort-by (completing-read "Sort by:" '("name" "size" "date" "extension")))
+      (pcase sort-by
+        ("name" (setq arg "-ahl --group-directories-first"))
+        ("date" (setq arg "-ahl -t --group-directories-first"))
+        ("size" (setq arg "-ahl -S --group-directories-first"))
+        ("extension" (setq arg "ahlD -X --group-directories-first"))
+        (otherwise (error "Dired-sort: unknown option %s" otherwise)))
+      (dired-sort-other arg)))
+#+end_src
+
+** Switch between buffers
+Two default shortcuts I really like from Spacemacs are ~SPC b m~ and ~SPC
+b s~, which bring the user directly to the ~*Messages*~ buffer and the
+~*scratch*~ buffer respectively. These functions do exactly this.
+#+begin_src emacs-lisp
+  (defun switch-to-messages-buffer ()
+    "Switch to Messages buffer."
+    (interactive)
+    (switch-to-buffer "*Messages*"))
+
+  (defun switch-to-scratch-buffer ()
+    "Switch to Messages buffer."
+    (interactive)
+    (switch-to-buffer "*scratch*"))
+#+end_src
+
+** Org Functions
+*** Emphasize text
+| /        |    <c>    |      <c>       |
+| Emphasis | Character | Character code |
+|----------+-----------+----------------|
+| Bold     |    ~*~    |       42       |
+| Italic   |    ~/~    |       47       |
+| Code     |    ~~~    |      126       |
+
+#+begin_src emacs-lisp
+  (defun org-mode-emphasize-bold ()
+    "Emphasize as bold the current region.
+
+  See also `org-emphasize'."
+    (interactive)
+    (org-emphasize 42))
+#+end_src
+
+*** Handle new windows
+The two functions below allow the user to not only create a new window
+to the right or below the current window (respectively), but also to
+focus the new window immediately.
 #+begin_src emacs-lisp
   (defun split-window-right-and-focus ()
     (interactive)
@@ -286,44 +474,9 @@ copy their code here. First we get the ~after!~ macro:
     (when (and (boundp 'golden-ratio-mode)
                (symbol-value golden-ratio-mode))
       (golden-ratio)))
-
-  (defun ibuffer-list-buffers-and-focus ()
-    (interactive)
-    (ibuffer-list-buffers)
-    (windmove-down)
-    (when (and (boundp 'golden-ratio-mode)
-               (symbol-value golden-ratio-mode))
-      (golden-ratio)))
 #+end_src
 
-#+begin_src emacs-lisp
-  (defun switch-to-messages-buffer ()
-    "Switch to Messages buffer."
-    (interactive)
-    (switch-to-buffer "*Messages*"))
-
-  (defun switch-to-scratch-buffer ()
-    "Switch to Messages buffer."
-    (interactive)
-    (switch-to-buffer "*scratch*"))
-#+end_src
-
-| /        |    <c>    |      <c>       |
-| Emphasis | Character | Character code |
-|----------+-----------+----------------|
-| Bold     |     ~*~     |       42       |
-| Italic   |     ~/~     |       47       |
-| Code     |     ~~~     |      126       |
-
-#+begin_src emacs-lisp
-  (defun org-mode-emphasize-bold ()
-    "Emphasize as bold the current region.
-
-  See also `org-emphasize'."
-    (interactive)
-    (org-emphasize 42))
-#+end_src
-
+*** ~phundrak/toggle-org-src-window-split~
 #+begin_src emacs-lisp
   (defun phundrak/toggle-org-src-window-split ()
     "This function allows the user to toggle the behavior of
@@ -406,8 +559,18 @@ repositories too.
 #+end_src
 
 ** General
+General is an awesome package for managing keybindings. Not only is it
+oriented towards keychords by default (which I love), but it also
+provides some integration with evil so that we can declare keybindings
+for certain states only! This is a perfect replacement for ~define-key~,
+~evil-define-key~, and any other function for defining keychords. And it
+is also possible to declare a prefix for my keybindings! By default,
+my keybinds that are not bound to a specific mode will be prefixed
+with ~SPC~, but when I want to get more specific in terms of mode, I'll
+prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+begin_src emacs-lisp
   (use-package general
+    :defer t
     :straight (:build t)
     :init
     (general-auto-unbind-keys))
@@ -466,8 +629,8 @@ repositories too.
     (define-key evil-motion-state-map "s" 'evil-previous-line)
     (define-key evil-motion-state-map "S" 'evil-lookup)
     (define-key evil-motion-state-map "r" 'evil-forward-char)
-    (define-key evil-motion-state-map "R" 'evil-window-bottom)
-    )
+    (define-key evil-motion-state-map "R" 'evil-window-bottom))
+
 
   (use-package evil-collection
     :after evil
@@ -478,6 +641,7 @@ repositories too.
 
 #+begin_src emacs-lisp
   (use-package undo-tree
+    :defer t
     :straight (:build t)
     :init
     (global-undo-tree-mode))
@@ -916,54 +1080,58 @@ grow the ~mu4e-headers~ buffer when viewing an email.
     (progn
       (with-eval-after-load 'pdf-view
         (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
-
       (general-define-key
        :keymaps 'pdf-view-mode-map
        "SPC" nil)
       (general-define-key
-       :keymaps 'pdf-view-mode-map
-       :states 'normal
-       "SPC" nil)
-      ;; (define-key 'pdf-view-mode-map (kbd "SPC") nil)
-
-      (general-define-key
        :states 'normal
        :keymaps 'pdf-view-mode-map
-       "y" #'pdf-view-kill-ring-save
-       "t" #'evil-collection-pdf-view-next-line-or-next-page
-       "s" #'evil-collection-pdf-view-previous-line-or-previous-page))
+       "SPC" nil
+       "y"   #'pdf-view-kill-ring-save
+       "t"   #'evil-collection-pdf-view-next-line-or-next-page
+       "s"   #'evil-collection-pdf-view-previous-line-or-previous-page))
+    (general-define-key
+     :states 'motion
+     :keymaps 'pdf-view-mode-map
+     :prefix "SPC"
+      "a"  '(nil :which-key "annotations")
+      "aD" #'pdf-annot-delete
+      "at" #'pdf-annot-attachment-dired
+      "ah" #'pdf-annot-add-highlight-markup-annotation
+      "al" #'pdf-annot-list-annotations
+      "am" #'pdf-annot-markup-annotation
+      "ao" #'pdf-annot-add-strikeout-markup-annotation
+      "as" #'pdf-annot-add-squiggly-markup-annotation
+      "at" #'pdf-annot-add-text-annotation
+      "au" #'pdf-annot-add-underline-markup-annotation
 
-      (general-define-key
-       :states 'motion
-       :keymaps 'pdf-view-mode-map
-       :prefix "SPC"
-        "a"  '(nil :which-key "annotations")
-        "aD" #'pdf-annot-delete
-        "at" #'pdf-annot-attachment-dired
-        "ah" #'pdf-annot-add-highlight-markup-annotation
-        "al" #'pdf-annot-list-annotations
-        "am" #'pdf-annot-markup-annotation
-        "ao" #'pdf-annot-add-strikeout-markup-annotation
-        "as" #'pdf-annot-add-squiggly-markup-annotation
-        "at" #'pdf-annot-add-text-annotation
-        "au" #'pdf-annot-add-underline-markup-annotation
+      "f"  '(nil :which-key "fit")
+      "fw" #'pdf-view-fit-width-to-window
+      "fh" #'pdf-view-fit-height-to-window
+      "fp" #'pdf-view-fit-page-to-window
 
-        "f"  '(nil :which-key "fit")
-        "fw" #'pdf-view-fit-width-to-window
-        "fh" #'pdf-view-fit-height-to-window
-        "fp" #'pdf-view-fit-page-to-window
+      "s"  '(nil :which-key "slice/search")
+      "sb" #'pdf-view-set-slice-from-bounding-box
+      "sm" #'pdf-view-set-slice-using-mouse
+      "sr" #'pdf-view-reset-slice
+      "ss" #'pdf-occur
 
-        "s"  '(nil :which-key "slice/search")
-        "sb" #'pdf-view-set-slice-from-bounding-box
-        "sm" #'pdf-view-set-slice-using-mouse
-        "sr" #'pdf-view-reset-slice
-        "ss" #'pdf-occur
-
-        "o"  'pdf-outline
-        "m"  'pdf-view-midnight-minor-mode)
+      "o"  'pdf-outline
+      "m"  'pdf-view-midnight-minor-mode)
 
     :hook
     (pdf-tools-enabled . pdf-view-midnight-minor-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pdf-view-restore
+    :after pdf-tools
+    :hook (pdf-view-mode . pdf-view-restore-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq pdf-view-restore-filename (expand-file-name ".tmp/pdf-view-restore"
+                                                    user-emacs-directory))
 #+end_src
 
 *** Screenshot
@@ -1262,7 +1430,31 @@ Finally, let’s make ~ivy~ richer:
     :straight (:build t))
 #+end_src
 
-*** string-edit
+*** Evil Surround
+This package allows its user to surround regions with pairs of
+characters easily.
+
+*** Parinfer
+Don’t let the name of the package fool you! ~parinfer-rust-mode~ is not
+a ~parinfer~ mode for ~rust-mode~, but a mode for ~parinfer-rust~. ~parinfer~
+was a project for handling parenthesis and other double markers in a
+much more intuitive way when writing Lisp code. However, it is now out
+of date (last commit was on January 2nd, 2019) and the repository has
+since been archived. New implementations then appeared, one of them is
+[[https://github.com/eraserhd/parinfer-rust][~parinfer-rust~]], obviously written in Rust, around which
+~parinfer-rust-mode~ is built.
+#+begin_src emacs-lisp
+  (use-package parinfer-rust-mode
+    :defer t
+    :diminish parinfer-rust-mode
+    :hook emacs-lisp-mode common-lisp-mode scheme-mode
+    :init
+    (setq parinfer-rust-auto-download     t
+          parinfer-rust-library-directory (concat user-emacs-directory
+                                                  "parinfer-rust/")))
+#+end_src
+
+*** ~string-edit~
 ~string-edit~ is a cool package that allows the user to write naturally
 a string and get it automatically escaped for you. No more manually
 escaping your strings!
@@ -1283,8 +1475,92 @@ distraction-free mode of Emacs, and I like that!
 
 ** Emacs built-ins
 *** Dired
+Dired is Emacs’ built-in file manager. It’s really great, and replaces
+any graphical file manager for me most of the time because:
+- I am not limited to /x/ tabs or panes
+- All actions can be done with keybindings
+- I get a consistent behavior between Dired and Emacs, since it’s the
+  same thing.
+However, the only thing I lack still is thumbnails. In any case, I
+need still to make some tweaks in order to make it usable for
+me.
 #+begin_src emacs-lisp
-  (setq dired-dwim-target t)
+  (use-package dired
+    :straight (:type built-in)
+    :defer t
+    :general
+    (:keymaps 'dired-mode-map
+     :states 'normal
+     "(" #'dired-hide-details-mode
+     "n" #'evil-next-line
+     "p" #'evil-previous-line)
+    :config
+    (setq dired-dwim-target t))
+#+end_src
+
+Dired-x stands for “dired extra” which provides a couple more features
+that are for some reason not included in dired yet.
+#+begin_src emacs-lisp
+  (use-package dired-x
+    :straight (:type built-in)
+    :after dired
+    :commands (dired-jump dired-jump-other-window dired-omit-mode)
+    :general
+    (:keymaps 'dired-mode-map
+     :states 'normal
+     "«" #'dired-omit-mode))
+#+end_src
+
+~dired-du~ provides the user with the option to be able to see the size
+of directories as they are, rather than just the size of their
+inode. However, I will not enable it by default as it can take some
+time to get the actual size of a directory.
+#+begin_src emacs-lisp
+  (use-package dired-du
+    :after dired
+    :straight (:build t)
+    :general
+    (:keymaps 'dired-mode-map
+     :states 'normal
+     "»" #'dired-du-mode))
+#+end_src
+
+This package on the other hand provides Git information to the user in
+the current dired buffer in a similar way to how Github and Gitea
+display the latest commit message and its age about a file in the file
+tree. And by default, I want ~dired-git-info~ to hide file details.
+#+begin_src emacs-lisp
+  (use-package dired-git-info
+    :after dired
+    :general
+    (:keymaps 'dired-mode-map
+     :states 'normal
+     ")" #'dired-git-info-mode)
+    :hook (dired-after-reading . dired-git-info-auto-enable)
+    :config
+    (setq dgi-auto-hide-details-p t))
+#+end_src
+
+Diredfl makes dired colorful, and much more readable in my opinion.
+#+begin_src emacs-lisp
+  (use-package diredfl
+    :straight (:build t)
+    :after dired
+    :init
+    (diredfl-global-mode 1))
+#+end_src
+
+And let’s add some fancy icons in dired!
+#+begin_src emacs-lisp
+  (use-package all-the-icons-dired
+    :straight (:build t)
+    :hook (dired-mode . all-the-icons-dired-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package image-dired+
+    :after image-dired
+    :init (image-diredx-adjust-mode 1))
 #+end_src
 
 *** Eshell
@@ -1387,41 +1663,9 @@ that.
 #+end_src
 
 **** Environment Variables
-Some environment variables need to be correctly set so Eshell can correctly
-work. The first environment variable to be set is the ~PATH~, as I have a couple
-of directories where executables are located. Let’s add them to our
-path if they aren’t already.
-#+name: table-eshell-env-path
-#+caption: Paths to add to ~PATH~
-| Path                | Relative to ~HOME~? |
-|---------------------+-------------------|
-| .pub-cache/bin      | yes               |
-| .local/bin          | yes               |
-| .cargo/bin          | yes               |
-| .gen/ruby/2.6.0/bin | yes               |
-| go/bin              | yes               |
-
-#+name: src-eshell-env-path
-#+begin_src emacs-lisp :exports none :tangle no :var paths=table-eshell-env-path :noweb yes
-  (progn
-    (setq-local PATH (getenv "PATH"))
-    (dolist (path paths)
-      (let ((path (if (equal "yes" (cadr path))
-                      (concat (getenv "HOME")
-                              "/"
-                              (car path))
-                    (car path))))
-        (unless (string-match-p (regexp-quote path) PATH)
-          (setq-local PATH (concat path ":" PATH)))))
-    PATH)
-#+end_src
-
-#+begin_src emacs-lisp
-  (setenv "PATH" "<<src-eshell-env-path()>>")
-#+end_src
-
-I would also like to set two environment variables related to Dart development:
-the ~DART_SDK~ and ~ANDROID_HOME~ variables.
+Some environment variables need to be correctly set so Eshell can
+correctly work. I would like to set two environment variables related
+to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
 #+BEGIN_SRC emacs-lisp
   (setenv "DART_SDK" "/opt/dart-sdk/bin")
   (setenv "ANDROID_HOME" (concat (getenv "HOME") "/Android/Sdk/"))
@@ -1456,17 +1700,158 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
           eshell-info-banner-partition-prefixes '("/dev" "zroot" "tank")))
 #+end_src
 
-*** Org-mode
+*** Tramp
+Tramp is an Emacs built-in package that allows the user to connect to
+various hosts using various protocols, such as ~ssh~ and
+~rsync~. However, I have some use-case for Tramp which are not
+supported natively. I will describe them here.
+#+begin_src emacs-lisp
+  (require 'tramp)
+#+end_src
+
+**** Yadm
+# ~yadm~ is the utility I use for managing my dotfiles, and it is a wrapper In
+# order to manage my dotfiles, I use the following shortcut to launch Magit Status
+# for ~yadm~:
+[[https://yadm.io/][~yadm~]] is a git wrapper made to easily manage your dotfiles. It has
+loads of features I don’t use (the main one I like but don’t use is
+its [[https://yadm.io/docs/templates][Jinja-like host and OS-aware syntax]]), but unfortunately Magit
+doesn’t play nice with it. Tramp to the rescue, and this page explains
+how! Let’s just insert in my config this code snippet:
+#+begin_src emacs-lisp
+(add-to-list 'tramp-methods
+                   '("yadm"
+                     (tramp-login-program "yadm")
+                     (tramp-login-args (("enter")))
+                     (tramp-login-env (("SHELL") ("/bin/sh")))
+                     (tramp-remote-shell "/bin/sh")
+                     (tramp-remote-shell-args ("-c"))))
+#+end_src
+
+I’ll also create a fuction for connecting to this new Tramp protocol:
+#+begin_src emacs-lisp
+  (defun my/yadm ()
+    "Manage my dotfiles through TRAMP."
+    (interactive)
+    (magit-status "/yadm::"))
+#+end_src
+
+** EXWM
+#+begin_src emacs-lisp
+  (defvar phundrak/exwm-enabled (and (seq-contains command-line-args "--use-exwm")))
+
+  (use-package xelb
+    :straight (:build t))
+
+  (use-package exwm
+    :straight (:build t)
+    :after (xelb)
+    :init
+    (setq mouse-autoselect-window nil
+          focus-follows-mouse t
+          exwm-workspace-warp-cursor t)
+    :config
+    (setq exwm-input-global-keys
+          `(([?\s-r] . exwm-reset)
+            ([?\s-w] . exwm-workspace-switch)
+            ,@(mapcar (lambda (i)
+                        `(,(kbd (format "s-%s" (car i))) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-switch-create ,(cdr i)))))
+                      '(("\"" . 1)
+                        ("«"  . 2)
+                        ("»"  . 3)
+                        ("("  . 4)
+                        (")"  . 5)
+                        ("@"  . 6)
+                        ("+"  . 7)
+                        ("-"  . 8)
+                        ("/"  . 9)
+                        ("*"  . 0)))))
+    (add-hook 'exwm-update-class-hook
+                (lambda ()
+                  (exwm-workspace-rename-buffer exwm-class-name)))
+    (require 'exwm-config)
+    (exwm-config-default)
+    (exwm-enable))
+
+
+
+  (use-package desktop-environment
+    :if phundrak/exwm-enabled
+    :after exwm
+    :straight (:build t))
+#+end_src
+
+#+RESULTS:
+
+** Making my life easier
+*** Bufler
+Bufler is a package that organizes and lists buffers in a much better
+way than how they are usually sorted. You can easily and quickly find
+buffers by their group, not only by their name, and THIS is great
+news! Also, no ~helm~ please! And for some reasons the keybindings are
+borked by default, so let’s redefine them, and let’s also rebind ~SPC~
+to ~p~ since it would conflict with my main ~general~ prefix.
+#+begin_src emacs-lisp
+  (use-package bufler
+    :straight (bufler :build t
+                      :files (:defaults (:exclude "helm-bufler.el")))
+    :defer t
+    :general
+    (:keymaps 'bufler-list-mode-map
+     :states  'normal
+     "?"   #'hydra:bufler/body
+     "g"   #'bufler
+     "f"   #'bufler-list-group-frame
+     "F"   #'bufler-list-group-make-frame
+     "N"   #'bufler-list-buffer-name-workspace
+     "k"   #'bufler-list-buffer-kill
+     "p"   #'bufler-list-buffer-peek
+     "s"   #'bufler-list-buffer-save
+     "RET" #'bufler-list-buffer-switch))
+#+end_src
+
+*** Helpful
+As the name tells, ~helpful~ is a really helpful package which greatly
+enhances a couple of built-in functions from Emacs, namely:
+| Vanilla Emacs Function | Helpful Function | Comment                                       |
+|------------------------+------------------+-----------------------------------------------|
+| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
+| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
+| ~describe-function~      | ~helpful-macro~    |                                               |
+| ~describe-command~       | ~helpful-command~  |                                               |
+| ~describe-key~           | ~helpful-key~      |                                               |
+| ~describe-variable~      | ~helpful-variable~ |                                               |
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :straight (:build t)
+    :after (counsel ivy)
+    :custom
+    (counsel-describe-function-function #'helpfull-callable)
+    (counsel-describe-variable-function #'helpfull-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command]  . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key]      . helpful-key))
+#+end_src
+
+** Org-mode
 #+begin_src emacs-lisp :noweb tangle
   (use-package org
-    :straight (:build (:not autoloads) :location site)
-    :after general
+    :straight (org :build t
+                   :type git
+                   :host nil
+                   :repo "https://code.orgmode.org/bzg/org-mode.git")
+    :defer t
+    :commands (orgtbl-mode)
     :hook (org-mode . visual-line-mode)
     :hook (org-mode . org-num-mode)
     :init
-    ;; (add-hook 'org-mode-hook #'visual-line-mode)
     (auto-fill-mode -1)
-
     :general
     (:states 'normal
      :prefix ","
@@ -1529,6 +1914,7 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
      "tf"  #'org-table-field-info
      "th"  #'org-table-convert
      "tl"  #'org-table-recalculate
+     "tp"  #'org-plot/gnuplot
      "ts"  #'org-table-sort-lines
      "tw"  #'org-table-wrap-region
      "tN"  #'org-table-create-with-table.el
@@ -1562,15 +1948,13 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
      "Ts" 'phundrak/toggle-org-src-window-split
      "Tt"  #'org-show-todo-tree
      "TT"  #'org-todo)
-
     (:states 'normal
      :keymaps 'org-src-mode-map
      :prefix ","
      "'" #'org-edit-src-exit
-     "k" #'org-edit-src-abort)
+     "k" #'org-edit-src-abort))
 
-    :config
-    (progn
+  (after! org
       (setq org-hide-leading-stars             nil
             org-superstar-leading-bullet       ?\s
             org-hide-macro-markers             t
@@ -1588,9 +1972,14 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
             org-use-property-inheritance       t
             org-list-allow-alphabetical        t
             org-M-RET-may-split-line           nil
-            org-src-window-setup               'split-window-below)
-
+            org-src-window-setup               'split-window-below
+            org-src-fontify-natively           t
+            org-src-tab-acts-natively          t
+            org-log-done                       'time
+            org-directory                      "~/org"
+            org-default-notes-file             (expand-file-name "notes.org" org-directory))
       <<org-agenda-files>>
+      <<org-behavior-electric>>
       <<org-use-sub-superscripts>>
       <<org-latex-compiler>>
       <<org-latex-listings>>
@@ -1600,8 +1989,7 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
       <<org-re-reveal-root>>
       <<org-html-validation>>
       <<org-latex-classes>>
-      <<org-publish-projects>>
-      ))
+      <<org-publish-projects>>)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1622,6 +2010,23 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
     (evil-org-agenda-set-keys))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package org-contrib
+    :defer t
+    :after org
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package conlanging
+    :straight (conlanging :build t
+                          :type git
+                          :host nil
+                          :repo "https://labs.phundrak.com/phundrak/conlanging.el")
+    :after org
+    :defer t)
+#+end_src
+
 Since very recently, the ~contrib/lisp/~ directory of org moved out of
 the main repository to [[https://git.sr.ht/~bzg/org-contrib][this repository]]. On the other hand,
 ~contrib/scripts/~ moved to [[https://code.orgmode.org/bzg/worg/src/master/code][the worg repository]], but I don’t need
@@ -1635,7 +2040,7 @@ the usage of the ~:ignore:~ tag in org.
     (ox-extras-activate '(latex-header-blocks ignore-headlines)))
 #+end_src
 
-**** Agenda
+*** Agenda
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
@@ -1644,7 +2049,7 @@ the usage of the ~:ignore:~ tag in org.
   (setq-default org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
-**** Behavior
+*** Behavior
 A useful package I like is ~toc-org~ which creates automatically a table
 of contents. My main usage for this however is not just to create a
 table of content of my files to quickly jump around my file (I have
@@ -1656,11 +2061,19 @@ for org files that will be hosted and viewable on Github.
     :straight (:build t)
     :init
     (add-to-list 'org-tag-alist '("TOC" . ?T))
-    :hook (org-mode . toc-org-mode)
-    :hook (markdown-mode . toc-org-mode))
+    :hook (org-mode . toc-org-enable)
+    :hook (markdown-mode . toc-org-enable))
 #+end_src
 
-**** Babel
+~electric-mode~ also bothers me a lot when editing org files, so let’s deactivate it:
+#+name: org-behavior-electric
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook (lambda ()
+                             (interactive)
+                             (electric-indent-local-mode -1)))
+#+end_src
+
+*** Babel
 A package I use from time to time is ~ob-latex-as-png~ which allows me
 to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
@@ -1670,7 +2083,7 @@ exporter I use afterwards. Its installation is pretty simple:
     :straight (:build t))
 #+end_src
 
-**** File export
+*** File export
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
@@ -1684,7 +2097,13 @@ describing phonetics evolution. So, let’s disable it:
   (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
-***** LaTeX
+#+begin_src emacs-lisp
+  (use-package htmlize
+    :straigh (:build t)
+    :defer t)
+#+end_src
+
+**** LaTeX
 When it comes to exports, I want the LaTeX and PDF exports to be done
 with XeLaTeX only. This implies the modification of the following
 variable:
@@ -1746,7 +2165,7 @@ add their extension like so:
     (add-to-list 'org-latex-logfiles-extensions ext t))
 #+end_src
 
-***** HTML
+**** HTML
 For Reveal.JS exports, I need to set where to find the framework by
 default:
 #+NAME: org-re-reveal-root
@@ -1761,7 +2180,7 @@ exported HTML. Let’s disable that since I never use it.
   (setq org-html-validation-link nil)
 #+END_SRC
 
-**** LaTeX formats
+*** LaTeX formats
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
@@ -1806,7 +2225,7 @@ Both these classes have to be added to ~org-latex-classes~ like so:
                     )))
 #+END_SRC
 
-**** Projects
+*** Projects
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
@@ -1828,7 +2247,7 @@ declaration of my projects, which will be detailed later:
           <<org-proj-lang>>))
 #+END_SRC
 
-***** Configuration website
+**** Configuration website
 This is my configuration for exporting my dotfiles to my website in a web format
 only. No PDFs or anything, just HTML. Please note that I do not use that often
 anymore, I much prefer the automatic script that I have which deploys through my
@@ -1894,7 +2313,7 @@ The project is then defined like so:
                 "config-website-static"))
 #+END_SRC
 
-***** Linguistics website
+**** Linguistics website
 My linguistics website is made out of three projects. As for the previous
 project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
@@ -1966,7 +2385,7 @@ The project is then defined like so:
                 "langue-phundrak-com-pdf"))
 #+END_SRC
 
-**** Visual Configuration
+*** Visual Configuration
 While most modes of Emacs are dedicated to development, and therefore
 are much more comfortable with a fixed-pitch font, more literary modes
 such as org-mode are much more enjoyable if you have a variable pitch
@@ -2049,95 +2468,6 @@ files at the top of your window.
     :hook (org-mode . org-sticky-header-mode))
 #+end_src
 
-*** Tramp
-Tramp is an Emacs built-in package that allows the user to connect to
-various hosts using various protocols, such as ~ssh~ and
-~rsync~. However, I have some use-case for Tramp which are not
-supported natively. I will describe them here.
-#+begin_src emacs-lisp
-  (require 'tramp)
-#+end_src
-
-**** Yadm
-# ~yadm~ is the utility I use for managing my dotfiles, and it is a wrapper In
-# order to manage my dotfiles, I use the following shortcut to launch Magit Status
-# for ~yadm~:
-[[https://yadm.io/][~yadm~]] is a git wrapper made to easily manage your dotfiles. It has
-loads of features I don’t use (the main one I like but don’t use is
-its [[https://yadm.io/docs/templates][Jinja-like host and OS-aware syntax]]), but unfortunately Magit
-doesn’t play nice with it. Tramp to the rescue, and this page explains
-how! Let’s just insert in my config this code snippet:
-#+begin_src emacs-lisp
-(add-to-list 'tramp-methods
-                   '("yadm"
-                     (tramp-login-program "yadm")
-                     (tramp-login-args (("enter")))
-                     (tramp-login-env (("SHELL") ("/bin/sh")))
-                     (tramp-remote-shell "/bin/sh")
-                     (tramp-remote-shell-args ("-c"))))
-#+end_src
-
-I’ll also create a fuction for connecting to this new Tramp protocol:
-#+begin_src emacs-lisp
-  (defun my/yadm ()
-    "Manage my dotfiles through TRAMP."
-    (interactive)
-    (magit-status "/yadm::"))
-#+end_src
-
-** Making my life easier
-*** Bufler
-Bufler is a package that organizes and lists buffers in a much better
-way than how they are usually sorted. You can easily and quickly find
-buffers by their group, not only by their name, and THIS is great
-news! Also, no ~helm~ please! And for some reasons the keybindings are
-borked by default, so let’s redefine them, and let’s also rebind ~SPC~
-to ~p~ since it would conflict with my main ~general~ prefix.
-#+begin_src emacs-lisp
-  (use-package bufler
-    :straight (bufler :build t
-                      :files (:defaults (:exclude "helm-bufler.el")))
-    :defer t
-    :general
-    (:keymaps 'bufler-list-mode-map
-     :states  'normal
-     "?"   #'hydra:bufler/body
-     "g"   #'bufler
-     "f"   #'bufler-list-group-frame
-     "F"   #'bufler-list-group-make-frame
-     "N"   #'bufler-list-buffer-name-workspace
-     "k"   #'bufler-list-buffer-kill
-     "p"   #'bufler-list-buffer-peek
-     "s"   #'bufler-list-buffer-save
-     "RET" #'bufler-list-buffer-switch))
-#+end_src
-
-*** Helpful
-As the name tells, ~helpful~ is a really helpful package which greatly
-enhances a couple of built-in functions from Emacs, namely:
-| Vanilla Emacs Function | Helpful Function | Comment                                       |
-|------------------------+------------------+-----------------------------------------------|
-| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
-| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
-| ~describe-function~      | ~helpful-macro~    |                                               |
-| ~describe-command~       | ~helpful-command~  |                                               |
-| ~describe-key~           | ~helpful-key~      |                                               |
-| ~describe-variable~      | ~helpful-variable~ |                                               |
-
-#+begin_src emacs-lisp
-  (use-package helpful
-    :straight (:build t)
-    :after (counsel ivy)
-    :custom
-    (counsel-describe-function-function #'helpfull-callable)
-    (counsel-describe-variable-function #'helpfull-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command]  . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key]      . helpful-key))
-#+end_src
-
 ** Project Management
 *** Magit
 Magit is an awesome wrapper around Git for Emacs! Very often, I go
@@ -2215,15 +2545,6 @@ DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
 such as SQL.
 
-**** Shells
-Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
-config]]), therefore I need a mode for it.
-#+begin_src emacs-lisp
-  (use-package fish-mode
-    :straight (:build t)
-    :defer t)
-#+end_src
-
 **** Caddy
 [[https://caddyserver.com/][Caddy]] (or /Caddyserver/) is a web server akin to Nginx or Apache which I
 find much easier to configure that the latter two, plus it has
@@ -2238,6 +2559,15 @@ Caddy files natively, so let’s install ~caddyfile-mode~:
     :straight (:build t)
     :mode (("Caddyfile\\'" . caddyfile-mode)
            ("caddy\\.conf\\'" . caddyfile-mode)))
+#+end_src
+
+**** Gnuplot
+This package is a front-end and major mode for the programming
+language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful graphs, shall we?
+#+begin_src emacs-lisp
+  (use-package gnuplot
+    :straight (:build t)
+    :defer t)
 #+end_src
 
 **** Nginx
@@ -2260,6 +2590,15 @@ Nginx syntax.
     :config
     (add-hook 'nginx-mode-hook (lambda ()
                                  (add-to-list 'company-backends #'company-nginx))))
+#+end_src
+
+**** Shells
+Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
+config]]), therefore I need a mode for it.
+#+begin_src emacs-lisp
+  (use-package fish-mode
+    :straight (:build t)
+    :defer t)
 #+end_src
 
 **** Yaml
