@@ -1,23 +1,24 @@
 # -*- org-confirm-babel-evaluate: nil  -*-
-#+title: Emacs Configuration
+#+title: Spacemacs Configuration
 #+setupfile: headers
 #+OPTIONS: auto-id:t
-#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Emacs Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Phundrak’s Spacemacs Configuration Detailed" />
 #+PROPERTY: header-args: :mkdirp yes :lexical t
 
 * Introduction
 :PROPERTIES:
 :CUSTOM_ID: Introduction-f1cbb8bb
 :END:
-This file is the main source file for my Emacs configuration which contains most
-of the user code. It is exported thanks to Emacs’ code tangling from the
-original Org file which you can find on my dotfiles’ repository[fn:1] if you are
-reading the web version of it. You can also find there my ~.spacemacs~[fn:2] and
-its code which isn’t part of the present file. As you can see in my
-~.spacemacs~, at init-time, if Emacs detects the tangled configuration files are
-older than the Org file, then Emacs tangles them again, and then loads them.
+This file is the main source file for my Spacemacs configuration which
+contains most of the user code. It is exported thanks to Emacs’ code
+tangling from the original Org file which you can find on my dotfiles’
+repository[fn:1] if you are reading the web version of it. You can
+also find there my ~.spacemacs~[fn:2] and its code which isn’t part of
+the present file. As you can see in my ~.spacemacs~, at init-time, if
+Emacs detects the tangled configuration files are older than the Org
+file, then Emacs tangles them again, and then loads them.
 
 * Spacemacs layers and packages
 :PROPERTIES:
