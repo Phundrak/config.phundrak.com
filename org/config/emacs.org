@@ -581,14 +581,16 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
   (use-package evil
     :straight (:build t)
     :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
+    (progn
+      (setq evil-want-integration t
+            evil-want-keybinding nil
+            evil-want-C-u-scroll t
+            evil-want-C-i-jump nil)
+      (require 'evil-vars)
+      (evil-set-undo-system 'undo-tree))
     :config
     (evil-mode 1)
     (setq evil-want-fine-undo t) ; more granular undo with evil
-    (setq evil-undo-system 'undo-tree)
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal)
 
@@ -1684,7 +1686,7 @@ to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
 The ~EDITOR~ variable also needs to be set for git commands, especially the
 ~yadm~ commands.
 #+BEGIN_SRC emacs-lisp
-  (setenv "EDITOR" "emacsclient -c")
+  (setenv "EDITOR" "emacsclient -c -a emacs")
 #+END_SRC
 
 Finally, for some specific situations I need ~SHELL~ to be set to
