@@ -2687,15 +2687,6 @@ in the echo area at the bottom of the frame. Quite useful indeed.
                        'company-abort))
 #+end_src
 
-~eldoc-box~ takes ~eldoc~ a step further by displaying said information in
-a child frame.
-#+begin_src emacs-lisp
-  (use-package eldoc-box
-    :straight (:build t)
-    :hook (emacs-lisp-mode . eldoc-box-hover-at-point-mode)
-    :after eldoc)
-#+end_src
-
 Let’s also declare some Elisp-dedicated keybindings, prefixed by a
 comma.
 #+begin_src emacs-lisp
