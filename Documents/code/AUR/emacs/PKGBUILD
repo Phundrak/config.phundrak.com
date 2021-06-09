@@ -51,7 +51,7 @@ DOCS_PDF="YES"    # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
                   # ImageMagick, like flash, won't die...
                   # -->>If you just *believe* you need ImageMagick, you don't.<<--
-NOGZ="YES"        # Don't compress .el files.
+NOGZ=             # Don't compress .el files.
 ################################################################################
 
 ################################################################################
@@ -60,7 +60,7 @@ if [[ $CLI == "YES" ]] ; then
 else
     pkgname="emacs-phundrak-git"
 fi
-pkgver=28.0.50.148469
+pkgver=28.0.50.148684
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -72,7 +72,7 @@ makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 replaces=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+source=("emacs-git::git://git.savannah.gnu.org/emacs.git#branch=feature/pgtk")
 # If Savannah fails for reasons, use Github's mirror
 #source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
