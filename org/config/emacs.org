@@ -1352,6 +1352,31 @@ notification system, and I’ll activate the modeline notification.
     (setq mu4e-alert-interesting-mail-query "<<mu4e-bookmarks-default-filter()>>"))
 #+end_src
 
+*** Nov
+#+begin_src emacs-lisp
+  (use-package nov
+    :straight (:build t)
+    :defer t
+    :mode ("\\.epub\\'" . nov-mode)
+    :general
+    (:keymaps 'nov-mode-map
+     :states 'normal
+     "SPC" nil
+     "["   #'nov-previous-document
+     "]"   #'nov-next-document
+     "c"   #'nov-previous-document
+     "t"   #'nov-scroll-up
+     "C-d" #'nov-scroll-down
+     "s"   #'nov-scroll-down
+     "C-u" #'nov-scroll-up
+     "r"   #'nov-next-document
+     "gm"  #'nov-display-metadata
+     "gr"  #'nov-render-document
+     "gt"  #'nov-goto-toc
+     "gv"  #'nov-view-source
+     "gV"  #'nov-view-content-source))
+#+end_src
+
 *** PDF Tools
 #+begin_src emacs-lisp
   (use-package pdf-tools
