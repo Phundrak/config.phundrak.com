@@ -1335,10 +1335,21 @@ the major-mode leader and call a simple function.
                                                    (buffer-string))))))
 #+end_src
 
+**** Email alerts
+There is also a package for mu4e which generates desktop notifications
+when new emails are received. By default, I want to be notified by all
+messages in my inbox and junk folder. Also, I’ll use Emacs’ default
+notification system, and I’ll activate the modeline notification.
 #+begin_src emacs-lisp
   (use-package mu4e-alert
     :straight (:build t)
-    :after mu4e)
+    :defer t
+    :init
+    (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+    (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+    (mu4e-alert-set-default-style 'notifications)
+    :config
+    (setq mu4e-alert-interesting-mail-query "<<mu4e-bookmarks-default-filter()>>"))
 #+end_src
 
 *** PDF Tools
