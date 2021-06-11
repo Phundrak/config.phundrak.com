@@ -1474,8 +1474,8 @@ buffer.
 
    "H" nil
    "L" nil
-   "T" #'xwidget-webkit-scroll-up
-   "S" #'xwidget-webkit-scroll-down)
+   "C-d" #'xwidget-webkit-scroll-up
+   "C-u" #'xwidget-webkit-scroll-down)
 
   (general-define-key
    :keymaps 'xwidget-webkit-mode-map
