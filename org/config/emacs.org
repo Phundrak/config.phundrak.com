@@ -743,27 +743,6 @@ current buffer.
     ("q" nil "finished" :exit t))
 #+end_src
 
-This one allows me to quickly navigate between code blocks and
-interact with them. This code block was inspired by one you can find
-in Spacemacs.
-#+begin_src emacs-lisp
-  (defhydra org-babel-transient ()
-    "
-  ^Navigate^                    ^Interact
-  ^^^^^^^^^^^------------------------------------------
-  [_t_/_s_] navigate src blocs  [_x_] execute src block
-  [_g_]^^   goto named block    [_'_] edit src block
-  [_z_]^^   recenter screen     [_q_] quit
-  "
-    ("q" nil :exit t)
-    ("t" org-babel-next-src-block)
-    ("s" org-babel-previous-src-block)
-    ("g" org-babel-goto-named-src-block)
-    ("z" recenter-top-bottom)
-    ("x" org-babel-execute-maybe)
-    ("'" org-edit-special :exit t))
-#+end_src
-
 Similarly, this one is also inspired from Spacemacs and allows the
 user to interact with the width of the buffer in ~writeroom~.
 #+begin_src emacs-lisp
@@ -2201,14 +2180,14 @@ to ~p~ since it would conflict with my main ~general~ prefix.
 *** Helpful
 As the name tells, ~helpful~ is a really helpful package which greatly
 enhances a couple of built-in functions from Emacs, namely:
-| Vanilla Emacs Function | Helpful Function | Comment                                       |
-|------------------------+------------------+-----------------------------------------------|
-| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
+| Vanilla Emacs Function | Helpful Function   | Comment                                       |
+|------------------------+--------------------+-----------------------------------------------|
+| ~describe-function~      | ~helpful-callable~   | Only interactive functions                    |
 | ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
-| ~describe-function~      | ~helpful-macro~    |                                               |
-| ~describe-command~       | ~helpful-command~  |                                               |
-| ~describe-key~           | ~helpful-key~      |                                               |
-| ~describe-variable~      | ~helpful-variable~ |                                               |
+| ~describe-function~      | ~helpful-macro~      |                                               |
+| ~describe-command~       | ~helpful-command~    |                                               |
+| ~describe-key~           | ~helpful-key~        |                                               |
+| ~describe-variable~      | ~helpful-variable~   |                                               |
 
 #+begin_src emacs-lisp
   (use-package helpful
@@ -2225,7 +2204,21 @@ enhances a couple of built-in functions from Emacs, namely:
 #+end_src
 
 ** Org-mode
-#+begin_src emacs-lisp :noweb tangle
+Org is the main reason I am using Emacs. It is an extremely powerfu
+tool when you want to write anything that is not necessarily primarily
+programming-related, though it absolutely can be! Org can be a
+replacement for anything similar to LibreOffice Writer, LibreOffice
+Calc, and LibreOffice Impress. It is a much more powerful (and older)
+version of Markdown which can be exported to LaTeX and HTML at least,
+rendering writing web pages and technical, scientific documents much
+simpler than writing manually HTML and LaTeX code, especially when a
+single document source is meant to be exported for both formats. And
+since org is an Emacs package, that also means it can be greatly
+extended however we like!
+
+By default I’ll use the git version of org, I like to be the most
+up-to-date possible with this particular package.
+#+begin_src emacs-lisp
   (use-package org
     :straight (org :build t
                    :type git
@@ -2237,6 +2230,8 @@ enhances a couple of built-in functions from Emacs, namely:
     :hook (org-mode . org-num-mode)
     :init
     (auto-fill-mode -1)
+    :config
+    <<org-hydra-babel>>
     :general
     (:states 'normal
      :keymaps 'org-mode-map
@@ -2244,98 +2239,14 @@ enhances a couple of built-in functions from Emacs, namely:
     (:states 'normal
      :prefix ","
      :keymaps 'org-mode-map
-     "RET" #'org-ctrl-c-ret
-     "*"   #'org-ctrl-c-star
-     ","   #'org-ctrl-c-ctrl-c
-     "'"   #'org-edit-special
-     "-"   #'org-ctrl-c-minus
-
-     "a"   #'org-agenda
-     "c"   #'org-capture
-     "l"   #'org-store-link
-     "p"   #'org-priority
-
-     "b"   '(:ignore t :wk "babel")
-     "b."  #'org-babel-transient/body
-     "bb"  #'org-babel-execute-buffer
-     "bc"  #'org-babel-check-src-block
-     "bC"  #'org-babel-tangle-clean
-     "be"  #'org-babel-execute-maybe
-     "bf"  #'org-babel-tangle-file
-     "bn"  #'org-babel-next-src-block
-     "bo"  #'org-babel-open-src-block-result
-     "bp"  #'org-babel-previous-src-block
-     "br"  #'org-babel-remove-result-one-or-many
-     "bR"  #'org-babel-goto-named-result
-     "bt"  #'org-babel-tangle
-     "bi"  #'org-babel-view-src-block-info
-
-     "d"   '(:ignore t :wk "dates")
-     "dd"  #'org-deadline
-     "ds"  #'org-schedule
-     "dt"  #'org-time-stamp
-     "dT"  #'org-time-stamp-inactive
-
-     "e"   '(:ignore t :wk "export")
-     "ee"  #'org-export-dispatch
-
-     "i"   '(:ignore t :wk "insert")
-     "ib"  #'org-insert-structure-template
-     "id"  #'org-insert-drawer
-     "ie"  #'org-set-effort
-     "if"  #'org-footnote-new
-     "ih"  #'org-insert-heading
-     "ii"  #'org-insert-item
-     "il"  #'org-insert-link
-     "in"  #'org-add-note
-     "ip"  #'org-set-property
-     "is"  #'org-insert-subheading
-     "it"  #'org-set-tags-command
-
-     "j"   '(:ignore t :wk "jump")
-     "ja"  #'counsel-org-goto-all
-     "jh"  #'counsel-org-goto
-
-     "t"   '(:ignore t :wk "tables")
-     "ta"  #'org-table-align
-     "te"  #'org-table-eval-formula
-     "tf"  #'org-table-field-info
-     "th"  #'org-table-convert
-     "tl"  #'org-table-recalculate
-     "tp"  #'org-plot/gnuplot
-     "ts"  #'org-table-sort-lines
-     "tw"  #'org-table-wrap-region
-     "tN"  #'org-table-create-with-table.el
-
-     "tc"  #'org-table-previous-field
-     "tr"  #'org-table-next-field
-     "tC"  #'org-table-move-column-left
-     "tT"  #'org-table-move-row-down
-     "tS"  #'org-table-move-row-up
-     "tR"  #'org-table-move-column-right
-
-     "td"  '(:ignore t :wk "delete")
-     "tdc" #'org-table-delete-column
-     "tdr" #'org-table-kill-row
-
-     "ti"  '(:ignore t :wk "insert")
-     "tic" #'org-table-insert-column
-     "tih" #'org-table-insert-hline
-     "tir" #'org-table-insert-row
-     "tiH" #'org-table-hline-and-move
-
-     "tt"  '(:ignore t :wk "toggle")
-     "ttf" #'org-table-toggle-formula-debugger
-     "tto" #'org-table-toggle-coordinate-overlays
-
-     "T"   '(:ignore t :wk "toggle")
-     "Tc"  #'org-toggle-checkbox
-     "Ti"  #'org-toggle-inline-images
-     "Tl"  #'org-latex-preview
-     "Tn"  #'org-num-mode
-     "Ts" 'phundrak/toggle-org-src-window-split
-     "Tt"  #'org-show-todo-tree
-     "TT"  #'org-todo)
+     <<general-keybindings-gen(table=org-keybinds-various)>>
+     <<general-keybindings-gen(table=org-keybinds-babel)>>
+     <<general-keybindings-gen(table=org-keybinds-dates)>>
+     <<general-keybindings-gen(table=org-keybinds-insert)>>
+     <<general-keybindings-gen(table=org-keybinds-jump)>>
+     <<general-keybindings-gen(table=org-keybinds-tables)>>
+     <<general-keybindings-gen(table=org-keybinds-toggles)>>
+    )
     (:states 'normal
      :keymaps 'org-src-mode-map
      :prefix ","
@@ -2344,7 +2255,6 @@ enhances a couple of built-in functions from Emacs, namely:
 
   (after! org
       (setq org-hide-leading-stars             nil
-            org-superstar-leading-bullet       ?\s
             org-hide-macro-markers             t
             org-ellipsis                       " ⤵"
             org-image-actual-width             550
@@ -2380,6 +2290,11 @@ enhances a couple of built-in functions from Emacs, namely:
       <<org-publish-projects>>)
 #+end_src
 
+The main feature from ~evil-org~ that I love is how easy it is to modify
+some keybindings for keyboards layouts that do not have ~hjkl~, such as
+the bépo layout (or Dvorak or Colemak if you are into that). But it
+also adds a ton of default keybindings which are just much more
+comfortable than the default ones you get with evil and org naked.
 #+begin_src emacs-lisp
   (use-package evil-org
     :straight (:build t)
@@ -2396,13 +2311,9 @@ enhances a couple of built-in functions from Emacs, namely:
     (evil-org-agenda-set-keys))
 #+end_src
 
-#+begin_src emacs-lisp
-  (use-package org-contrib
-    :defer t
-    :after org
-    :straight (:build t))
-#+end_src
-
+This package is a small package I’ve written that helps me when
+writing conlanging documents, with features such as creating syntax
+trees, converting translitterated text to its native script, etc…
 #+begin_src emacs-lisp
   (use-package conlanging
     :straight (conlanging :build t
@@ -2565,6 +2476,145 @@ exported HTML. Let’s disable that since I never use it.
 #+BEGIN_SRC emacs-lisp
   (setq org-html-validation-link nil)
 #+END_SRC
+
+*** Keybindings
+Be prepared, I have a lot of keybindings for org-mode! They are all
+prefixed with a comma ~,~ in normal mode.
+#+name: org-keybinds-various
+| Key chord | Function            | Description |
+|-----------+---------------------+-------------|
+| RET       | org-ctrl-c-ret      |             |
+| *         | org-ctrl-c-star     |             |
+| ,         | org-ctrl-c-ctrl-c   |             |
+| '         | org-edit-special    |             |
+| -         | org-ctrl-c-minus    |             |
+| a         | org-agenda          |             |
+| c         | org-capture         |             |
+| e         | org-export-dispatch |             |
+| l         | org-store-link      |             |
+| p         | org-priority        |             |
+
+I then have a couple of babel-related functions.
+#+name: org-keybinds-babel
+| Key chord | Function                            | Description |
+|-----------+-------------------------------------+-------------|
+| b         | nil                                 | babel       |
+| b.        | org-babel-transient/body            |             |
+| bb        | org-babel-execute-buffer            |             |
+| bc        | org-babel-check-src-block           |             |
+| bC        | org-babel-tangle-clean              |             |
+| be        | org-babel-execute-maybe             |             |
+| bf        | org-babel-tangle-file               |             |
+| bn        | org-babel-next-src-block            |             |
+| bo        | org-babel-open-src-block-result     |             |
+| bp        | org-babel-previous-src-block        |             |
+| br        | org-babel-remove-result-one-or-many |             |
+| bR        | org-babel-goto-named-result         |             |
+| bt        | org-babel-tangle                    |             |
+| bi        | org-babel-view-src-block-info       |             |
+
+The ~org-babel-transient~ hydra allows me to quickly navigate between
+code blocks and interact with them. This code block was inspired by
+one you can find in Spacemacs.
+#+name: org-hydra-babel
+#+begin_src emacs-lisp :tangle no
+  (defhydra org-babel-transient ()
+    "
+  ^Navigate^                    ^Interact
+  ^^^^^^^^^^^------------------------------------------
+  [_t_/_s_] navigate src blocs  [_x_] execute src block
+  [_g_]^^   goto named block    [_'_] edit src block
+  [_z_]^^   recenter screen     [_q_] quit
+  "
+    ("q" nil :exit t)
+    ("t" org-babel-next-src-block)
+    ("s" org-babel-previous-src-block)
+    ("g" org-babel-goto-named-src-block)
+    ("z" recenter-top-bottom)
+    ("x" org-babel-execute-maybe)
+    ("'" org-edit-special :exit t))
+#+end_src
+
+We next have keybindings related to org-mode’s agenda capabilities. We
+can schedule a todo header for some dates, or set a deadline.
+#+name: org-keybinds-dates
+| Key chord | Function                | Description |
+|-----------+-------------------------+-------------|
+| d         | nil                     | dates       |
+| dd        | org-deadline            |             |
+| ds        | org-schedule            |             |
+| dt        | org-time-stamp          |             |
+| dT        | org-time-stamp-inactive |             |
+
+Let’s now define some keybinds for inserting stuff in our org buffer:
+#+name: org-keybinds-insert
+| Key chord | Function                      | Description |
+|-----------+-------------------------------+-------------|
+| i         | nil                           | insert      |
+| ib        | org-insert-structure-template |             |
+| id        | org-insert-drawer             |             |
+| ie        | org-set-effort                |             |
+| if        | org-footnote-new              |             |
+| ih        | org-insert-heading            |             |
+| ii        | org-insert-item               |             |
+| il        | org-insert-link               |             |
+| in        | org-add-note                  |             |
+| ip        | org-set-property              |             |
+| is        | org-insert-subheading         |             |
+| it        | org-set-tags-command          |             |
+
+There isn’t a lot of stuff I can jump to yet, but there’s still some:
+#+name: org-keybinds-jump
+| Key chord | Function             | Description |
+|-----------+----------------------+-------------|
+| j         | nil                  | jump        |
+| ja        | counsel-org-goto-all |             |
+| jh        | counsel-org-goto     |             |
+
+Tables get a bit more love:
+#+name: org-keybinds-tables
+| Key chord | Function                             | Description |
+|-----------+--------------------------------------+-------------|
+| t         | nil                                  | tables      |
+| ta        | org-table-align                      |             |
+| te        | org-table-eval-formula               |             |
+| tf        | org-table-field-info                 |             |
+| th        | org-table-convert                    |             |
+| tl        | org-table-recalculate                |             |
+| tp        | org-plot/gnuplot                     |             |
+| ts        | org-table-sort-lines                 |             |
+| tw        | org-table-wrap-region                |             |
+| tN        | org-table-create-with-table.el       |             |
+| tc        | org-table-previous-field             |             |
+| tr        | org-table-next-field                 |             |
+| tC        | org-table-move-column-left           |             |
+| tT        | org-table-move-row-down              |             |
+| tS        | org-table-move-row-up                |             |
+| tR        | org-table-move-column-right          |             |
+| td        | nil                                  | delete      |
+| tdc       | org-table-delete-column              |             |
+| tdr       | org-table-kill-row                   |             |
+| ti        | nil                                  | insert      |
+| tic       | org-table-insert-column              |             |
+| tih       | org-table-insert-hline               |             |
+| tir       | org-table-insert-row                 |             |
+| tiH       | org-table-hline-and-move             |             |
+| tt        | nil                                  | toggle      |
+| ttf       | org-table-toggle-formula-debugger    |             |
+| tto       | org-table-toggle-coordinate-overlays |             |
+
+Finally, let’s make enabling and disabling stuff accessible:
+#+name: org-keybinds-toggles
+| Key chord | Function                             | Description |
+|-----------+--------------------------------------+-------------|
+| T         | nil                                  | toggle      |
+| Tc        | org-toggle-checkbox                  |             |
+| Ti        | org-toggle-inline-images             |             |
+| Tl        | org-latex-preview                    |             |
+| Tn        | org-num-mode                         |             |
+| Ts        | phundrak/toggle-org-src-window-split |             |
+| Tt        | org-show-todo-tree                   |             |
+| TT        | org-todo                             |             |
 
 *** LaTeX formats
 :PROPERTIES:
