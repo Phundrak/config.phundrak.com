@@ -1854,7 +1854,10 @@ me.
      "n" #'evil-next-line
      "p" #'evil-previous-line)
     :config
-    (setq dired-dwim-target t))
+    (setq dired-dwim-target       t
+          dired-recursive-copies  t
+          dired-recursive-deletes t
+          dired-listing-switches  "-ahl --group-directories-first"))
 #+end_src
 
 Note that I am activating by default ~gnus-dired-mode~. This is just for
