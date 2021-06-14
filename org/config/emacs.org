@@ -2657,11 +2657,9 @@ Both these classes have to be added to ~org-latex-classes~ like so:
   (eval-after-load "ox-latex"
     '(progn
        (add-to-list 'org-latex-classes
-                    <<org-latex-class-conlang>>
-                    )
+                    <<org-latex-class-conlang>>)
        (add-to-list 'org-latex-classes
-                    <<org-latex-class-beamer>>
-                    )))
+                    <<org-latex-class-beamer>>)))
 #+END_SRC
 
 *** Projects
