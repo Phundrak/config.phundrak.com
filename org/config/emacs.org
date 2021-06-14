@@ -192,6 +192,19 @@ we can fix this.
 This will make Emacs ask us for either hitting the ~y~ key for “yes”, or
 the ~n~ key for “no”. Much more polite!
 
+It is also very impolite to keep a certain version of a file in its
+buffer when said file has changed on disk. Let’s change this behavior:
+#+begin_src emacs-lisp
+  (global-auto-revert-mode 1)
+#+end_src
+
+#+RESULTS:
+: t
+
+Much more polite! Note that if the buffer is modified and its changes
+haven’t been saved, it will not automatically revert the buffer and
+your unsaved changes won’t be lost. Very polite!
+
 *** Misc
 Let’s raise Emacs undo memory to 10MB, and make Emacs auto-save our
 files by default.
@@ -263,7 +276,7 @@ know which column I’m on. This can be activated like so:
 #+end_src
 
 The following code is, as will several chunks of code in this config,
-borrowed from TEC’s configuration. It hides the encoding information
+borrowed from [[https://tecosaur.github.io/emacs-config/#theme-modeline][TEC’s configuration]]. It hides the encoding information
 of the file if the file itself is a regular UTF-8 file with ~\n~ line
 ending. Be aware the ~doom-modeline-buffer-encoding~ variable is usabel
 here only because I use the Doom modeline as seen below.
@@ -777,7 +790,6 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
     :after all-the-icons
     :straight (:build t :location site)
     :commands mu4e mu4e-compose-new
-    :bind (("C-x m" . mu4e-compose-new))
     :init
     (progn
       (setq mu4e-completing-read-function 'completing-read
@@ -1516,14 +1528,12 @@ buffer.
   (use-package wttrin
     :defer t
     :straight (wttrin :build t
-                      :type git
+                      :local-repo "~/fromGIT/emacs-packages/emacs-wttrin"
+                      :type git)
                       ;; :host github
                       ;; :repo "Phundrak/emacs-wttrin"
-                      :local-repo "~/fromGIT/emacs-packages/emacs-wttrin"
-                      )
     :config
-    (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières"
-                                  "Saint Agrève")
+    (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières" "Saint Agrève")
           wttrin-use-metric t))
 #+end_src
 
@@ -1808,6 +1818,7 @@ me.
   (use-package dired
     :straight (:type built-in)
     :defer t
+    :hook (dired-mode . turn-on-gnus-dired-mode)
     :general
     (:keymaps 'dired-mode-map
      :states 'normal
@@ -1817,6 +1828,11 @@ me.
     :config
     (setq dired-dwim-target t))
 #+end_src
+
+Note that I am activating by default ~gnus-dired-mode~. This is just for
+the sake of convenience, since I’m not penalized with activating this
+mode when it is not needed, but I don’t have to manually activate it
+each time I need it.
 
 Dired-x stands for “dired extra” which provides a couple more features
 that are for some reason not included in dired yet.
@@ -2321,12 +2337,10 @@ enhances a couple of built-in functions from Emacs, namely:
     :after org
     :hook (org-mode . evil-org-mode)
     :config
-    ;; (dolist (key '("h" "j" "k" "l"))
-    ;;   (define-key org-mode-map (kbd (format "M-%s" key)) 'undefined))
     (setq-default evil-org-movement-bindings
-                  '((up . "s")
-                    (down . "t")
-                    (left . "c")
+                  '((up    . "s")
+                    (down  . "t")
+                    (left  . "c")
                     (right . "r")))
     (evil-org-set-key-theme '(textobjects navigation calendar additional shift operators))
     (require 'evil-org-agenda)
