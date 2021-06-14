@@ -7,7 +7,7 @@
 #+html_head: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
 #+property: header-args:emacs-lisp+ :tangle ~/.emacs.vanilla/init.el
-#+property: header-args:emacs-lisp+ :mkdirp yes :noweb yes
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 * Introduction
 #+begin_center
@@ -123,11 +123,15 @@ fit mine, so on top of ~prog-mode~, let’s add a few other modes.
 | latex-mode |
 
 #+name: prog-modes-gen
-#+begin_src emacs-lisp :var modes=line-number-modes-table :exports none :tangle no
+#+headers: :cache yes :exports none :tangle no
+#+begin_src emacs-lisp :var modes=line-number-modes-table
   (mapconcat (lambda (mode) (format "%s-hook" (car mode)))
              modes
              " ")
 #+end_src
+
+#+RESULTS[b551840c279e88374f47f047e599b8d8686fd8bf]: prog-modes-gen
+: prog-mode-hook latex-mode-hook
 
 **** Line Number
 Since version 26, Emacs has a built-in capacity of displaying line
@@ -590,7 +594,7 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+end_src
 
 #+name: general-keybindings-gen
-#+header: :tangle no :exports none :results value
+#+header: :tangle no :exports none :results value :cache yes
 #+begin_src emacs-lisp :var table=mu4e-keybindings-view-tbl
   (mapconcat (lambda (line)
                (let ((key      (car line))
@@ -602,13 +606,50 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
                                  "nil"
                               (concat "#'" function))
                            (format "'(%s :wk \"%s\")"
-                                   comment
+                                   function
                                    (if (string= "" function)
                                        "nil"
                                      comment))))))
              table
              "\n")
 #+end_src
+
+#+RESULTS[daed5b240a2fd64608b66fc9bf38bb73f1d90db2]: general-keybindings-gen
+#+begin_example
+"&" #'mu4e-view-pipe
+"." '(mu4e-headers-split-adjust-width/body :wk "mu4e-headers width")
+"a" '(nil :wk "attachments")
+"a&" #'mu4e-view-pipe-attachment
+"aa" #'mu4e-view-attachment-action
+"ao" #'mu4e-view-open-attachment
+"aO" #'mu4e-view-open-attachment-with
+"c" '(nil :wk "compose")
+"cc" #'mu4e-compose-new
+"ce" #'mu4e-compose-edit
+"cf" #'mu4e-compose-forward
+"cr" #'mu4e-compose-reply
+"cR" #'mu4e-compose-resend
+"g" '(nil :wk "go to")
+"gu" #'mu4e-view-go-to-url
+"gX" #'mu4e-view-fetch-url
+"l" #'mu4e-show-log
+"m" '(nil :wk "mark")
+"md" #'mu4e-view-mark-for-trash
+"mD" #'mu4e-view-mark-for-delete
+"mm" #'mu4e-view-mark-for-move
+"mr" #'mu4e-view-mark-for-refile
+"mR" #'mu4e-view-mark-for-read
+"mu" #'mu4e-view-mark-for-unread
+"mU" #'mu4e-view-mark-for-unmark
+"t" '(nil :wk "thread")
+"T" '(nil :wk "toggle")
+"Tc" #'mu4e-view-toggle-hide-cited
+"Th" #'mu4e-view-toggle-html
+"n" #'mu4e-view-headers-next
+"N" #'mu4e-view-headers-next-unread
+"p" #'mu4e-view-headers-prev
+"P" #'mu4e-view-headers-prev-unread
+#+end_example
 
 ** Evil
 #+begin_src emacs-lisp
@@ -802,94 +843,102 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
           (setq mu4e-attachment-dir dir))))
 
     :config
-    (progn
-      <<mu4e-keybindings-view>>
-      <<mu4e-keybindings-header>>
-      <<mu4e-keybindings-header-no-leader>>
-      <<mu4e-keybindings-message>>
+    <<mu4e-mail-service>>
+    <<mu4e-mail-on-machine>>
+    <<mu4e-no-signature>>
 
-      (setq mu4e-compose-signature nil)
+    <<mu4e-bookmarks>>
 
-      (when (fboundp 'imagemagick-register-types)
-        (imagemagick-register-types))
+    <<mu4e-keybindings-view>>
+    <<mu4e-keybindings-header>>
+    <<mu4e-keybindings-header-no-leader>>
+    <<mu4e-keybindings-message>>
 
-      (add-to-list 'mu4e-view-actions
-                   '("View in browser" . mu4e-action-view-in-browser) t)
 
-      (require 'gnus-dired)
-      (setq gnus-dired-mail-mode 'mu4e-user-agent)
+    (when (fboundp 'imagemagick-register-types)
+      (imagemagick-register-types))
 
-      (add-hook 'mu4e-compose-mode-hook
-                (lambda () (use-hard-newlines t 'guess)))
-      (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-      (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
+    (add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser) t)
+    (add-to-list 'mu4e-view-actions '("PDF view"        . mu4e-action-open-as-pdf)     t)
 
-      (setq mu4e-get-mail-command             "mbsync -a"
-            mu4e-maildir                      "~/.mail"
-            mu4e-trash-folder                 "/Trash"
-            mu4e-refile-folder                "/Archive"
-            mu4e-sent-folder                  "/Sent"
-            mu4e-drafts-folder                "/Drafts"
-            mu4e-change-filenames-when-moving t
-            mu4e-update-interval              60
-            mu4e-compose-format-flowed        t
-            mu4e-view-show-addresses          t
-            mu4e-sent-messages-behaviour      'sent
-            mu4e-hide-index-messages          t
-            mu4e-view-show-images             t                     ; try to show images
-            mu4e-view-image-max-width         600
-            message-send-mail-function        #'smtpmail-send-it    ; how to send an email
-            smtpmail-stream-type              'starttls
-            message-kill-buffer-on-exit       t                     ; close after sending
-            mu4e-context-policy               'pick-first           ; start with first (default) context
-            mu4e-compose-context-policy       'ask-if-none          ; compose with current context, or ask
-            mu4e-completing-read-function     #'ivy-completing-read ; use ivy
-            mu4e-confirm-quit                 t                     ; no need to ask
-            mu4e-header-fields                '((:account    . 12)
-                                                (:human-date . 12)
-                                                (:flags      . 4)
-                                                (:from       . 25)
-                                                (:subject)))
+    (require 'gnus-dired)
+    (setq gnus-dired-mail-mode 'mu4e-user-agent)
+
+    (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines t 'guess)))
+    (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
+
+    (setq mu4e-change-filenames-when-moving t
+          mu4e-update-interval              60
+          mu4e-compose-format-flowed        t
+          mu4e-view-show-addresses          t
+          mu4e-sent-messages-behaviour      'sent
+          mu4e-hide-index-messages          t
+          mu4e-view-show-images             t                     ; try to show images
+          mu4e-view-image-max-width         600
+          message-send-mail-function        #'smtpmail-send-it    ; how to send an email
+          smtpmail-stream-type              'starttls
+          message-kill-buffer-on-exit       t                     ; close after sending
+          mu4e-context-policy               'pick-first           ; start with first (default) context
+          mu4e-compose-context-policy       'ask-if-none          ; compose with current context, or ask
+          mu4e-completing-read-function     #'ivy-completing-read ; use ivy
+          mu4e-confirm-quit                 t                     ; no need to ask
+          mu4e-header-fields                '((:account    . 12)
+                                              (:human-date . 12)
+                                              (:flags      . 4)
+                                              (:from       . 25)
+                                              (:subject)))
 
       ;; set mail user agent
-      (setq mail-user-agent 'mu4e-user-agent)
+    (setq mail-user-agent 'mu4e-user-agent)
 
       ;; Use fancy icons
-      <<mu4e-fancy-marks>>
-      ;; Set bookmarks
-      <<mu4e-bookmarks>>
+    <<mu4e-fancy-marks>>
 
       ;; mu4e-headers-mode config
-      <<mu4e-headers-mode>>
+    <<mu4e-headers-mode>>
 
-      ;; Add a column to display what email account the email belongs to.
-      (add-to-list 'mu4e-header-info-custom
-                   '(:account
-                     :name "Phundrak Main"
-                     :shortname "Phundrak"
-                     :help "Main email of phundrak"
-                     :function
-                     (lambda (msg)
-                       (let ((maildir (mu4e-message-field msg :maildir)))
-                         (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
-
-      (setq smtpmail-smtp-server       "mail.phundrak.com"
-            smtpmail-smtp-service      587
-            smtpmail-stream-type       'starttls
-            message-send-mail-function 'smtpmail-send-it)
-
-      (defun mu4e-action-open-as-pdf (msg)
-        "Export and open MSG as pdf."
-        (let* ((date    (mu4e-message-field msg :date))
-               (infile  (mu4e~write-body-to-html msg))
-               (outfile (format-time-string "/tmp/%Y-%m-%d-%H-%M-%S.pdf" date)))
-          (with-temp-buffer
-            (shell-command
-             (format "wkhtmltopdf %s %s" infile outfile) t))
-          (find-file outfile)))
-
-      (add-to-list 'mu4e-view-actions '("PDF view" . mu4e-action-open-as-pdf) t)))
+    (defun mu4e-action-open-as-pdf (msg)
+      "Export and open MSG as pdf."
+      (let* ((date    (mu4e-message-field msg :date))
+             (infile  (mu4e~write-body-to-html msg))
+             (outfile (format-time-string "/tmp/%Y-%m-%d-%H-%M-%S.pdf" date)))
+        (with-temp-buffer
+          (shell-command
+           (format "wkhtmltopdf %s %s" infile outfile) t))
+        (find-file outfile))))
 #+end_src
+
+***** Basic configuration
+First, let’s inform Emacs how it can send emails, using which service
+and how. In my case, I use my own mail server.
+#+name: mu4e-mail-service
+#+begin_src emacs-lisp :tangle no
+  (setq smtpmail-smtp-server       "mail.phundrak.com"
+        smtpmail-smtp-service      587
+        smtpmail-stream-type       'starttls
+        message-send-mail-function 'smtpmail-send-it)
+#+end_src
+
+We also need to inform it on where my emails are stored on my machine,
+and how to retrieve them.
+#+name: mu4e-mail-on-machine
+#+begin_src emacs-lisp :tangle no
+    (setq mu4e-get-mail-command "mbsync -a"
+          mu4e-maildir          "~/Mail"
+          mu4e-trash-folder     "/Trash"
+          mu4e-refile-folder    "/Archive"
+          mu4e-sent-folder      "/Sent"
+          mu4e-drafts-folder    "/Drafts")
+#+end_src
+
+In the same vein of [[*Basic configuration][this bit of configuration]], I do not want mu4e to
+insert my mail signature, ~org-msg~ already does that.
+#+name: mu4e-no-signature
+#+begin_src emacs-lisp :tangle no
+  (setq mu4e-compose-signature nil)
+#+end_src
+
+***** Actions on messages
 
 ***** Bookmarks
 In mu4e, the main focus isn’t really mail directories such as your
@@ -912,7 +961,7 @@ matches any email address which contains either ~up8.edu~ or
 ~univ-paris8~, which can be found in email addresses from the University
 Paris 8 (my university).
 #+name: mu4e-bookmarks-filter-uni
-#+headers: :tangle no :exports both :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
   (string-join '("f:/.*up8\.edu|.*univ-paris8.*/"
                  "c:/.*up8\.edu|.*univ-paris8.*/"
@@ -920,13 +969,13 @@ Paris 8 (my university).
                " OR ")
 #+end_src
 
-#+RESULTS[55041e7ce5b7c7b228c9fd6e1c9715f677094c8e]: mu4e-bookmarks-filter-uni
+#+RESULTS[6f0c2005657e701b0a992061981317febcdd6200]: mu4e-bookmarks-filter-uni
 : f:/.*up8.edu|.*univ-paris8.*/ OR c:/.*up8.edu|.*univ-paris8.*/ OR t:/.*up8.edu|.*univ-paris8.*/
 
 As for the Emacs-doctor list, I need to match both the current, modern
 mailing list address but also its old address.
 #+name: mu4e-bookmarks-filter-emacs-list
-#+headers: :tangle no :exports both :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
   (mapconcat (lambda (address)
                (mapconcat (lambda (flag)
@@ -937,14 +986,14 @@ mailing list address but also its old address.
              " OR ")
 #+end_src
 
-#+RESULTS[463132dbde653749ac07ee8e1263733ee15b5847]: mu4e-bookmarks-filter-emacs-list
+#+RESULTS[cff1b5e400cca47c06057bf236d099db01411cd7]: mu4e-bookmarks-filter-emacs-list
 : list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com
 
 When it comes to the conlang mailing list, let’s not match anything
 from or to them. I’ll also include the auxlang mailing list –I’m not
 subscribed anymore, but it’ll keep my inbox clean.
 #+name: mu4e-bookmarks-filter-conlang-list
-#+headers: :tangle no :exports both :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
   (mapconcat (lambda (address)
                (mapconcat (lambda (flag)
@@ -955,14 +1004,14 @@ subscribed anymore, but it’ll keep my inbox clean.
              " OR ")
 #+end_src
 
-#+RESULTS[5565a39c69d99277cffbf4e4be88211ab463543b]: mu4e-bookmarks-filter-conlang-list
+#+RESULTS[129026cfdaeb910562b800b659ad8d2d13773932]: mu4e-bookmarks-filter-conlang-list
 : from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU
 
 As I said earlier, something that will often come back in my bookmarks
 is the emails must not be trashed to appear. I want also to display
 junk emails, so I end up with the following rule:
 #+name: mu4e-bookmarks-default-filter
-#+headers: :tangle no :exports both :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
   (string-join `("NOT flag:trashed"
                  ,(format "(%s)" (mapconcat (lambda (maildir) (concat "maildir:" maildir))
@@ -971,12 +1020,12 @@ junk emails, so I end up with the following rule:
                " AND ")
 #+end_src
 
-#+RESULTS[88f8a5401e240f98fd64fe227699f5ddfe6d5730]: mu4e-bookmarks-default-filter
+#+RESULTS[ccf162e159f77ccf87ff4fae220106f0a91ad256]: mu4e-bookmarks-default-filter
 : NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk)
 
 And for the last string-generating code, let’s describe my main inbox:
 #+name: mu4e-bookmarks-inbox-filters
-#+headers: :exports both :tangle no :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
   (string-join (cons
                 <<mu4e-bookmarks-default-filter>>
@@ -990,7 +1039,7 @@ And for the last string-generating code, let’s describe my main inbox:
                " AND NOT ")
 #+end_src
 
-#+RESULTS[96218e66b6554a2b8b1f09f016d9af1d238bb79b]: mu4e-bookmarks-inbox-filters
+#+RESULTS[2bd917f15a55a2a509f5710c6a4db5f8a8e7a596]: mu4e-bookmarks-inbox-filters
 : NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu|.*univ-paris8.*/ OR c:/.*up8.edu|.*univ-paris8.*/ OR t:/.*up8.edu|.*univ-paris8.*/)
 
 We can finally define our bookmarks! The code reads as follows:
@@ -1027,7 +1076,7 @@ We can finally define our bookmarks! The code reads as follows:
           (:name "This Year"  :key ?y :query "date:1y..now    AND NOT flag:trashed")))
 #+end_src
 
-#+RESULTS[3e4e7f607d9f961a27594ddb98037ec25b2c94f7]: mu4e-bookmarks
+#+RESULTS[4a18e1cfa32f399203b300f7cbd986a553a1b234]: mu4e-bookmarks
 | :name | Inbox              | :key | 105 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/)                                                                                                                                                                                                                                           |                                  |                                  |                  |
 | :name | Linguistics        | :key | 108 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU                            |                                  |                                  |                  |
 | :name | Emacs              | :key | 101 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com |                                  |                                  |                  |
@@ -1060,7 +1109,7 @@ redefine them as follows. Be aware the name of these icons are from
 | signed    | s    | certificate |
 
 #+name: mu4e-fancy-marks-gen
-#+header: :tangle no :exports none :results value
+#+header: :tangle no :exports none :results value :cache yes
 #+begin_src emacs-lisp :var table=mu4e-fancy-marks-tbl
   (mapconcat (lambda (line)
                (let ((mark (car line))
@@ -1074,7 +1123,7 @@ redefine them as follows. Be aware the name of these icons are from
              "\n")
 #+end_src
 
-#+RESULTS:
+#+RESULTS[c6ed5d4bec4c10339a7de52a70822af74d782e62]: mu4e-fancy-marks-gen
 #+begin_example
 mu4e-headers-draft-mark `("D" . ,(all-the-icons-faicon "pencil" :height 0.8))
 mu4e-headers-flagged-mark `("F" . ,(all-the-icons-faicon "flag" :height 0.8))
@@ -1098,7 +1147,7 @@ Let’s enable them and set them:
 
 ***** Headers mode
 #+name: mu4e-headers-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-hook 'mu4e-headers-mode-hook (lambda () (visual-line-mode -1)))
   (add-hook 'mu4e-headers-mode-hook (lambda () (toggle-truncate-lines -1)))
 #+end_src
@@ -1107,7 +1156,7 @@ Let’s enable them and set them:
 By default, Evil has some pretty annoying keybindings for users of the
 bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
 #+name: mu4e-keybindings-undef
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (general-define-key
    :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
    "s" nil)
@@ -1198,7 +1247,7 @@ one of the possible following key can act on a thread:
                  (format "\"%s\" '((lambda ()
              (interactive)
              (mu4e-%s-mark-thread '%s))
-           :wk \"Mark as %s\")"
+         :wk \"Mark as %s\")"
                          key mode mark mark)))
              table
              "\n")
@@ -1209,35 +1258,35 @@ one of the possible following key can act on a thread:
 "td" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'trash))
-         :wk "Mark as trash")
+       :wk "Mark as trash")
 "tD" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'delete))
-         :wk "Mark as delete")
+       :wk "Mark as delete")
 "tm" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'move))
-         :wk "Mark as move")
+       :wk "Mark as move")
 "tr" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'refile))
-         :wk "Mark as refile")
+       :wk "Mark as refile")
 "tR" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'read))
-         :wk "Mark as read")
+       :wk "Mark as read")
 "tu" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'unread))
-         :wk "Mark as unread")
+       :wk "Mark as unread")
 "tU" '((lambda ()
            (interactive)
            (mu4e-view-mark-thread 'unmark))
-         :wk "Mark as unmark")
+       :wk "Mark as unmark")
 #+end_example
 
 #+name: mu4e-keybindings-view
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (general-define-key
      :states 'normal
      :keymaps 'mu4e-view-mode-map
@@ -1257,7 +1306,7 @@ The keybindings from table [[mu4e-keybindings-view-lambdas-tbl]] will also
 be reused for this mode.
 
 #+name: mu4e-keybindings-header
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (general-define-key
      :states 'normal
      :keymaps 'mu4e-headers-mode-map
@@ -1271,7 +1320,7 @@ be reused for this mode.
 I will also redefine without a leader key ~ctsr~ in order to be able to
 move freely (remember, bépo layout for me).
 #+name: mu4e-keybindings-header-no-leader
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (general-define-key
    :keymaps 'mu4e-headers-mode-map
    :states 'normal
