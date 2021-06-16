@@ -2551,15 +2551,6 @@ extended however we like!
       <<org-publish-projects>>)
 #+end_src
 
-#+RESULTS:
-| config-website-org         | :base-directory | ~/org/config/                                                                | :base-extension | org  | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/config | :recursive | t      | :language | en          | :publishing-function  | org-html-publish-to-html               | :headline-levels                       | 5                     | :auto-sitemap                          | t                                     | :auto-preamble       | t                        |                          |                      |                        |                        |                |   |
-| config-website-static      | :base-directory | ~/org/config/                                                                | :base-extension | png\ | jpg\                  | gif\                                  | webp\      | svg\   | jpeg\     | ttf\        | woff\                 | txt\                                   | epub\                                  | md                    | :publishing-directory                  | /rsync:Tilo:~/www/phundrak.com/config | :recursive           | t                        | :language                | en                   | :publishing-function   | org-publish-attachment |                |   |
-| config-website             | :components     | (config-website-org config-website-static)                                   |                 |      |                       |                                       |            |        |           |             |                       |                                        |                                        |                       |                                        |                                       |                      |                          |                          |                      |                        |                        |                |   |
-| langue-phundrak-com-org    | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | org  | :exclude              | \./\(CONTRIB\                         | README\    | head\  | temp\     | svg-ink\).* | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive                             | t                     | :language                              | fr                                    | :publishing-function | org-html-publish-to-html | :headline-levels         | 5                    | :auto-sitemap          | t                      | :auto-preamble | t |
-| langue-phundrak-com-pdf    | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | org  | :exclude              | \./\(CONTRIB\                         | README\    | index\ | head\     | temp\       | svg-ink\).*           | :publishing-directory                  | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive            | t                                      | :language                             | fr                   | :publishing-function     | org-latex-publish-to-pdf | :headline-levels     | 5                      | :auto-preamble         | t              |   |
-| langue-phundrak-com-static | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | png\ | jpg\                  | gif\                                  | webp\      | svg\   | jpeg\     | ttf\        | woff\                 | txt\                                   | epub                                   | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive                            | t                    | :language                | fr                       | :publishing-function | org-publish-attachment |                        |                |   |
-| langue-phundrak-com        | :components     | (langue-phundrak-com-org langue-phundrak-com-static langue-phundrak-com-pdf) |                 |      |                       |                                       |            |        |           |             |                       |                                        |                                        |                       |                                        |                                       |                      |                          |                          |                      |                        |                        |                |   |
-
 The main feature from ~evil-org~ that I love is how easy it is to modify
 some keybindings for keyboards layouts that do not have ~hjkl~, such as
 the bépo layout (or Dvorak or Colemak if you are into that). But it
@@ -2679,7 +2670,6 @@ exporter I use afterwards. Its installation is pretty simple:
 
 *** File export
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle no :exports code :results silent
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-exportik95fl6184j0
 :END:
 I want to disable by default behavior of ~^~ and ~_~ for only one
@@ -2688,14 +2678,48 @@ respectively. This is due to my frequent usage of the underscore in my
 org files as a regular character and not a markup one, especially when
 describing phonetics evolution. So, let’s disable it:
 #+NAME: org-use-sub-superscripts
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
 #+begin_src emacs-lisp
   (use-package htmlize
-    :straigh (:build t)
     :defer t)
+#+end_src
+
+There’s not really any unified Markdown specification, meaning
+everyone can pretty much do whatever they want with the syntax and
+still call it Markdown. Great… But something I appreciate is Github
+supports some extra HTML to make our files extra spicy! And lucky me,
+there’s a package for exporting my org files to Github-flavored
+Markdown!
+#+begin_src emacs-lisp
+  (use-package ox-gfm
+    :after ox
+    :straight (:build t)
+    :init
+    (require 'ox-gfm))
+#+end_src
+
+Another backend for exporting files through org I like is ~ox-epub~
+which, as you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/][Epub format]].
+#+begin_src emacs-lisp
+  (use-package ox-epub
+    :after ox
+    :straight (:build t)
+    :init
+    (require 'ox-epub))
+#+end_src
+
+Yet another exporter I enjoy is [[https://github.com/dantecatalfamo/ox-ssh][~ox-ssh~]] with which I manage my
+~$HOME/.ssh/config~ file. You won’t find my org file for managing my
+servers on my repos though.
+#+begin_src emacs-lisp
+  (use-package ox-ssh
+    :after ox
+    :straight (:build t)
+    :init
+    (require 'ox-ssh))
 #+end_src
 
 **** LaTeX
