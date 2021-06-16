@@ -2479,15 +2479,10 @@ simpler than writing manually HTML and LaTeX code, especially when a
 single document source is meant to be exported for both formats. And
 since org is an Emacs package, that also means it can be greatly
 extended however we like!
-
-By default I’ll use the git version of org, I like to be the most
-up-to-date possible with this particular package.
 #+begin_src emacs-lisp
   (use-package org
     :straight (org :build t
-                   :type git
-                   :host nil
-                   :repo "https://code.orgmode.org/bzg/org-mode.git")
+                   :type built-in)
     :defer t
     :commands (orgtbl-mode)
     :hook (org-mode . visual-line-mode)
@@ -2509,8 +2504,8 @@ up-to-date possible with this particular package.
      <<general-keybindings-gen(table=org-keybinds-insert)>>
      <<general-keybindings-gen(table=org-keybinds-jump)>>
      <<general-keybindings-gen(table=org-keybinds-tables)>>
-     <<general-keybindings-gen(table=org-keybinds-toggles)>>
-    )
+     <<general-keybindings-gen(table=org-keybinds-toggles)>>)
+
     (:states 'normal
      :keymaps 'org-src-mode-map
      :prefix ","
@@ -2553,6 +2548,15 @@ up-to-date possible with this particular package.
       <<org-latex-classes>>
       <<org-publish-projects>>)
 #+end_src
+
+#+RESULTS:
+| config-website-org         | :base-directory | ~/org/config/                                                                | :base-extension | org  | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/config | :recursive | t      | :language | en          | :publishing-function  | org-html-publish-to-html               | :headline-levels                       | 5                     | :auto-sitemap                          | t                                     | :auto-preamble       | t                        |                          |                      |                        |                        |                |   |
+| config-website-static      | :base-directory | ~/org/config/                                                                | :base-extension | png\ | jpg\                  | gif\                                  | webp\      | svg\   | jpeg\     | ttf\        | woff\                 | txt\                                   | epub\                                  | md                    | :publishing-directory                  | /rsync:Tilo:~/www/phundrak.com/config | :recursive           | t                        | :language                | en                   | :publishing-function   | org-publish-attachment |                |   |
+| config-website             | :components     | (config-website-org config-website-static)                                   |                 |      |                       |                                       |            |        |           |             |                       |                                        |                                        |                       |                                        |                                       |                      |                          |                          |                      |                        |                        |                |   |
+| langue-phundrak-com-org    | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | org  | :exclude              | \./\(CONTRIB\                         | README\    | head\  | temp\     | svg-ink\).* | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive                             | t                     | :language                              | fr                                    | :publishing-function | org-html-publish-to-html | :headline-levels         | 5                    | :auto-sitemap          | t                      | :auto-preamble | t |
+| langue-phundrak-com-pdf    | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | org  | :exclude              | \./\(CONTRIB\                         | README\    | index\ | head\     | temp\       | svg-ink\).*           | :publishing-directory                  | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive            | t                                      | :language                             | fr                   | :publishing-function     | org-latex-publish-to-pdf | :headline-levels     | 5                      | :auto-preamble         | t              |   |
+| langue-phundrak-com-static | :base-directory | ~/Documents/conlanging/content/                                              | :base-extension | png\ | jpg\                  | gif\                                  | webp\      | svg\   | jpeg\     | ttf\        | woff\                 | txt\                                   | epub                                   | :publishing-directory | /rsync:Tilo:~/www/phundrak.com/langue/ | :recursive                            | t                    | :language                | fr                       | :publishing-function | org-publish-attachment |                        |                |   |
+| langue-phundrak-com        | :components     | (langue-phundrak-com-org langue-phundrak-com-static langue-phundrak-com-pdf) |                 |      |                       |                                       |            |        |           |             |                       |                                        |                                        |                       |                                        |                                       |                      |                          |                          |                      |                        |                        |                |   |
 
 The main feature from ~evil-org~ that I love is how easy it is to modify
 some keybindings for keyboards layouts that do not have ~hjkl~, such as
@@ -2794,6 +2798,7 @@ prefixed with a comma ~,~ in normal mode.
 | e         | org-export-dispatch |             |
 | l         | org-store-link      |             |
 | p         | org-priority        |             |
+| r         | org-reload          |             |
 
 I then have a couple of babel-related functions.
 #+name: org-keybinds-babel
