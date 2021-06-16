@@ -2044,7 +2044,9 @@ distraction-free mode of Emacs, and I like that!
 #+begin_src emacs-lisp
   (use-package writeroom-mode
     :defer t
-    :straight (:build t))
+    :straight (:build t)
+    :config
+    (setq writeroom-width 100))
 #+end_src
 
 ** Emacs built-ins
