@@ -2373,6 +2373,26 @@ for org files that will be hosted and viewable on Github.
                              (electric-indent-local-mode -1)))
 #+end_src
 
+As explained in my [[https://blog.phundrak.com/better-custom-ids-orgmode/][blog post]], org-mode is terrible with coming up with
+meaningful IDs for its headings. I actually wrote a package for this!
+#+begin_src emacs-lisp
+  (use-package org-unique-id
+    :straight (org-unique-id :build t
+                             :type git
+                             :host github
+                             :repo "Phundrak/org-unique-id")
+    :defer t
+    :after org
+    :init
+    (add-hook 'org-mode-hook
+       (lambda ()
+         (add-hook 'before-save-hook
+                   (lambda ()
+                     (when (and (eq major-mode       'org-mode)
+                                (eq buffer-read-only nil))
+                       (org-unique-id)))))))
+#+end_src
+
 *** Babel
 A package I use from time to time is ~ob-latex-as-png~ which allows me
 to easily convert a LaTeX snippet into a PNG, regardless of the
