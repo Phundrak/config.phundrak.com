@@ -3255,7 +3255,6 @@ configuration to make it bépo-compatible.
 #+begin_src emacs-lisp
   (use-package avy
     :defer t
-    :straight (:build t)
     :config
     (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
     :general
