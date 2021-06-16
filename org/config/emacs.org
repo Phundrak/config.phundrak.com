@@ -10,6 +10,9 @@
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 * Introduction
+:PROPERTIES:
+:CUSTOM_ID: Introduction7gzhel6184j0
+:END:
 #+begin_center
 *STOP* Read this first!
 
@@ -27,7 +30,13 @@ missing, and lots of functionnalities are still not implemented. I’m
 still in the process of porting my [[file:spacemacs.org][Spacemacs]] configuration over here.
 
 * Basic configuration
+:PROPERTIES:
+:CUSTOM_ID: Basic-configurationzt3iel6184j0
+:END:
 ** Early Init
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Early-Inityj7iel6184j0
+:END:
 The early init file is the file loaded before anything else in
 Emacs. This is where I put some options in order to disable as quickly
 as possible some built-in features of Emacs before they can be even
@@ -45,7 +54,13 @@ loaded, speeding Emacs up a bit.
 #+end_src
 
 ** Emacs Behavior
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior6gbiel6184j0
+:END:
 *** Editing Text in Emacs
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Editing-Text-in-Emacsy2fiel6184j0
+:END:
 I *never* want to keep trailing spaces in my files, which is why I’m
 doing this:
 #+begin_src emacs-lisp
@@ -73,6 +88,9 @@ Lastly, I want the default mode for Emacs to be Emacs Lisp.
 #+end_src
 
 **** Indentation
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Editing-Text-in-Emacs-Indentationauiiel6184j0
+:END:
 I don’t like tabs. They rarely look good, and if I need it I can
 almost always tell Emacs to use them through a ~.dir-locals.el~ file or
 through the config file of my code formatter. So by default, let’s
@@ -114,6 +132,9 @@ formatters’ config file, and tabs look bat in EmacsLisp anyways, so
 I’ll stick with spaces by default and change it where needed.
 
 *** Programming Modes
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Programming-Modesfnmiel6184j0
+:END:
 First off, my definition of what makes a a “programming mode” doesn’t exactly
 fit mine, so on top of ~prog-mode~, let’s add a few other modes.
 #+name: line-number-modes-table
@@ -134,6 +155,9 @@ fit mine, so on top of ~prog-mode~, let’s add a few other modes.
 : prog-mode-hook latex-mode-hook
 
 **** Line Number
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Programming-Modes-Line-Numbermcqiel6184j0
+:END:
 Since version 26, Emacs has a built-in capacity of displaying line
 numbers on the left-side of the buffer. This is a fantastic feature
 that should actually be the default for all programming modes.
@@ -144,6 +168,9 @@ that should actually be the default for all programming modes.
 #+end_src
 
 **** Folding code
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Programming-Modes-Folding-code16uiel6184j0
+:END:
 Most programming languages can usually have their code folded, be it
 code between curly braces, chunks of comments or code on another level
 of indentation (Python, why…?). The minor-mode that enables that is
@@ -154,6 +181,9 @@ of indentation (Python, why…?). The minor-mode that enables that is
 #+end_src
 
 *** Stay Clean, Emacs!
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Stay-Clean-Emacs7wxiel6184j0
+:END:
 As nice as Emacs is, it isn’t very polite or clean by default: open a
 file, and it will create backup files in the same directory. But then,
 when you open your directory with your favorite file manager and see
@@ -186,6 +216,9 @@ don’t want it!
 #+end_src
 
 *** Stay Polite, Emacs!
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Stay-Polite-Emacszp1jel6184j0
+:END:
 When asking for our opinion on something, Emacs loves asking us to
 answer by “yes” or “no”, but *in full*! That’s very rude! Fortunately,
 we can fix this.
@@ -210,6 +243,9 @@ haven’t been saved, it will not automatically revert the buffer and
 your unsaved changes won’t be lost. Very polite!
 
 *** Misc
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Emacs-Behavior-Misc9j5jel6184j0
+:END:
 Let’s raise Emacs undo memory to 10MB, and make Emacs auto-save our
 files by default.
 #+begin_src emacs-lisp
@@ -222,6 +258,9 @@ files by default.
 #+end_src
 
 ** Personal Information
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Personal-Informationi59jel6184j0
+:END:
 Emacs needs to know its master! For various reasons by the way, some
 packages rely of these variables to know who it is talking to or
 dealing with, such as ~mu4e~ which will guess who you are if you haven’t
@@ -234,6 +273,9 @@ set it up correctly.
 #+end_src
 
 ** Visual Configuration
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Visual-Configurationzvcjel6184j0
+:END:
 The first visual setting in this section will activate the visible
 bell. What it does is I get a visual feedback each time I do something
 Emacs doesn’t agree with, like tring to go up a line when I’m already
@@ -254,6 +296,9 @@ character of three dots. Let’s make it so:
 #+end_src
 
 *** Modeline Modules
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Visual-Configuration-Modeline-Modules9kgjel6184j0
+:END:
 I sometimes use Emacs in fullscreen, meaning my usual taskbar will be
 hidden. This is why I want the current date and time to be displayed,
 in an ISO-8601 style, although not exactly ISO-8601 (this is the best
@@ -305,6 +350,9 @@ modifications to the modeline each time we open a new file.
 #+end_src
 
 *** Fonts
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Visual-Configuration-Fontsxfkjel6184j0
+:END:
 I don’t like the default font I usually have on my machines, I really
 don’t. I prefer [[https://github.com/microsoft/cascadia-code][Cascadia Code]], as it also somewhat supports the [[https://www.internationalphoneticassociation.org/][IPA]].
 #+begin_src emacs-lisp
@@ -316,6 +364,9 @@ don’t. I prefer [[https://github.com/microsoft/cascadia-code][Cascadia Code]],
 #+end_src
 
 *** Frame Title
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Visual-Configuration-Frame-Titlej7ojel6184j0
+:END:
 This is straight-up copied from [[https://tecosaur.github.io/emacs-config/config.html#window-title][TEC]]’s configuration. See their comment
 on the matter.
 #+begin_src emacs-lisp
@@ -329,6 +380,9 @@ on the matter.
 #+end_src
 
 ** Nice Macros From Doom-Emacs
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Nice-Macros-From-Doom-Emacsgyrjel6184j0
+:END:
 Doom-Emacs has some really nice macros that can come in really handy,
 but since I prefer to rely on my own configuration, I’ll instead just
 copy their code here. First we get the ~after!~ macro:
@@ -381,8 +435,17 @@ copy their code here. First we get the ~after!~ macro:
 #+end_src
 
 * Custom Elisp
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elispksvjel6184j0
+:END:
 ** Dired functions
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Dired-functionsm8zjel6184j0
+:END:
 *** ~phundrak/open-marked-files~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Dired-functions-phundrak-open-marked-filesdw2kel6184j0
+:END:
 This function allows the user to open all marked files from a dired
 buffer as new Emacs buffers.
 #+begin_src emacs-lisp
@@ -400,6 +463,9 @@ buffer as new Emacs buffers.
 #+end_src
 
 *** ~xah/open-in-external-app~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Dired-functions-xah-open-in-external-appnm6kel6184j0
+:END:
 #+begin_src emacs-lisp
   (defun xah/open-in-external-app (&optional file)
     "Open FILE or dired marked FILE in external app.
@@ -421,6 +487,9 @@ buffer as new Emacs buffers.
 #+end_src
 
 *** ~xah/dired-sort~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Dired-functions-xah-dired-sort9fakel6184j0
+:END:
 #+begin_src emacs-lisp
   (defun xah/dired-sort ()
     "Sort dired dir listing in different ways.
@@ -438,6 +507,9 @@ buffer as new Emacs buffers.
 #+end_src
 
 ** Switch between buffers
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Switch-between-buffersp4ekel6184j0
+:END:
 Two default shortcuts I really like from Spacemacs are ~SPC b m~ and ~SPC
 b s~, which bring the user directly to the ~*Messages*~ buffer and the
 ~*scratch*~ buffer respectively. These functions do exactly this.
@@ -454,7 +526,13 @@ b s~, which bring the user directly to the ~*Messages*~ buffer and the
 #+end_src
 
 ** Org Functions
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functionsyshkel6184j0
+:END:
 *** Emphasize text
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functions-Emphasize-textkilkel6184j0
+:END:
 | /        |    <c>    |      <c>       |
 | Emphasis | Character | Character code |
 |----------+-----------+----------------|
@@ -472,6 +550,9 @@ b s~, which bring the user directly to the ~*Messages*~ buffer and the
 #+end_src
 
 *** Handle new windows
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functions-Handle-new-windowst7pkel6184j0
+:END:
 The two functions below allow the user to not only create a new window
 to the right or below the current window (respectively), but also to
 focus the new window immediately.
@@ -494,6 +575,9 @@ focus the new window immediately.
 #+end_src
 
 *** ~phundrak/toggle-org-src-window-split~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functions-phundrak-toggle-org-src-window-splito2tkel6184j0
+:END:
 #+begin_src emacs-lisp
   (defun phundrak/toggle-org-src-window-split ()
     "This function allows the user to toggle the behavior of
@@ -512,7 +596,13 @@ focus the new window immediately.
 #+end_src
 
 * Package Management
+:PROPERTIES:
+:CUSTOM_ID: Package-Managementqpwkel6184j0
+:END:
 ** Repositories
+:PROPERTIES:
+:CUSTOM_ID: Package-Management-Repositoriesab0lel6184j0
+:END:
 By default, only GNU’s repositories are available to the package
 managers of Emacs. I also want to use Melpa and org-mode’s repository,
 so let’s add them! Note that the /Elpa/ repository has been renamed to
@@ -529,6 +619,9 @@ confusion between the two of them.
 #+end_src
 
 ** Straight
+:PROPERTIES:
+:CUSTOM_ID: Package-Management-Straightry3lel6184j0
+:END:
 For my package management, I prefer to use ~straight~ ([[https://github.com/raxod502/straight.el][Github]]). This is
 due to its capacity of integrating nicely with ~use-package~, which is
 also supported by ~general~ which I use for my keybindings (see below),
@@ -564,7 +657,13 @@ repositories too.
 #+end_src
 
 * Keybinding Management
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management728lel6184j0
+:END:
 ** Which-key
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management-Which-keymsblel6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package which-key
     :straight (:build t)
@@ -576,6 +675,9 @@ repositories too.
 #+end_src
 
 ** General
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management-Generalycflel6184j0
+:END:
 General is an awesome package for managing keybindings. Not only is it
 oriented towards keychords by default (which I love), but it also
 provides some integration with evil so that we can declare keybindings
@@ -652,6 +754,9 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+end_example
 
 ** Evil
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management-Eviljg30fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package evil
     :straight (:build t)
@@ -725,6 +830,9 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+end_src
 
 ** Hydra
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management-Hydra0970fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package hydra
     :straight (:build t)
@@ -732,6 +840,9 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+end_src
 
 *** Hydras
+:PROPERTIES:
+:CUSTOM_ID: Keybinding-Management-Hydra-Hydrasvya0fl6184j0
+:END:
 The following hydra allows me to quickly zoom in and out in the
 current buffer.
 #+begin_src emacs-lisp
@@ -765,8 +876,17 @@ grow the ~mu4e-headers~ buffer when viewing an email.
 #+end_src
 
 * Packages Configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configurationije0fl6184j0
+:END:
 ** Applications
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications94i0fl6184j0
+:END:
 *** Docker
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Docker5ul0fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package docker
     :defer t
@@ -783,8 +903,17 @@ grow the ~mu4e-headers~ buffer when viewing an email.
 #+end_src
 
 *** Elfeed
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Elfeedoip0fl6184j0
+:END:
 *** Email
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email9dt0fl6184j0
+:END:
 **** Basic configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Basic-configurationf7w0fl6184j0
+:END:
 As seen below, I use ~org-msg~ to compose my emails, which includes by
 default my signature. Therefore, there is no need for Emacs itself to
 know about it since I don’t want it to include it a second time after
@@ -795,6 +924,9 @@ know about it since I don’t want it to include it a second time after
 #+end_src
 
 **** Mu4e
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e5kx0fl6184j0
+:END:
 Mu4e is a very eye-pleasing email client for Emacs, built around ~mu~
 and which works very well with ~mbsync~ (found in Arch’s ~isync~ package).
 For me, the main advantage of mu4e is it has a modern interface for
@@ -888,6 +1020,9 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
 #+end_src
 
 ***** Basic configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Basic-configurationfxy0fl6184j0
+:END:
 First, let’s inform Emacs how it can send emails, using which service
 and how. In my case, I use my own mail server.
 #+name: mu4e-mail-service
@@ -918,8 +1053,14 @@ insert my mail signature, ~org-msg~ already does that.
 #+end_src
 
 ***** Actions on messages
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Actions-on-messageskb01fl6184j0
+:END:
 
 ***** Bookmarks
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Bookmarkszo11fl6184j0
+:END:
 In mu4e, the main focus isn’t really mail directories such as your
 inbox, your sent messages and such, but instead you manipulate
 bookmarks which will show you emails depending on tags. This mean you
@@ -1069,6 +1210,9 @@ We can finally define our bookmarks! The code reads as follows:
 | :name | This Year          | :key | 121 | :query | date:1y..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
 
 ***** Getting Fancy
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Getting-Fancyg731fl6184j0
+:END:
 I’m not a huge fan of mu4e’s default icons marking my emails, so I’ll
 redefine them as follows. Be aware the name of these icons are from
 /faicon/ in the package ~all-the-icons~.
@@ -1125,6 +1269,9 @@ Let’s enable them and set them:
 #+end_src
 
 ***** Headers mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Headers-modeum41fl6184j0
+:END:
 #+name: mu4e-headers-mode
 #+begin_src emacs-lisp :tangle no
   (add-hook 'mu4e-headers-mode-hook (lambda () (visual-line-mode -1)))
@@ -1132,6 +1279,9 @@ Let’s enable them and set them:
 #+end_src
 
 ***** Keybindings
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Keybindingsh161fl6184j0
+:END:
 By default, Evil has some pretty annoying keybindings for users of the
 bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
 #+name: mu4e-keybindings-undef
@@ -1336,6 +1486,9 @@ the major-mode leader and call a simple function.
 #+RESULTS: mu4e-keybindings-message
 
 **** Composing messages
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Composing-messagesth71fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package org-msg
     :after (org mu4e)
@@ -1376,6 +1529,9 @@ the major-mode leader and call a simple function.
 #+end_src
 
 **** Email alerts
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Email-alertsfx81fl6184j0
+:END:
 There is also a package for mu4e which generates desktop notifications
 when new emails are received. By default, I want to be notified by all
 messages in my inbox and junk folder. Also, I’ll use Emacs’ default
@@ -1393,6 +1549,9 @@ notification system, and I’ll activate the modeline notification.
 #+end_src
 
 *** Nov
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Nov0da1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package nov
     :straight (:build t)
@@ -1418,6 +1577,9 @@ notification system, and I’ll activate the modeline notification.
 #+end_src
 
 *** PDF Tools
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-PDF-Toolsvqb1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package pdf-tools
     :defer t
@@ -1483,6 +1645,9 @@ notification system, and I’ll activate the modeline notification.
 #+end_src
 
 *** Screenshot
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Screenshot96d1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package screenshot
     :defer t
@@ -1493,7 +1658,13 @@ notification system, and I’ll activate the modeline notification.
 #+end_src
 
 *** Shells
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Shellsxke1fl6184j0
+:END:
 **** Shell-pop
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Shells-Shell-popk0g1fl6184j0
+:END:
 Shell-pop allows the user to easily call for a new shell in a pop-up
 buffer.
 #+begin_src emacs-lisp
@@ -1512,6 +1683,9 @@ buffer.
 #+end_src
 
 **** VTerm
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Shells-VTermzfh1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package vterm
     :defer t
@@ -1521,6 +1695,9 @@ buffer.
 #+end_src
 
 *** XWidgets Webkit Browser
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-XWidgets-Webkit-Browsertui1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (general-define-key
    :keymaps 'xwidget-webkit-mode-map
@@ -1552,6 +1729,9 @@ buffer.
 #+end_src
 
 *** Wttr.in
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Wttr-inpak1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package wttrin
     :defer t
@@ -1566,11 +1746,20 @@ buffer.
 #+end_src
 
 **** TODO Derive a major mode for wttrin                        :noexport:
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Wttr-in-Derive-a-major-mode-for-wttrinkrl1fl6184j0
+:END:
 To handle keybindings correctly, a major mode for wttrin could be
 derived from ~fundamental-mode~ and get an associated keymap.
 
 ** Autocompletion
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletionr8n1fl6184j0
+:END:
 *** Code Autocompletion
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Code-Autocompletion4no1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package company
     :straight (:build t)
@@ -1659,6 +1848,9 @@ derived from ~fundamental-mode~ and get an associated keymap.
 #+end_src
 
 *** Ivy
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Ivy84q1fl6184j0
+:END:
 My main menu package is ~ivy~ which I use as much as possible –I’ve
 noticed ~helm~ can be slow, very slow in comparison to ~ivy~ so I’ll use
 the latter as much as possible. Actually, only ~ivy~ is installed for
@@ -1742,6 +1934,9 @@ Finally, let’s make ~ivy~ richer:
 #+end_src
 
 *** Counsel
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Counselorr1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package counsel
     :straight (:build t)
@@ -1754,6 +1949,9 @@ Finally, let’s make ~ivy~ richer:
 #+end_src
 
 *** Yasnippet
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Yasnippet68t1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package yasnippet
     :defer t
@@ -1781,7 +1979,13 @@ Finally, let’s make ~ivy~ richer:
 #+end_src
 
 ** Editing
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editinggnu1fl6184j0
+:END:
 *** Evil Nerd Commenter
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Evil-Nerd-Commenterd2w1fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package evil-nerd-commenter
     :after evil
@@ -1789,10 +1993,16 @@ Finally, let’s make ~ivy~ richer:
 #+end_src
 
 *** Evil Surround
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Evil-Surroundiix1fl6184j0
+:END:
 This package allows its user to surround regions with pairs of
 characters easily.
 
 *** Parinfer
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Parinfermxy1fl6184j0
+:END:
 Don’t let the name of the package fool you! ~parinfer-rust-mode~ is not
 a ~parinfer~ mode for ~rust-mode~, but a mode for ~parinfer-rust~. ~parinfer~
 was a project for handling parenthesis and other double markers in a
@@ -1813,6 +2023,9 @@ since been archived. New implementations then appeared, one of them is
 #+end_src
 
 *** ~string-edit~
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-string-editae02fl6184j0
+:END:
 ~string-edit~ is a cool package that allows the user to write naturally
 a string and get it automatically escaped for you. No more manually
 escaping your strings!
@@ -1823,6 +2036,9 @@ escaping your strings!
 #+end_src
 
 *** Writeroom
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Writeroomxt12fl6184j0
+:END:
 On the other hand, ~writeroom~ allows the user to enter a
 distraction-free mode of Emacs, and I like that!
 #+begin_src emacs-lisp
@@ -1832,7 +2048,13 @@ distraction-free mode of Emacs, and I like that!
 #+end_src
 
 ** Emacs built-ins
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-insr832fl6184j0
+:END:
 *** Dired
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Diredao42fl6184j0
+:END:
 Dired is Emacs’ built-in file manager. It’s really great, and replaces
 any graphical file manager for me most of the time because:
 - I am not limited to /x/ tabs or panes
@@ -1931,6 +2153,9 @@ And let’s add some fancy icons in dired!
 #+end_src
 
 *** Eshell
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell0662fl6184j0
+:END:
 Eshell is a built-in shell available from Emacs which I use almost as
 often as fish. Some adjustments are necessary to make it fit my taste
 though.
@@ -1943,6 +2168,9 @@ though.
 #+end_src
 
 **** Aliases
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Aliasesom72fl6184j0
+:END:
 First, let’s declare our list of “dumb” aliases we’ll use in
 Eshell. You can find them here.
 #+begin_src emacs-lisp
@@ -2008,6 +2236,9 @@ directories don’t, similarly to the ~-p~ option passed to ~mkdir~.
 #+end_src
 
 **** Custom Functions
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Custom-Functionsw492fl6184j0
+:END:
 When I’m in Eshell, sometimes I wish to open multiple files at once in
 Emacs.  For this, when I have several arguments for ~find-file~, I want
 to be able to open them all at once. Let’s modify ~find-file~ like so:
@@ -2030,6 +2261,9 @@ that.
 #+end_src
 
 **** Environment Variables
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Environment-Variablesmna2fl6184j0
+:END:
 Some environment variables need to be correctly set so Eshell can
 correctly work. I would like to set two environment variables related
 to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
@@ -2051,6 +2285,9 @@ something more standard than fish:
 #+end_src
 
 **** Visual configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Visual-configuratione7c2fl6184j0
+:END:
 I like to have at quick glance some information about my machine when
 I fire up a terminal. I haven’t found anything that does that the way
 I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]!
@@ -2068,6 +2305,9 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
 #+end_src
 
 *** Tramp
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Tramplqd2fl6184j0
+:END:
 Tramp is an Emacs built-in package that allows the user to connect to
 various hosts using various protocols, such as ~ssh~ and
 ~rsync~. However, I have some use-case for Tramp which are not
@@ -2077,6 +2317,9 @@ supported natively. I will describe them here.
 #+end_src
 
 **** Yadm
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Tramp-Yadma8f2fl6184j0
+:END:
 # ~yadm~ is the utility I use for managing my dotfiles, and it is a wrapper In
 # order to manage my dotfiles, I use the following shortcut to launch Magit Status
 # for ~yadm~:
@@ -2104,6 +2347,9 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
 #+end_src
 
 ** EXWM
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-EXWM6vx4fl6184j0
+:END:
 #+begin_src emacs-lisp
   (defvar phundrak/exwm-enabled (and (seq-contains command-line-args "--use-exwm")))
 
@@ -2154,7 +2400,13 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
 #+RESULTS:
 
 ** Making my life easier
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Making-my-life-easier2kz4fl6184j0
+:END:
 *** Bufler
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Making-my-life-easier-Buflerw215fl6184j0
+:END:
 Bufler is a package that organizes and lists buffers in a much better
 way than how they are usually sorted. You can easily and quickly find
 buffers by their group, not only by their name, and THIS is great
@@ -2181,6 +2433,9 @@ to ~p~ since it would conflict with my main ~general~ prefix.
 #+end_src
 
 *** Helpful
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Making-my-life-easier-Helpfullh25fl6184j0
+:END:
 As the name tells, ~helpful~ is a really helpful package which greatly
 enhances a couple of built-in functions from Emacs, namely:
 | Vanilla Emacs Function | Helpful Function   | Comment                                       |
@@ -2207,6 +2462,9 @@ enhances a couple of built-in functions from Emacs, namely:
 #+end_src
 
 ** Org-mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-modedw35fl6184j0
+:END:
 Org is the main reason I am using Emacs. It is an extremely powerfu
 tool when you want to write anything that is not necessarily primarily
 programming-related, though it absolutely can be! Org can be a
@@ -2343,6 +2601,7 @@ the usage of the ~:ignore:~ tag in org.
 *** Agenda
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
+:CUSTOM_ID: Packages-Configuration-Org-mode-Agenda8b55fl6184j0
 :END:
 #+name: org-agenda-files
 #+begin_src emacs-lisp
@@ -2350,6 +2609,9 @@ the usage of the ~:ignore:~ tag in org.
 #+end_src
 
 *** Behavior
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Behaviorzp65fl6184j0
+:END:
 A useful package I like is ~toc-org~ which creates automatically a table
 of contents. My main usage for this however is not just to create a
 table of content of my files to quickly jump around my file (I have
@@ -2394,6 +2656,9 @@ meaningful IDs for its headings. I actually wrote a package for this!
 #+end_src
 
 *** Babel
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Babel9585fl6184j0
+:END:
 A package I use from time to time is ~ob-latex-as-png~ which allows me
 to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
@@ -2406,6 +2671,7 @@ exporter I use afterwards. Its installation is pretty simple:
 *** File export
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-exportik95fl6184j0
 :END:
 I want to disable by default behavior of ~^~ and ~_~ for only one
 character, making it compulsory to use instead ~^{}~ and ~_{}~
@@ -2424,6 +2690,9 @@ describing phonetics evolution. So, let’s disable it:
 #+end_src
 
 **** LaTeX
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-LaTeXg2b5fl6184j0
+:END:
 When it comes to exports, I want the LaTeX and PDF exports to be done
 with XeLaTeX only. This implies the modification of the following
 variable:
@@ -2486,6 +2755,9 @@ add their extension like so:
 #+end_src
 
 **** HTML
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-HTMLxjc5fl6184j0
+:END:
 For Reveal.JS exports, I need to set where to find the framework by
 default:
 #+NAME: org-re-reveal-root
@@ -2501,6 +2773,9 @@ exported HTML. Let’s disable that since I never use it.
 #+END_SRC
 
 *** Keybindings
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Keybindingsv0e5fl6184j0
+:END:
 Be prepared, I have a lot of keybindings for org-mode! They are all
 prefixed with a comma ~,~ in normal mode.
 #+name: org-keybinds-various
@@ -2642,6 +2917,7 @@ Finally, let’s make enabling and disabling stuff accessible:
 *** LaTeX formats
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
+:CUSTOM_ID: Packages-Configuration-Org-mode-LaTeX-formatszjf5fl6184j0
 :END:
 I currently have two custom formats for my Org-mode exports: one for general use
 (initialy for my conlanging files, hence its ~conlang~ name), and one for beamer
@@ -2685,6 +2961,7 @@ Both these classes have to be added to ~org-latex-classes~ like so:
 *** Projects
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
+:CUSTOM_ID: Packages-Configuration-Org-mode-Projectsf2h5fl6184j0
 :END:
 Another great features of Org-mode is the Org projects that allow the user to
 easily publish a bunch of org files to a remote location. Here is the current
@@ -2705,6 +2982,9 @@ declaration of my projects, which will be detailed later:
 #+END_SRC
 
 **** Configuration website
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Projects-Configuration-websitelki5fl6184j0
+:END:
 This is my configuration for exporting my dotfiles to my website in a web format
 only. No PDFs or anything, just HTML. Please note that I do not use that often
 anymore, I much prefer the automatic script that I have which deploys through my
@@ -2771,6 +3051,9 @@ The project is then defined like so:
 #+END_SRC
 
 **** Linguistics website
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Projects-Linguistics-websitey4k5fl6184j0
+:END:
 My linguistics website is made out of three projects. As for the previous
 project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
@@ -2843,6 +3126,9 @@ The project is then defined like so:
 #+END_SRC
 
 *** Visual Configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Visual-Configurationrol5fl6184j0
+:END:
 While most modes of Emacs are dedicated to development, and therefore
 are much more comfortable with a fixed-pitch font, more literary modes
 such as org-mode are much more enjoyable if you have a variable pitch
@@ -2926,7 +3212,13 @@ files at the top of your window.
 #+end_src
 
 ** Project Management
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Managementi9n5fl6184j0
+:END:
 *** Magit
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Magitvso5fl6184j0
+:END:
 Magit is an awesome wrapper around Git for Emacs! Very often, I go
 from disliking to really hating Git GUI clients because they often
 obfuscate which Git commands are used to make things happen. Such a
@@ -2966,6 +3258,9 @@ project to remind you of what to do next.
 #+end_src
 
 *** Forge
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Forgelcq5fl6184j0
+:END:
 *NOTE*: Make sure to configure a GitHub token before using this
  package!
 - [[https://magit.vc/manual/forge/Token-Creation.html#Token-Creation][Token Creation]]
@@ -2977,6 +3272,9 @@ project to remind you of what to do next.
 #+end_src
 
 *** Projectile
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Projectilesvr5fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package projectile
     :straight (:build t)
@@ -2997,12 +3295,21 @@ project to remind you of what to do next.
 #+end_src
 
 ** Programming languages
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages6et5fl6184j0
+:END:
 *** DSLs
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLsbwu5fl6184j0
+:END:
 DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
 such as SQL.
 
 **** Caddy
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Caddy0fw5fl6184j0
+:END:
 [[https://caddyserver.com/][Caddy]] (or /Caddyserver/) is a web server akin to Nginx or Apache which I
 find much easier to configure that the latter two, plus it has
 built-in support for automatically generating SSL certificates with
@@ -3019,6 +3326,9 @@ Caddy files natively, so let’s install ~caddyfile-mode~:
 #+end_src
 
 **** Gnuplot
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Gnuplot8zx5fl6184j0
+:END:
 This package is a front-end and major mode for the programming
 language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful graphs, shall we?
 #+begin_src emacs-lisp
@@ -3028,6 +3338,9 @@ language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful grap
 #+end_src
 
 **** Nginx
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Nginxjiz5fl6184j0
+:END:
 Nginx is another webserver, older and more mature than Caddy. A couple
 of packages are required in order to be able to properly work with
 Nginx configuration files. First, we need the correct mode for editing
@@ -3050,6 +3363,9 @@ Nginx syntax.
 #+end_src
 
 **** Shells
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Shellsn116fl6184j0
+:END:
 Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
 config]]), therefore I need a mode for it.
 #+begin_src emacs-lisp
@@ -3059,6 +3375,9 @@ config]]), therefore I need a mode for it.
 #+end_src
 
 **** Yaml
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Yamlsk26fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :defer t
@@ -3068,6 +3387,9 @@ config]]), therefore I need a mode for it.
 #+end_src
 
 *** Flycheck
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Flycheckb446fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package flycheck
     :straight (:build t)
@@ -3113,7 +3435,13 @@ config]]), therefore I need a mode for it.
 #+end_src
 
 *** General Programming Languages
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languageszn56fl6184j0
+:END:
 **** EmacsLisp
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-EmacsLispo876fl6184j0
+:END:
 This package displays the function’s arglist or variable’s docstring
 in the echo area at the bottom of the frame. Quite useful indeed.
 #+begin_src emacs-lisp
@@ -3155,7 +3483,13 @@ comma.
 #+end_src
 
 ** Visual Configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configurationxr86fl6184j0
+:END:
 *** Dashboard
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Dashboardnba6fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package dashboard
     :straight (:build t)
@@ -3204,6 +3538,9 @@ comma.
 #+end_src
 
 *** Modeline
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package doom-modeline
     :straight (:build t)
@@ -3213,6 +3550,9 @@ comma.
 #+end_src
 
 *** Theme
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package doom-themes
     :straight (:build t)
@@ -3221,6 +3561,9 @@ comma.
 #+end_src
 
 *** Icons? Did someone say icons?
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Icons-Did-someone-say-iconsfye6fl6184j0
+:END:
 /*YES! ALL OF THEM!*/
 
 Ahem…
@@ -3251,6 +3594,9 @@ Let’s enable this mode for any programming mode:
 #+end_src
 
 *** Rainbow Delimiters
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Rainbow-Delimiters3lg6fl6184j0
+:END:
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :straight (:build t)
@@ -3259,6 +3605,9 @@ Let’s enable this mode for any programming mode:
 #+end_src
 
 *** Y’all want some more /COLORS/?
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Y-all-want-some-more-COLORSs6i6fl6184j0
+:END:
 It is possible to make info buffers much more colorful (and imo easier to read) with this simple package:
 #+begin_src emacs-lisp
   (use-package info-colors
@@ -3269,7 +3618,13 @@ It is possible to make info buffers much more colorful (and imo easier to read) 
 #+end_src
 
 ** Misc
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc0sj6fl6184j0
+:END:
 *** ~avy~
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-avyral6fl6184j0
+:END:
 ~avy~ is a really convenient way of jumping around, but I’ll need some
 configuration to make it bépo-compatible.
 #+begin_src emacs-lisp
@@ -3283,6 +3638,9 @@ configuration to make it bépo-compatible.
 #+end_src
 
 *** Calc
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Calc3vm6fl6184j0
+:END:
 Let’s give ~calc-mode~ some better defaults.
 #+begin_src emacs-lisp
   (setq calc-angle-mode    'rad
@@ -3290,6 +3648,9 @@ Let’s give ~calc-mode~ some better defaults.
 #+end_src
 
 *** Elcord
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Elcord7eo6fl6184j0
+:END:
 What’s the point of using Emacs if you can’t tell everyone?
 #+begin_src emacs-lisp
   (use-package elcord
@@ -3302,6 +3663,9 @@ What’s the point of using Emacs if you can’t tell everyone?
 #+end_src
 
 *** ~ivy-quick-find-files.el~
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-ivy-quick-find-files-el2yp6fl6184j0
+:END:
 This package is a small utility package I’ve written in order to
 quickly find files across my filesystem.
 #+begin_src emacs-lisp
@@ -3319,6 +3683,9 @@ quickly find files across my filesystem.
 #+end_src
 
 *** Winum
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Winumvir6fl6184j0
+:END:
 Winum allows Emacs to associate windows with a specific number and
 navigate through these windows by directly refering to their
 associated number! This allows for faster window configuration than
@@ -3330,6 +3697,9 @@ just going to the frame above, then left, left, and up.
 #+end_src
 
 * Keybindings
+:PROPERTIES:
+:CUSTOM_ID: Keybindings3ps6fl6184j0
+:END:
 Undefining some stuff to make keybind prefixes work correctly.
 #+begin_src emacs-lisp
   (general-define-key
@@ -3538,9 +3908,18 @@ Undefining some stuff to make keybind prefixes work correctly.
 #+end_src
 
 * Various TODOs                                                    :noexport:
+:PROPERTIES:
+:CUSTOM_ID: Various-TODOsnwt6fl6184j0
+:END:
 ** TODO advise ~evil-insert~ in eshell
+:PROPERTIES:
+:CUSTOM_ID: Various-TODOs-advise-evil-insert-in-eshellc4v6fl6184j0
+:END:
 Advise ~evil-insert~ to go to the end of the buffer while in
 ~eshell-mode~.
 ** TODO Write macro wrapper around ~general~
+:PROPERTIES:
+:CUSTOM_ID: Various-TODOs-Write-macro-wrapper-around-generalfew6fl6184j0
+:END:
 Write a macro wrapper around ~general~ for when an evil state is used in
 order to make the keybind available when in ~insert-mode~ through ~M-m~.
