@@ -3155,6 +3155,20 @@ org-mode. ~mixed-pitch~ comes to the rescue!
     (add-hook 'org-agenda-mode-hook (lambda () (mixed-pitch-mode -1))))
 #+end_src
 
+With this, I also use ~org-pretty-tables~ in order to use some
+capabilities of Unicode in order to make tables nicer to look at.
+#+begin_src emacs-lisp
+  (use-package org-pretty-table
+    :defer t
+    :after org
+    :straight (org-pretty-table :type git
+                                :host github
+                                :repo "Fuco1/org-pretty-table"
+                                :build t)
+    :hook (org-mode . org-pretty-table-mode)
+    :commands (org-pretty-table-mode global-org-pretty-table-mode))
+#+end_src
+
 I have an issue with org-mode’s emphasis markers: I find them ugly. I
 can of course hide them if I simply set ~org-hide-emphasis-markers~ to
 ~t~, but it makes editing hard since I never know whether I am before or
@@ -3174,6 +3188,17 @@ otherwise they will remain hidden! Very cool!
           org-appear-autoentities   t
           org-appear-autosubmarkers t)
     (run-at-time nil nil #'org-appear--set-elements))
+#+end_src
+
+Similarly, LaTeX fragments previews are nice and all, but if I have my
+cursor on it, I want to see the LaTeX source code and modify it, not
+just the generated image!
+#+begin_src emacs-lisp
+  (use-package org-fragtog
+    :defer t
+    :after org
+    :straight (:build t)
+    :hook (org-mode . org-fragtog-mode))
 #+end_src
 
 Tired of seeing lots of actual stars ~*~ in your headers, and you want a
@@ -3212,14 +3237,23 @@ icons!
                                       ,(all-the-icons-faicon "square"   :height 1.1 :v-adjust 0.0))))
 #+end_src
 
-Finally, ~org-sticky-header-mode~ reminds you where you are in your org
-files at the top of your window.
+/Org Outline Tree/ is a better way of managing my org files’ outline.
 #+begin_src emacs-lisp
-  (use-package org-sticky-header
-    :straight (:build t)
+  (use-package org-ol-tree
+    :defer t
     :after org
-    :hook (org-mode . org-sticky-header-mode))
+    :straight (org-ol-tree :build t
+                           :host github
+                           :type git
+                           :repo "Townk/org-ol-tree")
+    :general
+    (:keymaps 'org-mode-map
+     :states 'normal
+     :prefix ","
+     "O" #'org-ol-tree))
 #+end_src
+
+#+RESULTS:
 
 ** Project Management
 :PROPERTIES:
