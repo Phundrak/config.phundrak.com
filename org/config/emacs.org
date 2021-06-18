@@ -2701,9 +2701,7 @@ Markdown!
 #+begin_src emacs-lisp
   (use-package ox-gfm
     :after ox
-    :straight (:build t)
-    :init
-    (require 'ox-gfm))
+    :straight (:build t))
 #+end_src
 
 Another backend for exporting files through org I like is ~ox-epub~
@@ -2711,9 +2709,7 @@ which, as you can guess, exports org files to the [[https://www.w3.org/publishin
 #+begin_src emacs-lisp
   (use-package ox-epub
     :after ox
-    :straight (:build t)
-    :init
-    (require 'ox-epub))
+    :straight (:build t))
 #+end_src
 
 Yet another exporter I enjoy is [[https://github.com/dantecatalfamo/ox-ssh][~ox-ssh~]] with which I manage my
@@ -2722,9 +2718,7 @@ servers on my repos though.
 #+begin_src emacs-lisp
   (use-package ox-ssh
     :after ox
-    :straight (:build t)
-    :init
-    (require 'ox-ssh))
+    :straight (:build t))
 #+end_src
 
 **** LaTeX
