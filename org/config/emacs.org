@@ -832,6 +832,7 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 :PROPERTIES:
 :CUSTOM_ID: Keybinding-Management-Hydra0970fl6184j0
 :END:
+[[https://github.com/abo-abo/hydra][Hydra]] is a simple menu creator for keybindings.
 #+begin_src emacs-lisp
   (use-package hydra
     :straight (:build t)
@@ -846,7 +847,12 @@ The following hydra allows me to quickly zoom in and out in the
 current buffer.
 #+begin_src emacs-lisp
   (defhydra hydra-zoom ()
-    "Zoom current buffer."
+    "
+  ^Zoom^                 ^Other
+  ^^^^^^^--------------------------
+  [_t_/_s_] zoom in/out  [_q_] quit
+  [_0_]^^   reset zoom
+  "
     ("t" text-scale-increase "zoom in")
     ("s" text-scale-decrease "zoom out")
     ("0" text-scale-adjust "reset")
@@ -857,21 +863,48 @@ Similarly, this one is also inspired from Spacemacs and allows the
 user to interact with the width of the buffer in ~writeroom~.
 #+begin_src emacs-lisp
   (defhydra writeroom-buffer-width ()
-    "Change the width of a `writeroom-mode' buffer."
+    "
+  ^Width^        ^Other
+  ^^^^^^^^-----------------------
+  [_t_] enlarge  [_r_/_0_] adjust
+  [_s_] shrink   [_q_]^^   quit
+  "
     ("q" nil :exit t)
     ("t" writeroom-increase-width "enlarge")
     ("s" writeroom-decrease-width "shrink")
-    ("r" writeroom-adjust-width   "adjust"))
+    ("r" writeroom-adjust-width   "adjust")
+    ("0" writeroom-adjust-width   "adjust"))
 #+end_src
 
 Another similar one is for ~mu4e-view-mode~ that allows me to shrink or
 grow the ~mu4e-headers~ buffer when viewing an email.
 #+begin_src emacs-lisp
   (defhydra mu4e-headers-split-adjust-width ()
-    "Change the width of a `mu4e-headers' buffer."
+    "
+  ^Zoom^                        ^Other
+  ^^^^^^^---------------------------------
+  [_t_/_s_] shrink/enlarge view [_q_] quit
+  "
     ("q" nil :exit t)
     ("t" mu4e-headers-split-view-shrink "shrink")
     ("s" mu4e-headers-split-view-grow "enlarge"))
+#+end_src
+
+Similarly still, this one allows me to manage the size my Emacs
+windows.
+#+begin_src emacs-lisp
+  (defhydra windows-adjust-size ()
+    "
+  ^Zoom^                                ^Other
+  ^^^^^^^-----------------------------------------
+  [_t_/_s_] shrink/enlarge vertically   [_q_] quit
+  [_c_/_r_] shrink/enlarge horizontally
+  "
+    ("q" nil :exit t)
+    ("c" shrink-window)
+    ("r" enlarge-window)
+    ("t" enlarge-window-horizontally)
+    ("s" shrink-window-horizontally))
 #+end_src
 
 * Packages Configuration
@@ -3929,6 +3962,7 @@ Undefining some stuff to make keybind prefixes work correctly.
     "U"   #'undo-tree-visualize
 
     "w"   '(nil :wk "windows")
+    "w."  #'windows-adjust-size/body
     "w-"  #'split-window-below-and-focus
     "w/"  #'split-window-right-and-focus
     "w$"  #'winum-select-window-by-number
