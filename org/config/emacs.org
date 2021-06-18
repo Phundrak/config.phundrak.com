@@ -629,7 +629,6 @@ but also because with it I can specify where to retrieve packages that
 are not on MELPA or ELPA but on Github and other online Git
 repositories too.
 #+begin_src emacs-lisp
-
   (defvar bootstrap-version)
   (defvar comp-deferred-compilation-deny-list ()) ; workaround, otherwise straight shits itself
   (let ((bootstrap-file
@@ -1642,6 +1641,89 @@ notification system, and I’ll activate the modeline notification.
 #+begin_src emacs-lisp
   (setq pdf-view-restore-filename (expand-file-name ".tmp/pdf-view-restore"
                                                     user-emacs-directory))
+#+end_src
+
+*** Project Management
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Managementi9n5fl6184j0
+:END:
+**** Magit
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Magitvso5fl6184j0
+:END:
+Magit is an awesome wrapper around Git for Emacs! Very often, I go
+from disliking to really hating Git GUI clients because they often
+obfuscate which Git commands are used to make things happen. Such a
+thing doesn’t happen with Magit, it’s pretty transparent but it still
+provides some awesome features and visualizations of what you are
+doing and what Git is doing! In short, I absolutely love it!
+#+begin_src emacs-lisp
+  (use-package magit
+    :straight (:build t)
+    :defer t
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+    :config
+    (progn
+      (general-define-key
+       :keymaps '(git-rebase-mode-map)
+       "C-t" #'evil-next-line
+       "C-s" #'evil-previous-line)
+      (general-define-key
+       :keymaps 'git-rebase-mode-map
+       :state 'normal
+       :prefix ","
+       "," #'with-editor-finish
+       "k" #'with-editor-cancel
+       "a" #'with-editor-cancel)))
+#+end_src
+
+[[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
+display in the Magit buffer a list of TODOs found in the current
+project to remind you of what to do next.
+#+begin_src emacs-lisp
+  (use-package magit-todos
+    :straight (:build t)
+    :after magit
+    :config
+    (setq magit-todos-ignore-case t))
+#+end_src
+
+**** Forge
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Forgelcq5fl6184j0
+:END:
+*NOTE*: Make sure to configure a GitHub token before using this
+ package!
+- [[https://magit.vc/manual/forge/Token-Creation.html#Token-Creation][Token Creation]]
+- [[https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started][Getting started]]
+#+begin_src emacs-lisp
+  (use-package forge
+    :after magit
+    :straight (:build t))
+#+end_src
+
+**** Projectile
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Project-Management-Projectilesvr5fl6184j0
+:END:
+#+begin_src emacs-lisp
+  (use-package projectile
+    :straight (:build t)
+    :defer t
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    ;; NOTE: Set this to the folder where you keep your Git repos!
+    (setq projectile-switch-project-action #'projectile-dired))
+
+  (use-package counsel-projectile
+    :straight (:build t)
+    :after (counsel projectile)
+    :config (counsel-projectile-mode))
 #+end_src
 
 *** Screenshot
@@ -3277,89 +3359,6 @@ icons!
 #+end_src
 
 #+RESULTS:
-
-** Project Management
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Project-Managementi9n5fl6184j0
-:END:
-*** Magit
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Project-Management-Magitvso5fl6184j0
-:END:
-Magit is an awesome wrapper around Git for Emacs! Very often, I go
-from disliking to really hating Git GUI clients because they often
-obfuscate which Git commands are used to make things happen. Such a
-thing doesn’t happen with Magit, it’s pretty transparent but it still
-provides some awesome features and visualizations of what you are
-doing and what Git is doing! In short, I absolutely love it!
-#+begin_src emacs-lisp
-  (use-package magit
-    :straight (:build t)
-    :defer t
-    :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-    :config
-    (progn
-      (general-define-key
-       :keymaps '(git-rebase-mode-map)
-       "C-t" #'evil-next-line
-       "C-s" #'evil-previous-line)
-      (general-define-key
-       :keymaps 'git-rebase-mode-map
-       :state 'normal
-       :prefix ","
-       "," #'with-editor-finish
-       "k" #'with-editor-cancel
-       "a" #'with-editor-cancel)))
-#+end_src
-
-[[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
-display in the Magit buffer a list of TODOs found in the current
-project to remind you of what to do next.
-#+begin_src emacs-lisp
-  (use-package magit-todos
-    :straight (:build t)
-    :after magit
-    :config
-    (setq magit-todos-ignore-case t))
-#+end_src
-
-*** Forge
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Project-Management-Forgelcq5fl6184j0
-:END:
-*NOTE*: Make sure to configure a GitHub token before using this
- package!
-- [[https://magit.vc/manual/forge/Token-Creation.html#Token-Creation][Token Creation]]
-- [[https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started][Getting started]]
-#+begin_src emacs-lisp
-  (use-package forge
-    :after magit
-    :straight (:build t))
-#+end_src
-
-*** Projectile
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Project-Management-Projectilesvr5fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (use-package projectile
-    :straight (:build t)
-    :defer t
-    :diminish projectile-mode
-    :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :init
-    ;; NOTE: Set this to the folder where you keep your Git repos!
-    (setq projectile-switch-project-action #'projectile-dired))
-
-  (use-package counsel-projectile
-    :straight (:build t)
-    :after (counsel projectile)
-    :config (counsel-projectile-mode))
-#+end_src
 
 ** Programming languages
 :PROPERTIES:
