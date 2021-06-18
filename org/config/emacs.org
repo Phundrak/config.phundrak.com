@@ -1986,6 +1986,8 @@ Finally, let’s make ~ivy~ richer:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Evil-Nerd-Commenterd2w1fl6184j0
 :END:
+Emacs’ default commenting system is nice, but I don’t find it smart
+enough for me.
 #+begin_src emacs-lisp
   (use-package evil-nerd-commenter
     :after evil
@@ -2040,13 +2042,16 @@ escaping your strings!
 :CUSTOM_ID: Packages-Configuration-Editing-Writeroomxt12fl6184j0
 :END:
 On the other hand, ~writeroom~ allows the user to enter a
-distraction-free mode of Emacs, and I like that!
+distraction-free mode of Emacs, and I like that! But the default width
+is a bit too small for me, and I prefer not to go fullscren.
 #+begin_src emacs-lisp
   (use-package writeroom-mode
     :defer t
     :straight (:build t)
     :config
-    (setq writeroom-width 100))
+    (setq writeroom-width             100
+          writeroom-fullscreen-effect nil
+          writeroom-maximize-window   nil))
 #+end_src
 
 ** Emacs built-ins
@@ -3955,8 +3960,8 @@ Undefining some stuff to make keybind prefixes work correctly.
     "wo"  #'other-window
     "wD"  #'delete-other-windows
     "ww"  '(nil :wk "writeroom")
+    "ww." #'writeroom-buffer-width/body
     "www" #'writeroom-mode
-    "wwb" #'writeroom-buffer-width/body
 
     "wc"  #'evil-window-left
     "wt"  #'evil-window-down
