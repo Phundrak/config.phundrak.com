@@ -2462,9 +2462,6 @@ supported natively. I will describe them here.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Tramp-Yadma8f2fl6184j0
 :END:
-# ~yadm~ is the utility I use for managing my dotfiles, and it is a wrapper In
-# order to manage my dotfiles, I use the following shortcut to launch Magit Status
-# for ~yadm~:
 [[https://yadm.io/][~yadm~]] is a git wrapper made to easily manage your dotfiles. It has
 loads of features I don’t use (the main one I like but don’t use is
 its [[https://yadm.io/docs/templates][Jinja-like host and OS-aware syntax]]), but unfortunately Magit
