@@ -1702,19 +1702,33 @@ doing and what Git is doing! In short, I absolutely love it!
     :defer t
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-    :config
-    (progn
-      (general-define-key
-       :keymaps '(git-rebase-mode-map)
-       "C-t" #'evil-next-line
-       "C-s" #'evil-previous-line)
-      (general-define-key
-       :keymaps 'git-rebase-mode-map
-       :state 'normal
-       :prefix ","
-       "," #'with-editor-finish
-       "k" #'with-editor-cancel
-       "a" #'with-editor-cancel)))
+    :general
+    (:keymaps '(git-rebase-mode-map)
+     "C-t" #'evil-next-line
+     "C-s" #'evil-previous-line)
+    (:keymaps 'git-rebase-mode-map
+     :states 'normal
+     :prefix ","
+     "," #'with-editor-finish
+     "k" #'with-editor-cancel
+     "a" #'with-editor-cancel)
+    (:states 'normal
+     :prefix "SPC"
+     "g"   '(nil :wk "git")
+     "gb"  #'magit-blame
+     "gc"  #'magit-clone
+     "gd"  #'magit-dispatch
+     "gi"  #'magit-init
+     "gs"  #'magit-status
+     "gy"  #'my/yadm
+     "gS"  #'magit-stage-file
+     "gU"  #'magit-unstage-file
+
+     "gf"  '(nil :wk "file")
+     "gfd" #'magit-diff
+     "gfc" #'magit-file-checkout
+     "gfl" #'magit-file-dispatch
+     "gfF" #'magit-find-file))
 #+end_src
 
 [[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
@@ -3913,21 +3927,6 @@ Undefining some stuff to make keybind prefixes work correctly.
     "fh"  #'hexl-find-file
     "fr"  #'counsel-recentf
     "fs"  #'save-buffer
-
-    "g"   '(nil :wk "git")
-    "gc"  #'magit-clone
-    "gd"  #'magit-dispatch
-    "gi"  #'magit-init
-    "gs"  #'magit-status
-    "gy"  #'my/yadm
-    "gS"  #'magit-stage-file
-    "gU"  #'magit-unstage-file
-
-    "gf"  '(nil :wk "file")
-    "gfd" #'magit-diff
-    "gfc" #'magit-file-checkout
-    "gfl" #'magit-file-dispatch
-    "gfF" #'magit-find-file
 
     "h"   '(nil :wk "help")
     "hk"  #'which-key-show-top-level
