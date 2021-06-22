@@ -1584,6 +1584,10 @@ notification system, and I’ll activate the modeline notification.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Nov0da1fl6184j0
 :END:
+Nov is a major-mode for reading EPUB files within Emacs. Since I have
+it, I don’t need any other Epub reader on my computer! Plus this one
+is customizable and programmable, why would I use any other EPUB
+reader?
 #+begin_src emacs-lisp
   (use-package nov
     :straight (:build t)
@@ -1593,19 +1597,21 @@ notification system, and I’ll activate the modeline notification.
     (:keymaps 'nov-mode-map
      :states 'normal
      "SPC" nil
-     "["   #'nov-previous-document
-     "]"   #'nov-next-document
      "c"   #'nov-previous-document
      "t"   #'nov-scroll-up
-     "C-d" #'nov-scroll-down
+     "C-d" #'nov-scroll-up
      "s"   #'nov-scroll-down
-     "C-u" #'nov-scroll-up
+     "C-u" #'nov-scroll-down
      "r"   #'nov-next-document
      "gm"  #'nov-display-metadata
+     "gn"  #'nov-next-document
+     "gp"  #'nov-previous-document
      "gr"  #'nov-render-document
      "gt"  #'nov-goto-toc
      "gv"  #'nov-view-source
-     "gV"  #'nov-view-content-source))
+     "gV"  #'nov-view-content-source)
+    :config
+    (setq nov-text-width 95))
 #+end_src
 
 *** PDF Tools
