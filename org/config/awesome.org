@@ -1314,6 +1314,7 @@ to which tag by default.
 | class           | firefox    |   3 |
 | class           | Nemo       |   4 |
 | class           | Gimp*      |   5 |
+| class           | Signal     |   8 |
 | class           | Steam      |   9 |
 | class           | Mattermost |   0 |
 | class           | discord    |   0 |
@@ -1328,14 +1329,16 @@ to which tag by default.
              ",\n")
 #+END_SRC
 
-#+RESULTS[ec74b9e45bd477d22e2865de30a9c64973cf0927]: rules-default-tags-generate
+#+RESULTS[b1e188e8810460c2f84b6d9cb819430af300d9d0]: rules-default-tags-generate
 : {rule = {class = "Emacs"}, properties = {screen = 1, tag = "2"} },
 : {rule = {class = "firefox"}, properties = {screen = 1, tag = "3"} },
 : {rule = {class = "Nemo"}, properties = {screen = 1, tag = "4"} },
 : {rule = {class = "Gimp*"}, properties = {screen = 1, tag = "5"} },
+: {rule = {class = "Signal"}, properties = {screen = 1, tag = "8"} },
+: {rule = {class = "Steam"}, properties = {screen = 1, tag = "9"} },
+: {rule = {class = "Mattermost"}, properties = {screen = 1, tag = "0"} },
 : {rule = {class = "discord"}, properties = {screen = 1, tag = "0"} },
-: {rule = {class = "mattermost"}, properties = {screen = 1, tag = "0"} },
-: {rule = {class = "Steam"}, properties = {screen = 1, tag = "9"} }
+: {rule = {class = "lightcord"}, properties = {screen = 1, tag = "0"} }
 
 This is what these rules look like:
 #+NAME: rules-default-tags
