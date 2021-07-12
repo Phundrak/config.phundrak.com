@@ -833,27 +833,33 @@ Here is a description of the tables displayed below:
 #+NAME: gen-sc-text
 #+BEGIN_SRC emacs-lisp
   (lambda (x)
-    (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
-            (nth 1 x) (nth 0 x)
-            (cond
-             ((string= "yes" (nth 2 x))
-              (format "function(%s) %s end"
-                      (if (string= (nth 6 x) "yes") "c" "")
-                      (nth 3 x)))
-             ((string= "shell" (nth 2 x))
-              (format "function(%s) awful.spawn.with_shell(\"%s\") end"
-                      (if (string= (nth 6 x) "yes") "c" "")
-                      (nth 3 x)))
-             ((string= "terminal" (nth 2 x))
-              (format "function(%s) awful.spawn(terminal..\" -e %s\") end"
-                      (if (string= (nth 6 x) "yes") "c" "")
-                      (nth 3 x)))
-             ((string= "spawn" (nth 2 x))
-              (format "function(%s) awful.spawn(\"%s\") end"
-                      (if (string= (nth 6 x) "yes") "c" "")
-                      (nth 3 x)))
-             (t (nth 3 x)))
-            (nth 4 x) (nth 5 x)))
+    (let ((key         (nth 0 x))
+          (modifiers   (nth 1 x))
+          (lambda-p    (pcase (nth 2 x)
+                         ("yes" 'lambda)
+                         ("shell" 'shell)
+                         ("terminal" 'terminal)
+                         ("spawn" 'spawn)
+                         (otherwise nil)))
+          (action      (nth 3 x))
+          (description (nth 4 x))
+          (group       (nth 5 x))
+          (clientkey   (if (string= (nth 6 x) "yes") "c" "")))
+      (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
+              modifiers
+              key
+              (pcase lambda-p
+                ('lambda
+                 (format "function(%s) %s end" clientkey action))
+                ('shell
+                 (format "function(%s) awful.spawn.with_shell(\"%s\") end" clientkey action))
+                ('terminal
+                 (format "function(%s) awful.spawn(terminal..\" -e %s\" end" clientkey action))
+                ('spawn
+                 (format "function(%s) awful.spawn(\"%s\") end" clientkey action))
+                (otherwise action))
+              description
+              group)))
 #+END_SRC
 
 #+NAME: gen-sc-glob
@@ -861,8 +867,9 @@ Here is a description of the tables displayed below:
   (mapconcat
    <<gen-sc-text>>
    (seq-filter (lambda (x)
-                 (or (not (nth 6 x))
-                     (string= "no" (nth 6 x))))
+                 (let ((clientkey-p (nth 6 x)))
+                     (or (not (nth 6 x))
+                         (string= "no" (nth 6 x)))))
                table)
    ",\n")
 #+END_SRC
