@@ -22,8 +22,8 @@
 #
 ################################################################################
 CHECK=            # Run tests. May fail, this is developement after all.
-CLANG=            # Use clang.
-GOLD="YES"        # Use the gold linker.
+CLANG="YES"       # Use clang.
+GOLD=             # Use the gold linker.
 LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
                   # attempting to use it with clang.
 JIT="YES"         # Enable native just-in-time compilation. libgccjit is in AUR.
@@ -60,7 +60,7 @@ if [[ $CLI == "YES" ]] ; then
 else
     pkgname="emacs-phundrak-git"
 fi
-pkgver=28.0.50.148754
+pkgver=28.0.50.148919
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -72,9 +72,9 @@ makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 replaces=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 # If Savannah fails for reasons, use Github's mirror
-#source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
+source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 md5sums=('SKIP')
 ################################################################################
