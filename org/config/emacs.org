@@ -2252,7 +2252,8 @@ is a bit too small for me, and I prefer not to go fullscren.
     :config
     (setq writeroom-width             100
           writeroom-fullscreen-effect nil
-          writeroom-maximize-window   nil))
+          writeroom-maximize-window   nil
+          writeroom-mode-line         t))
 #+end_src
 
 ** Emacs built-ins
@@ -2329,11 +2330,11 @@ tree. And by default, I want ~dired-git-info~ to hide file details.
 #+begin_src emacs-lisp
   (use-package dired-git-info
     :after dired
+    :hook (dired-after-reading . dired-git-info-auto-enable)
     :general
     (:keymaps 'dired-mode-map
      :states 'normal
      ")" #'dired-git-info-mode)
-    :hook (dired-after-reading . dired-git-info-auto-enable)
     :config
     (setq dgi-auto-hide-details-p t))
 #+end_src
