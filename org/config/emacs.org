@@ -1633,51 +1633,51 @@ reader?
     :magic ("%PDF" . pdf-view-mode)
     :straight (:build t)
     :mode (("\\.pdf\\'" . pdf-view-mode))
+    :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
     :config
     (progn
       (with-eval-after-load 'pdf-view
         (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
       (general-define-key
        :keymaps 'pdf-view-mode-map
-       "SPC" nil)
+       "SPC" nil
+       ","   nil)
       (general-define-key
        :states 'normal
        :keymaps 'pdf-view-mode-map
        "SPC" nil
+       ","   nil
        "y"   #'pdf-view-kill-ring-save
        "t"   #'evil-collection-pdf-view-next-line-or-next-page
-       "s"   #'evil-collection-pdf-view-previous-line-or-previous-page))
-    (general-define-key
-     :states 'motion
-     :keymaps 'pdf-view-mode-map
-     :prefix "SPC"
-      "a"  '(nil :which-key "annotations")
-      "aD" #'pdf-annot-delete
-      "at" #'pdf-annot-attachment-dired
-      "ah" #'pdf-annot-add-highlight-markup-annotation
-      "al" #'pdf-annot-list-annotations
-      "am" #'pdf-annot-markup-annotation
-      "ao" #'pdf-annot-add-strikeout-markup-annotation
-      "as" #'pdf-annot-add-squiggly-markup-annotation
-      "at" #'pdf-annot-add-text-annotation
-      "au" #'pdf-annot-add-underline-markup-annotation
+       "s"   #'evil-collection-pdf-view-previous-line-or-previous-page)
+      (general-define-key
+       :states 'motion
+       :keymaps 'pdf-view-mode-map
+       :prefix ","
+        "a"  '(nil :which-key "annotations")
+        "aD" #'pdf-annot-delete
+        "at" #'pdf-annot-attachment-dired
+        "ah" #'pdf-annot-add-highlight-markup-annotation
+        "al" #'pdf-annot-list-annotations
+        "am" #'pdf-annot-markup-annotation
+        "ao" #'pdf-annot-add-strikeout-markup-annotation
+        "as" #'pdf-annot-add-squiggly-markup-annotation
+        "at" #'pdf-annot-add-text-annotation
+        "au" #'pdf-annot-add-underline-markup-annotation
 
-      "f"  '(nil :which-key "fit")
-      "fw" #'pdf-view-fit-width-to-window
-      "fh" #'pdf-view-fit-height-to-window
-      "fp" #'pdf-view-fit-page-to-window
+        "f"  '(nil :which-key "fit")
+        "fw" #'pdf-view-fit-width-to-window
+        "fh" #'pdf-view-fit-height-to-window
+        "fp" #'pdf-view-fit-page-to-window
 
-      "s"  '(nil :which-key "slice/search")
-      "sb" #'pdf-view-set-slice-from-bounding-box
-      "sm" #'pdf-view-set-slice-using-mouse
-      "sr" #'pdf-view-reset-slice
-      "ss" #'pdf-occur
+        "s"  '(nil :which-key "slice/search")
+        "sb" #'pdf-view-set-slice-from-bounding-box
+        "sm" #'pdf-view-set-slice-using-mouse
+        "sr" #'pdf-view-reset-slice
+        "ss" #'pdf-occur
 
-      "o"  'pdf-outline
-      "m"  'pdf-view-midnight-minor-mode)
-
-    :hook
-    (pdf-tools-enabled . pdf-view-midnight-minor-mode))
+        "o"  'pdf-outline
+        "m"  'pdf-view-midnight-minor-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
