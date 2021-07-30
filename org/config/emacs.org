@@ -1986,6 +1986,19 @@ project to remind you of what to do next.
     (setq magit-todos-ignore-case t))
 #+end_src
 
+Finally, it is also possible to use Gitflow’s framework with Magit
+with ~magit-gitflow~:
+#+begin_src emacs-lisp
+  (use-package magit-gitflow
+    :defer t
+    :after magit
+    :straight (magit-gitflow :build t
+                             :type git
+                             :host github
+                             :repo "jtatarik/magit-gitflow")
+    :hook (magit-mode . turn-on-magit-gitflow))
+#+end_src
+
 **** Forge
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Project-Management-Forgelcq5fl6184j0
@@ -2004,6 +2017,12 @@ project to remind you of what to do next.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Project-Management-Projectilesvr5fl6184j0
 :END:
+#+begin_src emacs-lisp
+  (use-package ripgrep
+    :straight (:build t)
+    :defer t)
+#+end_src
+
 #+begin_src emacs-lisp
   (use-package projectile
     :straight (:build t)
@@ -2188,6 +2207,22 @@ since been archived. New implementations then appeared, one of them is
     (setq parinfer-rust-auto-download     t
           parinfer-rust-library-directory (concat user-emacs-directory
                                                   "parinfer-rust/")))
+#+end_src
+
+*** Smartparens
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Smartparens-zve93mk0k4j0
+:END:
+~smartparens~ is a package similar to ~parinfer~, but while the latter is
+more specialized for Lisp dialects, ~smartparens~ works better with
+other programming languages that still uses parenthesis, but not as
+much as Lisp dialects; think for example C, C++, Rust, Javascript, and
+so on.
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :defer t
+    :straight (:build t)
+    :hook (prog-mode . smartparens-mode))
 #+end_src
 
 *** ~string-edit~
