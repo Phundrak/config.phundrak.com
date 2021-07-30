@@ -905,10 +905,10 @@ windows.
   [_c_/_r_] shrink/enlarge horizontally
   "
     ("q" nil :exit t)
-    ("c" shrink-window)
-    ("r" enlarge-window)
-    ("t" enlarge-window-horizontally)
-    ("s" shrink-window-horizontally))
+    ("c" shrink-window-horizontally)
+    ("t" enlarge-window)
+    ("s" shrink-window)
+    ("r" enlarge-window-horizontally))
 #+end_src
 
 * Packages Configuration
