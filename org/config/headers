@@ -10,7 +10,13 @@
 #+OPTIONS: H:4 broken_links:mark email:t ^:{}
 #+KEYWORDS: dotfiles, linux, emacs, configuration, phundrak, drakpa
 
-# ### HTML #####################################################################
+# ### LaTeX #############################################################
+
+#+latex_class:         article
+#+latex_class_options: [a4paper]
+#+latex_header:        \input{headers.tex}
+
+# ### HTML #############################################################
 
 #+HTML_DOCTYPE: html5
 #+HTML_HEAD: <meta property="og:image" content="https://cdn.phundrak.com/img/rich_preview.png" />
@@ -45,5 +51,5 @@
 #+html_head: </script>
 #+html_head: <!-- End Matomo Code -->
 
-# ### MACROS ###################################################################
+# ### MACROS ############################################################
 #+MACRO: newline @@latex:\hspace{0pt}\\@@ @@html:<br>@@
