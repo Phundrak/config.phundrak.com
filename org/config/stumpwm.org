@@ -908,7 +908,7 @@ This translates to:
 #+begin_src lisp
   (defvar *my-applications-keymap*
     (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+      <<keybinds-gen(map="m", keybinds=application-keymap)>>
       m))
 #+end_src
 
