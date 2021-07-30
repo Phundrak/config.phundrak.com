@@ -14,7 +14,7 @@
 configuration {
         show-icons:   true;
         sidebar-mode: false;
-        modi:         "window,ssh,drun";
+        modi:         "window,ssh,drun,combi";
 }
 
 * {
