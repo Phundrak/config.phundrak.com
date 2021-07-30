@@ -86,7 +86,6 @@ info "Terminal" term
 info "CPU" cpu
 info "GPU" gpu
 info "Memory" memory
-info "Disks" disks
 #+end_example
 
 Hence, the function looks like so:
