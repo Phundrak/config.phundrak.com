@@ -2560,6 +2560,50 @@ that.
     :after eshell)
 #+end_src
 
+*** Info
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Info-r7x90j20c5j0
+:END:
+Something that irks me as I use evil and a leader key is that the
+space bar is already bound to a function, ~Info-scroll-up~. Same goes
+for my local leader ~,~ which is bound to ~Info-index-next~. I don’t want
+that, so let’s unbind them:
+#+begin_src emacs-lisp
+  (general-define-key
+   :keymaps '(Info-mode-map)
+   "SPC" nil
+   "," nil)
+  (general-define-key
+   :keymaps '(Info-mode-map)
+   :states 'normal
+   "SPC" nil
+   "," nil)
+#+end_src
+
+Alright, now that we correctly unbound them, my global leader key
+works again, and I’m free to use the comma as a local leader, so let’s
+do that:
+#+begin_src emacs-lisp
+  (general-define-key
+   :keymaps 'Info-mode-map
+   :states 'normal
+   "c" #'Info-prev
+   "t" #'evil-scroll-down
+   "s" #'evil-scroll-up
+   "r" #'Info-next)
+
+  (general-define-key
+   :keymaps 'Info-mode-map
+   :states 'normal
+   :prefix ","
+   "?" #'Info-toc
+   "b" #'Info-history-back
+   "f" #'Info-history-forward
+   "m" #'Info-menu
+   "t" #'Info-top-node
+   "u" #'Info-up)
+#+end_src
+
 *** Tramp
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Tramplqd2fl6184j0
