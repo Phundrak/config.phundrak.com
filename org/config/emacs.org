@@ -4009,6 +4009,11 @@ Undefining some stuff to make keybind prefixes work correctly.
    "SPC" nil)
 
   (general-define-key
+   :keymaps 'global-map
+   "mouse-2" nil
+   "mouse-3" nil)
+
+  (general-define-key
    :keymaps 'evil-motion-state-map
    "," nil)
 
