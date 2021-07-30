@@ -2444,9 +2444,26 @@ directories don’t, similarly to the ~-p~ option passed to ~mkdir~.
     (cd dir))
 #+end_src
 
-**** Custom Functions
+**** Autosuggestion
 :PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Custom-Functionsw492fl6184j0
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Autosuggestion-kf6ipm1195j0
+:END:
+I really like fish’s autosuggestion feature, so let’s reproduce it
+here!
+#+begin_src emacs-lisp
+  (use-package esh-autosuggest
+    :defer t
+    :after eshell
+    :straight (:build t)
+    :hook (eshell-mode . esh-autosuggest-mode)
+    :general
+    (:keymaps 'esh-autosuggest-active-map
+     "C-e" #'company-complete-selection))
+#+end_src
+
+**** Commands
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Commands-n8w3fh2195j0
 :END:
 When I’m in Eshell, sometimes I wish to open multiple files at once in
 Emacs.  For this, when I have several arguments for ~find-file~, I want
@@ -2467,6 +2484,17 @@ that.
     "Open a new instance of eshell."
     (interactive)
     (eshell 'N))
+#+end_src
+
+A very useful command I use often in fish is ~z~, a port from bash’s and
+zsh’s command that allows to jump around directories based on how
+often we go in various directories.
+#+begin_src emacs-lisp
+  (use-package eshell-z
+    :defer t
+    :after eshell
+    :straight (:build t)
+    :hook (eshell-mode . (lambda () (require 'eshell-z))))
 #+end_src
 
 **** Environment Variables
@@ -2511,6 +2539,25 @@ I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve writte
     :config
     (setq eshell-info-banner-width 80
           eshell-info-banner-partition-prefixes '("/dev" "zroot" "tank")))
+#+end_src
+
+Another feature I like is fish-like syntax highlight, which brings
+some more colors to Eshell.
+#+begin_src emacs-lisp
+  (use-package eshell-syntax-highlighting
+    :after esh-mode
+    :defer t
+    :config
+    (eshell-syntax-highlighting-global-mode +1))
+#+end_src
+
+Powerline prompts are nice, git-aware prompts are even better!
+~eshell-git-prompt~ is nice, but I prefer to write my own package for
+that.
+#+begin_src emacs-lisp
+  (use-package powerline-eshell
+    :load-path "~/fromGIT/emacs-packages/powerline-eshell.el/"
+    :after eshell)
 #+end_src
 
 *** Tramp
