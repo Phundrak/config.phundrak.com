@@ -965,21 +965,21 @@ declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
 :CUSTOM_ID: Keybindings-Applications-Screenshots-fa63a5a5
 :END:
 #+NAME: sc-app-screenshot
-| Key   | Modifiers | Lambda? | Action     | What it does                | Group      |
-|-------+-----------+---------+------------+-----------------------------+------------|
-| Print |           | spawn   | scrot      | Screenshot                  | screenshot |
-| Print | control   | spawn   | scrot -s   | Screenshot (area selection) | screenshot |
-| Print | shift     | spawn   | scrot -d 3 | Screenshot (3s delay)       | screenshot |
+| Key   | Modifiers | Lambda? | Action                                       | What it does                | Group      |
+|-------+-----------+---------+----------------------------------------------+-----------------------------+------------|
+| Print |           | spawn   | scrot -e 'mv $f ~/Pictures/Screenshots'      | Screenshot                  | screenshot |
+| Print | control   | spawn   | scrot -s -e 'mv $f ~/Pictures/Screenshots'   | Screenshot (area selection) | screenshot |
+| Print | shift     | spawn   | scrot -d 3 -e 'mv $f ~/Pictures/Screenshots' | Screenshot (3s delay)       | screenshot |
 
 *** Emacs
 :PROPERTIES:
 :CUSTOM_ID: Keybindings-Applications-Emacs-95f8f6a4
 :END:
 #+NAME: sc-app-emacs
-| Key | Modifiers     | Lambda? | Action                       | What it does         | Group |
-|-----+---------------+---------+------------------------------+----------------------+-------|
-| e   | modkey        | spawn   | emacsclient -c -n            | invoke Spacemacs     | emacs |
-| e   | modkey, shift | spawn   | emacs --with-profile vanilla | invoke Vanilla Emacs | emacs |
+| Key | Modifiers     | Lambda? | Action            | What it does         | Group |
+|-----+---------------+---------+-------------------+----------------------+-------|
+| e   | modkey        | spawn   | emacsclient -c -n | invoke Spacemacs     | emacs |
+| e   | modkey, shift | spawn   | emacs             | invoke Vanilla Emacs | emacs |
 
 *** Rofi
 :PROPERTIES:
