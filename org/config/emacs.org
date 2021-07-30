@@ -1821,7 +1821,7 @@ notification system, and I’ll activate the modeline notification.
     (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
     (mu4e-alert-set-default-style 'notifications)
     :config
-    (setq mu4e-alert-interesting-mail-query "<<mu4e-bookmarks-default-filter()>>"))
+    (setq mu4e-alert-interesting-mail-query "flag:unread"))
 #+end_src
 
 *** Nov
@@ -2178,13 +2178,6 @@ enough for me.
     :after evil
     :straight (:build t))
 #+end_src
-
-*** Evil Surround
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Editing-Evil-Surroundiix1fl6184j0
-:END:
-This package allows its user to surround regions with pairs of
-characters easily.
 
 *** Parinfer
 :PROPERTIES:
