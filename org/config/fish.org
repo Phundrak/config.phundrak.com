@@ -233,17 +233,17 @@ my own executables, and some more.
 
 #+NAME: generate-extra-paths
 #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-  (mapconcat (lambda (x) x)
+  (mapconcat #'identity
              paths " \\\n")
 #+END_SRC
 
-#+RESULTS[8b780f78d3d321222408ba76c754c920d95b03ac]: generate-extra-paths
+#+RESULTS[3fd24377f29513d4c7edcd9621d0462665efb403]: generate-extra-paths
 : $HOME/.pub-cache/bin \
-:       $HOME/.local/bin \
-:       $HOME/go/bin \
-:       $HOME/.cargo/bin \
-:       $HOME/.gem/ruby/2.6.0/bin \
-:       $HOME/.cabal/bin
+: $HOME/.local/bin \
+: $HOME/go/bin \
+: $HOME/.cargo/bin \
+: $HOME/.gem/ruby/2.6.0/bin \
+: $HOME/.cabal/bin
 
 So, let’s set our user paths:
 #+BEGIN_SRC fish :noweb yes

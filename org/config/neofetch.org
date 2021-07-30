@@ -59,23 +59,24 @@ interesting information; ~info "Memory" memory~ will look like
 #+NAME: info-elements-gen
 #+BEGIN_SRC emacs-lisp :var table=info-elements-table :cache yes
   (mapconcat (lambda (x)
-               (format "info %s%s"
-                       (if (not (string= (car x) ""))
-                           (format "\"%s\" " (car x))
-                         "")
-                       (cadr x)))
+               (let ((prefix      (car x))
+                     (information (cadr x)))
+                (format "info %s%s"
+                        (if (not (string= prefix ""))
+                            (format "\"%s\" " prefix)
+                          "")
+                        information)))
              table
              "\n")
 #+END_SRC
 
-#+RESULTS[1e66bf48472ad24006f0cb9dc9c86078764ba84e]: info-elements-gen
+#+RESULTS[83eb4aaa554df955ad996157d911eec3a9251628]: info-elements-gen
 #+begin_example
-info line_break
 info title
 info line_break
 info cols
 info line_break
-info "OS" distro
+info "Distro" distro
 info "Kernel" kernel
 info "Uptime" uptime
 info "Packages" packages

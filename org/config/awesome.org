@@ -150,7 +150,7 @@ config file in order to modify which terminal or text editor I use, not that I
 do it often though.
 #+BEGIN_SRC lua
   terminal = "kitty"
-  editor = os.getenv("EDITOR") or "emacsclient -c"
+  editor = os.getenv("EDITOR") or "emacsclient -c -a emacs"
 #+END_SRC
 
 ** Keys
@@ -353,17 +353,20 @@ them, and their order in the table is their order in Awesome.
 
 #+NAME: list-layouts
 #+BEGIN_SRC emacs-lisp :var layouts=table-layouts :cache yes
-  (mapconcat (lambda (x) (if (string= (cadr x) "yes")
-                             (format "awful.layout.suit.%s,\n" (car x))))
+  (mapconcat (lambda (layout)
+               (let ((enabled-p (string= (cadr layout) "yes"))
+                     (layout    (car layout)))
+                (when enabled-p
+                    (format "awful.layout.suit.%s,\n" layout))))
              layouts
              "")
 #+END_SRC
 
-#+RESULTS[0bd0312ff10526c8b24199453ff235cf71425fb5]: list-layouts
+#+RESULTS[bf3bbbd40ecc04ec19d9660abff2080b4f68196a]: list-layouts
 #+begin_example
 awful.layout.suit.magnifier,
-awful.layout.suit.tile,
 awful.layout.suit.tile.left,
+awful.layout.suit.tile,
 awful.layout.suit.tile.bottom,
 awful.layout.suit.tile.top,
 awful.layout.suit.max,
@@ -395,22 +398,18 @@ below.
 :CUSTOM_ID: Top_bar-Menus-cf468ca8
 :END:
 #+NAME: make-menu
-#+BEGIN_SRC emacs-lisp :var menu=table-awesome-menu
-  (mapconcat (lambda (x)
+#+BEGIN_SRC emacs-lisp :var menu=table-main-menu
+  (mapconcat (lambda (item)
                (format "{ \"%s\", %s }"
-                       (car x)
-                       (mapconcat (lambda (y) (format "%s" y))
-                                  (cdr x)
-                                  ",")))
+                       (car item)
+                       (mapconcat #'identity (cdr item) ", ")))
              menu
              ",\n")
 #+END_SRC
 
 #+RESULTS: make-menu
-: { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end }
-: { "edit config", editor .. " " .. awesome.conffile }
-: { "restart", awesome.restart }
-: { "quit", function() awesome.quit() end }
+: { "awesome", awesomewm_menu, beautiful.awesome_icon },
+: { "open terminal", terminal, nil }
 
 It is possible to create actual menus in Awesome, including the one available at
 the top-left corner of the screen. First, let’s declare a menu related to
@@ -847,16 +846,17 @@ Here is a description of the tables displayed below:
       (format "awful.key({%s},\"%s\",%s,\n\t{description=\"%s\",group=\"%s\"})"
               modifiers
               key
-              (pcase lambda-p
-                ('lambda
-                 (format "function(%s) %s end" clientkey action))
-                ('shell
-                 (format "function(%s) awful.spawn.with_shell(\"%s\") end" clientkey action))
-                ('terminal
-                 (format "function(%s) awful.spawn(terminal..\" -e %s\" end" clientkey action))
-                ('spawn
-                 (format "function(%s) awful.spawn(\"%s\") end" clientkey action))
-                (otherwise action))
+              (if (not lambda-p)
+                  action
+                (format "function(%s) %s end" clientkey
+                        (pcase lambda-p
+                          ('lambda action)
+                          ('shell
+                           (format "awful.spawn.with_shell(\"%s\")" action))
+                          ('terminal
+                           (format "awful.spawn(terminal..\" -e %s\")" action))
+                          ('spawn
+                           (format "awful.spawn(\"%s\")" action)))))
               description
               group)))
 #+END_SRC
@@ -867,8 +867,8 @@ Here is a description of the tables displayed below:
    <<gen-sc-text>>
    (seq-filter (lambda (x)
                  (let ((clientkey-p (nth 6 x)))
-                     (or (not (nth 6 x))
-                         (string= "no" (nth 6 x)))))
+                     (or (not clientkey-p)
+                         (string= "no" clientkey-p))))
                table)
    ",\n")
 #+END_SRC
@@ -877,38 +877,14 @@ Here is a description of the tables displayed below:
 #+BEGIN_SRC emacs-lisp :var table=sc-client :cache yes
   (mapconcat
    <<gen-sc-text>>
-   (seq-filter (lambda (x)
-                 (string= "yes" (nth 6 x)))
+   (seq-filter (lambda (keybind)
+                 (string= "yes" (nth 6 keybind)))
                table)
    ",\n")
 #+END_SRC
 
-#+RESULTS[5a0293b89fe106cb2b71ba10d9548b29aa2f9543]: gen-sc-client
-#+begin_example
-awful.key({modkey},"f",function(c) toggle_fullscreen_client(c) end,
-  {description="toggle fullscreen",group="client"}),
-awful.key({modkey},"m",function(c) toggle_maximized(c) end,
-  {description="toggle maximized",group="client"}),
-awful.key({modkey, control},"m",function(c) toggle_vertical_maximized(c) end,
-  {description="toggle vertically maximized",group="client"}),
-awful.key({modkey, shift},"m",function(c) toggle_horizontal_maximized(c) end,
-  {description="toggle horizontally maximized",group="client"}),
-awful.key({modkey, shift},"n",function(c) c.minimized = true end,
-  {description="minimize",group="client"}),
-awful.key({modkey},"o",function(c) c:move_to_screen() end,
-  {description="move to screen",group="client"}),
-awful.key({modkey},"q",function(c) c:kill() end,
-  {description="close client",group="client"}),
-awful.key({modkey},"v",function(c) c.ontop = not c.ontop end,
-  {description="toggle keep on top",group="client"}),
-awful.key({modkey, control},"space",awful.client.floating.toggle,
-  {description="toggle floating",group="client"}),
-awful.key({modkey, control},"Return",function(c) c:swap(awful.client.getmaster()) end,
-  {description="move to master",group="client"})
-#+end_example
-
 #+NAME: sc-tag-num-gen
-#+BEGIN_SRC emacs-lisp :var input=sc-tag-num :results drawer
+#+BEGIN_SRC emacs-lisp :var input=sc-tag-num :results drawer :wrap src lua
   (let (result)
     (dotimes (i 10 result)
       (let* ((j (+ 1 i)))

@@ -706,10 +706,10 @@ working.
 #+NAME: python-packages-gen
 #+BEGIN_SRC emacs-lisp :var packages=python-packages-table[,0]
   (format "pip install --user %s"
-          (s-join " " packages))
+          (string-join packages " "))
 #+END_SRC
 
-#+RESULTS[cb6abaea9d7130a67569af2b4d1a545651bf29ab]: python-packages-gen
+#+RESULTS[29652be1076ffac01e34189067efa8fe9abda9d9]: python-packages-gen
 : pip install --user python-language-server[all] pyls-isort pyls-mypy pyls-black
 
 Let’s install them locally for our user.
