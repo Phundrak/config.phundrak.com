@@ -915,6 +915,241 @@ windows.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configurationije0fl6184j0
 :END:
+** Autocompletion
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletionr8n1fl6184j0
+:END:
+*** Code Autocompletion
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Code-Autocompletion4no1fl6184j0
+:END:
+#+begin_src emacs-lisp
+  (use-package company
+    :straight (:build t)
+    :defer t
+    :hook (company-mode . evil-normalize-keymaps)
+    :init (global-company-mode)
+    :config
+    (setq company-minimum-prefix-length     2
+          company-toolsip-limit             14
+          company-tooltip-align-annotations t
+          company-require-match             'never
+          company-global-modes              '(not erc-mode message-mode help-mode gud-mode)
+          company-frontends
+          '(company-pseudo-tooltip-frontend ; always show candidates in overlay tooltip
+            company-echo-metadata-frontend) ; show selected candidate docs in echo area
+
+          ;; Buffer-local backends will be computed when loading a major
+          ;; mode, so only specify a global default here.
+          company-backends '(company-capf)
+
+          ;; These auto-complete the current selection when
+          ;; `company-auto-complete-chars' is typed. This is too
+          ;; magical. We already have the much more explicit RET and
+          ;; TAB.
+          company-auto-complete       nil
+          company-auto-complete-chars nil
+
+          ;; Only search the current buffer for `company-dabbrev' (a
+          ;; backend that suggests text you open buffers). This prevents
+          ;; Company from causing lag once you have a lot of buffers
+          ;; open.
+          company-dabbrev-other-buffers nil
+
+          ;; Make `company-dabbrev' fully case-sensitive, to improve UX
+          ;; with domai-specific words with particular casing.
+          company-dabbrev-ignore-case nil
+          company-dabbrev-downcase    nil))
+
+  (use-package company-dict
+    :after company
+    :straight (:build t)
+    :config
+    (setq company-dict-dir (expand-file-name "dicts" user-emacs-directory)))
+
+  (use-package company-box
+    :straight (:build t)
+    :after (company all-the-icons)
+    :config
+    (setq company-box-show-single-candidate t
+          company-box-backends-colors       nil
+          company-box-max-candidates        50
+          company-box-icons-alist           'company-box-icons-all-the-icons
+          company-box-icons-all-the-icons
+          (let ((all-the-icons-scale-factor 0.8))
+            `((Unknown       . ,(all-the-icons-material "find_in_page"             :face 'all-the-icons-purple))
+              (Text          . ,(all-the-icons-material "text_fields"              :face 'all-the-icons-green))
+              (Method        . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+              (Function      . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+              (Constructor   . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+              (Field         . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+              (Variable      . ,(all-the-icons-material "adjust"                   :face 'all-the-icons-blue))
+              (Class         . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+              (Interface     . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
+              (Module        . ,(all-the-icons-material "view_module"              :face 'all-the-icons-red))
+              (Property      . ,(all-the-icons-material "settings"                 :face 'all-the-icons-red))
+              (Unit          . ,(all-the-icons-material "straighten"               :face 'all-the-icons-red))
+              (Value         . ,(all-the-icons-material "filter_1"                 :face 'all-the-icons-red))
+              (Enum          . ,(all-the-icons-material "plus_one"                 :face 'all-the-icons-red))
+              (Keyword       . ,(all-the-icons-material "filter_center_focus"      :face 'all-the-icons-red))
+              (Snippet       . ,(all-the-icons-material "short_text"               :face 'all-the-icons-red))
+              (Color         . ,(all-the-icons-material "color_lens"               :face 'all-the-icons-red))
+              (File          . ,(all-the-icons-material "insert_drive_file"        :face 'all-the-icons-red))
+              (Reference     . ,(all-the-icons-material "collections_bookmark"     :face 'all-the-icons-red))
+              (Folder        . ,(all-the-icons-material "folder"                   :face 'all-the-icons-red))
+              (EnumMember    . ,(all-the-icons-material "people"                   :face 'all-the-icons-red))
+              (Constant      . ,(all-the-icons-material "pause_circle_filled"      :face 'all-the-icons-red))
+              (Struct        . ,(all-the-icons-material "streetview"               :face 'all-the-icons-red))
+              (Event         . ,(all-the-icons-material "event"                    :face 'all-the-icons-red))
+              (Operator      . ,(all-the-icons-material "control_point"            :face 'all-the-icons-red))
+              (TypeParameter . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+              (Template      . ,(all-the-icons-material "short_text"               :face 'all-the-icons-green))
+              (ElispFunction . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+              (ElispVariable . ,(all-the-icons-material "check_circle"             :face 'all-the-icons-blue))
+              (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
+              (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))))
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Ivy
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Ivy84q1fl6184j0
+:END:
+My main menu package is ~ivy~ which I use as much as possible –I’ve
+noticed ~helm~ can be slow, very slow in comparison to ~ivy~ so I’ll use
+the latter as much as possible. Actually, only ~ivy~ is installed for
+now. I could have used ~ido~ too, but I find it to be a bit too
+restricted in terms of features compared to ~ivy~.
+#+begin_src emacs-lisp
+  (use-package ivy
+    :straight (:build t)
+    :defer t
+    :diminish
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-l" . ivy-alt-done)
+           ("C-t" . ivy-next-line)
+           ("C-s" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-t" . ivy-next-line)
+           ("C-s" . ivy-previous-line)
+           ("C-l" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-t" . ivy-next-line)
+           ("C-s" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1)
+    (setq ivy-wrap                        t
+          ivy-height                      17
+          ivy-sort-max-size               50000
+          ivy-fixed-height-minibuffer     t
+          ivy-read-action-functions       #'ivy-hydra-read-action
+          ivy-read-action-format-function #'ivy-read-action-format-columns
+          projectile-completion-system    'ivy
+          ivy-on-del-error-function       #'ignore
+          ivy-use-selectable-prompt       t))
+#+end_src
+
+There is also [[https://github.com/raxod502/prescient.el][~prescient.el~]] that offers some nice features when
+coupled with ~ivy~, guess what was born out of it? ~ivy-prescient~, of
+course!
+#+begin_src emacs-lisp
+  (use-package ivy-prescient
+    :after ivy
+    :straight (:build t))
+#+end_src
+
+I warned you I’d use too much ~all-the-icons~, I did!
+#+begin_src emacs-lisp
+  (use-package all-the-icons-ivy
+    :straight (:build t)
+    :after (ivy all-the-icons)
+    :hook (after-init . all-the-icons-ivy-setup))
+#+end_src
+
+A buffer popping at the bottom of the screen is nice and all, but have
+you considered a floating buffer in the center of your frame?
+#+begin_src emacs-lisp
+  (use-package ivy-posframe
+    :defer t
+    :after (:any ivy helpful)
+    :hook (ivy-mode . ivy-posframe-mode)
+    :straight (:build t)
+    :init
+    (ivy-posframe-mode 1)
+    :config
+    (setq ivy-fixed-height-minibuffer nil
+          ivy-posframe-border-width   10
+          ivy-posframe-parameters
+          `((min-width  . 90)
+            (min-height . ,ivy-height))))
+#+end_src
+
+Finally, let’s make ~ivy~ richer:
+#+begin_src emacs-lisp
+  (use-package ivy-rich
+    :straight (:build t)
+    :after ivy
+    :init
+    (ivy-rich-mode 1))
+#+end_src
+
+*** Counsel
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Counselorr1fl6184j0
+:END:
+#+begin_src emacs-lisp
+  (use-package counsel
+    :straight (:build t)
+    :defer t
+    :after ivy
+    :bind (("M-x"     . counsel-M-x)
+           ("C-x b"   . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)))
+#+end_src
+
+*** Yasnippet
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Autocompletion-Yasnippet68t1fl6184j0
+:END:
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :defer t
+    :straight (:build t)
+    :init
+    (yas-global-mode)
+    :hook ((prog-mode . yas-minor-mode)
+           (text-mode . yas-minor-mode)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package yasnippet-snippets
+    :defer t
+    :after yasnippet
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package yatemplate
+    :defer t
+    :after yasnippet
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package ivy-yasnippet
+    :defer t
+    :after (ivy yasnippet)
+    :straight (:build t))
+#+end_src
+
 ** Applications
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications94i0fl6184j0
@@ -1896,236 +2131,23 @@ buffer.
 To handle keybindings correctly, a major mode for wttrin could be
 derived from ~fundamental-mode~ and get an associated keymap.
 
-** Autocompletion
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Autocompletionr8n1fl6184j0
-:END:
-*** Code Autocompletion
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Autocompletion-Code-Autocompletion4no1fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (use-package company
-    :straight (:build t)
-    :defer t
-    :hook (company-mode . evil-normalize-keymaps)
-    :init (global-company-mode)
-    :config
-    (setq company-minimum-prefix-length     2
-          company-toolsip-limit             14
-          company-tooltip-align-annotations t
-          company-require-match             'never
-          company-global-modes              '(not erc-mode message-mode help-mode gud-mode)
-          company-frontends
-          '(company-pseudo-tooltip-frontend ; always show candidates in overlay tooltip
-            company-echo-metadata-frontend) ; show selected candidate docs in echo area
-
-          ;; Buffer-local backends will be computed when loading a major
-          ;; mode, so only specify a global default here.
-          company-backends '(company-capf)
-
-          ;; These auto-complete the current selection when
-          ;; `company-auto-complete-chars' is typed. This is too
-          ;; magical. We already have the much more explicit RET and
-          ;; TAB.
-          company-auto-complete       nil
-          company-auto-complete-chars nil
-
-          ;; Only search the current buffer for `company-dabbrev' (a
-          ;; backend that suggests text you open buffers). This prevents
-          ;; Company from causing lag once you have a lot of buffers
-          ;; open.
-          company-dabbrev-other-buffers nil
-
-          ;; Make `company-dabbrev' fully case-sensitive, to improve UX
-          ;; with domai-specific words with particular casing.
-          company-dabbrev-ignore-case nil
-          company-dabbrev-downcase    nil))
-
-  (use-package company-dict
-    :after company
-    :straight (:build t)
-    :config
-    (setq company-dict-dir (expand-file-name "dicts" user-emacs-directory)))
-
-  (use-package company-box
-    :straight (:build t)
-    :after (company all-the-icons)
-    :config
-    (setq company-box-show-single-candidate t
-          company-box-backends-colors       nil
-          company-box-max-candidates        50
-          company-box-icons-alist           'company-box-icons-all-the-icons
-          company-box-icons-all-the-icons
-          (let ((all-the-icons-scale-factor 0.8))
-            `((Unknown       . ,(all-the-icons-material "find_in_page"             :face 'all-the-icons-purple))
-              (Text          . ,(all-the-icons-material "text_fields"              :face 'all-the-icons-green))
-              (Method        . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-              (Function      . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-              (Constructor   . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-              (Field         . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-              (Variable      . ,(all-the-icons-material "adjust"                   :face 'all-the-icons-blue))
-              (Class         . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
-              (Interface     . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
-              (Module        . ,(all-the-icons-material "view_module"              :face 'all-the-icons-red))
-              (Property      . ,(all-the-icons-material "settings"                 :face 'all-the-icons-red))
-              (Unit          . ,(all-the-icons-material "straighten"               :face 'all-the-icons-red))
-              (Value         . ,(all-the-icons-material "filter_1"                 :face 'all-the-icons-red))
-              (Enum          . ,(all-the-icons-material "plus_one"                 :face 'all-the-icons-red))
-              (Keyword       . ,(all-the-icons-material "filter_center_focus"      :face 'all-the-icons-red))
-              (Snippet       . ,(all-the-icons-material "short_text"               :face 'all-the-icons-red))
-              (Color         . ,(all-the-icons-material "color_lens"               :face 'all-the-icons-red))
-              (File          . ,(all-the-icons-material "insert_drive_file"        :face 'all-the-icons-red))
-              (Reference     . ,(all-the-icons-material "collections_bookmark"     :face 'all-the-icons-red))
-              (Folder        . ,(all-the-icons-material "folder"                   :face 'all-the-icons-red))
-              (EnumMember    . ,(all-the-icons-material "people"                   :face 'all-the-icons-red))
-              (Constant      . ,(all-the-icons-material "pause_circle_filled"      :face 'all-the-icons-red))
-              (Struct        . ,(all-the-icons-material "streetview"               :face 'all-the-icons-red))
-              (Event         . ,(all-the-icons-material "event"                    :face 'all-the-icons-red))
-              (Operator      . ,(all-the-icons-material "control_point"            :face 'all-the-icons-red))
-              (TypeParameter . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
-              (Template      . ,(all-the-icons-material "short_text"               :face 'all-the-icons-green))
-              (ElispFunction . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-              (ElispVariable . ,(all-the-icons-material "check_circle"             :face 'all-the-icons-blue))
-              (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
-              (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))))
-#+end_src
-
-*** Ivy
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Autocompletion-Ivy84q1fl6184j0
-:END:
-My main menu package is ~ivy~ which I use as much as possible –I’ve
-noticed ~helm~ can be slow, very slow in comparison to ~ivy~ so I’ll use
-the latter as much as possible. Actually, only ~ivy~ is installed for
-now. I could have used ~ido~ too, but I find it to be a bit too
-restricted in terms of features compared to ~ivy~.
-#+begin_src emacs-lisp
-  (use-package ivy
-    :straight (:build t)
-    :defer t
-    :diminish
-    :bind (("C-s" . swiper)
-           :map ivy-minibuffer-map
-           ("TAB" . ivy-alt-done)
-           ("C-l" . ivy-alt-done)
-           ("C-t" . ivy-next-line)
-           ("C-s" . ivy-previous-line)
-           :map ivy-switch-buffer-map
-           ("C-t" . ivy-next-line)
-           ("C-s" . ivy-previous-line)
-           ("C-l" . ivy-done)
-           ("C-d" . ivy-switch-buffer-kill)
-           :map ivy-reverse-i-search-map
-           ("C-t" . ivy-next-line)
-           ("C-s" . ivy-previous-line)
-           ("C-d" . ivy-reverse-i-search-kill))
-    :config
-    (ivy-mode 1)
-    (setq ivy-wrap                        t
-          ivy-height                      17
-          ivy-sort-max-size               50000
-          ivy-fixed-height-minibuffer     t
-          ivy-read-action-functions       #'ivy-hydra-read-action
-          ivy-read-action-format-function #'ivy-read-action-format-columns
-          projectile-completion-system    'ivy
-          ivy-on-del-error-function       #'ignore
-          ivy-use-selectable-prompt       t))
-#+end_src
-
-There is also [[https://github.com/raxod502/prescient.el][~prescient.el~]] that offers some nice features when
-coupled with ~ivy~, guess what was born out of it? ~ivy-prescient~, of
-course!
-#+begin_src emacs-lisp
-  (use-package ivy-prescient
-    :after ivy
-    :straight (:build t))
-#+end_src
-
-I warned you I’d use too much ~all-the-icons~, I did!
-#+begin_src emacs-lisp
-  (use-package all-the-icons-ivy
-    :straight (:build t)
-    :after (ivy all-the-icons)
-    :hook (after-init . all-the-icons-ivy-setup))
-#+end_src
-
-A buffer popping at the bottom of the screen is nice and all, but have
-you considered a floating buffer in the center of your frame?
-#+begin_src emacs-lisp
-  (use-package ivy-posframe
-    :defer t
-    :hook (ivy-mode . ivy-posframe-mode)
-    :straight (ivy-posframe :build t
-                            :type git
-                            :host github
-                            :repo "tumashu/ivy-posframe")
-    :config
-    (setq ivy-fixed-height-minibuffer nil
-          ivy-posframe-border-width   10
-          ivy-posframe-parameters
-          `((min-width  . 90)
-            (min-height . ,ivy-height))))
-#+end_src
-
-Finally, let’s make ~ivy~ richer:
-#+begin_src emacs-lisp
-  (use-package ivy-rich
-    :straight (:build t)
-    :after ivy
-    :init
-    (ivy-rich-mode 1))
-#+end_src
-
-*** Counsel
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Autocompletion-Counselorr1fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (use-package counsel
-    :straight (:build t)
-    :defer t
-    :bind (("M-x"     . counsel-M-x)
-           ("C-x b"   . counsel-ibuffer)
-           ("C-x C-f" . counsel-find-file)
-           :map minibuffer-local-map
-           ("C-r" . 'counsel-minibuffer-history)))
-#+end_src
-
-*** Yasnippet
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Autocompletion-Yasnippet68t1fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (use-package yasnippet
-    :defer t
-    :straight (:build t)
-    :init
-    (yas-global-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package yasnippet-snippets
-    :after yasnippet
-    :straight (:build t))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package yatemplate
-    :after yasnippet
-    :straight (:build t))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package ivy-yasnippet
-    :after (ivy yasnippet)
-    :straight (:build t))
-#+end_src
-
 ** Editing
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editinggnu1fl6184j0
 :END:
+First, I’ll define some keybindings for easily inserting pairs when
+editing text.
+#+begin_src emacs-lisp
+  (general-define-key
+   :states 'visual
+   "M-["  #'insert-pair
+   "M-{"  #'insert-pair
+   "M-<"  #'insert-pair
+   "M-'"  #'insert-pair
+   "M-`"  #'insert-pair
+   "M-\"" #'insert-pair)
+#+end_src
+
 *** Evil Nerd Commenter
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Evil-Nerd-Commenterd2w1fl6184j0
