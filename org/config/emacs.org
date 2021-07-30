@@ -3510,6 +3510,173 @@ icons!
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages6et5fl6184j0
 :END:
+*** Tools
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-w3q5rsg0k4j0
+:END:
+**** Flycheck
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Flycheckb446fl6184j0
+:END:
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :straight (:build t)
+    :defer t
+    :init
+    (global-flycheck-mode)
+    :config
+    (setq flycheck-emacs-lisp-load-path 'inherit)
+
+    ;; Rerunning checks on every newline is a mote excessive.
+    (delq 'new-line flycheck-check-syntax-automatically)
+    ;; And don’t recheck on idle as often
+    (setq flycheck-idle-change-delay 2.0)
+
+    ;; For the above functionality, check syntax in a buffer that you
+    ;; switched to on briefly. This allows “refreshing” the syntax check
+    ;; state for several buffers quickly after e.g. changing a config
+    ;; file.
+    (setq flycheck-buffer-switch-check-intermediate-buffers t)
+
+    ;; Display errors a little quicker (default is 0.9s)
+    (setq flycheck-display-errors-delay 0.2))
+
+  (use-package flycheck-popup-tip
+    :straight (:build t)
+    :after flycheck
+    :hook (flycheck-mode . flycheck-popup-tip-mode)
+    :config
+    (setq flycheck-popup-tip-error-prefix "X ")
+    (after! evil
+      (add-hook 'evil-insert-state-entry-hook
+                #'flycheck-popup-tip-delete-popup)
+      (add-hook 'evil-replace-state-entry-hook
+                #'flycheck-popup-tip-delete-popup)))
+
+  (use-package flycheck-posframe
+    :straight (:build t)
+    :hook (flycheck-mode . flycheck-posframe-mode)
+    :config
+    (setq flycheck-posframe-warning-prefix "! "
+          flycheck-posframe-info-prefix    "··· "
+          flycheck-posframe-error-prefix   "X "))
+#+end_src
+
+**** LSP-Mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-LSP-Mode-g4v5rsg0k4j0
+:END:
+[[https://emacs-lsp.github.io/lsp-mode/][~lsp-mode~]] is a mode for Emacs which implements the [[https://github.com/Microsoft/language-server-protocol/][Language Server
+Protocol]] and offers Emacs an IDE-like experience. In short, it’s
+awesome!
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :defer t
+    :straight (:build t)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    ;; (dolist (hook '(rust-mode-hook
+    ;;                 c-mode-hook
+    ;;                 c++-mode-hook
+    ;;                 css-mode-hook
+    ;;                 html-mode-hook
+    ;;                 lua-mode-hook
+    ;;                 rust-mode-hook
+    ;;                 dockerfile-mode-hook))
+    ;;   (add-hook hook #'lsp-deferred))
+
+    ;; (dolist (mode '(#'lsp-enable-which-key-integration
+    ;;                 #'lsp-ui-mode))
+    ;;   (add-hook 'lsp-mode-hook mode))
+    :hook ((rust-mode       . lsp-deferred)
+           (c-mode          . lsp-deferred)
+           (c++-mode        . lsp-deferred)
+           (css-mode        . lsp-deferred)
+           (html-mode       . lsp-deferred)
+           (lua-mode        . lsp-deferred)
+           (rust-mode       . lsp-deferred)
+           (dockerfile-mode . lsp-deferred)
+           (lsp-mode        . lsp-enable-which-key-integration)
+           (lsp-mode        . lsp-ui-mode))
+    :commands (lsp lsp-deferred)
+    :custom
+    (lsp-rust-analyzer-cargo-watch-command "clippy")
+    (lsp-eldoc-render-all t)
+    (lsp-idle-delay 0.6)
+    (lsp-rust-analyzer-server-display-inlay-hints t))
+#+end_src
+
+I also want all the visual enhancements LSP can provide.
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :after lsp
+    :defer t
+    :straight (:build t)
+    :commands lsp-ui-mode
+    :custom
+    (lsp-ui-peek-always-show t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-doc-enable t)
+    :config
+    (general-define-key
+     :states 'normal
+     :keymaps 'lsp-ui-peek-mode-map
+     :prefix ","
+     "c" #'lsp-ui-pook--select-prev-file
+     "t" #'lsp-ui-pook--select-next
+     "s" #'lsp-ui-pook--select-prev
+     "r" #'lsp-ui-pook--select-next-file))
+#+end_src
+
+And let’s enable some intergration with ~ivy~.
+#+begin_src emacs-lisp
+  (use-package lsp-ivy
+    :straight (:build t)
+    :defer t
+    :after lsp
+    :commands lsp-ivy-workspace-symbol)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-treemacs
+    :defer t
+    :straight (:build t)
+    :requires treemacs)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :defer t
+    :straight (:build t)
+    :init (exec-path-from-shell-initialize))
+#+end_src
+
+~dap-mode~ is an advanced debugging mode that works through lsp.
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :after lsp
+    :defer t
+    :straight (:build t)
+    :config
+    (dap-ui-mode)
+    (dap-ui-controls-mode 1)
+
+    (require 'dap-lldb)
+    (require 'dap-gdb-lldb)
+
+    (dap-gdb-lldb-setup)
+    (dap-register-debug-template
+     "Rust::LLDB Run Configuration"
+     (list :type "lldb"
+           :request "launch"
+           :name "LLDB::Run"
+           :gdbpath "rust-lldb"
+           :target nil
+           :cwd nil)))
+#+end_src
+
+#+RESULTS:
+
 *** DSLs
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLsbwu5fl6184j0
@@ -3535,6 +3702,49 @@ Caddy files natively, so let’s install ~caddyfile-mode~:
     :straight (:build t)
     :mode (("Caddyfile\\'" . caddyfile-mode)
            ("caddy\\.conf\\'" . caddyfile-mode)))
+#+end_src
+
+**** CMake
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-CMake-vpqkiyp0m5j0
+:END:
+CMake is one of the standard tools for indicating how a project should
+be built. It is not as standard as some other tools such as automake,
+autoconfig, and the likes, but still pretty standard. CMake however
+doesn’t have a major mode available by default, so let’s provide one.
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+    :defer t
+    :straight (:build t))
+#+end_src
+
+#+RESULTS:
+
+Let’s enable first some autocompletion for it.
+#+begin_src emacs-lisp
+  (use-package company-cmake
+    :straight (company-cmake :build t
+                             :type git
+                             :host github
+                             :repo "purcell/company-cmake")
+    :after cmake-mode
+    :defer t)
+#+end_src
+
+And let’s also enable a more advanced CMake fontlock.
+#+begin_src emacs-lisp
+  (use-package cmake-font-lock
+    :defer t
+    :after cmake-mode
+    :straight (:build t))
+#+end_src
+
+And finally, let’s enable some Eldoc integration for CMake.
+#+begin_src emacs-lisp
+  (use-package eldoc-cmake
+    :straight (:build t)
+    :defer t
+    :after cmake-mode)
 #+end_src
 
 **** Gnuplot
@@ -3609,58 +3819,71 @@ config]]), therefore I need a mode for it.
     :mode "\\.yaml\\'")
 #+end_src
 
-*** Flycheck
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Programming-languages-Flycheckb446fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (use-package flycheck
-    :straight (:build t)
-    :defer t
-    :init
-    (global-flycheck-mode)
-    :config
-    (setq flycheck-emacs-lisp-load-path 'inherit)
-
-    ;; Rerunning checks on every newline is a mote excessive.
-    (delq 'new-line flycheck-check-syntax-automatically)
-    ;; And don’t recheck on idle as often
-    (setq flycheck-idle-change-delay 2.0)
-
-    ;; For the above functionality, check syntax in a buffer that you
-    ;; switched to on briefly. This allows “refreshing” the syntax check
-    ;; state for several buffers quickly after e.g. changing a config
-    ;; file.
-    (setq flycheck-buffer-switch-check-intermediate-buffers t)
-
-    ;; Display errors a little quicker (default is 0.9s)
-    (setq flycheck-display-errors-delay 0.2))
-
-  (use-package flycheck-popup-tip
-    :straight (:build t)
-    :after flycheck
-    :hook (flycheck-mode . flycheck-popup-tip-mode)
-    :config
-    (setq flycheck-popup-tip-error-prefix "X ")
-    (after! evil
-      (add-hook 'evil-insert-state-entry-hook
-                #'flycheck-popup-tip-delete-popup)
-      (add-hook 'evil-replace-state-entry-hook
-                #'flycheck-popup-tip-delete-popup)))
-
-  (use-package flycheck-posframe
-    :straight (:build t)
-    :hook (flycheck-mode . flycheck-posframe-mode)
-    :config
-    (setq flycheck-posframe-warning-prefix "! "
-          flycheck-posframe-info-prefix    "··· "
-          flycheck-posframe-error-prefix   "X "))
-#+end_src
-
 *** General Programming Languages
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languageszn56fl6184j0
 :END:
+**** C/C++
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-C-C-2nfcmoz0i5j0
+:END:
+I know, I know, C and C++ no longer are closely related languages,
+each one of them went their own way and learning C won’t make you a
+good C++ programmer, neither will the other way around. But, They are
+still somewhat related, and Emacs thinks so too.
+#+begin_src emacs-lisp
+  (use-package cc-mode
+    :straight (:type built-in)
+    :defer t
+    :init
+    (put 'c-c++-backend 'safe-local-variable 'symbolp)
+    :config
+    (progn
+      (require 'compile)
+      (general-define-key
+       :keymaps '(c-mode-map c++-mode-map)
+       "," nil
+       ";" nil)
+      (general-define-key
+       :states 'normal
+       :keymaps '(c-mode-map c++-mode-map)
+       :prefix ","
+       "l"  '(:keymap lsp-command-map :which-key "lsp" :package lsp-mode))
+      (general-define-key
+       :states 'normal
+       :keymaps '(c-mode-map c++-mode-map)
+       "ga" #'projectile-find-other-file
+       "gA" #'projectile-find-other-file-other-window)))
+#+end_src
+
+Something that is also important when working with these languages is
+respecting the ~.clang-format~ file that may be provided by a project.
+#+begin_src emacs-lisp
+  (use-package clang-format+
+    :straight (:build t)
+    :defer t
+    :init
+    (add-hook 'c-mode-common-hook #'clang-format+-mode))
+#+end_src
+
+However, Emacs’ notion of C++ is somewhat outdated, so we need to
+update its fontlock.
+#+begin_src emacs-lisp
+  (use-package modern-cpp-font-lock
+    :straight (:build t)
+    :defer t
+    :hook (c++-mode . modern-c++-font-lock-mode))
+#+end_src
+
+**** CommonLisp
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-CommonLisp-gc2a7s31q5j0
+:END:
+#+begin_src emacs-lisp
+  (add-hook 'lisp-mode-hook #'parinfer-rust-mode)
+  (add-hook 'lisp-mode-hook (lambda () (smartparens-mode -1)))
+#+end_src
+
 **** EmacsLisp
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-EmacsLispo876fl6184j0
@@ -3676,6 +3899,10 @@ in the echo area at the bottom of the frame. Quite useful indeed.
                        'company-complete-common
                        'company-capf
                        'company-abort))
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
 Let’s also declare some Elisp-dedicated keybindings, prefixed by a
@@ -3703,6 +3930,237 @@ comma.
    "tPs" #'parinfer-rust-switch-mode
    "tPd" #'parinfer-rust-mode-disable
    "tPp" #'parinfer-rust-toggle-paren-mode)
+#+end_src
+
+**** Lua
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Lua-p2odc7p0t4j0
+:END:
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :defer t
+    :straight (:build t)
+    :mode "\\.lua$"
+    :interpreter "lua"
+    :init
+    (setq lua-indent-level           2
+          lua-indent-string-contents t))
+    ;; (general-define-key
+    ;;  :keymaps lua-mode-map
+    ;;  :states 'normal
+    ;;  :prefix ","
+    ;;  "'"  #'lua-show-process-buffer
+    ;;  "h"  '(:ignore :wk "help")
+    ;;  "hd" #'lua-search-documentation
+    ;;  "s"  '(:ignore :wk "REPL")
+    ;;  "sb" #'lua-send-buffer
+    ;;  "sf" #'lua-send-defun
+    ;;  "sl" #'lua-send-current-line
+    ;;  "sr" #'lua-send-region))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-lua-emmy
+    :defer t
+    :after (lua-mode lsp-mode)
+    :straight (lsp-lua-emmy :build t
+                            :type git
+                            :host github
+                            :repo "EmmyLua/EmmyLua-LanguageServer")
+    :hook (lua-mode . lsp-deferred)
+    :config
+    (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
+
+#+end_src
+
+**** Rust
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Rust-n3jhh5h0k4j0
+:END:
+Rust is a general programming language, akin to C++ in some ways, but
+much more oriented towards safe code, and much better suited for web
+development. First, let’s install the most important package,
+~rustic~.
+#+begin_src emacs-lisp
+  (use-package rustic
+    :defer t
+    :straight (:build t)
+    :mode ("\\.rs$" . rustic-mode)
+    :init
+    (after! org-src
+      (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
+      (add-to-list 'org-src-lang-modes '("rust" . rustic)))
+    :general
+    (:keymaps 'rustic-mode-map
+              "M-t" #'lsp-ui-imenu
+              "M-?" #'lsp-find-references)
+    (:keymaps 'rustic-mode-map
+     :states 'normal
+     :prefix ","
+     "b"  '(:ignore :which-key "build")
+     "bb" #'rustic-cargo-build
+     "bB" #'rustic-cargo-bench
+     "bc" #'rustic-cargo-check
+     "bC" #'rustic-cargo-clippy
+     "bd" #'rustic-cargo-doc
+     "bf" #'rustic-cargo-fmt
+     "bn" #'rustic-cargo-new
+     "bo" #'rustic-cargo-outdated
+     "br" #'rustic-cargo-run
+     "l"  '(:ignore :which-key "lsp")
+     "la" #'lsp-execute-code-action
+     "lr" #'lsp-rename
+     "lq" #'lsp-workspace-restart
+     "lQ" #'lsp-workspace-shutdown
+     "ls" #'lsp-rust-analyzer-status
+     "t"  '(:ignore :which-key "cargo test")
+     "ta" #'rustic-cargo-test
+     "tt" #'rustic-cargo-current-test)
+    :config
+    (setq rustic-indent-method-chain    t
+          rustic-babel-format-src-block nil
+          rustic-format-trigger         nil)
+    (remove-hook 'rustic-mode-hook #'flycheck-mode)
+    (remove-hook 'rustic-mode-hook #'flymake-mode-off)
+    (remove-hook 'rustic-mode-hook #'rustic-setup-lsp)
+    (add-hook 'rustic-mode-local-vars-hook #'rustic-setup-lsp)
+    (setq rustic-lsp-client 'lsp-mode))
+#+end_src
+
+#+RESULTS:
+
+**** Web programming
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-7ca40po085j0
+:END:
+#+begin_src emacs-lisp
+  (use-package company-web
+    :defer t
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :straight (:build t)
+    :defer t
+    :hook ((css-mode  . emmet-mode)
+           (html-mode . emmet-mode)
+           (web-mode  . emmet-mode)
+           (sass-mode . emmet-mode)
+           (scss-mode . emmet-mode)
+           (web-mode  . emmet-mode))
+    :config
+    (general-define-key
+     :keymaps 'emmet-mode-keymap
+     "C-RET" #'emmet-expand-yas))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package impatient-mode
+    :straight (:build t)
+    :defer t)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package slim-mode
+    :defer t
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :defer t
+    :straight (:build t)
+    :hook ((html-mode . web-mode))
+    :mode (("\\.phtml\\'"      . web-mode)
+           ("\\.tpl\\.php\\'"  . web-mode)
+           ("\\.twig\\'"       . web-mode)
+           ("\\.xml\\'"        . web-mode)
+           ("\\.html\\'"       . web-mode)
+           ("\\.htm\\'"        . web-mode)
+           ("\\.[gj]sp\\'"     . web-mode)
+           ("\\.as[cp]x?\\'"   . web-mode)
+           ("\\.eex\\'"        . web-mode)
+           ("\\.erb\\'"        . web-mode)
+           ("\\.mustache\\'"   . web-mode)
+           ("\\.handlebars\\'" . web-mode)
+           ("\\.hbs\\'"        . web-mode)
+           ("\\.eco\\'"        . web-mode)
+           ("\\.ejs\\'"        . web-mode)
+           ("\\.svelte\\'"     . web-mode)
+           ("\\.ctp\\'"        . web-mode)
+           ("\\.djhtml\\'"     . web-mode))
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix ","
+     :keymaps 'web-mode-map
+     "="  '(nil :which-key "format")
+     "E"  '(nil :which-key "errors")
+     "El" #'web-mode-dom-errors-show
+     "gb" #'web-mode-element-beginning
+     "g"  '(nil :which-key "goto")
+     "gc" #'web-mode-element-child
+     "gp" #'web-mode-element-parent
+     "gs" #'web-mode-element-sibling-next
+     "h"  '(nil :which-key "dom")
+     "hp" #'web-mode-dom-xpath
+     "r"  '(nil :which-key "refactor")
+     "rc" #'web-mode-element-clone
+     "rd" #'web-mode-element-vanish
+     "rk" #'web-mode-element-kill
+     "rr" #'web-mode-element-rename
+     "rw" #'web-mode-element-wrap
+     "z"  #'web-mode-fold-or-unfold))
+#+end_src
+
+***** Javascript
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Javascript-8k5arup085j0
+:END:
+#+begin_src emacs-lisp
+  (use-package prettier-js
+    :defer t
+    :straight (:build t))
+#+end_src
+
+***** CSS
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-CSS-que40po085j0
+:END:
+#+begin_src emacs-lisp
+  (add-hook 'css-mode-hook #'smartparens-mode)
+  (put 'css-indent-offset 'safe-local-variable #'integerp)
+  (after! css-mode
+    (general-define-key
+     :keymaps '(css-mode-map)
+     :states 'normal
+     :prefix ","
+     "=" '(:ignore :wk "format")
+     "g" '(:ignore :wk "goto")))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package scss-mode
+    :straight (:build t)
+    :hook (scss-mode . smartparens-mode)
+    :defer t
+    :mode "\\.scss\\'")
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package counsel-css
+    :straight (:build t)
+    :defer t
+    :init
+    (cl-loop for (mode-map . mode-hook) in '((css-mode-map  . css-mode-hook)
+                                             (scss-mode-map . scss-mode-hook))
+             do (add-hook mode-hook #'counsel-css-imenu-setup)
+             (general-define-key
+              :keymaps mode-map
+              :states 'normal
+              :prefix ","
+              "gh" #'counsel-css)))
 #+end_src
 
 ** Visual Configuration
