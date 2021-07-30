@@ -16,10 +16,10 @@ mpd_connection_timeout = 5
 mpd_crossfade_time = 0
 
 ##### music visualizer #####
-visualizer_fifo_path = /tmp/mpd.fifo
+# visualizer_fifo_path = /tmp/mpd.fifo
 visualizer_output_name = "my_fifo"
 visualizer_in_stereo = yes
-visualizer_sync_interval = 30
+# visualizer_sync_interval = 10
 visualizer_type = "spectrum" ## Available values: spectrum, wave, wave_filled, ellipse.
 visualizer_look = "+|"
 visualizer_color = blue, cyan, green, yellow, magenta, red
