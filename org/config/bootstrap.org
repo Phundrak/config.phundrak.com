@@ -184,16 +184,14 @@ I’ll let the user accept them one by one.
 
 This is my configuration I usually use when it comes to my locale.
 #+BEGIN_SRC fish
-  set localeconf "LANG=en_US.UTF-8
+  set localeconf "LANG=en_DK.UTF-8
   LC_COLLATE=C
   LC_NAME=fr_FR.UTF-8
-  LC_NUMERIC=fr_FR.UTF-8
   LC_IDENTIFICATION=fr_FR.UTF-8
   LC_TELEPHONE=fr_FR.UTF-8
   LC_MONETARY=fr_FR.UTF-8
   LC_PAPER=fr_FR.UTF-8
   LC_ADDRESS=fr_FR.UTF-8
-  LC_TIME=fr_FR.UTF-8
   LC_MEASUREMENT=fr_FR.UTF-8"
 #+END_SRC
 
