@@ -3477,6 +3477,35 @@ icons!
 
 #+RESULTS:
 
+*** Misc
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Misc-l202k9z0l4j0
+:END:
+~org-tree-slide~ is a presentation tool for org-mode.
+#+begin_src emacs-lisp
+  (use-package org-tree-slide
+    :defer t
+    :after org
+    :straight (:build t)
+    :init
+    (general-define-key
+     :keymaps 'org-mode-map
+     :states 'normal
+     "<f8>" #'org-tree-slide-mode)
+    :config
+    (setq org-tree-slide-skip-done nil)
+    (general-define-key
+     :keymaps 'org-tree-slide-mode-map
+     :states 'normal
+     :prefix ","
+     "d" (lambda () (interactive (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))))
+     "p" #'org-tree-slide-move-next-tree
+     "n" #'org-tree-slide-move-previous-tree
+     "t" #'org-tree-slide-move-next-tree
+     "s" #'org-tree-slide-move-previous-tree
+     "u" #'org-tree-slide-content))
+#+end_src
+
 ** Programming languages
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages6et5fl6184j0
@@ -3555,6 +3584,17 @@ config]]), therefore I need a mode for it.
   (use-package fish-mode
     :straight (:build t)
     :defer t)
+#+end_src
+
+**** Toml
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Toml-txu8xvk0k4j0
+:END:
+#+begin_src emacs-lisp
+  (use-package toml-mode
+    :straight (:build t)
+    :defer t
+    :mode "/\\(Cargo.lock\\|\\.cargo/config\\)\\'")
 #+end_src
 
 **** Yaml
@@ -3720,6 +3760,21 @@ comma.
     (add-hook 'after-init-hook 'dashboard-refresh-buffer))
 #+end_src
 
+*** Fringe
+:PROPERTIES:
+:CUSTOM_ID: Basic-configuration-Visual-Configuration-Fringe-glc9ch1195j0
+:END:
+It’s nice to know which lines were modified since the last commit in a
+file.
+#+begin_src emacs-lisp
+  (use-package git-gutter-fringe
+    :straight (:build t)
+    :hook ((prog-mode     . git-gutter-mode)
+           (org-mode      . git-gutter-mode)
+           (markdown-mode . git-gutter-mode)
+           (latex-mode    . git-gutter-mode)))
+#+end_src
+
 *** Modeline
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
@@ -3791,19 +3846,35 @@ Let’s enable this mode for any programming mode:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Y-all-want-some-more-COLORSs6i6fl6184j0
 :END:
-It is possible to make info buffers much more colorful (and imo easier to read) with this simple package:
+It is possible to make info buffers much more colorful (and imo easier
+to read) with this simple package:
 #+begin_src emacs-lisp
   (use-package info-colors
     :straight (:build t)
     :commands info-colors-fnontify-node
     :hook (Info-selection . info-colors-fontify-node)
-    :hook (Info-mode . mixed-pitch-mode))
+    :hook (Info-mode      . mixed-pitch-mode))
 #+end_src
 
 ** Misc
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc0sj6fl6184j0
 :END:
+*** ArchWiki pages
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-ArchWiki-pages-nha3jhq0r4j0
+:END:
+A small package I’ve written allows the user to view ArchLinux pages
+either in Emacs or in an external web browser. I prefer the defaults.
+#+begin_src emacs-lisp
+  (use-package archwiki
+    :defer t
+    :straight (archwiki :build t
+                        :type git
+                        :host nil
+                        :repo "https://labs.phundrak.com/phundrak/archwiki.el"))
+#+end_src
+
 *** ~avy~
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-avyral6fl6184j0
@@ -3865,6 +3936,33 @@ quickly find files across my filesystem.
                                                ("~/Documents/university" . "org"))))
 #+end_src
 
+*** Keycast
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Keycast-nsqgl431t4j0
+:END:
+#+begin_src emacs-lisp
+  (use-package keycast
+    :config
+    (define-minor-mode keycast-mode
+      "Show current command and its key binding in the mode line."
+      :global t
+      (if keycast-mode
+          (add-hook 'pre-command-hook 'keycast--update t)
+        (remove-hook 'pre-command-hook 'keycast--update)))
+    (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+#+end_src
+
+*** SICP
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-SICP-96u6ukz0l4j0
+:END:
+Who would get interested in Emacs and not want to read the SICP?
+Moreover, inside Emacs?
+#+begin_src emacs-lisp
+  (use-package sicp
+    :defer t)
+#+end_src
+
 *** Winum
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-Winumvir6fl6184j0
@@ -3877,6 +3975,21 @@ just going to the frame above, then left, left, and up.
   (use-package winum
     :straight (:build t)
     :init (winum-mode))
+#+end_src
+
+*** Ytplay
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Ytplay-wxm9weq0r4j0
+:END:
+~ytplay~ is a small package I’ve written with which you can choose at
+which resolution to play a YouTube video in an external video player.
+#+begin_src emacs-lisp
+  (use-package ytplay
+    :defer t
+    :straight (ytplay :build t
+                      :type git
+                      :host nil
+                      :repo "https://labs.phundrak.com/phundrak/ytplay.el"))
 #+end_src
 
 * Keybindings
