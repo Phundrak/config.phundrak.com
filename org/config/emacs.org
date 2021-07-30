@@ -1221,9 +1221,11 @@ We can finally define our bookmarks! The code reads as follows:
            :query ,(format "%s AND %s"
                            <<mu4e-bookmarks-inbox-filters>>
                            <<mu4e-bookmarks-filter-uni>>))
-          (:name "eshell-info-banner" :key ?E :query ,(format "%s AND %s"
-                                                              <<mu4e-bookmarks-inbox-filters>>
-                                                              "list:eshell-info-banner.el.Phundrak.github.com"))
+          (:name "eshell-info-banner"
+           :key ?E
+           :query ,(format "%s AND %s"
+                           <<mu4e-bookmarks-inbox-filters>>
+                           "list:eshell-info-banner.el.Phundrak.github.com"))
           (:name "Sent"       :key ?s :query "maildir:/Sent")
           (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
           (:name "Today"      :key ?t :query "date:today..now AND NOT flag:trashed")
@@ -1324,12 +1326,14 @@ bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
 #+begin_src emacs-lisp :tangle no
   (general-define-key
    :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
-   "s" nil)
+   "SPC" nil
+   "s"   nil)
   (general-define-key
    :states 'normal
    :keymaps '(mu4e-headers-mode-map mu4e-view-mode-map)
-   "s" nil
-   "," nil)
+   "SPC" nil
+   "s"   nil
+   ","   nil)
   (general-define-key
    :keymaps 'mu4e-view-mode-map
    "SPC" nil
@@ -1529,7 +1533,7 @@ the major-mode leader and call a simple function.
   (use-package org-msg
     :after (org mu4e)
     :straight (:build t)
-    :hook (mu4e-compose-pre . org-msg-mode)
+    :hook ((mu4e-compose-pre . org-msg-mode))
     :general (:keymaps 'org-msg-edit-mode-map
               :prefix ","
               :states 'normal
@@ -1539,29 +1543,30 @@ the major-mode leader and call a simple function.
               "k" #'message-kill-buffer
               "s" #'message-dont-send
               "f" #'org-msg-attach)
-
+    :custom-face
+    (mu4e-replied-face ((t (:weight normal :foreground "#b48ead"))))
     :config
-    (progn
-      (defun my/org-msg-signature-convert (orig-fun &rest args)
-        "Tweak my signature when replying as plain/text only."
-        (let ((res (apply orig-fun args)))
-          (when (equal (cadr args) '(text))
-            (setf (alist-get 'signature res)
-                  (replace-regexp-in-string "\n+" "\n" org-msg-signature)))
-          res))
-      (advice-add 'org-msg-composition-parameters
-                  :around 'my/org-msg-signature-convert)
-
-      (setq org-msg-startup              "inlineimages"
-            org-msg-default-alternatives '((new           . (text html))
-                                           (reply-to-html . (text html))
-                                           (reply-to-text . (text)))
-            org-msg-convert-citation     t
-            org-msg-greeting-name-limit  3
-            org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
-                                                 (with-temp-buffer
-                                                   (insert-file-contents mail-signature-file)
-                                                   (buffer-string))))))
+    (defun my/org-msg-signature-convert (orig-fun &rest args)
+      "Tweak my signature when replying as plain/text only."
+      (let ((res (apply orig-fun args)))
+        (when (equal (cadr args) '(text))
+          (setf (alist-get 'signature res)
+                (replace-regexp-in-string "\n+" "\n" org-msg-signature)))
+        res))
+    (advice-add 'org-msg-composition-parameters
+                :around 'my/org-msg-signature-convert)
+    (add-hook 'mu4e-headers-mode (lambda () (toggle-truncate-lines -1)))
+    (setq org-msg-startup              "inlineimages"
+          org-msg-default-alternatives '((new           . (text html))
+                                         (reply-to-html . (text html))
+                                         (reply-to-text . (text)))
+          org-msg-convert-citation     t
+          org-msg-greeting-name-limit  3
+          org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
+                                               (replace-regexp-in-string (regexp-quote "\n") "\n\n"
+                                                                         (with-temp-buffer
+                                                                          (insert-file-contents mail-signature-file)
+                                                                          (buffer-string))))))
 #+end_src
 
 **** Email alerts
@@ -1597,8 +1602,9 @@ reader?
     :straight (:build t)
     :defer t
     :mode ("\\.epub\\'" . nov-mode)
-    :general
-    (:keymaps 'nov-mode-map
+    :config
+    (general-define-key
+     :keymaps 'nov-mode-map
      :states 'normal
      "SPC" nil
      "c"   #'nov-previous-document
@@ -1614,7 +1620,6 @@ reader?
      "gt"  #'nov-goto-toc
      "gv"  #'nov-view-source
      "gV"  #'nov-view-content-source)
-    :config
     (setq nov-text-width 95))
 #+end_src
 
