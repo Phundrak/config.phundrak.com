@@ -2782,35 +2782,14 @@ extended however we like!
                    :type built-in)
     :defer t
     :commands (orgtbl-mode)
-    :hook (org-mode . visual-line-mode)
-    :hook (org-mode . org-num-mode)
+    :hook ((org-mode . visual-line-mode)
+           (org-mode . org-num-mode))
     :init
     (auto-fill-mode -1)
     :config
     <<org-hydra-babel>>
-    :general
-    (:states 'normal
-     :keymaps 'org-mode-map
-     "RET" 'org-open-at-point)
-    (:states 'normal
-     :prefix ","
-     :keymaps 'org-mode-map
-     <<general-keybindings-gen(table=org-keybinds-various)>>
-     <<general-keybindings-gen(table=org-keybinds-babel)>>
-     <<general-keybindings-gen(table=org-keybinds-dates)>>
-     <<general-keybindings-gen(table=org-keybinds-insert)>>
-     <<general-keybindings-gen(table=org-keybinds-jump)>>
-     <<general-keybindings-gen(table=org-keybinds-tables)>>
-     <<general-keybindings-gen(table=org-keybinds-toggles)>>)
-
-    (:states 'normal
-     :keymaps 'org-src-mode-map
-     :prefix ","
-     "'" #'org-edit-src-exit
-     "k" #'org-edit-src-abort))
-
-  (after! org
-      (setq org-hide-leading-stars             nil
+    (require 'ox-beamer)
+    (setq org-hide-leading-stars             nil
             org-hide-macro-markers             t
             org-ellipsis                       " ⤵"
             org-image-actual-width             550
@@ -2832,18 +2811,39 @@ extended however we like!
             org-log-done                       'time
             org-directory                      "~/org"
             org-default-notes-file             (expand-file-name "notes.org" org-directory))
-      <<org-agenda-files>>
-      <<org-behavior-electric>>
-      <<org-use-sub-superscripts>>
-      <<org-latex-compiler>>
-      <<org-latex-listings>>
-      <<org-latex-default-packages>>
-      <<org-export-latex-hyperref-format>>
-      <<org-latex-pdf-process>>
-      <<org-re-reveal-root>>
-      <<org-html-validation>>
-      <<org-latex-classes>>
-      <<org-publish-projects>>)
+    <<org-agenda-files>>
+    <<org-behavior-electric>>
+    <<org-babel-load-languages>>
+    <<org-use-sub-superscripts>>
+    <<org-latex-compiler>>
+    <<org-latex-listings>>
+    <<org-latex-default-packages>>
+    <<org-export-latex-hyperref-format>>
+    <<org-latex-pdf-process>>
+    <<org-re-reveal-root>>
+    <<org-html-validation>>
+    <<org-latex-classes>>
+    <<org-publish-projects>>
+    :general
+    (:states 'normal
+     :keymaps 'org-mode-map
+     "RET" 'org-open-at-point)
+    (:states 'normal
+     :prefix ","
+     :keymaps 'org-mode-map
+     <<general-keybindings-gen(table=org-keybinds-various)>>
+     <<general-keybindings-gen(table=org-keybinds-babel)>>
+     <<general-keybindings-gen(table=org-keybinds-dates)>>
+     <<general-keybindings-gen(table=org-keybinds-insert)>>
+     <<general-keybindings-gen(table=org-keybinds-jump)>>
+     <<general-keybindings-gen(table=org-keybinds-tables)>>
+     <<general-keybindings-gen(table=org-keybinds-toggles)>>)
+
+    (:states 'normal
+     :keymaps 'org-src-mode-map
+     :prefix ","
+     "'" #'org-edit-src-exit
+     "k" #'org-edit-src-abort))
 #+end_src
 
 The main feature from ~evil-org~ that I love is how easy it is to modify
@@ -2959,9 +2959,66 @@ to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
 #+begin_src emacs-lisp
   (use-package ob-latex-as-png
-    :defer t
-    :straight (:build t))
+    :straight (:build t)
+    :defer t)
 #+end_src
+
+#+begin_src emacs-lisp
+  (use-package ob-restclient
+    :straight (:build t)
+    :defer t)
+#+end_src
+
+One of the amazing features of org-mode is its literary programming capacities
+by running code blocks from within Org-mode itself. But for that, only a couple
+of languages are supported directly by Org-mode itself, and they need to be
+activated. Here are the languages I activated in my Org-mode configuration:
+#+NAME: org-babel-languages-table
+| C          |
+| dot        |
+| emacs-lisp |
+| gnuplot    |
+| latex      |
+| makefile   |
+| plantuml   |
+| python     |
+| sass       |
+| shell      |
+
+#+NAME: org-babel-languages-gen
+#+header: :cache yes :results replace
+#+header: :var languages=org-babel-languages-table[,0]
+#+BEGIN_SRC emacs-lisp :exports none
+  (format "'(%s)"
+          (mapconcat (lambda ($language)
+                       (format "(%s . t)" $language))
+                     languages
+                     "\n  "))
+#+END_SRC
+
+#+RESULTS[52f5db378c4060c5ce47e6228e95feefba4fe24d]: org-babel-languages-gen
+#+begin_example
+'((C . t)
+  (dot . t)
+  (emacs-lisp . t)
+  (gnuplot . t)
+  (latex . t)
+  (latex-as-png . t)
+  (makefile . t)
+  (plantuml . t)
+  (python . t)
+  (restclient . t)
+  (sass . t)
+  (shell . t))
+#+end_example
+
+The corresponding code is as follows:
+#+NAME: org-babel-load-languages
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle no
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   <<org-babel-languages-gen()>>)
+#+END_SRC
 
 *** File export
 :PROPERTIES:
@@ -2977,38 +3034,64 @@ describing phonetics evolution. So, let’s disable it:
   (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
-#+begin_src emacs-lisp
-  (use-package htmlize
-    :defer t)
-#+end_src
 
-There’s not really any unified Markdown specification, meaning
-everyone can pretty much do whatever they want with the syntax and
-still call it Markdown. Great… But something I appreciate is Github
-supports some extra HTML to make our files extra spicy! And lucky me,
-there’s a package for exporting my org files to Github-flavored
-Markdown!
-#+begin_src emacs-lisp
-  (use-package ox-gfm
-    :after ox
-    :straight (:build t))
-#+end_src
-
-Another backend for exporting files through org I like is ~ox-epub~
-which, as you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/][Epub format]].
+**** Epub
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Epub-w5ycfuz095j0
+:END:
+A backend for exporting files through org I like is ~ox-epub~ which, as
+you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/][Epub format]].
 #+begin_src emacs-lisp
   (use-package ox-epub
     :after ox
     :straight (:build t))
 #+end_src
 
-Yet another exporter I enjoy is [[https://github.com/dantecatalfamo/ox-ssh][~ox-ssh~]] with which I manage my
-~$HOME/.ssh/config~ file. You won’t find my org file for managing my
-servers on my repos though.
+**** HTML
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-HTMLxjc5fl6184j0
+:END:
+For Reveal.JS exports, I need to set where to find the framework by
+default:
+#+NAME: org-re-reveal-root
+#+BEGIN_SRC emacs-lisp
+  (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+#+END_SRC
+
+On HTML exports, Org-mode tries to include a validation link for the
+exported HTML. Let’s disable that since I never use it.
+#+NAME: org-html-validation
+#+BEGIN_SRC emacs-lisp
+  (setq org-html-validation-link nil)
+#+END_SRC
+
 #+begin_src emacs-lisp
-  (use-package ox-ssh
-    :after ox
-    :straight (:build t))
+  (use-package htmlize
+    :defer t)
+#+end_src
+
+This package allows for live-previewing the HTML export of an org
+buffer in an XWidget Webkit browser window. But when testing it, it’s
+not great for large org files, I should keep its usage for smaller org
+files.
+#+begin_src emacs-lisp
+  (use-package preview-org-html-mode
+    :defer t
+    :after org
+    :straight (preview-org-html-mode :build t
+                                     :type git
+                                     :host github
+                                     :repo "jakebox/preview-org-html-mode")
+    :general
+    (:keymaps '(org-mode-map)
+     :states 'normal
+     :prefix ","
+     "P"  '(:ignore :which-key "preview")
+     "Ph" #'preview-org-html-mode
+     "Pr" #'preview-org-html-refresh
+     "Pp" #'preview-org-html-pop-window-to-frame)
+    :config
+    (setq preview-org-html-refresh-configuration 'save))
 #+end_src
 
 **** LaTeX
@@ -3032,29 +3115,43 @@ syntax highlights:
 
 The default packages break my LaTeX exports: for some reasons, images
 are not loaded and exported in PDFs, so I needed to redifine the
-default packages excluding the one that broke my exports. I also added
-a default package, ~minted~ for syntax highlighting.
+default packages excluding the one that broke my exports; namely, I
+need to remove ~inputenc~, ~fontenc~ and ~grffile~. I also added some default
+packages:
+- ~minted~ for syntax highlighting
+- ~cleveref~ for better references to various elements.
+- ~svg~ for inserting SVG files in PDF outputs
+- ~booktabs~ for nicer tables
+- and ~tabularx~ for tabulars with adjustable columns
 #+NAME: org-latex-default-packages
 #+BEGIN_SRC emacs-lisp
-  (setq org-latex-default-packages-alist '((""         "graphicx"  t)
-                                           ("T1"       "fontspec"  t ("pdflatex"))
-                                           (""         "longtable" nil)
-                                           (""         "wrapfig"   nil)
-                                           (""         "rotating"  nil)
-                                           ("normalem" "ulem"      t)
-                                           (""         "amsmath"   t)
-                                           (""         "textcomp"  t)
-                                           (""         "amssymb"   t)
-                                           (""         "capt-of"   nil)
-                                           (""         "minted"    nil)
-                                           (""         "hyperref"  nil)))
+  (dolist (package '(("AUTO" "inputenc" t ("pdflatex"))
+                     ("T1"   "fontenc"  t ("pdflatex"))
+                     (""     "grffile"  t)))
+    (delete package org-latex-default-packages-alist))
+
+  (dolist (package '((""           "minted")
+                     ("capitalize" "cleveref")
+                     (""           "svg")
+                     (""           "booktabs")
+                     (""           "tabularx")))
+    (add-to-list 'org-latex-default-packages-alist package t))
+
+  (setq org-latex-reference-command "\\cref{%s}")
 #+END_SRC
 
-By the way, reference links in LaTeX should be written in this format:
+By the way, reference links in LaTeX should be written in this format,
+since we are using ~cleveref~:
 #+NAME: org-export-latex-hyperref-format
 #+BEGIN_SRC emacs-lisp
   (setq org-export-latex-hyperref-format "\\ref{%s}")
 #+END_SRC
+
+And Minted should be default break lines if a line is too long:
+#+name: org-export-latex-minted-options
+#+begin_src emacs-lisp
+  (setq org-latex-minted-options '(("breaklines") ("tabsize" "2")))
+#+end_src
 
 When it comes to the export itself, the latex file needs to be
 processed several times through XeLaTeX in order to get some
@@ -3076,23 +3173,34 @@ add their extension like so:
     (add-to-list 'org-latex-logfiles-extensions ext t))
 #+end_src
 
-**** HTML
+**** Markdown
 :PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-HTMLxjc5fl6184j0
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Markdown-g2vh5vz095j0
 :END:
-For Reveal.JS exports, I need to set where to find the framework by
-default:
-#+NAME: org-re-reveal-root
-#+BEGIN_SRC emacs-lisp
-  (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-#+END_SRC
+There’s not really any unified Markdown specification, meaning
+everyone can pretty much do whatever they want with the syntax and
+still call it Markdown. Great… But something I appreciate is Github
+supports some extra HTML to make our files extra spicy! And lucky me,
+there’s a package for exporting my org files to Github-flavored
+Markdown!
+#+begin_src emacs-lisp
+  (use-package ox-gfm
+    :after ox
+    :straight (:build t))
+#+end_src
 
-On HTML exports, Org-mode tries to include a validation link for the
-exported HTML. Let’s disable that since I never use it.
-#+NAME: org-html-validation
-#+BEGIN_SRC emacs-lisp
-  (setq org-html-validation-link nil)
-#+END_SRC
+**** SSH Config
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-SSH-Config-tatextz095j0
+:END:
+Yet another exporter I enjoy is [[https://github.com/dantecatalfamo/ox-ssh][~ox-ssh~]] with which I manage my
+~$HOME/.ssh/config~ file. You won’t find my org file for managing my
+servers on my repos though.
+#+begin_src emacs-lisp
+  (use-package ox-ssh
+    :after ox
+    :straight (:build t))
+#+end_src
 
 *** Keybindings
 :PROPERTIES:
@@ -3447,6 +3555,90 @@ The project is then defined like so:
                 "langue-phundrak-com-static"
                 "langue-phundrak-com-pdf"))
 #+END_SRC
+
+*** Org-ref and Bibtex configuration
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-org-ref-1h586cd085j0
+:END:
+#+begin_src emacs-lisp
+  (use-package reftex
+    :commands turn-on-reftex
+    :init (setq reftex-default-bibliography "~/org/bibliography/references.bib"
+                reftex-plug-into-AUCTeX     t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package org-ref
+    :straight (:build t)
+    :after (org ox-bibtex)
+    :demand t
+    :custom-face
+    (org-ref-cite-face ((t (:weight bold))))
+    :init
+    (setq org-ref-completion-library    'org-ref-ivy-cite
+          org-ref-bibliography-notes    "~/org/bibliography/notes.org"
+          org-ref-default-bibliography  "~/org/bibliography/references.bib"
+          org-ref-pdf-directory         "~/org/bibliography/bibtex-pdfs/"
+          org-latex-logfiles-extensions '("lof" "lot" "aux" "idx" "out" "log" "fbd_latexmk"
+                                          "toc" "nav" "snm" "vrb" "dvi" "blg" "brf" "bflsb"
+                                          "entoc" "ps" "spl" "bbl" "pygtex" "pygstyle"))
+    (add-hook 'org-mode-hook (lambda () (require 'org-ref)))
+    :config
+    (setq bibtex-completion-pdf-field "file")
+    (general-define-key
+     :keymaps '(bibtex-mode-map)
+     :states 'normal
+     "C-t" #'org-ref-bibtex-next-entry
+     "C-s" #'org-ref-bibtex-previous-entry
+     "gt"  #'org-ref-bibtex-next-entry
+     "gs"  #'org-ref-bibtex-previous-entry)
+    (general-define-key
+     :keymaps '(bibtex-mode-map)
+     :states 'normal
+     :prefix ","
+     ;; Navigation
+     "t" #'org-ref-bibtex-next-entry
+     "s" #'org-ref-bibtex-previous-entry
+
+     ;; Open
+     "b" #'org-ref-open-in-browser
+     "n" #'org-ref-open-bibtex-notes
+     "p" #'org-ref-open-bibtex-pdf
+
+     ;; Misc
+     "h" #'org-ref-bibtex-hydra/body
+     "i" #'org-ref-bibtex-hydra/org-ref-bibtex-new-entry/body-and-exit
+     "s" #'org-ref-sort-bibtex-entry
+
+     "l" '(:ignore :which-key "lookup")
+     "la" #'arxiv-add-bibtex-entry
+     "lA" #'arxiv-get-pdf-add-bibtex-entry
+     "ld" #'doi-utils-add-bibtex-entry-from-doi
+     "li" #'isbn-to-bibtex
+     "lp" #'pubmed-insert-bibtex-from-pmid)
+    (general-define-key
+     :keymaps '(org-mode-map)
+     :states 'normal
+     :prefix ","
+     "ic" #'org-ref-insert-link))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package ivy-bibtex
+    :defer t
+    :straight (:build t)
+    :config
+    (setq org-ref-bibliography-notes   "~/org/bibliography/notes.org"
+          org-ref-default-bibliography "~/org/bibliography/references.bib"
+          org-ref-pdf-directory        "~/org/bibliography/bibtex-pdfs/"
+          bibtex-completion-pdf-open-function #'find-file)
+
+    (general-define-key
+       :keymaps '(bibtex-mode-map)
+       :states 'normal
+       :prefix "SPC"
+       "m" #'ivy-bibtex))
+#+end_src
 
 *** Visual Configuration
 :PROPERTIES:
