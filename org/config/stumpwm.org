@@ -1,0 +1,972 @@
+#+TITLE: StumpWM config
+#+setupfile: headers
+#+OPTIONS: auto-id:t
+#+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's StumpWM config" />
+#+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's StumpWM config" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Stump config files of Phundrak" />
+
+* Introduction
+:PROPERTIES:
+:CUSTOM_ID: Introduction-9vda1z81u5j0
+:END:
+** What is StumpWM?
+:PROPERTIES:
+:CUSTOM_ID: Introduction-What-is-StumpWM-oyycyb91u5j0
+:END:
+[[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written
+entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not an
+dynamic tiling window manager like [[file:awesome.org][Awesome]] is, its ability of managing
+windows in frames and using keychords with keymaps like Emacs does is
+a huge plus for me, not to mention the fact its configuration file is
+written in Common Lisp, a general programming language, a bit like
+Awesome. This makes it an [[file:Deprecated/i3.org][i3]] on steroids, sort of. It also uses a lot
+of Emacs’ concepts, which is great for an Emacs user such as myself.
+
+** Why not EXWM then?
+:PROPERTIES:
+:CUSTOM_ID: Introduction-Why-not-EXWM-then-670dyb91u5j0
+:END:
+Sometimes, some actions within Emacs are blocking actions, making the
+computer not usable while the command runs. It also does not play nice
+with video games (pun intended), which is also a negative point for
+me. And I also find EXWM more confusing overall than StumpWM.
+
+** What this file is for
+:PROPERTIES:
+:CUSTOM_ID: Introduction-What-this-file-is-for-pnyg92a1u5j0
+:END:
+This file has two main goals:
+- This will be the actual source code of my StumpWM
+  configuration, thanks to Emacs’ org-mode, and thanks to org-mode’s
+  literate config capabilities.
+
+  Almost all of the visible source blocks if not all will be included
+  in my configuration files through tangling, which can be done in
+  Emacs when this file is opened through ~M-x org-babel-tangle~, which
+  will write my configuration files based on the source blocks present
+  in this document. This file is not only my config’s documentation,
+  it /*is*/ my configuration.
+- Be my documentation on my StumpWM configuration. That way, I’ll
+  never forget which block of code does what.
+
+  And maybe, hopefully, someone could learn a thing or two if they
+  want to get into StumpWM but don’t know where to begin. You should
+  be able to read this document as a book, with each chapter dedicated
+  to a different aspect of StumpWM.a
+
+** Organization of my files
+:PROPERTIES:
+:CUSTOM_ID: Introduction-Organization-of-my-files-40vjne91u5j0
+:END:
+While I could make this file write everything to the same file (the
+actual source will be in a single file after all), I find it easier to
+debug StumpWM if everything’s split up. For now, my configuration
+follows this architecture:
+- ~init.el~ :: My main configuration file, glues everything together. It
+  loads all of my configuration files as well as some modules I find
+  useful;
+
+- ~colors.lisp~ :: In this file are defined colors that will be used in
+  common in my ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code
+  DRY, or as I prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
+- ~commands.lisp~ :: Lisp commands, in case I want to bind some
+  complicated actions to a keybind that is not just a simple shell
+  command;
+- ~keybindings.lisp~ :: My list of keymaps and keybinds which make
+  StumpWM actually usable;
+- ~modeline.lisp~ :: This defines the modeline, a concept taken from
+  Emacs which can display various information such as a list of
+  workspaces, including the current one;
+- ~placement.lisp~ :: This file manages my workspaces and the default
+  placement of various windows;
+- ~theme.lisp~ :: manages the color theme of StumpWM, the default
+  placement of some windows and StumpWM’s gaps.
+
+* Init file
+:PROPERTIES:
+:CUSTOM_ID: Init-file-l3q4snd1u5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/init.lisp
+:END:
+As mentioned in [[https://stumpwm.github.io/git/stumpwm-git_1.html#Init-File][the documentation]], the configuration files can be in
+different locations, but I chose an Emacs-like configuration: put
+everything in ~~/.stumpwm.d/~. We begin by indicating quicklisp how to
+properly initialize:
+#+begin_src lisp
+  #-quicklisp
+  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                         (user-homedir-pathname))))
+    (when (probe-file quicklisp-init)
+      (load quicklisp-init)))
+#+end_src
+
+Then, our first StumpWM-related code is declaring we are using the
+~stumpwm~ package, and this is also our default package. This will allow
+us to avoid using the prefix ~stumpwm:~ each time we are using a
+function or a variable from this package.
+#+begin_src lisp
+  (in-package :stumpwm)
+  (setf *default-package* :stumpwm)
+#+end_src
+
+
+Since I install StumpWM with my package manager (I use the AUR’s
+~stumpwm-git~ package), StumpWM’s modules are installed to
+~/usr/share/stupmwm/contrib/utils/~, let’s indicate that to StumpWM.
+#+begin_src lisp
+  ;; (set-module-dir "/usr/share/stupmwm/contrib/utils/")
+  (set-module-dir "/usr/share/stupmwm/contrib/")
+  ;; (dolist (path '("/usr/share/stumpwm/contrib/utils/"
+  ;;                 "/usr/share/stumpwm/contrib/minor-mode"
+  ;;                 "/usr/share/stumpwm/contrib/modeline"))
+  ;;   (add-to-load-path path))
+#+end_src
+
+A startup message can be used when initializing StumpWM. For now,
+let’s set it to ~nil~.
+#+begin_src lisp
+(setf *startup-message* nil)
+#+end_src
+
+The first thing I want to do after that is to set some decent cursor
+pointer as well as get a bunch of stuff started. To see what’s in the
+~autostart~ script, [[file:bin.org::#Autostart-a99e99e7][see here]].
+#+begin_src lisp
+  (run-shell-command "xsetroot -cursor_name left_ptr")
+  (run-shell-command "autostart")
+#+end_src
+
+Now, we’ll load a couple of my custom files that will be described below:
+#+name: first-loaded-files
+| File to be loaded |
+|-------------------|
+| commands.lisp     |
+| placement.lisp    |
+| keybindings.lisp  |
+| theme.lisp        |
+| modeline.lisp     |
+
+#+name: gen-load-files
+#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+begin_src emacs-lisp :var files=first-loaded-files
+  (mapconcat (lambda (file)
+               (format "(load \"~/.stumpwm.d/%s\")" (car file)))
+             files
+             "\n")
+#+end_src
+
+This is equivalent to the Common Lisp code:
+#+RESULTS[942558619eb0d0a3d694a7808d0b600f0bc4c14c]: gen-load-files
+#+begin_src lisp
+(load "~/.stumpwm.d/commands.lisp")
+(load "~/.stumpwm.d/placement.lisp")
+(load "~/.stumpwm.d/keybindings.lisp")
+(load "~/.stumpwm.d/theme.lisp")
+(load "~/.stumpwm.d/modeline.lisp")
+#+end_src
+
+Once the modeline file is loaded, let’s indicate StumpWM to activate
+it:
+#+begin_src lisp
+  (when *initializing*
+    (mode-line))
+#+end_src
+
+Another thing I want to set is how focus is linked to my mouse: only
+on click. I /HATE/ it when focus follows my mouse like some damn dog
+after its ball. Also, the meta key will be used to move floating
+windows.
+#+begin_src lisp
+  (setf *mouse-focus-policy*    :click
+        ,*float-window-modifier* :META)
+#+end_src
+
+Next, some modules will be loaded from the ~stumpwm-contrib~ package
+(which is included in ~stumpwm-git~). Here is a short list including a
+short description of what they are for:
+#+name: loaded-modules
+| Module Name      | Why It Is Loaded                                           |
+|------------------+------------------------------------------------------------|
+| alert-me         | Creates notifications, can also create timed notifications |
+| battery-portable | Get information on the battery level of a laptop           |
+| beckon           | Bring the mouse cursor to the current window               |
+| cpu              | Get the CPU usage of the computer                          |
+| end-session      | Gracefully end programs when ending user session           |
+| globalwindows    | Navigate between windows from all workspaces               |
+| mem              | Get the memory usage of the computer                       |
+| stump-backlight  | Native management of backlight in StumpWM                  |
+| urgentwindows    | Get urgent windows                                         |
+
+#+name: gen-load-modules
+#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+begin_src emacs-lisp :var modules=loaded-modules
+  (mapconcat (lambda (module)
+               (format "(load-module \"%s\")" (car module)))
+             modules
+             "\n")
+#+end_src
+
+#+RESULTS[1978f17a99db4ca68780c378e5e5d9d58f9e08bc]: gen-load-modules
+#+begin_src lisp
+(load-module "alert-me")
+(load-module "battery-portable")
+(load-module "beckon")
+(load-module "cpu")
+(load-module "end-session")
+(load-module "globalwindows")
+(load-module "mem")
+(load-module "stump-backlight")
+(load-module "urgentwindows")
+#+end_src
+
+Finally, we can notify the user everything is ready.
+#+begin_src lisp
+  (setf *startup-message* "StumpWM is ready!")
+#+end_src
+
+And it’s done! We can now move on to the creation of the other CLisp files.
+
+* Commands
+:PROPERTIES:
+:CUSTOM_ID: Commands-1wagy001v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/commands.lisp
+:END:
+This file is going to be short. The only two custom command I have is
+for Firefox, in order to either invoke a new Firefox window, or raise
+it if it already exists, and for Emacs to invoke the Emacs client or a
+new Emacs instance if the server isn’t running. This is done like so:
+#+begin_src lisp
+  (defcommand firefox () ()
+              "Run or raise Firefox."
+              (run-or-raise "firefox" '(:class "Firefox") t nil))
+#+end_src
+
+And done, next!
+
+* Colors
+:PROPERTIES:
+:CUSTOM_ID: Colors-w5493d01v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/colors.lisp
+:END:
+If you’ve taken a look at the rest of my dotfiles, you may have
+noticed I really like the [[https://www.nordtheme.com/][Nord theme]]. No wonder we can find it here
+again! Here is a small table listing the Nord colors:
+#+name: nord-colors
+| Name   | Value   |
+|--------+---------|
+| nord0  | #2e3440 |
+| nord1  | #3b4252 |
+| nord2  | #434c5e |
+| nord3  | #4c566a |
+| nord4  | #d8dee9 |
+| nord5  | #e5e9f0 |
+| nord6  | #eceff4 |
+| nord7  | #8fbcbb |
+| nord8  | #88c0d0 |
+| nord9  | #81a1c1 |
+| nord10 | #5e81ac |
+| nord11 | #bf616a |
+| nord12 | #d08770 |
+| nord13 | #ebcb8b |
+| nord14 | #a3be8c |
+| nord15 | #b48ead |
+
+I’ll prefix the variables’ name with ~phundrak-~ just in case it might
+conflict with another package I might use in the future, so the CLisp
+code looks like so:
+#+name: gen-colors
+#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+begin_src emacs-lisp :var colors=nord-colors
+  (mapconcat (lambda (color)
+               (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
+             colors
+             "\n")
+#+end_src
+
+#+RESULTS[08b3db7a2b4f31d641bcd096ff265eae06879244]: gen-colors
+#+begin_src lisp
+(defvar phundrak-nord0 "#2e3440")
+(defvar phundrak-nord1 "#3b4252")
+(defvar phundrak-nord2 "#434c5e")
+(defvar phundrak-nord3 "#4c566a")
+(defvar phundrak-nord4 "#d8dee9")
+(defvar phundrak-nord5 "#e5e9f0")
+(defvar phundrak-nord6 "#eceff4")
+(defvar phundrak-nord7 "#8fbcbb")
+(defvar phundrak-nord8 "#88c0d0")
+(defvar phundrak-nord9 "#81a1c1")
+(defvar phundrak-nord10 "#5e81ac")
+(defvar phundrak-nord11 "#bf616a")
+(defvar phundrak-nord12 "#d08770")
+(defvar phundrak-nord13 "#ebcb8b")
+(defvar phundrak-nord14 "#a3be8c")
+(defvar phundrak-nord15 "#b48ead")
+#+end_src
+
+And with that we’re done!
+
+* Modeline
+:PROPERTIES:
+:CUSTOM_ID: Modeline-g2ofyw01v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/modeline.lisp
+:END:
+The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
+#+begin_src lisp
+  (load "~/.stumpwm.d/colors.lisp")
+#+end_src
+
+Next, we can set some colors for the modeline. Let’s set the
+background of the modeline to Nord1 and the foreground to Nord5, I
+think this is a pretty good combination.
+#+begin_src lisp
+  (setf *mode-line-background-color* phundrak-nord1
+        ,*mode-line-foreground-color* phundrak-nord5)
+#+end_src
+
+We /could/ also use some borders in the modeline. But we won’t. Let’s
+still set its color to Nord1, just in case.
+#+begin_src lisp
+  (setf *mode-line-border-color* phundrak-nord1
+        ,*mode-line-border-width* 0)
+#+end_src
+
+The timeout of the modeline indicates how often it refreshes in
+seconds. I think one second is good.
+#+begin_src lisp
+  (setf *mode-line-timeout* 1)
+#+end_src
+
+Next we get to the content of the modeline. This format follows the
+format indicated in the manpage of ~date~.
+#+begin_src lisp
+  (setf *time-modeline-string* "%F %H:%M")
+#+end_src
+
+Let’s also indicate how the groupname is displayed.
+#+begin_src lisp
+  (setf *group-format* " %t ")
+#+end_src
+
+The window format should display first its window number, then its
+titled, limited to 30 characters.
+#+begin_src lisp
+  (setf *window-format* "%n: %30t")
+#+end_src
+
+We can indicate what to display in our modeline. Be aware the ~^>~
+string will align the rest of the string to the right of the modeline.
+~%g~ will display the group list, while ~%v~ will display the list of
+windows that are in the current group, with the active one
+highlighted, and ~%u~ will display urgent windows if there are any. ~%d~
+on the other hand will display the date in the format set above, while
+~%B~ will display the battery level of the laptop.
+#+begin_src lisp
+  (setf *screen-mode-line-format* (list "%g %v ^> %C | %M | %B | %d"))
+#+end_src
+
+This variable as you can see is a list of elements, although here I am
+only using one string. But it is completely possible to insert some
+CLisp code in here that returns some string if the user needs some
+code to return data that cannot be easily accesible otherwise. I might
+add some at some point, but not today yet.
+
+# Also, let’s enable a system tray.
+# #+begin_src lisp
+#   (load-module "stumptray")
+#   (stumptray::stumptray)
+# #+end_src
+
+# Don’t forget to run src_lisp[:exports code]{(ql:quickload :xembed)} in
+# ~sbcl~ at least once to install its dependencies.
+
+* Placement
+:PROPERTIES:
+:CUSTOM_ID: Placement-mhc3sr21v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/placement.lisp :noweb yes
+:END:
+I’ve been used to ten groups, or workspaces, or tags, since I began
+using tiling window managers. I shall then continue this habit. Here
+is the list of groups I will be using:
+#+name: list-groups
+| Groups   |
+|----------|
+| term     |
+| emacs    |
+| www      |
+| files    |
+| media    |
+| graphics |
+| VMs      |
+| games    |
+| private  |
+| discord  |
+
+#+name: gen-groups
+#+headers: :tangle no :exports none :cache yes
+#+begin_src emacs-lisp :var groups=list-groups
+  (string-join `(,(format "(grename \"%s\")" (car (car groups)))
+                 ,@(mapcar (lambda (group)
+                             (format "(gnewbg \"%s\")" (car group)))
+                           (cdr groups)))
+               "\n")
+#+end_src
+
+#+RESULTS[ed2b45d9a542233061373da32e830bd27a68d61b]: gen-groups
+#+begin_example
+(grename "term")
+(gnewbg "emacs")
+(gnewbg "www")
+(gnewbg "files")
+(gnewbg "media")
+(gnewbg "graphics")
+(gnewbg "VMs")
+(gnewbg "games")
+(gnewbg "private")
+(gnewbg "discord")
+#+end_example
+
+Groups are specified this way:
+#+begin_src lisp
+  (when *initializing*
+    <<gen-groups()>>)
+#+end_src
+
+Next, let’s make sure no previous window placement rule is in place,
+this will avoid unexpected and hard-to-debug behavior.
+#+begin_src lisp
+  (clear-window-placement-rules)
+#+end_src
+
+Now we can define our window placement preferences. For now, all rely
+on the window’s class, so it will be pretty straightforward to write.
+#+name: frame-preferences
+| Window Class | Group   |
+|--------------+---------|
+| Emacs        | emacs   |
+| Firefox      | browser |
+| Nemo         | files   |
+| Gimp         | media   |
+| Signal       | private |
+| lightcord    | discord |
+| Steam        | games   |
+| Virt-manager | VMs     |
+
+#+name: gen-rules
+#+headers: :tangle no :exports results :cache yes :wrap src lisp
+#+begin_src emacs-lisp :var rules=frame-preferences
+  (mapconcat (lambda (rule)
+               (let ((class (car rule))
+                     (group (cadr rule)))
+                 (format "(define-frame-preference \"%s\"
+      (nil t t :class \"%s\"))" group class)))
+             rules
+             "\n")
+#+end_src
+
+This can be written this way:
+#+RESULTS[b493d3cb9cae1fc97cdb4eb5dc56c9440fde0b2b]: gen-rules
+#+begin_src lisp
+(define-frame-preference "emacs"
+    (nil t t :class "Emacs"))
+(define-frame-preference "browser"
+    (nil t t :class "Firefox"))
+(define-frame-preference "files"
+    (nil t t :class "Nemo"))
+(define-frame-preference "media"
+    (nil t t :class "Gimp"))
+(define-frame-preference "private"
+    (nil t t :class "Signal"))
+(define-frame-preference "discord"
+    (nil t t :class "lightcord"))
+(define-frame-preference "games"
+    (nil t t :class "Steam"))
+(define-frame-preference "VMs"
+    (nil t t :class "Virt-manager"))
+#+end_src
+
+* Theme
+:PROPERTIES:
+:CUSTOM_ID: Theme-1x3c2u31v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/theme.lisp :noweb yes
+:END:
+As in the modeline file, the first thing we’ll do is to load our colors.
+#+begin_src lisp
+  (load "~/.stumpwm.d/colors.lisp")
+#+end_src
+
+We can now go onto more serious business.
+
+** Fonts
+:PROPERTIES:
+:CUSTOM_ID: Theme-Fonts-28pc8141v5j0
+:END:
+This gave me quite the headache when I tried to set this up: in order
+to use TTF or OTF fonts, we need to use the ~ttf-fonts~ module which
+relies on the ~clx-truetype~ library. A few years back, it should have
+been possible to get it installed with a call to src_lisp[:exports
+code]{(ql:quickload :clx-truetype)}, but it is no longer available!
+There’s a quickfix available while we wait for ~clx-truetype~ to be once
+again available: clone it in quicklisp’s local projects. You will
+obviously need to have quicklisp installed (for that, follow the
+[[https://www.quicklisp.org/beta/#installation][official instructions]]), then execute the following shell commands:
+#+begin_src sh
+  cd ~/quicklisp/local-projects/
+  git clone https://github.com/lihebi/clx-truetype.git
+#+end_src
+This will make ~clx-truetype~ available to quicklisp, and you can run
+again src_lisp[:exports code]{(ql:quickload :clx-truetype)} without an
+issue (running it again is necessary to install its dependencies).
+
+Now that this is out of the way, let’s add two lines so we can use TTF
+and OTF fonts:
+#+begin_src lisp
+  (ql:quickload :clx-truetype)
+  (load-module "ttf-fonts")
+#+end_src
+
+Something that didn’t click immediately for me (and I think StumpWM’s
+documentation on this could be improved) is that ~set-font~ can be used
+to set either one main font for StumpWM, as one might guess reading
+the documentation --- or you can set a list of them! And this is
+great, since my main font does not support some characters I regularly
+have in my windows’ title, such as CJK characters, emojis and all!
+Here is my list of fonts I want loaded:
+#+name: list-fonts
+| Family      | Subfamily | Size |
+|-------------+-----------+------|
+| DejaVu Sans | Book      |    9 |
+| IPAMincho   | Regular   |   11 |
+
+#+name: gen-fonts
+#+headers: :tangle no :exports results :cache yes :wrap src lisp
+#+begin_src emacs-lisp :var fonts=list-fonts
+  (format "(set-font `(%s))"
+          (mapconcat (lambda (font)
+                      (let ((family    (nth 0 font))
+                            (subfamily (nth 1 font))
+                            (size      (nth 2 font)))
+                        (format ",%s" `(make-instance 'xft:font
+                                                      :family ,(format "\"%s\"" family)
+                                                      :subfamily ,(format "\"%s\"" subfamily)
+                                                      :size ,size
+                                                      :antialias t))))
+                    fonts
+                    "\n            "))
+#+end_src
+
+The code equivalent of this table can be seen below:
+#+RESULTS[054585246a49cd88836d4c5ea1aad66c1bc97f8a]: gen-fonts
+#+begin_src lisp
+(set-font `(,(make-instance 'xft:font :family "DejaVu Sans" :subfamily "Book" :size 11 :antialias t)
+            ,(make-instance 'xft:font :family "IPAMincho" :subfamily "Regular" :size 11 :antialias t)))
+#+end_src
+
+*** TODO Font error in modeline with Japanese                    :noexport:
+:PROPERTIES:
+:CUSTOM_ID: Theme-Fonts-Font-error-in-modeline-with-Japanese-w9xk5161v5j0
+:END:
+Apparently having two fonts, including one with Japanese characters,
+does not help with window titles containing Japanese characters.
+
+** Colors
+:PROPERTIES:
+:CUSTOM_ID: Theme-Colors-ctlclb51v5j0
+:END:
+We can now set a couple of colors for StumpWM. Not that we will see
+them often since I don’t like borders on my windows, but in case I
+want to get them back, they’ll be nice to have.
+#+begin_src lisp
+  (set-border-color        phundrak-nord1)
+  (set-focus-color         phundrak-nord1)
+  (set-unfocus-color       phundrak-nord3)
+  (set-float-focus-color   phundrak-nord1)
+  (set-float-unfocus-color phundrak-nord3)
+#+end_src
+
+Let’s also set the colors of the message and input windows:
+#+begin_src lisp
+  (set-fg-color phundrak-nord4)
+  (set-bg-color phundrak-nord1)
+#+end_src
+
+As I said, I don’t like borders, so I’ll remove them. I’ll still keep
+the window’s title bar available when it’s floating, and this is also
+where I can set the format of its title: its number as well as its
+name, limited to thirty characters.
+#+begin_src lisp
+  (setf *normal-border-width*       0
+        ,*float-window-border*       0
+        ,*float-window-title-height* 15
+        ,*window-border-style*       :none
+        ,*window-format*             "%n:%30t")
+#+end_src
+
+** Message and Input Windows
+:PROPERTIES:
+:CUSTOM_ID: Theme-Message-and-Input-Windows-jxwhch51v5j0
+:END:
+The Input windows as well as the message windows should both be at the
+top of my screen. And I believe a padding of five pixels for the
+message windows is good.
+#+begin_src lisp
+  (setf *input-window-gravity*     :top
+        ,*message-window-padding*   10
+        ,*message-window-y-padding* 10
+        ,*message-window-gravity*   :top)
+#+end_src
+
+** Gaps Between Frames
+:PROPERTIES:
+:CUSTOM_ID: Theme-Gaps-Between-Frames-bqngnt51v5j0
+:END:
+I love gaps. When I was using i3, I used the ~i3-gaps~ package, not just
+plain ~i3~. In Awesome, I still have gaps. And in StumpWM, I shall still
+use gaps. In order to use them, let’s load a module dedicated to gaps
+in StumpWM:
+#+begin_src lisp
+  (load-module "swm-gaps")
+#+end_src
+
+Now that this is done, I can now set some variables bound to this
+package.
+#+begin_src lisp
+  (setf swm-gaps:*head-gaps-size*  0
+        swm-gaps:*inner-gaps-size* 5
+        swm-gaps:*outer-gaps-size* 15)
+#+end_src
+
+Finally, let’s enable our gaps:
+#+begin_src lisp
+  (when *initializing*
+    (swm-gaps:toggle-gaps))
+#+end_src
+
+* Keybinds
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-c6wgf961v5j0
+:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes
+:END:
+Buckle up, this chapter is going to be *long*, because me loves LOTS of keybinds.
+
+First, let’s declare again we are using the default package ~stumpwm~:
+#+begin_src lisp
+  (in-package :stumpwm)
+#+end_src
+
+This will avoid us always repeating ~stumpwm:define-key~ or ~stumpwm:kbd~
+instead of simply ~define-key~ and ~kbd~.
+
+StumpWM behaves a bit like Emacs in terms of keybinds. You have
+keymaps, which are a collection of keybinds, which in turn call CLisp
+functions. However, unlike Emacs, you have to declare a lot of
+keymaps, because StumpWM cannot (/yet/) understand keybinds such as
+src_lisp[:exports code]{(kbd "C-x c l")}, so you end up creating a
+keybind to a keymap which contains other keybinds, which might contain
+a couple of keybinds to other keymaps. I hope this will get improved
+soon.
+
+There are also two keymaps you need to be aware of:
+- ~*top-map*~ :: This is the keymap available litteraly everywhere. With
+  this keymap, you can emulate most of your keybinds you have in other
+  window managers. For instance, I cannot live without ~s-RET~ for
+  creating new shells, so I’ll bind it to ~*top-map*~. But it’s good
+  practice to avoid polluting ~*top-map*~ with too many keybinds.
+- ~*root-map*~ :: This keymap is the default keymap that is already
+  somewhat populated. It is available after hitting the prefix key set
+  with ~set-prefix-key~ which we will see just below.
+
+It is interesting to note that once you entered any keymap, except
+~*top-map*~, if you hit ~?~ you will see the list of available keybinds.
+I’d like it if something similar to ~general~ in Emacs too could be
+implemented: give any arbitrary name to the keybind you just declared
+which would be displayed instead of the actual function or keymap
+called by keybind. It would be nicer to see ~frames~ rather than
+~*my-frames-management-keymap*~.
+
+Anyways, as mentionned above, ~*root-map*~ is already pre-populated with
+some cool stuff for you, and you can access it with a prefix which is
+by default ~C-t~. But if this doesn’t suit you, you can always redefine
+it with ~set-prefix-key~. I personally like to have my space key as a
+leader key, but in order to not have it conflict with Emacs, I also
+need to press the super key too.
+#+begin_src lisp
+  (set-prefix-key (kbd "s-SPC"))
+#+end_src
+
+Also, let’s enable ~which-key~:
+#+begin_src lisp
+  (which-key-mode)
+#+end_src
+
+#+name: keybinds-gen
+#+headers: :tangle no :exports none :cache yes :noweb yes
+#+begin_src emacs-lisp :var map="m" keybinds=frames-float
+  (mapconcat (lambda (keybind)
+               (format "%s" (let ((key    (string-replace "~" "" (car keybind)))
+                                  (function (string-replace "~" "" (cadr keybind))))
+                              `(define-key ,map
+                                 (kbd ,(format "\"%s\"" key))
+                                 ,(if (string-prefix-p "'" function t)
+                                      function
+                                    (format "\"%s\"" function))))))
+             keybinds
+             "\n")
+#+end_src
+
+#+RESULTS[5938b2a6efd9c8b565416f9a687bc0d6a4a5f77e]: keybinds-gen
+: (define-key m (kbd "f") "float-this")
+: (define-key m (kbd "F") "unfloat-this")
+: (define-key m (kbd "u") "unfloat-this")
+: (define-key m (kbd "C-f") "flatten-floats")
+
+** Frames and Windows management
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-Frames-and-Windows-management-g4s6j371v5j0
+:END:
+As you’ll see, I have loads of keybinds related to frames and windows
+management. They are all categorized in a specific keymap, called
+~*my-frames-management-keymap*~. But before that, let’s define the
+keymap ~*my-frames-float-keymap*~, with keybinds dedicated to actions
+related with floating windows and frames.
+
+#+name: frames-float
+#+caption: ~*my-frames-float-keymap*~
+| Keychord | Function       |
+|----------+----------------|
+| ~f~        | ~float-this~     |
+| ~F~        | ~unfloat-this~   |
+| ~u~        | ~unfloat-this~   |
+| ~C-f~      | ~flatten-floats~ |
+
+We can now pass onto ~*my-frames-management-keymap*~. My keybinds are organized this way:
+#+name: frames-and-window-management
+#+caption: ~*my-frames-management-keymap*~
+| Keychord | Function                  |
+|----------+---------------------------|
+| ~c~        | ~move-focus left~           |
+| ~t~        | ~move-focus down~           |
+| ~s~        | ~move-focus up~             |
+| ~r~        | ~move-focus right~          |
+| ~C~        | ~move-window left~          |
+| ~T~        | ~move-window down~          |
+| ~S~        | ~move-window up~            |
+| ~R~        | ~move-window right~         |
+| ~C-c~      | ~exchange-direction left~   |
+| ~C-t~      | ~exchange-direction down~   |
+| ~C-s~      | ~exchange-direction up~     |
+| ~C-r~      | ~exchange-direction right~  |
+| ~n~        | ~next~                      |
+| ~p~        | ~prev~                      |
+| ~/~        | ~hsplit~                    |
+| ~-~        | ~vsplit~                    |
+| ~h~        | ~hsplit~                    |
+| ~v~        | ~vsplit~                    |
+| ~H~        | ~hsplit-equally~            |
+| ~V~        | ~vsplit-equally~            |
+| ~.~        | ~iresize~                   |
+| ~d~        | ~remove-split~              |
+| ~D~        | ~only~                      |
+| ~e~        | ~expose~                    |
+| ~f~        | ~fullscreen~                |
+| ~F~        | ~'*my-frames-float-keymap*~ |
+| ~i~        | ~info~                      |
+| ~I~        | ~show-window-properties~    |
+| ~m~        | ~meta~                      |
+| ~o~        | ~other-window~              |
+| ~q~        | ~delete-window~             |
+| ~Q~        | ~kill-window~               |
+| ~s~        | ~sibling~                   |
+| ~u~        | ~next-urgent~               |
+| ~U~        | ~unmaximize~                |
+
+As you can see, with the binding to ~F~, we make use of the
+~*my-frames-float-keymap*~ keymap declared above, which means if we find
+ourselves in ~*my-frames-management-keymap*~, pressing ~F~ will bring us
+in ~*my-frames-float-keymap*~.
+
+#+begin_src lisp
+  (defvar *my-frames-float-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=frames-float)>>
+      m))
+
+  (defvar *my-frames-management-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=frames-and-window-management)>>
+      m))
+#+end_src
+
+Let’s bind ~*my-frames-management-keymap*~ in ~*root-keymap*~:
+#+begin_src lisp
+  (define-key *root-map* (kbd "w") '*my-frames-management-keymap*)
+#+end_src
+
+That way, if we want for instance to split our current frame
+vertically, we’ll be able to type ~s-SPC w -~ and ~vsplit~ will be called.
+
+I also bound a couple of these functions to the top keymap for easier access:
+#+name: top-window-map
+| Keychord | Function                 |
+|----------+--------------------------|
+| ~s-c~      | ~move-focus left~          |
+| ~s-t~      | ~move-focus down~          |
+| ~s-s~      | ~move-focus up~            |
+| ~s-r~      | ~move-focus right~         |
+| ~s-C~      | ~move-window left~         |
+| ~s-T~      | ~move-window down~         |
+| ~s-S~      | ~move-window up~           |
+| ~s-R~      | ~move-window right~        |
+| ~s-M-c~    | ~exchange-direction left~  |
+| ~s-M-t~    | ~exchange-direction down~  |
+| ~s-M-s~    | ~exchange-direction up~    |
+| ~s-M-r~    | ~exchange-direction right~ |
+
+This translates to:
+#+begin_src lisp
+  <<keybinds-gen(map="*top-map*", keybinds=top-window-map)>>
+#+end_src
+
+Being a [[https://bepo.fr/wiki/Accueil][bépo layout]] user, the ~hjkl~ keys don’t exactly fit me, as you
+might have noticed with my use of ~ctsr~ which is its equivalent. Due to
+this, the interactive keymap for ~iresize~ is not ideal for me, let me
+redefine it:
+#+begin_src lisp
+  (define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
+                                                   :on-exit  #'resize-unhide
+                                                   :abort-if #'abort-resize-p)
+    ((kbd "c") "resize-direction left")
+    ((kbd "t") "resize-direction down")
+    ((kbd "s") "resize-direction up")
+    ((kbd "r") "resize-direction right"))
+#+end_src
+
+** Applications
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-Applications-2t512k00w5j0
+:END:
+When I speak about applications, I speak about programs and scripts in
+general. With these keymaps, I can launch programs I often have use
+for, but I can also launch some scripts as well as take screenshots.
+
+First, let’s create my ~rofi~ scripts keymap.
+#+name: rofi-scripts
+#+caption: ~*my-rofi-keymap*~
+| Keychord | Function                                      |
+|----------+-----------------------------------------------|
+| ~a~        | ~exec awiki~                                    |
+| ~r~        | ~exec rofi -combi-modi drun,window -show combi~ |
+| ~s~        | ~exec rofi -show ssh~                           |
+| ~p~        | ~exec rofi-pass -t~                             |
+| ~P~        | ~exec rofi-pass~                                |
+| ~e~        | ~exec rofi-emoji~                               |
+| ~m~        | ~exec rofi-mount~                               |
+| ~u~        | ~exec rofi-umount~                              |
+| ~w~        | ~exec wacom-setup~                              |
+| ~y~        | ~exec ytplay~                                   |
+| ~Y~        | ~exec rofi-ytdl~                                |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+  (defvar *my-rofi-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
+      m))
+#+end_src
+
+Let’s also create a keymap for screenshots.
+#+name: screenshot-keymap
+#+caption: ~*my-screenshot-keymap*~
+| Keychord | Function                                             |
+|----------+------------------------------------------------------|
+| ~d~        | ~exec scrot -d 3 -e 'mv $f ~/Pictures/Screenshots'~     |
+| ~s~        | ~exec scrot -e 'mv $f ~/Pictures/Screenshots'~          |
+| ~S~        | ~exec scrot -s -e 'mv $f ~/Pictures/Screenshots'~       |
+| ~g~        | ~exec scrot -e 'gimp $f; mv $f ~/Pictures/Screenshots'~ |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+  (defvar *my-screenshot-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+      m))
+#+end_src
+
+We can now define our applications keymap which will reference both
+the above keymaps.
+#+name: application-keymap
+#+caption: ~*my-applications-keymap*~
+| Keychord | Function                |
+|----------+-------------------------|
+| ~b~        | ~firefox~                 |
+| ~d~        | ~exec lightcord~          |
+| ~e~        | ~emacs~                   |
+| ~g~        | ~exec gimp~               |
+| ~n~        | ~exec nemo~               |
+| ~r~        | ~'*my-rofi-keymap*~       |
+| ~s~        | ~'*my-screenshot-keymap*~ |
+
+This translates to:
+#+begin_src lisp
+  (defvar *my-applications-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+      m))
+#+end_src
+
+The application keymap can now be bound to the top map like so:
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-a") '*my-applications-keymap*)
+#+end_src
+
+I will also bind to the top map ~s-RET~ in order to open a new terminal
+window. The screenshot keymap is also bound to the ScreenPrint key.
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-RET") "exec kitty")
+  (define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
+#+end_src
+
+** End of Session, Powering Off, and the Likes
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-End-of-Session-Powering-Off-and-the-Likes-mgz02z40w5j0
+:END:
+The module ~end-session~ provides functions for gracefully ending the
+user session, powering off, restarting, and suspending the computer.
+It also provides a function that interactively asks what the user
+whishes to do.
+#+name: end-session-keymap
+| Keychord | Function          |
+|----------+-------------------|
+| ~q~        | ~end-session~       |
+| ~l~        | ~logout~            |
+| ~s~        | ~suspend-computer~  |
+| ~S~        | ~shutdown-computer~ |
+| ~r~        | ~restart-computer~  |
+
+This translates to:
+#+begin_src lisp
+  (defvar *my-end-session-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
+      m))
+#+end_src
+
+Which is bound in the root map to ~q~:
+#+begin_src lisp
+  (define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+#+end_src
+
+** Misc
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-Misc-455iuh50w5j0
+:END:
+Finally, some misc keybinds on the root map which don’t really fit
+anywhere else:
+#+name: misc-root-map
+| Keychord | Function   |
+|----------+------------|
+| ~B~        | ~beckon~     |
+| ~l~        | ~exec plock~ |
+| ~r~        | ~reload~     |
+
+#+begin_src lisp
+  <<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
+#+end_src
