@@ -4163,6 +4163,21 @@ update its fontlock.
   (add-hook 'lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package stumpwm-mode
+    :straight (:build t)
+    :defer t
+    :config
+    (general-define-key
+     :keymaps 'stumpwm-mode-map
+     :states 'normal
+     :prefix ","
+     "e"  '(:ignore :which-key "eval")
+     "ee" #'stumpwm-eval-last-sexp
+     "ed" #'stumpwm-eval-defun
+     "er" #'stumpwm-eval-region))
+#+end_src
+
 **** EmacsLisp
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-EmacsLispo876fl6184j0
