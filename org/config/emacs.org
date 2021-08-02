@@ -3143,7 +3143,10 @@ since we are using ~cleveref~:
 And Minted should be default break lines if a line is too long:
 #+name: org-export-latex-minted-options
 #+begin_src emacs-lisp
-  (setq org-latex-minted-options '(("breaklines") ("tabsize" "2")))
+  (setq org-latex-minted-options '(("breaklines")
+                                   ("tabsize" "2")
+                                   ("frame" "single")
+                                   ("autogobble")))
 #+end_src
 
 When it comes to the export itself, the latex file needs to be
