@@ -108,17 +108,11 @@ function or a variable from this package.
   (setf *default-package* :stumpwm)
 #+end_src
 
-
 Since I install StumpWM with my package manager (I use the AUR’s
 ~stumpwm-git~ package), StumpWM’s modules are installed to
 ~/usr/share/stupmwm/contrib/utils/~, let’s indicate that to StumpWM.
 #+begin_src lisp
-  ;; (set-module-dir "/usr/share/stupmwm/contrib/utils/")
   (set-module-dir "/usr/share/stupmwm/contrib/")
-  ;; (dolist (path '("/usr/share/stumpwm/contrib/utils/"
-  ;;                 "/usr/share/stumpwm/contrib/minor-mode"
-  ;;                 "/usr/share/stumpwm/contrib/modeline"))
-  ;;   (add-to-load-path path))
 #+end_src
 
 A startup message can be used when initializing StumpWM. For now,
