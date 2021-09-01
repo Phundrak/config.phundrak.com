@@ -34,12 +34,13 @@ As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of
 using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in insert mode but with Evil in
 normal mode) as my main text editor.
 
-When it comes to my graphical UI, I do not have any desktop environment.
-Instead, I have a tiling window manager, [[https://awesomewm.org/][Awesome]]. I used to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]]
-fork by [[https://github.com/Airblader/i3][Airblader]], with which I used [[https://polybar.github.io/][Polybar]] as well as [[https://github.com/dylanaraps/pywal][pywal]] to define my
-system’s color scheme. But now, as said above, I prefer to use Awesome. It has a
-built-in status bar which I use, and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty
-much everything I use.
+When it comes to my graphical UI, I do not have any desktop
+environment. Instead, I have two tiling window managers, [[https://awesomewm.org/][Awesome]] and
+[[https://stumpwm.github.io/][StumpWM]]. I used to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]] fork by [[https://github.com/Airblader/i3][Airblader]], with which I
+used [[https://polybar.github.io/][Polybar]] as well as [[https://github.com/dylanaraps/pywal][pywal]] to define my system’s color scheme. But
+now, as said above, I prefer to use Awesome. It has a built-in status
+bar which I use, and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty much
+everything I use.
 
 Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is
 optimized for usage with the Bépo layout set as a software layout. It has also a
@@ -51,36 +52,50 @@ some games that do not offer to remap keys (I’m looking at you, Among Us).
 :CUSTOM_ID: Features-5ab2a2c0
 :END:
 - Emacs configuration perfectly tailored for my own use
-- Beautiful and comfy i3 and polybar configuration
-- And enough information below to get basically the same distro install as I
-  have on my main computer and my travel laptop.
+- Beautiful and comfy AwesomeWM and StumpWM configuration
+- And enough information below to get basically the same distro
+  install as I have on my main computer and my travel laptop.
 
-Most of the org files you will find in this repos are the actual source code of
-much of my config files. For instance, the bootstrap found in [[file:installation.org][installation.org]]
-exports almost all of its code snippets to [[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x
-org-babel-tangle= from within Emacs. Below I will also present and comment some
-of my short config files which do not deserve to have a full org file dedicated
-to them.
+Most of the org files you will find in this repos are the actual
+source code of much of my config files. For instance, the bootstrap
+found in [[file:bootstrap.org][bootstrap.org]] exports almost all of its code snippets to
+[[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x org-babel-tangle= from within
+Emacs. Below I will also present and comment some of my short config
+files which do not deserve to have a full org file dedicated to them.
 
 ** Tiling Window Managers
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-da221e37
 :END:
+*** StumpWM
+:PROPERTIES:
+:CUSTOM_ID: Features-Tiling-Window-Managers-StumpWM-u9kdbd6137j0
+:END:
+StumpWM is the tiling window manager I use the most at the moment. It
+is written and configured in Common Lisp, which I enjoy a lot since it
+has a syntax quite close to Elisp, the Lisp dialect used in Emacs. I’m
+currently still in the process of figuring out my config, so please
+consider it as a kind of work in progress. You can find the
+configuration [[file:stumpwm.org][here]].
+
 *** AwesomeWM
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
 :END:
-AwesomeWM is the TWM I use the most on my computer between itself and i3. My
-configuration for it is documented in detail in its corresponding document,
-which you can find [[file:awesome.org][here]].
+AwesomeWM is the TWM I used for quite some time after switching from
+i3. This is an automatic tiling window manager written and configured
+mostly in Lua, with its core written in C (this is originally a dwm
+fork). My configuration for it is documented in detail in its
+corresponding document, which you can find [[file:awesome.org][here]].
 
 *** i3 configuration (Deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
 :END:
-The i3 configuration is detailed in its corresponding README which you can find
-[[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update it until I may
-someday use it again. This was deprecated on August 22nd, 2020.
+The i3 configuration is detailed in its corresponding README which you
+can find [[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update
+it until I may someday use it again. This was deprecated on August
+22nd, 2020.
 
 **** Polybar config (Deprecated)
 :PROPERTIES:
@@ -244,17 +259,17 @@ empty.
 :PROPERTIES:
 :CUSTOM_ID: Features-Graphical_tweaks-Picom-b5b9a4dd
 :END:
-Picom is a standalone compositor for Xorg, and the successor to Compton, itself
-successor to xcompmgr-dana, itself a fork of xcompmgr. You can find my Picom
-configuration [[file:picom.org][here]].
+Picom is a standalone compositor for Xorg, and the successor to
+Compton, itself successor to xcompmgr-dana, itself a fork of xcompmgr.
+You can find my Picom configuration [[file:picom.org][here]].
 
 *** Xresources
 :PROPERTIES:
 :HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
 :CUSTOM_ID: Features-Graphical_tweaks-Xresources-8b622de1
 :END:
-The main body in my Xresources declaration is the declaration of my color theme.
-It is based on the [[https://www.nordtheme.com/][Nord]] theme, from their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
+The main body in my Xresources declaration is the declaration of my
+color theme. It is based on the [[https://www.nordtheme.com/][Nord]] theme, from their [[https://github.com/arcticicestudio/nord-xresources/][Git repository]].
 #+BEGIN_SRC conf
   #define nord0 #2E3440
   #define nord1 #3B4252
@@ -305,14 +320,19 @@ It is based on the [[https://www.nordtheme.com/][Nord]] theme, from their [[http
 :PROPERTIES:
 :CUSTOM_ID: Features-Text_and_source_code_editing-Emacs_configuration-ef937102
 :END:
-Emacs is my main text editor, which I use for almost everything. Because, you
-know…
+Emacs is my main text editor, which I use for almost everything.
+Because, you know…
 #+begin_quote
 Emacs is a great operating system, it just lacks a good text editor.
 #+end_quote
 
-You can find my Emacs config, based on Spacemacs, in my [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.spacemacs][.spacemacs]] file, and my
-user configuration in my [[file:emacs.org][emacs.org]] file.
+I currently have two Emacs configs:
+- a Spacemacs config, which you can find [[file:spacemacs.org][here]]. It is mostly abandoned
+  at this point, and I’m thinking of deprecating it in favor of the
+  next config
+- a vanilla config, written entirely by myself instead of relying on a
+  framework like Spacemacs or DoomEmacs. This is currently my main
+  config which you can find [[file:emacs.org][here]].
 
 *** Nano (deprecated)
 :PROPERTIES:
@@ -333,12 +353,12 @@ You can find my Rustfmt configuration [[file:rustfmt.org][here]].
 :PROPERTIES:
 :CUSTOM_ID: Features-Custom_scripts_in_=PATH=-043e8c8e
 :END:
-I have written some scripts that help me daily accomplish some simple tasks,
-like mounting and unmounting a drive or Android device, an emoji picker, a
-utility to set up my Wacom tablet, and so on. You can find them stored in my
-[[file:bin.org][bin.org]] file along with their detailed explanation in the README placed in the
-same folder —which is actually their source code once the org-mode file gets
-tangled.
+I have written some scripts that help me daily accomplish some simple
+tasks, like mounting and unmounting a drive or Android device, an
+emoji picker, a utility to set up my Wacom tablet, and so on. You can
+find them stored in my [[file:bin.org][bin.org]] file along with their detailed
+explanation in the README placed in the same folder —which is actually
+their source code once the org-mode file gets tangled.
 
 ** Terminal configuration
 :PROPERTIES:
@@ -407,7 +427,7 @@ it can be a security issue if someone ever get access to my computer while paru
 is running, but if it ever happens it will be already concerning enough they
 managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my custom script dired]] so I can use Emacs’ Dired
 as the file manager for ~paru~.
-#+BEGIN_SRC conf-space :tangle ~/.config/paru/paru.conf
+#+BEGIN_SRC conf :tangle ~/.config/paru/paru.conf
   [options]
   BottomUp
   Devel
@@ -427,10 +447,10 @@ as the file manager for ~paru~.
 :PROPERTIES:
 :CUSTOM_ID: Installation-9ec2ae86
 :END:
-For an installation walkthrough of my Arch Linux installation, check out my
-[[file:installation.org][installation.org]] file where I walk you through the first manual steps and
-through the bootstrap you can execute to automatically take care of a lot of
-elements.
+For an installation walkthrough of my Arch Linux installation, check
+out my [[file:bootstrap.org][bootstrap]] file where I walk you through the first manual steps
+and through the bootstrap you can execute to automatically take care
+of a lot of elements.
 
 * Licence
 :PROPERTIES:
