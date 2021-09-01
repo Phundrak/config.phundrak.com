@@ -3871,6 +3871,7 @@ awesome!
            (c-mode          . lsp-deferred)
            (c++-mode        . lsp-deferred)
            (css-mode        . lsp-deferred)
+           (dart-mode       . lsp-deferred)
            (html-mode       . lsp-deferred)
            (lua-mode        . lsp-deferred)
            (rust-mode       . lsp-deferred)
@@ -4178,6 +4179,23 @@ update its fontlock.
      "er" #'stumpwm-eval-region))
 #+end_src
 
+**** Dart
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Dart-xkr3z8j0m6j0
+:END:
+#+begin_src emacs-lisp
+  (use-package dart-mode
+    :straight (:build t)
+    :defer t
+    :mode "\\.dart\\'")
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-dart
+    :straight (:build t)
+    :defer t)
+#+end_src
+
 **** EmacsLisp
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-EmacsLispo876fl6184j0
@@ -4265,6 +4283,231 @@ comma.
     :config
     (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
 
+#+end_src
+
+**** Python
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Python-7mwd2yq0z6j0
+:END:
+#+begin_src emacs-lisp
+  (use-package python
+    :defer t
+    :straight (:build t)
+    :mode (("SConstruct\\'" . python-mode)
+           ("SConscript\\'" . python-mode)
+           ("[./]flake8\\'" . conf-mode)
+           ("/Pipfile\\'"   . conf-mode))
+    :init
+    (setq python-indent-guess-indent-offset-verbose nil)
+    (add-hook 'python-mode-local-vars-hook #'lsp)
+    :config
+    (setq python-indent-guess-indent-offset-verbose nil)
+    (when (and (executable-find "python3")
+               (string= python-shell-interpreter "python"))
+      (setq python-shell-interpreter "python3")))
+#+end_src
+
+#+begin_src emacs-lisp
+  (after! org
+    (add-to-list 'org-babel-load-languages '(python . t)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pytest
+    :defer t
+    :straight (:build t)
+    :commands (pytest-one
+               pytest-pdb-one
+               pytest-all
+               pytest-pdb-all
+               pytest-last-failed
+               pytest-pdb-last-failed
+               pytest-module
+               pytest-pdb-module)
+    :config
+    (add-to-list 'pytest-project-root-files "setup.cfg")
+    (general-define-key
+     :states 'normal
+     :prefix ","
+     :keymaps 'python-mode-map
+     "t"  '(:ignore :which-key "test")
+     "ta" #'python-pytest
+     "tf" #'python-pytest-file-dwim
+     "tF" #'python-pytest-file
+     "tt" #'python-pytest-function-dwim
+     "tT" #'python-pytest-function
+     "tr" #'python-pytest-repeat
+     "tp" #'python-pytest-dispatch))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package poetry
+    :defer t
+    :straight (:build t)
+    :commands (poetry-venv-toggle
+               poetry-tracking-mode)
+    :config
+    (setq poetry-tracking-strategy 'switch-buffer)
+    (add-hook 'python-mode-hook #'poetry-tracking-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pip-requirements
+    :defer t
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pipenv
+    :defer t
+    :straight (:build t)
+    :commands (pipenv-activate
+               pipenv-deactivate
+               pipenv-shell
+               pipenv-open
+               pipenv-install
+               pipenv-uninstall)
+    :hook (python-mode . pipenv-mode)
+    :init (setq pipenv-with-projectile nil)
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix ","
+     :keymaps 'python-mode-map
+     "e"  '(:ignore :which-key "pipenv")
+     "ea" #'pipenv-activate
+     "ed" #'pipenv-deactivate
+     "ei" #'pipenv-install
+     "el" #'pipenv-lock
+     "eo" #'pipenv-open
+     "er" #'pipenv-run
+     "es" #'pipenv-shell
+     "eu" #'pipenv-uninstall))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pyenv
+    :defer t
+    :straight (:build t)
+    :config
+    (add-hook 'python-mode-hook #'pyenv-track-virtualenv)
+    (add-to-list 'global-mode-string
+                 '(pyenv-virtual-env-name (" venv:" pyenv-virtual-env-name " "))
+                 'append))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pyenv-mode
+    :defer t
+    :after python
+    :straight (:build t)
+    :if (executable-find "pyenv")
+    :commands (pyenv-mode-versions)
+    :config
+    (general-define-key
+     :states 'normal
+     :keymaps 'python-mode-map
+     :prefix ","
+     "vu" #'pyenv-mode-unset
+     "vs" #'pyenv-mode-set))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pippel
+    :defer t
+    :straight (:build t)
+    :init
+    (general-define-key
+     :states 'normal
+     :keymaps 'python-mode-map
+     :prefix ","
+     "P" #'pippel-list-packages))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pyimport
+    :defer t
+    :straight (:build t)
+    :config
+    (general-define-key
+     :states 'normal
+     :prefix ","
+     :keymaps 'python-mode-map
+     "i"  '(:ignore :which-key "imports")
+     "ii" #'pyimport-insert-missing
+     "ir" #'pyimport-remove-unused))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package py-isort
+    :defer t
+    :straight (:build t)
+    :config
+    (general-define-key
+     :prefix ","
+     :states 'normal
+     :keymaps 'python-mode-map
+     "i"  '(:ignore :which-key "imports")
+     "is" #'py-isort-buffer
+     "iR" #'py-isort-region))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package counsel-pydoc
+    :defer t
+    :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package sphinx-doc
+    :defer t
+    :straight (:build t)
+    :init
+    (add-hook 'python-mode-hook #'sphinx-doc-mode)
+    (general-define-key
+     :states 'normal
+     :keymaps 'python-mode-map
+     :prefix ","
+     "S"  '(:ignore :which-key "sphinx-doc")
+     "Se" #'sphinx-doc-mode
+     "Sd" #'sphinx-doc))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package cython-mode
+    :defer t
+    :straight (:build t)
+    :mode "\\.p\\(yx\\|x[di]\\)\\'"
+    :config
+    (setq cython-default-compile-format "cython -a %s")
+    (general-define-key
+     :prefix ","
+     :states 'normal
+     :keymaps 'cython-mode-map
+     "c"  '(:ignore :which-key "cython")
+     "cc" #'cython-compile))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package flycheck-cython
+    :defer t
+    :straight (:build t)
+    :after cython-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package blacken
+    :defer t
+    :straight (:build t)
+    :init
+    (add-hook 'python-mode-hook #'blacken-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+    :after lsp-mode
+    :defer t
+    :straight (:buidl t))
 #+end_src
 
 **** Rust
