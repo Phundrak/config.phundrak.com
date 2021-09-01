@@ -3301,21 +3301,20 @@ Tables get a bit more love:
 | Key chord | Function                             | Description |
 |-----------+--------------------------------------+-------------|
 | t         | nil                                  | tables      |
+| tc        | org-table-move-column-left           |             |
+| tt        | org-table-move-row-down              |             |
+| ts        | org-table-move-row-up                |             |
+| tr        | org-table-move-column-right          |             |
 | ta        | org-table-align                      |             |
 | te        | org-table-eval-formula               |             |
 | tf        | org-table-field-info                 |             |
 | th        | org-table-convert                    |             |
 | tl        | org-table-recalculate                |             |
 | tp        | org-plot/gnuplot                     |             |
-| ts        | org-table-sort-lines                 |             |
+| tS        | org-table-sort-lines                 |             |
 | tw        | org-table-wrap-region                |             |
+| tx        | org-table-shrink                     |             |
 | tN        | org-table-create-with-table.el       |             |
-| tc        | org-table-previous-field             |             |
-| tr        | org-table-next-field                 |             |
-| tC        | org-table-move-column-left           |             |
-| tT        | org-table-move-row-down              |             |
-| tS        | org-table-move-row-up                |             |
-| tR        | org-table-move-column-right          |             |
 | td        | nil                                  | delete      |
 | tdc       | org-table-delete-column              |             |
 | tdr       | org-table-kill-row                   |             |
@@ -5102,6 +5101,10 @@ Undefining some stuff to make keybind prefixes work correctly.
     "ff"  #'counsel-find-file
     "fF"  #'ivy-quick-find-files
     "fh"  #'hexl-find-file
+    "fi"  '((lambda ()
+              (interactive)
+              (find-file (concat user-emacs-directory "init.el")))
+            :which-key "init.el")
     "fr"  #'counsel-recentf
     "fs"  #'save-buffer
 
