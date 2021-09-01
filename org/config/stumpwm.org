@@ -3,7 +3,8 @@
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's StumpWM config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's StumpWM config" />
-#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Stump config files of Phundrak" />
+#+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Stump Window Manager configuration files of Phundrak" />
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
 * Introduction
 :PROPERTIES:
@@ -140,7 +141,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 | modeline.lisp     |
 
 #+name: gen-load-files
-#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+headers: :wrap src lisp
 #+begin_src emacs-lisp :var files=first-loaded-files
   (mapconcat (lambda (file)
                (format "(load \"~/.stumpwm.d/%s\")" (car file)))
@@ -175,23 +176,20 @@ windows.
 #+end_src
 
 Next, some modules will be loaded from the ~stumpwm-contrib~ package
-(which is included in ~stumpwm-git~). Here is a short list including a
-short description of what they are for:
+(which is included in ~stumpwm-git~ in the AUR). Here is a short list
+including a short description of what they are for:
 #+name: loaded-modules
-| Module Name      | Why It Is Loaded                                           |
-|------------------+------------------------------------------------------------|
-| alert-me         | Creates notifications, can also create timed notifications |
-| battery-portable | Get information on the battery level of a laptop           |
-| beckon           | Bring the mouse cursor to the current window               |
-| cpu              | Get the CPU usage of the computer                          |
-| end-session      | Gracefully end programs when ending user session           |
-| globalwindows    | Navigate between windows from all workspaces               |
-| mem              | Get the memory usage of the computer                       |
-| stump-backlight  | Native management of backlight in StumpWM                  |
-| urgentwindows    | Get urgent windows                                         |
+| Module Name     | Why It Is Loaded                                           |
+|-----------------+------------------------------------------------------------|
+| alert-me        | Creates notifications, can also create timed notifications |
+| beckon          | Bring the mouse cursor to the current window               |
+| end-session     | Gracefully end programs when ending user session           |
+| globalwindows   | Navigate between windows from all workspaces               |
+| stump-backlight | Native management of backlight in StumpWM                  |
+| urgentwindows   | Get urgent windows                                         |
 
 #+name: gen-load-modules
-#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+headers: :wrap src lisp
 #+begin_src emacs-lisp :var modules=loaded-modules
   (mapconcat (lambda (module)
                (format "(load-module \"%s\")" (car module)))
@@ -199,15 +197,12 @@ short description of what they are for:
              "\n")
 #+end_src
 
-#+RESULTS[1978f17a99db4ca68780c378e5e5d9d58f9e08bc]: gen-load-modules
+#+RESULTS[508e36f9747f1da901bbee63582416a8a6ba2c2f]: gen-load-modules
 #+begin_src lisp
 (load-module "alert-me")
-(load-module "battery-portable")
 (load-module "beckon")
-(load-module "cpu")
 (load-module "end-session")
 (load-module "globalwindows")
-(load-module "mem")
 (load-module "stump-backlight")
 (load-module "urgentwindows")
 #+end_src
@@ -224,17 +219,41 @@ And it’s done! We can now move on to the creation of the other CLisp files.
 :CUSTOM_ID: Commands-1wagy001v5j0
 :header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/commands.lisp
 :END:
-This file is going to be short. The only two custom command I have is
-for Firefox, in order to either invoke a new Firefox window, or raise
-it if it already exists, and for Emacs to invoke the Emacs client or a
-new Emacs instance if the server isn’t running. This is done like so:
+
+The first command I declare in this file is a command that will avoid
+me invoking too many Firefox instances. Either Firefox is not already
+running and an instance is launched, or one already is and we are
+brought to it. This is done like so:
 #+begin_src lisp
   (defcommand firefox () ()
               "Run or raise Firefox."
               (run-or-raise "firefox" '(:class "Firefox") t nil))
 #+end_src
 
-And done, next!
+Next, this command will not only close the current window, but it will
+also close the current frame.
+#+begin_src lisp
+  (defcommand delete-window-and-frame () ()
+              "Delete the current frame with its window."
+              (delete-window)
+              (remove-split))
+#+end_src
+
+The two following commands will create a new frame to the right and
+below the current frame respectively, then focus it.
+#+begin_src lisp
+  (defcommand hsplit-and-focus () ()
+              "Create a new frame on the right and focus it."
+              (hsplit)
+              (move-focus :right))
+
+  (defcommand vsplit-and-focus () ()
+              "Create a new frame below and move focus to it."
+              (vsplit)
+              (move-focus :down))
+#+end_src
+
+And done! Next!
 
 * Colors
 :PROPERTIES:
@@ -268,7 +287,7 @@ I’ll prefix the variables’ name with ~phundrak-~ just in case it might
 conflict with another package I might use in the future, so the CLisp
 code looks like so:
 #+name: gen-colors
-#+headers: :tangle no :exports results :wrap src lisp :cache yes
+#+headers: :wrap src lisp
 #+begin_src emacs-lisp :var colors=nord-colors
   (mapconcat (lambda (color)
                (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
@@ -337,13 +356,37 @@ format indicated in the manpage of ~date~.
 
 Let’s also indicate how the groupname is displayed.
 #+begin_src lisp
-  (setf *group-format* " %t ")
+  (setf *group-format* "%t")
 #+end_src
 
 The window format should display first its window number, then its
 titled, limited to 30 characters.
 #+begin_src lisp
   (setf *window-format* "%n: %30t")
+#+end_src
+
+Here are some modules that we will load for the modeline:
+#+name: modeline-modules
+| Module Name      | Why It Is Loaded                                 |
+|------------------+--------------------------------------------------|
+| battery-portable | Get information on the battery level of a laptop |
+| cpu              | Get the CPU usage of the computer                |
+| mem              | Get the memory usage of the computer             |
+
+#+name: gen-load-modeline-modules
+#+headers: :wrap src lisp
+#+begin_src emacs-lisp :var modules=modeline-modules
+  (mapconcat (lambda (module)
+               (format "(load-module \"%s\")" (car module)))
+             modules
+             "\n")
+#+end_src
+
+#+RESULTS[75023085d7c69ae09044826218830e6b678d5959]: gen-load-modeline-modules
+#+begin_src lisp
+(load-module "battery-portable")
+(load-module "cpu")
+(load-module "mem")
 #+end_src
 
 We can indicate what to display in our modeline. Be aware the ~^>~
@@ -354,7 +397,7 @@ highlighted, and ~%u~ will display urgent windows if there are any. ~%d~
 on the other hand will display the date in the format set above, while
 ~%B~ will display the battery level of the laptop.
 #+begin_src lisp
-  (setf *screen-mode-line-format* (list "%g %v ^> %C | %M | %B | %d"))
+  (setf *screen-mode-line-format* (list "%g %v %u ^> %C | %M | %B | %d"))
 #+end_src
 
 This variable as you can see is a list of elements, although here I am
@@ -362,6 +405,15 @@ only using one string. But it is completely possible to insert some
 CLisp code in here that returns some string if the user needs some
 code to return data that cannot be easily accesible otherwise. I might
 add some at some point, but not today yet.
+
+For some reason, the ~stumptray~ module does not work for me, I get an
+error saying a certain value is of type ~NIL~ and not of type
+~STUMPWM:MODELINE~. I should investigate this.
+
+** TODO Investigate why ~stumptray~ doesn’t work                    :noexport:
+:PROPERTIES:
+:CUSTOM_ID: Modeline-Investigate-why-stumptray-doesn-t-work-0juh13g0m6j0
+:END:
 
 # Also, let’s enable a system tray.
 # #+begin_src lisp
@@ -381,42 +433,36 @@ I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
 is the list of groups I will be using:
 #+name: list-groups
-| Groups   |
-|----------|
-| term     |
-| emacs    |
-| www      |
-| files    |
-| media    |
-| graphics |
-| VMs      |
-| games    |
-| private  |
-| discord  |
+| Groups  | Number | Windows                    |
+|---------+--------+----------------------------|
+| [SYS]   |      1 |                            |
+| [DEV]   |      2 | Emacs, Virt-manager        |
+| [WWW]   |      3 | Firefox                    |
+| [FILES] |      4 | Nemo                       |
+| [MEDIA] |      5 | Gimp                       |
+| [SOC]   |      6 | Signal, discord, lightcord |
+| [PRIV]  |      7 |                            |
 
 #+name: gen-groups
 #+headers: :tangle no :exports none :cache yes
 #+begin_src emacs-lisp :var groups=list-groups
-  (string-join `(,(format "(grename \"%s\")" (car (car groups)))
-                 ,@(mapcar (lambda (group)
-                             (format "(gnewbg \"%s\")" (car group)))
-                           (cdr groups)))
-               "\n")
+  (string-trim (string-join `(,(format "(grename \"%s\")" (car (car groups)))
+                              ,@(mapcar (lambda (group)
+                                          (format "(gnewbg \"%s\")" (car group)))
+                                        (cdr groups)))
+                            "\n")
+               "[[:space:]]*"
+               "[[:space:]]*")
 #+end_src
 
-#+RESULTS[ed2b45d9a542233061373da32e830bd27a68d61b]: gen-groups
-#+begin_example
-(grename "term")
-(gnewbg "emacs")
-(gnewbg "www")
-(gnewbg "files")
-(gnewbg "media")
-(gnewbg "graphics")
-(gnewbg "VMs")
-(gnewbg "games")
-(gnewbg "private")
-(gnewbg "discord")
-#+end_example
+#+RESULTS[caa45af7c6ee092f88acb86d974cf0c9c93b2a3e]: gen-groups
+: (grename "[SYS]")
+: (gnewbg "[DEV]")
+: (gnewbg "[WWW]")
+: (gnewbg "[FILES]")
+: (gnewbg "[MEDIA]")
+: (gnewbg "[SOC]")
+: (gnewbg "[PRIV]")
 
 Groups are specified this way:
 #+begin_src lisp
@@ -430,51 +476,46 @@ this will avoid unexpected and hard-to-debug behavior.
   (clear-window-placement-rules)
 #+end_src
 
-Now we can define our window placement preferences. For now, all rely
-on the window’s class, so it will be pretty straightforward to write.
-#+name: frame-preferences
-| Window Class | Group   |
-|--------------+---------|
-| Emacs        | emacs   |
-| Firefox      | browser |
-| Nemo         | files   |
-| Gimp         | media   |
-| Signal       | private |
-| lightcord    | discord |
-| Steam        | games   |
-| Virt-manager | VMs     |
-
+As you can see in the table [[list-groups]] above, I also indicated my
+window placement preferences. For now, they all rely on the window’s
+class, so it will be pretty straightforward to the corresponding code.
 #+name: gen-rules
 #+headers: :tangle no :exports results :cache yes :wrap src lisp
-#+begin_src emacs-lisp :var rules=frame-preferences
-  (mapconcat (lambda (rule)
-               (let ((class (car rule))
-                     (group (cadr rule)))
-                 (format "(define-frame-preference \"%s\"
-      (nil t t :class \"%s\"))" group class)))
-             rules
-             "\n")
+#+begin_src emacs-lisp :var rules=list-groups
+  (require 'seq)
+  (let ((output "")
+        (rules (seq-filter (lambda (rule) rule)
+                           (mapcar (lambda (line)
+                                     (let ((classes (caddr line)))
+                                       (unless (string= "" classes)
+                                         (cons
+                                          (split-string classes "," t "[[:space:]]*")
+                                          (car line)))))
+                                   rules))))
+    (progn
+      (seq-do (lambda (rule)
+                (let ((classes (car rule))
+                      (group   (cdr rule)))
+                  (dolist (class classes)
+                    (setf output (format "%s\n%s"
+                                         `(define-frame-preference ,(format "\"%s\"" group)
+                                            (nil t t :class ,(format "\"%s\"" class)))
+                                         output)))))
+              rules)
+      output))
 #+end_src
 
 This can be written this way:
-#+RESULTS[b493d3cb9cae1fc97cdb4eb5dc56c9440fde0b2b]: gen-rules
+#+RESULTS[1c9490c15e3cc7d2c8ed1c508cab844567232afc]: gen-rules
 #+begin_src lisp
-(define-frame-preference "emacs"
-    (nil t t :class "Emacs"))
-(define-frame-preference "browser"
-    (nil t t :class "Firefox"))
-(define-frame-preference "files"
-    (nil t t :class "Nemo"))
-(define-frame-preference "media"
-    (nil t t :class "Gimp"))
-(define-frame-preference "private"
-    (nil t t :class "Signal"))
-(define-frame-preference "discord"
-    (nil t t :class "lightcord"))
-(define-frame-preference "games"
-    (nil t t :class "Steam"))
-(define-frame-preference "VMs"
-    (nil t t :class "Virt-manager"))
+(define-frame-preference "[SOC]" (nil t t :class "lightcord"))
+(define-frame-preference "[SOC]" (nil t t :class "discord"))
+(define-frame-preference "[SOC]" (nil t t :class "Signal"))
+(define-frame-preference "[MEDIA]" (nil t t :class "Gimp"))
+(define-frame-preference "[FILES]" (nil t t :class "Nemo"))
+(define-frame-preference "[WWW]" (nil t t :class "Firefox"))
+(define-frame-preference "[DEV]" (nil t t :class "Virt-manager"))
+(define-frame-preference "[DEV]" (nil t t :class "Emacs"))
 #+end_src
 
 * Theme
@@ -511,24 +552,29 @@ again src_lisp[:exports code]{(ql:quickload :clx-truetype)} without an
 issue (running it again is necessary to install its dependencies).
 
 Now that this is out of the way, let’s add two lines so we can use TTF
-and OTF fonts:
+fonts:
 #+begin_src lisp
   (ql:quickload :clx-truetype)
   (load-module "ttf-fonts")
 #+end_src
+The documentation says we should be able to also use OTF fonts, but so
+far I’ve had no luck loading one. Loading more than one font to use
+some fallback fonts also doesn’t seem to work, unlike specified in the
+documentation (I wanted to use a CJK font, but it doesn’t appear to
+work).
 
-Something that didn’t click immediately for me (and I think StumpWM’s
-documentation on this could be improved) is that ~set-font~ can be used
-to set either one main font for StumpWM, as one might guess reading
-the documentation --- or you can set a list of them! And this is
-great, since my main font does not support some characters I regularly
-have in my windows’ title, such as CJK characters, emojis and all!
-Here is my list of fonts I want loaded:
+# Something that didn’t click immediately for me (and I think StumpWM’s
+# documentation on this could be improved) is that ~set-font~ can be used
+# to set either one main font for StumpWM, as one might guess reading
+# the documentation --- or you can set a list of them! And this is
+# great, since my main font does not support some characters I regularly
+# have in my windows’ title, such as CJK characters, emojis and all!
+# Here is my list of fonts I want loaded:
 #+name: list-fonts
-| Family      | Subfamily | Size |
-|-------------+-----------+------|
-| DejaVu Sans | Book      |    9 |
-| IPAMincho   | Regular   |   11 |
+| Family           | Subfamily | Size |
+|------------------+-----------+------|
+| DejaVu Sans Mono | Book      |    8 |
+# | IPAMincho    | Regular   |   11 |
 
 #+name: gen-fonts
 #+headers: :tangle no :exports results :cache yes :wrap src lisp
@@ -548,10 +594,9 @@ Here is my list of fonts I want loaded:
 #+end_src
 
 The code equivalent of this table can be seen below:
-#+RESULTS[054585246a49cd88836d4c5ea1aad66c1bc97f8a]: gen-fonts
+#+RESULTS[ca1ca106ad10eea84a34362acfc543eba559260c]: gen-fonts
 #+begin_src lisp
-(set-font `(,(make-instance 'xft:font :family "DejaVu Sans" :subfamily "Book" :size 11 :antialias t)
-            ,(make-instance 'xft:font :family "IPAMincho" :subfamily "Regular" :size 11 :antialias t)))
+(set-font `(,(make-instance 'xft:font :family "DejaVu Sans Mono" :subfamily "Book" :size 8 :antialias t)))
 #+end_src
 
 *** TODO Font error in modeline with Japanese                    :noexport:
@@ -691,26 +736,143 @@ Also, let’s enable ~which-key~:
   (which-key-mode)
 #+end_src
 
-#+name: keybinds-gen
-#+headers: :tangle no :exports none :cache yes :noweb yes
-#+begin_src emacs-lisp :var map="m" keybinds=frames-float
-  (mapconcat (lambda (keybind)
-               (format "%s" (let ((key    (string-replace "~" "" (car keybind)))
-                                  (function (string-replace "~" "" (cadr keybind))))
-                              `(define-key ,map
-                                 (kbd ,(format "\"%s\"" key))
-                                 ,(if (string-prefix-p "'" function t)
-                                      function
-                                    (format "\"%s\"" function))))))
-             keybinds
-             "\n")
+Lastly, before we get more into details, keep in mind that I use the
+[[https://bepo.fr][bépo]] layout, as I often say in my different documents. This means the
+characters found in the numbers’ row when pressing shift are actually
+the numbers themselves. Below are the following characters:
+#+name: number-to-char-table
+| Number | Character |
+|--------+-----------|
+|      1 | ~"~         |
+|      2 | ~«~         |
+|      3 | ~»~         |
+|      4 | ~(~         |
+|      5 | ~)~         |
+|      6 | ~@~         |
+|      7 | ~+~         |
+|      8 | ~-~         |
+|      9 | ~/~         |
+|      0 | ~*~         |
+
+So if you see any weird keybind involving these characters, this is
+because of my layout.
+
+** Applications
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-Applications-2t512k00w5j0
+:END:
+When I speak about applications, I speak about programs and scripts in
+general. With these keymaps, I can launch programs I often have use
+for, but I can also launch some scripts as well as take screenshots.
+
+First, let’s create my ~rofi~ scripts keymap.
+#+name: rofi-scripts
+#+caption: ~*my-rofi-keymap*~
+| Keychord | Function                                      |
+|----------+-----------------------------------------------|
+| ~a~        | ~exec awiki~                                    |
+| ~r~        | ~exec rofi -combi-modi drun,window -show combi~ |
+| ~s~        | ~exec rofi -show ssh~                           |
+| ~p~        | ~exec rofi-pass -t~                             |
+| ~P~        | ~exec rofi-pass~                                |
+| ~e~        | ~exec rofi-emoji~                               |
+| ~m~        | ~exec rofi-mount~                               |
+| ~u~        | ~exec rofi-umount~                              |
+| ~w~        | ~exec wacom-setup~                              |
+| ~y~        | ~exec ytplay~                                   |
+| ~Y~        | ~exec rofi-ytdl~                                |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+  (defvar *my-rofi-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
+      m))
 #+end_src
 
-#+RESULTS[5938b2a6efd9c8b565416f9a687bc0d6a4a5f77e]: keybinds-gen
-: (define-key m (kbd "f") "float-this")
-: (define-key m (kbd "F") "unfloat-this")
-: (define-key m (kbd "u") "unfloat-this")
-: (define-key m (kbd "C-f") "flatten-floats")
+Let’s also create a keymap for screenshots.
+#+name: screenshot-keymap
+#+caption: ~*my-screenshot-keymap*~
+| Keychord | Function                                             |
+|----------+------------------------------------------------------|
+| ~d~        | ~exec scrot -d 3 -e 'mv $f ~/Pictures/Screenshots'~     |
+| ~s~        | ~exec scrot -e 'mv $f ~/Pictures/Screenshots'~          |
+| ~S~        | ~exec scrot -s -e 'mv $f ~/Pictures/Screenshots'~       |
+| ~g~        | ~exec scrot -e 'gimp $f; mv $f ~/Pictures/Screenshots'~ |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+  (defvar *my-screenshot-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+      m))
+#+end_src
+
+We can now define our applications keymap which will reference both
+the above keymaps.
+#+name: application-keymap
+#+caption: ~*my-applications-keymap*~
+| Keychord | Function                |
+|----------+-------------------------|
+| ~b~        | ~firefox~                 |
+| ~d~        | ~exec lightcord~          |
+| ~e~        | ~exec emacsclient -c~     |
+| ~g~        | ~exec gimp~               |
+| ~n~        | ~exec nemo~               |
+| ~r~        | ~'*my-rofi-keymap*~       |
+| ~s~        | ~'*my-screenshot-keymap*~ |
+
+This translates to:
+#+begin_src lisp
+  (defvar *my-applications-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=application-keymap)>>
+      m))
+#+end_src
+
+The application keymap can now be bound to the top map like so:
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-a") '*my-applications-keymap*)
+#+end_src
+
+I will also bind to the top map ~s-RET~ in order to open a new terminal
+window. The screenshot keymap is also bound to the ScreenPrint key.
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-RET") "exec kitty")
+  (define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
+#+end_src
+
+** End of Session, Powering Off, and the Likes
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-End-of-Session-Powering-Off-and-the-Likes-mgz02z40w5j0
+:END:
+The module ~end-session~ provides functions for gracefully ending the
+user session, powering off, restarting, and suspending the computer.
+It also provides a function that interactively asks what the user
+whishes to do.
+#+name: end-session-keymap
+| Keychord | Function          |
+|----------+-------------------|
+| ~q~        | ~end-session~       |
+| ~l~        | ~logout~            |
+| ~s~        | ~suspend-computer~  |
+| ~S~        | ~shutdown-computer~ |
+| ~r~        | ~loadrc~            |
+| ~R~        | ~restart-hard~      |
+| ~C-r~      | ~restart-computer~  |
+
+This translates to:
+#+begin_src lisp
+  (defvar *my-end-session-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
+      m))
+#+end_src
+
+Which is bound in the root map to ~q~:
+#+begin_src lisp
+  (define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+#+end_src
 
 ** Frames and Windows management
 :PROPERTIES:
@@ -748,10 +910,8 @@ We can now pass onto ~*my-frames-management-keymap*~. My keybinds are organized 
 | ~C-t~      | ~exchange-direction down~   |
 | ~C-s~      | ~exchange-direction up~     |
 | ~C-r~      | ~exchange-direction right~  |
-| ~n~        | ~next~                      |
-| ~p~        | ~prev~                      |
-| ~/~        | ~hsplit~                    |
-| ~-~        | ~vsplit~                    |
+| ~/~        | ~hsplit-and-focus~          |
+| ~-~        | ~vsplit-and-focus~          |
 | ~h~        | ~hsplit~                    |
 | ~v~        | ~vsplit~                    |
 | ~H~        | ~hsplit-equally~            |
@@ -765,9 +925,6 @@ We can now pass onto ~*my-frames-management-keymap*~. My keybinds are organized 
 | ~i~        | ~info~                      |
 | ~I~        | ~show-window-properties~    |
 | ~m~        | ~meta~                      |
-| ~o~        | ~other-window~              |
-| ~q~        | ~delete-window~             |
-| ~Q~        | ~kill-window~               |
 | ~s~        | ~sibling~                   |
 | ~u~        | ~next-urgent~               |
 | ~U~        | ~unmaximize~                |
@@ -833,119 +990,113 @@ redefine it:
     ((kbd "r") "resize-direction right"))
 #+end_src
 
-** Applications
+** Windows management
 :PROPERTIES:
-:CUSTOM_ID: Keybinds-Applications-2t512k00w5j0
+:CUSTOM_ID: Keybinds-Windows-management-ylf903j0x5j0
 :END:
-When I speak about applications, I speak about programs and scripts in
-general. With these keymaps, I can launch programs I often have use
-for, but I can also launch some scripts as well as take screenshots.
+When it comes to windows management, I will treat them a bit like I do
+with Emacs’ buffers.
 
-First, let’s create my ~rofi~ scripts keymap.
-#+name: rofi-scripts
-#+caption: ~*my-rofi-keymap*~
-| Keychord | Function                                      |
-|----------+-----------------------------------------------|
-| ~a~        | ~exec awiki~                                    |
-| ~r~        | ~exec rofi -combi-modi drun,window -show combi~ |
-| ~s~        | ~exec rofi -show ssh~                           |
-| ~p~        | ~exec rofi-pass -t~                             |
-| ~P~        | ~exec rofi-pass~                                |
-| ~e~        | ~exec rofi-emoji~                               |
-| ~m~        | ~exec rofi-mount~                               |
-| ~u~        | ~exec rofi-umount~                              |
-| ~w~        | ~exec wacom-setup~                              |
-| ~y~        | ~exec ytplay~                                   |
-| ~Y~        | ~exec rofi-ytdl~                                |
-
-Here’s the equivalent in Common Lisp.
-#+begin_src lisp
-  (defvar *my-rofi-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
-      m))
-#+end_src
-
-Let’s also create a keymap for screenshots.
-#+name: screenshot-keymap
-#+caption: ~*my-screenshot-keymap*~
-| Keychord | Function                                             |
-|----------+------------------------------------------------------|
-| ~d~        | ~exec scrot -d 3 -e 'mv $f ~/Pictures/Screenshots'~     |
-| ~s~        | ~exec scrot -e 'mv $f ~/Pictures/Screenshots'~          |
-| ~S~        | ~exec scrot -s -e 'mv $f ~/Pictures/Screenshots'~       |
-| ~g~        | ~exec scrot -e 'gimp $f; mv $f ~/Pictures/Screenshots'~ |
-
-Here’s the equivalent in Common Lisp.
-#+begin_src lisp
-  (defvar *my-screenshot-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
-      m))
-#+end_src
-
-We can now define our applications keymap which will reference both
-the above keymaps.
-#+name: application-keymap
-#+caption: ~*my-applications-keymap*~
+#+name: window-management
+#+caption: ~*my-buffers-management-keymap*~
 | Keychord | Function                |
 |----------+-------------------------|
-| ~b~        | ~firefox~                 |
-| ~d~        | ~exec lightcord~          |
-| ~e~        | ~emacs~                   |
-| ~g~        | ~exec gimp~               |
-| ~n~        | ~exec nemo~               |
-| ~r~        | ~'*my-rofi-keymap*~       |
-| ~s~        | ~'*my-screenshot-keymap*~ |
+| ~b~        | ~windowlist~              |
+| ~d~        | ~delete-window~           |
+| ~D~        | ~window-window-and-frame~ |
+| ~k~        | ~kill-window~             |
+| ~n~        | ~next~                    |
+| ~o~        | ~other-window~            |
+| ~p~        | ~prev~                    |
 
-This translates to:
 #+begin_src lisp
-  (defvar *my-applications-keymap*
+  (defvar *my-buffers-management-keymap*
     (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=application-keymap)>>
+      <<keybinds-gen(map="m", keybinds=window-management)>>
       m))
+
+  (define-key *root-map* (kbd "b") '*my-buffers-management-keymap*)
 #+end_src
 
-The application keymap can now be bound to the top map like so:
-#+begin_src lisp
-  (define-key *top-map* (kbd "s-a") '*my-applications-keymap*)
-#+end_src
-
-I will also bind to the top map ~s-RET~ in order to open a new terminal
-window. The screenshot keymap is also bound to the ScreenPrint key.
-#+begin_src lisp
-  (define-key *top-map* (kbd "s-RET") "exec kitty")
-  (define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
-#+end_src
-
-** End of Session, Powering Off, and the Likes
+** Media and Media Control
 :PROPERTIES:
-:CUSTOM_ID: Keybinds-End-of-Session-Powering-Off-and-the-Likes-mgz02z40w5j0
+:CUSTOM_ID: Keybinds-Media-and-Media-Control-hbv5uk91z5j0
 :END:
-The module ~end-session~ provides functions for gracefully ending the
-user session, powering off, restarting, and suspending the computer.
-It also provides a function that interactively asks what the user
-whishes to do.
-#+name: end-session-keymap
+My music is managed through MPD, and I often use ~mpc~ commands in order
+to interact with it without any GUI application. So, we’ll see a lot
+of its usage here.
+
+First, let’s declare an interactive keymap in order to easily change
+several times in a row either the current song playing or the volume
+of MPD.
+#+name: inter-mpc
+#+caption: Interactive keybinds for ~mpc~
+| Keychord | Function           |
+|----------+--------------------|
+| ~c~        | ~exec mpc prev~      |
+| ~t~        | ~exec mpc volume -2~ |
+| ~s~        | ~exec mpc volume +2~ |
+| ~r~        | ~exec mpc next~      |
+
+Cela donne le code suivant:
+#+begin_src lisp
+  <<interactive-gen(name="mpc-interactive", keys=inter-mpc)>>
+#+end_src
+
+Another one will be defined for the general audio of my computer. And
+I know it isn’t technically media keybinds, but I’ll add in keybinds
+for my screen’s backlight.
+#+name: inter-media
+#+caption: Interactive keybinds for general media interaction
+| Keys | Function                             |
+|------+--------------------------------------|
+| ~c~    | ~exec xbacklight -dec 2~               |
+| ~t~    | ~exec amixer -q set Master 2%- unmute~ |
+| ~s~    | ~exec amixer -q set Master 2%+ unmute~ |
+| ~r~    | ~exec xbacklight -inc 2~               |
+| ~m~    | ~exec amixer -q set Master 1+ toggle~  |
+
+#+begin_src lisp
+  <<interactive-gen(name="media-interactive", keys=inter-media)>>
+#+end_src
+
+Then, let’s declare a keymap for our media controls.
+#+name: media-management
+#+caption: ~*my-media-keymap*~
 | Keychord | Function          |
 |----------+-------------------|
-| ~q~        | ~end-session~       |
-| ~l~        | ~logout~            |
-| ~s~        | ~suspend-computer~  |
-| ~S~        | ~shutdown-computer~ |
-| ~r~        | ~restart-computer~  |
+| ~.~        | ~media-interactive~ |
+| ~m~        | ~mpc-interactive~   |
+| ~p~        | ~exec mpc prev~     |
+| ~n~        | ~exec mpc next~     |
+| ~t~        | ~exec mpc toggle~   |
+| ~s~        | ~exec mpc stop~     |
 
-This translates to:
+Let’s translate this table in CommonLisp:
 #+begin_src lisp
-  (defvar *my-end-session-keymap*
+  (defvar *my-buffers-management-keymap*
     (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
+      <<keybinds-gen(map="m", keybinds=media-management)>>
       m))
+
+  (define-key *root-map* (kbd "m") '*my-media-keymap*)
 #+end_src
 
-Which is bound in the root map to ~q~:
+I will also define on ~*top-map*~ some basic volume management keybinds
+so that they are immediately accessible. Again, this isn’t technically
+media-related, but I’ll add keybinds for my screen’s backlight.
+#+name: media-top-level
+#+caption: Top-level media keys
+| Keychord              | Function                             |
+|-----------------------+--------------------------------------|
+| ~XF86AudioRaiseVolume~  | ~exec amixer -q set Master 2%+ unmute~ |
+| ~XF86AudioLowerVolume~  | ~exec amixer -q set Master 2%- unmute~ |
+| ~XF86AudioMute~         | ~exec amixer -q set Master 1+ toggle~  |
+| ~XF86MonBrightnessDown~ | ~exec xbacklight -dec 2~               |
+| ~XF86MonBrightnessUp~   | ~exec xbacklight -inc 2~               |
+
 #+begin_src lisp
-  (define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+  <<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>
 #+end_src
 
 ** Misc
@@ -964,3 +1115,57 @@ anywhere else:
 #+begin_src lisp
   <<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
 #+end_src
+
+* org functions                                                    :noexport:
+:PROPERTIES:
+:CUSTOM_ID: org-functions-syqgzgg0m6j0
+:END:
+
+#+name: keybinds-gen
+#+headers: :tangle no :exports none :cache yes :noweb yes
+#+begin_src emacs-lisp :var map="m" keybinds=frames-float
+  (mapconcat (lambda (keybind)
+               (format "%s" (let ((key      (let ((s (car keybind)))
+                                              (substring-no-properties s 1 (1- (length s)))))
+                                  (function (let ((s (cadr keybind)))
+                                              (substring-no-properties s 1 (1- (length s))))))
+                              `(define-key ,map
+                                 (kbd ,(format "\"%s\"" key))
+                                 ,(if (string-prefix-p "'" function t)
+                                      function
+                                    (format "\"%s\"" function))))))
+             keybinds
+             "\n")
+#+end_src
+
+#+name: interactive-gen
+#+headers: :tangle no :exports none :noweb yes
+#+begin_src emacs-lisp :var name="inter" keys=inter-mpc
+  (format "%s"
+          `(define-interactive-keymap ,name ()
+             "\n "
+             ,(mapconcat (lambda (keybind)
+                           (format "%s"
+                                   (let ((key     (let ((s (car keybind)))
+                                                    (substring-no-properties s
+                                                                             1
+                                                                             (1- (length s)))))
+                                         (command (let ((s (cadr keybind)))
+                                                    (substring-no-properties s
+                                                                             1
+                                                                             (1- (length s))))))
+                                      `((kbd ,(format "\"%s\"" key)) ,(format "\"%s\"" command)))))
+                         keys
+                         "\n  ")))
+#+end_src
+
+#+name: num-to-char
+#+headers: :tangle no :exports none :noweb yes
+#+begin_src emacs-lisp :var table=number-to-char-table num=0
+  (replace-regexp-in-string (regexp-quote "~")
+                            ""
+                            (cadr (assoc num table)))
+#+end_src
+
+#+RESULTS: num-to-char
+: *
