@@ -66,7 +66,6 @@ follows this architecture:
 - ~init.el~ :: My main configuration file, glues everything together. It
   loads all of my configuration files as well as some modules I find
   useful;
-
 - ~colors.lisp~ :: In this file are defined colors that will be used in
   common in my ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code
   DRY, or as I prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
@@ -424,7 +423,7 @@ error saying a certain value is of type ~NIL~ and not of type
 # Don’t forget to run src_lisp[:exports code]{(ql:quickload :xembed)} in
 # ~sbcl~ at least once to install its dependencies.
 
-* Placement
+* Groups and placement
 :PROPERTIES:
 :CUSTOM_ID: Placement-mhc3sr21v5j0
 :header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/placement.lisp :noweb yes
@@ -547,6 +546,7 @@ obviously need to have quicklisp installed (for that, follow the
   cd ~/quicklisp/local-projects/
   git clone https://github.com/lihebi/clx-truetype.git
 #+end_src
+
 This will make ~clx-truetype~ available to quicklisp, and you can run
 again src_lisp[:exports code]{(ql:quickload :clx-truetype)} without an
 issue (running it again is necessary to install its dependencies).
@@ -739,20 +739,22 @@ Also, let’s enable ~which-key~:
 Lastly, before we get more into details, keep in mind that I use the
 [[https://bepo.fr][bépo]] layout, as I often say in my different documents. This means the
 characters found in the numbers’ row when pressing shift are actually
-the numbers themselves. Below are the following characters:
+the numbers themselves. Also, some characters are not recognized as is
+by ~kbd~, so we need to use a special name (not fun…). Below are the
+following characters:
 #+name: number-to-char-table
-| Number | Character |
-|--------+-----------|
-|      1 | ~"~         |
-|      2 | ~«~         |
-|      3 | ~»~         |
-|      4 | ~(~         |
-|      5 | ~)~         |
-|      6 | ~@~         |
-|      7 | ~+~         |
-|      8 | ~-~         |
-|      9 | ~/~         |
-|      0 | ~*~         |
+| Number | Character | Lisp Character |
+|--------+-----------+----------------|
+|      1 | ~"~         |                |
+|      2 | ~«~         | ~guillemotleft~  |
+|      3 | ~»~         | ~guillemotright~ |
+|      4 | ~(~         |                |
+|      5 | ~)~         |                |
+|      6 | ~@~         |                |
+|      7 | ~+~         |                |
+|      8 | ~-~         |                |
+|      9 | ~/~         |                |
+|      0 | ~*~         |                |
 
 So if you see any weird keybind involving these characters, this is
 because of my layout.
@@ -830,9 +832,9 @@ This translates to:
       m))
 #+end_src
 
-The application keymap can now be bound to the top map like so:
+The application keymap can now be bound to the root map like so:
 #+begin_src lisp
-  (define-key *top-map* (kbd "s-a") '*my-applications-keymap*)
+  (define-key *root-map* (kbd "a") '*my-applications-keymap*)
 #+end_src
 
 I will also bind to the top map ~s-RET~ in order to open a new terminal
@@ -872,6 +874,128 @@ This translates to:
 Which is bound in the root map to ~q~:
 #+begin_src lisp
   (define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+#+end_src
+
+** Groups
+:PROPERTIES:
+:CUSTOM_ID: Keybinds-Groups-daxfwu40a7j0
+:END:
+A basic keybind I need for groups is to be able to switch from one
+another. I’m very used to the ability of being able to jump between
+them with the keybind Super + /number of the group/, so let’s define
+this:
+
+#+name: group-keybind-gen
+#+header: :noweb no :results verbatim :exports none :var convert="no"
+#+begin_src emacs-lisp :var groups=list-groups mod="s" action="gselect" map="*top-map*" convert="yes"
+  (mapconcat (lambda (group)
+               (let ((group-nbr (nth 1 group)))
+                 (format "%S" `(define-key
+                                 ,(make-symbol map)
+                                 ;; (kbd ,(if (string= convert "yes")
+                                 ;;           (format "%s-<<num-to-char(num=%s)>>" mod group-nbr)
+                                 ;;         (number-to-string group-nbr)))
+                                 (kbd ,(format "%s-%s"
+                                               mod
+                                               (if (string= "yes" convert)
+                                                   (format "<<num-to-char(num=%s)>>" group-nbr)
+                                                 (number-to-string group-nbr))))
+                                 ,(format "%s %d" action group-nbr)))))
+             groups
+             "\n")
+#+end_src
+
+#+RESULTS[7337dc02bc356fcd83b164e4b879e2b2086cee55]: group-keybind-gen
+: "(define-key *top-map* (kbd \"s-1\") \"gselect 1\")
+: (define-key *top-map* (kbd \"s-2\") \"gselect 2\")
+: (define-key *top-map* (kbd \"s-3\") \"gselect 3\")
+: (define-key *top-map* (kbd \"s-4\") \"gselect 4\")
+: (define-key *top-map* (kbd \"s-5\") \"gselect 5\")
+: (define-key *top-map* (kbd \"s-6\") \"gselect 6\")
+: (define-key *top-map* (kbd \"s-7\") \"gselect 7\")"
+
+#+header: :cache yes :noweb yes :wrap src lisp
+#+begin_src emacs-lisp
+  <<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
+#+end_src
+
+#+RESULTS[2697e8b16b9807047ec38a47c9bf44234aa7c129]:
+#+begin_src lisp
+(define-key *top-map* (kbd "s-<<num-to-char(num=1)>>") "gselect 1")
+(define-key *top-map* (kbd "s-<<num-to-char(num=2)>>") "gselect 2")
+(define-key *top-map* (kbd "s-<<num-to-char(num=3)>>") "gselect 3")
+(define-key *top-map* (kbd "s-<<num-to-char(num=4)>>") "gselect 4")
+(define-key *top-map* (kbd "s-<<num-to-char(num=5)>>") "gselect 5")
+(define-key *top-map* (kbd "s-<<num-to-char(num=6)>>") "gselect 6")
+(define-key *top-map* (kbd "s-<<num-to-char(num=7)>>") "gselect 7")
+#+end_src
+
+Another batch of keybinds I use a lot is keybinds to send the
+currently active window to another group, using Super + Shift + /number
+of the group/. As mentioned before, due to my keyboard layout Shift +
+/number/ is actually just /number/ for me (e.g. Shift + ~"~ results in ~1~),
+so there’s no need to convert the group number to another character.
+#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp
+  <<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
+#+end_src
+
+#+RESULTS[6577510905e5cce124ff563a6d68a7f64fc8683c]:
+#+begin_src lisp
+(define-key *top-map* (kbd "s-1") "gmove-and-follow 1")
+(define-key *top-map* (kbd "s-2") "gmove-and-follow 2")
+(define-key *top-map* (kbd "s-3") "gmove-and-follow 3")
+(define-key *top-map* (kbd "s-4") "gmove-and-follow 4")
+(define-key *top-map* (kbd "s-5") "gmove-and-follow 5")
+(define-key *top-map* (kbd "s-6") "gmove-and-follow 6")
+(define-key *top-map* (kbd "s-7") "gmove-and-follow 7")
+#+end_src
+
+If I want to send a window to another group without following it, I’ll
+use ~s-S-C-<group number>~, which gives us the following:
+#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp
+  <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
+#+end_src
+
+#+RESULTS[55852a5a035c23f078ba0a97120151c059fa955f]:
+#+begin_src lisp
+(define-key *top-map* (kbd "s-C-1") "gmove-and-follow 1")
+(define-key *top-map* (kbd "s-C-2") "gmove-and-follow 2")
+(define-key *top-map* (kbd "s-C-3") "gmove-and-follow 3")
+(define-key *top-map* (kbd "s-C-4") "gmove-and-follow 4")
+(define-key *top-map* (kbd "s-C-5") "gmove-and-follow 5")
+(define-key *top-map* (kbd "s-C-6") "gmove-and-follow 6")
+(define-key *top-map* (kbd "s-C-7") "gmove-and-follow 7")
+#+end_src
+
+And if I want to bring the windows of another group into the current
+group, I’ll use ~s-C-<group number>~:
+#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp :exports results
+  <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
+#+end_src
+
+#+RESULTS[b536bb0359e6e9e10e98635c82bed3d348d75ac5]:
+#+begin_src lisp
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=1)>>") "gmove-and-follow 1")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=2)>>") "gmove-and-follow 2")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=3)>>") "gmove-and-follow 3")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=5)>>") "gmove-and-follow 5")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=6)>>") "gmove-and-follow 6")
+(define-key *top-map* (kbd "s-C-<<num-to-char(num=7)>>") "gmove-and-follow 7")
+#+end_src
+
+StumpWM also has already a nice keymap for managing groups called
+~*groups-map*~, so let’s bind it to ~*root-map*~ too! (It’s actually
+already bound, but since I plan on erasing ~*root-map*~ in the near
+future before binding stuff to it, I prefer to bind it already)
+#+begin_src lisp
+  (define-key *root-map* (kbd "g") '*groups-map*)
+#+end_src
+
+And a binding to ~vgroups~ is done on ~*groups-map*~ in order to regroup
+similar keybinds.
+#+begin_src lisp
+  (define-key *groups-map* (kbd "G") "vgroups")
 #+end_src
 
 ** Frames and Windows management
@@ -917,6 +1041,7 @@ We can now pass onto ~*my-frames-management-keymap*~. My keybinds are organized 
 | ~H~        | ~hsplit-equally~            |
 | ~V~        | ~vsplit-equally~            |
 | ~.~        | ~iresize~                   |
+| ~+~        | ~balance-frames~            |
 | ~d~        | ~remove-split~              |
 | ~D~        | ~only~                      |
 | ~e~        | ~expose~                    |
@@ -1074,7 +1199,7 @@ Then, let’s declare a keymap for our media controls.
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
-  (defvar *my-buffers-management-keymap*
+  (defvar *my-media-keymap*
     (let ((m (make-sparse-keymap)))
       <<keybinds-gen(map="m", keybinds=media-management)>>
       m))
@@ -1154,7 +1279,8 @@ anywhere else:
                                                     (substring-no-properties s
                                                                              1
                                                                              (1- (length s))))))
-                                      `((kbd ,(format "\"%s\"" key)) ,(format "\"%s\"" command)))))
+                                     `((kbd ,(format "\"%s\"" key))
+                                       ,(format "\"%s\"" command)))))
                          keys
                          "\n  ")))
 #+end_src
@@ -1162,10 +1288,18 @@ anywhere else:
 #+name: num-to-char
 #+headers: :tangle no :exports none :noweb yes
 #+begin_src emacs-lisp :var table=number-to-char-table num=0
-  (replace-regexp-in-string (regexp-quote "~")
-                            ""
-                            (cadr (assoc num table)))
+  (let ((char (replace-regexp-in-string (regexp-quote "~")
+                                        ""
+                                        (let* ((row (assoc num table))
+                                               (char (cadr row))
+                                               (lispchar (caddr row)))
+                                          (if (string= "" lispchar)
+                                              char
+                                            lispchar)))))
+    (if (string= char "\"")
+        "\\\""
+      char))
 #+end_src
 
-#+RESULTS: num-to-char
+#+RESULTS[6934c27c10c3f968f70b0112d4639298e519fe61]: num-to-char
 : *
