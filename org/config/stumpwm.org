@@ -443,7 +443,7 @@ is the list of groups I will be using:
 | [PRIV]  |      7 |                            |
 
 #+name: gen-groups
-#+headers: :tangle no :exports none :cache yes
+#+headers: :exports none
 #+begin_src emacs-lisp :var groups=list-groups
   (string-trim (string-join `(,(format "(grename \"%s\")" (car (car groups)))
                               ,@(mapcar (lambda (group)
@@ -479,7 +479,7 @@ As you can see in the table [[list-groups]] above, I also indicated my
 window placement preferences. For now, they all rely on the window’s
 class, so it will be pretty straightforward to the corresponding code.
 #+name: gen-rules
-#+headers: :tangle no :exports results :cache yes :wrap src lisp
+#+headers: :wrap src lisp
 #+begin_src emacs-lisp :var rules=list-groups
   (require 'seq)
   (let ((output "")
@@ -577,7 +577,7 @@ work).
 # | IPAMincho    | Regular   |   11 |
 
 #+name: gen-fonts
-#+headers: :tangle no :exports results :cache yes :wrap src lisp
+#+headers: :wrap src lisp
 #+begin_src emacs-lisp :var fonts=list-fonts
   (format "(set-font `(%s))"
           (mapconcat (lambda (font)
@@ -935,7 +935,7 @@ currently active window to another group, using Super + Shift + /number
 of the group/. As mentioned before, due to my keyboard layout Shift +
 /number/ is actually just /number/ for me (e.g. Shift + ~"~ results in ~1~),
 so there’s no need to convert the group number to another character.
-#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp
+#+begin_src emacs-lisp :wrap src lisp
   <<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
 #+end_src
 
@@ -952,7 +952,7 @@ so there’s no need to convert the group number to another character.
 
 If I want to send a window to another group without following it, I’ll
 use ~s-S-C-<group number>~, which gives us the following:
-#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp
+#+begin_src emacs-lisp :wrap src lisp
   <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
 #+end_src
 
@@ -969,7 +969,7 @@ use ~s-S-C-<group number>~, which gives us the following:
 
 And if I want to bring the windows of another group into the current
 group, I’ll use ~s-C-<group number>~:
-#+begin_src emacs-lisp :cache yes :noweb yes :wrap src lisp :exports results
+#+begin_src emacs-lisp :wrap src lisp :exports results
   <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
 #+end_src
 
@@ -1247,7 +1247,6 @@ anywhere else:
 :END:
 
 #+name: keybinds-gen
-#+headers: :tangle no :exports none :cache yes :noweb yes
 #+begin_src emacs-lisp :var map="m" keybinds=frames-float
   (mapconcat (lambda (keybind)
                (format "%s" (let ((key      (let ((s (car keybind)))
@@ -1264,7 +1263,6 @@ anywhere else:
 #+end_src
 
 #+name: interactive-gen
-#+headers: :tangle no :exports none :noweb yes
 #+begin_src emacs-lisp :var name="inter" keys=inter-mpc
   (format "%s"
           `(define-interactive-keymap ,name ()
@@ -1286,7 +1284,6 @@ anywhere else:
 #+end_src
 
 #+name: num-to-char
-#+headers: :tangle no :exports none :noweb yes
 #+begin_src emacs-lisp :var table=number-to-char-table num=0
   (let ((char (replace-regexp-in-string (regexp-quote "~")
                                         ""
