@@ -2082,9 +2082,12 @@ with ~magit-gitflow~:
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :init
-    ;; NOTE: Set this to the folder where you keep your Git repos!
-    (setq projectile-switch-project-action #'projectile-dired))
+    (setq projectile-switch-project-action #'projectile-dired)
+    :config
+    (add-to-list 'projectile-ignored-projects "~/"))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package counsel-projectile
     :straight (:build t)
     :after (counsel projectile)
