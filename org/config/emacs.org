@@ -1231,11 +1231,12 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
 
     <<mu4e-bookmarks>>
 
+    ;; Keybindings
+    <<mu4e-keybindings-undef>>
     <<mu4e-keybindings-view>>
     <<mu4e-keybindings-header>>
     <<mu4e-keybindings-header-no-leader>>
     <<mu4e-keybindings-message>>
-
 
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
@@ -1270,13 +1271,16 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
                                               (:from       . 25)
                                               (:subject)))
 
-      ;; set mail user agent
+    ;; set mail user agent
     (setq mail-user-agent 'mu4e-user-agent)
 
-      ;; Use fancy icons
+    ;; Use fancy icons
     <<mu4e-fancy-marks>>
 
-      ;; mu4e-headers-mode config
+    ;; Vertical split
+    <<mu4e-vertical-split>>
+
+    ;; mu4e-headers-mode config
     <<mu4e-headers-mode>>
 
     (defun mu4e-action-open-as-pdf (msg)
@@ -1482,6 +1486,32 @@ We can finally define our bookmarks! The code reads as follows:
 | :name | This Month         | :key | 109 | :query | date:1m..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
 | :name | This Year          | :key | 121 | :query | date:1y..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
 
+***** Dealing with spammers
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Dealing-with-spammers-tid4mw51l7j0
+:END:
+I’m sure you have received at least one email recently from a sketchy
+email address asking you something that might be completely unrelated
+to what you do, or at least somewhat related. Fortunately, [[https://twitter.com/Boris/status/1360208504544444417][we have a
+hero]]! Now, let me write a function that will insert their pre-written
+text at point so I don’t have to go back to their Twitter thread each
+time I want to shut spammers up.
+#+begin_src emacs-lisp
+  (defun reply-to-bill ()
+    (interactive)
+    (insert "Please forward this email to bill@noprocurement.com,
+  and delete my email, as I’ll be changing jobs soon, and this
+  email address will no longer be active.
+
+  Bill Whiskoney is a senior partner at Nordic Procurement
+  Services, and he handles our budget and will help you further or
+  introduce you to someone who can."))
+#+end_src
+
+If you want the full story, make sure to read the whole thread, I
+guarantee it, it’s worth your time! And in case the Twitter thread
+disappear in the future, [[https://threader.app/thread/1360208504544444417][here is a backup]].
+
 ***** Getting Fancy
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Getting-Fancyg731fl6184j0
@@ -1541,6 +1571,27 @@ Let’s enable them and set them:
         <<mu4e-fancy-marks-gen()>>)
 #+end_src
 
+#+name: mu4e-vertical-split
+#+begin_src emacs-lisp
+  (defun my/set-mu4e-headers-width ()
+    (let ((width    (window-body-width))
+          (threshold (+ 120 80)))
+      (setq mu4e-split-view (if (> width threshold)
+                                'vertical
+                              'horizontal))
+      (message "Window width: %d\tthreshold: %d\nSplit: %S"
+               width
+               threshold
+               mu4e-split-view)))
+
+  (setq mu4e-headers-visible-columns 120
+        mu4e-headers-visible-lines   15)
+  (add-hook 'mu4e-headers-mode-hook #'my/set-mu4e-headers-width)
+#+end_src
+
+#+RESULTS: mu4e-vertical-split
+| (lambda nil (toggle-truncate-lines -1)) | (lambda nil (visual-line-mode -1)) | my/set-mu4e-headers-width |
+
 ***** Headers mode
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Headers-modeum41fl6184j0
@@ -1584,8 +1635,6 @@ bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
    "c"   nil
    "gu"  nil)
 #+end_src
-
-#+RESULTS: mu4e-keybindings-undef
 
 Now, let’s define some keybindings for mu4e’s view mode, that is when
 we are viewing an email. All these keybindings will reside between the
