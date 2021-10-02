@@ -1057,6 +1057,12 @@ similar keybinds.
   (define-key *groups-map* (kbd "G") "vgroups")
 #+end_src
 
+I grew accustomed to ~s-ESC~ bringing me to the previous group when
+using AwesomeWM, so let’s define that:
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-ESC") "gother")
+#+end_src
+
 ** Frames and Windows management
 :PROPERTIES:
 :CUSTOM_ID: Keybinds-Frames-and-Windows-management-g4s6j371v5j0
@@ -1172,6 +1178,12 @@ redefine it:
     ((kbd "t") "resize-direction down")
     ((kbd "s") "resize-direction up")
     ((kbd "r") "resize-direction right"))
+#+end_src
+
+As with groups management, I grew used to ~s-TAB~ in AwesomeWM bringing
+me back to the previously focused window.
+#+begin_src lisp
+  (define-key *top-map* (kbd "s-TAB") "other-window")
 #+end_src
 
 ** Windows management
@@ -1293,11 +1305,31 @@ anywhere else:
 | Keychord | Function   |
 |----------+------------|
 | ~B~        | ~beckon~     |
+| ~C-b~      | ~banish~     |
 | ~l~        | ~exec plock~ |
 | ~r~        | ~reload~     |
 
 #+begin_src lisp
   <<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
+#+end_src
+
+From time to time, I need to switch between different keyboard
+layouts, especially to the US Qwerty layout when I’m playing some
+games and the bépo layout most of the time. I’ll use the command
+~switch-layout~ defined above.
+#+name: keyboard-layout-map
+| Keychord | Function                     |
+|----------+------------------------------|
+| ~b~        | ~exec setxkbmap fr bepo_afnor~ |
+| ~u~        | ~exec setxkbmap us~            |
+
+#+begin_src lisp
+  (defvar *my-keyboard-layout-keymap*
+    (let ((m (make-sparse-keymap)))
+      <<keybinds-gen(map="m", keybinds=keyboard-layout-map)>>
+      m))
+
+  (define-key *root-map* (kbd "k") '*my-keyboard-layout-keymap*)
 #+end_src
 
 * org functions                                                    :noexport:
