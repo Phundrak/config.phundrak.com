@@ -542,6 +542,38 @@ This can be written this way:
 (define-frame-preference "[DEV]" (nil t t :class "Emacs"))
 #+end_src
 
+Now, let’s do some automation. The reason why I want the first group
+to be a dynamic group is so that all terminal windows I’ll have there
+will be automatically arranged. If I switch to the ~[SYS]~ group, I want
+three terminal windows to open by default:
+- an ~htop~ window
+- and two terminals
+This can be done like so:
+#+begin_src lisp
+  (defun my-term-init (current-group _last-group)
+    "Create terminals in the first group when none are already there."
+    (let ((term-group (select-group (current-screen) "2"))
+          (windows    (group-windows current-group)))
+      (when (and (equal current-group term-group)
+                 (null windows))
+        (unless (= 1 (length (group-frames current-group)))
+          (only))
+        (term "htop")
+        (term)
+        (term))))
+#+end_src
+
+Let’s add a hook for that now:
+#+begin_src lisp
+  (add-hook *focus-group-hook* 'my-term-init)
+#+end_src
+
+By the way, dynamic groups should have a split ratio of half of the
+available space.
+#+begin_src lisp
+  (setf *dynamic-group-master-split-ratio* 1/2)
+#+end_src
+
 * Theme
 :PROPERTIES:
 :CUSTOM_ID: Theme-1x3c2u31v5j0
