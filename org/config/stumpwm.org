@@ -441,42 +441,57 @@ I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
 is the list of groups I will be using:
 #+name: list-groups
-| Groups  | Number | Windows                    |
-|---------+--------+----------------------------|
-| [SYS]   |      1 |                            |
-| [DEV]   |      2 | Emacs, Virt-manager        |
-| [WWW]   |      3 | Firefox                    |
-| [FILES] |      4 | Nemo                       |
-| [MEDIA] |      5 | Gimp                       |
-| [SOC]   |      6 | Signal, discord, lightcord |
-| [PRIV]  |      7 |                            |
+| Groups  | Number | Windows                    | Type    |
+|---------+--------+----------------------------+---------|
+| [DEV]   |      1 | Emacs, Virt-manager        |         |
+| [SYS]   |      2 |                            | Dynamic |
+| [WWW]   |      3 | Firefox                    |         |
+| [FILES] |      4 | Nemo                       |         |
+| [MEDIA] |      5 | Gimp                       |         |
+| [SOC]   |      6 | Signal, discord, lightcord |         |
+| [PRIV]  |      7 |                            |         |
+| [GAM]   |      8 | Steam                      |         |
 
 #+name: gen-groups
 #+headers: :exports none
 #+begin_src emacs-lisp :var groups=list-groups
-  (string-trim (string-join `(,(format "(grename \"%s\")" (car (car groups)))
-                              ,@(mapcar (lambda (group)
-                                          (format "(gnewbg \"%s\")" (car group)))
-                                        (cdr groups)))
-                            "\n")
-               "[[:space:]]*"
-               "[[:space:]]*")
+  (let ((make-group (lambda (group &optional first-p)
+                      (let ((group-name (car group))
+                            (group-type (nth 3 group)))
+                        (format "(%s \"%s\")"
+                                (if first-p
+                                    "grename"
+                                  (pcase group-type
+                                    ("Dynamic"  "gnewbg-dynamic")
+                                    ("Floating" "gnewbg-float")
+                                    (otherwise  "gnewbg")))
+                                group-name)))))
+    (string-join `(,(funcall make-group (car groups) t)
+                   ,@(mapcar (lambda (group)
+                               (funcall make-group group))
+                             (cdr groups)))
+                 "\n"))
 #+end_src
 
-#+RESULTS[caa45af7c6ee092f88acb86d974cf0c9c93b2a3e]: gen-groups
-: (grename "[SYS]")
-: (gnewbg "[DEV]")
+#+RESULTS[22540ee038b7206f965b7ca48521e93bdccb5de8]: gen-groups
+: (grename "[DEV]")
+: (gnewbg-dynamic "[SYS]")
 : (gnewbg "[WWW]")
 : (gnewbg "[FILES]")
 : (gnewbg "[MEDIA]")
 : (gnewbg "[SOC]")
 : (gnewbg "[PRIV]")
+: (gnewbg "[GAM]")
 
 Groups are specified this way:
 #+begin_src lisp
   (when *initializing*
     <<gen-groups()>>)
 #+end_src
+
+By default, if nothing is specified as per the group type, my groups
+are manual tiling groups. Otherwise, as you can see above, they can
+also be dynamic tiling groups or floating groups.
 
 Next, let’s make sure no previous window placement rule is in place,
 this will avoid unexpected and hard-to-debug behavior.
@@ -514,8 +529,9 @@ class, so it will be pretty straightforward to the corresponding code.
 #+end_src
 
 This can be written this way:
-#+RESULTS[1c9490c15e3cc7d2c8ed1c508cab844567232afc]: gen-rules
+#+RESULTS[21630178e2de94ae4bda9a3f91f96b04ff447845]: gen-rules
 #+begin_src lisp
+(define-frame-preference "[GAM]" (nil t t :class "Steam"))
 (define-frame-preference "[SOC]" (nil t t :class "lightcord"))
 (define-frame-preference "[SOC]" (nil t t :class "discord"))
 (define-frame-preference "[SOC]" (nil t t :class "Signal"))
@@ -914,21 +930,22 @@ this:
              "\n")
 #+end_src
 
-#+RESULTS[7337dc02bc356fcd83b164e4b879e2b2086cee55]: group-keybind-gen
+#+RESULTS[09b139b0e127a88b3e4e2a05a609ccfcb7825b3c]: group-keybind-gen
 : "(define-key *top-map* (kbd \"s-1\") \"gselect 1\")
 : (define-key *top-map* (kbd \"s-2\") \"gselect 2\")
 : (define-key *top-map* (kbd \"s-3\") \"gselect 3\")
 : (define-key *top-map* (kbd \"s-4\") \"gselect 4\")
 : (define-key *top-map* (kbd \"s-5\") \"gselect 5\")
 : (define-key *top-map* (kbd \"s-6\") \"gselect 6\")
-: (define-key *top-map* (kbd \"s-7\") \"gselect 7\")"
+: (define-key *top-map* (kbd \"s-7\") \"gselect 7\")
+: (define-key *top-map* (kbd \"s-8\") \"gselect 8\")"
 
 #+header: :cache yes :noweb yes :wrap src lisp
 #+begin_src emacs-lisp
   <<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
 #+end_src
 
-#+RESULTS[2697e8b16b9807047ec38a47c9bf44234aa7c129]:
+#+RESULTS[627ef5c7e456944dd624c322529699e11f2a041b]:
 #+begin_src lisp
 (define-key *top-map* (kbd "s-<<num-to-char(num=1)>>") "gselect 1")
 (define-key *top-map* (kbd "s-<<num-to-char(num=2)>>") "gselect 2")
@@ -937,6 +954,7 @@ this:
 (define-key *top-map* (kbd "s-<<num-to-char(num=5)>>") "gselect 5")
 (define-key *top-map* (kbd "s-<<num-to-char(num=6)>>") "gselect 6")
 (define-key *top-map* (kbd "s-<<num-to-char(num=7)>>") "gselect 7")
+(define-key *top-map* (kbd "s-<<num-to-char(num=8)>>") "gselect 8")
 #+end_src
 
 Another batch of keybinds I use a lot is keybinds to send the
