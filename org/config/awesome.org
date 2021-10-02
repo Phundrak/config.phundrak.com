@@ -991,8 +991,8 @@ declared in the ~globalkeys~ variable, which will be added then to ~root.keys~
 | a   | modkey                 | shell   | awiki                                    | find and open an ArchWiki page  | rofi  |
 | d   | modkey                 | spawn   | rofi -combi-modi drun,window -show combi | rofi for drun and windows       | rofi  |
 | d   | modkey, meta           | spawn   | rofi -show ssh                           | rofi for SSH                    | rofi  |
-| p   | modkey, shift          | shell   | rofi-pass -t                             | types password from ~pass~      | rofi  |
-| p   | modkey, control, shift | shell   | rofi-pass                                | copy password from ~pass~       | rofi  |
+| p   | modkey, shift          | shell   | rofi-pass -t                             | types password from ~pass~        | rofi  |
+| p   | modkey, control, shift | shell   | rofi-pass                                | copy password from ~pass~         | rofi  |
 | e   | modkey, meta           | shell   | rofi-emoji                               | select and copy emoji from list | rofi  |
 | m   | modkey, meta           | shell   | rofi-mount                               | volume mounting helper          | rofi  |
 | u   | modkey, meta           | shell   | rofi-umount                              | volume unmounting helper        | rofi  |
