@@ -1287,6 +1287,10 @@ media-related, but I’ll add keybinds for my screen’s backlight.
 #+caption: Top-level media keys
 | Keychord              | Function                             |
 |-----------------------+--------------------------------------|
+| ~XF86AudioPlay~         | ~exec mpc play~                        |
+| ~XF86AudioPause~        | ~exec mpc pause~                       |
+| ~XF86AudioPrev~         | ~exec mpc prev~                        |
+| ~XF86AudioNext~         | ~exec mpc next~                        |
 | ~XF86AudioRaiseVolume~  | ~exec amixer -q set Master 2%+ unmute~ |
 | ~XF86AudioLowerVolume~  | ~exec amixer -q set Master 2%- unmute~ |
 | ~XF86AudioMute~         | ~exec amixer -q set Master 1+ toggle~  |
