@@ -4098,6 +4098,20 @@ language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful grap
     :defer t)
 #+end_src
 
+**** Graphviz
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Graphviz-zifi28c1e8j0
+:END:
+[[https://graphviz.org/][Graphviz]], often known with ~dot~, allows to programatically create
+visual graphs and networks.
+#+begin_src emacs-lisp
+  (use-package graphviz-dot-mode
+    :straight (:build t)
+    :defer t
+    :config
+    (setq graphviz-dot-indent-width 4))
+#+end_src
+
 **** Nginx
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Nginxjiz5fl6184j0
