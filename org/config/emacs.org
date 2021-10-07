@@ -2829,6 +2829,8 @@ extended however we like!
     :commands (orgtbl-mode)
     :hook ((org-mode . visual-line-mode)
            (org-mode . org-num-mode))
+    :custom-face
+    (org-macro ((t (:foreground "#b48ead"))))
     :init
     (auto-fill-mode -1)
     :config
@@ -3475,17 +3477,18 @@ hasle.
 #+NAME: org-proj-config-setup
 #+BEGIN_SRC emacs-lisp
   (defvar phundrak//projects-config-target
-    "/rsync:Tilo:~/www/phundrak.com/config"
-    "Points to where exported files for config.phundrak.com should be put")
+    "/ssh:Tilo:~/www/phundrak.com/config"
+    "Points to where exported files for config.phundrak.com should be put.")
+
   (defvar phundrak//projects-config-source
     "~/org/config/"
-    "Points to where the sources for config.phundrak.com are")
+    "Points to where the sources for config.phundrak.com are.")
   (defvar phundrak//projects-config-language
     "en"
-    "Language of config.phundrak.com")
+    "Language of the website config.phundrak.com.")
   (defvar phundrak//projects-config-recursive
     t
-    "Defines whether subdirectories should be parsed for config.phundrak.com")
+    "Defines whether subdirectories should be parsed for config.phundrak.com.")
 #+END_SRC
 
 Now, here is my configuration. In this snippet, my org files located in my
@@ -3685,6 +3688,11 @@ The project is then defined like so:
        :states 'normal
        :prefix "SPC"
        "m" #'ivy-bibtex))
+#+end_src
+
+#+begin_src emacs-lisp
+  (after! org
+    (require 'org-ref))
 #+end_src
 
 *** Visual Configuration
