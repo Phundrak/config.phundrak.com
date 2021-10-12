@@ -18,9 +18,9 @@ abbreviations.
 Just in case, we might need sometimes to declare the fish function =fish_title=
 as =true=, so let’s do so.
 #+BEGIN_SRC fish
-  function fish_title
-      true
-  end
+function fish_title
+    true
+end
 #+END_SRC
 
 * Fish from within Emacs
@@ -30,9 +30,9 @@ as =true=, so let’s do so.
 I sometimes call fish from within emacs, with =M-x ansi-term=. In this case, the
 variable =TERM= needs to have the value =eterm-color=.
 #+BEGIN_SRC fish
-  if test -n "$EMACS"
-      set -x TERM eterm-color
-  end
+if test -n "$EMACS"
+    set -x TERM eterm-color
+end
 #+END_SRC
 
 * Tramp remote access
@@ -44,14 +44,14 @@ precise shell appearance: a simple =$= followed by a space after which to put
 the commands it needs to execute, and nothing else. Due to this, let’s
 deactivate and redefine some of the functions defining the appearance of fish.
 #+BEGIN_SRC fish
-  if test "$TERM" = "dumb"
-      function fish_prompt
-          echo "\$ "
-      end
-      function fish_right_prompt; end
-      function fish_greeting; end
-      function fish_title; end
-  end
+if test "$TERM" = "dumb"
+    function fish_prompt
+        echo "\$ "
+    end
+    function fish_right_prompt; end
+    function fish_greeting; end
+    function fish_title; end
+end
 #+END_SRC
 
 * Regular fish shell appearance
@@ -63,88 +63,88 @@ when I’m the one using it: the ~fish_greeting~ function. I use it to give me a
 overview of my computer’s status, including its hostname, uptime, disks usage,
 ram usage, swap usage, and networking.
 #+BEGIN_SRC fish
-  set RED '\033[0;31m'
-  set GREEN '\033[0;32m'
-  set NC '\033[0m'
+set RED '\033[0;31m'
+set GREEN '\033[0;32m'
+set NC '\033[0m'
 
-  function display_slider # used total
-      set -l slider_length 38
-      set -l used $argv[1]
-      set -l total $argv[2]
-      set -l used_slider (math -s0 "($used * $slider_length) / $total")
-      set -l unused_slider (math -s0 "$slider_length - $used_slider")
-      echo -en "["
-      echo -en $RED
-      echo -en (string repeat -n $used_slider '=')
-      echo -en $GREEN
-      echo -en (string repeat -n $unused_slider '=')
-      echo -en $NC
-      echo -en "]"
-  end
+function display_slider # used total
+    set -l slider_length 38
+    set -l used $argv[1]
+    set -l total $argv[2]
+    set -l used_slider (math -s0 "($used * $slider_length) / $total")
+    set -l unused_slider (math -s0 "$slider_length - $used_slider")
+    echo -en "["
+    echo -en $RED
+    echo -en (string repeat -n $used_slider '=')
+    echo -en $GREEN
+    echo -en (string repeat -n $unused_slider '=')
+    echo -en $NC
+    echo -en "]"
+end
 
-  function fish_greeting
-      set -l ruler_length 79
-      set -l ruler (string repeat -n $ruler_length "=")
+function fish_greeting
+    set -l ruler_length 79
+    set -l ruler (string repeat -n $ruler_length "=")
 
-      set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
-      set -l uptime (uptime -p | sed 's/up //')
+    set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
+    set -l uptime (uptime -p | sed 's/up //')
 
-      set -l root (df -Ph | grep -E "/\$")
-      set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
-      set -l root_used (echo $root | awk '{print $3}')
-      set -l root_total (echo $root | awk '{print $2}')
+    set -l root (df -Ph | grep -E "/\$")
+    set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
+    set -l root_used (echo $root | awk '{print $3}')
+    set -l root_total (echo $root | awk '{print $2}')
 
-      set -l ram (free -tm | grep Mem)
-      set -l ram_total (echo $ram | awk '{print $2}')
-      set -l ram_used (echo $ram | awk '{print $3}')
-      set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
+    set -l ram (free -tm | grep Mem)
+    set -l ram_total (echo $ram | awk '{print $2}')
+    set -l ram_used (echo $ram | awk '{print $3}')
+    set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
 
-      set -l swap (free -tm | grep Swap)
-      set -l swap_total (echo $swap | awk '{print $2}')
-      set -l swap_used (echo $swap | awk '{print $3}')
-      set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
+    set -l swap (free -tm | grep Swap)
+    set -l swap_total (echo $swap | awk '{print $2}')
+    set -l swap_used (echo $swap | awk '{print $3}')
+    set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
 
-      set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
-      set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
-      set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
-      set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
+    set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
+    set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
+    set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
+    set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
 
-      echo $ruler
-      printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
-      printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
-      printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
-      printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
+    echo $ruler
+    printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
+    printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
+    printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
+    printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
 
-      # loop other mountpoints
-      for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
-          set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
-          set -l mp_used (echo $mp | awk '{print $3}')
-          set -l mp_total (echo $mp | awk '{print $2}')
-          set -l mp_name (echo $mp | awk '{print $6}')
-          printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
-      end
+    # loop other mountpoints
+    for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
+        set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
+        set -l mp_used (echo $mp | awk '{print $3}')
+        set -l mp_total (echo $mp | awk '{print $2}')
+        set -l mp_name (echo $mp | awk '{print $6}')
+        printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
+    end
 
-      printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
-      printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
-      echo $ruler
-  end
+    printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
+    printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
+    echo $ruler
+end
 #+END_SRC
 
 The theme I use for fish is [[https://github.com/oh-my-fish/theme-bobthefish][bobthefish]], which by default puts a really long
 timestamp to the right of the prompt. I want something shorter, so here is the
 variable to set, using the format specified in ~date(1)~.
 #+BEGIN_SRC fish
-  set -g theme_date_format "+%g-%m-%d %H:%M:%S"
+set -g theme_date_format "+%g-%m-%d %H:%M:%S"
 #+END_SRC
 
 I also wish to have a kinda different newline prompt, so let’s set it:
 #+BEGIN_SRC fish
-  set -g theme_newline_prompt 'λ '
+set -g theme_newline_prompt 'λ '
 #+END_SRC
 
 Finally, let’s set our prompt’s theme to the Nord theme.
 #+BEGIN_SRC fish
-  set -g theme_color_scheme nord
+set -g theme_color_scheme nord
 #+END_SRC
 
 * Global variables
@@ -154,24 +154,24 @@ Finally, let’s set our prompt’s theme to the Nord theme.
 In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t
 have to call my web browser directly but rather with this variable.
 #+BEGIN_SRC fish
-  set -gx BROWSER firefox
+set -gx BROWSER firefox
 #+END_SRC
 
 Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can
 get the sudo password. So, let’s declare it.
 #+BEGIN_SRC fish
-  set -gx SUDO_ASKPASS ~/.local/bin/askpass
+set -gx SUDO_ASKPASS ~/.local/bin/askpass
 #+END_SRC
 
 In general, I prefer using ~bat~ to ~less~, although the former relies on the
 latter, but ~bat~ provides nice wrapping around ~less~, including syntax
 highlighting. Let’s set the manpager to bat then:
 #+BEGIN_SRC fish
-  set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 #+END_SRC
 
 #+begin_src fish
-  set -x XMODIFIERS
+set -x XMODIFIERS
 #+end_src
 
 ** Development
@@ -182,8 +182,8 @@ Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since i
 will most often be just quick edits, nothing too heavy, if it is called from the
 ~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
 #+BEGIN_SRC fish
-  set -gx EDITOR emacsclient -c
-  set -gx VISUAL emacsclient -c
+set -gx EDITOR emacsclient -c
+set -gx VISUAL emacsclient -c
 #+END_SRC
 
 We also need to set the path to the Dart SDK.
@@ -198,21 +198,21 @@ set -gx ANDROID_HOME $HOME/Android/Sdk
 
 Still related to Dart and Flutter development,
 #+BEGIN_SRC fish
-  set -gx CHROME_EXECUTABLE /usr/bin/chromium
+set -gx CHROME_EXECUTABLE /usr/bin/chromium
 #+END_SRC
 
 Next, we have two variables from Deno, the Node.js destroyer. Its base directory
 will be set in my XDG config directory, and its binaries will be located in my
 local binaries directory (see below).
 #+BEGIN_SRC fish
-  set -gx DENO_DIR $HOME/.config/deno
-  set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
+set -gx DENO_DIR $HOME/.config/deno
+set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
 #+END_SRC
 
 Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so
 let’s do so.
 #+BEGIN_SRC fish
-  set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
+set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 #+END_SRC
 
 ** ~$PATH~
@@ -237,8 +237,8 @@ my own executables, and some more.
 
 #+NAME: generate-extra-paths
 #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-  (mapconcat #'identity
-             paths " \\\n")
+(mapconcat #'identity
+           paths " \\\n")
 #+END_SRC
 
 #+RESULTS[3fd24377f29513d4c7edcd9621d0462665efb403]: generate-extra-paths
@@ -251,8 +251,8 @@ my own executables, and some more.
 
 So, let’s set our user paths:
 #+BEGIN_SRC fish :noweb yes
-  set -g fish_user_paths \
-  <<generate-extra-paths()>>
+set -g fish_user_paths \
+<<generate-extra-paths()>>
 #+END_SRC
 
 * Abbreviations
@@ -261,12 +261,12 @@ So, let’s set our user paths:
 :END:
 #+NAME: generate-abbr
 #+BEGIN_SRC emacs-lisp :var table=[] :exports none :tangle no
-  (replace-regexp-in-string "\\\\vert[{}]*"
-                            "|"
-                            (mapconcat (lambda (x) (format "abbr %s '%s'" (car x) (cadr x)))
-                                       table
-                                       "\n")
-                            t t)
+(replace-regexp-in-string "\\\\vert[{}]*"
+                          "|"
+                          (mapconcat (lambda (x) (format "abbr %s '%s'" (car x) (cadr x)))
+                                     table
+                                     "\n")
+                          t t)
 #+END_SRC
 
 Abbreviations are a great way to keep correctly track of which commands are run
@@ -306,7 +306,7 @@ running right now, and =pscpu10= limits that to the top 10 threads. Similarly,
 | psmem10      | ps auxf \vert sort -nr -k 4 \vert head -10         |
 
 #+begin_SRC fish
-  <<generate-abbr(table=mgmt-abbr)>>
+<<generate-abbr(table=mgmt-abbr)>>
 #+END_SRC
 
 ** System management (packages and services)
@@ -332,7 +332,7 @@ can type =search=. Otherwise, if I want to include AUR results, I’ll use =paru
 | purge        | paru -Sc         |
 
 #+BEGIN_SRC fish
-  <<generate-abbr(table=pm-abbr)>>
+<<generate-abbr(table=pm-abbr)>>
 #+END_SRC
 
 *** Service management
@@ -349,7 +349,7 @@ system services, I can instead type a simple capital =S=.
 | suser        | systemctl --user |
 
 #+BEGIN_SRC fish
-  <<generate-abbr(table=service-abbr)>>
+<<generate-abbr(table=service-abbr)>>
 #+END_SRC
 
 ** Development
@@ -373,7 +373,7 @@ configuration for debug or release profiles.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=abbr-cmake)>>
+<<generate-abbr(table=abbr-cmake)>>
 #+END_SRC
 
 *** Docker
@@ -398,7 +398,7 @@ full command, so I use these instead.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=abbr-docker)>>
+<<generate-abbr(table=abbr-docker)>>
 #+END_SRC
 
 *** Text editors
@@ -419,7 +419,7 @@ In case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish :noweb yes
-  <<generate-abbr(table=abbr-text-ed)>>
+<<generate-abbr(table=abbr-text-ed)>>
 #+END_SRC
 
 *** Compilation
@@ -438,7 +438,7 @@ with the ~-Wall~ flag activated.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=abbr-comp)>>
+<<generate-abbr(table=abbr-comp)>>
 #+END_SRC
 
 *** Git
@@ -455,7 +455,7 @@ covered.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=abbr-git)>>
+<<generate-abbr(table=abbr-git)>>
 #+END_SRC
 
 ** LaTeX
@@ -475,7 +475,7 @@ abbreviation. Same goes for ~texhash~ which must be run as sudo.
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=latex-abbr)>>
+<<generate-abbr(table=latex-abbr)>>
 #+END_SRC
 
 ** Some security measures
@@ -507,7 +507,7 @@ accidentally removing the root folder. I added the same option to =chgrp=,
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=sec-abbr)>>
+<<generate-abbr(table=sec-abbr)>>
 #+END_SRC
 
 ** Typos
@@ -530,7 +530,7 @@ So, let's just replace the former by the latter. I'm also very bad at typing
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
-  <<generate-abbr(table=typo-abbr)>>
+<<generate-abbr(table=typo-abbr)>>
 #+END_SRC
 
 ** Misc
@@ -548,33 +548,33 @@ Here you will find various commands related to media in general. the first one
 is a command to play some chillhop from the [[https://www.youtube.com/user/Chillhopdotcom][Chillhop YouTube channel]]'s
 livestream.
 #+BEGIN_SRC fish
-  abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
+abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
 #+END_SRC
 
 When it comes to mpv, I do not want to force it to open a graphical window if
 for example I want to listen to an audio file. I also do not want any border on
 that window. So, I declared this abbreviation.
 #+BEGIN_SRC fish
-  abbr mpv 'mpv --no-border --force-window=no'
+abbr mpv 'mpv --no-border --force-window=no'
 #+END_SRC
 
 When I want to download a song from YouTube, I'll just use the command ~flac
 videoIdentifier~ to get it through ~youtube-dl~.
 #+BEGIN_SRC fish
-  abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
+abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
 #+END_SRC
 
 Some sane default options for ~sxiv~, a simple X image Viewer. This includes
 playing GIFs and not displaying the filename below. Sxiv will also open in
 fullscreen and will fit the displayed image to the frame.
 #+BEGIN_SRC fish
-  abbr sxiv 'sxiv -abfs f'
+abbr sxiv 'sxiv -abfs f'
 #+END_SRC
 
 Finally, let's declare the following abbreviation that will launch an mpv
 instance displaying my webcam:
 #+BEGIN_SRC fish
-  abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
+abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
 #+END_SRC
 
 *** Sudo
@@ -585,7 +585,7 @@ First, I make it so that ~sudo~ comes with the ~-A~ switch in order to call my
 custom graphical script for getting my password (see [[file:bin.org::#Askpass-d0d7a8c0][askpass]]). I also made it so
 ~please~ is an equivalent to ~sudo -A~ as a joke.
 #+BEGIN_SRC fish
-  abbr please 'sudo -A'
+abbr please 'sudo -A'
 #+END_SRC
 
 *** History
@@ -595,7 +595,7 @@ custom graphical script for getting my password (see [[file:bin.org::#Askpass-d0
 I find it more intuitive and faster to just write ~hist~ instead of ~history~,
 so let's declare that.
 #+BEGIN_SRC fish
-  abbr hist history
+abbr hist history
 #+END_SRC
 
 *** Compression
@@ -614,7 +614,7 @@ management]]).
 | untar        | tar -xvzf |
 
 #+BEGIN_SRC fish
-  <<generate-abbr(table=tar-abbr)>>
+<<generate-abbr(table=tar-abbr)>>
 #+END_SRC
 
 *** exa
@@ -628,7 +628,7 @@ management]]).
 | lsl          | exa -halg@ --group-directories-first --git |
 
 #+BEGIN_SRC fish
-  <<generate-abbr(table=exa-abbr)>>
+<<generate-abbr(table=exa-abbr)>>
 #+END_SRC
 
 *** Network Management
@@ -638,7 +638,7 @@ management]]).
 First, we have just =nmcli= with sane default options, that is a pretty output
 with colors.
 #+BEGIN_SRC fish
-  abbr nmcli 'nmcli -p -c auto'
+abbr nmcli 'nmcli -p -c auto'
 #+END_SRC
 
 *** NordVPN
@@ -662,7 +662,7 @@ the US.
 | ncu          | nordvpn c United_States |
 
 #+BEGIN_SRC fish
-  <<generate-abbr(table=nordvpn-abbr)>>
+<<generate-abbr(table=nordvpn-abbr)>>
 #+END_SRC
 
 *** Wget
@@ -671,7 +671,7 @@ the US.
 :END:
 By default, continue a download that was interupted.
 #+BEGIN_SRC fish
-  abbr wget 'wget -c'
+abbr wget 'wget -c'
 #+END_SRC
 
 * Last thing before we’re done

@@ -47,9 +47,9 @@ partition is 16GB large.
 :END:
 When you boot into the live ISO, execute the following command:
 #+BEGIN_SRC sh
-  pacman -Sy reflector
-  reflector -c FR -c DE -c BE -l 200 -p http -p https --sort rate \
-            --save /etc/pacman.d/mirrorlist --verbose
+pacman -Sy reflector
+reflector -c FR -c DE -c BE -l 200 -p http -p https --sort rate \
+          --save /etc/pacman.d/mirrorlist --verbose
 #+END_SRC
 
 This will update the packages from your live ISO, and you will get the best
@@ -67,14 +67,14 @@ how the distro works, I just want to be able to install my distro quickly now.
 I’ll need to download the script with ~wget~, but apparently it isn’t installed
 by default on Arch ISOs anymore, so I’ll need to install it.
 #+BEGIN_SRC sh
-  pacman -S wget
+pacman -S wget
 #+END_SRC
 
 Now, let’s grab the script. You can check it on [[https://github.com/matmoul/archfi][Github]].
 #+BEGIN_SRC sh
-  wget archfi.sf.net/archfi
-  # Or from matmoul.github.io/archfi if SourceForge is down
-  sh archfi
+wget archfi.sf.net/archfi
+# Or from matmoul.github.io/archfi if SourceForge is down
+sh archfi
 #+END_SRC
 
 Then, follow the instructions and install Arch Linux. Take the opportunity to
@@ -90,28 +90,32 @@ your computer.
 :HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
 :CUSTOM_ID: Execute_bootstrap-e37054ef
 :END:
-The first thing I will do is add the [[https://github.com/archlinuxcn/repo][ArchLinuxCN]] repository so I can get access
-to ~paru~.
+The first thing I will do is add the [[https://aur.chaotic.cx/][Chaotic AUR]] repository so I can
+get access to ~paru~ as well as some AUR packages without the need of an
+AUR helper (ironic considering ~paru~ is one)..
 #+BEGIN_SRC sh
-  printf '[archlinuxcn]\nServer = https://repo.archlinuxcn.org/$arch\n' | sudo tee -a /etc/pacman.conf
+sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key 3056513887B78AEB
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+printf '[chaotic-aur]\nServer = /etc/pacman.d/chaotic-mirrorlist\n' | sudo tee -a /etc/pacman.conf
 #+END_SRC
 
 I can now install ~fish~, ~git~, and ~paru~:
 #+BEGIN_SRC sh
-  sudo pacman -S fish git paru
+sudo pacman -S fish git paru
 #+END_SRC
 
 And now that ~paru~ is available, we can install ~yadm~:
 #+BEGIN_SRC sh
-  paru -S yadm
+paru -S yadm
 #+END_SRC
 
 ~yadm~ comes with a very handy feature: its bootstrap script. It can be executed
 automatically once the dotfiles are cloned with yadm:
 #+BEGIN_SRC sh
-  yadm clone https://labs.phundrak.com/phundrak/dotfiles
-  # or if labs.phundrak.com is down or too slow for you
-  #yadm clone https://github.com/phundrak/dotfiles
+yadm clone https://labs.phundrak.com/phundrak/dotfiles
+# or if labs.phundrak.com is down or too slow for you
+#yadm clone https://github.com/phundrak/dotfiles
 #+END_SRC
 
 Let’s take a look at what it does.
@@ -123,11 +127,11 @@ Let’s take a look at what it does.
 Some private files are stored encrypted in the repository of my yadm dotfiles. I
 will need them later on during the bootstrap execution.
 #+BEGIN_SRC fish
-  if test "$USER" = 'phundrak'
-      yadm decrypt
-  else
-      whiptail --yesno "Decrypt private files?" 8 40 && yadm decrypt
-  end
+if test "$USER" = 'phundrak'
+    yadm decrypt
+else
+    whiptail --yesno "Decrypt private files?" 8 40 && yadm decrypt
+end
 #+END_SRC
 
 ** Get a correct keyboard layout
@@ -140,24 +144,24 @@ or the American QWERTY layout, so I make it so the Menu key switches for me my
 layout between these three. This makes it so my xorg configuration of my
 keyboard looks like this:
 #+BEGIN_SRC fish
-  set keyboardconf \
-  'Section "InputClass"
-          Identifier "system-keyboard"
-          MatchIsKeyboard "on"
-          Option "XkbLayout" "fr"
-          Option "XkbModel" "pc104"
-          Option "XkbVariant" "bepo_afnor"
-          Option "XkbOptions" "caps:ctrl_modifier"
-  EndSection'
+set keyboardconf \
+'Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "fr"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "bepo_afnor"
+        Option "XkbOptions" "caps:ctrl_modifier"
+EndSection'
 #+END_SRC
 
 So, let’s ask the user if they want to set it as their keyboard configuration.
 #+BEGIN_SRC fish
-  printf "\n# Set keyboard layout #########################################################\n\n"
-  whiptail --yesno "Would you like to set your keyboard layout to the bépo layout?" 8 55
-  if test $status -eq 0
-      echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
-  end
+printf "\n# Set keyboard layout #########################################################\n\n"
+whiptail --yesno "Would you like to set your keyboard layout to the bépo layout?" 8 55
+if test $status -eq 0
+    echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+end
 #+END_SRC
 
 ** Set our locale
@@ -167,12 +171,12 @@ So, let’s ask the user if they want to set it as their keyboard configuration.
 I use two main locales, the French and US UTF-8 locales, and I like to keep the
 Japanese locale activated just in case.
 #+BEGIN_SRC fish
-  set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
+set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 #+END_SRC
 
 I’ll let the user accept them one by one.
 #+BEGIN_SRC fish
-  printf "\n# Set locale ##################################################################\n\n"
+printf "\n# Set locale ##################################################################\n\n"
 
   for item in $mylocales
       whiptail --yesno "Set the \"$item\" locale?" 8 40
@@ -184,29 +188,29 @@ I’ll let the user accept them one by one.
 
 This is my configuration I usually use when it comes to my locale.
 #+BEGIN_SRC fish
-  set localeconf "LANG=en_DK.UTF-8
-  LC_COLLATE=C
-  LC_NAME=fr_FR.UTF-8
-  LC_IDENTIFICATION=fr_FR.UTF-8
-  LC_TELEPHONE=fr_FR.UTF-8
-  LC_MONETARY=fr_FR.UTF-8
-  LC_PAPER=fr_FR.UTF-8
-  LC_ADDRESS=fr_FR.UTF-8
-  LC_MEASUREMENT=fr_FR.UTF-8"
+set localeconf "LANG=en_DK.UTF-8
+LC_COLLATE=C
+LC_NAME=fr_FR.UTF-8
+LC_IDENTIFICATION=fr_FR.UTF-8
+LC_TELEPHONE=fr_FR.UTF-8
+LC_MONETARY=fr_FR.UTF-8
+LC_PAPER=fr_FR.UTF-8
+LC_ADDRESS=fr_FR.UTF-8
+LC_MEASUREMENT=fr_FR.UTF-8"
 #+END_SRC
 
 Let’s set it as our system’s locale if the user whishes to.
 #+BEGIN_SRC fish
-  whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
-  if test $status -eq 0
-      echo $localeconf | sudo tee /etc/locale.conf
-  end
+whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
+if test $status -eq 0
+    echo $localeconf | sudo tee /etc/locale.conf
+end
 #+END_SRC
 
 Now we can generate our locale!
 #+BEGIN_SRC fish
-  printf "\n# Generate locale #############################################################\n\n"
-  sudo locale-gen
+printf "\n# Generate locale #############################################################\n\n"
+sudo locale-gen
 #+END_SRC
 
 ** Create some folders
@@ -216,9 +220,9 @@ Now we can generate our locale!
 Let’s create some folders we might need for mounting our drives, Android devices
 and CDs.
 #+BEGIN_SRC fish
-  printf "\n# Create directories for mounting #############################################\n\n"
-  sudo mkdir -p /mnt/{USB,CD,Android}
-  sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+printf "\n# Create directories for mounting #############################################\n\n"
+sudo mkdir -p /mnt/{USB,CD,Android}
+sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 #+END_SRC
 
 ** Set user’s shell to fish
@@ -227,11 +231,11 @@ and CDs.
 :END:
 First of all, the bootstrap shell will set the user’s shell to fish.
 #+BEGIN_SRC fish
-  printf "\n# Set fish as the default shell ###############################################\n\n"
-  whiptail --yesno "Set the current user’s default shell to fish?" 8 50
-  if test $status -eq 0 -a ! "$SHELL" = '/usr/bin/fish'
-      chsh -s /usr/bin/fish
-  end
+printf "\n# Set fish as the default shell ###############################################\n\n"
+whiptail --yesno "Set the current user’s default shell to fish?" 8 50
+if test $status -eq 0 -a ! "$SHELL" = '/usr/bin/fish'
+    chsh -s /usr/bin/fish
+end
 #+END_SRC
 
 ** Install basic packages
@@ -240,49 +244,49 @@ First of all, the bootstrap shell will set the user’s shell to fish.
 :END:
 Let’s set in a custom varible what packages we’ll be needing.
 #+BEGIN_SRC fish
-  set PACKAGES \
-  acpi acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii \
-  aspell-en aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git \
-  base-devel bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bzip2 \
-  chicken chromium clisp corrupter-git cppcheck cppreference \
-  cppreference-devhelp cpupower discord-canary discount docker docker-compose \
-  dockerfile-language-server-bin doxygen emacs emacs-org-mode exa exfat-utils \
-  farbfeld fd ffmpegthumbnailer findutils firefox flake8 flat-remix-gtk freeglut \
-  fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
-  gnuplot go go-tools golangci-lint-bin graphviz htop hugo i3lock-color \
-  inetutils isync inter-font javascript-typescript-langserver js-beautify \
-  jfsutils jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
-  minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools \
-  nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
-  network-manager-applet networkmanager networkmanager-openvpn \
-  nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
-  noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
-  otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-git \
-  powerline-fonts prettier pulseaudio-bluetooth python-autoflake python-epc \
-  python-importmagic python-language-server python-nose python-pip python-poetry \
-  python-ptvsd python-pytest qt5-imageformats qemu r raw-thumbnailer reflector \
-  ripgrep rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent \
-  shadow siji-git simplescreenrecorder sshfs sxiv texlive-bibtexextra \
-  texlive-fontsextra texlive-formatsextra texlive-humanities \
-  texlive-langjapanese texlive-pictures texlive-pstricks texlive-publishers \
-  texlive-science tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil \
-  ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
-  ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-  typescript typescript-language-server-bin unicode-emoji unrar usbutils \
-  valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-  x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
-  xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
-  yaml-language-server-bin zeal
+set PACKAGES \
+acpi acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii \
+aspell-en aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git \
+base-devel bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bzip2 \
+chicken chromium clisp corrupter-git cppcheck cppreference \
+cppreference-devhelp cpupower discord-canary discount docker docker-compose \
+dockerfile-language-server-bin doxygen emacs emacs-org-mode exa exfat-utils \
+farbfeld fd ffmpegthumbnailer findutils firefox flake8 flat-remix-gtk freeglut \
+fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
+gnuplot go go-tools golangci-lint-bin graphviz htop hugo i3lock-color \
+inetutils isync inter-font javascript-typescript-langserver js-beautify \
+jfsutils jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
+minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools \
+nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
+network-manager-applet networkmanager networkmanager-openvpn \
+nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
+noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
+otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-git \
+powerline-fonts prettier pulseaudio-bluetooth python-autoflake python-epc \
+python-importmagic python-language-server python-nose python-pip python-poetry \
+python-ptvsd python-pytest qt5-imageformats qemu r raw-thumbnailer reflector \
+ripgrep rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent \
+shadow siji-git simplescreenrecorder sshfs sxiv texlive-bibtexextra \
+texlive-fontsextra texlive-formatsextra texlive-humanities \
+texlive-langjapanese texlive-pictures texlive-pstricks texlive-publishers \
+texlive-science tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil \
+ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
+ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
+typescript typescript-language-server-bin unicode-emoji unrar usbutils \
+valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
+xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
+yaml-language-server-bin zeal
 #+END_SRC
 
 These are the minimum I would have in my own installation. You can edit it
 however you want. Let’s install those.
 #+BEGIN_SRC fish
-  printf "\n# Installing needed packages ##################################################\n\n"
-  sudo pacman -Syu
-  for pkg in $PACKAGES
-      paru -S --needed $pkg
-  end
+printf "\n# Installing needed packages ##################################################\n\n"
+sudo pacman -Syu
+for pkg in $PACKAGES
+    paru -S --needed $pkg
+end
 #+END_SRC
 
 ** Tangle configuration files from Org files
@@ -308,9 +312,9 @@ need to create:
 
 #+NAME: gen-dirs-tangle
 #+BEGIN_SRC emacs-lisp :var dirs=dirs-tangled-files
-  (mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
-             dirs
-             "\n")
+(mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
+           dirs
+           "\n")
 #+END_SRC
 
 #+RESULTS[a95e25a5f3ac91b1f884b39dde38e3b51366b188]: gen-dirs-tangle
@@ -331,7 +335,7 @@ mkdir -p $HOME/org/capture
 
 Our code to generate such directories looks like this:
 #+BEGIN_SRC fish :noweb yes
-  <<gen-dirs-tangle()>>
+<<gen-dirs-tangle()>>
 #+END_SRC
 
 The next step is to tangle all the Org files. Here is the list of files that are
@@ -350,13 +354,13 @@ to be tangled:
 
 #+NAME: generate-tangle
 #+BEGIN_SRC emacs-lisp :var files=tangled-files[,0]
-  (mapconcat (lambda (x) (concat
-                          (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
-                          (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
-                                  "--eval '(setq org-confirm-babel-evaluate nil)' \\\n"
-                                  (format "--eval '(org-babel-tangle-file \"~/org/config/%s\")'\n" x))))
-             files
-             "\n")
+(mapconcat (lambda (x) (concat
+                        (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
+                        (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
+                                "--eval '(setq org-confirm-babel-evaluate nil)' \\\n"
+                                (format "--eval '(org-babel-tangle-file \"~/org/config/%s\")'\n" x))))
+           files
+           "\n")
 #+END_SRC
 
 #+RESULTS[87a25d6c524e8d1346452c54aa42ac3ac09d94cf]: generate-tangle
@@ -403,8 +407,8 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 #+end_example
 
 #+BEGIN_SRC fish :noweb yes
-  printf "\n# Tangling org files ##########################################################\n\n"
-  <<generate-tangle()>>
+printf "\n# Tangling org files ##########################################################\n\n"
+<<generate-tangle()>>
 #+END_SRC
 
 ** Setting up Emacs: Installing Spacemacs
@@ -418,19 +422,19 @@ cloned within our =~/.config/emacs= directory, and git won’t let us clone
 Spacemacs in an already existing and non-empty directory. To make sure it isn’t
 one, let’s delete any potentially existing =~/.config/emacs= directory:
 #+BEGIN_SRC fish
-  printf "\n# Installing Spacemacs ########################################################\n\n"
-  rm -rf $HOME/.config/emacs $HOME/.emacs* .spacemacs
+printf "\n# Installing Spacemacs ########################################################\n\n"
+rm -rf $HOME/.config/emacs $HOME/.emacs* .spacemacs
 #+END_SRC
 
 Now we can clone Spacemacs:
 #+BEGIN_SRC fish
-  git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
+git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
 #+END_SRC
 
 And we can restore what might have been deleted in our =~/.emacs.d/private=
 directory:
 #+BEGIN_SRC fish
-  yadm checkout -- ~/.config/emacs/private/
+yadm checkout -- ~/.config/emacs/private/
 #+END_SRC
 
 ** Set up dotfiles’ git repository
@@ -444,26 +448,26 @@ directory:
 This line in the bootstrap script will test if the current user is using my
 username. If yes, it’s probably me.
 #+BEGIN_SRC fish
-  if test "$USER" = 'phundrak'
+if test "$USER" = 'phundrak'
 #+END_SRC
 
 If it is me installing and using these dotfiles, I want the remotes of my
 dotfiles to be set to ssh remotes using my ssh keys.
 #+BEGIN_SRC fish
-  printf "\n# Update yadm’s remotes #######################################################\n\n"
-  yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
-  yadm remote add github git@github.com:phundrak/dotfiles.git
+printf "\n# Update yadm’s remotes #######################################################\n\n"
+yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
+yadm remote add github git@github.com:phundrak/dotfiles.git
 #+END_SRC
 
 I will also want to decrypt my encrypted files, such as said ssh keys.
 #+BEGIN_SRC fish
-  printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
-  yadm decrypt
+printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
+yadm decrypt
 #+END_SRC
 
 Finally, let’s close this ~if~ statement.
 #+BEGIN_SRC fish
-  end
+end
 #+END_SRC
 
 *** Update our submodules
@@ -473,8 +477,8 @@ Finally, let’s close this ~if~ statement.
 Now we can download the various dependencies of our dotfiles. To do so, let’s
 run the following command:
 #+BEGIN_SRC fish
-  printf "\n# Getting yadm susbmodules ####################################################\n\n"
-  yadm submodule update --init --recursive
+printf "\n# Getting yadm susbmodules ####################################################\n\n"
+yadm submodule update --init --recursive
 #+END_SRC
 
 ** Enable some services
@@ -491,14 +495,14 @@ them.
 This service enables time syncing with the NTP protocol, so I can be sure my
 computer’s time is correct. The service first needs to be enabled:
 #+BEGIN_SRC fish
-  printf "\n# Enabling timesync ###########################################################\n\n"
-  sudo systemctl enable --now systemd-timesyncd
+printf "\n# Enabling timesync ###########################################################\n\n"
+sudo systemctl enable --now systemd-timesyncd
 #+END_SRC
 
 Now, let systemd know I want to use the NTP protocol to keep my computer’s time
 synced.
 #+BEGIN_SRC fish
-  sudo timedatectl set-ntp true
+sudo timedatectl set-ntp true
 #+END_SRC
 
 *** Docker
@@ -507,17 +511,17 @@ synced.
 :END:
 First, let’s activate Docker on startup.
 #+BEGIN_SRC fish
-  printf "\n# Enabling and starting Docker ################################################\n\n"
-  sudo systemctl enable --now docker
+printf "\n# Enabling and starting Docker ################################################\n\n"
+sudo systemctl enable --now docker
 #+END_SRC
 
 Now, if we wish it, we can be added to the =docker= group so we won’t have to
 type =sudo= each time we call Docker or Docker Compose.
 #+BEGIN_SRC fish
-  read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
-  if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
-      sudo usermod -aG docker $USER
-  end
+read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
+if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
+    sudo usermod -aG docker $USER
+end
 #+END_SRC
 
 *** Emacs
@@ -529,8 +533,8 @@ in. However, the service won’t be started immediately, I personally prefer to
 start a standalone instance in which installing and compiling the Emacs packages
 will happen, and then once that is done I will start the service.
 #+BEGIN_SRC fish
-  printf "\n# Enabling Emacs as user service ##############################################\n\n"
-  systemctl --user enable emacs
+printf "\n# Enabling Emacs as user service ##############################################\n\n"
+systemctl --user enable emacs
 #+END_SRC
 
 *** Mpd
@@ -540,9 +544,9 @@ will happen, and then once that is done I will start the service.
 Mpd will also use as a user service in order to get rid of some lines of code in
 my configuration.
 #+BEGIN_SRC fish
-  printf "\n# Enabling Mpd as a user service ##############################################\n\n"
-  mkdir -p ~/.config/mpd/playlists
-  systemctl --user enable --now mpd
+printf "\n# Enabling Mpd as a user service ##############################################\n\n"
+mkdir -p ~/.config/mpd/playlists
+systemctl --user enable --now mpd
 #+END_SRC
 
 *** SSH server
@@ -552,11 +556,11 @@ my configuration.
 Maybe we want to activate an SSH server on our machine. If so, we can enable it.
 Let’s ask the question.
 #+BEGIN_SRC fish
-  whiptail --yesno 'Do you want to activate the ssh server?' 8 50
-  if test $status -eq 0
-      printf "\n# Enabling ssh server #########################################################\n\n"
-      sudo systemctl enable --now sshd
-  end
+whiptail --yesno 'Do you want to activate the ssh server?' 8 50
+if test $status -eq 0
+    printf "\n# Enabling ssh server #########################################################\n\n"
+    sudo systemctl enable --now sshd
+end
 #+END_SRC
 
 *** Acpilight
@@ -568,7 +572,7 @@ actually no service to enable here, but we must ensure the user is part of the
 ~video~ group so we can modify the brightness of our screen without using
 ~sudo~.
 #+BEGIN_SRC fish
-  sudo usermod -aG video $USER
+sudo usermod -aG video $USER
 #+END_SRC
 
 *** NordVPN
@@ -579,7 +583,7 @@ Thanks to the AUR package ~nordvpn-bin~, I no longer have to manually maintain
 my VPN connections with OpenVPN. However, it requires a service that we should
 activate:
 #+BEGIN_SRC fish
-  sudo systemctl enable --now nordvpnd
+sudo systemctl enable --now nordvpnd
 #+END_SRC
 
 Let’s also set its default protocol to UDP. This will allow me to use any port
@@ -587,7 +591,7 @@ while connected to any WiFi as long as the 443 port is available. Because yes, I
 do connect to a WiFi that blocks some important ports, such as the IMAP and SMTP
 ports. Thanks University of Paris 8 for being SO paranoid.
 #+BEGIN_SRC fish
-  nordvpn s protocol tcp
+nordvpn s protocol tcp
 #+END_SRC
 
 ** Symlink some system config files
@@ -596,16 +600,16 @@ ports. Thanks University of Paris 8 for being SO paranoid.
 :END:
 We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
 #+BEGIN_SRC fish
-  for f in (find ~/.etc -type f)
-      set dest (echo $f | sed -n 's|^.*etc\(.*\)$|/etc\1|p')
-      sudo ln -s $f $dest
-  end
+for f in (find ~/.etc -type f)
+    set dest (echo $f | sed -n 's|^.*etc\(.*\)$|/etc\1|p')
+    sudo ln -s $f $dest
+end
 #+END_SRC
 
 Let’s also symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source here]]) to ~/usr/bin~ so ~xss-lock~
 can find it.
 #+BEGIN_SRC fish
-  sudo ln -s (which plock) /usr/bin/plock
+sudo ln -s (which plock) /usr/bin/plock
 #+END_SRC
 
 ** Install packages from git
@@ -614,7 +618,7 @@ can find it.
 :END:
 Now, let’s install some packages from git directly.
 #+BEGIN_SRC fish
-  mkdir -p ~/fromGIT
+mkdir -p ~/fromGIT
 #+END_SRC
 
 *** Reveal.JS
@@ -624,9 +628,9 @@ Now, let’s install some packages from git directly.
 I sometimes use Reveal.JS to make presentations, and I set its location in my
 [[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
 #+BEGIN_SRC fish
-  printf "\n# Install Reveal.JS ###########################################################\n\n"
-  cd ~/fromGIT
-  git clone https://github.com/hakimel/reveal.js.git
+printf "\n# Install Reveal.JS ###########################################################\n\n"
+cd ~/fromGIT
+git clone https://github.com/hakimel/reveal.js.git
 #+END_SRC
 
 ** Install Rust
@@ -641,14 +645,14 @@ When using Rust, I bounce between two toolchains, the ~stable~ toolchain and the
 ~nightly~ toolchain, although I try to stick with Rust Stable. To install them,
 I will use ~rustup~ which has already been installed previously.
 #+BEGIN_SRC fish
-  printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
-  rustup default stable
+printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
+rustup default stable
 #+END_SRC
 
 This will both download the stable toolchain and set it as the default one. Now
 to install the nightly toolchain, let’s run this:
 #+BEGIN_SRC fish
-  rustup toolchain install nightly
+rustup toolchain install nightly
 #+END_SRC
 
 *** Install some utilities
@@ -658,8 +662,8 @@ to install the nightly toolchain, let’s run this:
 We’ll need some utilities when developing Rust from Emacs, namely ~rustfmt~ and
 ~racer~. Let’s install them with ~cargo~.
 #+BEGIN_SRC fish
-  printf "\n# Add rust utilities ##########################################################\n\n"
-  cargo install rustfmt racer
+printf "\n# Add rust utilities ##########################################################\n\n"
+cargo install rustfmt racer
 #+END_SRC
 
 We will also need some components for development purposes.
@@ -672,9 +676,9 @@ We will also need some components for development purposes.
 
 #+NAME: rust-components-gen
 #+BEGIN_SRC emacs-lisp :var components=rust-components-table[,0]
-  (mapconcat (lambda (x) (format "rustup component add %s" x))
-             components
-             "\n")
+(mapconcat (lambda (x) (format "rustup component add %s" x))
+           components
+           "\n")
 #+END_SRC
 
 #+RESULTS[b3935b1c09d86fe506b43670f52960306a1e9809]:
@@ -684,7 +688,7 @@ We will also need some components for development purposes.
 
 Here is the code to do so:
 #+BEGIN_SRC fish :noweb yes
-  <<rust-components-gen()>>
+<<rust-components-gen()>>
 #+END_SRC
 
 ** Install some python packages
@@ -703,8 +707,8 @@ working.
 
 #+NAME: python-packages-gen
 #+BEGIN_SRC emacs-lisp :var packages=python-packages-table[,0]
-  (format "pip install --user %s"
-          (string-join packages " "))
+(format "pip install --user %s"
+        (string-join packages " "))
 #+END_SRC
 
 #+RESULTS[29652be1076ffac01e34189067efa8fe9abda9d9]: python-packages-gen
@@ -712,8 +716,8 @@ working.
 
 Let’s install them locally for our user.
 #+BEGIN_SRC fish :noweb yes
-  printf "\n# Installing Python packages ##################################################\n\n"
-  <<python-packages-gen()>>
+printf "\n# Installing Python packages ##################################################\n\n"
+<<python-packages-gen()>>
 #+END_SRC
 
 ** Set up Chicken (Scheme interpreter/compiler)
@@ -723,14 +727,14 @@ Let’s install them locally for our user.
 Chicken needs to be set up before being used. First, we need to install its
 documentation.
 #+BEGIN_SRC fish
-  printf "\n# Setting up Chicken ##########################################################\n\n"
-  chicken-install -s apropos chicken-doc
+printf "\n# Setting up Chicken ##########################################################\n\n"
+chicken-install -s apropos chicken-doc
 #+END_SRC
 
 Then, we’ll complete the documentation like so:
 #+BEGIN_SRC fish
-  cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
-  curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
+curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 #+END_SRC
 
 ** Set up our fish shell
@@ -746,8 +750,8 @@ order to improve the user experience.
 :END:
 We will be using ~fisher~ as our extensions manager for Fish. Let’s install it.
 #+BEGIN_SRC fish
-  printf "\n# Installing fisher ###########################################################\n\n"
-  curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+printf "\n# Installing fisher ###########################################################\n\n"
+curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
 #+END_SRC
 
 *** Install our extensions
@@ -770,9 +774,9 @@ I generally use the following extensions in my Fish shell.
 
 #+NAME: fish-extensions-gen
 #+BEGIN_SRC emacs-lisp :var extensions=fish-extensions-table[,0]
-  (mapconcat (lambda (x) (format "fisher add %s" x))
-             extensions
-             "\n")
+(mapconcat (lambda (x) (format "fisher add %s" x))
+           extensions
+           "\n")
 #+END_SRC
 
 #+RESULTS[a88b321ba9148acc8c28c7fb1aaf924c23b6b072]: fish-extensions-gen
@@ -786,6 +790,6 @@ I generally use the following extensions in my Fish shell.
 : fisher add oh-my-fish/theme-bobthefish
 
 #+BEGIN_SRC fish :noweb yes
-  printf "\n# Installing Fisher Extensions ################################################\n\n"
-  <<fish-extensions-gen()>>
+printf "\n# Installing Fisher Extensions ################################################\n\n"
+<<fish-extensions-gen()>>
 #+END_SRC

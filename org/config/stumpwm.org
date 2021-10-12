@@ -92,11 +92,11 @@ different locations, but I chose an Emacs-like configuration: put
 everything in ~~/.stumpwm.d/~. We begin by indicating quicklisp how to
 properly initialize:
 #+begin_src lisp
-  #-quicklisp
-  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                         (user-homedir-pathname))))
-    (when (probe-file quicklisp-init)
-      (load quicklisp-init)))
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
 #+end_src
 
 Then, our first StumpWM-related code is declaring we are using the
@@ -104,15 +104,15 @@ Then, our first StumpWM-related code is declaring we are using the
 us to avoid using the prefix ~stumpwm:~ each time we are using a
 function or a variable from this package.
 #+begin_src lisp
-  (in-package :stumpwm)
-  (setf *default-package* :stumpwm)
+(in-package :stumpwm)
+(setf *default-package* :stumpwm)
 #+end_src
 
 Since I install StumpWM with my package manager (I use the AUR’s
 ~stumpwm-git~ package), StumpWM’s modules are installed to
 ~/usr/share/stupmwm/contrib/utils/~, let’s indicate that to StumpWM.
 #+begin_src lisp
-  (set-module-dir "/usr/share/stupmwm/contrib/")
+(set-module-dir "/usr/share/stupmwm/contrib/")
 #+end_src
 
 A startup message can be used when initializing StumpWM. For now,
@@ -125,8 +125,8 @@ The first thing I want to do after that is to set some decent cursor
 pointer as well as get a bunch of stuff started. To see what’s in the
 ~autostart~ script, [[file:bin.org::#Autostart-a99e99e7][see here]].
 #+begin_src lisp
-  (run-shell-command "xsetroot -cursor_name left_ptr")
-  (run-shell-command "autostart")
+(run-shell-command "xsetroot -cursor_name left_ptr")
+(run-shell-command "autostart")
 #+end_src
 
 Now, we’ll load a couple of my custom files that will be described below:
@@ -142,10 +142,10 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+name: gen-load-files
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var files=first-loaded-files
-  (mapconcat (lambda (file)
-               (format "(load \"~/.stumpwm.d/%s\")" (car file)))
-             files
-             "\n")
+(mapconcat (lambda (file)
+             (format "(load \"~/.stumpwm.d/%s\")" (car file)))
+           files
+           "\n")
 #+end_src
 
 This is equivalent to the Common Lisp code:
@@ -161,8 +161,8 @@ This is equivalent to the Common Lisp code:
 Once the modeline file is loaded, let’s indicate StumpWM to activate
 it:
 #+begin_src lisp
-  (when *initializing*
-    (mode-line))
+(when *initializing*
+  (mode-line))
 #+end_src
 
 Another thing I want to set is how focus is linked to my mouse: only
@@ -170,8 +170,8 @@ on click. I /HATE/ it when focus follows my mouse like some damn dog
 after its ball. Also, the meta key will be used to move floating
 windows.
 #+begin_src lisp
-  (setf *mouse-focus-policy*    :click
-        ,*float-window-modifier* :META)
+(setf *mouse-focus-policy*    :click
+      ,*float-window-modifier* :META)
 #+end_src
 
 Next, some modules will be loaded from the ~stumpwm-contrib~ package
@@ -190,10 +190,10 @@ including a short description of what they are for:
 #+name: gen-load-modules
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var modules=loaded-modules
-  (mapconcat (lambda (module)
-               (format "(load-module \"%s\")" (car module)))
-             modules
-             "\n")
+(mapconcat (lambda (module)
+             (format "(load-module \"%s\")" (car module)))
+           modules
+           "\n")
 #+end_src
 
 #+RESULTS[508e36f9747f1da901bbee63582416a8a6ba2c2f]: gen-load-modules
@@ -208,7 +208,7 @@ including a short description of what they are for:
 
 Finally, we can notify the user everything is ready.
 #+begin_src lisp
-  (setf *startup-message* "StumpWM is ready!")
+(setf *startup-message* "StumpWM is ready!")
 #+end_src
 
 And it’s done! We can now move on to the creation of the other CLisp files.
@@ -223,42 +223,42 @@ me invoking too many Firefox instances. Either Firefox is not already
 running and an instance is launched, or one already is and we are
 brought to it. This is done like so:
 #+begin_src lisp
-  (defcommand firefox () ()
-              "Run or raise Firefox."
-              (run-or-raise "firefox" '(:class "Firefox") t nil))
+(defcommand firefox () ()
+            "Run or raise Firefox."
+            (run-or-raise "firefox" '(:class "Firefox") t nil))
 #+end_src
 
 Next, this command will not only close the current window, but it will
 also close the current frame.
 #+begin_src lisp
-  (defcommand delete-window-and-frame () ()
-              "Delete the current frame with its window."
-              (delete-window)
-              (remove-split))
+(defcommand delete-window-and-frame () ()
+            "Delete the current frame with its window."
+            (delete-window)
+            (remove-split))
 #+end_src
 
 The two following commands will create a new frame to the right and
 below the current frame respectively, then focus it.
 #+begin_src lisp
-  (defcommand hsplit-and-focus () ()
-              "Create a new frame on the right and focus it."
-              (hsplit)
-              (move-focus :right))
+(defcommand hsplit-and-focus () ()
+            "Create a new frame on the right and focus it."
+            (hsplit)
+            (move-focus :right))
 
-  (defcommand vsplit-and-focus () ()
-              "Create a new frame below and move focus to it."
-              (vsplit)
-              (move-focus :down))
+(defcommand vsplit-and-focus () ()
+            "Create a new frame below and move focus to it."
+            (vsplit)
+            (move-focus :down))
 #+end_src
 
 Now, let’s create a command for invoking the terminal, optionally with
 a program.
 #+begin_src lisp
-  (defcommand term (&optional program) ()
-              "Invoke a terminal, possibly with a @arg{program}."
-              (run-shell-command (if program
-                                     (format nil "kitty ~A" program)
-                                     "kitty")))
+(defcommand term (&optional program) ()
+            "Invoke a terminal, possibly with a @arg{program}."
+            (run-shell-command (if program
+                                   (format nil "kitty ~A" program)
+                                   "kitty")))
 #+end_src
 
 And done! Next!
@@ -297,10 +297,10 @@ code looks like so:
 #+name: gen-colors
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var colors=nord-colors
-  (mapconcat (lambda (color)
-               (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
-             colors
-             "\n")
+(mapconcat (lambda (color)
+             (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
+           colors
+           "\n")
 #+end_src
 
 #+RESULTS[08b3db7a2b4f31d641bcd096ff265eae06879244]: gen-colors
@@ -332,45 +332,45 @@ And with that we’re done!
 :END:
 The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
 #+begin_src lisp
-  (load "~/.stumpwm.d/colors.lisp")
+(load "~/.stumpwm.d/colors.lisp")
 #+end_src
 
 Next, we can set some colors for the modeline. Let’s set the
 background of the modeline to Nord1 and the foreground to Nord5, I
 think this is a pretty good combination.
 #+begin_src lisp
-  (setf *mode-line-background-color* phundrak-nord1
-        ,*mode-line-foreground-color* phundrak-nord5)
+(setf *mode-line-background-color* phundrak-nord1
+      ,*mode-line-foreground-color* phundrak-nord5)
 #+end_src
 
 We /could/ also use some borders in the modeline. But we won’t. Let’s
 still set its color to Nord1, just in case.
 #+begin_src lisp
-  (setf *mode-line-border-color* phundrak-nord1
-        ,*mode-line-border-width* 0)
+(setf *mode-line-border-color* phundrak-nord1
+      ,*mode-line-border-width* 0)
 #+end_src
 
 The timeout of the modeline indicates how often it refreshes in
 seconds. I think one second is good.
 #+begin_src lisp
-  (setf *mode-line-timeout* 1)
+(setf *mode-line-timeout* 1)
 #+end_src
 
 Next we get to the content of the modeline. This format follows the
 format indicated in the manpage of ~date~.
 #+begin_src lisp
-  (setf *time-modeline-string* "%F %H:%M")
+(setf *time-modeline-string* "%F %H:%M")
 #+end_src
 
 Let’s also indicate how the groupname is displayed.
 #+begin_src lisp
-  (setf *group-format* "%t")
+(setf *group-format* "%t")
 #+end_src
 
 The window format should display first its window number, then its
 titled, limited to 30 characters.
 #+begin_src lisp
-  (setf *window-format* "%n: %30t")
+(setf *window-format* "%n: %30t")
 #+end_src
 
 Here are some modules that we will load for the modeline:
@@ -384,10 +384,10 @@ Here are some modules that we will load for the modeline:
 #+name: gen-load-modeline-modules
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var modules=modeline-modules
-  (mapconcat (lambda (module)
-               (format "(load-module \"%s\")" (car module)))
-             modules
-             "\n")
+(mapconcat (lambda (module)
+             (format "(load-module \"%s\")" (car module)))
+           modules
+           "\n")
 #+end_src
 
 #+RESULTS[75023085d7c69ae09044826218830e6b678d5959]: gen-load-modeline-modules
@@ -405,7 +405,7 @@ highlighted, and ~%u~ will display urgent windows if there are any. ~%d~
 on the other hand will display the date in the format set above, while
 ~%B~ will display the battery level of the laptop.
 #+begin_src lisp
-  (setf *screen-mode-line-format* (list "%g %v %u ^> %C | %M | %B | %d"))
+(setf *screen-mode-line-format* (list "%g %v %u ^> %C | %M | %B | %d"))
 #+end_src
 
 This variable as you can see is a list of elements, although here I am
@@ -455,22 +455,22 @@ is the list of groups I will be using:
 #+name: gen-groups
 #+headers: :exports none
 #+begin_src emacs-lisp :var groups=list-groups
-  (let ((make-group (lambda (group &optional first-p)
-                      (let ((group-name (car group))
-                            (group-type (nth 3 group)))
-                        (format "(%s \"%s\")"
-                                (if first-p
-                                    "grename"
-                                  (pcase group-type
-                                    ("Dynamic"  "gnewbg-dynamic")
-                                    ("Floating" "gnewbg-float")
-                                    (otherwise  "gnewbg")))
-                                group-name)))))
-    (string-join `(,(funcall make-group (car groups) t)
-                   ,@(mapcar (lambda (group)
-                               (funcall make-group group))
-                             (cdr groups)))
-                 "\n"))
+(let ((make-group (lambda (group &optional first-p)
+                    (let ((group-name (car group))
+                          (group-type (nth 3 group)))
+                      (format "(%s \"%s\")"
+                              (if first-p
+                                  "grename"
+                                (pcase group-type
+                                  ("Dynamic"  "gnewbg-dynamic")
+                                  ("Floating" "gnewbg-float")
+                                  (otherwise  "gnewbg")))
+                              group-name)))))
+  (string-join `(,(funcall make-group (car groups) t)
+                 ,@(mapcar (lambda (group)
+                             (funcall make-group group))
+                           (cdr groups)))
+               "\n"))
 #+end_src
 
 #+RESULTS[22540ee038b7206f965b7ca48521e93bdccb5de8]: gen-groups
@@ -485,8 +485,8 @@ is the list of groups I will be using:
 
 Groups are specified this way:
 #+begin_src lisp
-  (when *initializing*
-    <<gen-groups()>>)
+(when *initializing*
+  <<gen-groups()>>)
 #+end_src
 
 By default, if nothing is specified as per the group type, my groups
@@ -496,7 +496,7 @@ also be dynamic tiling groups or floating groups.
 Next, let’s make sure no previous window placement rule is in place,
 this will avoid unexpected and hard-to-debug behavior.
 #+begin_src lisp
-  (clear-window-placement-rules)
+(clear-window-placement-rules)
 #+end_src
 
 As you can see in the table [[list-groups]] above, I also indicated my
@@ -505,27 +505,27 @@ class, so it will be pretty straightforward to the corresponding code.
 #+name: gen-rules
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var rules=list-groups
-  (require 'seq)
-  (let ((output "")
-        (rules (seq-filter (lambda (rule) rule)
-                           (mapcar (lambda (line)
-                                     (let ((classes (caddr line)))
-                                       (unless (string= "" classes)
-                                         (cons
-                                          (split-string classes "," t "[[:space:]]*")
-                                          (car line)))))
-                                   rules))))
-    (progn
-      (seq-do (lambda (rule)
-                (let ((classes (car rule))
-                      (group   (cdr rule)))
-                  (dolist (class classes)
-                    (setf output (format "%s\n%s"
-                                         `(define-frame-preference ,(format "\"%s\"" group)
-                                            (nil t t :class ,(format "\"%s\"" class)))
-                                         output)))))
-              rules)
-      output))
+(require 'seq)
+(let ((output "")
+      (rules (seq-filter (lambda (rule) rule)
+                         (mapcar (lambda (line)
+                                   (let ((classes (caddr line)))
+                                     (unless (string= "" classes)
+                                       (cons
+                                        (split-string classes "," t "[[:space:]]*")
+                                        (car line)))))
+                                 rules))))
+  (progn
+    (seq-do (lambda (rule)
+              (let ((classes (car rule))
+                    (group   (cdr rule)))
+                (dolist (class classes)
+                  (setf output (format "%s\n%s"
+                                       `(define-frame-preference ,(format "\"%s\"" group)
+                                          (nil t t :class ,(format "\"%s\"" class)))
+                                       output)))))
+            rules)
+    output))
 #+end_src
 
 This can be written this way:
@@ -550,28 +550,28 @@ three terminal windows to open by default:
 - and two terminals
 This can be done like so:
 #+begin_src lisp
-  (defun my-term-init (current-group _last-group)
-    "Create terminals in the first group when none are already there."
-    (let ((term-group (select-group (current-screen) "2"))
-          (windows    (group-windows current-group)))
-      (when (and (equal current-group term-group)
-                 (null windows))
-        (unless (= 1 (length (group-frames current-group)))
-          (only))
-        (term "htop")
-        (term)
-        (term))))
+(defun my-term-init (current-group _last-group)
+  "Create terminals in the first group when none are already there."
+  (let ((term-group (select-group (current-screen) "2"))
+        (windows    (group-windows current-group)))
+    (when (and (equal current-group term-group)
+               (null windows))
+      (unless (= 1 (length (group-frames current-group)))
+        (only))
+      (term "htop")
+      (term)
+      (term))))
 #+end_src
 
 Let’s add a hook for that now:
 #+begin_src lisp
-  (add-hook *focus-group-hook* 'my-term-init)
+(add-hook *focus-group-hook* 'my-term-init)
 #+end_src
 
 By the way, dynamic groups should have a split ratio of half of the
 available space.
 #+begin_src lisp
-  (setf *dynamic-group-master-split-ratio* 1/2)
+(setf *dynamic-group-master-split-ratio* 1/2)
 #+end_src
 
 * Theme
@@ -581,7 +581,7 @@ available space.
 :END:
 As in the modeline file, the first thing we’ll do is to load our colors.
 #+begin_src lisp
-  (load "~/.stumpwm.d/colors.lisp")
+(load "~/.stumpwm.d/colors.lisp")
 #+end_src
 
 We can now go onto more serious business.
@@ -599,9 +599,9 @@ There’s a quickfix available while we wait for ~clx-truetype~ to be once
 again available: clone it in quicklisp’s local projects. You will
 obviously need to have quicklisp installed (for that, follow the
 [[https://www.quicklisp.org/beta/#installation][official instructions]]), then execute the following shell commands:
-#+begin_src sh
-  cd ~/quicklisp/local-projects/
-  git clone https://github.com/lihebi/clx-truetype.git
+#+begin_src sh :dir ~/quicklisp/local-projects
+cd ~/quicklisp/local-projects/
+git clone https://github.com/lihebi/clx-truetype.git
 #+end_src
 
 This will make ~clx-truetype~ available to quicklisp, and you can run
@@ -611,8 +611,8 @@ issue (running it again is necessary to install its dependencies).
 Now that this is out of the way, let’s add two lines so we can use TTF
 fonts:
 #+begin_src lisp
-  (ql:quickload :clx-truetype)
-  (load-module "ttf-fonts")
+(ql:quickload :clx-truetype)
+(load-module "ttf-fonts")
 #+end_src
 The documentation says we should be able to also use OTF fonts, but so
 far I’ve had no luck loading one. Loading more than one font to use
@@ -636,18 +636,18 @@ work).
 #+name: gen-fonts
 #+headers: :wrap src lisp
 #+begin_src emacs-lisp :var fonts=list-fonts
-  (format "(set-font `(%s))"
-          (mapconcat (lambda (font)
-                      (let ((family    (nth 0 font))
-                            (subfamily (nth 1 font))
-                            (size      (nth 2 font)))
-                        (format ",%s" `(make-instance 'xft:font
-                                                      :family ,(format "\"%s\"" family)
-                                                      :subfamily ,(format "\"%s\"" subfamily)
-                                                      :size ,size
-                                                      :antialias t))))
-                    fonts
-                    "\n            "))
+(format "(set-font `(%s))"
+        (mapconcat (lambda (font)
+                    (let ((family    (nth 0 font))
+                          (subfamily (nth 1 font))
+                          (size      (nth 2 font)))
+                      (format ",%s" `(make-instance 'xft:font
+                                                    :family ,(format "\"%s\"" family)
+                                                    :subfamily ,(format "\"%s\"" subfamily)
+                                                    :size ,size
+                                                    :antialias t))))
+                  fonts
+                  "\n            "))
 #+end_src
 
 The code equivalent of this table can be seen below:
@@ -671,17 +671,17 @@ We can now set a couple of colors for StumpWM. Not that we will see
 them often since I don’t like borders on my windows, but in case I
 want to get them back, they’ll be nice to have.
 #+begin_src lisp
-  (set-border-color        phundrak-nord1)
-  (set-focus-color         phundrak-nord1)
-  (set-unfocus-color       phundrak-nord3)
-  (set-float-focus-color   phundrak-nord1)
-  (set-float-unfocus-color phundrak-nord3)
+(set-border-color        phundrak-nord1)
+(set-focus-color         phundrak-nord1)
+(set-unfocus-color       phundrak-nord3)
+(set-float-focus-color   phundrak-nord1)
+(set-float-unfocus-color phundrak-nord3)
 #+end_src
 
 Let’s also set the colors of the message and input windows:
 #+begin_src lisp
-  (set-fg-color phundrak-nord4)
-  (set-bg-color phundrak-nord1)
+(set-fg-color phundrak-nord4)
+(set-bg-color phundrak-nord1)
 #+end_src
 
 As I said, I don’t like borders, so I’ll remove them. I’ll still keep
@@ -689,11 +689,11 @@ the window’s title bar available when it’s floating, and this is also
 where I can set the format of its title: its number as well as its
 name, limited to thirty characters.
 #+begin_src lisp
-  (setf *normal-border-width*       0
-        ,*float-window-border*       0
-        ,*float-window-title-height* 15
-        ,*window-border-style*       :none
-        ,*window-format*             "%n:%30t")
+(setf *normal-border-width*       0
+      ,*float-window-border*       0
+      ,*float-window-title-height* 15
+      ,*window-border-style*       :none
+      ,*window-format*             "%n:%30t")
 #+end_src
 
 ** Message and Input Windows
@@ -704,10 +704,10 @@ The Input windows as well as the message windows should both be at the
 top of my screen. And I believe a padding of five pixels for the
 message windows is good.
 #+begin_src lisp
-  (setf *input-window-gravity*     :top
-        ,*message-window-padding*   10
-        ,*message-window-y-padding* 10
-        ,*message-window-gravity*   :top)
+(setf *input-window-gravity*     :top
+      ,*message-window-padding*   10
+      ,*message-window-y-padding* 10
+      ,*message-window-gravity*   :top)
 #+end_src
 
 ** Gaps Between Frames
@@ -719,21 +719,21 @@ plain ~i3~. In Awesome, I still have gaps. And in StumpWM, I shall still
 use gaps. In order to use them, let’s load a module dedicated to gaps
 in StumpWM:
 #+begin_src lisp
-  (load-module "swm-gaps")
+(load-module "swm-gaps")
 #+end_src
 
 Now that this is done, I can now set some variables bound to this
 package.
 #+begin_src lisp
-  (setf swm-gaps:*head-gaps-size*  0
-        swm-gaps:*inner-gaps-size* 5
-        swm-gaps:*outer-gaps-size* 15)
+(setf swm-gaps:*head-gaps-size*  0
+      swm-gaps:*inner-gaps-size* 5
+      swm-gaps:*outer-gaps-size* 15)
 #+end_src
 
 Finally, let’s enable our gaps:
 #+begin_src lisp
-  (when *initializing*
-    (swm-gaps:toggle-gaps))
+(when *initializing*
+  (swm-gaps:toggle-gaps))
 #+end_src
 
 * Keybinds
@@ -745,7 +745,7 @@ Buckle up, this chapter is going to be *long*, because me loves LOTS of keybinds
 
 First, let’s declare again we are using the default package ~stumpwm~:
 #+begin_src lisp
-  (in-package :stumpwm)
+(in-package :stumpwm)
 #+end_src
 
 This will avoid us always repeating ~stumpwm:define-key~ or ~stumpwm:kbd~
@@ -785,12 +785,12 @@ it with ~set-prefix-key~. I personally like to have my space key as a
 leader key, but in order to not have it conflict with Emacs, I also
 need to press the super key too.
 #+begin_src lisp
-  (set-prefix-key (kbd "s-SPC"))
+(set-prefix-key (kbd "s-SPC"))
 #+end_src
 
 Also, let’s enable ~which-key~:
 #+begin_src lisp
-  (which-key-mode)
+(which-key-mode)
 #+end_src
 
 Lastly, before we get more into details, keep in mind that I use the
@@ -843,10 +843,10 @@ First, let’s create my ~rofi~ scripts keymap.
 
 Here’s the equivalent in Common Lisp.
 #+begin_src lisp
-  (defvar *my-rofi-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
-      m))
+(defvar *my-rofi-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
+    m))
 #+end_src
 
 Let’s also create a keymap for screenshots.
@@ -861,10 +861,10 @@ Let’s also create a keymap for screenshots.
 
 Here’s the equivalent in Common Lisp.
 #+begin_src lisp
-  (defvar *my-screenshot-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
-      m))
+(defvar *my-screenshot-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+    m))
 #+end_src
 
 We can now define our applications keymap which will reference both
@@ -883,22 +883,22 @@ the above keymaps.
 
 This translates to:
 #+begin_src lisp
-  (defvar *my-applications-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=application-keymap)>>
-      m))
+(defvar *my-applications-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=application-keymap)>>
+    m))
 #+end_src
 
 The application keymap can now be bound to the root map like so:
 #+begin_src lisp
-  (define-key *root-map* (kbd "a") '*my-applications-keymap*)
+(define-key *root-map* (kbd "a") '*my-applications-keymap*)
 #+end_src
 
 I will also bind to the top map ~s-RET~ in order to open a new terminal
 window. The screenshot keymap is also bound to the ScreenPrint key.
 #+begin_src lisp
-  (define-key *top-map* (kbd "s-RET") "term")
-  (define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
+(define-key *top-map* (kbd "s-RET") "term")
+(define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
 #+end_src
 
 ** End of Session, Powering Off, and the Likes
@@ -922,15 +922,15 @@ whishes to do.
 
 This translates to:
 #+begin_src lisp
-  (defvar *my-end-session-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
-      m))
+(defvar *my-end-session-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
+    m))
 #+end_src
 
 Which is bound in the root map to ~q~:
 #+begin_src lisp
-  (define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+(define-key *root-map* (kbd "q") '*my-end-session-keymap*)
 #+end_src
 
 ** Groups
@@ -945,21 +945,18 @@ this:
 #+name: group-keybind-gen
 #+header: :noweb no :results verbatim :exports none :var convert="no"
 #+begin_src emacs-lisp :var groups=list-groups mod="s" action="gselect" map="*top-map*" convert="yes"
-  (mapconcat (lambda (group)
-               (let ((group-nbr (nth 1 group)))
-                 (format "%S" `(define-key
-                                 ,(make-symbol map)
-                                 ;; (kbd ,(if (string= convert "yes")
-                                 ;;           (format "%s-<<num-to-char(num=%s)>>" mod group-nbr)
-                                 ;;         (number-to-string group-nbr)))
-                                 (kbd ,(format "%s-%s"
-                                               mod
-                                               (if (string= "yes" convert)
-                                                   (format "<<num-to-char(num=%s)>>" group-nbr)
-                                                 (number-to-string group-nbr))))
-                                 ,(format "%s %d" action group-nbr)))))
-             groups
-             "\n")
+(mapconcat (lambda (group)
+             (let ((group-nbr (nth 1 group)))
+               (format "%S" `(define-key
+                               ,(make-symbol map)
+                               (kbd ,(format "%s-%s"
+                                             mod
+                                             (if (string= "yes" convert)
+                                                 (format "<<num-to-char(num=%s)>>" group-nbr)
+                                               (number-to-string group-nbr))))
+                               ,(format "%s %d" action group-nbr)))))
+           groups
+           "\n")
 #+end_src
 
 #+RESULTS[09b139b0e127a88b3e4e2a05a609ccfcb7825b3c]: group-keybind-gen
@@ -974,7 +971,7 @@ this:
 
 #+header: :cache yes :noweb yes :wrap src lisp
 #+begin_src emacs-lisp
-  <<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
+<<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
 #+end_src
 
 #+RESULTS[627ef5c7e456944dd624c322529699e11f2a041b]:
@@ -995,7 +992,7 @@ of the group/. As mentioned before, due to my keyboard layout Shift +
 /number/ is actually just /number/ for me (e.g. Shift + ~"~ results in ~1~),
 so there’s no need to convert the group number to another character.
 #+begin_src emacs-lisp :wrap src lisp
-  <<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
+<<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
 #+end_src
 
 #+RESULTS[6577510905e5cce124ff563a6d68a7f64fc8683c]:
@@ -1012,7 +1009,7 @@ so there’s no need to convert the group number to another character.
 If I want to send a window to another group without following it, I’ll
 use ~s-S-C-<group number>~, which gives us the following:
 #+begin_src emacs-lisp :wrap src lisp
-  <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
+<<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
 #+end_src
 
 #+RESULTS[55852a5a035c23f078ba0a97120151c059fa955f]:
@@ -1029,7 +1026,7 @@ use ~s-S-C-<group number>~, which gives us the following:
 And if I want to bring the windows of another group into the current
 group, I’ll use ~s-C-<group number>~:
 #+begin_src emacs-lisp :wrap src lisp :exports results
-  <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
+<<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
 #+end_src
 
 #+RESULTS[b536bb0359e6e9e10e98635c82bed3d348d75ac5]:
@@ -1048,19 +1045,19 @@ StumpWM also has already a nice keymap for managing groups called
 already bound, but since I plan on erasing ~*root-map*~ in the near
 future before binding stuff to it, I prefer to bind it already)
 #+begin_src lisp
-  (define-key *root-map* (kbd "g") '*groups-map*)
+(define-key *root-map* (kbd "g") '*groups-map*)
 #+end_src
 
 And a binding to ~vgroups~ is done on ~*groups-map*~ in order to regroup
 similar keybinds.
 #+begin_src lisp
-  (define-key *groups-map* (kbd "G") "vgroups")
+(define-key *groups-map* (kbd "G") "vgroups")
 #+end_src
 
 I grew accustomed to ~s-ESC~ bringing me to the previous group when
 using AwesomeWM, so let’s define that:
 #+begin_src lisp
-  (define-key *top-map* (kbd "s-ESC") "gother")
+(define-key *top-map* (kbd "s-ESC") "gother")
 #+end_src
 
 ** Frames and Windows management
@@ -1125,20 +1122,20 @@ ourselves in ~*my-frames-management-keymap*~, pressing ~F~ will bring us
 in ~*my-frames-float-keymap*~.
 
 #+begin_src lisp
-  (defvar *my-frames-float-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=frames-float)>>
-      m))
+(defvar *my-frames-float-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=frames-float)>>
+    m))
 
-  (defvar *my-frames-management-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=frames-and-window-management)>>
-      m))
+(defvar *my-frames-management-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=frames-and-window-management)>>
+    m))
 #+end_src
 
 Let’s bind ~*my-frames-management-keymap*~ in ~*root-keymap*~:
 #+begin_src lisp
-  (define-key *root-map* (kbd "w") '*my-frames-management-keymap*)
+(define-key *root-map* (kbd "w") '*my-frames-management-keymap*)
 #+end_src
 
 That way, if we want for instance to split our current frame
@@ -1163,7 +1160,7 @@ I also bound a couple of these functions to the top keymap for easier access:
 
 This translates to:
 #+begin_src lisp
-  <<keybinds-gen(map="*top-map*", keybinds=top-window-map)>>
+<<keybinds-gen(map="*top-map*", keybinds=top-window-map)>>
 #+end_src
 
 Being a [[https://bepo.fr/wiki/Accueil][bépo layout]] user, the ~hjkl~ keys don’t exactly fit me, as you
@@ -1171,19 +1168,19 @@ might have noticed with my use of ~ctsr~ which is its equivalent. Due to
 this, the interactive keymap for ~iresize~ is not ideal for me, let me
 redefine it:
 #+begin_src lisp
-  (define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
-                                                   :on-exit  #'resize-unhide
-                                                   :abort-if #'abort-resize-p)
-    ((kbd "c") "resize-direction left")
-    ((kbd "t") "resize-direction down")
-    ((kbd "s") "resize-direction up")
-    ((kbd "r") "resize-direction right"))
+(define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
+                                                 :on-exit  #'resize-unhide
+                                                 :abort-if #'abort-resize-p)
+  ((kbd "c") "resize-direction left")
+  ((kbd "t") "resize-direction down")
+  ((kbd "s") "resize-direction up")
+  ((kbd "r") "resize-direction right"))
 #+end_src
 
 As with groups management, I grew used to ~s-TAB~ in AwesomeWM bringing
 me back to the previously focused window.
 #+begin_src lisp
-  (define-key *top-map* (kbd "s-TAB") "other-window")
+(define-key *top-map* (kbd "s-TAB") "other-window")
 #+end_src
 
 ** Windows management
@@ -1206,12 +1203,12 @@ with Emacs’ buffers.
 | ~p~        | ~prev~                    |
 
 #+begin_src lisp
-  (defvar *my-buffers-management-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=window-management)>>
-      m))
+(defvar *my-buffers-management-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=window-management)>>
+    m))
 
-  (define-key *root-map* (kbd "b") '*my-buffers-management-keymap*)
+(define-key *root-map* (kbd "b") '*my-buffers-management-keymap*)
 #+end_src
 
 ** Media and Media Control
@@ -1236,7 +1233,7 @@ of MPD.
 
 Cela donne le code suivant:
 #+begin_src lisp
-  <<interactive-gen(name="mpc-interactive", keys=inter-mpc)>>
+<<interactive-gen(name="mpc-interactive", keys=inter-mpc)>>
 #+end_src
 
 Another one will be defined for the general audio of my computer. And
@@ -1253,7 +1250,7 @@ for my screen’s backlight.
 | ~m~    | ~exec amixer -q set Master 1+ toggle~  |
 
 #+begin_src lisp
-  <<interactive-gen(name="media-interactive", keys=inter-media)>>
+<<interactive-gen(name="media-interactive", keys=inter-media)>>
 #+end_src
 
 Then, let’s declare a keymap for our media controls.
@@ -1272,12 +1269,12 @@ Then, let’s declare a keymap for our media controls.
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
-  (defvar *my-media-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=media-management)>>
-      m))
+(defvar *my-media-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=media-management)>>
+    m))
 
-  (define-key *root-map* (kbd "m") '*my-media-keymap*)
+(define-key *root-map* (kbd "m") '*my-media-keymap*)
 #+end_src
 
 I will also define on ~*top-map*~ some basic volume management keybinds
@@ -1298,7 +1295,7 @@ media-related, but I’ll add keybinds for my screen’s backlight.
 | ~XF86MonBrightnessUp~   | ~exec xbacklight -inc 2~               |
 
 #+begin_src lisp
-  <<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>
+<<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>
 #+end_src
 
 ** Misc
@@ -1316,7 +1313,7 @@ anywhere else:
 | ~r~        | ~reload~     |
 
 #+begin_src lisp
-  <<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
+<<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
 #+end_src
 
 From time to time, I need to switch between different keyboard
@@ -1330,12 +1327,12 @@ games and the bépo layout most of the time. I’ll use the command
 | ~u~        | ~exec setxkbmap us~            |
 
 #+begin_src lisp
-  (defvar *my-keyboard-layout-keymap*
-    (let ((m (make-sparse-keymap)))
-      <<keybinds-gen(map="m", keybinds=keyboard-layout-map)>>
-      m))
+(defvar *my-keyboard-layout-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=keyboard-layout-map)>>
+    m))
 
-  (define-key *root-map* (kbd "k") '*my-keyboard-layout-keymap*)
+(define-key *root-map* (kbd "k") '*my-keyboard-layout-keymap*)
 #+end_src
 
 * org functions                                                    :noexport:
@@ -1345,54 +1342,54 @@ games and the bépo layout most of the time. I’ll use the command
 
 #+name: keybinds-gen
 #+begin_src emacs-lisp :var map="m" keybinds=frames-float
-  (mapconcat (lambda (keybind)
-               (format "%s" (let ((key      (let ((s (car keybind)))
-                                              (substring-no-properties s 1 (1- (length s)))))
-                                  (function (let ((s (cadr keybind)))
-                                              (substring-no-properties s 1 (1- (length s))))))
-                              `(define-key ,map
-                                 (kbd ,(format "\"%s\"" key))
-                                 ,(if (string-prefix-p "'" function t)
-                                      function
-                                    (format "\"%s\"" function))))))
-             keybinds
-             "\n")
+(mapconcat (lambda (keybind)
+             (format "%s" (let ((key      (let ((s (car keybind)))
+                                            (substring-no-properties s 1 (1- (length s)))))
+                                (function (let ((s (cadr keybind)))
+                                            (substring-no-properties s 1 (1- (length s))))))
+                            `(define-key ,map
+                               (kbd ,(format "\"%s\"" key))
+                               ,(if (string-prefix-p "'" function t)
+                                    function
+                                  (format "\"%s\"" function))))))
+           keybinds
+           "\n")
 #+end_src
 
 #+name: interactive-gen
 #+begin_src emacs-lisp :var name="inter" keys=inter-mpc
-  (format "%s"
-          `(define-interactive-keymap ,name ()
-             "\n "
-             ,(mapconcat (lambda (keybind)
-                           (format "%s"
-                                   (let ((key     (let ((s (car keybind)))
-                                                    (substring-no-properties s
-                                                                             1
-                                                                             (1- (length s)))))
-                                         (command (let ((s (cadr keybind)))
-                                                    (substring-no-properties s
-                                                                             1
-                                                                             (1- (length s))))))
-                                     `((kbd ,(format "\"%s\"" key))
-                                       ,(format "\"%s\"" command)))))
-                         keys
-                         "\n  ")))
+(format "%s"
+        `(define-interactive-keymap ,name ()
+           "\n "
+           ,(mapconcat (lambda (keybind)
+                         (format "%s"
+                                 (let ((key     (let ((s (car keybind)))
+                                                  (substring-no-properties s
+                                                                           1
+                                                                           (1- (length s)))))
+                                       (command (let ((s (cadr keybind)))
+                                                  (substring-no-properties s
+                                                                           1
+                                                                           (1- (length s))))))
+                                   `((kbd ,(format "\"%s\"" key))
+                                     ,(format "\"%s\"" command)))))
+                       keys
+                       "\n  ")))
 #+end_src
 
 #+name: num-to-char
 #+begin_src emacs-lisp :var table=number-to-char-table num=0
-  (let ((char (replace-regexp-in-string (regexp-quote "~")
-                                        ""
-                                        (let* ((row (assoc num table))
-                                               (char (cadr row))
-                                               (lispchar (caddr row)))
-                                          (if (string= "" lispchar)
-                                              char
-                                            lispchar)))))
-    (if (string= char "\"")
-        "\\\""
-      char))
+(let ((char (replace-regexp-in-string (regexp-quote "~")
+                                      ""
+                                      (let* ((row (assoc num table))
+                                             (char (cadr row))
+                                             (lispchar (caddr row)))
+                                        (if (string= "" lispchar)
+                                            char
+                                          lispchar)))))
+  (if (string= char "\"")
+      "\\\""
+    char))
 #+end_src
 
 #+RESULTS[6934c27c10c3f968f70b0112d4639298e519fe61]: num-to-char
