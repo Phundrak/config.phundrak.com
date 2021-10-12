@@ -1318,11 +1318,6 @@ insert my mail signature, ~org-msg~ already does that.
 (setq mu4e-compose-signature nil)
 #+end_src
 
-***** Actions on messages
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Actions-on-messageskb01fl6184j0
-:END:
-
 ***** Bookmarks
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Bookmarkszo11fl6184j0
@@ -1395,6 +1390,19 @@ mailing list address but also its old address.
 #+RESULTS[7f37e2a9e37056a22e7e168ad0bef1189b1210c7]: mu4e-bookmarks-filter-emacs-list
 : list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com
 
+Another bookmark I wish to have is one dedicated to emails related to
+issues and PRs from Github.
+#+name: mu4e-bookmarks-filter-github-list
+#+headers: :tangle no :cache yes
+#+begin_src emacs-lisp
+(string-join '("list:/.*\\.github\\.com/"
+               "to:/.*noreply\\.github\\.com/")
+             " OR ")
+#+end_src
+
+#+RESULTS[e070eb4d48660380191a28686d8002378dfc5a9a]: mu4e-bookmarks-filter-github-list
+: list:/.*\.github\.com/ OR to:/.*noreply\.github\.com/
+
 When it comes to the conlang mailing list, let’s not match anything
 from or to them. I’ll also include the auxlang mailing list –I’m not
 subscribed anymore, but it’ll keep my inbox clean.
@@ -1434,12 +1442,11 @@ And for the last string-generating code, let’s describe my main inbox:
 #+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
 (string-join (cons
-              <<mu4e-bookmarks-default-filter>>
+              "<<mu4e-bookmarks-default-filter()>>"
               `(
                 ,(format "(%s)"
                          <<mu4e-bookmarks-filter-conlang-list>>)
-                ,(format "(%s)"
-                         <<mu4e-bookmarks-filter-asso>>)
+                ,(format "(%s)" "<<mu4e-bookmarks-filter-asso()>>")
                 ,(format "(%s)"
                          <<mu4e-bookmarks-filter-emacs-list>>)
                 ,(format "(%s)"
@@ -1447,8 +1454,8 @@ And for the last string-generating code, let’s describe my main inbox:
              " AND NOT ")
 #+end_src
 
-#+RESULTS[53677775fc49c0a71ef204fcbc6027d56b192257]: mu4e-bookmarks-inbox-filters
-: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/) AND NOT (list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
+#+RESULTS[f9397c5b9d6f7e371770c2a527536721f9bcc621]: mu4e-bookmarks-inbox-filters
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
 
 We can finally define our bookmarks! The code reads as follows:
 #+name: mu4e-bookmarks
@@ -1461,27 +1468,27 @@ We can finally define our bookmarks! The code reads as follows:
         (:name "University"
          :key ?u
          :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-default-filter>>
-                         <<mu4e-bookmarks-filter-uni>>))
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-uni()>>"))
         (:name "Supran"
          :key ?S
          :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-default-filter>>
-                         <<mu4e-bookmarks-filter-asso>>))
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-asso()>>"))
         (:name "Emacs"
          :key ?e
          :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-default-filter>>
+                         "<<mu4e-bookmarks-default-filter()>>"
                          <<mu4e-bookmarks-filter-emacs-list>>))
         (:name "Github"
          :key ?g
-         :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-default-filter>>
-                         "list:/.*\\.github.com/"))
+         :query ,(format "%s AND (%s)"
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-github-list()>>"))
         (:name "Linguistics"
          :key ?l
          :query ,(format "%s AND %s"
-                     <<mu4e-bookmarks-default-filter>>
+                     "<<mu4e-bookmarks-default-filter()>>"
                      <<mu4e-bookmarks-filter-conlang-list>>))
         (:name "Sent"       :key ?s :query "maildir:/Sent")
         (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
@@ -1687,7 +1694,7 @@ described with a simple function:
 | mR         | mu4e-view-mark-for-read              |                    |
 | mu         | mu4e-view-mark-for-unread            |                    |
 | mU         | mu4e-view-mark-for-unmark            |                    |
-| t          | nil                                  | thread             |
+| t          | mu4e-view-mark-thread                | mark thread        |
 | T          | nil                                  | toggle             |
 | Tc         | mu4e-view-toggle-hide-cited          |                    |
 | Th         | mu4e-view-toggle-html                |                    |
@@ -1696,98 +1703,25 @@ described with a simple function:
 | p          | mu4e-view-headers-prev               |                    |
 | P          | mu4e-view-headers-prev-unread        |                    |
 
-Some functions are however lambdas. They all are written as actions on
-the current thread. They all begin with ~,t~, and below you can see each
-one of the possible following key can act on a thread:
-#+name: mu4e-keybindings-view-lambdas-tbl
-| Key | Mark thread as |
-|-----+----------------|
-| td  | trash          |
-| tD  | delete         |
-| tm  | move           |
-| tr  | refile         |
-| tR  | read           |
-| tu  | unread         |
-| tU  | unmark         |
-
-#+name: mu4e-keybindings-view-lambdas-gen
-#+header: :tangle no :exports none :results value
-#+begin_src emacs-lisp :var table=mu4e-keybindings-view-lambdas-tbl mode="view"
-(mapconcat (lambda (line)
-             (let ((key  (car line))
-                   (mark (cadr line)))
-               (format "\"%s\" '((lambda ()
-           (interactive)
-           (mu4e-%s-mark-thread '%s))
-       :wk \"Mark as %s\")"
-                       key mode mark mark)))
-           table
-           "\n")
-#+end_src
-
-#+RESULTS: mu4e-keybindings-view-lambdas-gen
-#+begin_example
-"td" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'trash))
-       :wk "Mark as trash")
-"tD" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'delete))
-       :wk "Mark as delete")
-"tm" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'move))
-       :wk "Mark as move")
-"tr" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'refile))
-       :wk "Mark as refile")
-"tR" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'read))
-       :wk "Mark as read")
-"tu" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'unread))
-       :wk "Mark as unread")
-"tU" '((lambda ()
-           (interactive)
-           (mu4e-view-mark-thread 'unmark))
-       :wk "Mark as unmark")
-#+end_example
-
 #+name: mu4e-keybindings-view
 #+begin_src emacs-lisp :tangle no
 (general-define-key
    :states 'normal
    :keymaps 'mu4e-view-mode-map
    :prefix ","
-   <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>
-   <<mu4e-keybindings-view-lambdas-gen(mode="view")>>)
+   <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>)
 #+end_src
 
-Some simple keybindings are defined for mu4e’s header mode:
-#+name: mu4e-keybindings-headers-tbl
-| Key | Function | Description |
-|-----+----------+-------------|
-| s   | swiper   |             |
-| t   | nil      | thread      |
-
-The keybindings from table [[mu4e-keybindings-view-lambdas-tbl]] will also
-be reused for this mode.
-
+I’ll also declare two keybinds for mu4e’s headers mode.
 #+name: mu4e-keybindings-header
 #+begin_src emacs-lisp :tangle no
 (general-define-key
    :states 'normal
    :keymaps 'mu4e-headers-mode-map
    :prefix ","
-   <<general-keybindings-gen(table=mu4e-keybindings-headers-tbl)>>
-   <<mu4e-keybindings-view-lambdas-gen(mode="headers")>>)
+   "t" '(mu4e-view-mark-thread :which-key "mark thread")
+   "s" 'swiper)
 #+end_src
-
-#+RESULTS: mu4e-keybindings-header
 
 I will also redefine without a leader key ~ctsr~ in order to be able to
 move freely (remember, bépo layout for me).
