@@ -4688,7 +4688,7 @@ development. First, let’s install the most important package,
           dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
     (setq dashboard-navigator-buttons
           `(((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
-              "Linguistics website"
+              "Linguistics Website"
               ""
               (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
 
@@ -4698,18 +4698,19 @@ development. First, let’s install the most important package,
               (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
 
             ((,(all-the-icons-octicon "git-branch" :height 1.1 :v-adjust 0.0)
-              "Dotfiles sources"
+              "Dotfiles Sources"
               ""
               (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
              ("!" "Issues" "Show issues" (lambda (&rest _)
                                            (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
               warning))
             ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
-              "Update packages"
+              "Update Packages"
               ""
               (lambda (&rest _) (progn
                                   (require 'straight)
-                                  (straight-pull-all)))))))
+                                  (straight-pull-all)
+                                  (straight-rebuild-all)))))))
 
     (setq dashboard-items '((recents  . 15)
                             (projects . 10)))
