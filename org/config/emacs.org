@@ -3523,15 +3523,17 @@ The project is then defined like so:
   (org-ref-cite-face ((t (:weight bold))))
   :init
   (setq org-ref-completion-library    'org-ref-ivy-cite
-        org-ref-bibliography-notes    "~/org/bibliography/notes.org"
-        org-ref-default-bibliography  "~/org/bibliography/references.bib"
-        org-ref-pdf-directory         "~/org/bibliography/bibtex-pdfs/"
         org-latex-logfiles-extensions '("lof" "lot" "aux" "idx" "out" "log" "fbd_latexmk"
                                         "toc" "nav" "snm" "vrb" "dvi" "blg" "brf" "bflsb"
                                         "entoc" "ps" "spl" "bbl" "pygtex" "pygstyle"))
   (add-hook 'org-mode-hook (lambda () (require 'org-ref)))
   :config
-  (setq bibtex-completion-pdf-field "file")
+  (setq bibtex-completion-pdf-field    "file"
+        bibtex-completion-notes-path   "~/org/bibliography/notes/"
+        bibtex-completion-bibliography "~/org/bibliography/references.bib"
+        bibtex-completion-library-path "~/org/bibliography/bibtex-pdfs/"
+        bibtex-completion-pdf-symbol   "⌘"
+        bibtex-completion-notes-symbol "✎")
   (general-define-key
    :keymaps '(bibtex-mode-map)
    :states 'normal
@@ -3575,10 +3577,7 @@ The project is then defined like so:
   :defer t
   :straight (:build t)
   :config
-  (setq org-ref-bibliography-notes   "~/org/bibliography/notes.org"
-        org-ref-default-bibliography "~/org/bibliography/references.bib"
-        org-ref-pdf-directory        "~/org/bibliography/bibtex-pdfs/"
-        bibtex-completion-pdf-open-function #'find-file)
+  (setq bibtex-completion-pdf-open-function #'find-file)
 
   (general-define-key
      :keymaps '(bibtex-mode-map)
