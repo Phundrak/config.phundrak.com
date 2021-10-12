@@ -1144,12 +1144,8 @@ Finally, let’s make ~ivy~ richer:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Docker5ul0fl6184j0
 :END:
-#+begin_src emacs-lisp
-  (use-package docker
-    :defer t
-    :straight (:build t))
-#+end_src
-
+Docker is an awesome tool for reproducible development environments.
+Due to this, I absolutely need a mode for editing Dockerfiles.
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
     :defer t
@@ -1157,6 +1153,14 @@ Finally, let’s make ~ivy~ richer:
     :init
     (put 'docker-image-name 'safe-local-variable #'stringp)
     :mode "Dockerfile\\'")
+#+end_src
+
+The =docker= package also provides interactivity with Docker and
+docker-compose from Emacs.
+#+begin_src emacs-lisp
+(use-package docker
+  :defer t
+  :straight (:build t))
 #+end_src
 
 *** Elfeed
