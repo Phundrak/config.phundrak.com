@@ -999,9 +999,6 @@ windows.
               (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))))
 #+end_src
 
-#+RESULTS:
-: t
-
 *** Ivy
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Autocompletion-Ivy84q1fl6184j0
@@ -3453,6 +3450,7 @@ This is my configuration for exporting my dotfiles to my website in a web format
 only. No PDFs or anything, just HTML. Please note that I do not use that often
 anymore, I much prefer the automatic script that I have which deploys through my
 Drone instance my website on git pushes.
+
 And before we get into the actual configuration, I would like to introduce a
 couple of variables. This is a bit more verbose than if I declared everything
 manually, but now I can change all three values at the same time without a
@@ -3795,8 +3793,6 @@ icons!
      "O" #'org-ol-tree))
 #+end_src
 
-#+RESULTS:
-
 *** Misc
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Misc-l202k9z0l4j0
@@ -3996,8 +3992,6 @@ And let’s enable some intergration with ~ivy~.
            :cwd nil)))
 #+end_src
 
-#+RESULTS:
-
 *** DSLs
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLsbwu5fl6184j0
@@ -4038,8 +4032,6 @@ doesn’t have a major mode available by default, so let’s provide one.
     :defer t
     :straight (:build t))
 #+end_src
-
-#+RESULTS:
 
 Let’s enable first some autocompletion for it.
 #+begin_src emacs-lisp
