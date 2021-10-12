@@ -40,7 +40,8 @@ The early init file is the file loaded before anything else in
 Emacs. This is where I put some options in order to disable as quickly
 as possible some built-in features of Emacs before they can be even
 loaded, speeding Emacs up a bit.
-#+begin_src emacs-lisp :mkdirp yes :tangle ~/.emacs.vanilla/early-init.el :exports code :results silent :lexical t
+#+headers: :exports code :results silent :lexical t
+#+begin_src emacs-lisp :mkdirp yes :tangle ~/.emacs.vanilla/early-init.el
   (setq package-enable-at-startup nil
         inhibit-startup-message   t
         frame-resize-pixelwise    t  ; fine resize
@@ -191,7 +192,8 @@ almost all of your files duplicated with a =~= appended to the filename,
 it looks really uncomfortable! This is why I prefer to tell Emacs to
 keep its backup files to itself in a directory it only will acces.
 #+begin_src emacs-lisp
-  (setq backup-directory-alist `(("." . ,(expand-file-name ".tmp/backups/" user-emacs-directory))))
+(setq backup-directory-alist `(("." . ,(expand-file-name ".tmp/backups/"
+                                                         user-emacs-directory))))
 #+end_src
 
 It also loves to litter its ~init.el~ with custom variables here and
@@ -695,7 +697,7 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
 #+end_src
 
 #+name: general-keybindings-gen
-#+header: :tangle no :exports none :results value :cache yes
+#+headers: :tangle no :exports none :results value :cache yes
 #+begin_src emacs-lisp :var table=mu4e-keybindings-view-tbl
   (mapconcat (lambda (line)
                (let* ((key      (car line))
@@ -781,41 +783,28 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
     (evil-global-set-key 'motion "t" 'evil-next-visual-line)
     (evil-global-set-key 'motion "s" 'evil-previous-visual-line)
 
-    (define-key evil-normal-state-map "c" nil)
-    (define-key evil-normal-state-map "C" nil)
-    (define-key evil-normal-state-map "t" nil)
-    (define-key evil-normal-state-map "T" nil)
-    (define-key evil-normal-state-map "s" nil)
-    (define-key evil-normal-state-map "S" nil)
-    (define-key evil-normal-state-map "r" nil)
-    (define-key evil-normal-state-map "R" nil)
-    (define-key evil-normal-state-map "h" nil)
-    (define-key evil-normal-state-map "H" nil)
-    (define-key evil-normal-state-map "j" nil)
-    (define-key evil-normal-state-map "J" nil)
-    (define-key evil-normal-state-map "k" nil)
-    (define-key evil-normal-state-map "K" nil)
-    (define-key evil-normal-state-map "l" nil)
-    (define-key evil-normal-state-map "L" nil)
+  (dolist (key '("c" "C" "t" "T" "s" "S" "r" "R" "h" "H" "j" "J" "k" "K" "l" "L"))
+    (general-define-key :states 'normal key nil))
 
-    (define-key evil-motion-state-map "h" 'evil-replace)
-    (define-key evil-motion-state-map "H" 'evil-replace-state)
-    (define-key evil-motion-state-map "j" 'evil-find-char-to)
-    (define-key evil-motion-state-map "J" 'evil-find-char-to-backward)
-    (define-key evil-motion-state-map "k" 'evil-substitute)
-    (define-key evil-motion-state-map "K" 'evil-smart-doc-lookup)
-    (define-key evil-motion-state-map "l" 'evil-change)
-    (define-key evil-motion-state-map "L" 'evil-change-line)
+  (general-define-key
+   :states 'motion
+   "h" 'evil-replace
+   "H" 'evil-replace-state
+   "j" 'evil-find-char-to
+   "J" 'evil-find-char-to-backward
+   "k" 'evil-substitute
+   "K" 'evil-smart-doc-lookup
+   "l" 'evil-change
+   "L" 'evil-change-line
 
-    (define-key evil-motion-state-map "c" 'evil-backward-char)
-    (define-key evil-motion-state-map "C" 'evil-window-top)
-    (define-key evil-motion-state-map "t" 'evil-next-line)
-    (define-key evil-motion-state-map "T" 'evil-join)
-    (define-key evil-motion-state-map "s" 'evil-previous-line)
-    (define-key evil-motion-state-map "S" 'evil-lookup)
-    (define-key evil-motion-state-map "r" 'evil-forward-char)
-    (define-key evil-motion-state-map "R" 'evil-window-bottom))
-
+   "c" 'evil-backward-char
+   "C" 'evil-window-top
+   "t" 'evil-next-line
+   "T" 'evil-join
+   "s" 'evil-previous-line
+   "S" 'evil-lookup
+   "r" 'evil-forward-char
+   "R" 'evil-window-bottom))
 
   (use-package evil-collection
     :after evil
@@ -1274,13 +1263,8 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
     ;; set mail user agent
     (setq mail-user-agent 'mu4e-user-agent)
 
-    ;; Use fancy icons
     <<mu4e-fancy-marks>>
-
-    ;; Vertical split
     <<mu4e-vertical-split>>
-
-    ;; mu4e-headers-mode config
     <<mu4e-headers-mode>>
 
     (defun mu4e-action-open-as-pdf (msg)
@@ -1847,10 +1831,13 @@ the major-mode leader and call a simple function.
           org-msg-convert-citation     t
           org-msg-greeting-name-limit  3
           org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
-                                               (replace-regexp-in-string (regexp-quote "\n") "\n\n"
+                                             (string-trim
+                                              (replace-regexp-in-string
+                                               (regexp-quote "\n")
+                                               "\n\n"
                                                                          (with-temp-buffer
                                                                           (insert-file-contents mail-signature-file)
-                                                                          (buffer-string))))))
+                                                (buffer-string)))))))
 #+end_src
 
 **** Email alerts
@@ -2123,7 +2110,7 @@ buffer.
     :straight (:build t)
     :custom
     (shell-pop-default-directory "/home/phundrak")
-    (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+  (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda () (eshell shell-pop-term-shell)))))
     (shell-pop-window-size 30)
     (shell-pop-full-span nil)
     (shell-pop-window-position "bottom")
@@ -2436,9 +2423,8 @@ functions, but first I’ll need a function for concatenating a shell
 command into a single string:
 #+begin_src emacs-lisp
   (defun phundrak/concatenate-shell-command (&rest command)
-    "Concatenate an eshell `COMMAND' into a single string.
-
-  All elements of `COMMAND' will be joined in a single
+  "Concatenate an eshell COMMAND into a single string.
+All elements of COMMAND will be joined in a single
   space-separated string."
     (string-join command " "))
 #+end_src
@@ -2467,8 +2453,7 @@ have all its power available instantly. So, let’s open each file
 passed to these commands.
 #+begin_src emacs-lisp
   (defun eshell/emacs (&rest file)
-    "Open each `FILE' and kill eshell.
-
+  "Open each FILE and kill eshell.
   Old habits die hard."
     (when file
       (dolist (f (reverse file))
@@ -2481,9 +2466,8 @@ it will also work if the directory also exists or if parent
 directories don’t, similarly to the ~-p~ option passed to ~mkdir~.
 #+begin_src emacs-lisp
   (defun eshell/mkcd (dir)
-    "Create the directory `DIR' and move there.
-
-  If the directory `DIR' doesn’t exist, create it and its parents
+  "Create the directory DIR and move there.
+If the directory DIR doesn’t exist, create it and its parents
   if needed, then move there."
     (mkdir dir t)
     (cd dir))
@@ -3469,7 +3453,6 @@ This is my configuration for exporting my dotfiles to my website in a web format
 only. No PDFs or anything, just HTML. Please note that I do not use that often
 anymore, I much prefer the automatic script that I have which deploys through my
 Drone instance my website on git pushes.
-
 And before we get into the actual configuration, I would like to introduce a
 couple of variables. This is a bit more verbose than if I declared everything
 manually, but now I can change all three values at the same time without a
@@ -3479,7 +3462,6 @@ hasle.
   (defvar phundrak//projects-config-target
     "/ssh:Tilo:~/www/phundrak.com/config"
     "Points to where exported files for config.phundrak.com should be put.")
-
   (defvar phundrak//projects-config-source
     "~/org/config/"
     "Points to where the sources for config.phundrak.com are.")
