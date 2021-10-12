@@ -1346,17 +1346,37 @@ Here are the requirements for my university bookmark. The regex
 matches any email address which contains either ~up8.edu~ or
 ~univ-paris8~, which can be found in email addresses from the University
 Paris 8 (my university).
+
+#+name: mu4e-bookmarks-from-copy-to-gen
+#+begin_src emacs-lisp :tangle no :exports none
+(mapconcat (lambda (x) (concat x ":" regex))
+           '("f" "c" "t")
+           " OR ")
+#+end_src
+
+#+RESULTS: mu4e-bookmarks-from-copy-to-gen
+: f: OR c: OR t:
+
 #+name: mu4e-bookmarks-filter-uni
 #+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
-(string-join '("f:/.*up8\.edu|.*univ-paris8.*/"
-               "c:/.*up8\.edu|.*univ-paris8.*/"
-               "t:/.*up8\.edu|.*univ-paris8.*/")
-             " OR ")
+(let ((regex "/.*up8\\.edu|.*univ-paris8.*/"))
+  <<mu4e-bookmarks-from-copy-to-gen>>)
 #+end_src
 
-#+RESULTS[6f0c2005657e701b0a992061981317febcdd6200]: mu4e-bookmarks-filter-uni
-: f:/.*up8.edu|.*univ-paris8.*/ OR c:/.*up8.edu|.*univ-paris8.*/ OR t:/.*up8.edu|.*univ-paris8.*/
+#+RESULTS[f1b50a07521c59a4ccd72f6f8ec11431ac618139]: mu4e-bookmarks-filter-uni
+: f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/
+
+Next I need an inbox dedicated to the association I’m part of.
+#+name: mu4e-bookmarks-filter-asso
+#+headers: tangle no :cache yes
+#+begin_src emacs-lisp
+(let ((regex "/.*supran\\.fr/"))
+  <<mu4e-bookmarks-from-copy-to-gen>>)
+#+end_src
+
+#+RESULTS[981592042b62118e3bb82ce802bdfe9647a200c7]: mu4e-bookmarks-filter-asso
+: f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/
 
 As for the Emacs-doctor list, I need to match both the current, modern
 mailing list address but also its old address.
@@ -1366,14 +1386,14 @@ mailing list address but also its old address.
 (mapconcat (lambda (address)
              (mapconcat (lambda (flag)
                           (concat flag ":" address))
-                        '("list" "to" "from")
+                        '("list" "t" "f")
                         " OR "))
            '("ateliers-emacs.framalistes.org" "ateliers-paris.emacs-doctor.com")
            " OR ")
 #+end_src
 
-#+RESULTS[cff1b5e400cca47c06057bf236d099db01411cd7]: mu4e-bookmarks-filter-emacs-list
-: list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com
+#+RESULTS[7f37e2a9e37056a22e7e168ad0bef1189b1210c7]: mu4e-bookmarks-filter-emacs-list
+: list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com
 
 When it comes to the conlang mailing list, let’s not match anything
 from or to them. I’ll also include the auxlang mailing list –I’m not
@@ -1384,14 +1404,14 @@ subscribed anymore, but it’ll keep my inbox clean.
 (mapconcat (lambda (address)
              (mapconcat (lambda (flag)
                           (concat flag ":" address))
-                        '("from" "to" "list")
+                        '("f" "t" "list")
                         " OR "))
            '("CONLANG@LISTSERV.BROWN.EDU" "AUXLANG@LISTSERV.BROWN.EDU")
            " OR ")
 #+end_src
 
-#+RESULTS[129026cfdaeb910562b800b659ad8d2d13773932]: mu4e-bookmarks-filter-conlang-list
-: from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU
+#+RESULTS[8b8e964b9777bc1d98542218d79a3537283ac03c]: mu4e-bookmarks-filter-conlang-list
+: f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU
 
 As I said earlier, something that will often come back in my bookmarks
 is the emails must not be trashed to appear. I want also to display
@@ -1419,14 +1439,16 @@ And for the last string-generating code, let’s describe my main inbox:
                 ,(format "(%s)"
                          <<mu4e-bookmarks-filter-conlang-list>>)
                 ,(format "(%s)"
+                         <<mu4e-bookmarks-filter-asso>>)
+                ,(format "(%s)"
                          <<mu4e-bookmarks-filter-emacs-list>>)
                 ,(format "(%s)"
                          <<mu4e-bookmarks-filter-uni>>)))
              " AND NOT ")
 #+end_src
 
-#+RESULTS[2bd917f15a55a2a509f5710c6a4db5f8a8e7a596]: mu4e-bookmarks-inbox-filters
-: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu|.*univ-paris8.*/ OR c:/.*up8.edu|.*univ-paris8.*/ OR t:/.*up8.edu|.*univ-paris8.*/)
+#+RESULTS[53677775fc49c0a71ef204fcbc6027d56b192257]: mu4e-bookmarks-inbox-filters
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/) AND NOT (list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
 
 We can finally define our bookmarks! The code reads as follows:
 #+name: mu4e-bookmarks
@@ -1436,26 +1458,31 @@ We can finally define our bookmarks! The code reads as follows:
          :key ?i
          :query ,(format "%s"
                          <<mu4e-bookmarks-inbox-filters>>))
-        (:name "Linguistics"
-         :key ?l
-         :query ,(format "%s AND %s"
-                     <<mu4e-bookmarks-inbox-filters>>
-                     <<mu4e-bookmarks-filter-conlang-list>>))
-        (:name "Emacs"
-         :key ?e
-         :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-inbox-filters>>
-                         <<mu4e-bookmarks-filter-emacs-list>>))
         (:name "University"
          :key ?u
          :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-inbox-filters>>
+                         <<mu4e-bookmarks-default-filter>>
                          <<mu4e-bookmarks-filter-uni>>))
-        (:name "eshell-info-banner"
-         :key ?E
+        (:name "Supran"
+         :key ?S
          :query ,(format "%s AND %s"
-                         <<mu4e-bookmarks-inbox-filters>>
-                         "list:eshell-info-banner.el.Phundrak.github.com"))
+                         <<mu4e-bookmarks-default-filter>>
+                         <<mu4e-bookmarks-filter-asso>>))
+        (:name "Emacs"
+         :key ?e
+         :query ,(format "%s AND %s"
+                         <<mu4e-bookmarks-default-filter>>
+                         <<mu4e-bookmarks-filter-emacs-list>>))
+        (:name "Github"
+         :key ?g
+         :query ,(format "%s AND %s"
+                         <<mu4e-bookmarks-default-filter>>
+                         "list:/.*\\.github.com/"))
+        (:name "Linguistics"
+         :key ?l
+         :query ,(format "%s AND %s"
+                     <<mu4e-bookmarks-default-filter>>
+                     <<mu4e-bookmarks-filter-conlang-list>>))
         (:name "Sent"       :key ?s :query "maildir:/Sent")
         (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
         (:name "Today"      :key ?t :query "date:today..now AND NOT flag:trashed")
@@ -1464,18 +1491,19 @@ We can finally define our bookmarks! The code reads as follows:
         (:name "This Year"  :key ?y :query "date:1y..now    AND NOT flag:trashed")))
 #+end_src
 
-#+RESULTS[b3dc7eb1936a879ab07bb2c5acdfb05cf330285a]: mu4e-bookmarks
-| :name | Inbox              | :key | 105 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/)                                                                                                                                                                                                                                           |                                  |                                  |                  |
-| :name | Linguistics        | :key | 108 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU                            |                                  |                                  |                  |
-| :name | Emacs              | :key | 101 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com |                                  |                                  |                  |
-| :name | University         | :key | 117 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND f:/.*up8.edu                                                                                                                                                                                                                          | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/ |
-| :name | eshell-info-banner | :key |  69 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (from:CONLANG@LISTSERV.BROWN.EDU OR to:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR from:AUXLANG@LISTSERV.BROWN.EDU OR to:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (list:ateliers-emacs.framalistes.org OR to:ateliers-emacs.framalistes.org OR from:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR to:ateliers-paris.emacs-doctor.com OR from:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8.edu | .*univ-paris8.*/ OR c:/.*up8.edu | .*univ-paris8.*/ OR t:/.*up8.edu | .*univ-paris8.*/) AND list:eshell-info-banner.el.Phundrak.github.com                                                                                                                                                                                        |                                  |                                  |                  |
-| :name | Sent               | :key | 115 | :query | maildir:/Sent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
-| :name | All Unread         | :key |  85 | :query | flag:unread AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
-| :name | Today              | :key | 116 | :query | date:today..now AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
-| :name | This Week          | :key | 119 | :query | date:7d..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
-| :name | This Month         | :key | 109 | :query | date:1m..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
-| :name | This Year          | :key | 121 | :query | date:1y..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                  |                                  |                                                                                                                                                                                                                                                             |                                  |                                  |                  |
+#+RESULTS[2075e217490452e36b879f71ae39dc777cccee83]: mu4e-bookmarks
+| :name | Inbox       | :key | 105 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/) AND NOT (list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8\.edu | .*univ-paris8.*/ OR c:/.*up8\.edu | .*univ-paris8.*/ OR t:/.*up8\.edu | .*univ-paris8.*/) |
+| :name | University  | :key | 117 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND f:/.*up8\.edu                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | .*univ-paris8.*/ OR c:/.*up8\.edu | .*univ-paris8.*/ OR t:/.*up8\.edu | .*univ-paris8.*/  |
+| :name | Supran      | :key |  83 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                   |                                   |                   |
+| :name | Emacs       | :key | 101 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com                                                                                                                                                                                                                                                                                                              |                                   |                                   |                   |
+| :name | Github      | :key | 103 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND list:/.*\.github.com/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |                                   |                                   |                   |
+| :name | Linguistics | :key | 108 | :query | NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU                                                                                                                                                                                                                                                                                                                                         |                                   |                                   |                   |
+| :name | Sent        | :key | 115 | :query | maildir:/Sent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                   |                                   |                   |
+| :name | All Unread  | :key |  85 | :query | flag:unread AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |                                   |                                   |                   |
+| :name | Today       | :key | 116 | :query | date:today..now AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                   |                                   |                   |
+| :name | This Week   | :key | 119 | :query | date:7d..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                   |                                   |                   |
+| :name | This Month  | :key | 109 | :query | date:1m..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                   |                                   |                   |
+| :name | This Year   | :key | 121 | :query | date:1y..now    AND NOT flag:trashed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                   |                                   |                   |
 
 ***** Dealing with spammers
 :PROPERTIES:
