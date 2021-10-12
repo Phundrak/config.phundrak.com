@@ -3522,7 +3522,7 @@ project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
 #+BEGIN_SRC emacs-lisp
   (defvar phundrak//projects-conlanging-target
-    "/rsync:Tilo:~/www/phundrak.com/langue/"
+  "/ssh:Tilo:~/www/phundrak.com/langue/"
     "Points to where exported files for langue.phundrak.com should be put")
   (defvar phundrak//projects-conlanging-source
     "~/Documents/conlanging/content/"
