@@ -2673,62 +2673,6 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
     (magit-status "/yadm::"))
 #+end_src
 
-** EXWM
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-EXWM6vx4fl6184j0
-:END:
-#+begin_src emacs-lisp
-  (defvar phundrak/exwm-enabled (and (seq-contains command-line-args "--with-exwm")))
-
-  (use-package xelb
-    :if phundrak/exwm-enabled
-    :straight (:build t))
-
-  (use-package exwm
-    :straight (:build t)
-    :if phundrak/exwm-enabled
-    :after xelb
-    :init
-    (setq mouse-autoselect-window nil
-          focus-follows-mouse t
-          exwm-workspace-warp-cursor t)
-    :config
-    (when phundrak/exwm-enabled
-     (setq exwm-input-global-keys
-           `(([?\s-r] . exwm-reset)
-             ([?\s-w] . exwm-workspace-switch)
-             ,@(mapcar (lambda (i)
-                         `(,(kbd (format "s-%s" (car i))) .
-                           (lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,(cdr i)))))
-                       '(("\"" . 1)
-                         ("«"  . 2)
-                         ("»"  . 3)
-                         ("("  . 4)
-                         (")"  . 5)
-                         ("@"  . 6)
-                         ("+"  . 7)
-                         ("-"  . 8)
-                         ("/"  . 9)
-                         ("*"  . 0)))))
-     (add-hook 'exwm-update-class-hook
-                 (lambda ()
-                   (exwm-workspace-rename-buffer exwm-class-name)))
-     (require 'exwm-config)
-     (exwm-config-default)
-     (exwm-enable)))
-
-
-
-  (use-package desktop-environment
-    :if phundrak/exwm-enabled
-    :after exwm
-    :straight (:build t))
-#+end_src
-
-#+RESULTS:
-
 ** Making my life easier
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Making-my-life-easier2kz4fl6184j0
