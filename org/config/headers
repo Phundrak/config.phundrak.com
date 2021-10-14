@@ -23,10 +23,10 @@
 #+HTML_HEAD: <meta name="twitter:card" content="summary" />
 #+HTML_HEAD: <meta name="twitter:site" content="@phundrak" />
 #+HTML_HEAD: <meta name="twitter:creator" content="@phundrak" />
-#+HTML_HEAD: <link rel="stylesheet" href="/style/main.css"/>
+#+HTML_HEAD: <link rel="stylesheet" href="https://config.phundrak.com//style/main.css"/>
 #+HTML_HEAD: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/mahakala-128x128.png" type="img/png" media="screen" />
 #+HTML_HEAD: <link rel="shortcut icon" href="https://cdn.phundrak.com/img/favicon.ico" type="image/x-icon" media="screen" />
-#+HTML_HEAD: <script defer src="/dart/main.dart.js"></script>
+#+HTML_HEAD: <script defer src="https://config.phundrak.com/dart/main.dart.js"></script>
 #+html_head: <!-- Matomo -->
 #+html_head: <script type="text/javascript">
 #+html_head:   var _paq = window._paq = window._paq || [];
