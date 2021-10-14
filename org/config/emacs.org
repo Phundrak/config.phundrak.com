@@ -1173,6 +1173,34 @@ docker-compose from Emacs.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Elfeedoip0fl6184j0
 :END:
+#+begin_src emacs-lisp
+(use-package elfeed
+  :defer t
+  :straight (:build t))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package elfeed-goodies
+  :defer t
+  :after elfeed
+  :commands elfeed-goodies/setup
+  :straight (:build t)
+  :init
+  (general-define-key
+   :keymaps 'elfeed-show-mode-map
+   :states 'normal
+   "o" #'elfeed-goodies/show-ace-link))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package elfeed-org
+  :defer t
+  :after elfeed
+  :straight (:build t)
+  :config
+  (setq rmh-elfeed-org-files '("~/org/elfeed.org")))
+#+end_src
+
 *** Email
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email9dt0fl6184j0
@@ -4958,13 +4986,17 @@ which resolution to play a YouTube video in an external video player.
 Undefining some stuff to make keybind prefixes work correctly.
 #+begin_src emacs-lisp
   (general-define-key
-   :keymaps '(backtrace-mode-map diff-minor-mode-map magit-mode-map
-              rmail-mode-map evil-motion-state-map dired-mode-map
-              epa-key-list-mode-map special-mode-map splash-screen-keymap
-              undo-tree-visualizer-mode-map magit-blame-read-only-mode-map
-              org-agenda-keymap org-agenda-mode-map git-rebase-mode-map
-              Buffer-menu-mode-map custom-mode-map gfm-view-mode-map
-              electric-help-map image-mode-map magit-diff-mode-map)
+   :keymaps '(backtrace-mode-map diff-minor-mode-map
+              magit-mode-map rmail-mode-map evil-motion-state-map
+              dired-mode-map epa-key-list-mode-map
+              special-mode-map splash-screen-keymap
+              undo-tree-visualizer-mode-map
+              magit-blame-read-only-mode-map org-agenda-keymap
+              org-agenda-mode-map git-rebase-mode-map
+              Buffer-menu-mode-map custom-mode-map
+              gfm-view-mode-map electric-help-map image-mode-map
+              magit-diff-mode-map elfeed-show-mode-map
+              grep-mode-map)
    "SPC" nil)
 
   (general-define-key
@@ -4982,9 +5014,11 @@ Undefining some stuff to make keybind prefixes work correctly.
 
   (general-define-key
    :keymaps '(diff-mode-map help-mode-map image-mode-map
-              dired-mode-map Man-mode-map eww-mode-map magit-mode-map
-              debugger-mode-map dired-mode-map custom-mode-map
-              eshell-mode-map)
+              dired-mode-map Man-mode-map eww-mode-map
+              magit-mode-map debugger-mode-map dired-mode-map
+              custom-mode-map eshell-mode-map
+              elfeed-show-mode-map elfeed-search-mode-map
+              image-mode-map help-mode-map)
    :states 'normal
    "SPC" nil)
 
@@ -5031,7 +5065,8 @@ Undefining some stuff to make keybind prefixes work correctly.
     "a"   '(nil :wk "apps")
     "ac"  #'calc
     "ad"  #'docker
-    "ae"  #'eww
+    "ae"  #'elfeed
+    "aE"  #'eww
     "at"  #'tetris
     "aw"  #'wttrin
     "aC"  #'calendar
