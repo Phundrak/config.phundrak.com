@@ -6,6 +6,8 @@
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the Stump Window Manager configuration files of Phundrak" />
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
+[[file:img/stumpwm.png]]
+
 * Introduction
 :PROPERTIES:
 :CUSTOM_ID: Introduction-9vda1z81u5j0
