@@ -380,6 +380,7 @@ Here are some modules that we will load for the modeline:
 | battery-portable | Get information on the battery level of a laptop |
 | cpu              | Get the CPU usage of the computer                |
 | mem              | Get the memory usage of the computer             |
+| wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
 #+headers: :wrap src lisp
@@ -395,6 +396,7 @@ Here are some modules that we will load for the modeline:
 (load-module "battery-portable")
 (load-module "cpu")
 (load-module "mem")
+(load-module "wifi")
 #+end_src
 
 We can indicate what to display in our modeline. Be aware the ~^>~
@@ -405,7 +407,10 @@ highlighted, and ~%u~ will display urgent windows if there are any. ~%d~
 on the other hand will display the date in the format set above, while
 ~%B~ will display the battery level of the laptop.
 #+begin_src lisp
-(setf *screen-mode-line-format* (list "%g %v %u ^> %C | %M | %B | %d"))
+(setq cpu::*cpu-modeline-fmt* "%c"
+      mem::*mem-modeline-fmt* "%a %p"
+      wifi:*wifi-modeline-fmt* "%e %P"
+      ,*screen-mode-line-format* (list "%g %v %u ^> %I | %C | %M | %B | %d"))
 #+end_src
 
 This variable as you can see is a list of elements, although here I am
