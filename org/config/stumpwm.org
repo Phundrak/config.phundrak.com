@@ -370,7 +370,7 @@ Let’s also indicate how the groupname is displayed.
 The window format should display first its window number, then its
 titled, limited to 30 characters.
 #+begin_src lisp
-(setf *window-format* "%n: %30t")
+(setf *window-format* "%n: %t")
 #+end_src
 
 Here are some modules that we will load for the modeline:
@@ -391,7 +391,7 @@ Here are some modules that we will load for the modeline:
            "\n")
 #+end_src
 
-#+RESULTS[75023085d7c69ae09044826218830e6b678d5959]: gen-load-modeline-modules
+#+RESULTS[125d7bbaa15ee28f0baf4cad59c4742ac372853b]: gen-load-modeline-modules
 #+begin_src lisp
 (load-module "battery-portable")
 (load-module "cpu")
@@ -399,18 +399,75 @@ Here are some modules that we will load for the modeline:
 (load-module "wifi")
 #+end_src
 
-We can indicate what to display in our modeline. Be aware the ~^>~
-string will align the rest of the string to the right of the modeline.
-~%g~ will display the group list, while ~%v~ will display the list of
-windows that are in the current group, with the active one
-highlighted, and ~%u~ will display urgent windows if there are any. ~%d~
-on the other hand will display the date in the format set above, while
-~%B~ will display the battery level of the laptop.
 #+begin_src lisp
 (setq cpu::*cpu-modeline-fmt* "%c"
       mem::*mem-modeline-fmt* "%a %p"
       wifi:*wifi-modeline-fmt* "%e %P"
-      ,*screen-mode-line-format* (list "%g %v %u ^> %I | %C | %M | %B | %d"))
+      wifi:*use-colors* nil
+      ,*mode-line-highlight-template* "<~A>"
+      ,*hidden-window-color* "^**")
+#+end_src
+
+We can indicate what to display in our modeline. Each formatter will
+be separated by a Powerline separator with the code point ~0xE0B0~ in
+the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
+#+name: modeline-format
+| Formatter | What it does                                          | Command? |
+|-----------+-------------------------------------------------------+----------|
+| ~%g~        | Display list of groups                                |          |
+| ~%W~        | Display list of windows in the current group and head |          |
+| ~^>~        | Rest of the modeline will be aligned to the right     |          |
+| ~mu-unread~ | Display number of unread emails                       | yes      |
+| ~%I~        | Display Wifi status                                   |          |
+| ~%C~        | Display CPU status                                    |          |
+| ~%M~        | Display RAM status                                    |          |
+| ~%B~        | Display battery status                                |          |
+| ~%d~        | Display date                                          |          |
+
+#+name: modeline-format-gen
+#+begin_src emacs-lisp :var elements=modeline-format :exports none
+(mapcar (lambda (element)
+          (cons (format "\"%s\""
+                        (string-replace (regexp-quote "~")
+                                 ""
+                                 (car element)))
+                (string= "yes" (caddr element))))
+        elements)
+#+end_src
+
+#+RESULTS[5d43e832fca88ddfffecd2a55d63bbb767e2e315]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%I") ("%C") ("%M") ("%B") ("%d"))
+
+#+begin_src lisp :noweb yes
+(defcommand reload-modeline () ()
+            "Reload modeline."
+            (setq *screen-mode-line-format* nil)
+            (let ((invertedp nil))
+              (dolist (element '<<modeline-format-gen()>>)
+                (setf invertedp (not invertedp))
+                (setf *screen-mode-line-format*
+                      (cons (if invertedp
+                                (format nil
+                                        " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^** "
+                                        phundrak-nord15
+                                        phundrak-nord1)
+                                (format nil
+                                        " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^(:fg \"~A\") "
+                                        phundrak-nord1
+                                        phundrak-nord15
+                                        phundrak-nord3))
+                            ,*screen-mode-line-format*))
+                (let ((formatter (car element))
+                      (commandp  (cdr element)))
+                  (setf *screen-mode-line-format*
+                        (cons (if commandp
+                                  `(:eval (run-shell-command ,formatter t))
+                                  (format nil "~A" formatter))
+                              ,*screen-mode-line-format*)))))
+            (setf *screen-mode-line-format* (reverse (cons " " *screen-mode-line-format*)))
+            (pop *screen-mode-line-format*))
+
+(reload-modeline)
 #+end_src
 
 This variable as you can see is a list of elements, although here I am
@@ -418,10 +475,6 @@ only using one string. But it is completely possible to insert some
 CLisp code in here that returns some string if the user needs some
 code to return data that cannot be easily accesible otherwise. I might
 add some at some point, but not today yet.
-
-For some reason, the ~stumptray~ module does not work for me, I get an
-error saying a certain value is of type ~NIL~ and not of type
-~STUMPWM:MODELINE~. I should investigate this.
 
 ** TODO Investigate why ~stumptray~ doesn’t work                    :noexport:
 :PROPERTIES:
@@ -619,24 +672,34 @@ fonts:
 (ql:quickload :clx-truetype)
 (load-module "ttf-fonts")
 #+end_src
+
 The documentation says we should be able to also use OTF fonts, but so
-far I’ve had no luck loading one. Loading more than one font to use
+far I’ve had no luck loading one.
+
+Loading more than one font to use
 some fallback fonts also doesn’t seem to work, unlike specified in the
 documentation (I wanted to use a CJK font, but it doesn’t appear to
-work).
+work), we need to manually change the font used which isn’t very
+user-friendly, especially if you might have CJK characters appear in
+otherwise regular text.
 
-# Something that didn’t click immediately for me (and I think StumpWM’s
-# documentation on this could be improved) is that ~set-font~ can be used
-# to set either one main font for StumpWM, as one might guess reading
-# the documentation --- or you can set a list of them! And this is
-# great, since my main font does not support some characters I regularly
-# have in my windows’ title, such as CJK characters, emojis and all!
-# Here is my list of fonts I want loaded:
+Something that didn’t click immediately for me (and I think StumpWM’s
+documentation on this could be improved) is that ~set-font~ can be used
+to set either one main font for StumpWM, as one might guess reading
+the documentation --- or you can set a list of them! And this is
+great, since my main font does not support some characters I regularly
+have in my windows’ title, such as CJK characters! However, be aware
+*the second font and further aren’t fallback fonts*. They are additional
+fonts you can switch to manually through the use of ~^f<n>~ (~<n>~ being
+the desired’s font index in the 0-indexed font list). But if a font
+cannot render a character, it will simply display an empty rectangle
+instead of falling back to another font. That’s annoying… Here is my
+list of fonts I want loaded:
 #+name: list-fonts
-| Family           | Subfamily | Size |
-|------------------+-----------+------|
-| DejaVu Sans Mono | Book      |    8 |
-# | IPAMincho    | Regular   |   11 |
+| Family                         | Subfamily | Size |
+|--------------------------------+-----------+------|
+| Unifont-JP                     | Regular   |   10 |
+| DejaVu Sans Mono for Powerline | Book      |  8.5 |
 
 #+name: gen-fonts
 #+headers: :wrap src lisp
@@ -656,17 +719,18 @@ work).
 #+end_src
 
 The code equivalent of this table can be seen below:
-#+RESULTS[ca1ca106ad10eea84a34362acfc543eba559260c]: gen-fonts
+#+RESULTS[2bcc2bbfd79a25c20b4dfa9d9867b91797089ffc]: gen-fonts
 #+begin_src lisp
-(set-font `(,(make-instance 'xft:font :family "DejaVu Sans Mono" :subfamily "Book" :size 8 :antialias t)))
+(set-font `(,(make-instance 'xft:font :family "Unifont-JP" :subfamily "Regular" :size 10 :antialias t)
+            ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)))
 #+end_src
 
-*** TODO Font error in modeline with Japanese                    :noexport:
-:PROPERTIES:
-:CUSTOM_ID: Theme-Fonts-Font-error-in-modeline-with-Japanese-w9xk5161v5j0
-:END:
-Apparently having two fonts, including one with Japanese characters,
-does not help with window titles containing Japanese characters.
+As far as I know, Unifont is the only font I’ve tested that displays
+monospaced Japanese characters in StumpWM. I tried DejaVu, IBM Plex,
+and a couple of others but only this one works correctly. DejaVu is
+here for the Powerline separator. If you know of another monospaced
+font that displays Japanese characters, or even better CJK characters,
+please tell me! My email address is at the bottom of this webpage.
 
 ** Colors
 :PROPERTIES:
@@ -698,7 +762,7 @@ name, limited to thirty characters.
       ,*float-window-border*       0
       ,*float-window-title-height* 15
       ,*window-border-style*       :none
-      ,*window-format*             "%n:%30t")
+      ,*window-format*             "%n:%t")
 #+end_src
 
 ** Message and Input Windows

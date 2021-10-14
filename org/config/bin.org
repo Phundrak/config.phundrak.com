@@ -255,6 +255,18 @@ sudo chmod a+rw /opt/flutter/version
 sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
 #+END_SRC
 
+** mu-unread
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/mu-unread
+:CUSTOM_ID: cli-utilities-mu-unread-f8t7tf20o8j0
+:END:
+~mu-unread~ is a very simple utility that simply returns the amount of
+unread emails I have through the use of ~mu~.
+#+begin_src sh
+UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
+printf "Mail: %s" $UNREAD
+#+end_src
+
 ** Pinfo                                                          :noexport:
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
