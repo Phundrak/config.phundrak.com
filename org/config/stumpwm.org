@@ -441,33 +441,34 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 : (("%g") ("%W") ("^>") ("mu-unread" . t) ("%I") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
+(defun generate-modeline (elements &optional not-invertedp)
+  "Generate a modeline for StumpWM.
+ELEMENTS should be a list of `cons'es which `car' is the modeline
+formatter or the shell command to run, and their `cdr' is either nil
+when the `car' is a formatter and t when it is a shell command."
+  (when elements
+    (cons (if not-invertedp
+              (format nil
+                      " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^(:fg \"~A\") "
+                      phundrak-nord1
+                      phundrak-nord15
+                      phundrak-nord3)
+              (format nil
+                      " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^** "
+                      phundrak-nord15
+                      phundrak-nord1))
+          (let* ((current-element (car elements))
+                 (formatter       (car current-element))
+                 (commandp        (cdr current-element)))
+            (cons (if commandp
+                      `(:eval (run-shell-command ,formatter t))
+                      (format nil "~A" formatter))
+                  (generate-modeline (cdr elements) (not not-invertedp)))))))
+
 (defcommand reload-modeline () ()
             "Reload modeline."
-            (setq *screen-mode-line-format* nil)
-            (let ((invertedp nil))
-              (dolist (element '<<modeline-format-gen()>>)
-                (setf invertedp (not invertedp))
-                (setf *screen-mode-line-format*
-                      (cons (if invertedp
-                                (format nil
-                                        " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^** "
-                                        phundrak-nord15
-                                        phundrak-nord1)
-                                (format nil
-                                        " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^(:fg \"~A\") "
-                                        phundrak-nord1
-                                        phundrak-nord15
-                                        phundrak-nord3))
-                            ,*screen-mode-line-format*))
-                (let ((formatter (car element))
-                      (commandp  (cdr element)))
-                  (setf *screen-mode-line-format*
-                        (cons (if commandp
-                                  `(:eval (run-shell-command ,formatter t))
-                                  (format nil "~A" formatter))
-                              ,*screen-mode-line-format*)))))
-            (setf *screen-mode-line-format* (reverse (cons " " *screen-mode-line-format*)))
-            (pop *screen-mode-line-format*))
+            (setf *screen-mode-line-format*
+                  (cdr (generate-modeline '<<modeline-format-gen()>>))))
 
 (reload-modeline)
 #+end_src
