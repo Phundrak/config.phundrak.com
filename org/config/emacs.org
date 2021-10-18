@@ -2337,6 +2337,44 @@ And let’s add some fancy icons in dired!
   :init (image-diredx-adjust-mode 1))
 #+end_src
 
+*** Compilation mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Compilation-mode-7nh817m0t8j0
+:END:
+After reading about a blog article, I found out it is possible to run
+quite a few things through ~compilation-mode~, so why not? First, let’s
+redefine some keybinds for this mode. I’ll also define a general
+keybind in order to re-run my programs from other buffers than the
+~compilation-mode~ buffer.
+#+begin_src emacs-lisp
+(after! compile
+  (general-define-key
+   :keymaps 'compilation-mode-map
+   "g" nil
+   "r" #'recompile
+   "h" nil))
+
+(general-define-key
+ :states 'normal
+ :prefix "SPC"
+ "R" #'recompile)
+#+end_src
+
+I also want to follow the output of the compilation buffer, as well as
+enable some syntax highlighting, so let’s do this.
+#+begin_src emacs-lisp
+(after! compile
+  (setq compilation-scroll-output t))
+
+(require 'ansi-color)
+
+(defun colorize-compilation-buffer ()
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-mode-hook #'colorize-compilation-buffer)
+#+end_src
+
 *** Eshell
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell0662fl6184j0
