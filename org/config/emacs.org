@@ -2646,6 +2646,20 @@ that.
   :after eshell)
 #+end_src
 
+*** Eww
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eww-m1343rs0t8j0
+:END:
+Since Emacs 29, it is possible to automatically rename ~eww~ buffers to
+a more human-readable name, see [[https://protesilaos.com/codelog/2021-10-15-emacs-29-eww-rename-buffers/][Prot’s blog]] post on the matter.
+#+begin_src emacs-lisp
+(use-package eww
+  :defer t
+  :straight (:type built-in)
+  :config
+  (setq eww-auto-rename-buffer 'title))
+#+end_src
+
 *** Info
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Info-r7x90j20c5j0
