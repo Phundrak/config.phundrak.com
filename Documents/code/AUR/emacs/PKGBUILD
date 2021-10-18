@@ -47,7 +47,7 @@ GTK2=             # GTK2 support. Why would you?
 NOCAIRO=          # Disable here.
 XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML=        # Generate and install html documentation.
-DOCS_PDF="YES"    # Generate and install pdf documentation.
+DOCS_PDF=         # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
                   # ImageMagick, like flash, won't die...
                   # -->>If you just *believe* you need ImageMagick, you don't.<<--
@@ -60,7 +60,7 @@ if [[ $CLI == "YES" ]] ; then
 else
     pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.150835
+pkgver=29.0.50.150975
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
