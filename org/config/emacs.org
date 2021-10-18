@@ -3978,6 +3978,17 @@ And let’s enable some intergration with ~ivy~.
   :init (exec-path-from-shell-initialize))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package consult-lsp
+  :defer t
+  :after lsp
+  :straight (:build t)
+  :general
+  (:states 'normal
+   :keymaps 'lsp-mode-map
+   [remap xref-find-apropos] #'consult-lsp-symbols))
+#+end_src
+
 ~dap-mode~ is an advanced debugging mode that works through lsp.
 #+begin_src emacs-lisp
 (use-package dap-mode
