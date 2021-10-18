@@ -730,6 +730,17 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
           evil-want-C-i-jump nil)
     (require 'evil-vars)
     (evil-set-undo-system 'undo-tree))
+  :general
+  (:keymaps 'evil-motion-state-map
+   "SPC" nil
+   ","   nil)
+  (:keymaps 'evil-insert-state-map
+   "C-t" nil)
+  (:keymaps 'evil-insert-state-map
+   "U"   nil
+   "C-a" nil
+   "C-y" nil
+   "C-e" nil)
   :config
   (evil-mode 1)
   (setq evil-want-fine-undo t) ; more granular undo with evil
@@ -1143,10 +1154,21 @@ docker-compose from Emacs.
   :commands elfeed-goodies/setup
   :straight (:build t)
   :init
-  (general-define-key
-   :keymaps 'elfeed-show-mode-map
+  :general
+  (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+   :states  '(normal emacs)
+   "SPC" nil
+   "s"   nil)
+  (:keymaps 'elfeed-show-mode-map
+   :states  'normal
+   "o" #'elfeed-goodies/show-ace-link)
+  (:keymaps 'elfeed-show-mode-map
    :states 'normal
-   "o" #'elfeed-goodies/show-ace-link))
+   :prefix ","
+   "b" #'elfeed-show-visit
+   "n" #'elfeed-show-next
+   "p" #'elfeed-show-prev
+   "l" #'elfeed-show-next-link))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1927,9 +1949,16 @@ doing and what Git is doing! In short, I absolutely love it!
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   :general
+  ; global
+  (:keymaps '(magit-blame-read-only-mode-map magit-mode-map magit-diff-mode-map)
+   "SPC" nil)
   (:keymaps '(git-rebase-mode-map)
    "C-t" #'evil-next-line
    "C-s" #'evil-previous-line)
+  ; evil
+  (:keymaps '(magit-mode-map)
+   :states '(normal visual)
+   "SPC" nil)
   (:keymaps 'git-rebase-mode-map
    :states 'normal
    :prefix ","
@@ -2256,7 +2285,10 @@ me.
   :hook (dired-mode . turn-on-gnus-dired-mode)
   :general
   (:keymaps 'dired-mode-map
+   "SPC" nil)
+  (:keymaps 'dired-mode-map
    :states 'normal
+   "SPC" nil
    "(" #'dired-hide-details-mode
    "n" #'evil-next-line
    "p" #'evil-previous-line)
@@ -2383,6 +2415,14 @@ Eshell is a built-in shell available from Emacs which I use almost as
 often as fish. Some adjustments are necessary to make it fit my taste
 though.
 #+begin_src emacs-lisp
+(general-define-key
+ :keymaps 'eshell-mode-map
+ :states 'normal
+ "c" #'evil-backward-char
+ "t" #'evil-next-line
+ "s" #'evil-previous-line
+ "r" #'evil-forward-char)
+
 (general-define-key
  :keymaps 'eshell-mode-map
  :states 'insert
@@ -2743,6 +2783,12 @@ extended however we like!
   (org-macro ((t (:foreground "#b48ead"))))
   :init
   (auto-fill-mode -1)
+  :general
+  (:keymaps '(org-agenda-keymap org-agenda-mode-map)
+   "SPC" nil)
+  (:keymaps '(org-agenda-keymap org-agenda-mode-map)
+   :states 'motion
+   "SPC" nil)
   :config
   <<org-hydra-babel>>
   (require 'ox-beamer)
@@ -4955,74 +5001,54 @@ which resolution to play a YouTube video in an external video player.
 :END:
 Undefining some stuff to make keybind prefixes work correctly.
 #+begin_src emacs-lisp
-  (general-define-key
-   :keymaps '(backtrace-mode-map diff-minor-mode-map
-              magit-mode-map rmail-mode-map evil-motion-state-map
-              dired-mode-map epa-key-list-mode-map
-              special-mode-map splash-screen-keymap
-              undo-tree-visualizer-mode-map
-              magit-blame-read-only-mode-map org-agenda-keymap
-              org-agenda-mode-map git-rebase-mode-map
-              Buffer-menu-mode-map custom-mode-map
-              gfm-view-mode-map electric-help-map image-mode-map
-              magit-diff-mode-map elfeed-show-mode-map
-              grep-mode-map)
-   "SPC" nil)
+(general-define-key
+ :keymaps '( Buffer-menu-mode-map
+            Man-mode-map
+            backtrace-mode-map
+            custom-mode-map
+            debugger-mode-map
+            diff-minor-mode-map
+            diff-mode-map
+            electric-help-map
+            epa-key-list-mode-map
+            eshell-mode-map
+            eww-mode-map
+            gfm-view-mode-map
+            git-rebase-mode-map
+            grep-mode-map
+            help-mode-map
+            image-mode-map
+            rmail-mode-map
+            special-mode-map
+            splash-screen-keymap
+            undo-tree-visualizer-mode-map)
+ :states '(emacs normal motion)
+ "SPC" nil)
 
-  (general-define-key
-   :keymaps 'global-map
-   "<mouse-2>" nil
-   "<mouse-3>" nil)
+(general-define-key
+ :keymaps 'global-map
+ "<mouse-2>" nil
+ "<mouse-3>" nil)
 
-  (general-define-key
-   :keymaps 'evil-motion-state-map
-   "," nil)
+;; (general-define-key
+;;  :keymaps '(diff-mode-map help-mode-map image-mode-map
+;;             custom-mode-map Man-mode-map eww-mode-map
+;;             debugger-mode-map custom-mode-map eshell-mode-map
+;;             image-mode-map help-mode-map)
+;;  :states 'normal
+;;  "SPC" nil)
 
-  (general-define-key
-   :keymaps 'evil-insert-state-map
-   "C-t" nil)
+;; (general-define-key
+;;  :keymaps 'diff-mode-map
+;;  :states 'motion
+;;  "SPC" nil)
 
-  (general-define-key
-   :keymaps '(diff-mode-map help-mode-map image-mode-map
-              dired-mode-map Man-mode-map eww-mode-map
-              magit-mode-map debugger-mode-map dired-mode-map
-              custom-mode-map eshell-mode-map
-              elfeed-show-mode-map elfeed-search-mode-map
-              image-mode-map help-mode-map)
-   :states 'normal
-   "SPC" nil)
-
-  (general-define-key
-   :keymaps 'magit-mode-map
-   :states 'visual
-   "SPC" nil)
-
-  (general-define-key
-   :keymaps '(diff-mode-map org-agenda-keymap org-agenda-mode-map)
-   :states 'motion
-   "SPC" nil)
-
-  (general-define-key
-   :keymaps 'eshell-mode-map
-   :states 'normal
-   "c" #'evil-backward-char
-   "t" #'evil-next-line
-   "s" #'evil-previous-line
-   "r" #'evil-forward-char)
-
-  (general-define-key
-   :keymaps 'evil-insert-state-map
-   "U"   nil
-   "C-a" nil
-   "C-y" nil
-   "C-e" nil)
-
-  (general-define-key
-   :states 'normal
-   "U"   #'evil-redo
-   "C-a" #'beginning-of-line
-   "C-e" #'end-of-line
-   "C-y" #'yank)
+(general-define-key
+ :states 'normal
+ "U"   #'evil-redo
+ "C-a" #'beginning-of-line
+ "C-e" #'end-of-line
+ "C-y" #'yank)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5087,6 +5113,7 @@ Undefining some stuff to make keybind prefixes work correctly.
     "hdk" #'helpful-key
     "hdm" #'helpful-macro
     "hdM" #'helpful-mode
+    "hdp" #'describe-package
     "hds" #'helpful-symbol
     "hdv" #'helpful-variable
 
