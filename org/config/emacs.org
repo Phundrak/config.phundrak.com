@@ -1144,7 +1144,11 @@ docker-compose from Emacs.
 #+begin_src emacs-lisp
 (use-package elfeed
   :defer t
-  :straight (:build t))
+  :straight (:build t)
+  :custom
+  (elfeed-search-filter "@6-months-ago")
+  :config
+  (elfeed-goodies/setup))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1154,21 +1158,50 @@ docker-compose from Emacs.
   :commands elfeed-goodies/setup
   :straight (:build t)
   :init
+  (elfeed-goodies/setup)
   :general
   (:keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
    :states  '(normal emacs)
    "SPC" nil
+   "DEL" nil
    "s"   nil)
   (:keymaps 'elfeed-show-mode-map
    :states  'normal
-   "o" #'elfeed-goodies/show-ace-link)
+   "+" #'elfeed-show-tag
+   "-" #'elfeed-show-untag
+   "o" #'elfeed-goodies/show-ace-link
+   "q" #'elfeed-kill-buffer)
   (:keymaps 'elfeed-show-mode-map
    :states 'normal
    :prefix ","
    "b" #'elfeed-show-visit
+   "c" #'elfeed-kill-link-url-at-point
+   "d" #'elfeed-show-save-enclosure
+   "l" #'elfeed-show-next-link
    "n" #'elfeed-show-next
    "p" #'elfeed-show-prev
-   "l" #'elfeed-show-next-link))
+   "s" #'elfeed-show-new-live-search
+   "u" #'elfeed-show-tag--unread
+   "y" #'elfeed-show-yank)
+  (:keymaps 'elfeed-search-mode-map
+   :states 'normal
+   :prefix ","
+   "«"  #'elfeed-search-first-entry
+   "»"  #'elfeed-search-last-entry
+   "b"  #'elfeed-search-browse-url
+   "f"  '(nil :which-key "filter")
+   "fc" #'elfeed-search-clear-filter
+   "fl" #'elfeed-search-live-filter
+   "fs" #'elfeed-search-set-filter
+   "t"  '(nil :which-key "tag")
+   "tt" #'elfeed-search-tag-all-unread
+   "tu" #'elfeed-search-untag-all-unread
+   "tT" #'elfeed-search-tag-all
+   "tU" #'elfeed-search-untag-all
+   "u"  '(nil :which-key "update")
+   "uf" #'elfeed-search-fetch
+   "uF" #'elfeed-search-update
+   "y"  #'elfeed-search-yank))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1176,6 +1209,8 @@ docker-compose from Emacs.
   :defer t
   :after elfeed
   :straight (:build t)
+  :init
+  (elfeed-org)
   :config
   (setq rmh-elfeed-org-files '("~/org/elfeed.org")))
 #+end_src
