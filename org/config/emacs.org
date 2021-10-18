@@ -2226,6 +2226,41 @@ enough for me.
   :straight (:build t))
 #+end_src
 
+*** Iedit
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Iedit-eb98g8q0p8j0
+:END:
+Iedit is a powerful text editing tool that can be used to refactor
+code through the edition of multiple regions at once, be it in a
+region or in a whole buffer.
+#+begin_src emacs-lisp
+(use-package iedit
+  :defer t
+  :straight (:build t)
+  :general
+  (:states 'normal
+   :prefix "SPC"
+   "r" '(nil :which-key "refactor")
+   "ri" #'iedit-mode))
+#+end_src
+
+Since I’m using evil, I’ll also use a compatibility package that adds
+states for iedit.
+#+begin_src emacs-lisp
+(use-package evil-iedit-state
+  :after iedit
+  :defer t
+  :straight (:build t)
+  :commands (evil-iedit-state evil-iedit-state/iedit-mode)
+  :init
+  (setq iedit-curent-symbol-default     t
+        iedit-only-at-symbol-boundaries t
+        iedit-toggle-key-default        nil)
+  :general
+  (:keymaps 'evil-iedit-state-map
+   "SPC" nil))
+#+end_src
+
 *** Parinfer
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Parinfermxy1fl6184j0
