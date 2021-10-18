@@ -2822,8 +2822,7 @@ since org is an Emacs package, that also means it can be greatly
 extended however we like!
 #+begin_src emacs-lisp
 (use-package org
-  :straight (org :build t
-                 :type built-in)
+  :straight (:build t)
   :defer t
   :commands (orgtbl-mode)
   :hook ((org-mode . visual-line-mode)
