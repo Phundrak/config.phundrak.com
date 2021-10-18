@@ -152,9 +152,6 @@ fit mine, so on top of ~prog-mode~, let’s add a few other modes.
            " ")
 #+end_src
 
-#+RESULTS[b551840c279e88374f47f047e599b8d8686fd8bf]: prog-modes-gen
-: prog-mode-hook latex-mode-hook
-
 **** Line Number
 :PROPERTIES:
 :CUSTOM_ID: Basic-configuration-Emacs-Behavior-Programming-Modes-Line-Numbermcqiel6184j0
@@ -236,9 +233,6 @@ buffer when said file has changed on disk. Let’s change this behavior:
 #+begin_src emacs-lisp
 (global-auto-revert-mode 1)
 #+end_src
-
-#+RESULTS:
-: t
 
 Much more polite! Note that if the buffer is modified and its changes
 haven’t been saved, it will not automatically revert the buffer and
@@ -720,43 +714,6 @@ prefix them with a comma (I’ve taken this habit from Spacemacs).
            table
            "\n")
 #+end_src
-
-#+RESULTS[fa2948b693499edc6458f60c46357955b8ace1fb]: general-keybindings-gen
-#+begin_example
-"&" #'mu4e-view-pipe
-"." '(mu4e-headers-split-adjust-width/body :which-key "mu4e-headers width")
-"a" '(:ignore :which-key "attachments")
-"a&" #'mu4e-view-pipe-attachment
-"aa" #'mu4e-view-attachment-action
-"ao" #'mu4e-view-open-attachment
-"aO" #'mu4e-view-open-attachment-with
-"c" '(:ignore :which-key "compose")
-"cc" #'mu4e-compose-new
-"ce" #'mu4e-compose-edit
-"cf" #'mu4e-compose-forward
-"cr" #'mu4e-compose-reply
-"cR" #'mu4e-compose-resend
-"g" '(:ignore :which-key "go to")
-"gu" #'mu4e-view-go-to-url
-"gX" #'mu4e-view-fetch-url
-"l" #'mu4e-show-log
-"m" '(:ignore :which-key "mark")
-"md" #'mu4e-view-mark-for-trash
-"mD" #'mu4e-view-mark-for-delete
-"mm" #'mu4e-view-mark-for-move
-"mr" #'mu4e-view-mark-for-refile
-"mR" #'mu4e-view-mark-for-read
-"mu" #'mu4e-view-mark-for-unread
-"mU" #'mu4e-view-mark-for-unmark
-"t" '(:ignore :which-key "thread")
-"T" '(:ignore :which-key "toggle")
-"Tc" #'mu4e-view-toggle-hide-cited
-"Th" #'mu4e-view-toggle-html
-"n" #'mu4e-view-headers-next
-"N" #'mu4e-view-headers-next-unread
-"p" #'mu4e-view-headers-prev
-"P" #'mu4e-view-headers-prev-unread
-#+end_example
 
 ** Evil
 :PROPERTIES:
@@ -1371,14 +1328,11 @@ matches any email address which contains either ~up8.edu~ or
 Paris 8 (my university).
 
 #+name: mu4e-bookmarks-from-copy-to-gen
-#+begin_src emacs-lisp :tangle no :exports none
+#+begin_src emacs-lisp :tangle no :exports none :var regex="test"
 (mapconcat (lambda (x) (concat x ":" regex))
            '("f" "c" "t")
            " OR ")
 #+end_src
-
-#+RESULTS: mu4e-bookmarks-from-copy-to-gen
-: f: OR c: OR t:
 
 #+name: mu4e-bookmarks-filter-uni
 #+headers: :tangle no :cache yes
@@ -1643,9 +1597,6 @@ Let’s enable them and set them:
 (add-hook 'mu4e-headers-mode-hook #'my/set-mu4e-headers-width)
 #+end_src
 
-#+RESULTS: mu4e-vertical-split
-| (lambda nil (toggle-truncate-lines -1)) | (lambda nil (visual-line-mode -1)) | my/set-mu4e-headers-width |
-
 ***** Headers mode
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Headers-modeum41fl6184j0
@@ -1764,8 +1715,6 @@ move freely (remember, bépo layout for me).
  "r" #'evil-forward-char)
 #+end_src
 
-#+RESULTS: mu4e-keybindings-header-no-leader
-
 Finally, let’s declare a couple of keybindings for when we are
 composing a message. This time, all my keybindings are prefixed with
 the major-mode leader and call a simple function.
@@ -1787,8 +1736,6 @@ the major-mode leader and call a simple function.
  :prefix ","
  <<general-keybindings-gen(table=mu4e-keybindings-message-tbl)>>
 #+end_src
-
-#+RESULTS: mu4e-keybindings-message
 
 **** Composing messages
 :PROPERTIES:
@@ -3835,19 +3782,6 @@ awesome!
   :straight (:build t)
   :init
   (setq lsp-keymap-prefix "C-c l")
-  ;; (dolist (hook '(rust-mode-hook
-  ;;                 c-mode-hook
-  ;;                 c++-mode-hook
-  ;;                 css-mode-hook
-  ;;                 html-mode-hook
-  ;;                 lua-mode-hook
-  ;;                 rust-mode-hook
-  ;;                 dockerfile-mode-hook))
-  ;;   (add-hook hook #'lsp-deferred))
-
-  ;; (dolist (mode '(#'lsp-enable-which-key-integration
-  ;;                 #'lsp-ui-mode))
-  ;;   (add-hook 'lsp-mode-hook mode))
   :hook ((rust-mode       . lsp-deferred)
          (c-mode          . lsp-deferred)
          (c++-mode        . lsp-deferred)
@@ -4554,8 +4488,6 @@ development. First, let’s install the most important package,
     (add-hook 'rustic-mode-local-vars-hook #'rustic-setup-lsp)
     (setq rustic-lsp-client 'lsp-mode))
 #+end_src
-
-#+RESULTS:
 
 **** Web programming
 :PROPERTIES:
