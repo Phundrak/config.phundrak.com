@@ -2875,7 +2875,7 @@ since org is an Emacs package, that also means it can be greatly
 extended however we like!
 #+begin_src emacs-lisp
 (use-package org
-  :straight (:build t)
+  :straight t
   :defer t
   :commands (orgtbl-mode)
   :hook ((org-mode . visual-line-mode)
@@ -4933,7 +4933,8 @@ fonts might not be available, so you’ll need to install them with the
 command ~M-x all-the-icons-install-fonts~.
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  :defer t)
+  :defer t
+  :straight t)
 #+end_src
 
 ~prettify-symbols-mode~ is also a nifty feature of Emacs, and it is
@@ -5002,6 +5003,7 @@ configuration to make it bépo-compatible.
 #+begin_src emacs-lisp
 (use-package avy
   :defer t
+  :straight t
   :config
   (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
   :general
@@ -5060,6 +5062,8 @@ quickly find files across my filesystem.
 :END:
 #+begin_src emacs-lisp
 (use-package keycast
+  :defer t
+  :straight (:build t)
   :config
   (define-minor-mode keycast-mode
     "Show current command and its key binding in the mode line."
@@ -5078,6 +5082,7 @@ Who would get interested in Emacs and not want to read the SICP?
 Moreover, inside Emacs?
 #+begin_src emacs-lisp
 (use-package sicp
+  :straight (:build t)
   :defer t)
 #+end_src
 
