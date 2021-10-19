@@ -1955,12 +1955,12 @@ reader?
 #+begin_src emacs-lisp
 (use-package pdf-view-restore
   :after pdf-tools
-  :hook (pdf-view-mode . pdf-view-restore-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-(setq pdf-view-restore-filename (expand-file-name ".tmp/pdf-view-restore"
-                                                  user-emacs-directory))
+  :defer t
+  :straight (:build t)
+  :hook (pdf-view-mode . pdf-view-restore-mode)
+  :config
+  (setq pdf-view-restore-filename (expand-file-name ".tmp/pdf-view-restore"
+                                                    user-emacs-directory)))
 #+end_src
 
 *** Project Management
