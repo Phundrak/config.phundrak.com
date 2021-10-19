@@ -308,9 +308,9 @@ Something my taskbar doesn’t have is a battery indicator. However, I
 want it enabled only if I am on a laptop or if a battery is available.
 #+begin_src emacs-lisp
 (let ((battery-str (battery)))
-    (unless (or (equal "Battery status not available" battery-str)
-                (string-match-p (regexp-quote "N/A") battery-str))
-      (display-battery-mode 1)))
+  (unless (or (equal "Battery status not available" battery-str)
+              (string-match-p (regexp-quote "N/A") battery-str))
+    (display-battery-mode 1)))
 #+end_src
 
 This isn’t a modeline module per se, but we have an indicator of the
@@ -383,7 +383,7 @@ Doom-Emacs has some really nice macros that can come in really handy,
 but since I prefer to rely on my own configuration, I’ll instead just
 copy their code here. First we get the ~after!~ macro:
 #+begin_src emacs-lisp
-(require 'cl)
+(require 'cl-lib)
 (defmacro after! (package &rest body)
   "Evaluate BODY after PACKAGE have loaded.
 
@@ -1403,7 +1403,7 @@ Paris 8 (my university).
 
 Next I need an inbox dedicated to the association I’m part of.
 #+name: mu4e-bookmarks-filter-asso
-#+headers: tangle no :cache yes
+#+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
 (let ((regex "/.*supran\\.fr/"))
   <<mu4e-bookmarks-from-copy-to-gen>>)
@@ -1637,7 +1637,7 @@ Let’s enable them and set them:
 #+end_src
 
 #+name: mu4e-vertical-split
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun my/set-mu4e-headers-width ()
   (let ((width    (window-body-width))
         (threshold (+ 120 80)))
@@ -2276,6 +2276,7 @@ since been archived. New implementations then appeared, one of them is
 #+begin_src emacs-lisp
 (use-package parinfer-rust-mode
   :defer t
+  :straight (:build t)
   :diminish parinfer-rust-mode
   :hook emacs-lisp-mode common-lisp-mode scheme-mode
   :init
@@ -2407,7 +2408,8 @@ display the latest commit message and its age about a file in the file
 tree. And by default, I want ~dired-git-info~ to hide file details.
 #+begin_src emacs-lisp
 (use-package dired-git-info
-  :after dired
+  :after (dired)
+  :straight (:build t)
   :hook (dired-after-reading . dired-git-info-auto-enable)
   :general
   (:keymaps 'dired-mode-map
@@ -2420,8 +2422,8 @@ tree. And by default, I want ~dired-git-info~ to hide file details.
 Diredfl makes dired colorful, and much more readable in my opinion.
 #+begin_src emacs-lisp
 (use-package diredfl
+  :after (dired all-the-icons)
   :straight (:build t)
-  :after dired
   :init
   (diredfl-global-mode 1))
 #+end_src
@@ -2429,13 +2431,16 @@ Diredfl makes dired colorful, and much more readable in my opinion.
 And let’s add some fancy icons in dired!
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
+  :after (all-the-icons)
   :straight (:build t)
+  :defer t
   :hook (dired-mode . all-the-icons-dired-mode))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package image-dired+
-  :after image-dired
+  :after (image-dired)
+  :straight (:build t)
   :init (image-diredx-adjust-mode 1))
 #+end_src
 
@@ -2485,19 +2490,27 @@ Eshell is a built-in shell available from Emacs which I use almost as
 often as fish. Some adjustments are necessary to make it fit my taste
 though.
 #+begin_src emacs-lisp
-(general-define-key
- :keymaps 'eshell-mode-map
- :states 'normal
- "c" #'evil-backward-char
- "t" #'evil-next-line
- "s" #'evil-previous-line
- "r" #'evil-forward-char)
-
-(general-define-key
- :keymaps 'eshell-mode-map
- :states 'insert
- "C-a" #'eshell-bol
- "C-e" #'end-of-line)
+(use-package eshell
+  :defer t
+  :straight (:type built-in :build t)
+  :general
+  (:keymaps 'eshell-mode-map
+   :states 'normal
+   "c" #'evil-backward-char
+   "t" #'evil-next-line
+   "s" #'evil-previous-line
+   "r" #'evil-forward-char)
+  (:keymaps 'eshell-mode-map
+   :states 'insert
+   "C-a" #'eshell-bol
+   "C-e" #'end-of-line)
+  :config
+  <<eshell-alias-file>>
+  <<eshell-concat-shell-command>>
+  <<eshell-alias-open>>
+  <<eshell-alias-buffers>>
+  <<eshell-alias-emacs>>
+  <<eshell-alias-mkcd>>)
 #+end_src
 
 **** Aliases
@@ -2506,14 +2519,16 @@ though.
 :END:
 First, let’s declare our list of “dumb” aliases we’ll use in
 Eshell. You can find them here.
-#+begin_src emacs-lisp
+#+name: eshell-alias-file
+#+begin_src emacs-lisp :tangle no
 (setq eshell-aliases-file (expand-file-name "eshell-aliases" user-emacs-directory))
 #+end_src
 
 A couple of other aliases will be defined through custom Elisp
 functions, but first I’ll need a function for concatenating a shell
 command into a single string:
-#+begin_src emacs-lisp
+#+name: eshell-concat-shell-command
+#+begin_src emacs-lisp :tangle no
 (defun phundrak/concatenate-shell-command (&rest command)
   "Concatenate an eshell COMMAND into a single string.
 All elements of COMMAND will be joined in a single
@@ -2524,7 +2539,8 @@ space-separated string."
 I’ll also declare some aliases here, such as ~open~ and ~openo~ that
 respectively allow me to open a file in Emacs, and same but in another
 window.
-#+begin_src emacs-lisp
+#+name: eshell-alias-open
+#+begin_src emacs-lisp :tangle no
 (defalias 'open 'find-file)
 (defalias 'openo 'find-file-other-window)
 #+end_src
@@ -2535,7 +2551,8 @@ my aliases file for stuff that could work too with other shells were
 the syntax a bit different, and aliases related to Elisp are kept
 programmatically. I’ll also declare ~list-buffers~ an alias of ~ibuffer~
 because naming it that way kind of makes more sense to me.
-#+begin_src emacs-lisp
+#+name: eshell-alias-buffers
+#+begin_src emacs-lisp :tangle no
 (defalias 'list-buffers 'ibuffer)
 #+end_src
 
@@ -2543,7 +2560,8 @@ I still have some stupid muscle memory telling me to open ~emacs~, ~vim~
 or ~nano~ in Eshell, which is stupid: I’m already inside Emacs and I
 have all its power available instantly. So, let’s open each file
 passed to these commands.
-#+begin_src emacs-lisp
+#+name: eshell-alias-emacs
+#+begin_src emacs-lisp :tangle no
 (defun eshell/emacs (&rest file)
   "Open each FILE and kill eshell.
 Old habits die hard."
@@ -2556,7 +2574,8 @@ Finally, I’ll declare ~mkcd~ which allows the simultaneous creation of a
 directory and moving into this newly created directory. And of course,
 it will also work if the directory also exists or if parent
 directories don’t, similarly to the ~-p~ option passed to ~mkdir~.
-#+begin_src emacs-lisp
+#+name: eshell-alias-mkcd
+#+begin_src emacs-lisp :tangle no
 (defun eshell/mkcd (dir)
   "Create the directory DIR and move there.
 If the directory DIR doesn’t exist, create it and its parents
@@ -2651,6 +2670,7 @@ I fire up a terminal. I haven’t found anything that does that the way
 I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]!
 #+begin_src emacs-lisp
 (use-package eshell-info-banner
+  :after (eshell)
   :defer t
   :straight (eshell-info-banner :build t
                                 :type git
@@ -2666,8 +2686,9 @@ Another feature I like is fish-like syntax highlight, which brings
 some more colors to Eshell.
 #+begin_src emacs-lisp
 (use-package eshell-syntax-highlighting
-  :after esh-mode
+  :after (esh-mode eshell)
   :defer t
+  :straight (:build t)
   :config
   (eshell-syntax-highlighting-global-mode +1))
 #+end_src
@@ -2699,44 +2720,27 @@ a more human-readable name, see [[https://protesilaos.com/codelog/2021-10-15-ema
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Info-r7x90j20c5j0
 :END:
-Something that irks me as I use evil and a leader key is that the
-space bar is already bound to a function, ~Info-scroll-up~. Same goes
-for my local leader ~,~ which is bound to ~Info-index-next~. I don’t want
-that, so let’s unbind them:
+Let’s define some more intuitive keybinds for ~info-mode~.
 #+begin_src emacs-lisp
-(general-define-key
- :keymaps '(Info-mode-map)
- "SPC" nil
- "," nil)
-(general-define-key
- :keymaps '(Info-mode-map)
- :states 'normal
- "SPC" nil
- "," nil)
-#+end_src
-
-Alright, now that we correctly unbound them, my global leader key
-works again, and I’m free to use the comma as a local leader, so let’s
-do that:
-#+begin_src emacs-lisp
-(general-define-key
- :keymaps 'Info-mode-map
- :states 'normal
- "c" #'Info-prev
- "t" #'evil-scroll-down
- "s" #'evil-scroll-up
- "r" #'Info-next)
-
-(general-define-key
- :keymaps 'Info-mode-map
- :states 'normal
- :prefix ","
- "?" #'Info-toc
- "b" #'Info-history-back
- "f" #'Info-history-forward
- "m" #'Info-menu
- "t" #'Info-top-node
- "u" #'Info-up)
+(use-package info
+  :defer t
+  :straight (info :type built-in :build t)
+  :general
+  (:keymaps 'Info-mode-map
+   :states 'normal
+   "c" #'Info-prev
+   "t" #'evil-scroll-down
+   "s" #'evil-scroll-up
+   "r" #'Info-next)
+  (:keymaps 'Info-mode-map
+   :states 'normal
+   :prefix ","
+   "?" #'Info-toc
+   "b" #'Info-history-back
+   "f" #'Info-history-forward
+   "m" #'Info-menu
+   "t" #'Info-top-node
+   "u" #'Info-up))
 #+end_src
 
 *** Tramp
@@ -2749,6 +2753,10 @@ various hosts using various protocols, such as ~ssh~ and
 supported natively. I will describe them here.
 #+begin_src emacs-lisp
 (require 'tramp)
+(use-package tramp
+  :straight (tramp :type built-in :build t)
+  :init
+  <<tramp-add-yadm>>)
 #+end_src
 
 **** Yadm
@@ -2760,7 +2768,8 @@ loads of features I don’t use (the main one I like but don’t use is
 its [[https://yadm.io/docs/templates][Jinja-like host and OS-aware syntax]]), but unfortunately Magit
 doesn’t play nice with it. Tramp to the rescue, and this page explains
 how! Let’s just insert in my config this code snippet:
-#+begin_src emacs-lisp
+#+name: tramp-add-yadm
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'tramp-methods
                    '("yadm"
                      (tramp-login-program "yadm")
@@ -2844,6 +2853,15 @@ enhances a couple of built-in functions from Emacs, namely:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-modedw35fl6184j0
 :END:
+Since recently, in order to make ~org-cite~ compile properly, we need
+the ~citeproc~ package, a citation processor.
+#+begin_src emacs-lisp
+(use-package citeproc
+  :after (org)
+  :defer t
+  :straight (:build t))
+#+end_src
+
 Org is the main reason I am using Emacs. It is an extremely powerfu
 tool when you want to write anything that is not necessarily primarily
 programming-related, though it absolutely can be! Org can be a
@@ -2906,7 +2924,9 @@ extended however we like!
   <<org-latex-listings>>
   <<org-latex-default-packages>>
   <<org-export-latex-hyperref-format>>
+  <<org-export-latex-minted-options>>
   <<org-latex-pdf-process>>
+  <<org-latex-logfiles-add-extensions>>
   <<org-re-reveal-root>>
   <<org-html-validation>>
   <<org-latex-classes>>
@@ -2941,7 +2961,7 @@ comfortable than the default ones you get with evil and org naked.
 #+begin_src emacs-lisp
 (use-package evil-org
   :straight (:build t)
-  :after org
+  :after (org)
   :hook (org-mode . evil-org-mode)
   :config
   (setq-default evil-org-movement-bindings
@@ -2961,7 +2981,6 @@ trees, converting translitterated text to its native script, etc…
 (use-package conlanging
   :straight (conlanging :build t
                         :type git
-                        :host nil
                         :repo "https://labs.phundrak.com/phundrak/conlanging.el")
   :after org
   :defer t)
@@ -2974,6 +2993,8 @@ it. The main reason I want ~org-contrib~ is due to ~ox-extra~ that allow
 the usage of the ~:ignore:~ tag in org.
 #+begin_src emacs-lisp
 (use-package org-contrib
+  :after (org)
+  :defer t
   :straight (:build t)
   :init
   (require 'ox-extra)
@@ -3011,7 +3032,7 @@ for org files that will be hosted and viewable on Github.
 
 ~electric-mode~ also bothers me a lot when editing org files, so let’s deactivate it:
 #+name: org-behavior-electric
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (add-hook 'org-mode-hook (lambda ()
                            (interactive)
                            (electric-indent-local-mode -1)))
@@ -3046,6 +3067,7 @@ to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
 #+begin_src emacs-lisp
 (use-package ob-latex-as-png
+  :after (org)
   :straight (:build t)
   :defer t)
 #+end_src
@@ -3075,7 +3097,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
 #+header: :var languages=org-babel-languages-table[,0]
-#+BEGIN_SRC emacs-lisp :exports none
+#+BEGIN_SRC emacs-lisp :exports none :tangle no
 (format "'(%s)"
         (mapconcat (lambda ($language)
                      (format "(%s . t)" $language))
@@ -3121,7 +3143,6 @@ describing phonetics evolution. So, let’s disable it:
 (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
-
 **** Epub
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Epub-w5ycfuz095j0
@@ -3130,7 +3151,7 @@ A backend for exporting files through org I like is ~ox-epub~ which, as
 you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/][Epub format]].
 #+begin_src emacs-lisp
 (use-package ox-epub
-  :after ox
+  :after (org ox)
   :straight (:build t))
 #+end_src
 
@@ -3141,20 +3162,21 @@ you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/]
 For Reveal.JS exports, I need to set where to find the framework by
 default:
 #+NAME: org-re-reveal-root
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 #+END_SRC
 
 On HTML exports, Org-mode tries to include a validation link for the
 exported HTML. Let’s disable that since I never use it.
 #+NAME: org-html-validation
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-html-validation-link nil)
 #+END_SRC
 
 #+begin_src emacs-lisp
-(use-package htmlize
-  :defer t)
+;; (use-package htmlize
+;;   :defer t
+;;   :straight (:build t))
 #+end_src
 
 This package allows for live-previewing the HTML export of an org
@@ -3164,7 +3186,7 @@ files.
 #+begin_src emacs-lisp
 (use-package preview-org-html-mode
   :defer t
-  :after org
+  :after (org)
   :straight (preview-org-html-mode :build t
                                    :type git
                                    :host github
@@ -3189,14 +3211,14 @@ When it comes to exports, I want the LaTeX and PDF exports to be done
 with XeLaTeX only. This implies the modification of the following
 variable:
 #+NAME: org-latex-compiler
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-latex-compiler "xelatex")
 #+END_SRC
 
 I also want to get by default ~minted~ for LaTeX listings so I can have
 syntax highlights:
 #+NAME: org-latex-listings
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-latex-listings 'minted)
 #+END_SRC
 
@@ -3211,7 +3233,7 @@ packages:
 - ~booktabs~ for nicer tables
 - and ~tabularx~ for tabulars with adjustable columns
 #+NAME: org-latex-default-packages
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (dolist (package '(("AUTO" "inputenc" t ("pdflatex"))
                    ("T1"   "fontenc"  t ("pdflatex"))
                    (""     "grffile"  t)))
@@ -3230,13 +3252,13 @@ packages:
 By the way, reference links in LaTeX should be written in this format,
 since we are using ~cleveref~:
 #+NAME: org-export-latex-hyperref-format
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-export-latex-hyperref-format "\\ref{%s}")
 #+END_SRC
 
 And Minted should be default break lines if a line is too long:
 #+name: org-export-latex-minted-options
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq org-latex-minted-options '(("breaklines")
                                  ("tabsize" "2")
                                  ("frame" "single")
@@ -3247,7 +3269,7 @@ When it comes to the export itself, the latex file needs to be
 processed several times through XeLaTeX in order to get some
 references right. Don’t forget to also run bibtex!
 #+NAME: org-latex-pdf-process
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-latex-pdf-process
       '("xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"
         "bibtex %b"
@@ -3258,7 +3280,8 @@ references right. Don’t forget to also run bibtex!
 Finally, org-mode is supposed to automatically clean logfiles after it
 exports an org file to LaTeX. However, it misses a few, so I need to
 add their extension like so:
-#+begin_src emacs-lisp
+#+name: org-latex-logfiles-add-extensions
+#+begin_src emacs-lisp :tangle no
 (dolist (ext '("bbl" "lot"))
   (add-to-list 'org-latex-logfiles-extensions ext t))
 #+end_src
@@ -3275,7 +3298,7 @@ there’s a package for exporting my org files to Github-flavored
 Markdown!
 #+begin_src emacs-lisp
 (use-package ox-gfm
-  :after ox
+  :after (ox org)
   :straight (:build t))
 #+end_src
 
@@ -3288,7 +3311,7 @@ Yet another exporter I enjoy is [[https://github.com/dantecatalfamo/ox-ssh][~ox-
 servers on my repos though.
 #+begin_src emacs-lisp
 (use-package ox-ssh
-  :after ox
+  :after (ox org)
   :straight (:build t))
 #+end_src
 
@@ -3658,8 +3681,8 @@ The project is then defined like so:
 
 #+begin_src emacs-lisp
 (use-package org-ref
+  :after (org ox-bibtex pdf-tools)
   :straight (:build t)
-  :after (org ox-bibtex)
   :demand t
   :custom-face
   (org-ref-cite-face ((t (:weight bold))))
@@ -3746,7 +3769,7 @@ org-mode. ~mixed-pitch~ comes to the rescue!
 #+begin_src emacs-lisp
 (use-package mixed-pitch
   :after org
-  :straight t
+  :straight (:build t)
   :hook
   (org-mode . mixed-pitch-mode)
   :config
@@ -3838,8 +3861,8 @@ icons!
 /Org Outline Tree/ is a better way of managing my org files’ outline.
 #+begin_src emacs-lisp
 (use-package org-ol-tree
+  :after (org avy)
   :defer t
-  :after org
   :straight (org-ol-tree :build t
                          :host github
                          :type git
@@ -4195,11 +4218,11 @@ config]]), therefore I need a mode for it.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Yamlsk26fl6184j0
 :END:
 #+begin_src emacs-lisp
-  (use-package yaml-mode
-    :defer t
-    :straight (:build t)
-    :mode "\\.yml\\'"
-    :mode "\\.yaml\\'")
+(use-package yaml-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.yml\\'"
+  :mode "\\.yaml\\'")
 #+end_src
 
 *** General Programming Languages
@@ -4215,47 +4238,47 @@ each one of them went their own way and learning C won’t make you a
 good C++ programmer, neither will the other way around. But, They are
 still somewhat related, and Emacs thinks so too.
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    :straight (:type built-in)
-    :defer t
-    :init
-    (put 'c-c++-backend 'safe-local-variable 'symbolp)
-    :config
-    (progn
-      (require 'compile)
-      (general-define-key
-       :keymaps '(c-mode-map c++-mode-map)
-       "," nil
-       ";" nil)
-      (general-define-key
-       :states 'normal
-       :keymaps '(c-mode-map c++-mode-map)
-       :prefix ","
-       "l"  '(:keymap lsp-command-map :which-key "lsp" :package lsp-mode))
-      (general-define-key
-       :states 'normal
-       :keymaps '(c-mode-map c++-mode-map)
-       "ga" #'projectile-find-other-file
-       "gA" #'projectile-find-other-file-other-window)))
+(use-package cc-mode
+  :straight (:type built-in)
+  :defer t
+  :init
+  (put 'c-c++-backend 'safe-local-variable 'symbolp)
+  :config
+  (progn
+    (require 'compile)
+    (general-define-key
+     :keymaps '(c-mode-map c++-mode-map)
+     "," nil
+     ";" nil)
+    (general-define-key
+     :states 'normal
+     :keymaps '(c-mode-map c++-mode-map)
+     :prefix ","
+     "l"  '(:keymap lsp-command-map :which-key "lsp" :package lsp-mode))
+    (general-define-key
+     :states 'normal
+     :keymaps '(c-mode-map c++-mode-map)
+     "ga" #'projectile-find-other-file
+     "gA" #'projectile-find-other-file-other-window)))
 #+end_src
 
 Something that is also important when working with these languages is
 respecting the ~.clang-format~ file that may be provided by a project.
 #+begin_src emacs-lisp
-  (use-package clang-format+
-    :straight (:build t)
-    :defer t
-    :init
-    (add-hook 'c-mode-common-hook #'clang-format+-mode))
+(use-package clang-format+
+  :straight (:build t)
+  :defer t
+  :init
+  (add-hook 'c-mode-common-hook #'clang-format+-mode))
 #+end_src
 
 However, Emacs’ notion of C++ is somewhat outdated, so we need to
 update its fontlock.
 #+begin_src emacs-lisp
-  (use-package modern-cpp-font-lock
-    :straight (:build t)
-    :defer t
-    :hook (c++-mode . modern-c++-font-lock-mode))
+(use-package modern-cpp-font-lock
+  :straight (:build t)
+  :defer t
+  :hook (c++-mode . modern-c++-font-lock-mode))
 #+end_src
 
 **** CommonLisp
@@ -4263,23 +4286,23 @@ update its fontlock.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-CommonLisp-gc2a7s31q5j0
 :END:
 #+begin_src emacs-lisp
-  (add-hook 'lisp-mode-hook #'parinfer-rust-mode)
-  (add-hook 'lisp-mode-hook (lambda () (smartparens-mode -1)))
+(add-hook 'lisp-mode-hook #'parinfer-rust-mode)
+(add-hook 'lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package stumpwm-mode
-    :straight (:build t)
-    :defer t
-    :config
-    (general-define-key
-     :keymaps 'stumpwm-mode-map
-     :states 'normal
-     :prefix ","
-     "e"  '(:ignore :which-key "eval")
-     "ee" #'stumpwm-eval-last-sexp
-     "ed" #'stumpwm-eval-defun
-     "er" #'stumpwm-eval-region))
+(use-package stumpwm-mode
+  :straight (:build t)
+  :defer t
+  :config
+  (general-define-key
+   :keymaps 'stumpwm-mode-map
+   :states 'normal
+   :prefix ","
+   "e"  '(:ignore :which-key "eval")
+   "ee" #'stumpwm-eval-last-sexp
+   "ed" #'stumpwm-eval-defun
+   "er" #'stumpwm-eval-region))
 #+end_src
 
 **** Dart
@@ -4287,16 +4310,16 @@ update its fontlock.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Dart-xkr3z8j0m6j0
 :END:
 #+begin_src emacs-lisp
-  (use-package dart-mode
-    :straight (:build t)
-    :defer t
-    :mode "\\.dart\\'")
+(use-package dart-mode
+  :straight (:build t)
+  :defer t
+  :mode "\\.dart\\'")
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package lsp-dart
-    :straight (:build t)
-    :defer t)
+(use-package lsp-dart
+  :straight (:build t)
+  :defer t)
 #+end_src
 
 **** EmacsLisp
@@ -4306,45 +4329,45 @@ update its fontlock.
 This package displays the function’s arglist or variable’s docstring
 in the echo area at the bottom of the frame. Quite useful indeed.
 #+begin_src emacs-lisp
-  (use-package eldoc
-    :defer t
-    :after company
-    :init
-    (eldoc-add-command 'company-complete-selection
-                       'company-complete-common
-                       'company-capf
-                       'company-abort))
+(use-package eldoc
+  :defer t
+  :after company
+  :init
+  (eldoc-add-command 'company-complete-selection
+                     'company-complete-common
+                     'company-capf
+                     'company-abort))
 #+end_src
 
 #+begin_src emacs-lisp
-  (add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1)))
+(add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
 Let’s also declare some Elisp-dedicated keybindings, prefixed by a
 comma.
 #+begin_src emacs-lisp
-  (general-define-key
-   :states 'motion
-   :keymaps 'emacs-lisp-mode-map
-   :prefix ","
+(general-define-key
+ :states 'motion
+ :keymaps 'emacs-lisp-mode-map
+ :prefix ","
 
-   "'"   #'ielm
-   "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
+ "'"   #'ielm
+ "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
 
-   "e"   '(nil :which-key "eval")
-   "eb"  #'eval-buffer
-   "ed"  #'eval-defun
-   "ee"  #'eval-last-sexp
-   "er"  #'eval-region
+ "e"   '(nil :which-key "eval")
+ "eb"  #'eval-buffer
+ "ed"  #'eval-defun
+ "ee"  #'eval-last-sexp
+ "er"  #'eval-region
 
-   "h"   '(nil :which-key "help")
-   "hh"  #'helpful-at-point
+ "h"   '(nil :which-key "help")
+ "hh"  #'helpful-at-point
 
-   "t"   '(nil :wk "toggle")
-   "tP"  '(nil :wk "parinfer")
-   "tPs" #'parinfer-rust-switch-mode
-   "tPd" #'parinfer-rust-mode-disable
-   "tPp" #'parinfer-rust-toggle-paren-mode)
+ "t"   '(nil :wk "toggle")
+ "tP"  '(nil :wk "parinfer")
+ "tPs" #'parinfer-rust-switch-mode
+ "tPd" #'parinfer-rust-mode-disable
+ "tPp" #'parinfer-rust-toggle-paren-mode)
 #+end_src
 
 **** Lua
@@ -4352,40 +4375,39 @@ comma.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Lua-p2odc7p0t4j0
 :END:
 #+begin_src emacs-lisp
-  (use-package lua-mode
-    :defer t
-    :straight (:build t)
-    :mode "\\.lua$"
-    :interpreter "lua"
-    :init
-    (setq lua-indent-level           2
-          lua-indent-string-contents t))
-    ;; (general-define-key
-    ;;  :keymaps lua-mode-map
-    ;;  :states 'normal
-    ;;  :prefix ","
-    ;;  "'"  #'lua-show-process-buffer
-    ;;  "h"  '(:ignore :wk "help")
-    ;;  "hd" #'lua-search-documentation
-    ;;  "s"  '(:ignore :wk "REPL")
-    ;;  "sb" #'lua-send-buffer
-    ;;  "sf" #'lua-send-defun
-    ;;  "sl" #'lua-send-current-line
-    ;;  "sr" #'lua-send-region))
+(use-package lua-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.lua$"
+  :interpreter "lua"
+  :init
+  (setq lua-indent-level           2
+        lua-indent-string-contents t))
+  ;; (general-define-key
+  ;;  :keymaps lua-mode-map
+  ;;  :states 'normal
+  ;;  :prefix ","
+  ;;  "'"  #'lua-show-process-buffer
+  ;;  "h"  '(:ignore :wk "help")
+  ;;  "hd" #'lua-search-documentation
+  ;;  "s"  '(:ignore :wk "REPL")
+  ;;  "sb" #'lua-send-buffer
+  ;;  "sf" #'lua-send-defun
+  ;;  "sl" #'lua-send-current-line
+  ;;  "sr" #'lua-send-region))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package lsp-lua-emmy
-    :defer t
-    :after (lua-mode lsp-mode)
-    :straight (lsp-lua-emmy :build t
-                            :type git
-                            :host github
-                            :repo "EmmyLua/EmmyLua-LanguageServer")
-    :hook (lua-mode . lsp-deferred)
-    :config
-    (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
-
+(use-package lsp-lua-emmy
+  :defer t
+  :after (lua-mode lsp-mode)
+  :straight (lsp-lua-emmy :build t
+                          :type git
+                          :host github
+                          :repo "EmmyLua/EmmyLua-LanguageServer")
+  :hook (lua-mode . lsp-deferred)
+  :config
+  (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
 #+end_src
 
 **** Python
@@ -4393,224 +4415,224 @@ comma.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Python-7mwd2yq0z6j0
 :END:
 #+begin_src emacs-lisp
-  (use-package python
-    :defer t
-    :straight (:build t)
-    :mode (("SConstruct\\'" . python-mode)
-           ("SConscript\\'" . python-mode)
-           ("[./]flake8\\'" . conf-mode)
-           ("/Pipfile\\'"   . conf-mode))
-    :init
-    (setq python-indent-guess-indent-offset-verbose nil)
-    (add-hook 'python-mode-local-vars-hook #'lsp)
-    :config
-    (setq python-indent-guess-indent-offset-verbose nil)
-    (when (and (executable-find "python3")
-               (string= python-shell-interpreter "python"))
-      (setq python-shell-interpreter "python3")))
+(use-package python
+  :defer t
+  :straight (:build t)
+  :mode (("SConstruct\\'" . python-mode)
+         ("SConscript\\'" . python-mode)
+         ("[./]flake8\\'" . conf-mode)
+         ("/Pipfile\\'"   . conf-mode))
+  :init
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (add-hook 'python-mode-local-vars-hook #'lsp)
+  :config
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (when (and (executable-find "python3")
+             (string= python-shell-interpreter "python"))
+    (setq python-shell-interpreter "python3")))
 #+end_src
 
 #+begin_src emacs-lisp
-  (after! org
-    (add-to-list 'org-babel-load-languages '(python . t)))
+(after! org
+  (add-to-list 'org-babel-load-languages '(python . t)))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pytest
-    :defer t
-    :straight (:build t)
-    :commands (pytest-one
-               pytest-pdb-one
-               pytest-all
-               pytest-pdb-all
-               pytest-last-failed
-               pytest-pdb-last-failed
-               pytest-module
-               pytest-pdb-module)
-    :config
-    (add-to-list 'pytest-project-root-files "setup.cfg")
-    (general-define-key
-     :states 'normal
-     :prefix ","
-     :keymaps 'python-mode-map
-     "t"  '(:ignore :which-key "test")
-     "ta" #'python-pytest
-     "tf" #'python-pytest-file-dwim
-     "tF" #'python-pytest-file
-     "tt" #'python-pytest-function-dwim
-     "tT" #'python-pytest-function
-     "tr" #'python-pytest-repeat
-     "tp" #'python-pytest-dispatch))
+(use-package pytest
+  :defer t
+  :straight (:build t)
+  :commands (pytest-one
+             pytest-pdb-one
+             pytest-all
+             pytest-pdb-all
+             pytest-last-failed
+             pytest-pdb-last-failed
+             pytest-module
+             pytest-pdb-module)
+  :config
+  (add-to-list 'pytest-project-root-files "setup.cfg")
+  (general-define-key
+   :states 'normal
+   :prefix ","
+   :keymaps 'python-mode-map
+   "t"  '(:ignore :which-key "test")
+   "ta" #'python-pytest
+   "tf" #'python-pytest-file-dwim
+   "tF" #'python-pytest-file
+   "tt" #'python-pytest-function-dwim
+   "tT" #'python-pytest-function
+   "tr" #'python-pytest-repeat
+   "tp" #'python-pytest-dispatch))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package poetry
-    :defer t
-    :straight (:build t)
-    :commands (poetry-venv-toggle
-               poetry-tracking-mode)
-    :config
-    (setq poetry-tracking-strategy 'switch-buffer)
-    (add-hook 'python-mode-hook #'poetry-tracking-mode))
+(use-package poetry
+  :defer t
+  :straight (:build t)
+  :commands (poetry-venv-toggle
+             poetry-tracking-mode)
+  :config
+  (setq poetry-tracking-strategy 'switch-buffer)
+  (add-hook 'python-mode-hook #'poetry-tracking-mode))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pip-requirements
-    :defer t
-    :straight (:build t))
+(use-package pip-requirements
+  :defer t
+  :straight (:build t))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pipenv
-    :defer t
-    :straight (:build t)
-    :commands (pipenv-activate
-               pipenv-deactivate
-               pipenv-shell
-               pipenv-open
-               pipenv-install
-               pipenv-uninstall)
-    :hook (python-mode . pipenv-mode)
-    :init (setq pipenv-with-projectile nil)
-    :config
-    (general-define-key
-     :states 'normal
-     :prefix ","
-     :keymaps 'python-mode-map
-     "e"  '(:ignore :which-key "pipenv")
-     "ea" #'pipenv-activate
-     "ed" #'pipenv-deactivate
-     "ei" #'pipenv-install
-     "el" #'pipenv-lock
-     "eo" #'pipenv-open
-     "er" #'pipenv-run
-     "es" #'pipenv-shell
-     "eu" #'pipenv-uninstall))
+(use-package pipenv
+  :defer t
+  :straight (:build t)
+  :commands (pipenv-activate
+             pipenv-deactivate
+             pipenv-shell
+             pipenv-open
+             pipenv-install
+             pipenv-uninstall)
+  :hook (python-mode . pipenv-mode)
+  :init (setq pipenv-with-projectile nil)
+  :config
+  (general-define-key
+   :states 'normal
+   :prefix ","
+   :keymaps 'python-mode-map
+   "e"  '(:ignore :which-key "pipenv")
+   "ea" #'pipenv-activate
+   "ed" #'pipenv-deactivate
+   "ei" #'pipenv-install
+   "el" #'pipenv-lock
+   "eo" #'pipenv-open
+   "er" #'pipenv-run
+   "es" #'pipenv-shell
+   "eu" #'pipenv-uninstall))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pyenv
-    :defer t
-    :straight (:build t)
-    :config
-    (add-hook 'python-mode-hook #'pyenv-track-virtualenv)
-    (add-to-list 'global-mode-string
-                 '(pyenv-virtual-env-name (" venv:" pyenv-virtual-env-name " "))
-                 'append))
+(use-package pyenv
+  :defer t
+  :straight (:build t)
+  :config
+  (add-hook 'python-mode-hook #'pyenv-track-virtualenv)
+  (add-to-list 'global-mode-string
+               '(pyenv-virtual-env-name (" venv:" pyenv-virtual-env-name " "))
+               'append))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pyenv-mode
-    :defer t
-    :after python
-    :straight (:build t)
-    :if (executable-find "pyenv")
-    :commands (pyenv-mode-versions)
-    :config
-    (general-define-key
-     :states 'normal
-     :keymaps 'python-mode-map
-     :prefix ","
-     "vu" #'pyenv-mode-unset
-     "vs" #'pyenv-mode-set))
+(use-package pyenv-mode
+  :defer t
+  :after python
+  :straight (:build t)
+  :if (executable-find "pyenv")
+  :commands (pyenv-mode-versions)
+  :config
+  (general-define-key
+   :states 'normal
+   :keymaps 'python-mode-map
+   :prefix ","
+   "vu" #'pyenv-mode-unset
+   "vs" #'pyenv-mode-set))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pippel
-    :defer t
-    :straight (:build t)
-    :init
-    (general-define-key
-     :states 'normal
-     :keymaps 'python-mode-map
-     :prefix ","
-     "P" #'pippel-list-packages))
+(use-package pippel
+  :defer t
+  :straight (:build t)
+  :init
+  (general-define-key
+   :states 'normal
+   :keymaps 'python-mode-map
+   :prefix ","
+   "P" #'pippel-list-packages))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package pyimport
-    :defer t
-    :straight (:build t)
-    :config
-    (general-define-key
-     :states 'normal
-     :prefix ","
-     :keymaps 'python-mode-map
-     "i"  '(:ignore :which-key "imports")
-     "ii" #'pyimport-insert-missing
-     "ir" #'pyimport-remove-unused))
+(use-package pyimport
+  :defer t
+  :straight (:build t)
+  :config
+  (general-define-key
+   :states 'normal
+   :prefix ","
+   :keymaps 'python-mode-map
+   "i"  '(:ignore :which-key "imports")
+   "ii" #'pyimport-insert-missing
+   "ir" #'pyimport-remove-unused))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package py-isort
-    :defer t
-    :straight (:build t)
-    :config
-    (general-define-key
-     :prefix ","
-     :states 'normal
-     :keymaps 'python-mode-map
-     "i"  '(:ignore :which-key "imports")
-     "is" #'py-isort-buffer
-     "iR" #'py-isort-region))
+(use-package py-isort
+  :defer t
+  :straight (:build t)
+  :config
+  (general-define-key
+   :prefix ","
+   :states 'normal
+   :keymaps 'python-mode-map
+   "i"  '(:ignore :which-key "imports")
+   "is" #'py-isort-buffer
+   "iR" #'py-isort-region))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package counsel-pydoc
-    :defer t
-    :straight (:build t))
+(use-package counsel-pydoc
+  :defer t
+  :straight (:build t))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package sphinx-doc
-    :defer t
-    :straight (:build t)
-    :init
-    (add-hook 'python-mode-hook #'sphinx-doc-mode)
-    (general-define-key
-     :states 'normal
-     :keymaps 'python-mode-map
-     :prefix ","
-     "S"  '(:ignore :which-key "sphinx-doc")
-     "Se" #'sphinx-doc-mode
-     "Sd" #'sphinx-doc))
+(use-package sphinx-doc
+  :defer t
+  :straight (:build t)
+  :init
+  (add-hook 'python-mode-hook #'sphinx-doc-mode)
+  (general-define-key
+   :states 'normal
+   :keymaps 'python-mode-map
+   :prefix ","
+   "S"  '(:ignore :which-key "sphinx-doc")
+   "Se" #'sphinx-doc-mode
+   "Sd" #'sphinx-doc))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package cython-mode
-    :defer t
-    :straight (:build t)
-    :mode "\\.p\\(yx\\|x[di]\\)\\'"
-    :config
-    (setq cython-default-compile-format "cython -a %s")
-    (general-define-key
-     :prefix ","
-     :states 'normal
-     :keymaps 'cython-mode-map
-     "c"  '(:ignore :which-key "cython")
-     "cc" #'cython-compile))
+(use-package cython-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.p\\(yx\\|x[di]\\)\\'"
+  :config
+  (setq cython-default-compile-format "cython -a %s")
+  (general-define-key
+   :prefix ","
+   :states 'normal
+   :keymaps 'cython-mode-map
+   "c"  '(:ignore :which-key "cython")
+   "cc" #'cython-compile))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package flycheck-cython
-    :defer t
-    :straight (:build t)
-    :after cython-mode)
+(use-package flycheck-cython
+  :defer t
+  :straight (:build t)
+  :after cython-mode)
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package blacken
-    :defer t
-    :straight (:build t)
-    :init
-    (add-hook 'python-mode-hook #'blacken-mode))
+(use-package blacken
+  :defer t
+  :straight (:build t)
+  :init
+  (add-hook 'python-mode-hook #'blacken-mode))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package lsp-pyright
-    :after lsp-mode
-    :defer t
-    :straight (:buidl t))
+(use-package lsp-pyright
+  :after lsp-mode
+  :defer t
+  :straight (:buidl t))
 #+end_src
 
 **** Rust
@@ -4622,49 +4644,49 @@ much more oriented towards safe code, and much better suited for web
 development. First, let’s install the most important package,
 ~rustic~.
 #+begin_src emacs-lisp
-  (use-package rustic
-    :defer t
-    :straight (:build t)
-    :mode ("\\.rs$" . rustic-mode)
-    :init
-    (after! org-src
-      (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
-      (add-to-list 'org-src-lang-modes '("rust" . rustic)))
-    :general
-    (:keymaps 'rustic-mode-map
-              "M-t" #'lsp-ui-imenu
-              "M-?" #'lsp-find-references)
-    (:keymaps 'rustic-mode-map
-     :states 'normal
-     :prefix ","
-     "b"  '(:ignore :which-key "build")
-     "bb" #'rustic-cargo-build
-     "bB" #'rustic-cargo-bench
-     "bc" #'rustic-cargo-check
-     "bC" #'rustic-cargo-clippy
-     "bd" #'rustic-cargo-doc
-     "bf" #'rustic-cargo-fmt
-     "bn" #'rustic-cargo-new
-     "bo" #'rustic-cargo-outdated
-     "br" #'rustic-cargo-run
-     "l"  '(:ignore :which-key "lsp")
-     "la" #'lsp-execute-code-action
-     "lr" #'lsp-rename
-     "lq" #'lsp-workspace-restart
-     "lQ" #'lsp-workspace-shutdown
-     "ls" #'lsp-rust-analyzer-status
-     "t"  '(:ignore :which-key "cargo test")
-     "ta" #'rustic-cargo-test
-     "tt" #'rustic-cargo-current-test)
-    :config
-    (setq rustic-indent-method-chain    t
-          rustic-babel-format-src-block nil
-          rustic-format-trigger         nil)
-    (remove-hook 'rustic-mode-hook #'flycheck-mode)
-    (remove-hook 'rustic-mode-hook #'flymake-mode-off)
-    (remove-hook 'rustic-mode-hook #'rustic-setup-lsp)
-    (add-hook 'rustic-mode-local-vars-hook #'rustic-setup-lsp)
-    (setq rustic-lsp-client 'lsp-mode))
+(use-package rustic
+  :defer t
+  :straight (:build t)
+  :mode ("\\.rs$" . rustic-mode)
+  :init
+  (after! org-src
+    (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
+    (add-to-list 'org-src-lang-modes '("rust" . rustic)))
+  :general
+  (:keymaps 'rustic-mode-map
+            "M-t" #'lsp-ui-imenu
+            "M-?" #'lsp-find-references)
+  (:keymaps 'rustic-mode-map
+   :states 'normal
+   :prefix ","
+   "b"  '(:ignore :which-key "build")
+   "bb" #'rustic-cargo-build
+   "bB" #'rustic-cargo-bench
+   "bc" #'rustic-cargo-check
+   "bC" #'rustic-cargo-clippy
+   "bd" #'rustic-cargo-doc
+   "bf" #'rustic-cargo-fmt
+   "bn" #'rustic-cargo-new
+   "bo" #'rustic-cargo-outdated
+   "br" #'rustic-cargo-run
+   "l"  '(:ignore :which-key "lsp")
+   "la" #'lsp-execute-code-action
+   "lr" #'lsp-rename
+   "lq" #'lsp-workspace-restart
+   "lQ" #'lsp-workspace-shutdown
+   "ls" #'lsp-rust-analyzer-status
+   "t"  '(:ignore :which-key "cargo test")
+   "ta" #'rustic-cargo-test
+   "tt" #'rustic-cargo-current-test)
+  :config
+  (setq rustic-indent-method-chain    t
+        rustic-babel-format-src-block nil
+        rustic-format-trigger         nil)
+  (remove-hook 'rustic-mode-hook #'flycheck-mode)
+  (remove-hook 'rustic-mode-hook #'flymake-mode-off)
+  (remove-hook 'rustic-mode-hook #'rustic-setup-lsp)
+  (add-hook 'rustic-mode-local-vars-hook #'rustic-setup-lsp)
+  (setq rustic-lsp-client 'lsp-mode))
 #+end_src
 
 **** Web programming
@@ -4672,84 +4694,84 @@ development. First, let’s install the most important package,
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-7ca40po085j0
 :END:
 #+begin_src emacs-lisp
-  (use-package company-web
-    :defer t
-    :straight (:build t))
+(use-package company-web
+  :defer t
+  :straight (:build t))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package emmet-mode
-    :straight (:build t)
-    :defer t
-    :hook ((css-mode  . emmet-mode)
-           (html-mode . emmet-mode)
-           (web-mode  . emmet-mode)
-           (sass-mode . emmet-mode)
-           (scss-mode . emmet-mode)
-           (web-mode  . emmet-mode))
-    :config
-    (general-define-key
-     :keymaps 'emmet-mode-keymap
-     "C-RET" #'emmet-expand-yas))
+(use-package emmet-mode
+  :straight (:build t)
+  :defer t
+  :hook ((css-mode  . emmet-mode)
+         (html-mode . emmet-mode)
+         (web-mode  . emmet-mode)
+         (sass-mode . emmet-mode)
+         (scss-mode . emmet-mode)
+         (web-mode  . emmet-mode))
+  :config
+  (general-define-key
+   :keymaps 'emmet-mode-keymap
+   "C-RET" #'emmet-expand-yas))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package impatient-mode
-    :straight (:build t)
-    :defer t)
+(use-package impatient-mode
+  :straight (:build t)
+  :defer t)
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package slim-mode
-    :defer t
-    :straight (:build t))
+(use-package slim-mode
+  :defer t
+  :straight (:build t))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package web-mode
-    :defer t
-    :straight (:build t)
-    :hook ((html-mode . web-mode))
-    :mode (("\\.phtml\\'"      . web-mode)
-           ("\\.tpl\\.php\\'"  . web-mode)
-           ("\\.twig\\'"       . web-mode)
-           ("\\.xml\\'"        . web-mode)
-           ("\\.html\\'"       . web-mode)
-           ("\\.htm\\'"        . web-mode)
-           ("\\.[gj]sp\\'"     . web-mode)
-           ("\\.as[cp]x?\\'"   . web-mode)
-           ("\\.eex\\'"        . web-mode)
-           ("\\.erb\\'"        . web-mode)
-           ("\\.mustache\\'"   . web-mode)
-           ("\\.handlebars\\'" . web-mode)
-           ("\\.hbs\\'"        . web-mode)
-           ("\\.eco\\'"        . web-mode)
-           ("\\.ejs\\'"        . web-mode)
-           ("\\.svelte\\'"     . web-mode)
-           ("\\.ctp\\'"        . web-mode)
-           ("\\.djhtml\\'"     . web-mode))
-    :config
-    (general-define-key
-     :states 'normal
-     :prefix ","
-     :keymaps 'web-mode-map
-     "="  '(nil :which-key "format")
-     "E"  '(nil :which-key "errors")
-     "El" #'web-mode-dom-errors-show
-     "gb" #'web-mode-element-beginning
-     "g"  '(nil :which-key "goto")
-     "gc" #'web-mode-element-child
-     "gp" #'web-mode-element-parent
-     "gs" #'web-mode-element-sibling-next
-     "h"  '(nil :which-key "dom")
-     "hp" #'web-mode-dom-xpath
-     "r"  '(nil :which-key "refactor")
-     "rc" #'web-mode-element-clone
-     "rd" #'web-mode-element-vanish
-     "rk" #'web-mode-element-kill
-     "rr" #'web-mode-element-rename
-     "rw" #'web-mode-element-wrap
-     "z"  #'web-mode-fold-or-unfold))
+(use-package web-mode
+  :defer t
+  :straight (:build t)
+  :hook ((html-mode . web-mode))
+  :mode (("\\.phtml\\'"      . web-mode)
+         ("\\.tpl\\.php\\'"  . web-mode)
+         ("\\.twig\\'"       . web-mode)
+         ("\\.xml\\'"        . web-mode)
+         ("\\.html\\'"       . web-mode)
+         ("\\.htm\\'"        . web-mode)
+         ("\\.[gj]sp\\'"     . web-mode)
+         ("\\.as[cp]x?\\'"   . web-mode)
+         ("\\.eex\\'"        . web-mode)
+         ("\\.erb\\'"        . web-mode)
+         ("\\.mustache\\'"   . web-mode)
+         ("\\.handlebars\\'" . web-mode)
+         ("\\.hbs\\'"        . web-mode)
+         ("\\.eco\\'"        . web-mode)
+         ("\\.ejs\\'"        . web-mode)
+         ("\\.svelte\\'"     . web-mode)
+         ("\\.ctp\\'"        . web-mode)
+         ("\\.djhtml\\'"     . web-mode))
+  :config
+  (general-define-key
+   :states 'normal
+   :prefix ","
+   :keymaps 'web-mode-map
+   "="  '(nil :which-key "format")
+   "E"  '(nil :which-key "errors")
+   "El" #'web-mode-dom-errors-show
+   "gb" #'web-mode-element-beginning
+   "g"  '(nil :which-key "goto")
+   "gc" #'web-mode-element-child
+   "gp" #'web-mode-element-parent
+   "gs" #'web-mode-element-sibling-next
+   "h"  '(nil :which-key "dom")
+   "hp" #'web-mode-dom-xpath
+   "r"  '(nil :which-key "refactor")
+   "rc" #'web-mode-element-clone
+   "rd" #'web-mode-element-vanish
+   "rk" #'web-mode-element-kill
+   "rr" #'web-mode-element-rename
+   "rw" #'web-mode-element-wrap
+   "z"  #'web-mode-fold-or-unfold))
 #+end_src
 
 ***** Javascript
@@ -4757,9 +4779,9 @@ development. First, let’s install the most important package,
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Javascript-8k5arup085j0
 :END:
 #+begin_src emacs-lisp
-  (use-package prettier-js
-    :defer t
-    :straight (:build t))
+(use-package prettier-js
+  :defer t
+  :straight (:build t))
 #+end_src
 
 ***** CSS
@@ -4767,38 +4789,38 @@ development. First, let’s install the most important package,
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-CSS-que40po085j0
 :END:
 #+begin_src emacs-lisp
-  (add-hook 'css-mode-hook #'smartparens-mode)
-  (put 'css-indent-offset 'safe-local-variable #'integerp)
-  (after! css-mode
-    (general-define-key
-     :keymaps '(css-mode-map)
-     :states 'normal
-     :prefix ","
-     "=" '(:ignore :wk "format")
-     "g" '(:ignore :wk "goto")))
+(add-hook 'css-mode-hook #'smartparens-mode)
+(put 'css-indent-offset 'safe-local-variable #'integerp)
+(after! css-mode
+  (general-define-key
+   :keymaps '(css-mode-map)
+   :states 'normal
+   :prefix ","
+   "=" '(:ignore :wk "format")
+   "g" '(:ignore :wk "goto")))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package scss-mode
-    :straight (:build t)
-    :hook (scss-mode . smartparens-mode)
-    :defer t
-    :mode "\\.scss\\'")
+(use-package scss-mode
+  :straight (:build t)
+  :hook (scss-mode . smartparens-mode)
+  :defer t
+  :mode "\\.scss\\'")
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package counsel-css
-    :straight (:build t)
-    :defer t
-    :init
-    (cl-loop for (mode-map . mode-hook) in '((css-mode-map  . css-mode-hook)
-                                             (scss-mode-map . scss-mode-hook))
-             do (add-hook mode-hook #'counsel-css-imenu-setup)
-             (general-define-key
-              :keymaps mode-map
-              :states 'normal
-              :prefix ","
-              "gh" #'counsel-css)))
+(use-package counsel-css
+  :straight (:build t)
+  :defer t
+  :init
+  (cl-loop for (mode-map . mode-hook) in '((css-mode-map  . css-mode-hook)
+                                           (scss-mode-map . scss-mode-hook))
+           do (add-hook mode-hook #'counsel-css-imenu-setup)
+           (general-define-key
+            :keymaps mode-map
+            :states 'normal
+            :prefix ","
+            "gh" #'counsel-css)))
 #+end_src
 
 ** Visual Configuration
@@ -4810,51 +4832,51 @@ development. First, let’s install the most important package,
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Dashboardnba6fl6184j0
 :END:
 #+begin_src emacs-lisp
-  (use-package dashboard
-    :straight (:build t)
-    :ensure t
-    :after all-the-icons
-    :config
-    (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
-          dashboard-startup-banner    'logo
-          dashboard-center-content    t
-          dashboard-show-shortcuts    t
-          dashboard-set-navigator     t
-          dashboard-set-heading-icons t
-          dashboard-set-file-icons    t
-          initial-buffer-choice       (lambda () (get-buffer "*dashboard*"))
-          dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
-    (setq dashboard-navigator-buttons
-          `(((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
-              "Linguistics Website"
-              ""
-              (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
+(use-package dashboard
+  :straight (:build t)
+  :ensure t
+  :after all-the-icons
+  :config
+  (setq dashboard-banner-logo-title "Phundrak’s Vanilla Emacs"
+        dashboard-startup-banner    'logo
+        dashboard-center-content    t
+        dashboard-show-shortcuts    t
+        dashboard-set-navigator     t
+        dashboard-set-heading-icons t
+        dashboard-set-file-icons    t
+        initial-buffer-choice       (lambda () (get-buffer "*dashboard*"))
+        dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  (setq dashboard-navigator-buttons
+        `(((,(all-the-icons-faicon "language" :height 1.1 :v-adjust 0.0)
+            "Linguistics Website"
+            ""
+            (lambda (&rest _) (browse-url "https://langue.phundrak.com")))
 
-             (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
-              "Config Website"
-              ""
-              (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
+           (,(all-the-icons-faicon "firefox" :height 1.1 :v-adjust 0.0)
+            "Config Website"
+            ""
+            (lambda (&rest _) (browse-url "https://config.phundrak.com"))))
 
-            ((,(all-the-icons-octicon "git-branch" :height 1.1 :v-adjust 0.0)
-              "Dotfiles Sources"
-              ""
-              (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
-             ("!" "Issues" "Show issues" (lambda (&rest _)
-                                           (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
-              warning))
-            ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
-              "Update Packages"
-              ""
-              (lambda (&rest _) (progn
-                                  (require 'straight)
-                                  (straight-pull-all)
-                                  (straight-rebuild-all)))))))
+          ((,(all-the-icons-octicon "git-branch" :height 1.1 :v-adjust 0.0)
+            "Dotfiles Sources"
+            ""
+            (lambda (&rest _) (browse-url "https://labs.phundrak.com/phundrak/dotfiles")))
+           ("!" "Issues" "Show issues" (lambda (&rest _)
+                                         (browse-url "https://labs.phundrak.com/phundrak/dotfiles/issues"))
+            warning))
+          ((,(all-the-icons-faicon "level-up" :height 1.1 :v-adjust 0.0)
+            "Update Packages"
+            ""
+            (lambda (&rest _) (progn
+                                (require 'straight)
+                                (straight-pull-all)
+                                (straight-rebuild-all)))))))
 
-    (setq dashboard-items '((recents  . 15)
-                            (projects . 10)))
-    (dashboard-setup-startup-hook)
-    :init
-    (add-hook 'after-init-hook 'dashboard-refresh-buffer))
+  (setq dashboard-items '((recents  . 15)
+                          (projects . 10)))
+  (dashboard-setup-startup-hook)
+  :init
+  (add-hook 'after-init-hook 'dashboard-refresh-buffer))
 #+end_src
 
 *** Fringe
@@ -4864,12 +4886,12 @@ development. First, let’s install the most important package,
 It’s nice to know which lines were modified since the last commit in a
 file.
 #+begin_src emacs-lisp
-  (use-package git-gutter-fringe
-    :straight (:build t)
-    :hook ((prog-mode     . git-gutter-mode)
-           (org-mode      . git-gutter-mode)
-           (markdown-mode . git-gutter-mode)
-           (latex-mode    . git-gutter-mode)))
+(use-package git-gutter-fringe
+  :straight (:build t)
+  :hook ((prog-mode     . git-gutter-mode)
+         (org-mode      . git-gutter-mode)
+         (markdown-mode . git-gutter-mode)
+         (latex-mode    . git-gutter-mode)))
 #+end_src
 
 *** Modeline
@@ -4877,11 +4899,11 @@ file.
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
 :END:
 #+begin_src emacs-lisp
-  (use-package doom-modeline
-    :straight (:build t)
-    :defer t
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
+(use-package doom-modeline
+  :straight (:build t)
+  :defer t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
 #+end_src
 
 *** Theme
@@ -4889,10 +4911,10 @@ file.
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
 :END:
 #+begin_src emacs-lisp
-  (use-package doom-themes
-    :straight (:build t)
-    :defer t
-    :init (load-theme 'doom-nord t))
+(use-package doom-themes
+  :straight (:build t)
+  :defer t
+  :init (load-theme 'doom-nord t))
 #+end_src
 
 *** Icons? Did someone say icons?
@@ -4910,22 +4932,22 @@ configuration with ~all-the-icons~ is loaded on a machine, the needed
 fonts might not be available, so you’ll need to install them with the
 command ~M-x all-the-icons-install-fonts~.
 #+begin_src emacs-lisp
-  (use-package all-the-icons
-    :defer t)
+(use-package all-the-icons
+  :defer t)
 #+end_src
 
 ~prettify-symbols-mode~ is also a nifty feature of Emacs, and it is
 built-in! With that, I can replace strings of my choice by another
 character of my choice!
 #+begin_src emacs-lisp
-  (dolist (symbol '(("lambda" . 955)
-                    ("mapc" . 8614)))
-    (add-to-list 'prettify-symbols-alist symbol))
+(dolist (symbol '(("lambda" . 955)
+                  ("mapc" . 8614)))
+  (add-to-list 'prettify-symbols-alist symbol))
 #+end_src
 
 Let’s enable this mode for any programming mode:
 #+begin_src emacs-lisp
-  (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+(add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 #+end_src
 
 *** Rainbow Delimiters
@@ -4933,10 +4955,10 @@ Let’s enable this mode for any programming mode:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Rainbow-Delimiters3lg6fl6184j0
 :END:
 #+begin_src emacs-lisp
-  (use-package rainbow-delimiters
-    :straight (:build t)
-    :defer t
-    :hook (prog-mode . rainbow-delimiters-mode))
+(use-package rainbow-delimiters
+  :straight (:build t)
+  :defer t
+  :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
 *** Y’all want some more /COLORS/?
@@ -4946,11 +4968,11 @@ Let’s enable this mode for any programming mode:
 It is possible to make info buffers much more colorful (and imo easier
 to read) with this simple package:
 #+begin_src emacs-lisp
-  (use-package info-colors
-    :straight (:build t)
-    :commands info-colors-fnontify-node
-    :hook (Info-selection . info-colors-fontify-node)
-    :hook (Info-mode      . mixed-pitch-mode))
+(use-package info-colors
+  :straight (:build t)
+  :commands info-colors-fnontify-node
+  :hook (Info-selection . info-colors-fontify-node)
+  :hook (Info-mode      . mixed-pitch-mode))
 #+end_src
 
 ** Misc
@@ -4964,12 +4986,11 @@ to read) with this simple package:
 A small package I’ve written allows the user to view ArchLinux pages
 either in Emacs or in an external web browser. I prefer the defaults.
 #+begin_src emacs-lisp
-  (use-package archwiki
-    :defer t
-    :straight (archwiki :build t
-                        :type git
-                        :host nil
-                        :repo "https://labs.phundrak.com/phundrak/archwiki.el"))
+(use-package archwiki
+  :defer t
+  :straight (archwiki :build t
+                      :type git
+                      :repo "https://labs.phundrak.com/phundrak/archwiki.el"))
 #+end_src
 
 *** ~avy~
@@ -4979,13 +5000,13 @@ either in Emacs or in an external web browser. I prefer the defaults.
 ~avy~ is a really convenient way of jumping around, but I’ll need some
 configuration to make it bépo-compatible.
 #+begin_src emacs-lisp
-  (use-package avy
-    :defer t
-    :config
-    (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
-    :general
-    (:states 'normal
-     "gl" #'avy-goto-line))
+(use-package avy
+  :defer t
+  :config
+  (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
+  :general
+  (:states 'normal
+   "gl" #'avy-goto-line))
 #+end_src
 
 *** Calc
@@ -4994,8 +5015,8 @@ configuration to make it bépo-compatible.
 :END:
 Let’s give ~calc-mode~ some better defaults.
 #+begin_src emacs-lisp
-  (setq calc-angle-mode    'rad
-        calc-symbolic-mode t)
+(setq calc-angle-mode    'rad
+      calc-symbolic-mode t)
 #+end_src
 
 *** Elcord
@@ -5004,13 +5025,13 @@ Let’s give ~calc-mode~ some better defaults.
 :END:
 What’s the point of using Emacs if you can’t tell everyone?
 #+begin_src emacs-lisp
-  (use-package elcord
-    :straight (:built t)
-    :defer t
-    :config
-    (setq elcord-use-major-mode-as-main-icon t
-          elcord-refresh-rate                5
-          elcord-display-elapsed             nil))
+(use-package elcord
+  :straight (:built t)
+  :defer t
+  :config
+  (setq elcord-use-major-mode-as-main-icon t
+        elcord-refresh-rate                5
+        elcord-display-elapsed             nil))
 #+end_src
 
 *** ~ivy-quick-find-files.el~
@@ -5020,17 +5041,17 @@ What’s the point of using Emacs if you can’t tell everyone?
 This package is a small utility package I’ve written in order to
 quickly find files across my filesystem.
 #+begin_src emacs-lisp
-  (use-package ivy-quick-find-files
-    :defer t
-    :straight (ivy-quick-find-files :type git
-                                    :host github
-                                    :repo "phundrak/ivy-quick-find-files.el"
-                                    :build t)
-    :config
-    (setq ivy-quick-find-files-program 'fd
-          ivy-quick-find-files-dirs-and-exts '(("~/org"                  . "org")
-                                               ("~/Documents/conlanging" . "org")
-                                               ("~/Documents/university" . "org"))))
+(use-package ivy-quick-find-files
+  :defer t
+  :straight (ivy-quick-find-files :type git
+                                  :host github
+                                  :repo "phundrak/ivy-quick-find-files.el"
+                                  :build t)
+  :config
+  (setq ivy-quick-find-files-program 'fd
+        ivy-quick-find-files-dirs-and-exts '(("~/org"                  . "org")
+                                             ("~/Documents/conlanging" . "org")
+                                             ("~/Documents/university" . "org"))))
 #+end_src
 
 *** Keycast
@@ -5038,15 +5059,15 @@ quickly find files across my filesystem.
 :CUSTOM_ID: Packages-Configuration-Misc-Keycast-nsqgl431t4j0
 :END:
 #+begin_src emacs-lisp
-  (use-package keycast
-    :config
-    (define-minor-mode keycast-mode
-      "Show current command and its key binding in the mode line."
-      :global t
-      (if keycast-mode
-          (add-hook 'pre-command-hook 'keycast--update t)
-        (remove-hook 'pre-command-hook 'keycast--update)))
-    (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+(use-package keycast
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (add-hook 'pre-command-hook 'keycast--update t)
+      (remove-hook 'pre-command-hook 'keycast--update)))
+  (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
 #+end_src
 
 *** SICP
@@ -5056,8 +5077,8 @@ quickly find files across my filesystem.
 Who would get interested in Emacs and not want to read the SICP?
 Moreover, inside Emacs?
 #+begin_src emacs-lisp
-  (use-package sicp
-    :defer t)
+(use-package sicp
+  :defer t)
 #+end_src
 
 *** Winum
@@ -5069,9 +5090,9 @@ navigate through these windows by directly refering to their
 associated number! This allows for faster window configuration than
 just going to the frame above, then left, left, and up.
 #+begin_src emacs-lisp
-  (use-package winum
-    :straight (:build t)
-    :init (winum-mode))
+(use-package winum
+  :straight (:build t)
+  :init (winum-mode))
 #+end_src
 
 *** Ytplay
@@ -5081,12 +5102,11 @@ just going to the frame above, then left, left, and up.
 ~ytplay~ is a small package I’ve written with which you can choose at
 which resolution to play a YouTube video in an external video player.
 #+begin_src emacs-lisp
-  (use-package ytplay
-    :defer t
-    :straight (ytplay :build t
-                      :type git
-                      :host nil
-                      :repo "https://labs.phundrak.com/phundrak/ytplay.el"))
+(use-package ytplay
+  :defer t
+  :straight (ytplay :build t
+                    :type git
+                    :repo "https://labs.phundrak.com/phundrak/ytplay.el"))
 #+end_src
 
 * Keybindings
@@ -5096,7 +5116,8 @@ which resolution to play a YouTube video in an external video player.
 Undefining some stuff to make keybind prefixes work correctly.
 #+begin_src emacs-lisp
 (general-define-key
- :keymaps '( Buffer-menu-mode-map
+ :keymaps '(Buffer-menu-mode-map
+            Info-mode-map
             Man-mode-map
             backtrace-mode-map
             custom-mode-map
@@ -5117,7 +5138,8 @@ Undefining some stuff to make keybind prefixes work correctly.
             splash-screen-keymap
             undo-tree-visualizer-mode-map)
  :states '(emacs normal motion)
- "SPC" nil)
+ "SPC" nil
+ ","   nil)
 
 (general-define-key
  :keymaps 'global-map
@@ -5146,145 +5168,145 @@ Undefining some stuff to make keybind prefixes work correctly.
 #+end_src
 
 #+begin_src emacs-lisp
-  (general-define-key
-   :states 'normal
-   :prefix "SPC"
-    "SPC" '(counsel-M-x :wk "M-x")
-    "'"   #'shell-pop
+(general-define-key
+ :states 'normal
+ :prefix "SPC"
+  "SPC" '(counsel-M-x :wk "M-x")
+  "'"   #'shell-pop
 
-    "a"   '(nil :wk "apps")
-    "ac"  #'calc
-    "ad"  #'docker
-    "ae"  #'elfeed
-    "aE"  #'eww
-    "at"  #'tetris
-    "aw"  #'wttrin
-    "aC"  #'calendar
+  "a"   '(nil :wk "apps")
+  "ac"  #'calc
+  "ad"  #'docker
+  "ae"  #'elfeed
+  "aE"  #'eww
+  "at"  #'tetris
+  "aw"  #'wttrin
+  "aC"  #'calendar
 
-    "as"  '(nil :wk "shells")
-    "ase" #'eshell-new
-    "asv" #'vterm
+  "as"  '(nil :wk "shells")
+  "ase" #'eshell-new
+  "asv" #'vterm
 
-    "b"   '(nil :wk "buffers")
-    "bb"  #'bufler-switch-buffer
-    "bB"  #'bury-buffer
-    "bl"  #'bufler
-    "bd"  #'kill-this-buffer
-    "bD"  #'kill-buffer
-    "bh"  #'dashboard-refresh-buffer
-    "bm"  #'switch-to-messages-buffer
-    "br"  #'counsel-buffer-or-recentf
-    "bs"  #'switch-to-scratch-buffer
+  "b"   '(nil :wk "buffers")
+  "bb"  #'bufler-switch-buffer
+  "bB"  #'bury-buffer
+  "bl"  #'bufler
+  "bd"  #'kill-this-buffer
+  "bD"  #'kill-buffer
+  "bh"  #'dashboard-refresh-buffer
+  "bm"  #'switch-to-messages-buffer
+  "br"  #'counsel-buffer-or-recentf
+  "bs"  #'switch-to-scratch-buffer
 
-    "c"   '(nil :wk "code")
-    "cl"  #'evilnc-comment-or-uncomment-lines
+  "c"   '(nil :wk "code")
+  "cl"  #'evilnc-comment-or-uncomment-lines
 
-    "e"   '(nil :wk "email")
-    "ec"  #'mu4e-compose-new
-    "em"  #'mu4e
+  "e"   '(nil :wk "email")
+  "ec"  #'mu4e-compose-new
+  "em"  #'mu4e
 
-    "f"   '(nil :wk "files")
-    "fc"  '((lambda ()
-             (interactive)
-             (find-file (concat (getenv "HOME") "/org/config/emacs.org")))
-            :wk "Config file")
-    "ff"  #'counsel-find-file
-    "fF"  #'ivy-quick-find-files
-    "fh"  #'hexl-find-file
-    "fi"  '((lambda ()
-              (interactive)
-              (find-file (concat user-emacs-directory "init.el")))
-            :which-key "init.el")
-    "fr"  #'counsel-recentf
-    "fs"  #'save-buffer
+  "f"   '(nil :wk "files")
+  "fc"  '((lambda ()
+           (interactive)
+           (find-file (concat (getenv "HOME") "/org/config/emacs.org")))
+          :wk "Config file")
+  "ff"  #'counsel-find-file
+  "fF"  #'ivy-quick-find-files
+  "fh"  #'hexl-find-file
+  "fi"  '((lambda ()
+            (interactive)
+            (find-file (concat user-emacs-directory "init.el")))
+          :which-key "init.el")
+  "fr"  #'counsel-recentf
+  "fs"  #'save-buffer
 
-    "h"   '(nil :wk "help")
-    "hk"  #'which-key-show-top-level
-    "hd"  '(nil :wk "describe")
-    "hdc" #'describe-char
-    "hdC" #'helpful-command
-    "hdf" #'helpful-callable
-    "hdk" #'helpful-key
-    "hdm" #'helpful-macro
-    "hdM" #'helpful-mode
-    "hdp" #'describe-package
-    "hds" #'helpful-symbol
-    "hdv" #'helpful-variable
+  "h"   '(nil :wk "help")
+  "hk"  #'which-key-show-top-level
+  "hd"  '(nil :wk "describe")
+  "hdc" #'describe-char
+  "hdC" #'helpful-command
+  "hdf" #'helpful-callable
+  "hdk" #'helpful-key
+  "hdm" #'helpful-macro
+  "hdM" #'helpful-mode
+  "hdp" #'describe-package
+  "hds" #'helpful-symbol
+  "hdv" #'helpful-variable
 
-    "i"   '(nil :wk "insert")
-    "iy"  #'ivy-yasnippet
+  "i"   '(nil :wk "insert")
+  "iy"  #'ivy-yasnippet
 
-    "j"   '(nil :wk "jump")
-    "jd"  #'dired-jump
-    "jD"  #'dired-jump-other-window
+  "j"   '(nil :wk "jump")
+  "jd"  #'dired-jump
+  "jD"  #'dired-jump-other-window
 
-    "p"   '(nil :wk "project")
-    "p!"  #'projectile-run-shell-command-in-root
-    "p&"  #'projectile-run-async-shell-command-in-root
-    "pb"  #'counsel-projectile-switch-to-buffer
-    "pc"  #'counsel-projectile
-    "pd"  #'counsel-projectile-find-dir
-    "pe"  #'projectile-edit-dir-locals
-    "pf"  #'counsel-projectile-find-file
-    "pg"  #'projectile-find-tag
-    "pk"  #'project-kill-buffers
-    "pp"  #'counsel-projectile-switch-project
-    "pt"  #'ivy-magit-todos
-    "pv"  #'projectile-vc
+  "p"   '(nil :wk "project")
+  "p!"  #'projectile-run-shell-command-in-root
+  "p&"  #'projectile-run-async-shell-command-in-root
+  "pb"  #'counsel-projectile-switch-to-buffer
+  "pc"  #'counsel-projectile
+  "pd"  #'counsel-projectile-find-dir
+  "pe"  #'projectile-edit-dir-locals
+  "pf"  #'counsel-projectile-find-file
+  "pg"  #'projectile-find-tag
+  "pk"  #'project-kill-buffers
+  "pp"  #'counsel-projectile-switch-project
+  "pt"  #'ivy-magit-todos
+  "pv"  #'projectile-vc
 
-    "t"   '(nil :wk "toggles")
-    "tt"  #'counsel-load-theme
-    "ti"  '(nil :wk "input method")
-    "tit" #'toggle-input-method
-    "tis" #'set-input-mode
+  "t"   '(nil :wk "toggles")
+  "tt"  #'counsel-load-theme
+  "ti"  '(nil :wk "input method")
+  "tit" #'toggle-input-method
+  "tis" #'set-input-mode
 
-    "u"   #'universal-argument
-    "U"   #'undo-tree-visualize
+  "u"   #'universal-argument
+  "U"   #'undo-tree-visualize
 
-    "w"   '(nil :wk "windows")
-    "w."  #'windows-adjust-size/body
-    "w-"  #'split-window-below-and-focus
-    "w/"  #'split-window-right-and-focus
-    "w$"  #'winum-select-window-by-number
-    "w0"  '(winum-select-window-0-or-10 :wk nil)
-    "w1"  '(winum-select-window-1 :wk nil)
-    "w2"  '(winum-select-window-2 :wk nil)
-    "w3"  '(winum-select-window-3 :wk nil)
-    "w4"  '(winum-select-window-4 :wk nil)
-    "w5"  '(winum-select-window-5 :wk nil)
-    "w6"  '(winum-select-window-6 :wk nil)
-    "w7"  '(winum-select-window-7 :wk nil)
-    "w8"  '(winum-select-window-8 :wk nil)
-    "w9"  '(winum-select-window-9 :wk nil)
+  "w"   '(nil :wk "windows")
+  "w."  #'windows-adjust-size/body
+  "w-"  #'split-window-below-and-focus
+  "w/"  #'split-window-right-and-focus
+  "w$"  #'winum-select-window-by-number
+  "w0"  '(winum-select-window-0-or-10 :wk nil)
+  "w1"  '(winum-select-window-1 :wk nil)
+  "w2"  '(winum-select-window-2 :wk nil)
+  "w3"  '(winum-select-window-3 :wk nil)
+  "w4"  '(winum-select-window-4 :wk nil)
+  "w5"  '(winum-select-window-5 :wk nil)
+  "w6"  '(winum-select-window-6 :wk nil)
+  "w7"  '(winum-select-window-7 :wk nil)
+  "w8"  '(winum-select-window-8 :wk nil)
+  "w9"  '(winum-select-window-9 :wk nil)
 
-    "wb"  '((lambda ()
-              (interactive)
-              (progn
-                (kill-this-buffer)
-                (delete-window)))
-            :wk "Kill buffer and window")
-    "wd"  #'delete-window
-    "wo"  #'other-window
-    "wD"  #'delete-other-windows
-    "ww"  '(nil :wk "writeroom")
-    "ww." #'writeroom-buffer-width/body
-    "www" #'writeroom-mode
+  "wb"  '((lambda ()
+            (interactive)
+            (progn
+              (kill-this-buffer)
+              (delete-window)))
+          :wk "Kill buffer and window")
+  "wd"  #'delete-window
+  "wo"  #'other-window
+  "wD"  #'delete-other-windows
+  "ww"  '(nil :wk "writeroom")
+  "ww." #'writeroom-buffer-width/body
+  "www" #'writeroom-mode
 
-    "wc"  #'evil-window-left
-    "wt"  #'evil-window-down
-    "ws"  #'evil-window-up
-    "wr"  #'evil-window-right
+  "wc"  #'evil-window-left
+  "wt"  #'evil-window-down
+  "ws"  #'evil-window-up
+  "wr"  #'evil-window-right
 
-    "T"   '(nil :wk "text")
-    "Tz"  #'hydra-zoom/body
-    "Tu"  #'downcase-region
-    "TU"  #'upcase-region
-    "Te"  #'string-edit-at-point
+  "T"   '(nil :wk "text")
+  "Tz"  #'hydra-zoom/body
+  "Tu"  #'downcase-region
+  "TU"  #'upcase-region
+  "Te"  #'string-edit-at-point
 
-    "q"   '(nil :wk "quit")
-    "qf"  #'delete-frame
-    "qq"  #'save-buffers-kill-terminal
-    "qQ"  #'kill-emacs)
+  "q"   '(nil :wk "quit")
+  "qf"  #'delete-frame
+  "qq"  #'save-buffers-kill-terminal
+  "qQ"  #'kill-emacs)
 #+end_src
 
 * Various TODOs                                                    :noexport:
