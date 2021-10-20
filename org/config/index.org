@@ -16,31 +16,18 @@ below.
 
 For starters, here is the link to all the pages on my website that you might
 find interesting. I’ll describe them in more details below.
-- [[file:installation.org][Arch Linux bootstrap script]]
-- [[file:awesome.org][AwesomeWM configuration]]
-- [[file:bin.org][Custom scripts]]
-- [[file:spacemacs.org][Emacs (Spacemacs) configuration]]
-- [[file:fish.org][Fish shell configuration]]
-- [[file:Deprecated/i3.org][i3 configuration]] (deprecated)
-- [[file:Deprecated/nano.org][Nano configuration]] (deprecated)
-- [[file:WIP/ncmpcpp.org][ncmpcpp configuration]] (work in progress)
-- [[file:WIP/neofetch.org][Neofetch configuration]] (work in progress)
-- [[file:picom.org][Picom configuration]] (replacement of Compton)
-- [[file:Deprecated/polybar.org][Polybar configuration]] (deprecated)
-- [[file:rustfmt.org][Rustfmt configuration]]
-- [[file:tmux.org][Tmux configuration]]
+#+include: sitemap.org
 
-As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]] 28.0
-using [[http://spacemacs.org][Spacemacs]] (still with Emacs keybinding in insert mode but with Evil in
-normal mode) as my main text editor.
+As you can see, I personally use [[https://fishshell.com/][fish]] as my shell of choice, and [[https://www.gnu.org/software/emacs/][Emacs]]
+29.0 as my main text editor.
 
 When it comes to my graphical UI, I do not have any desktop
-environment. Instead, I have two tiling window managers, [[https://awesomewm.org/][Awesome]] and
-[[https://stumpwm.github.io/][StumpWM]]. I used to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]] fork by [[https://github.com/Airblader/i3][Airblader]], with which I
-used [[https://polybar.github.io/][Polybar]] as well as [[https://github.com/dylanaraps/pywal][pywal]] to define my system’s color scheme. But
-now, as said above, I prefer to use Awesome. It has a built-in status
-bar which I use, and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty much
-everything I use.
+environment. Instead, I have a tiling window managers, [[https://stumpwm.github.io/][StumpWM]]. I used
+to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]] fork by [[https://github.com/Airblader/i3][Airblader]], with which I used [[https://polybar.github.io/][Polybar]] as
+well as [[https://github.com/dylanaraps/pywal][pywal]] to define my system’s color scheme, and then I used
+[[file:awesome.org][Awesome]]. But now, as said above, I prefer to use StumpWM. It has a
+built-in status bar (called a mode-line, like in Emacs) which I use,
+and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty much everything I use.
 
 Finally, you can find my configuration for my ErgodoxEZ keyboard [[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is
 optimized for usage with the Bépo layout set as a software layout. It has also a
@@ -71,14 +58,14 @@ files which do not deserve to have a full org file dedicated to them.
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling-Window-Managers-StumpWM-u9kdbd6137j0
 :END:
-StumpWM is the tiling window manager I use the most at the moment. It
-is written and configured in Common Lisp, which I enjoy a lot since it
+StumpWM is the tiling window manager I use at the moment. It is
+written and configured in Common Lisp, which I enjoy a lot since it
 has a syntax quite close to Elisp, the Lisp dialect used in Emacs. I’m
 currently still in the process of figuring out my config, so please
 consider it as a kind of work in progress. You can find the
 configuration [[file:stumpwm.org][here]].
 
-*** AwesomeWM
+*** AwesomeWM (Deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-AwesomeWM-2eac61a9
 :END:
@@ -326,13 +313,12 @@ Because, you know…
 Emacs is a great operating system, it just lacks a good text editor.
 #+end_quote
 
-I currently have two Emacs configs:
-- a Spacemacs config, which you can find [[file:spacemacs.org][here]]. It is mostly abandoned
-  at this point, and I’m thinking of deprecating it in favor of the
-  next config
-- a vanilla config, written entirely by myself instead of relying on a
-  framework like Spacemacs or DoomEmacs. This is currently my main
-  config which you can find [[file:emacs.org][here]].
+My current configuration is a vanilla config, meaning I do not rely on
+another configuration or framework such as Spacemacs or DoomEmacs to
+configure Emacs. You can find its configuration [[file:emacs.org][here]].
+
+I used to use a Spacemacs-based configuration, however I deprecated it
+on October 20th 2021. You can find it [[file:Deprecated/spacemacs.org][here]].
 
 *** Nano (deprecated)
 :PROPERTIES:
