@@ -1278,9 +1278,6 @@ emailing, and quite straightforward. I tried a couple of other email
 clients for Emacs, and I even was for some time a Gnus user, but in
 the end, mu4e really works best for me. Below you’ll find my
 configuration for the ~mu4e~ package itself.
-
-Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
-~mu-git~ from the AUR in order to use mu4e.
 #+begin_src emacs-lisp
 (use-package mu4e
   :after all-the-icons
@@ -1360,6 +1357,25 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
         (shell-command
          (format "wkhtmltopdf %s %s" infile outfile) t))
       (find-file outfile))))
+#+end_src
+
+Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
+~mu-git~ from the AUR in order to use mu4e. I also have a ~.desktop~ file
+so I can open mu4e directly from my program picker. It uses the shell
+script ~emacsmail~ I’ve written [[file:bin.org::#Emacsmail-afffb7cd][here]].
+#+begin_src conf-desktop :tangle ~/.local/share/applications/mu4e.desktop
+[Desktop Entry]
+Name=Mu4e
+GenericName=Mu4e
+Comment=Maildir Utils for Emacs
+MimeType=x-scheme-handler/mailto;
+Exec=/home/phundrak/.local/bin/emacsmail %U
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Network;Email;TextEditor
+StartupWMClass=Gnus
+Keywords=Text;Editor;
 #+end_src
 
 ***** Basic configuration
