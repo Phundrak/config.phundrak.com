@@ -1202,38 +1202,39 @@ in this code block all my keybinds for Elfeed here.
    "q" #'elfeed-kill-buffer)
   (:keymaps 'elfeed-show-mode-map
    :states 'normal
-   :prefix ","
    "b" #'elfeed-show-visit
-   "c" #'elfeed-kill-link-url-at-point
+   "C" #'elfeed-kill-link-url-at-point
    "d" #'elfeed-show-save-enclosure
    "l" #'elfeed-show-next-link
    "n" #'elfeed-show-next
    "p" #'elfeed-show-prev
-   "s" #'elfeed-show-new-live-search
+   "S" #'elfeed-show-new-live-search
    "u" #'elfeed-show-tag--unread
    "y" #'elfeed-show-yank)
   (:keymaps 'elfeed-search-mode-map
    :states 'normal
-   :prefix ","
    "«"  #'elfeed-search-first-entry
    "»"  #'elfeed-search-last-entry
    "b"  #'elfeed-search-browse-url
-   "c"  #'elfeed-db-compact
    "f"  '(nil :which-key "filter")
    "fc" #'elfeed-search-clear-filter
    "fl" #'elfeed-search-live-filter
    "fs" #'elfeed-search-set-filter
-   "t"  '(nil :which-key "tag")
-   "tt" #'elfeed-search-tag-all-unread
-   "tu" #'elfeed-search-untag-all-unread
-   "tT" #'elfeed-search-tag-all
-   "tU" #'elfeed-search-untag-all
    "u"  '(nil :which-key "update")
    "us" #'elfeed-search-fetch
    "uS" #'elfeed-search-update
    "uu" #'elfeed-update
    "uU" #'elfeed-search-update--force
-   "y"  #'elfeed-search-yank))
+   "y"  #'elfeed-search-yank)
+  (:keymaps 'elfeed-search-mode-map
+   :states 'normal
+   :prefix ","
+   "c"  #'elfeed-db-compact
+   "t"  '(nil :which-key "tag")
+   "tt" #'elfeed-search-tag-all-unread
+   "tu" #'elfeed-search-untag-all-unread
+   "tT" #'elfeed-search-tag-all
+   "tU" #'elfeed-search-untag-all))
 #+end_src
 
 Last but not least, my Elfeed configuration is stored in an org file
