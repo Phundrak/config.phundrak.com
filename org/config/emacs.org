@@ -4910,29 +4910,6 @@ file.
          (latex-mode    . git-gutter-mode)))
 #+end_src
 
-*** Modeline
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
-:END:
-#+begin_src emacs-lisp
-(use-package doom-modeline
-  :straight (:build t)
-  :defer t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
-#+end_src
-
-*** Theme
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
-:END:
-#+begin_src emacs-lisp
-(use-package doom-themes
-  :straight (:build t)
-  :defer t
-  :init (load-theme 'doom-nord t))
-#+end_src
-
 *** Icons? Did someone say icons?
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Icons-Did-someone-say-iconsfye6fl6184j0
@@ -4965,6 +4942,83 @@ character of my choice!
 Let’s enable this mode for any programming mode:
 #+begin_src emacs-lisp
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+#+end_src
+
+*** Ligatures
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Ligatures-2v50x451v8j0
+:END:
+The font I’m using (see
+§[[#Basic-configuration-Visual-Configuration-Fontsxfkjel6184j0]]) supports
+ligatures, but Emacs in GUI mode does not. And of course, there’s a
+package for that.
+#+begin_src emacs-lisp
+(use-package ligature
+  :straight (ligature :type git
+                      :host github
+                      :repo "mickeynp/ligature.el"
+                      :build t)
+  :config
+  (ligature-set-ligatures 't
+                          '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures '(eww-mode org-mode elfeed-show-mode)
+                          '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode
+                          '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                            ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                            "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                            "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                            "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                            "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                            "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                            "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                            ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                            "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                            "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                            "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                            "\\\\" "://"))
+  (global-ligature-mode t))
+#+end_src
+
+*** Modeline
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
+:END:
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :straight (:build t)
+  :defer t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+#+end_src
+
+*** Secret mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Secret-mode-b2e9hp51v8j0
+:END:
+Sometimes, I want to hide the text displayed by Emacs but not lock
+altogether my computer. In this case, ~secret-mode~ comes in handy.
+#+begin_src emacs-lisp
+(use-package secret-mode
+  :defer t
+  :straight (secret-mode :build t
+                         :type git
+                         :host github
+                         :repo "bkaestner/secret-mode.el"))
+#+end_src
+
+*** Theme
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
+:END:
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :straight (:build t)
+  :defer t
+  :init (load-theme 'doom-nord t))
 #+end_src
 
 *** Rainbow Delimiters
