@@ -1,5 +1,5 @@
 #+title: Spacemacs Configuration
-#+setupfile: headers
+#+setupfile: ../headers
 #+OPTIONS: auto-id:t
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak’s Spacemacs Configuration" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak’s Spacemacs Configuration" />
@@ -10,6 +10,10 @@
 :PROPERTIES:
 :CUSTOM_ID: Introduction-f1cbb8bb
 :END:
+#+begin_center
+*Before proceeding, be aware that I deprecated this i3 config on October 20th 2021, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
+#+end_center
+
 This file is the main source file for my Spacemacs configuration which
 contains most of the user code. It is exported thanks to Emacs’ code
 tangling from the original Org file which you can find on my dotfiles’
@@ -2132,7 +2136,7 @@ Fish. Some adjustments are necessary for making this shell usable for me.
 But first, here is a screenshot of what to expect visually from my configuration
 of Eshell when it is launched:
 
-#+include: ./img/eshell.svg export html
+#+include: ../img/eshell.svg export html
 
 **** Aliases
 :PROPERTIES:
