@@ -3867,6 +3867,72 @@ The project is then defined like so:
   (require 'org-ref))
 #+end_src
 
+*** Org-present
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Org-present-pw04s240w8j0
+:END:
+~org-present~ allows its user to create presentations through ~org-mode~,
+which is really nice! However, most of my configuration will be stolen
+[[https://config.daviwil.com/emacs#org-present][from Daviwil’s]] with minor changes.
+#+begin_src emacs-lisp
+(defun my/org-present-prepare-slide ()
+  (org-overview)
+  (org-show-entry)
+  (org-show-children)
+  (org-present-hide-cursor))
+
+(defun my/org-present-init ()
+  (setq header-line-format " ")
+  (org-display-inline-images)
+  (my/org-present-prepare-slide))
+
+(defun my/org-present-quit ()
+  (setq header-line-format nil)
+  (org-present-small)
+  (org-present-show-cursor))
+
+(defun my/org-present-prev ()
+  (interactive)
+  (org-present-prev)
+  (my/org-present-prepare-slide))
+
+(defun my/org-present-next ()
+  (interactive)
+  (org-present-next)
+  (my/org-present-prepare-slide))
+
+(use-package org-present
+  :after org
+  :defer t
+  :straight (:build t)
+  :general
+  (:states '(normal emacs)
+   :keymaps 'org-present-mode-map
+   "SPC" nil
+   ","   nil)
+  (:states 'normal
+   :keymaps 'org-mode-map
+   :prefix ","
+   "p" #'org-present)
+  (:states 'normal
+   :keymaps 'org-present-mode-keymap
+   "+" #'org-present-big
+   "-" #'org-present-small
+   "<" #'org-present-beginning
+   ">" #'org-present-end
+   "«" #'org-present-beginning
+   "»" #'org-present-end
+   "c" #'org-present-hide-cursor
+   "C" #'org-present-show-cursor
+   "n" #'org-present-next
+   "p" #'org-present-prev
+   "r" #'org-present-read-only
+   "w" #'org-present-read-write
+   "q" #'org-present-quit)
+  :hook ((org-present-mode      . my/org-present-init)
+         (org-present-mode-quit . my/org-present-quit)))
+#+end_src
+
 *** Visual Configuration
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Visual-Configurationrol5fl6184j0
