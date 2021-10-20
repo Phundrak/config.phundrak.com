@@ -1873,6 +1873,78 @@ notification system, and I’ll activate the modeline notification.
   (setq mu4e-alert-interesting-mail-query "flag:unread"))
 #+end_src
 
+*** EMMS
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-EMMS-ij71fr61v8j0
+:END:
+EMMS, also known as the /Emacs MultiMedia System/, allows the user to
+interact through Emacs with multimedia elements such as music and
+videos. My main use for it will be for music with MPD (see its
+configuration [[file:mpd.org][here]]).
+#+begin_src emacs-lisp
+(use-package emms
+  :defer t
+  :straight (:build t)
+  :init
+  (require 'emms-setup)
+  (emms-all)
+  (add-to-list 'emms-info-functions 'emms-info-mpd)
+  (add-to-list 'emms-player-list    'emms-player-mpd)
+  (emms-player-mpd-connect)
+  (add-hook 'emms-playlist-cleared-hook #'emms-player-mpd-clear)
+  :general
+  (:keymaps 'emms-browser-mode-map
+   :states '(normal emacs)
+   "SPC" nil
+   ","   nil
+   "s"   nil
+   "r"   nil)
+  (:keymaps 'emms-browser-mode-map
+   :states 'normal
+   "a"  #'emms-browser-add-tracks
+   "A"  #'emms-browser-add-tracks-and-play
+   "b"  '(nil :which-key "browse by")
+   "bA" #'emms-browse-by-album
+   "ba" #'emms-browse-by-artist
+   "bg" #'emms-browse-by-genre
+   "bs" #'emms-smart-browse
+   "by" #'emms-browse-by-year
+   "c"  #'emms-browser-clear-playlist
+   "S"  '(nil :which-key "search")
+   "SA" '(emms-browser-search-by-album  :which-key "by album")
+   "Sa" '(emms-browser-search-by-artist :which-key "by artist")
+   "Ss" '(emms-browser-search-by-names  :which-key "by name")
+   "St" '(emms-browser-search-by-names  :which-key "by title")
+   "q"  #'kill-this-buffer)
+  (:keymaps 'emms-playlist-mode-map
+   :states 'normal
+   "d" #'emms-playlist-mode-kill-track
+   "p" #'emms-playlist-mode-play-smart
+   "q" #'kill-this-buffer)
+  (:states 'normal
+   :prefix "SPC"
+   "m"   '(nil :which-key "media")
+   "m<"  #'emms-player-mpd-previous
+   "m>"  #'emms-player-mpd-next
+   "mc"  #'emms-player-mpd-clear
+   "me"  '(nil :which-key "emms")
+   "meb" #'emms-browser
+   "mep" #'emms-playlist-mode-go
+   "mes" #'emms-player-mpd-show
+   "mp"  #'emms-player-mpd-play
+   "mP"  #'emms-player-mpd-pause
+   "mu"  '(nil :which-key "update")
+   "mum" #'emms-player-mpd-update-all
+   "muc" #'emms-cache-set-from-mpd-all)
+  :custom
+  ((emms-source-file-default-directory (expand-file-name "~/Music"))
+   (emms-player-mpd-server-name "localhost")
+   (emms-player-mpd-server-port "6600")
+   (emms-player-mpd-music-directory (expand-file-name "~/Music"))))
+#+end_src
+
+#+RESULTS:
+
 *** Nov
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Nov0da1fl6184j0
@@ -3787,7 +3859,9 @@ org-mode. ~mixed-pitch~ comes to the rescue!
   :after org
   :straight (:build t)
   :hook
-  (org-mode . mixed-pitch-mode)
+  (org-mode           . mixed-pitch-mode)
+  (emms-browser-mode  . mixed-pitch-mode)
+  (emms-playlist-mode . mixed-pitch-mode)
   :config
   (add-hook 'org-agenda-mode-hook (lambda () (mixed-pitch-mode -1))))
 #+end_src
