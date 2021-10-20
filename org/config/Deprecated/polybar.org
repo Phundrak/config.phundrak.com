@@ -12,7 +12,9 @@
 :PROPERTIES:
 :CUSTOM_ID: Presentation-4e723f32
 :END:
+#+begin_center
 *Before proceeding, be aware that I deprecated this polybar config on August 22nd, 2020, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
+#+end_center
 
 Polybar is a desktop utility for displaying various information in form of bars for GNU/Linux systems. It is often used as a replacement for native bars available in window managers, such as i3. In my case, I use two instances of polybar in order to get two bars displayed on each screen. The information displayed is either related to i3 itself, or it is system information, such as CPU or disk usage. More information will be given and explained below.
 

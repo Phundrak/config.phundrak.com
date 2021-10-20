@@ -11,7 +11,9 @@
 :PROPERTIES:
 :CUSTOM_ID: Presentation-9c7a53bf
 :END:
+#+begin_center
 *Before proceeding, be aware that I deprecated this i3 config on August 22nd, 2020, meaning I won’t update it anymore unless I use it again some day in the future. I will keep it on my website though.*
+#+end_center
 
 =i3= is a window manager for GNU/Linux which automatically tiles windows in workspaces. This configuration was ade to automatically handle some tasks such as which software allowed where, autostart, and launching software with shortcuts.
 
