@@ -1,4 +1,4 @@
-#+title: Vanilla Emacs Configuration
+#+title: Emacs Configuration
 #+setupfile: ~/org/config/headers
 #+options: auto-id:t
 #+html_head: <meta name="description" content="Phundrak’s Emacs Configuration" />
@@ -1141,16 +1141,23 @@ docker-compose from Emacs.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Elfeedoip0fl6184j0
 :END:
+Elfeed is a nice Atom and RSS reader for Emacs. The only thing I want
+to change for now is the default search filter: I want to see not only
+unread news but read news as well, a bit like my emails; and where the
+database is to be stored.
 #+begin_src emacs-lisp
 (use-package elfeed
   :defer t
   :straight (:build t)
   :custom
-  (elfeed-search-filter "@6-months-ago")
-  :config
-  (elfeed-goodies/setup))
+  ((elfeed-search-filter "@6-months-ago")
+   (elfeed-db-directory  (expand-file-name ".elfeed-db"
+                                           user-emacs-directory))))
 #+end_src
 
+Elfeed-goodies is a package which enhances the Elfeed experience.
+Aside from running its setup command as soon as possible, I also set
+in this code block all my keybinds for Elfeed here.
 #+begin_src emacs-lisp
 (use-package elfeed-goodies
   :defer t
@@ -1189,6 +1196,7 @@ docker-compose from Emacs.
    "«"  #'elfeed-search-first-entry
    "»"  #'elfeed-search-last-entry
    "b"  #'elfeed-search-browse-url
+   "c"  #'elfeed-db-compact
    "f"  '(nil :which-key "filter")
    "fc" #'elfeed-search-clear-filter
    "fl" #'elfeed-search-live-filter
@@ -1199,11 +1207,15 @@ docker-compose from Emacs.
    "tT" #'elfeed-search-tag-all
    "tU" #'elfeed-search-untag-all
    "u"  '(nil :which-key "update")
-   "uf" #'elfeed-search-fetch
-   "uF" #'elfeed-search-update
+   "us" #'elfeed-search-fetch
+   "uS" #'elfeed-search-update
+   "uu" #'elfeed-update
+   "uU" #'elfeed-search-update--force
    "y"  #'elfeed-search-yank))
 #+end_src
 
+Last but not least, my Elfeed configuration is stored in an org file
+thanks to ~elfeed-org~.
 #+begin_src emacs-lisp
 (use-package elfeed-org
   :defer t
@@ -1899,6 +1911,11 @@ reader?
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-PDF-Toolsvqb1fl6184j0
 :END:
+~pdf-tools~ enables PDF support for Emacs, much better than its built-in
+support with DocView. Aside from the classical settings such as
+keybinds, I also enable the midnight colors by default; think of it as
+an equivalent of Zathura’s recolor feature which kind of enables a
+dark mode for PDFs.
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :defer t
@@ -1906,52 +1923,51 @@ reader?
   :straight (:build t)
   :mode (("\\.pdf\\'" . pdf-view-mode))
   :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
+  :general
+  (:keymaps 'pdf-view-mode-map
+   :states '(normal emacs)
+   "SPC" nil
+   ","   nil)
+  (:states 'normal
+   :keymaps 'pdf-view-mode-map
+   "y"   #'pdf-view-kill-ring-save
+   "t"   #'evil-collection-pdf-view-next-line-or-next-page
+   "s"   #'evil-collection-pdf-view-previous-line-or-previous-page)
+  (:states '(normal motion)
+   :keymaps 'pdf-view-mode-map
+   :prefix ","
+    "a"  '(nil :which-key "annotations")
+    "aD" #'pdf-annot-delete
+    "at" #'pdf-annot-attachment-dired
+    "ah" #'pdf-annot-add-highlight-markup-annotation
+    "al" #'pdf-annot-list-annotations
+    "am" #'pdf-annot-markup-annotation
+    "ao" #'pdf-annot-add-strikeout-markup-annotation
+    "as" #'pdf-annot-add-squiggly-markup-annotation
+    "at" #'pdf-annot-add-text-annotation
+    "au" #'pdf-annot-add-underline-markup-annotation
+
+    "f"  '(nil :which-key "fit")
+    "fw" #'pdf-view-fit-width-to-window
+    "fh" #'pdf-view-fit-height-to-window
+    "fp" #'pdf-view-fit-page-to-window
+
+    "s"  '(nil :which-key "slice/search")
+    "sb" #'pdf-view-set-slice-from-bounding-box
+    "sm" #'pdf-view-set-slice-using-mouse
+    "sr" #'pdf-view-reset-slice
+    "ss" #'pdf-occur
+
+    "o"  'pdf-outline
+    "m"  'pdf-view-midnight-minor-mode)
   :config
-  (progn
-    (with-eval-after-load 'pdf-view
-      (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440")))
-    (general-define-key
-     :keymaps 'pdf-view-mode-map
-     "SPC" nil
-     ","   nil)
-    (general-define-key
-     :states 'normal
-     :keymaps 'pdf-view-mode-map
-     "SPC" nil
-     ","   nil
-     "y"   #'pdf-view-kill-ring-save
-     "t"   #'evil-collection-pdf-view-next-line-or-next-page
-     "s"   #'evil-collection-pdf-view-previous-line-or-previous-page)
-    (general-define-key
-     :states 'motion
-     :keymaps 'pdf-view-mode-map
-     :prefix ","
-      "a"  '(nil :which-key "annotations")
-      "aD" #'pdf-annot-delete
-      "at" #'pdf-annot-attachment-dired
-      "ah" #'pdf-annot-add-highlight-markup-annotation
-      "al" #'pdf-annot-list-annotations
-      "am" #'pdf-annot-markup-annotation
-      "ao" #'pdf-annot-add-strikeout-markup-annotation
-      "as" #'pdf-annot-add-squiggly-markup-annotation
-      "at" #'pdf-annot-add-text-annotation
-      "au" #'pdf-annot-add-underline-markup-annotation
-
-      "f"  '(nil :which-key "fit")
-      "fw" #'pdf-view-fit-width-to-window
-      "fh" #'pdf-view-fit-height-to-window
-      "fp" #'pdf-view-fit-page-to-window
-
-      "s"  '(nil :which-key "slice/search")
-      "sb" #'pdf-view-set-slice-from-bounding-box
-      "sm" #'pdf-view-set-slice-using-mouse
-      "sr" #'pdf-view-reset-slice
-      "ss" #'pdf-occur
-
-      "o"  'pdf-outline
-      "m"  'pdf-view-midnight-minor-mode)))
+  (with-eval-after-load 'pdf-view
+    (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
 #+end_src
 
+One thing ~pdf-tools~ doesn’t handle is restoring the PDF to the last
+point it was visited --- in other words, open the PDF where I last
+left it.
 #+begin_src emacs-lisp
 (use-package pdf-view-restore
   :after pdf-tools
