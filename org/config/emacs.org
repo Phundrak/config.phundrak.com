@@ -535,7 +535,7 @@ b s~, which bring the user directly to the ~*Messages*~ buffer and the
 (defun switch-to-messages-buffer ()
   "Switch to Messages buffer."
   (interactive)
-  (switch-to-buffer "*Messages*"))
+  (switch-to-buffer (messages-buffer)))
 
 (defun switch-to-scratch-buffer ()
   "Switch to Messages buffer."
