@@ -1912,7 +1912,7 @@ notification system, and I’ll activate the modeline notification.
   (setq mu4e-alert-interesting-mail-query "flag:unread"))
 #+end_src
 
-*** EMMS
+*** EMMS and Media
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-EMMS-ij71fr61v8j0
 :END:
@@ -1923,6 +1923,7 @@ configuration [[file:mpd.org][here]]).
 #+begin_src emacs-lisp
 (use-package emms
   :defer t
+  :after all-the-icons
   :straight (:build t)
   :init
   (require 'emms-setup)
@@ -1931,6 +1932,7 @@ configuration [[file:mpd.org][here]]).
   (add-to-list 'emms-player-list    'emms-player-mpd)
   (emms-player-mpd-connect)
   (add-hook 'emms-playlist-cleared-hook #'emms-player-mpd-clear)
+  <<emms-media-hydra>>
   :general
   (:keymaps 'emms-browser-mode-map
    :states '(normal emacs)
@@ -1963,8 +1965,11 @@ configuration [[file:mpd.org][here]]).
   (:states 'normal
    :prefix "SPC"
    "m"   '(nil :which-key "media")
+   "m."  #'hydra-media/body
    "m<"  #'emms-player-mpd-previous
+   "m«"  #'emms-player-mpd-previous
    "m>"  #'emms-player-mpd-next
+   "m»"  #'emms-player-mpd-next
    "mc"  #'emms-player-mpd-clear
    "me"  '(nil :which-key "emms")
    "meb" #'emms-browser
@@ -1982,7 +1987,35 @@ configuration [[file:mpd.org][here]]).
    (emms-player-mpd-music-directory (expand-file-name "~/Music"))))
 #+end_src
 
-#+RESULTS:
+I also want to create a small hydra for manipulating MPD:
+#+name: emms-media-hydra
+#+begin_src emacs-lisp :tangle no
+(let ((shell-command-and-echo (lambda (command &optional echo)
+                                (with-temp-buffer
+                                  (shell-command command
+                                                 (current-buffer)
+                                                 (current-buffer)))
+                                (when echo
+                                  (message "mpc %s"
+                                           (string-trim
+                                            (shell-command-to-string "mpc volume")))))))
+  (defhydra hydra-media ()
+    "
+^Tracks^     ^Volume^    ^Other^
+^^^^^^^^----------------------------
+[_c_] %s(all-the-icons-material \"skip_previous\" :height 1.0 :v-adjust -0.2)     [_t_] %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)    [_p_] %s(all-the-icons-material \"play_arrow\" :height 1.0 :v-adjust -0.2)
+[_r_] %s(all-the-icons-material \"skip_next\" :height 1.0 :v-adjust -0.2)     [_s_] %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)    [_S_] %s(all-the-icons-material \"stop\" :height 1.0 :v-adjust -0.2)
+
+[_q_] quit
+"
+    ("c" emms-player-mpd-previous)
+    ("r" emms-player-mpd-next)
+    ("t" (apply shell-command-and-echo '("mpc volume -2" "mpc volume")))
+    ("s" (apply shell-command-and-echo '("mpc volume +2" "mpc volume")))
+    ("p" (apply shell-command-and-echo '("mpc toggle")))
+    ("S" emms-player-mpd-stop)
+    ("q" nil :exit t)))
+#+end_src
 
 *** Nov
 :PROPERTIES:
