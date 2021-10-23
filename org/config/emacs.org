@@ -4393,6 +4393,150 @@ visual graphs and networks.
   (setq graphviz-dot-indent-width 4))
 #+end_src
 
+**** Markdown
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Markdown-7sljsrb1y8j0
+:END:
+Yes, I love org-mode and I largely prefer to use it instead of
+Markdown due to its far superior power and abilities. But still,
+sometimes I need to use Markdown because not everyone use org-mode,
+unfortunately.
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :defer t
+  :straight (:build t)
+  :mode
+  (("\\.mkd\\'" . markdown-mode)
+   ("\\.mdk\\'" . markdown-mode)
+   ("\\.mdx\\'" . markdown-mode))
+  :general
+  (:keymaps 'markdown-mode-map
+            :states 'normal
+            "M-RET" #'markdown-insert-list-item
+            "M-c"   #'markdown-promote
+            "M-t"   #'markdown-move-down
+            "M-s"   #'markdown-move-up
+            "M-r"   #'markdown-demote)
+  (:keymaps 'markdown-mode-map
+            :states 'normal
+            :prefix ","
+            "{"   #'markdown-backward-paragraph
+            "}"   #'markdown-forward-paragraph
+            "]"   #'markdown-complete
+            ">"   #'markdown-indent-region
+            "»"   #'markdown-indent-region
+            "<"   #'markdown-outdent-region
+            "«"   #'markdown-outdent-region
+            "n"   #'markdown-next-link
+            "p"   #'markdown-previous-link
+            "f"   #'markdown-follow-thing-at-point
+            "k"   #'markdown-kill-thing-at-point
+            "c"   '(nil :which-key "command")
+            "c]"  #'markdown-complete-buffer
+            "cc"  #'markdown-check-refs
+            "ce"  #'markdown-export
+            "cm"  #'markdown-other-window
+            "cn"  #'markdown-cleanup-list-numbers
+            "co"  #'markdown-open
+            "cp"  #'markdown-preview
+            "cv"  #'markdown-export-and-preview
+            "cw"  #'markdown-kill-ring-save
+            "h"   '(nil :which-key "headings")
+            "hi"  #'markdown-insert-header-dwim
+            "hI"  #'markdown-insert-header-setext-dwim
+            "h1"  #'markdown-insert-header-atx-1
+            "h2"  #'markdown-insert-header-atx-2
+            "h3"  #'markdown-insert-header-atx-3
+            "h4"  #'markdown-insert-header-atx-4
+            "h5"  #'markdown-insert-header-atx-5
+            "h6"  #'markdown-insert-header-atx-6
+            "h!"  #'markdown-insert-header-setext-1
+            "h@"  #'markdown-insert-header-setext-2
+            "i"   '(nil :which-key "insert")
+            "i-"  #'markdown-insert-hr
+            "if"  #'markdown-insert-footnote
+            "ii"  #'markdown-insert-image
+            "il"  #'markdown-insert-link
+            "it"  #'markdown-insert-table
+            "iw"  #'markdown-insert-wiki-link
+            "l"   '(nil :which-key "lists")
+            "li"  #'markdown-insert-list-item
+            "T"   '(nil :which-key "toggle")
+            "Ti"  #'markdown-toggle-inline-images
+            "Tu"  #'markdown-toggle-url-hiding
+            "Tm"  #'markdown-toggle-markup-hiding
+            "Tt"  #'markdown-toggle-gfm-checkbox
+            "Tw"  #'markdown-toggle-wiki-links
+            "t"   '(nil :which-key "table")
+            "tc"  #'markdown-table-move-column-left
+            "tt"  #'markdown-table-move-row-down
+            "ts"  #'markdown-table-move-row-up
+            "tr"  #'markdown-table-move-column-right
+            "ts"  #'markdown-table-sort-lines
+            "tC"  #'markdown-table-convert-region
+            "tt"  #'markdown-table-transpose
+            "td"  '(nil :which-key "delete")
+            "tdc" #'markdown-table-delete-column
+            "tdr" #'markdown-table-delete-row
+            "ti"  '(nil :which-key "insert")
+            "tic" #'markdown-table-insert-column
+            "tir" #'markdown-table-insert-row
+            "x"   '(nil :which-key "text")
+            "xb"  #'markdown-insert-bold
+            "xB"  #'markdown-insert-gfm-checkbox
+            "xc"  #'markdown-insert-code
+            "xC"  #'markdown-insert-gfm-code-block
+            "xi"  #'markdown-insert-italic
+            "xk"  #'markdown-insert-kbd
+            "xp"  #'markdown-insert-pre
+            "xP"  #'markdown-pre-region
+            "xs"  #'markdown-insert-strike-through
+            "xq"  #'markdown-blockquote-region)
+  :hook (markdown-mode . orgtbl-mode)
+  :config
+  (setq markdown-fontify-code-blocks-natively t))
+#+end_src
+
+Since most of my Mardown files are related to Github, I’d like to be
+able to render Markdown through its API.
+#+begin_src emacs-lisp
+(use-package gh-md
+  :defer t
+  :straight (:build t)
+  :general
+  (:keymaps 'markdown-mode-map
+   :states 'normal
+   :prefix ","
+   "cr" #'gh-md-render-buffer))
+#+end_src
+
+Tables of content are always nice to have for large files, just like
+with the ~toc-org~ package for org-mode.
+#+begin_src emacs-lisp
+(use-package markdown-toc
+  :defer t
+  :straight (:build t)
+  :general
+  (:keymaps 'markdown-mode-map
+   :states 'normal
+   :prefix ","
+   "iT" #'markdown-toc-generate-toc))
+#+end_src
+
+~vmd-mode~ allows the user to live-preview their Github-flavored
+Markdown file quickly. That’s neat!
+#+begin_src emacs-lisp
+(use-package vmd-mode
+  :defer t
+  :straight (:build t)
+  :custom ((vmd-binary-path (executable-find "vmd")))
+  :general
+  (:keymaps 'markdown-mode-map
+   :states 'normal
+   :prefix ","
+   "cP" #'vmd-mode))
+#+end_src
+
 **** Nginx
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Nginxjiz5fl6184j0
