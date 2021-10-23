@@ -1,4 +1,3 @@
-# -*- after-save-hook: (org-babel-tangle t); -*-
 #+title: MPD Configuration
 #+setupfile: ~/org/config/headers
 #+options: auto-id:t
@@ -39,7 +38,10 @@ MPD requires a few compulsory parameters that we will see below.
 #+name: mpd-gen-values
 #+begin_src emacs-lisp :var table=mpd-required-parameters :exports results
 (mapconcat (lambda (parameter)
-             (let* ((trim-name (lambda (parameter) (string-replace "=" "" parameter)))
+             (let* ((trim-name (lambda (parameter)
+                                 (replace-regexp-in-string (regexp-quote "=")
+                                                           ""
+                                                           parameter)))
                     (name      (apply trim-name `(,(car parameter))))
                     (value     (apply trim-name `(,(cadr parameter)))))
                (format "%s \"%s\"" name value)))

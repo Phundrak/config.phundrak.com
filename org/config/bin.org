@@ -44,30 +44,33 @@ of said command running.
 #+NAME: autostart-gen
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
 (mapconcat (lambda (start-command)
-             (let* ((command   (s-replace "~" "" (nth 0 start-command)))
-                    (arguments (s-replace "~" "" (nth 1 start-command)))
-                    (once?     (string= "yes"    (nth 2 start-command))))
-               (if once?
+             (let ((command   (replace-regexp-in-string (regexp-quote "~") "" (nth 0 start-command)))
+                   (arguments (replace-regexp-in-string (regexp-quote "~") "" (nth 1 start-command)))
+                   (oncep     (string= "yes"    (nth 2 start-command))))
+               (if oncep
                    (format "pgrep -x %s 2&>/dev/null || echo (%s) 2&>/dev/null"
                            command
-                           (s-collapse-whitespace (format "%s %s & && disown"
-                                                          command
-                                                          arguments)))
+                           (replace-regexp-in-string " +" " " (format "%s %s & && disown"
+                                                                      command
+                                                                      arguments)))
                  (format "%s %s &" command arguments))))
            table
            "\n")
 #+END_SRC
 
-#+RESULTS[6bdde37274cbbcce2fcd7e86690ce9ce7f32c62f]: autostart-gen
-: xrdb -merge $HOME/.Xresources &
-: mpc stop &
-: set-screens  &
-: pgrep -x picom 2&>/dev/null || echo (picom & && disown) 2&>/dev/null
-: pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
-: pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
-: pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
-: pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
-: xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
+#+RESULTS[085e16ae9fd402b050b526763cc792af26aaaf41]: autostart-gen
+#+begin_example
+mpc stop &
+pgrep -x picom 2&>/dev/null || echo (picom & && disown) 2&>/dev/null
+set-screens  &
+pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
+pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
+pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
+pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
+xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
+pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
+xrdb -merge $HOME/.Xresources &
+#+end_example
 
 I also have an external sound card, a Scarlet 2i2 G3, that I would like to use
 as my default audio output. However, it might not be always connected, hence the
@@ -782,12 +785,12 @@ end
 
 #+NAME: ytdl-arg-set-default-value-gen
 #+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
-(let* ((args (-filter (lambda (arg)
-                        (let* ((var     (unless (string= "None" (nth 3 arg)) (nth 3 arg)))
-                               (default (format "%s" (nth 4 arg)))
-                               (default (unless (string= "None" default) default)))
-                          (and var default)))
-                      args)))
+(let* ((args (seq-filter (lambda (arg)
+                           (let* ((var     (unless (string= "None" (nth 3 arg)) (nth 3 arg)))
+                                  (default (format "%s" (nth 4 arg)))
+                                  (default (unless (string= "None" default) default)))
+                             (and var default)))
+                         args)))
   (mapconcat (lambda (arg)
                (let* ((var     (nth 3 arg))
                       (default (format "%s" (nth 4 arg))))
