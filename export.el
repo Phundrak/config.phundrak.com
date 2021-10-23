@@ -1,15 +1,15 @@
-#!/usr/bin/emacs --script
+#!/usr/bin/env -S emacs -Q --script
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(require 'org)
+(require 'ox-html)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 (package-refresh-contents)
 (package-install 'htmlize)
-(package-install 's)
-(require 's)
 (setq org-confirm-babel-evaluate nil
       org-html-validation-link nil)
-(let* ((files (mapcar #'expand-file-name
-                      (file-expand-wildcards "org/config/*.org"))))
+(let ((files (mapcar #'expand-file-name
+                     (file-expand-wildcards "org/config/*.org"))))
   (mapc (lambda (file)
           (message (format "==========\nExporting %S\n==========" file))
           (with-current-buffer (find-file file)

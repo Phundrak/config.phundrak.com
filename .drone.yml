@@ -5,6 +5,7 @@ steps:
 - name: build
   image: silex/emacs:27-alpine
   commands:
+    - apk add git
     - emacs --script export.el
   when:
     branch:
