@@ -1990,31 +1990,33 @@ configuration [[file:mpd.org][here]]).
 I also want to create a small hydra for manipulating MPD:
 #+name: emms-media-hydra
 #+begin_src emacs-lisp :tangle no
-(let ((shell-command-and-echo (lambda (command &optional echo)
-                                (with-temp-buffer
-                                  (shell-command command
-                                                 (current-buffer)
-                                                 (current-buffer)))
-                                (when echo
-                                  (message "mpc %s"
-                                           (string-trim
-                                            (shell-command-to-string "mpc volume")))))))
-  (defhydra hydra-media ()
-    "
+(defun shell-command-and-echo (command &optional echo)
+  (progn
+    (with-temp-buffer
+      (shell-command command
+                     (current-buffer)
+                     (current-buffer))
+      (when echo
+        (message "mpc %s"
+                 (string-trim
+                  (shell-command-to-string "mpc volume")))))))
+
+(defhydra hydra-media ()
+  "
 ^Tracks^     ^Volume^    ^Other^
 ^^^^^^^^----------------------------
-[_c_] %s(all-the-icons-material \"skip_previous\" :height 1.0 :v-adjust -0.2)     [_t_] %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)    [_p_] %s(all-the-icons-material \"play_arrow\" :height 1.0 :v-adjust -0.2)
-[_r_] %s(all-the-icons-material \"skip_next\" :height 1.0 :v-adjust -0.2)     [_s_] %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)    [_S_] %s(all-the-icons-material \"stop\" :height 1.0 :v-adjust -0.2)
+[_c_] %s(all-the-icons-material \"skip_previous\" :height 1.0 :v-adjust -0.2)     [_t_] %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)    [_p_] %s(all-the-icons-material \"play_arrow\" :height 1.0 :v-adjust -0.2)
+[_r_] %s(all-the-icons-material \"skip_next\" :height 1.0 :v-adjust -0.2)     [_s_] %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)    [_S_] %s(all-the-icons-material \"stop\" :height 1.0 :v-adjust -0.2)
 
 [_q_] quit
 "
-    ("c" emms-player-mpd-previous)
-    ("r" emms-player-mpd-next)
-    ("t" (apply shell-command-and-echo '("mpc volume -2" "mpc volume")))
-    ("s" (apply shell-command-and-echo '("mpc volume +2" "mpc volume")))
-    ("p" (apply shell-command-and-echo '("mpc toggle")))
-    ("S" emms-player-mpd-stop)
-    ("q" nil :exit t)))
+  ("c" emms-player-mpd-previous)
+  ("r" emms-player-mpd-next)
+  ("t" (shell-command-and-echo "mpc volume -2" "mpc volume"))
+  ("s" (shell-command-and-echo "mpc volume +2" "mpc volume"))
+  ("p" (shell-command-and-echo "mpc toggle"))
+  ("S" emms-player-mpd-stop)
+  ("q" nil :exit t))
 #+end_src
 
 *** Nov
