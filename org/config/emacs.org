@@ -5601,19 +5601,6 @@ Undefining some stuff to make keybind prefixes work correctly.
  "<mouse-2>" nil
  "<mouse-3>" nil)
 
-;; (general-define-key
-;;  :keymaps '(diff-mode-map help-mode-map image-mode-map
-;;             custom-mode-map Man-mode-map eww-mode-map
-;;             debugger-mode-map custom-mode-map eshell-mode-map
-;;             image-mode-map help-mode-map)
-;;  :states 'normal
-;;  "SPC" nil)
-
-;; (general-define-key
-;;  :keymaps 'diff-mode-map
-;;  :states 'motion
-;;  "SPC" nil)
-
 (general-define-key
  :states 'normal
  "U"   #'evil-redo
