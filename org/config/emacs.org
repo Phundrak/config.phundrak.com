@@ -5664,10 +5664,13 @@ Undefining some stuff to make keybind prefixes work correctly.
 
   "h"   '(nil :wk "help")
   "hk"  #'which-key-show-top-level
+  "hi"  #'info
+  "hI"  #'info-display-manual
   "hd"  '(nil :wk "describe")
   "hdc" #'describe-char
   "hdC" #'helpful-command
   "hdf" #'helpful-callable
+  "hdi" #'describe-input-method
   "hdk" #'helpful-key
   "hdm" #'helpful-macro
   "hdM" #'helpful-mode
