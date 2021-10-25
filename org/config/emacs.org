@@ -2889,6 +2889,10 @@ Let’s define some more intuitive keybinds for ~info-mode~.
   :straight (info :type built-in :build t)
   :general
   (:keymaps 'Info-mode-map
+   :states '(normal emacs)
+   "SPC" nil
+   ","   nil)
+  (:keymaps 'Info-mode-map
    :states 'normal
    "c" #'Info-prev
    "t" #'evil-scroll-down
