@@ -3188,7 +3188,7 @@ table of content of my files to quickly jump around my file (I have
 for org files that will be hosted and viewable on Github.
 #+begin_src emacs-lisp
 (use-package toc-org
-  :after org
+  :after (org markdown-mode)
   :straight (:build t)
   :init
   (add-to-list 'org-tag-alist '("TOC" . ?T))
@@ -4410,7 +4410,7 @@ unfortunately.
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :defer t
-  :straight (:build t)
+  :straight t
   :mode
   (("\\.mkd\\'" . markdown-mode)
    ("\\.mdk\\'" . markdown-mode)
@@ -4508,6 +4508,7 @@ able to render Markdown through its API.
 #+begin_src emacs-lisp
 (use-package gh-md
   :defer t
+  :after markdown-mode
   :straight (:build t)
   :general
   (:keymaps 'markdown-mode-map
@@ -4521,6 +4522,7 @@ with the ~toc-org~ package for org-mode.
 #+begin_src emacs-lisp
 (use-package markdown-toc
   :defer t
+  :after markdown-mode
   :straight (:build t)
   :general
   (:keymaps 'markdown-mode-map
@@ -4534,6 +4536,7 @@ Markdown file quickly. That’s neat!
 #+begin_src emacs-lisp
 (use-package vmd-mode
   :defer t
+  :after markdown-mode
   :straight (:build t)
   :custom ((vmd-binary-path (executable-find "vmd")))
   :general
