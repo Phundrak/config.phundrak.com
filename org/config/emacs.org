@@ -2376,6 +2376,21 @@ editing text.
  "M-\"" #'insert-pair)
 #+end_src
 
+*** Atomic Chrome
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Atomic-Chrome-2w5bt8y029j0
+:END:
+Why write in your browser when you could write with Emacs? Despite its
+name, this package isn’t only geared towards Chrome/Chromium-based
+browsers but also towards Firefox since its 2.0 version. I find it a
+bit unfortunate Chrome’s name stuck in the package’s name though.
+#+begin_src emacs-lisp
+(use-package atomic-chrome
+  :straight (:build t)
+  :init
+  (atomic-chrome-start-server))
+#+end_src
+
 *** Evil Nerd Commenter
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Evil-Nerd-Commenterd2w1fl6184j0
