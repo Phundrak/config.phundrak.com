@@ -1,12 +1,6 @@
 [submodule ".config/tmux"]
         path = .config/tmux
         url = git@github.com:gpakosz/.tmux.git
-[submodule ".config/emacs/private/conlanging"]
-        path = fromGIT/emacs-packages/conlanging
-        url = git@labs.phundrak.com:phundrak/conlang-layer.git
-[submodule ".mozilla/firefox/lruehqec.default/chrome"]
-        path = fromGIT/blurredfox-nord
-        url = git@labs.phundrak.com:phundrak/blurredfox-nord.git
 [submodule ".emacs.d"]
         path = .emacs.d
         url = git@github.com:plexus/chemacs2.git
