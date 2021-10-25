@@ -924,8 +924,8 @@ Here’s the equivalent in Common Lisp.
 Let’s also create a keymap for screenshots.
 #+name: screenshot-keymap
 #+caption: ~*my-screenshot-keymap*~
-| Keychord | Function                                             |
-|----------+------------------------------------------------------|
+| Keychord | Function                                              |
+|----------+-------------------------------------------------------|
 | ~d~        | ~exec scrot -d 3 -e 'mv $f ~/Pictures/Screenshots'~     |
 | ~s~        | ~exec scrot -e 'mv $f ~/Pictures/Screenshots'~          |
 | ~S~        | ~exec scrot -s -e 'mv $f ~/Pictures/Screenshots'~       |
@@ -952,6 +952,7 @@ the above keymaps.
 | ~n~        | ~exec nemo~               |
 | ~r~        | ~'*my-rofi-keymap*~       |
 | ~s~        | ~'*my-screenshot-keymap*~ |
+| ~w~        | ~exec select-pape~        |
 
 This translates to:
 #+begin_src lisp
