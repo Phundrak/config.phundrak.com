@@ -502,16 +502,16 @@ I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
 is the list of groups I will be using:
 #+name: list-groups
-| Groups  | Number | Windows                    | Type    |
-|---------+--------+----------------------------+---------|
-| [DEV]   |      1 | Emacs, Virt-manager        |         |
-| [SYS]   |      2 |                            | Dynamic |
-| [WWW]   |      3 | Firefox                    |         |
-| [FILES] |      4 | Nemo                       |         |
-| [MEDIA] |      5 | Gimp                       |         |
-| [SOC]   |      6 | Signal, discord, lightcord |         |
-| [PRIV]  |      7 |                            |         |
-| [GAM]   |      8 | Steam                      |         |
+| Groups  | Number | Windows             | Type    |
+|---------+--------+---------------------+---------|
+| [DEV]   |      1 | Emacs, Virt-manager |         |
+| [SYS]   |      2 |                     | Dynamic |
+| [WWW]   |      3 | Firefox             |         |
+| [FILES] |      4 | Nemo                |         |
+| [MEDIA] |      5 | Gimp                |         |
+| [SOC]   |      6 | Signal, discord     |         |
+| [PRIV]  |      7 |                     |         |
+| [GAM]   |      8 | Steam               |         |
 
 #+name: gen-groups
 #+headers: :exports none
@@ -534,7 +534,7 @@ is the list of groups I will be using:
                "\n"))
 #+end_src
 
-#+RESULTS[22540ee038b7206f965b7ca48521e93bdccb5de8]: gen-groups
+#+RESULTS[212d0f619fcfa8df9da1b051a3855491e53431b2]: gen-groups
 : (grename "[DEV]")
 : (gnewbg-dynamic "[SYS]")
 : (gnewbg "[WWW]")
@@ -590,10 +590,9 @@ class, so it will be pretty straightforward to the corresponding code.
 #+end_src
 
 This can be written this way:
-#+RESULTS[21630178e2de94ae4bda9a3f91f96b04ff447845]: gen-rules
+#+RESULTS[4affc294b6e643c957fceec5e084fae4933ac7f3]: gen-rules
 #+begin_src lisp
 (define-frame-preference "[GAM]" (nil t t :class "Steam"))
-(define-frame-preference "[SOC]" (nil t t :class "lightcord"))
 (define-frame-preference "[SOC]" (nil t t :class "discord"))
 (define-frame-preference "[SOC]" (nil t t :class "Signal"))
 (define-frame-preference "[MEDIA]" (nil t t :class "Gimp"))
@@ -946,7 +945,7 @@ the above keymaps.
 | Keychord | Function                |
 |----------+-------------------------|
 | ~b~        | ~firefox~                 |
-| ~d~        | ~exec lightcord~          |
+| ~d~        | ~exec discord-canary~     |
 | ~e~        | ~exec emacsclient -c~     |
 | ~g~        | ~exec gimp~               |
 | ~n~        | ~exec nemo~               |
