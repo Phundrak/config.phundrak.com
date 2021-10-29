@@ -1975,8 +1975,10 @@ configuration [[file:mpd.org][here]]).
    "meb" #'emms-browser
    "mep" #'emms-playlist-mode-go
    "mes" #'emms-player-mpd-show
-   "mp"  #'emms-player-mpd-play
-   "mP"  #'emms-player-mpd-pause
+   "mp"  '((lambda ()
+             (interactive)
+             (shell-command-and-echo "mpc toggle"))
+           :which-key "mpc toggle")
    "mu"  '(nil :which-key "update")
    "mum" #'emms-player-mpd-update-all
    "muc" #'emms-cache-set-from-mpd-all)
@@ -1990,14 +1992,26 @@ configuration [[file:mpd.org][here]]).
 I also want to create a small hydra for manipulating MPD:
 #+name: emms-media-hydra
 #+begin_src emacs-lisp :tangle no
-(defun shell-command-and-echo (command &optional echo)
+(defun shell-command-and-echo (command &optional echo prefix)
+  "Run COMMAND and display the result of ECHO prefixed by PREFIX.
+
+Run COMMAND as a shell command.
+
+If ECHO is non nil, display the result of its execution as a
+shell command to the minibuffer through `MESSAGE'.
+
+If PREFIX is non nil, it will prefix the output of ECHO in the
+minibuffer, both separated by a single space."
   (progn
     (with-temp-buffer
       (shell-command command
                      (current-buffer)
                      (current-buffer))
       (when echo
-        (message "mpc %s"
+        (message "%s%s"
+                 (if prefix
+                     (concat prefix " ")
+                   "")
                  (string-trim
                   (shell-command-to-string "mpc volume")))))))
 
@@ -2012,8 +2026,8 @@ I also want to create a small hydra for manipulating MPD:
 "
   ("c" emms-player-mpd-previous)
   ("r" emms-player-mpd-next)
-  ("t" (shell-command-and-echo "mpc volume -2" "mpc volume"))
-  ("s" (shell-command-and-echo "mpc volume +2" "mpc volume"))
+  ("t" (shell-command-and-echo "mpc volume -2" "mpc volume" "mpc"))
+  ("s" (shell-command-and-echo "mpc volume +2" "mpc volume" "mpc"))
   ("p" (shell-command-and-echo "mpc toggle"))
   ("S" emms-player-mpd-stop)
   ("q" nil :exit t))
