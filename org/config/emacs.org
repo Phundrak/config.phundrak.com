@@ -3876,9 +3876,10 @@ The project is then defined like so:
 
 #+begin_src emacs-lisp
 (use-package org-ref
-  :after (org ox-bibtex pdf-tools)
+  ;; :after (org ox-bibtex pdf-tools)
+  :after org
+  :defer t
   :straight (:build t)
-  :demand t
   :custom-face
   (org-ref-cite-face ((t (:weight bold))))
   :init
