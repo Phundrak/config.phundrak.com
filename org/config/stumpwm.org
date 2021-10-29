@@ -1334,7 +1334,7 @@ Then, let’s declare a keymap for our media controls.
 | ~m~        | ~mpc-interactive~             |
 | ~p~        | ~exec mpc prev~               |
 | ~n~        | ~exec mpc next~               |
-| ~t~        | ~exec mpc toggle~             |
+| ~p~        | ~exec mpc toggle~             |
 | ~s~        | ~exec mpc stop~               |
 | ~N~        | ~term ncmpcpp -q~             |
 | ~v~        | ~term ncmpcpp -qs visualizer~ |
