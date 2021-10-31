@@ -372,7 +372,7 @@ Let’s also indicate how the groupname is displayed.
 The window format should display first its window number, then its
 titled, limited to 30 characters.
 #+begin_src lisp
-(setf *window-format* "%n: %t")
+(setf *window-format* "%n: %30t")
 #+end_src
 
 Here are some modules that we will load for the modeline:
@@ -618,7 +618,7 @@ This can be done like so:
                (null windows))
       (unless (= 1 (length (group-frames current-group)))
         (only))
-      (term "htop")
+      (term "btm -T")
       (term)
       (term))))
 #+end_src
