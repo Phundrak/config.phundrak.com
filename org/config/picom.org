@@ -202,7 +202,7 @@ describes the opacity of inactive windows.
 | Min value     | ~0.1~ |
 | Max value     | ~1.0~ |
 #+BEGIN_SRC conf
-inactive-opacity = 0.9;
+inactive-opacity = 0.8;
 #+END_SRC
 
 On the other hand, it is possible to declare a default opacity for active
