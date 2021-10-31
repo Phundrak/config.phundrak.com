@@ -3354,13 +3354,6 @@ you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/]
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-HTMLxjc5fl6184j0
 :END:
-For Reveal.JS exports, I need to set where to find the framework by
-default:
-#+NAME: org-re-reveal-root
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-#+END_SRC
-
 On HTML exports, Org-mode tries to include a validation link for the
 exported HTML. Let’s disable that since I never use it.
 #+NAME: org-html-validation
@@ -3495,6 +3488,23 @@ Markdown!
 (use-package ox-gfm
   :after (ox org)
   :straight (:build t))
+#+end_src
+
+**** Reveal.js
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Reveal-js-mzijhel099j0
+:END:
+#+NAME: org-re-reveal-root
+#+begin_src emacs-lisp
+(use-package org-re-reveal
+  :defer t
+  :after org
+  :straight (:build t)
+  :init
+  (add-hook 'org-mode-hook (lambda () (require 'org-re-reveal)))
+  :config
+  (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"
+        org-re-reveal-revealjs-version "4"))
 #+end_src
 
 **** SSH Config
