@@ -4611,6 +4611,29 @@ Nginx syntax.
                                (add-to-list 'company-backends #'company-nginx))))
 #+end_src
 
+**** PlantUML
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-PlantUML-9zo88og099j0
+:END:
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :defer t
+  :mode ("{{.\\(pum\\|puml\\)\\'" . plantuml-mode)
+  :init
+  (add-to-list 'org-babel-load-languages '(plantuml . t))
+  :general
+  (:keymaps 'plantuml-mode-map
+   :states 'normal
+   :prefix ","
+   "c"  '(nil :which-key "compile")
+   "cc" #'plantuml-preview
+   "co" #'plantuml-set-output-type)
+  :config
+  (setq plantuml-default-exec-mode 'jar
+        plantuml-jar-path "~/.local/bin/plantuml.jar"
+        org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
+#+end_src
+
 **** Shells
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Shellsn116fl6184j0
