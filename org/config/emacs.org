@@ -5,7 +5,7 @@
 #+html_head: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
 #+html_head: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :tangle ~/.emacs.vanilla/init.el
+#+property: header-args:emacs-lisp+ :tangle ~/.emacs.d/init.el
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 * Introduction
@@ -41,7 +41,7 @@ Emacs. This is where I put some options in order to disable as quickly
 as possible some built-in features of Emacs before they can be even
 loaded, speeding Emacs up a bit.
 #+headers: :exports code :results silent :lexical t
-#+begin_src emacs-lisp :mkdirp yes :tangle ~/.emacs.vanilla/early-init.el
+#+begin_src emacs-lisp :mkdirp yes :tangle ~/.emacs.d/early-init.el
 (setq package-enable-at-startup nil
       inhibit-startup-message   t
       frame-resize-pixelwise    t  ; fine resize
