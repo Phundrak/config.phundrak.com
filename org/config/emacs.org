@@ -1305,15 +1305,17 @@ configuration for the ~mu4e~ package itself.
   :straight (:build t :location site)
   :commands mu4e mu4e-compose-new
   :init
-  (progn
-    (setq mu4e-completing-read-function 'completing-read
-          mu4e-use-fancy-chars          t
-          mu4e-view-show-images         t
-          message-kill-buffer-on-exit   t
-          mu4e-org-support              nil)
-    (let ((dir "~/Downloads/mu4e"))
-      (when (file-directory-p dir)
-        (setq mu4e-attachment-dir dir))))
+  (setq mu4e-completing-read-function 'completing-read
+        mu4e-use-fancy-chars          t
+        mu4e-view-show-images         t
+        message-kill-buffer-on-exit   t
+        mu4e-org-support              nil)
+  (let ((dir "~/Downloads/mu4e"))
+    (when (file-directory-p dir)
+      (setq mu4e-attachment-dir dir)))
+  (defmacro mu4e-view-mode--prepare ()
+    `(lambda () (visual-line-mode 1)))
+  :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :general
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
