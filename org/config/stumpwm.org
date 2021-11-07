@@ -182,10 +182,10 @@ including a short description of what they are for:
 #+name: loaded-modules
 | Module Name     | Why It Is Loaded                                           |
 |-----------------+------------------------------------------------------------|
-| alert-me        | Creates notifications, can also create timed notifications |
 | beckon          | Bring the mouse cursor to the current window               |
 | end-session     | Gracefully end programs when ending user session           |
 | globalwindows   | Navigate between windows from all workspaces               |
+| mpd             | Interact with MPD                                          |
 | stump-backlight | Native management of backlight in StumpWM                  |
 | urgentwindows   | Get urgent windows                                         |
 
@@ -198,14 +198,21 @@ including a short description of what they are for:
            "\n")
 #+end_src
 
-#+RESULTS[508e36f9747f1da901bbee63582416a8a6ba2c2f]: gen-load-modules
+#+RESULTS[0cbba236372280cb2eb6a1e277cda84938e15d46]: gen-load-modules
 #+begin_src lisp
-(load-module "alert-me")
 (load-module "beckon")
 (load-module "end-session")
 (load-module "globalwindows")
+(load-module "mpd")
 (load-module "stump-backlight")
 (load-module "urgentwindows")
+#+end_src
+
+In order to be able to use MPD from StumpWM itself, we’ll need to
+connect to it.
+#+begin_src lisp
+(when *initializing*
+  (mpd-connect))
 #+end_src
 
 Finally, we can notify the user everything is ready.
@@ -353,9 +360,9 @@ still set its color to Nord1, just in case.
 #+end_src
 
 The timeout of the modeline indicates how often it refreshes in
-seconds. I think one second is good.
+seconds. I think two seconds is good.
 #+begin_src lisp
-(setf *mode-line-timeout* 1)
+(setf *mode-line-timeout* 2)
 #+end_src
 
 Next we get to the content of the modeline. This format follows the
@@ -380,8 +387,9 @@ Here are some modules that we will load for the modeline:
 | Module Name      | Why It Is Loaded                                 |
 |------------------+--------------------------------------------------|
 | battery-portable | Get information on the battery level of a laptop |
-| cpu              | Get the CPU usage of the computer                |
-| mem              | Get the memory usage of the computer             |
+| cpu              | Get the CPU usage                                |
+| mpd              | Display MPD’s status                             |
+| mem              | Get the memory usage                             |
 | wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
@@ -393,21 +401,25 @@ Here are some modules that we will load for the modeline:
            "\n")
 #+end_src
 
-#+RESULTS[125d7bbaa15ee28f0baf4cad59c4742ac372853b]: gen-load-modeline-modules
+#+RESULTS[22e9c907b8814e15dd2bc2a16aa98bb7cab0fd46]: gen-load-modeline-modules
 #+begin_src lisp
 (load-module "battery-portable")
 (load-module "cpu")
+(load-module "mpd")
 (load-module "mem")
 (load-module "wifi")
 #+end_src
 
+Some variables need to be set so modules are displayed correctly.
 #+begin_src lisp
-(setq cpu::*cpu-modeline-fmt* "%c"
-      mem::*mem-modeline-fmt* "%a %p"
-      wifi:*wifi-modeline-fmt* "%e %P"
-      wifi:*use-colors* nil
-      ,*mode-line-highlight-template* "<~A>"
-      ,*hidden-window-color* "^**")
+(setf cpu::*cpu-modeline-fmt*        "%c"
+      mem::*mem-modeline-fmt*        "%a%p"
+      wifi:*wifi-modeline-fmt*       "%e %P"
+      wifi:*use-colors*              nil
+      mpd:*mpd-modeline-fmt*         "%a - %t"
+      mpd:*mpd-status-fmt*           "%a - %t"
+      ,*mode-line-highlight-template* "«~A»"
+      ,*hidden-window-color*          "^**")
 #+end_src
 
 We can indicate what to display in our modeline. Each formatter will
@@ -420,9 +432,10 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 | ~%W~        | Display list of windows in the current group and head |          |
 | ~^>~        | Rest of the modeline will be aligned to the right     |          |
 | ~mu-unread~ | Display number of unread emails                       | yes      |
+| ~%m~        | Display current MPD song                              |          |
 | ~%I~        | Display Wifi status                                   |          |
-| ~%C~        | Display CPU status                                    |          |
-| ~%M~        | Display RAM status                                    |          |
+| ~%C~        | Display CPU usage                                     |          |
+| ~%M~        | Display RAM usage                                     |          |
 | ~%B~        | Display battery status                                |          |
 | ~%d~        | Display date                                          |          |
 
@@ -437,8 +450,8 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
         elements)
 #+end_src
 
-#+RESULTS[5d43e832fca88ddfffecd2a55d63bbb767e2e315]: modeline-format-gen
-: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%I") ("%C") ("%M") ("%B") ("%d"))
+#+RESULTS[54964dce177e8031e22761857d7d1a0bc960c6bd]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%I") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
 (defun generate-modeline (elements &optional not-invertedp)
@@ -1289,23 +1302,30 @@ with Emacs’ buffers.
 :END:
 My music is managed through MPD, and I often use ~mpc~ commands in order
 to interact with it without any GUI application. So, we’ll see a lot
-of its usage here.
+of its usage here, and numerous commands used here come from the ~mpd~
+minor mode loaded [[#Init-file-l3q4snd1u5j0][above]].
 
 First, let’s declare an interactive keymap in order to easily change
 several times in a row either the current song playing or the volume
 of MPD.
 #+name: inter-mpc
 #+caption: Interactive keybinds for ~mpc~
-| Keychord | Function           |
-|----------+--------------------|
-| ~c~        | ~exec mpc prev~      |
-| ~t~        | ~exec mpc volume -2~ |
-| ~s~        | ~exec mpc volume +2~ |
-| ~r~        | ~exec mpc next~      |
+| Keychord | Function        |
+|----------+-----------------|
+| ~c~        | ~mpd-prev~        |
+| ~t~        | ~mpd-volume-down~ |
+| ~s~        | ~mpd-volume-up~   |
+| ~r~        | ~mpd-next~        |
 
-Cela donne le code suivant:
+This can be translated in CommonLisp as:
 #+begin_src lisp
 <<interactive-gen(name="mpc-interactive", keys=inter-mpc)>>
+#+end_src
+
+We need to indicate also how much the volume is affected by
+~mpd-volume-down~ and ~mpd-volume-up~.
+#+begin_src lisp
+(setf *mpd-volume-step* 2)
 #+end_src
 
 Another one will be defined for the general audio of my computer. And
@@ -1326,21 +1346,56 @@ for my screen’s backlight.
 #+end_src
 
 Then, let’s declare a keymap for our media controls.
+#+name: mpd-add-map
+#+caption: ~*my-mpd-add-map*~
+| Keychord | Function                  |
+|----------+---------------------------|
+| ~a~        | ~mpd-search-and-add-artist~ |
+| ~A~        | ~mpd-search-and-add-album~  |
+| ~f~        | ~mpd-search-and-add-file~   |
+| ~F~        | ~mpd-add-file~              |
+| ~g~        | ~mpd-search-and-add-genre~  |
+| ~t~        | ~mpd-search-and-add-title~  |
+
+#+name: mpd-browse-map
+#+caption: ~*my-mpd-browse-map*~
+| Keychord | Function            |
+|----------+---------------------|
+| ~a~        | ~mpd-browse-artists~  |
+| ~A~        | ~mpd-browse-albums~   |
+| ~g~        | ~mpd-browse-genres~   |
+| ~p~        | ~mpd-browse-playlist~ |
+| ~t~        | ~mpd-browse-tracks~   |
+
 #+name: media-management
 #+caption: ~*my-media-keymap*~
 | Keychord | Function                    |
 |----------+-----------------------------|
 | ~.~        | ~media-interactive~           |
+| ~a~        | ~'*my-mpd-add-map*~           |
+| ~b~        | ~'*my-mpd-browse-map*~        |
+| ~c~        | ~mpd-clear~                   |
 | ~m~        | ~mpc-interactive~             |
-| ~p~        | ~exec mpc prev~               |
-| ~n~        | ~exec mpc next~               |
-| ~p~        | ~exec mpc toggle~             |
-| ~s~        | ~exec mpc stop~               |
+| ~p~        | ~mpd-prev~                    |
+| ~n~        | ~mpd-next~                    |
+| ~P~        | ~mpd-toggle-pause~            |
+| ~s~        | ~mpd-stop~                    |
+| ~u~        | ~mpd-update~                  |
 | ~N~        | ~term ncmpcpp -q~             |
 | ~v~        | ~term ncmpcpp -qs visualizer~ |
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
+(defvar *my-mpd-add-map*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=mpd-add-map)>>
+    m))
+
+(defvar *my-mpd-browse-map*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=mpd-browse-map)>>
+    m))
+
 (defvar *my-media-keymap*
   (let ((m (make-sparse-keymap)))
     <<keybinds-gen(map="m", keybinds=media-management)>>
@@ -1356,10 +1411,10 @@ media-related, but I’ll add keybinds for my screen’s backlight.
 #+caption: Top-level media keys
 | Keychord              | Function                             |
 |-----------------------+--------------------------------------|
-| ~XF86AudioPlay~         | ~exec mpc play~                        |
+| ~XF86AudioPlay~         | ~mpd-play~                             |
 | ~XF86AudioPause~        | ~exec mpc pause~                       |
-| ~XF86AudioPrev~         | ~exec mpc prev~                        |
-| ~XF86AudioNext~         | ~exec mpc next~                        |
+| ~XF86AudioPrev~         | ~mpd-prev~                             |
+| ~XF86AudioNext~         | ~mpd-next~                             |
 | ~XF86AudioRaiseVolume~  | ~exec amixer -q set Master 2%+ unmute~ |
 | ~XF86AudioLowerVolume~  | ~exec amixer -q set Master 2%- unmute~ |
 | ~XF86AudioMute~         | ~exec amixer -q set Master 1+ toggle~  |
