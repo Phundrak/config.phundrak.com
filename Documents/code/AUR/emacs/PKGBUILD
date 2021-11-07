@@ -60,7 +60,7 @@ if [[ $CLI == "YES" ]] ; then
 else
     pkgname="emacs-phundrak-git"
 fi
-pkgver=28.0.60.150848
+pkgver=28.0.60.150902
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -69,9 +69,9 @@ license=('GPL3')
 depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
 depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
 makedepends=('git')
-provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-replaces=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+provides=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+conflicts=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+replaces=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 #source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 # If Savannah fails for reasons, use Github's mirror
 source=("emacs-git::git://github.com/emacs-mirror/emacs.git#branch=emacs-28")
