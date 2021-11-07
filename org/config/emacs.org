@@ -713,15 +713,18 @@ can still feel some influence from my Spacemacs years here.
   (general-auto-unbind-keys)
   :config
   (general-create-definer phundrak/undefine
+    :keymaps 'override
     :states '(normal emacs))
   (general-create-definer phundrak/evil
     :states '(normal))
   (general-create-definer phundrak/leader-key
     :states '(normal insert visual emacs)
+    :keymaps 'override
     :prefix "SPC"
     :global-prefix "C-SPC")
   (general-create-definer phundrak/major-leader-key
     :states '(normal insert visual emacs)
+    :keymaps 'override
     :prefix ","
     :global-prefix "M-m"))
 #+end_src
@@ -1206,31 +1209,31 @@ in this code block all my keybinds for Elfeed here.
   :straight (:build t)
   :init
   (elfeed-goodies/setup)
-  :config
+  :general
   (phundrak/undefine
     :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
-    "SPC" nil
+    :packages 'elfeed
     "DEL" nil
     "s"   nil)
   (phundrak/evil
     :keymaps 'elfeed-show-mode-map
+    :packages 'elfeed
     "+" #'elfeed-show-tag
     "-" #'elfeed-show-untag
-    "o" #'elfeed-goodies/show-ace-link
-    "q" #'elfeed-kill-buffer)
-  (phundrak/evil
-    :keymaps 'elfeed-show-mode-map
     "b" #'elfeed-show-visit
     "C" #'elfeed-kill-link-url-at-point
     "d" #'elfeed-show-save-enclosure
     "l" #'elfeed-show-next-link
     "n" #'elfeed-show-next
+    "o" #'elfeed-goodies/show-ace-link
     "p" #'elfeed-show-prev
+    "q" #'elfeed-kill-buffer
     "S" #'elfeed-show-new-live-search
     "u" #'elfeed-show-tag--unread
     "y" #'elfeed-show-yank)
   (phundrak/evil
     :keymaps 'elfeed-search-mode-map
+    :packages 'elfeed
     "«"  #'elfeed-search-first-entry
     "»"  #'elfeed-search-last-entry
     "b"  #'elfeed-search-browse-url
@@ -1246,6 +1249,7 @@ in this code block all my keybinds for Elfeed here.
     "y"  #'elfeed-search-yank)
   (phundrak/major-leader-key
     :keymaps 'elfeed-search-mode-map
+    :packages 'elfeed
     "c"  #'elfeed-db-compact
     "t"  '(nil :which-key "tag")
     "tt" #'elfeed-search-tag-all-unread
@@ -1310,20 +1314,18 @@ configuration for the ~mu4e~ package itself.
     (let ((dir "~/Downloads/mu4e"))
       (when (file-directory-p dir)
         (setq mu4e-attachment-dir dir))))
-
-  :config
-  <<mu4e-mail-service>>
-  <<mu4e-mail-on-machine>>
-  <<mu4e-no-signature>>
-
-  <<mu4e-bookmarks>>
-
-  ;; Keybindings
+  :general
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
   <<mu4e-keybindings-header>>
   <<mu4e-keybindings-header-no-leader>>
   <<mu4e-keybindings-message>>
+
+  :config
+  <<mu4e-mail-service>>
+  <<mu4e-mail-on-machine>>
+  <<mu4e-no-signature>>
+  <<mu4e-bookmarks>>
 
   (when (fboundp 'imagemagick-register-types)
     (imagemagick-register-types))
@@ -1741,17 +1743,17 @@ bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
 #+name: mu4e-keybindings-undef
 #+begin_src emacs-lisp :tangle no
 (phundrak/undefine
- :keymaps 'mu4e-view-mode-map
- "S"   nil
- "r"   nil
- "c"   nil
- "gu"  nil)
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  "S"   nil
+  "r"   nil
+  "c"   nil
+  "gu"  nil)
 
 (phundrak/undefine
   :keymaps '(mu4e-view-mode-map mu4e-headers-mode-map)
-  "SPC" nil
-  "s"   nil
-  ","   nil)
+  :packages 'mu4e
+  "s"   nil)
 #+end_src
 
 Now, let’s define some keybindings for mu4e’s view mode, that is when
@@ -1798,17 +1800,19 @@ described with a simple function:
 #+name: mu4e-keybindings-view
 #+begin_src emacs-lisp :tangle no
 (phundrak/major-leader-key
- :keymaps 'mu4e-view-mode-map
- <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>)
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>)
 #+end_src
 
 I’ll also declare two keybinds for mu4e’s headers mode.
 #+name: mu4e-keybindings-header
 #+begin_src emacs-lisp :tangle no
 (phundrak/major-leader-key
- :keymaps 'mu4e-headers-mode-map
- "t" '(mu4e-view-mark-thread :which-key "mark thread")
- "s" 'swiper)
+  :keymaps 'mu4e-headers-mode-map
+  :packages 'mu4e
+  "t" '(mu4e-view-mark-thread :which-key "mark thread")
+  "s" 'swiper)
 #+end_src
 
 I will also redefine without a leader key ~ctsr~ in order to be able to
@@ -1816,11 +1820,12 @@ move freely (remember, bépo layout for me).
 #+name: mu4e-keybindings-header-no-leader
 #+begin_src emacs-lisp :tangle no
 (phundrak/evil
- :keymaps 'mu4e-headers-mode-map
- "c" #'evil-backward-char
- "t" #'evil-next-line
- "s" #'evil-previous-line
- "r" #'evil-forward-char)
+  :keymaps 'mu4e-headers-mode-map
+  :packages 'mu4e
+  "c" #'evil-backward-char
+  "t" #'evil-next-line
+  "s" #'evil-previous-line
+  "r" #'evil-forward-char)
 #+end_src
 
 Finally, let’s declare a couple of keybindings for when we are
@@ -1839,8 +1844,9 @@ the major-mode leader and call a simple function.
 #+name: mu4e-keybindings-message
 #+begin_src emacs-lisp :tangle no
 (phundrak/major-leader-key
- :keymaps 'message-mode-map
- <<general-keybindings-gen(table=mu4e-keybindings-message-tbl)>>)
+  :keymaps 'message-mode-map
+  :packages 'mu4e
+  <<general-keybindings-gen(table=mu4e-keybindings-message-tbl)>>)
 #+end_src
 
 **** Composing messages
@@ -1877,16 +1883,18 @@ the major-mode leader and call a simple function.
                                                (regexp-quote "\n")
                                                "\n\n"
                                                (with-temp-buffer
-                                                (insert-file-contents mail-signature-file)
-                                                (buffer-string))))))
+                                                 (insert-file-contents mail-signature-file)
+                                                 (buffer-string))))))
+  :general
   (phundrak/major-leader-key
-   :keymaps 'org-msg-edit-mode-map
-   "," #'message-send-and-exit
-   "c" #'message-send-and-exit
-   "a" #'message-kill-buffer
-   "k" #'message-kill-buffer
-   "s" #'message-dont-send
-   "f" #'org-msg-attach))
+    :keymaps 'org-msg-edit-mode-map
+    :packages 'org-msg
+    "," #'message-send-and-exit
+    "c" #'message-send-and-exit
+    "a" #'message-kill-buffer
+    "k" #'message-kill-buffer
+    "s" #'message-dont-send
+    "f" #'org-msg-attach))
 #+end_src
 
 **** Email alerts
@@ -1934,55 +1942,58 @@ configuration [[file:mpd.org][here]]).
   ((emms-source-file-default-directory (expand-file-name "~/Music"))
    (emms-player-mpd-server-name "localhost")
    (emms-player-mpd-server-port "6600")
-   (emms-player-mpd-music-directory (expand-file-name "~/Music"))))
-
-(phundrak/undefine
-  :keymaps 'emms-browser-mode-map
-  "SPC" nil
-  ","   nil
-  "s"   nil
-  "r"   nil)
-(phundrak/evil
-  :keymaps 'emms-browser-mode-map
-  "a"  #'emms-browser-add-tracks
-  "A"  #'emms-browser-add-tracks-and-play
-  "b"  '(nil :which-key "browse by")
-  "bA" #'emms-browse-by-album
-  "ba" #'emms-browse-by-artist
-  "bg" #'emms-browse-by-genre
-  "bs" #'emms-smart-browse
-  "by" #'emms-browse-by-year
-  "c"  #'emms-browser-clear-playlist
-  "S"  '(nil :which-key "search")
-  "SA" '(emms-browser-search-by-album  :which-key "by album")
-  "Sa" '(emms-browser-search-by-artist :which-key "by artist")
-  "Ss" '(emms-browser-search-by-names  :which-key "by name")
-  "St" '(emms-browser-search-by-names  :which-key "by title")
-  "q"  #'kill-this-buffer)
-(phundrak/evil
-  :keymaps 'emms-playlist-mode-map
-  "d" #'emms-playlist-mode-kill-track
-  "p" #'emms-playlist-mode-play-smart
-  "q" #'kill-this-buffer)
-(phundrak/leader-key
-  "m"   '(nil :which-key "media")
-  "m."  #'hydra-media/body
-  "m<"  #'emms-player-mpd-previous
-  "m«"  #'emms-player-mpd-previous
-  "m>"  #'emms-player-mpd-next
-  "m»"  #'emms-player-mpd-next
-  "mc"  #'emms-player-mpd-clear
-  "me"  '(nil :which-key "emms")
-  "meb" #'emms-browser
-  "mep" #'emms-playlist-mode-go
-  "mes" #'emms-player-mpd-show
-  "mp"  '((lambda ()
-            (interactive)
-            (shell-command-and-echo "mpc toggle"))
-          :which-key "mpc toggle")
-  "mu"  '(nil :which-key "update")
-  "mum" #'emms-player-mpd-update-all
-  "muc" #'emms-cache-set-from-mpd-all)
+   (emms-player-mpd-music-directory (expand-file-name "~/Music")))
+  :general
+  (phundrak/undefine
+    :keymaps 'emms-browser-mode-map
+    :packages 'emms
+    "s"   nil
+    "r"   nil)
+  (phundrak/evil
+    :keymaps 'emms-browser-mode-map
+    :packages 'emms
+    "a"  #'emms-browser-add-tracks
+    "A"  #'emms-browser-add-tracks-and-play
+    "b"  '(nil :which-key "browse by")
+    "bA" #'emms-browse-by-album
+    "ba" #'emms-browse-by-artist
+    "bg" #'emms-browse-by-genre
+    "bs" #'emms-smart-browse
+    "by" #'emms-browse-by-year
+    "c"  #'emms-browser-clear-playlist
+    "S"  '(nil :which-key "search")
+    "SA" '(emms-browser-search-by-album  :which-key "by album")
+    "Sa" '(emms-browser-search-by-artist :which-key "by artist")
+    "Ss" '(emms-browser-search-by-names  :which-key "by name")
+    "St" '(emms-browser-search-by-names  :which-key "by title")
+    "q"  #'kill-this-buffer)
+  (phundrak/evil
+    :keymaps 'emms-playlist-mode-map
+    :packages 'emms
+    "d" #'emms-playlist-mode-kill-track
+    "p" #'emms-playlist-mode-play-smart
+    "q" #'kill-this-buffer)
+  (phundrak/leader-key
+    :infix "m"
+    :packages 'emms
+    ""   '(nil :which-key "media")
+    "."  #'hydra-media/body
+    "<"  #'emms-player-mpd-previous
+    "«"  #'emms-player-mpd-previous
+    ">"  #'emms-player-mpd-next
+    "»"  #'emms-player-mpd-next
+    "c"  #'emms-player-mpd-clear
+    "e"  '(nil :which-key "emms")
+    "eb" #'emms-browser
+    "ep" #'emms-playlist-mode-go
+    "es" #'emms-player-mpd-show
+    "p"  '((lambda ()
+             (interactive)
+             (shell-command-and-echo "mpc toggle"))
+           :which-key "mpc toggle")
+    "u"  '(nil :which-key "update")
+    "um" #'emms-player-mpd-update-all
+    "uc" #'emms-cache-set-from-mpd-all))
 #+end_src
 
 I also want to create a small hydra for manipulating MPD:
@@ -2042,23 +2053,24 @@ reader?
   :straight (:build t)
   :defer t
   :mode ("\\.epub\\'" . nov-mode)
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'nov-mode-map
-   "SPC" nil
-   "c"   #'nov-previous-document
-   "t"   #'nov-scroll-up
-   "C-d" #'nov-scroll-up
-   "s"   #'nov-scroll-down
-   "C-u" #'nov-scroll-down
-   "r"   #'nov-next-document
-   "gm"  #'nov-display-metadata
-   "gn"  #'nov-next-document
-   "gp"  #'nov-previous-document
-   "gr"  #'nov-render-document
-   "gt"  #'nov-goto-toc
-   "gv"  #'nov-view-source
-   "gV"  #'nov-view-content-source)
+    :keymaps 'nov-mode-map
+    :packages 'nov
+    "c"   #'nov-previous-document
+    "t"   #'nov-scroll-up
+    "C-d" #'nov-scroll-up
+    "s"   #'nov-scroll-down
+    "C-u" #'nov-scroll-down
+    "r"   #'nov-next-document
+    "gm"  #'nov-display-metadata
+    "gn"  #'nov-next-document
+    "gp"  #'nov-previous-document
+    "gr"  #'nov-render-document
+    "gt"  #'nov-goto-toc
+    "gv"  #'nov-view-source
+    "gV"  #'nov-view-content-source)
+  :config
   (setq nov-text-width 95))
 #+end_src
 
@@ -2078,18 +2090,16 @@ dark mode for PDFs.
   :straight (:build t)
   :mode (("\\.pdf\\'" . pdf-view-mode))
   :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
-  :config
-  (phundrak/undefine
-    :keymaps 'pdf-view-mode-map
-    "SPC" nil
-    ","   nil)
+  :general
   (phundrak/evil
     :keymaps 'pdf-view-mode-map
+    :packages 'pdf-tools
     "y"   #'pdf-view-kill-ring-save
     "t"   #'evil-collection-pdf-view-next-line-or-next-page
     "s"   #'evil-collection-pdf-view-previous-line-or-previous-page)
   (phundrak/major-leader-key
     :keymaps 'pdf-view-mode-map
+    :packages 'pdf-tools
     "a"  '(nil :which-key "annotations")
     "aD" #'pdf-annot-delete
     "at" #'pdf-annot-attachment-dired
@@ -2114,6 +2124,7 @@ dark mode for PDFs.
 
     "o"  'pdf-outline
     "m"  'pdf-view-midnight-minor-mode)
+  :config
   (with-eval-after-load 'pdf-view
     (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
 #+end_src
@@ -2152,36 +2163,34 @@ doing and what Git is doing! In short, I absolutely love it!
   :defer t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  :config
-  (phundrak/undefine
-    :keymaps '(magit-blame-read-only-mode-map magit-mode-map magit-diff-mode-map)
-    :states '(normal visual emacs)
-    "SPC" nil)
-  (general-define-key
-   :keymaps '(git-rebase-mode-map)
+  :general
+  (:keymaps '(git-rebase-mode-map)
+   :packages 'magit
    "C-t" #'evil-next-line
    "C-s" #'evil-previous-line)
   (phundrak/major-leader-key
     :keymaps 'git-rebase-mode-map
+    :packages 'magit
     "," #'with-editor-finish
     "k" #'with-editor-cancel
     "a" #'with-editor-cancel)
   (phundrak/leader-key
-    :states 'normal
-    "g"   '(nil :wk "git")
-    "gb"  #'magit-blame
-    "gc"  #'magit-clone
-    "gd"  #'magit-dispatch
-    "gi"  #'magit-init
-    "gs"  #'magit-status
-    "gy"  #'my/yadm
-    "gS"  #'magit-stage-file
-    "gU"  #'magit-unstage-file
-    "gf"  '(nil :wk "file")
-    "gfd" #'magit-diff
-    "gfc" #'magit-file-checkout
-    "gfl" #'magit-file-dispatch
-    "gfF" #'magit-find-file))
+    :infix   "g"
+    :packages 'magit
+    ""   '(nil :wk "git")
+    "b"  #'magit-blame
+    "c"  #'magit-clone
+    "d"  #'magit-dispatch
+    "i"  #'magit-init
+    "s"  #'magit-status
+    "y"  #'my/yadm
+    "S"  #'magit-stage-file
+    "U"  #'magit-unstage-file
+    "f"  '(nil :wk "file")
+    "fd" #'magit-diff
+    "fc" #'magit-file-checkout
+    "fl" #'magit-file-dispatch
+    "fF" #'magit-find-file))
 #+end_src
 
 [[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
@@ -2409,10 +2418,12 @@ region or in a whole buffer.
 (use-package iedit
   :defer t
   :straight (:build t)
-  :config
+  :general
   (phundrak/leader-key
-   "r" '(nil :which-key "refactor")
-   "ri" #'iedit-mode))
+    :infix "r"
+    :packages 'iedit
+    "" '(nil :which-key "refactor")
+    "i" #'iedit-mode))
 #+end_src
 
 Since I’m using evil, I’ll also use a compatibility package that adds
@@ -2426,11 +2437,7 @@ states for iedit.
   :init
   (setq iedit-curent-symbol-default     t
         iedit-only-at-symbol-boundaries t
-        iedit-toggle-key-default        nil)
-  :config
-  (phundrak/undefine
-   :keymaps 'evil-iedit-state-map
-   "SPC" nil))
+        iedit-toggle-key-default        nil))
 #+end_src
 
 *** Parinfer
@@ -2526,15 +2533,14 @@ me.
   :straight (:type built-in)
   :defer t
   :hook (dired-mode . turn-on-gnus-dired-mode)
-  :config
-  (phundrak/undefine
-   :keymaps 'dired-mode-map
-   "SPC" nil)
+  :general
   (phundrak/evil
-   :keymaps 'dired-mode-map
-   "(" #'dired-hide-details-mode
-   "n" #'evil-next-line
-   "p" #'evil-previous-line)
+    :keymaps 'dired-mode-map
+    :packages 'dired
+    "(" #'dired-hide-details-mode
+    "n" #'evil-next-line
+    "p" #'evil-previous-line)
+  :config
   (setq dired-dwim-target       t
         dired-recursive-copies  t
         dired-recursive-deletes t
@@ -2553,10 +2559,11 @@ that are for some reason not included in dired yet.
   :straight (:type built-in)
   :after dired
   :commands (dired-jump dired-jump-other-window dired-omit-mode)
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'dired-mode-map
-   "«" #'dired-omit-mode))
+    :keymaps 'dired-mode-map
+    :packages 'dired-x
+    "«" #'dired-omit-mode))
 #+end_src
 
 ~dired-du~ provides the user with the option to be able to see the size
@@ -2567,9 +2574,10 @@ time to get the actual size of a directory.
 (use-package dired-du
   :after dired
   :straight (:build t)
-  :config
+  :general
   (phundrak/evil
    :keymaps 'dired-mode-map
+   :packages 'dired-du
    "»" #'dired-du-mode))
 #+end_src
 
@@ -2582,10 +2590,12 @@ tree. And by default, I want ~dired-git-info~ to hide file details.
   :after (dired)
   :straight (:build t)
   :hook (dired-after-reading . dired-git-info-auto-enable)
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'dired-mode-map
-   ")" #'dired-git-info-mode)
+    :keymaps 'dired-mode-map
+    :packages 'dired-git-info
+    ")" #'dired-git-info-mode)
+  :config
   (setq dgi-auto-hide-details-p t))
 #+end_src
 
@@ -2634,16 +2644,17 @@ compilation buffer, as well as enable some syntax highlighting.
   (defun colorize-compilation-buffer ()
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region (point-min) (point-max))))
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'compilation-mode-map
-   "g" nil
-   "r" #'recompile
-   "h" nil)
+    :keymaps 'compilation-mode-map
+    "g" nil
+    "r" #'recompile
+    "h" nil)
+  (phundrak/leader-key
+    "R" #'recompile)
+  :config
   (setq compilation-scroll-output t))
 
-(phundrak/leader-key
- "R" #'recompile)
 #+end_src
 
 *** Eshell
@@ -2657,18 +2668,19 @@ though.
 (use-package eshell
   :defer t
   :straight (:type built-in :build t)
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'eshell-mode-map
-   "c" #'evil-backward-char
-   "t" #'evil-next-line
-   "s" #'evil-previous-line
-   "r" #'evil-forward-char)
+    :keymaps 'eshell-mode-map
+    "c" #'evil-backward-char
+    "t" #'evil-next-line
+    "s" #'evil-previous-line
+    "r" #'evil-forward-char)
   (general-define-key
    :keymaps 'eshell-mode-map
    :states 'insert
    "C-a" #'eshell-bol
    "C-e" #'end-of-line)
+  :config
   <<eshell-alias-file>>
   <<eshell-concat-shell-command>>
   <<eshell-alias-open>>
@@ -2889,25 +2901,21 @@ Let’s define some more intuitive keybinds for ~info-mode~.
 (use-package info
   :defer t
   :straight (info :type built-in :build t)
-  :config
-  (phundrak/undefine
-   :keymaps 'Info-mode-map
-   "SPC" nil
-   ","   nil)
+  :general
   (phundrak/evil
-   :keymaps 'Info-mode-map
-   "c" #'Info-prev
-   "t" #'evil-scroll-down
-   "s" #'evil-scroll-up
-   "r" #'Info-next)
+    :keymaps 'Info-mode-map
+    "c" #'Info-prev
+    "t" #'evil-scroll-down
+    "s" #'evil-scroll-up
+    "r" #'Info-next)
   (phundrak/major-leader-key
-   :keymaps 'Info-mode-map
-   "?" #'Info-toc
-   "b" #'Info-history-back
-   "f" #'Info-history-forward
-   "m" #'Info-menu
-   "t" #'Info-top-node
-   "u" #'Info-up))
+    :keymaps 'Info-mode-map
+    "?" #'Info-toc
+    "b" #'Info-history-back
+    "f" #'Info-history-forward
+    "m" #'Info-menu
+    "t" #'Info-top-node
+    "u" #'Info-up))
 #+end_src
 
 *** Tramp
@@ -2973,9 +2981,10 @@ to ~p~ since it would conflict with my main ~general~ prefix.
   :straight (bufler :build t
                     :files (:defaults (:exclude "helm-bufler.el")))
   :defer t
-  :config
+  :general
   (phundrak/evil
-   :keymaps 'bufler-list-mode-map
+   :keymaps  'bufler-list-mode-map
+   :packages 'bufler
    "?"   #'hydra:bufler/body
    "g"   #'bufler
    "f"   #'bufler-list-group-frame
@@ -3052,10 +3061,6 @@ extended however we like!
   :init
   (auto-fill-mode -1)
   :config
-  (phundrak/undefine
-   :keymaps '(org-agenda-keymap org-agenda-mode-map)
-   :states '(normal motion emacs)
-   "SPC" nil)
   <<org-hydra-babel>>
   (require 'ox-beamer)
   (setq org-hide-leading-stars             nil
@@ -3096,23 +3101,27 @@ extended however we like!
   <<org-html-validation>>
   <<org-latex-classes>>
   <<org-publish-projects>>
+  :general
   (phundrak/evil
-   :keymaps 'org-mode-map
-   "RET" 'org-open-at-point)
+    :keymaps 'org-mode-map
+    :packages 'org
+    "RET" 'org-open-at-point)
   (phundrak/major-leader-key
-   :keymaps 'org-mode-map
-   <<general-keybindings-gen(table=org-keybinds-various)>>
-   <<general-keybindings-gen(table=org-keybinds-babel)>>
-   <<general-keybindings-gen(table=org-keybinds-dates)>>
-   <<general-keybindings-gen(table=org-keybinds-insert)>>
-   <<general-keybindings-gen(table=org-keybinds-jump)>>
-   <<general-keybindings-gen(table=org-keybinds-tables)>>
-   <<general-keybindings-gen(table=org-keybinds-toggles)>>)
+    :keymaps 'org-mode-map
+    :packages 'org
+    <<general-keybindings-gen(table=org-keybinds-various)>>
+    <<general-keybindings-gen(table=org-keybinds-babel)>>
+    <<general-keybindings-gen(table=org-keybinds-dates)>>
+    <<general-keybindings-gen(table=org-keybinds-insert)>>
+    <<general-keybindings-gen(table=org-keybinds-jump)>>
+    <<general-keybindings-gen(table=org-keybinds-tables)>>
+    <<general-keybindings-gen(table=org-keybinds-toggles)>>)
 
   (phundrak/major-leader-key
-   :keymaps 'org-src-mode-map
-   "'" #'org-edit-src-exit
-   "k" #'org-edit-src-abort))
+    :packages 'org
+    :keymaps 'org-src-mode-map
+    "'" #'org-edit-src-exit
+    "k" #'org-edit-src-abort))
 #+end_src
 
 The main feature from ~evil-org~ that I love is how easy it is to modify
@@ -3346,13 +3355,15 @@ files.
                                    :type git
                                    :host github
                                    :repo "jakebox/preview-org-html-mode")
-  :config
+  :general
   (phundrak/major-leader-key
    :keymaps 'org-mode-map
-   "P"  '(:ignore :which-key "preview")
-   "Ph" #'preview-org-html-mode
-   "Pr" #'preview-org-html-refresh
-   "Pp" #'preview-org-html-pop-window-to-frame)
+   :packages 'preview-org-html-mode
+   :infix "P"
+   ""  '(:ignore :which-key "preview")
+   "h" #'preview-org-html-mode
+   "r" #'preview-org-html-refresh
+   "p" #'preview-org-html-pop-window-to-frame)
   :config
   (setq preview-org-html-refresh-configuration 'save))
 #+end_src
@@ -3871,14 +3882,17 @@ The project is then defined like so:
         bibtex-completion-library-path "~/org/bibliography/bibtex-pdfs/"
         bibtex-completion-pdf-symbol   "⌘"
         bibtex-completion-notes-symbol "✎")
+  :general
   (phundrak/evil
    :keymaps 'bibtex-mode-map
+   :packages 'org-ref
    "C-t" #'org-ref-bibtex-next-entry
    "C-s" #'org-ref-bibtex-previous-entry
    "gt"  #'org-ref-bibtex-next-entry
    "gs"  #'org-ref-bibtex-previous-entry)
   (phundrak/major-leader-key
    :keymaps '(bibtex-mode-map)
+   :packages 'org-ref
    ;; Navigation
    "t" #'org-ref-bibtex-next-entry
    "s" #'org-ref-bibtex-previous-entry
@@ -3901,6 +3915,7 @@ The project is then defined like so:
    "lp" #'pubmed-insert-bibtex-from-pmid)
   (phundrak/major-leader-key
    :keymaps 'org-mode-map
+   :pakages 'org-ref
    "ic" #'org-ref-insert-link))
 #+end_src
 
@@ -3910,9 +3925,10 @@ The project is then defined like so:
   :straight (:build t)
   :config
   (setq bibtex-completion-pdf-open-function #'find-file)
-
+  :general
   (phundrak/leader-key
     :keymaps '(bibtex-mode-map)
+    :packages 'ivy-bibtex
     "m" #'ivy-bibtex))
 #+end_src
 
@@ -3959,16 +3975,14 @@ which is really nice! However, most of my configuration will be stolen
   :after org
   :defer t
   :straight (:build t)
-  :config
-  (phundrak/undefine
-    :keymaps 'org-present-mode-map
-    "SPC" nil
-    ","   nil)
+  :general
   (phundrak/major-leader-key
+    :packages 'org-present
     :keymaps 'org-mode-map
     "p" #'org-present)
   (phundrak/evil
     :states 'normal
+    :packages 'org-present
     :keymaps 'org-present-mode-keymap
     "+" #'org-present-big
     "-" #'org-present-small
@@ -4100,10 +4114,11 @@ icons!
                          :host github
                          :type git
                          :repo "Townk/org-ol-tree")
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'org-mode-map
-   "O" #'org-ol-tree))
+    :packages 'org-ol-tree
+    :keymaps 'org-mode-map
+    "O" #'org-ol-tree))
 #+end_src
 
 *** Misc
@@ -4116,14 +4131,16 @@ icons!
   :defer t
   :after org
   :straight (:build t)
-  :init
-  (phundrak/evil
-    :keymaps 'org-mode-map
-    "<f8>" #'org-tree-slide-mode)
   :config
   (setq org-tree-slide-skip-done nil)
+  :general
+  (phundrak/evil
+    :keymaps 'org-mode-map
+    :packages 'org-tree-slide
+    "<f8>" #'org-tree-slide-mode)
   (phundrak/major-leader-key
     :keymaps 'org-tree-slide-mode-map
+    :packages 'org-tree-slide
     "d" (lambda () (interactive (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))))
     "p" #'org-tree-slide-move-next-tree
     "n" #'org-tree-slide-move-previous-tree
@@ -4231,13 +4248,14 @@ I also want all the visual enhancements LSP can provide.
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable t)
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'lsp-ui-peek-mode-map
-   "c" #'lsp-ui-pook--select-prev-file
-   "t" #'lsp-ui-pook--select-next
-   "s" #'lsp-ui-pook--select-prev
-   "r" #'lsp-ui-pook--select-next-file))
+    :keymaps 'lsp-ui-peek-mode-map
+    :packages 'lsp-ui
+    "c" #'lsp-ui-pook--select-prev-file
+    "t" #'lsp-ui-pook--select-next
+    "s" #'lsp-ui-pook--select-prev
+    "r" #'lsp-ui-pook--select-next-file))
 #+end_src
 
 And let’s enable some intergration with ~ivy~.
@@ -4268,7 +4286,7 @@ And let’s enable some intergration with ~ivy~.
   :defer t
   :after lsp
   :straight (:build t)
-  :config
+  :general
   (phundrak/evil
     :keymaps 'lsp-mode-map
     [remap xref-find-apropos] #'consult-lsp-symbols))
@@ -4409,9 +4427,10 @@ unfortunately.
    ("\\.mdk\\'" . markdown-mode)
    ("\\.mdx\\'" . markdown-mode))
   :hook (markdown-mode . orgtbl-mode)
-  :config
+  :general
   (phundrak/evil
     :keymaps 'markdown-mode-map
+    :packages 'markdown-mode
     "M-RET" #'markdown-insert-list-item
     "M-c"   #'markdown-promote
     "M-t"   #'markdown-move-down
@@ -4419,6 +4438,7 @@ unfortunately.
     "M-r"   #'markdown-demote)
   (phundrak/major-leader-key
     :keymaps 'markdown-mode-map
+    :packages 'markdown-mode
     "{"   #'markdown-backward-paragraph
     "}"   #'markdown-forward-paragraph
     "]"   #'markdown-complete
@@ -4491,6 +4511,7 @@ unfortunately.
     "xP"  #'markdown-pre-region
     "xs"  #'markdown-insert-strike-through
     "xq"  #'markdown-blockquote-region)
+  :config
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
@@ -4501,10 +4522,11 @@ able to render Markdown through its API.
   :defer t
   :after markdown-mode
   :straight (:build t)
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'markdown-mode-map
-   "cr" #'gh-md-render-buffer))
+    :packages 'gh-md
+    :keymaps 'markdown-mode-map
+    "cr" #'gh-md-render-buffer))
 #+end_src
 
 Tables of content are always nice to have for large files, just like
@@ -4514,8 +4536,9 @@ with the ~toc-org~ package for org-mode.
   :defer t
   :after markdown-mode
   :straight (:build t)
-  :config
+  :general
   (phundrak/major-leader-key
+    :packages 'markdown-toc
     :keymaps 'markdown-mode-map
     "iT" #'markdown-toc-generate-toc))
 #+end_src
@@ -4528,10 +4551,11 @@ Markdown file quickly. That’s neat!
   :after markdown-mode
   :straight (:build t)
   :custom ((vmd-binary-path (executable-find "vmd")))
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'markdown-mode-map
-   "cP" #'vmd-mode))
+    :packages 'vmd-mode
+    :keymaps 'markdown-mode-map
+    "cP" #'vmd-mode))
 #+end_src
 
 **** Nginx
@@ -4569,12 +4593,14 @@ Nginx syntax.
   :mode ("{{.\\(pum\\|puml\\)\\'" . plantuml-mode)
   :init
   (add-to-list 'org-babel-load-languages '(plantuml . t))
-  :config
+  :general
   (phundrak/major-leader-key
    :keymaps 'plantuml-mode-map
+   :packages 'plantuml-mode
    "c"  '(nil :which-key "compile")
    "cc" #'plantuml-preview
    "co" #'plantuml-set-output-type)
+  :config
   (setq plantuml-default-exec-mode 'jar
         plantuml-jar-path "~/.local/bin/plantuml.jar"
         org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
@@ -4635,9 +4661,9 @@ still somewhat related, and Emacs thinks so too.
   (put 'c-c++-backend 'safe-local-variable 'symbolp)
   :config
   (require 'compile)
+  :general
   (phundrak/undefine
     :keymaps '(c-mode-map c++-mode-map)
-    "," nil
     ";" nil)
   (phundrak/major-leader-key
    :keymaps '(c-mode-map c++-mode-map)
@@ -4683,6 +4709,7 @@ update its fontlock.
   :config
   (phundrak/major-leader-key
    :keymaps 'stumpwm-mode-map
+   :packages 'stumpwm-mode
    "e"  '(:ignore :which-key "eval")
    "ee" #'stumpwm-eval-last-sexp
    "ed" #'stumpwm-eval-defun
@@ -4731,7 +4758,6 @@ Let’s also declare some Elisp-dedicated keybindings, prefixed by a
 comma.
 #+begin_src emacs-lisp
 (phundrak/major-leader-key
- general-define-key
  :keymaps 'emacs-lisp-mode-map
  "'"   #'ielm
  "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
@@ -4765,6 +4791,7 @@ comma.
 ;;   :init
 ;;   (setq lua-indent-level           2
 ;;         lua-indent-string-contents t)
+;;   :general
 ;;   (phundrak/major-leader-key
 ;;    :keymaps lua-mode-map
 ;;    "'"  #'lua-show-process-buffer
@@ -4831,16 +4858,19 @@ comma.
              pytest-pdb-module)
   :config
   (add-to-list 'pytest-project-root-files "setup.cfg")
+  :general
   (phundrak/major-leader-key
    :keymaps 'python-mode-map
-   "t"  '(:ignore :which-key "test")
-   "ta" #'python-pytest
-   "tf" #'python-pytest-file-dwim
-   "tF" #'python-pytest-file
-   "tt" #'python-pytest-function-dwim
-   "tT" #'python-pytest-function
-   "tr" #'python-pytest-repeat
-   "tp" #'python-pytest-dispatch))
+   :infix "t"
+   :packages 'pytest
+   ""  '(:ignore :which-key "test")
+   "a" #'python-pytest
+   "f" #'python-pytest-file-dwim
+   "F" #'python-pytest-file
+   "t" #'python-pytest-function-dwim
+   "T" #'python-pytest-function
+   "r" #'python-pytest-repeat
+   "p" #'python-pytest-dispatch))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4872,18 +4902,20 @@ comma.
              pipenv-uninstall)
   :hook (python-mode . pipenv-mode)
   :init (setq pipenv-with-projectile nil)
-  :config
+  :general
   (phundrak/major-leader-key
    :keymaps 'python-mode-map
-   "e"  '(:ignore :which-key "pipenv")
-   "ea" #'pipenv-activate
-   "ed" #'pipenv-deactivate
-   "ei" #'pipenv-install
-   "el" #'pipenv-lock
-   "eo" #'pipenv-open
-   "er" #'pipenv-run
-   "es" #'pipenv-shell
-   "eu" #'pipenv-uninstall))
+   :packages 'pipenv
+   :infix "e"
+   ""  '(:ignore :which-key "pipenv")
+   "a" #'pipenv-activate
+   "d" #'pipenv-deactivate
+   "i" #'pipenv-install
+   "l" #'pipenv-lock
+   "o" #'pipenv-open
+   "r" #'pipenv-run
+   "s" #'pipenv-shell
+   "u" #'pipenv-uninstall))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4904,20 +4936,23 @@ comma.
   :straight (:build t)
   :if (executable-find "pyenv")
   :commands (pyenv-mode-versions)
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'python-mode-map
-   "vu" #'pyenv-mode-unset
-   "vs" #'pyenv-mode-set))
+    :packages 'pyenv-mode
+    :keymaps 'python-mode-map
+    :infix "v"
+    "u" #'pyenv-mode-unset
+    "s" #'pyenv-mode-set))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package pippel
   :defer t
   :straight (:build t)
-  :init
+  :general
   (phundrak/major-leader-key
    :keymaps 'python-mode-map
+   :packages 'pippel
    "P" #'pippel-list-packages))
 #+end_src
 
@@ -4925,24 +4960,28 @@ comma.
 (use-package pyimport
   :defer t
   :straight (:build t)
-  :config
+  :general
   (phundrak/major-leader-key
-   :keymaps 'python-mode-map
-   "i"  '(:ignore :which-key "imports")
-   "ii" #'pyimport-insert-missing
-   "ir" #'pyimport-remove-unused))
+    :packages 'pyimport
+    :keymaps 'python-mode-map
+    :infix "i"
+    ""  '(:ignore :which-key "imports")
+    "i" #'pyimport-insert-missing
+    "r" #'pyimport-remove-unused))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package py-isort
   :defer t
   :straight (:build t)
-  :config
+  :general
   (phundrak/major-leader-key
    :keymaps 'python-mode-map
-   "i"  '(:ignore :which-key "imports")
-   "is" #'py-isort-buffer
-   "iR" #'py-isort-region))
+   :packages 'py-isort
+   :infix "i"
+   ""  '(:ignore :which-key "imports")
+   "s" #'py-isort-buffer
+   "R" #'py-isort-region))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4957,11 +4996,14 @@ comma.
   :straight (:build t)
   :init
   (add-hook 'python-mode-hook #'sphinx-doc-mode)
+  :general
   (phundrak/major-leader-key
    :keymaps 'python-mode-map
-   "S"  '(:ignore :which-key "sphinx-doc")
-   "Se" #'sphinx-doc-mode
-   "Sd" #'sphinx-doc))
+   :packages 'sphinx-doc
+   :infix "S"
+   ""  '(:ignore :which-key "sphinx-doc")
+   "e" #'sphinx-doc-mode
+   "d" #'sphinx-doc))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4971,10 +5013,13 @@ comma.
   :mode "\\.p\\(yx\\|x[di]\\)\\'"
   :config
   (setq cython-default-compile-format "cython -a %s")
+  :general
   (phundrak/major-leader-key
    :keymaps 'cython-mode-map
-   "c"  '(:ignore :which-key "cython")
-   "cc" #'cython-compile))
+   :packages 'cython-mode
+   :infix "c"
+   ""  '(:ignore :which-key "cython")
+   "c" #'cython-compile))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5016,13 +5061,15 @@ development. First, let’s install the most important package,
   (after! org-src
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
-  :config
+  :general
   (general-define-key
    :keymaps 'rustic-mode-map
+   :packages 'lsp
    "M-t" #'lsp-ui-imenu
    "M-?" #'lsp-find-references)
   (phundrak/major-leader-key
    :keymaps 'rustic-mode-map
+   :packages 'rustic
    "b"  '(:ignore :which-key "build")
    "bb" #'rustic-cargo-build
    "bB" #'rustic-cargo-bench
@@ -5042,6 +5089,7 @@ development. First, let’s install the most important package,
    "t"  '(:ignore :which-key "cargo test")
    "ta" #'rustic-cargo-test
    "tt" #'rustic-cargo-current-test)
+  :config
   (setq rustic-indent-method-chain    t
         rustic-babel-format-src-block nil
         rustic-format-trigger         nil)
@@ -5113,9 +5161,10 @@ development. First, let’s install the most important package,
          ("\\.svelte\\'"     . web-mode)
          ("\\.ctp\\'"        . web-mode)
          ("\\.djhtml\\'"     . web-mode))
-  :config
+  :general
   (phundrak/major-leader-key
    :keymaps 'web-mode-map
+   :packages 'web-mode
    "="  '(nil :which-key "format")
    "E"  '(nil :which-key "errors")
    "El" #'web-mode-dom-errors-show
@@ -5164,9 +5213,10 @@ development. First, let’s install the most important package,
   :hook (css-mode . smartparens-mode)
   :init
   (put 'css-indent-offset 'safe-local-variable #'integerp)
-  :config
+  :general
   (phundrak/major-leader-key
-    :keymaps '(css-mode-map)
+    :keymaps 'css-mode-map
+    :packages 'css-mode
     "=" '(:ignore :wk "format")
     "g" '(:ignore :wk "goto")))
 #+end_src
@@ -5429,8 +5479,10 @@ configuration to make it bépo-compatible.
   :straight t
   :config
   (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
+  :general
   (phundrak/evil
-   "gl" #'avy-goto-line))
+    :packages 'avy
+    "gl" #'avy-goto-line))
 #+end_src
 
 *** Calc
@@ -5542,32 +5594,6 @@ which resolution to play a YouTube video in an external video player.
 :END:
 Undefining some stuff to make keybind prefixes work correctly.
 #+begin_src emacs-lisp
-(phundrak/undefine
- :keymaps '(Buffer-menu-mode-map
-            Info-mode-map
-            Man-mode-map
-            backtrace-mode-map
-            custom-mode-map
-            debugger-mode-map
-            diff-minor-mode-map
-            diff-mode-map
-            electric-help-map
-            epa-key-list-mode-map
-            eshell-mode-map
-            eww-mode-map
-            gfm-view-mode-map
-            git-rebase-mode-map
-            grep-mode-map
-            help-mode-map
-            image-mode-map
-            rmail-mode-map
-            special-mode-map
-            splash-screen-keymap
-            undo-tree-visualizer-mode-map)
- :states '(emacs normal motion)
- "SPC" nil
- ","   nil)
-
 (general-define-key
  :keymaps 'global-map
  "<mouse-2>" nil
