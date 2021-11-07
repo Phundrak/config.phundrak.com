@@ -3136,6 +3136,8 @@ comfortable than the default ones you get with evil and org naked.
   :straight (:build t)
   :after (org)
   :hook (org-mode . evil-org-mode)
+  :init
+  (fset 'evil-redirect-digit-argument 'ignore) ;; quickfix for https://github.com/Somelauw/evil-org-mode/issues/93
   :config
   (setq-default evil-org-movement-bindings
                 '((up    . "s")
@@ -3144,7 +3146,12 @@ comfortable than the default ones you get with evil and org naked.
                   (right . "r")))
   (evil-org-set-key-theme '(textobjects navigation calendar additional shift operators))
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+
+  ;; quickfix for https://github.com/Somelauw/evil-org-mode/issues/93
+  (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
+  (evil-define-key 'motion 'evil-org-mode
+    (kbd "0") 'evil-org-beginning-of-line))
 #+end_src
 
 This package is a small package I’ve written that helps me when
