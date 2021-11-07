@@ -1031,6 +1031,8 @@ restricted in terms of features compared to ~ivy~.
          ("C-l" . ivy-alt-done)
          ("C-t" . ivy-next-line)
          ("C-s" . ivy-previous-line)
+         ("C-u" . ivy-scroll-up-command)
+         ("C-d" . ivy-scroll-down-command)
          :map ivy-switch-buffer-map
          ("C-t" . ivy-next-line)
          ("C-s" . ivy-previous-line)
@@ -5588,6 +5590,8 @@ Undefining some stuff to make keybind prefixes work correctly.
   "ad"  #'docker
   "ae"  #'elfeed
   "aE"  #'eww
+  "ak"  #'keycast-mode
+  "aK"  #'keycast-log-mode
   "at"  #'tetris
   "aw"  #'wttrin
   "aC"  #'calendar
