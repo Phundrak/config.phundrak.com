@@ -578,18 +578,12 @@ focus the new window immediately.
 (defun split-window-right-and-focus ()
   (interactive)
   (split-window-right)
-  (windmove-right)
-  (when (and (boundp 'golden-ratio-mode)
-             (symbol-value golden-ratio-mode))
-    (golden-ratio)))
+  (windmove-right))
 
 (defun split-window-below-and-focus ()
   (interactive)
   (split-window-below)
-  (windmove-down)
-  (when (and (boundp 'golden-ratio-mode)
-             (symbol-value golden-ratio-mode))
-    (golden-ratio)))
+  (windmove-down))
 #+end_src
 
 *** ~phundrak/toggle-org-src-window-split~
@@ -947,7 +941,7 @@ windows.
         ;; `company-auto-complete-chars' is typed. This is too
         ;; magical. We already have the much more explicit RET and
         ;; TAB.
-        company-auto-complete       nil
+        company-auto-commit         nil
         company-auto-complete-chars nil
 
         ;; Only search the current buffer for `company-dabbrev' (a
@@ -1418,7 +1412,7 @@ and how to retrieve them.
 #+name: mu4e-mail-on-machine
 #+begin_src emacs-lisp :tangle no
 (setq mu4e-get-mail-command "mbsync -a"
-      mu4e-maildir          "~/Mail"
+      mu4e-root-maildir     "~/Mail"
       mu4e-trash-folder     "/Trash"
       mu4e-refile-folder    "/Archive"
       mu4e-sent-folder      "/Sent"
