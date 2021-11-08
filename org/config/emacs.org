@@ -1214,6 +1214,8 @@ in this code block all my keybinds for Elfeed here.
     :packages 'elfeed
     "+" #'elfeed-show-tag
     "-" #'elfeed-show-untag
+    "«" #'elfeed-show-prev
+    "»" #'elfeed-show-next
     "b" #'elfeed-show-visit
     "C" #'elfeed-kill-link-url-at-point
     "d" #'elfeed-show-save-enclosure
@@ -1313,6 +1315,7 @@ configuration for the ~mu4e~ package itself.
   :general
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
+  <<mu4e-keybindings-view-no-prefix>>
   <<mu4e-keybindings-header>>
   <<mu4e-keybindings-header-no-leader>>
   <<mu4e-keybindings-message>>
@@ -1799,6 +1802,17 @@ described with a simple function:
   :keymaps 'mu4e-view-mode-map
   :packages 'mu4e
   <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>)
+#+end_src
+
+Two other keybinds are added without a prefix, just for the sake of
+convenience.
+#+name: mu4e-keybindings-view-no-prefix
+#+begin_src emacs-lisp
+(phundrak/evil
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  "«" #'mu4e-view-headers-prev
+  "»" #'mu4e-view-headers-next)
 #+end_src
 
 I’ll also declare two keybinds for mu4e’s headers mode.
@@ -4764,7 +4778,9 @@ comma.
  :keymaps 'emacs-lisp-mode-map
  "'"   #'ielm
  "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
-
+ "C"   '(:ignore :which-key "checkdoc")
+ "Cc"  #'checkdoc
+ "Cs"  #'checkdoc-start
  "e"   '(nil :which-key "eval")
  "eb"  #'eval-buffer
  "ed"  #'eval-defun
@@ -5650,8 +5666,8 @@ Undefining some stuff to make keybind prefixes work correctly.
   "f"   '(nil :wk "files")
   "fc"  '((lambda ()
             (interactive)
-            (find-file (concat (getenv "HOME") "/org/config/emacs.org")))
-          :wk "Config file")
+            (find-file "~/org/config/emacs.org"))
+          :wk "emacs.org")
   "ff"  #'counsel-find-file
   "fF"  #'ivy-quick-find-files
   "fh"  #'hexl-find-file
@@ -5661,6 +5677,10 @@ Undefining some stuff to make keybind prefixes work correctly.
           :which-key "init.el")
   "fr"  #'counsel-recentf
   "fs"  #'save-buffer
+  "fS"  '((lambda ()
+            (interactive)
+            (find-file "~/org/config/stumpwm.org"))
+          :which-key "stumpwm.org")
 
   "h"   '(nil :wk "help")
   "hk"  #'which-key-show-top-level
