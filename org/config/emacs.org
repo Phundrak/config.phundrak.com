@@ -313,6 +313,13 @@ character of three dots. Let’s make it so:
 (setq truncate-string-ellipsis "…")
 #+end_src
 
+Thanks to [[https://github.com/TheVaffel/emacs][this fork]] of Emacs, it is now possible to set some
+transparency to the background of Emacs only and not to the entire
+frame.
+#+begin_src emacs-lisp
+(set-frame-parameter (selected-frame) 'alpha-background 0.8)
+#+end_src
+
 *** Modeline Modules
 :PROPERTIES:
 :CUSTOM_ID: Basic-configuration-Visual-Configuration-Modeline-Modules9kgjel6184j0
