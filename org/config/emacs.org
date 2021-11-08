@@ -4797,6 +4797,17 @@ comma.
  "tPp" #'parinfer-rust-toggle-paren-mode)
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package package-lint
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'emacs-lisp-mode-map
+    :packages 'package-lint
+    "l" #'package-lint-current-buffer))
+#+end_src
+
 **** Lua
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Lua-p2odc7p0t4j0
