@@ -3262,15 +3262,19 @@ to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
 #+begin_src emacs-lisp
 (use-package ob-latex-as-png
-  :after (org)
+  :after org
   :straight (:build t)
-  :defer t)
+  :defer t
+  :init
+  (add-to-list 'org-babel-load-languages '(latex-as-png . t)))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package ob-restclient
   :straight (:build t)
-  :defer t)
+  :defer t
+  :init
+  (add-to-list 'org-babel-load-languages '(restclient . t)))
 #+end_src
 
 One of the amazing features of org-mode is its literary programming capacities
@@ -3284,8 +3288,6 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | gnuplot    |
 | latex      |
 | makefile   |
-| plantuml   |
-| python     |
 | sass       |
 | shell      |
 
@@ -3300,21 +3302,15 @@ activated. Here are the languages I activated in my Org-mode configuration:
                    "\n  "))
 #+END_SRC
 
-#+RESULTS[52f5db378c4060c5ce47e6228e95feefba4fe24d]: org-babel-languages-gen
-#+begin_example
-'((C . t)
-  (dot . t)
-  (emacs-lisp . t)
-  (gnuplot . t)
-  (latex . t)
-  (latex-as-png . t)
-  (makefile . t)
-  (plantuml . t)
-  (python . t)
-  (restclient . t)
-  (sass . t)
-  (shell . t))
-#+end_example
+#+RESULTS[6ee465842066eca1ca245b962239bd8a1ef84a10]: org-babel-languages-gen
+: '((C . t)
+:   (dot . t)
+:   (emacs-lisp . t)
+:   (gnuplot . t)
+:   (latex . t)
+:   (makefile . t)
+:   (sass . t)
+:   (shell . t))
 
 The corresponding code is as follows:
 #+NAME: org-babel-load-languages
@@ -4869,6 +4865,7 @@ comma.
   :init
   (setq python-indent-guess-indent-offset-verbose nil)
   (add-hook 'python-mode-local-vars-hook #'lsp)
+  (add-to-list 'org-babel-load-languages '(python . t))
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
   (when (and (executable-find "python3")
