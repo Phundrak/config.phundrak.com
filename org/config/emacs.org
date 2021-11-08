@@ -1995,9 +1995,7 @@ configuration [[file:mpd.org][here]]).
     :packages 'emms
     ""   '(nil :which-key "media")
     "."  #'hydra-media/body
-    "<"  #'emms-player-mpd-previous
     "«"  #'emms-player-mpd-previous
-    ">"  #'emms-player-mpd-next
     "»"  #'emms-player-mpd-next
     "c"  #'emms-player-mpd-clear
     "e"  '(nil :which-key "emms")
