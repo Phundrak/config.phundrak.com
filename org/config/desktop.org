@@ -744,25 +744,6 @@ Type=Application
 Categories=Graphics
 #+end_src
 
-** Wonderdraft
-:PROPERTIES:
-:CUSTOM_ID: -desktop-files-for-custom-applications-Wonderdraft-0qaa6qg0m9j0
-:END:
-Wonderdraft is another map creation software. I install it in
-~~/.local/opt/Wonderdraft~.
-#+begin_src conf-desktop
-[Desktop Entry]
-Version=1.1.3.2
-Name=Wonderdraft
-Comment=Wonderdraft is a powerful yet intuitive fantasy map creation tool.
-Exec=/usr/bin/prime-run /home/phundrak/.local/opt/Wonderdraft/Wonderdraft.x86_64
-Path=/home/phundrak/.local/opt/Wonderdraft
-Icon=/home/phundrak/.local/opt/Wonderdraft/Wonderdraft.png
-Terminal=false
-Type=Application
-Categories=Graphics
-#+end_src
-
 ** YouTube ~.desktop~ files
 :PROPERTIES:
 :CUSTOM_ID: -desktop-files-for-custom-applications-YouTube-desktop-files-0pw918h0m9j0

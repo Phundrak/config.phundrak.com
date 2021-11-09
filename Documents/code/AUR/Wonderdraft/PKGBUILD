@@ -1,0 +1,37 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+pkgname=Wonderdraft
+pkgver=1.1.6.1
+pkgrel=1
+epoch=
+pkgdesc=""
+arch=('x86_64')
+url="https://www.wonderdraft.net/"
+license=('proprietary')
+depends=()
+makedepends=('zip')
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=(!strip docs !libtool !staticlibs emptydirs zipman purge !debug)
+install=
+changelog=
+source=($pkgname-$pkgver-Linux64.zip)
+sha512sums=('27b0a56c95efe99c2b3cadb10c4e70186591bef0793d58b1acff99f8dfc789806ae7821adcdfc10af1c46e4801a8fe753380913ea4aeb4fb8030fe7cf80ea090')
+noextract=()
+
+package() {
+  # unzip "${srcdir}/${pkgname}-${pkgver}-Linux64.zip" -d "${srcdir}/${pkgname}/"
+  mkdir -p "${pkgdir}/usr/share/applications/"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/"
+  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 "${srcdir}/EULA.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  mkdir -p "${pkgdir}/opt/"
+  mv "${srcdir}" "${pkgdir}/opt/${pkgname}"
+  rm "${pkgdir}/opt/${pkgname}/${pkgname}-${pkgver}-Linux64.zip"
+  chmod 4755 "${pkgdir}/opt/${pkgname}/${pkgname}.x86_64"
+}
+
+# vim:set ts=2 sw=2 et:
