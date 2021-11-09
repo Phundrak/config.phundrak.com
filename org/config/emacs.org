@@ -583,14 +583,23 @@ to the right or below the current window (respectively), but also to
 focus the new window immediately.
 #+begin_src emacs-lisp
 (defun split-window-right-and-focus ()
+  "Spawn a new window right of the current one and focus it."
   (interactive)
   (split-window-right)
   (windmove-right))
 
 (defun split-window-below-and-focus ()
+  "Spawn a new window below the current one and focus it."
   (interactive)
   (split-window-below)
   (windmove-down))
+
+(defun kill-buffer-and-delete-window ()
+  "Kill the current buffer and delete its window."
+  (interactive)
+  (progn
+    (kill-this-buffer)
+    (delete-window)))
 #+end_src
 
 *** ~phundrak/toggle-org-src-window-split~
@@ -1952,9 +1961,12 @@ configuration [[file:mpd.org][here]]).
   (emms-all)
   (add-to-list 'emms-info-functions 'emms-info-mpd)
   (add-to-list 'emms-player-list    'emms-player-mpd)
+  (emms-player-mpd-sync-from-mpd)
   (emms-player-mpd-connect)
-  (add-hook 'emms-playlist-cleared-hook #'emms-player-mpd-clear)
   <<emms-media-hydra>>
+  (defun emms-player-toggle-pause ()
+    (interactive)
+    (shell-command-and-echo "mpc toggle"))
   :custom
   ((emms-source-file-default-directory (expand-file-name "~/Music"))
    (emms-player-mpd-server-name "localhost")
@@ -5757,12 +5769,7 @@ Undefining some stuff to make keybind prefixes work correctly.
   "w8"  '(winum-select-window-8 :wk nil)
   "w9"  '(winum-select-window-9 :wk nil)
 
-  "wb"  '((lambda ()
-            (interactive)
-            (progn
-              (kill-this-buffer)
-              (delete-window)))
-          :wk "Kill buffer and window")
+  "wb"  #'kill-buffer-and-delete-window
   "wd"  #'delete-window
   "wo"  #'other-window
   "wD"  #'delete-other-windows
