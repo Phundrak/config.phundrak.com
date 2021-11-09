@@ -4613,6 +4613,29 @@ Nginx syntax.
                                (add-to-list 'company-backends #'company-nginx))))
 #+end_src
 
+**** PKGBUILD
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-PKGBUILD-ll37pjt0m9j0
+:END:
+As I am an ArchLinux user, I sometimes have to interact with PKGBUILD
+files, both from the AUR when I want to install something from there
+or some I write myself.
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :straight (:build t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'pkgbuild-mode-map
+    "c"  #'pkgbuild-syntax-check
+    "i"  #'pkgbuild-initialize
+    "I"  #'pkgbuild-increase-release-tag
+    "m"  #'pkgbuild-makepkg
+    "u"  '(:ignore :wk "update")
+    "us" #'pkgbuild-update-sums-line
+    "uS" #'pkgbuild-update-srcinfo))
+#+end_src
+
 **** PlantUML
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-PlantUML-9zo88og099j0
