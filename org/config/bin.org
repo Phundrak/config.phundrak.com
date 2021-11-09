@@ -519,7 +519,7 @@ ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
 *** ytplay
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytplay
-:CUSTOM_ID: Weather-4ed00bb0
+:CUSTOM_ID: Media-youtube-dl-wrappers-ytplay-z6ka39h0m9j0
 :END:
 ~ytplay~ is a simple script I’ve written that allows me to play in mpv any
 YouTube video at the desired resolution. The script relies on ~dmenu~ (or ~rofi~
