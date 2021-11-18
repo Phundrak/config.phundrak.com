@@ -2188,6 +2188,8 @@ doing and what Git is doing! In short, I absolutely love it!
   :defer t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  :config
+  (setq magit-clone-default-directory "~/fromGIT/")
   :general
   (:keymaps '(git-rebase-mode-map)
    :packages 'magit
