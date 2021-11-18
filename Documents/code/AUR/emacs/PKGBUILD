@@ -76,9 +76,9 @@ replaces=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-n
 # If Savannah fails for reasons, use Github's mirror
 source=("emacs-git::git://github.com/emacs-mirror/emacs.git#branch=emacs-28"
         "https://raw.githubusercontent.com/TheVaffel/emacs/master/emacs_background_transparency.patch")
-OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 md5sums=('SKIP'
-         'SKIP')
+         '4a48652df63bbd4039d164e843323f27')
+OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 ################################################################################
 
 ################################################################################
