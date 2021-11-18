@@ -5256,6 +5256,55 @@ development. First, let’s install the most important package,
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Javascript-8k5arup085j0
 :END:
 #+begin_src emacs-lisp
+(use-package rjsx-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.[mc]?js\\'"
+  :mode "\\.es6\\'"
+  :mode "\\.pac\\'"
+  :interpreter "node"
+  :hook (rjsx-mode . rainbow-delimiters-mode)
+  :init
+  (add-to-list 'compilation-error-regexp-alist 'node)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(node "^[[:blank:]]*at \\(.*(\\|\\)\\(.+?\\):\\([[:digit:]]+\\):\\([[:digit:]]+\\)"
+                      2 3 4))
+  :config
+  (setq js-chain-indent                  t
+        js2-basic-offset                 2
+        ;; ignore shebangs
+        js2-skip-preprocessor-directives t
+        ;; Flycheck handles this already
+        js2-mode-show-parse-errors       nil
+        js2-mode-show-strict-warnings    nil
+        ;; conflicting with eslint, Flycheck already handles this
+        js2-strict-missing-semi-warning  nil
+        js2-highlight-level              3
+        js2-idle-timer-delay             0.15))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package js2-refactor
+  :defer t
+  :straight (:build t)
+  :after (js2-mode rjsx-mode)
+  :hook (js2-mode . js2-refactor-mode)
+  :hoo k (rjsx-mode . js2-refactor-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package npm-mode
+  :defer t
+  :straight (:build t)
+  :hook (js-mode . npm-mode)
+  :general
+  (phundrak/major-leader-key
+    :packages '(npm-mode rjsx-mode)
+    :keymaps 'rjsx-mode-map
+    "n" '(:keymap npm-mode-command-keymap :which-key "npm")))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package prettier-js
   :defer t
   :straight (:build t))
