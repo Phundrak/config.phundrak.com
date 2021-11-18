@@ -1,0 +1,1 @@
+/home/phundrak/fromGIT/nord-qutebrowser/nord-qutebrowser.py
