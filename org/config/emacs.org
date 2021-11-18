@@ -1236,9 +1236,7 @@ in this code block all my keybinds for Elfeed here.
     "C" #'elfeed-kill-link-url-at-point
     "d" #'elfeed-show-save-enclosure
     "l" #'elfeed-show-next-link
-    "n" #'elfeed-show-next
     "o" #'elfeed-goodies/show-ace-link
-    "p" #'elfeed-show-prev
     "q" #'elfeed-kill-buffer
     "S" #'elfeed-show-new-live-search
     "u" #'elfeed-show-tag--unread
