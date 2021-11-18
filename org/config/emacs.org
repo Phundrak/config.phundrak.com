@@ -3216,53 +3216,6 @@ the usage of the ~:ignore:~ tag in org.
 (setq-default org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
-*** Behavior
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-Behaviorzp65fl6184j0
-:END:
-A useful package I like is ~toc-org~ which creates automatically a table
-of contents. My main usage for this however is not just to create a
-table of content of my files to quickly jump around my file (I have
-~counsel-org-goto~ for that), but it is for creating table of contents
-for org files that will be hosted and viewable on Github.
-#+begin_src emacs-lisp
-(use-package toc-org
-  :after (org markdown-mode)
-  :straight (:build t)
-  :init
-  (add-to-list 'org-tag-alist '("TOC" . ?T))
-  :hook (org-mode . toc-org-enable)
-  :hook (markdown-mode . toc-org-enable))
-#+end_src
-
-~electric-mode~ also bothers me a lot when editing org files, so let’s deactivate it:
-#+name: org-behavior-electric
-#+begin_src emacs-lisp :tangle no
-(add-hook 'org-mode-hook (lambda ()
-                           (interactive)
-                           (electric-indent-local-mode -1)))
-#+end_src
-
-As explained in my [[https://blog.phundrak.com/better-custom-ids-orgmode/][blog post]], org-mode is terrible with coming up with
-meaningful IDs for its headings. I actually wrote a package for this!
-#+begin_src emacs-lisp
-(use-package org-unique-id
-  :straight (org-unique-id :build t
-                           :type git
-                           :host github
-                           :repo "Phundrak/org-unique-id")
-  :defer t
-  :after org
-  :init
-  (add-hook 'org-mode-hook
-     (lambda ()
-       (add-hook 'before-save-hook
-                 (lambda ()
-                   (when (and (eq major-mode       'org-mode)
-                              (eq buffer-read-only nil))
-                     (org-unique-id)))))))
-#+end_src
-
 *** Babel
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Babel9585fl6184j0
@@ -3329,6 +3282,53 @@ The corresponding code is as follows:
  'org-babel-load-languages
  <<org-babel-languages-gen()>>)
 #+END_SRC
+
+*** Behavior
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Behaviorzp65fl6184j0
+:END:
+A useful package I like is ~toc-org~ which creates automatically a table
+of contents. My main usage for this however is not just to create a
+table of content of my files to quickly jump around my file (I have
+~counsel-org-goto~ for that), but it is for creating table of contents
+for org files that will be hosted and viewable on Github.
+#+begin_src emacs-lisp
+(use-package toc-org
+  :after (org markdown-mode)
+  :straight (:build t)
+  :init
+  (add-to-list 'org-tag-alist '("TOC" . ?T))
+  :hook (org-mode . toc-org-enable)
+  :hook (markdown-mode . toc-org-enable))
+#+end_src
+
+~electric-mode~ also bothers me a lot when editing org files, so let’s deactivate it:
+#+name: org-behavior-electric
+#+begin_src emacs-lisp :tangle no
+(add-hook 'org-mode-hook (lambda ()
+                           (interactive)
+                           (electric-indent-local-mode -1)))
+#+end_src
+
+As explained in my [[https://blog.phundrak.com/better-custom-ids-orgmode/][blog post]], org-mode is terrible with coming up with
+meaningful IDs for its headings. I actually wrote a package for this!
+#+begin_src emacs-lisp
+(use-package org-unique-id
+  :straight (org-unique-id :build t
+                           :type git
+                           :host github
+                           :repo "Phundrak/org-unique-id")
+  :defer t
+  :after org
+  :init
+  (add-hook 'org-mode-hook
+     (lambda ()
+       (add-hook 'before-save-hook
+                 (lambda ()
+                   (when (and (eq major-mode       'org-mode)
+                              (eq buffer-read-only nil))
+                     (org-unique-id)))))))
+#+end_src
 
 *** Exporters
 :PROPERTIES:
