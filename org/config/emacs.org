@@ -2744,8 +2744,15 @@ respectively allow me to open a file in Emacs, and same but in another
 window.
 #+name: eshell-alias-open
 #+begin_src emacs-lisp :tangle no
-(defalias 'open 'find-file)
-(defalias 'openo 'find-file-other-window)
+(defalias 'open #'find-file)
+(defalias 'openo #'find-file-other-window)
+#+end_src
+
+The default behavior of ~eshell/clear~ is not great at all, although it
+clears the screen it also scrolls all the way down. Therefore, let’s
+alias it to ~eshell/clear-scrollback~ which has the correct behavior.
+#+begin_src emacs-lisp
+(defalias 'eshell/clear #'eshell/clear-scrollback)
 #+end_src
 
 As you see, these were not declared in my dedicated aliases file but
