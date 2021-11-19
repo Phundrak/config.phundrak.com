@@ -68,9 +68,9 @@ follows this architecture:
 - ~init.el~ :: My main configuration file, glues everything together. It
   loads all of my configuration files as well as some modules I find
   useful;
-- ~colors.lisp~ :: In this file are defined colors that will be used in
-  common in my ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code
-  DRY, or as I prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
+- ~colors.lisp~ :: This file defines colors that will be used in my
+  ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code DRY, or as I
+  prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
 - ~commands.lisp~ :: Lisp commands, in case I want to bind some
   complicated actions to a keybind that is not just a simple shell
   command;
@@ -81,13 +81,16 @@ follows this architecture:
   workspaces, including the current one;
 - ~placement.lisp~ :: This file manages my workspaces and the default
   placement of various windows;
+- ~utilities.lisp~ :: Here you can find my StumpWM configuration that
+  isn’t really related to the rest of the config, for instance utility
+  code for connecting by SSH to some host.
 - ~theme.lisp~ :: manages the color theme of StumpWM, the default
   placement of some windows and StumpWM’s gaps.
 
 * Init file
 :PROPERTIES:
 :CUSTOM_ID: Init-file-l3q4snd1u5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/init.lisp
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/init.lisp
 :END:
 As mentioned in [[https://stumpwm.github.io/git/stumpwm-git_1.html#Init-File][the documentation]], the configuration files can be in
 different locations, but I chose an Emacs-like configuration: put
@@ -139,6 +142,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 | placement.lisp    |
 | keybindings.lisp  |
 | theme.lisp        |
+| utilities.lisp    |
 | modeline.lisp     |
 
 #+name: gen-load-files
@@ -151,12 +155,13 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+end_src
 
 This is equivalent to the Common Lisp code:
-#+RESULTS[942558619eb0d0a3d694a7808d0b600f0bc4c14c]: gen-load-files
+#+RESULTS[5ec83707b957847594f436dfabc8458904c4ab8b]: gen-load-files
 #+begin_src lisp
 (load "~/.stumpwm.d/commands.lisp")
 (load "~/.stumpwm.d/placement.lisp")
 (load "~/.stumpwm.d/keybindings.lisp")
 (load "~/.stumpwm.d/theme.lisp")
+(load "~/.stumpwm.d/utilities.lisp")
 (load "~/.stumpwm.d/modeline.lisp")
 #+end_src
 
@@ -225,7 +230,7 @@ And it’s done! We can now move on to the creation of the other CLisp files.
 * Commands
 :PROPERTIES:
 :CUSTOM_ID: Commands-1wagy001v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/commands.lisp
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/commands.lisp
 :END:
 The first command I declare in this file is a command that will avoid
 me invoking too many Firefox instances. Either Firefox is not already
@@ -275,7 +280,7 @@ And done! Next!
 * Colors
 :PROPERTIES:
 :CUSTOM_ID: Colors-w5493d01v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/colors.lisp
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/colors.lisp
 :END:
 If you’ve taken a look at the rest of my dotfiles, you may have
 noticed I really like the [[https://www.nordtheme.com/][Nord theme]]. No wonder we can find it here
@@ -332,12 +337,30 @@ code looks like so:
 (defvar phundrak-nord15 "#b48ead")
 #+end_src
 
+Finally, let’s also modify the default colors StumpWM has. I’ll try to
+respect the original colors while converting them to Nord. We also
+need to reload them now that we modified them.
+#+begin_src lisp
+(setq *colors*
+      `(,phundrak-nord1   ;; 0 black
+        ,phundrak-nord11  ;; 1 red
+        ,phundrak-nord14  ;; 2 green
+        ,phundrak-nord13  ;; 3 yellow
+        ,phundrak-nord10  ;; 4 blue
+        ,phundrak-nord14  ;; 5 magenta
+        ,phundrak-nord8   ;; 6 cyan
+        ,phundrak-nord5)) ;; 7 white
+
+(when *initializing*
+  (update-color-map (current-screen)))
+#+end_src
+
 And with that we’re done!
 
 * Modeline
 :PROPERTIES:
 :CUSTOM_ID: Modeline-g2ofyw01v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/modeline.lisp
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/modeline.lisp
 :END:
 The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
 #+begin_src lisp
@@ -509,7 +532,7 @@ add some at some point, but not today yet.
 * Groups and placement
 :PROPERTIES:
 :CUSTOM_ID: Placement-mhc3sr21v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/placement.lisp :noweb yes
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/placement.lisp :noweb yes
 :END:
 I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
@@ -650,7 +673,7 @@ available space.
 * Theme
 :PROPERTIES:
 :CUSTOM_ID: Theme-1x3c2u31v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/theme.lisp :noweb yes
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/theme.lisp :noweb yes
 :END:
 As in the modeline file, the first thing we’ll do is to load our colors.
 #+begin_src lisp
@@ -780,6 +803,13 @@ name, limited to thirty characters.
       ,*window-format*             "%n:%t")
 #+end_src
 
+I also have a [[https://github.com/Phundrak/stumpwm/tree/feature/no-hardcoded-which-key-format][StumpWM fork]] that introduces two new variables for
+customizing which-key keybindings.
+#+begin_src lisp
+(setf *key-seq-color* "^2")
+(setf *which-key-format* (concat *key-seq-color* "*~5a^n ~a"))
+#+end_src
+
 ** Message and Input Windows
 :PROPERTIES:
 :CUSTOM_ID: Theme-Message-and-Input-Windows-jxwhch51v5j0
@@ -820,10 +850,91 @@ Finally, let’s enable our gaps:
   (swm-gaps:toggle-gaps))
 #+end_src
 
+* Utilities
+:PROPERTIES:
+:CUSTOM_ID: Utilities-vrggajs0z9j0
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/utilities.lisp :noweb yes
+:END:
+Part of my configuration is not really related to StumpWM itself, or
+rather it adds new behavior StumpWM doesn’t have. ~utilities.lisp~
+stores all this code in one place.
+
+** Binwarp
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Binwarp-0wrbg1v0z9j0
+:END:
+Binwarp allows the user to control their mouse from the keyboard,
+basically eliminating the need for a physical mouse in daily usage of
+the workstation (though a physical mouse stays useful for games and
+such).
+#+begin_src lisp
+(load-module "binwarp")
+#+end_src
+
+Next, I’ll define my keybinds for when using Binwarp for emulating
+mouse clicks as well as bépo-compatible mouse movements. This new
+Binwarp mode is now available from the keybind ~s-m~ at top level.
+#+begin_src lisp
+(binwarp:define-binwarp-mode my-binwarp-mode "s-m" (:map *top-map*)
+    ((kbd "SPC") "ratclick 1")
+    ((kbd "RET") "ratclick 3")
+    ((kbd "c")   "binwarp left")
+    ((kbd "t")   "binwarp down")
+    ((kbd "s")   "binwarp up")
+    ((kbd "r")   "binwarp right")
+    ((kbd "i")   "init-binwarp")
+    ((kbd "q")   "exit-binwarp"))
+#+end_src
+
+** Notifications
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Notifications-g7rj2qu0z9j0
+:END:
+No need for ~dunst~ or something like that, the contrib modules of
+StumpWM have got us covered! Simply load the module and toggle the
+server on.
+#+begin_src lisp
+(load-module "notify")
+
+(notify:notify-server-toggle)
+
+#+end_src
+
+I don’t like the default colors of the notifications though, let’s change that.
+#+begin_src lisp
+(load "~/.stumpwm.d/colors.lisp")
+
+(setf notify:*notify-server-title-color* "^2"
+      notify:*notify-server-body-color* "^7")
+#+end_src
+
+** ~swm-ssh~
+:PROPERTIES:
+:CUSTOM_ID: Utilities-swm-ssh-s14ahrs0z9j0
+:END:
+This module from the contrib repository scans the user’s ssh
+configuration file and offers them a quick way of connecting to their
+remote hosts.
+#+begin_src lisp
+(load-module "swm-ssh")
+#+end_src
+
+The default terminal needs to be set, otherwise the module will try to
+call ~urxvtc~ which is not installed on my system.
+#+begin_src lisp
+(setq swm-ssh:*swm-ssh-default-term* "kitty")
+#+end_src
+
+Now, to call the main command of this module we can define the
+following keybind.
+#+begin_src lisp
+(define-key *root-map* (kbd "s") "swm-ssh-menu")
+#+end_src
+
 * Keybinds
 :PROPERTIES:
 :CUSTOM_ID: Keybinds-c6wgf961v5j0
-:header-args:lisp: :mkdirp :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes
 :END:
 Buckle up, this chapter is going to be *long*, because me loves LOTS of keybinds.
 
