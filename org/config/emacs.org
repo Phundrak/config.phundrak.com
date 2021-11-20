@@ -1164,6 +1164,10 @@ Finally, let’s make ~ivy~ richer:
   :defer t
   :after (ivy yasnippet)
   :straight (:build t))
+(phundrak/leader-key)
+  :infix "i"
+  :packages 'ivy-yasnippet
+  "y" #'ivy-yasnippet
 #+end_src
 
 ** Applications
@@ -5801,7 +5805,6 @@ Undefining some stuff to make keybind prefixes work correctly.
   "hdv" #'helpful-variable
 
   "i"   '(nil :wk "insert")
-  "iy"  #'ivy-yasnippet
 
   "j"   '(nil :wk "jump")
   "jd"  #'dired-jump
