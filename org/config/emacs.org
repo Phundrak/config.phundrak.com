@@ -4426,6 +4426,52 @@ And let’s enable some intergration with ~ivy~.
   :defer t
   :straight (:build t)
   :requires treemacs)
+
+(phundrak/leader-key
+  :infix "at"
+  :packages 'treemacs
+  ""   '(:ignore :which-key "treemacs")
+  "c"  '(:ignore :which-key "create")
+  "cd" #'treemacs-create-dir
+  "cf" #'treemacs-create-file
+  "ci" #'treemacs-create-icon
+  "ct" #'treemacs-create-theme
+  "cw" #'treemacs-create-workspace
+  "d"  #'treemacs-delete-file
+  "f"  '(:ignore :which-key "files")
+  "ff" #'treemacs-find-file
+  "ft" #'treemacs-find-tag
+  "l"  '(:ignore :which-key "lsp")
+  "ls" #'treemacs-expand-lsp-symbol
+  "ld" #'treemacs-expand-lsp-treemacs-deps
+  "lD" #'treemacs-collapse-lsp-treemacs-deps
+  "lS" #'treemacs-collapse-lsp-symbol
+  "p"  '(:ignore :which-key "projects")
+  "pa" #'treemacs-add-project
+  "pf" #'treemacs-project-follow-mode
+  "pn" #'treemacs-project-of-node
+  "pp" #'treemacs-project-at-point
+  "pr" #'treemacs-remove-project-from-workspace
+  "pt" #'treemacs-move-project-down
+  "ps" #'treemacs-move-project-up
+  "r"  '(:ignore :which-key "rename")
+  "rf" #'treemacs-rename-file
+  "rp" #'treemacs-rename-project
+  "rr" #'treemacs-rename
+  "rw" #'treemacs-rename-workspace
+  "t"  #'treemacs
+  "T"  '(:ignore :which-key "toggles")
+  "Td" #'treemacs-toggle-show-dotfiles
+  "Tn" #'treemacs-toggle-node
+  "v"  '(:ignore :wk "visit node")
+  "va" #'treemacs-visit-node-ace
+  "vc" #'treemacs-visit-node-close-treemacs
+  "vn" #'treemacs-visit-node-default
+  "y"  '(:ignore :which-key "yank")
+  "ya" #'treemacs-copy-absolute-path-at-point
+  "yp" #'treemacs-copy-project-path-at-point
+  "yr" #'treemacs-copy-relative-path-at-point
+  "yf" #'treemacs-copy-file)
 #+end_src
 
 #+begin_src emacs-lisp
