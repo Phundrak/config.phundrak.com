@@ -25,7 +25,7 @@ After a couple of years using Spacemacs and a failed attempt at
 switching to DoomEmacs, I’m finally switching back to a vanilla
 configuration! Be aware though this document is still very much a work
 in progress document, lots of comments on existing configuration are
-missing, and lots of functionnalities are still not implemented. I’m
+missing, and lots of functionalities are still not implemented. I’m
 still in the process of porting my [[file:spacemacs.org][Spacemacs]] configuration over here.
 
 * Basic configuration
@@ -76,9 +76,8 @@ I sure don’t. Let’s tell Emacs.
 
 There is a minor mode in Emacs which allows to have a finer way of
 jumping from word to word: ~global-subword-mode~. It detects if what
-would usually be considered by Emacs a word can be understood as
-several modes, as in camelCase words, and allows us to jump words on
-this finer level.
+Emacs usually considers a word can be understood as several words, as
+in camelCase words, and allows us to jump words on this finer level.
 #+begin_src emacs-lisp
 (global-subword-mode 1)
 #+end_src
@@ -101,9 +100,9 @@ disable them:
 (add-hook 'prog-mode-hook (lambda () (setq indent-tabs-mode nil)))
 #+end_src
 
-Just to go on a little tangeant here: I don’t exactly /hate/ tabs, but I
+Just to go on a little tangent here: I don’t exactly /hate/ tabs, but I
 find them really annoying when your text editor knows only them. Sure,
-for indentation they work great and they allow different people
+for indentation they work great, and they allow different people
 getting different settings in their text editor depending on their
 preferred tastes —some may prefer 2 spaces tabs, some may prefer 4
 spaces tabs, some deranged people prefer 8 spaces tabs, and some
@@ -129,14 +128,14 @@ the best of both worlds then?
 #+end_center
 
 I haven’t found a way to automate that in Emacs yet aside from
-formatters’ config file, and tabs look bat in EmacsLisp anyways, so
+formatters’ config file, and tabs look bat in EmacsLisp anyway, so
 I’ll stick with spaces by default and change it where needed.
 
 *** Programming Modes
 :PROPERTIES:
 :CUSTOM_ID: Basic-configuration-Emacs-Behavior-Programming-Modesfnmiel6184j0
 :END:
-First off, my definition of what makes a a “programming mode” doesn’t exactly
+First off, my definition of what makes a “programming mode” doesn’t exactly
 fit mine, so on top of ~prog-mode~, let’s add a few other modes.
 #+name: line-number-modes-table
 | Modes      |
@@ -187,7 +186,7 @@ file, and it will create backup files in the same directory. But then,
 when you open your directory with your favorite file manager and see
 almost all of your files duplicated with a =~= appended to the filename,
 it looks really uncomfortable! This is why I prefer to tell Emacs to
-keep its backup files to itself in a directory it only will acces.
+keep its backup files to itself in a directory it only will access.
 #+begin_src emacs-lisp
 (setq backup-directory-alist `(("." . ,(expand-file-name ".tmp/backups/"
                                                          user-emacs-directory))))
@@ -5444,8 +5443,8 @@ Ahem…
 The package ~all-the-icons~ allows us to use a wide variety of icons in
 Emacs for various purposes, wherever we want, and /THAT/ is *GREAT*! I’ll
 (ab)use this feature in my config, be warned! *NOTE*: The first time a
-configuration with ~all-the-icons~ is loaded on a machine, the needed
-fonts might not be available, so you’ll need to install them with the
+configuration with ~all-the-icons~ loads on a machine, the needed fonts
+might not be available, so you’ll need to install them with the
 command ~M-x all-the-icons-install-fonts~.
 #+begin_src emacs-lisp
 (use-package all-the-icons
