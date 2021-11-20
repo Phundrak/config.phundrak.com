@@ -265,9 +265,13 @@ sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
 :END:
 ~mu-unread~ is a very simple utility that simply returns the amount of
 unread emails I have through the use of ~mu~.
+
+As you can see, the output string contains two font switchers for
+StumpWM so I can switch from the main font to Siji for the caracter
+contained between them: U+E072 (an email icon).
 #+begin_src sh
 UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
-printf "Mail: %s" $UNREAD
+printf "^f2^f0%s" $UNREAD
 #+end_src
 
 ** Pinfo                                                          :noexport:

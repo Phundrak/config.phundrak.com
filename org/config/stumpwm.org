@@ -413,6 +413,7 @@ Here are some modules that we will load for the modeline:
 | cpu              | Get the CPU usage                                |
 | mpd              | Display MPD’s status                             |
 | mem              | Get the memory usage                             |
+| net              |                                                  |
 | wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
@@ -424,25 +425,30 @@ Here are some modules that we will load for the modeline:
            "\n")
 #+end_src
 
-#+RESULTS[22e9c907b8814e15dd2bc2a16aa98bb7cab0fd46]: gen-load-modeline-modules
+#+RESULTS[5d4a6c25675e69770eec211c3e07048b62864363]: gen-load-modeline-modules
 #+begin_src lisp
 (load-module "battery-portable")
 (load-module "cpu")
 (load-module "mpd")
 (load-module "mem")
+(load-module "net")
 (load-module "wifi")
 #+end_src
 
 Some variables need to be set so modules are displayed correctly.
+
+Note that the character between the font switchers in the second CPU
+formatter is U+E082, which symbolizes the CPU.
 #+begin_src lisp
 (setf cpu::*cpu-modeline-fmt*        "%c"
+      cpu::*cpu-usage-modeline-fmt*  "^f2^f0^[~A~2D%^]"
       mem::*mem-modeline-fmt*        "%a%p"
       wifi:*wifi-modeline-fmt*       "%e %P"
       wifi:*use-colors*              nil
       mpd:*mpd-modeline-fmt*         "%a - %t"
       mpd:*mpd-status-fmt*           "%a - %t"
-      ,*mode-line-highlight-template* "«~A»"
       ,*hidden-window-color*          "^**")
+      ,*mode-line-highlight-template* "«~A»"
 #+end_src
 
 We can indicate what to display in our modeline. Each formatter will
@@ -453,10 +459,11 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 |-----------+-------------------------------------------------------+----------|
 | ~%g~        | Display list of groups                                |          |
 | ~%W~        | Display list of windows in the current group and head |          |
-| ~^>~        | Rest of the modeline will be aligned to the right     |          |
+| ~^>~        | Rest of the modeline align to the right               |          |
 | ~mu-unread~ | Display number of unread emails                       | yes      |
 | ~%m~        | Display current MPD song                              |          |
 | ~%I~        | Display Wifi status                                   |          |
+| ~%l~        | Display network usage                                 |          |
 | ~%C~        | Display CPU usage                                     |          |
 | ~%M~        | Display RAM usage                                     |          |
 | ~%B~        | Display battery status                                |          |
@@ -473,8 +480,8 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
         elements)
 #+end_src
 
-#+RESULTS[54964dce177e8031e22761857d7d1a0bc960c6bd]: modeline-format-gen
-: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%I") ("%C") ("%M") ("%B") ("%d"))
+#+RESULTS[7f62146daae5aab6014d303b57c306fe44c4087b]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%I") ("%l") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
 (defun generate-modeline (elements &optional not-invertedp)
@@ -738,6 +745,7 @@ list of fonts I want loaded:
 |--------------------------------+-----------+------|
 | Unifont-JP                     | Regular   |   10 |
 | DejaVu Sans Mono for Powerline | Book      |  8.5 |
+| Siji                           | Medium    |   10 |
 
 #+name: gen-fonts
 #+headers: :wrap src lisp
@@ -757,10 +765,11 @@ list of fonts I want loaded:
 #+end_src
 
 The code equivalent of this table can be seen below:
-#+RESULTS[2bcc2bbfd79a25c20b4dfa9d9867b91797089ffc]: gen-fonts
+#+RESULTS[4792ccbea35e0666b555ccf10bc3abcf85763ef0]: gen-fonts
 #+begin_src lisp
 (set-font `(,(make-instance 'xft:font :family "Unifont-JP" :subfamily "Regular" :size 10 :antialias t)
-            ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)))
+            ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)
+            ,(make-instance 'xft:font :family "siji" :subfamily "Medium" :size 10 :antialias t)))
 #+end_src
 
 As far as I know, Unifont is the only font I’ve tested that displays
