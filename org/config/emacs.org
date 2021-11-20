@@ -4249,6 +4249,116 @@ icons!
         flycheck-posframe-error-prefix   "X "))
 #+end_src
 
+**** Langtool
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Langtool-sjr1oox0y9j0
+:END:
+#+begin_src emacs-lisp
+(use-package langtool
+  :defer t
+  :straight (:build t)
+  :commands (langtool-check
+             langtool-check-done
+             langtool-show-message-at-point
+             langtool-correct-buffer)
+  :init
+  (setq langtool-default-language "en-US")
+  :config
+  (setq langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package writegood-mode
+  :defer t
+  :straight (:build t)
+  :hook org-mode latex-mode
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'writegood-mode-map
+    "g" #'writegood-grade-level
+    "r" #'writegood-reading-ease))
+#+end_src
+
+**** Spellcheck
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Spellcheck-wos8d0y0y9j0
+:END:
+#+begin_src emacs-lisp
+(use-package ispell
+  :defer t
+  :straight (:type built-in)
+  :config
+  (require 'cl-lib)
+  ;; (cl-pushnew 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
+  ;; (cl-pushnew 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
+  ;; (cl-pushnew 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
+  (setq ispell-program-name "aspell"
+        ispell-extra-args   '("--sug-mode=ultra" "--run-together")
+        ispell-aspell-dict-dir (ispell-get-aspell-config-value "dict-dir")
+        ispell-aspell-data-dir (ispell-get-aspell-config-value "data-dir")
+        ispell-personal-dictionary (expand-file-name (concat "ispell/" ispell-dictionary ".pws")
+                                                     user-emacs-directory)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :defer t
+  :straight (:type built-in)
+  :ghook 'org-mode 'markdown-mode 'TeX-mode
+  :init
+  (defhydra flyspell-hydra ()
+    "
+Spell Commands^^           Add To Dictionary^^              Other
+--------------^^---------- -----------------^^------------- -----^^---------------------------
+[_b_] check whole buffer   [_B_] add word to dict (buffer)  [_t_] toggle spell check
+[_r_] check region         [_G_] add word to dict (global)  [_q_] exit
+[_d_] change dictionary    [_S_] add word to dict (session) [_Q_] exit and disable spell check
+[_n_] next error
+[_c_] correct before point
+[_s_] correct at point"
+    ("B" nil)
+    ("b" flyspell-buffer)
+    ("r" flyspell-region)
+    ("d" nil)
+    ("G" nil)
+    ("n" flyspell-goto-next-error)
+    ("c" flyspell-correct-wrapper)
+    ("Q" flyspell-mode :exit t)
+    ("q" nil :exit t)
+    ("S" nil)
+    ("s" flyspell-correct-at-point)
+    ("t" nil))
+  :config
+  (provide 'ispell) ;; force loading ispell
+  (setq flyspell-issue-welcome-flag nil
+        flyspell-issue-message-flag nil))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell-correct
+  :defer t
+  :straight (:build t)
+  :general ([remap ispell-word] #'flyspell-correct-at-point)
+  :config
+  (require 'flyspell-correct-ivy nil t))
+
+(use-package flyspell-correct-ivy
+  :defer t
+  :straight (:build t)
+  :after flyspell-correct)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell-lazy
+  :defer t
+  :straight (:build t)
+  :after flyspell
+  :config
+  (setq flyspell-lazy-idle-seconds 1
+        flyspell-lazy-window-idle-seconds 3)
+  (flyspell-lazy-mode +1))
+#+end_src
+
 **** LSP-Mode
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-LSP-Mode-g4v5rsg0k4j0
