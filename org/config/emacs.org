@@ -2495,7 +2495,12 @@ since been archived. New implementations then appeared, one of them is
   :init
   (setq parinfer-rust-auto-download     t
         parinfer-rust-library-directory (concat user-emacs-directory
-                                                "parinfer-rust/")))
+                                                "parinfer-rust/"))
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'parinfer-rust-mode-map
+    "m" #'parinfer-rust-switch-mode
+    "M" #'parinfer-rust-toggle-disable))
 #+end_src
 
 *** Smartparens
