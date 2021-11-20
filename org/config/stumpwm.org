@@ -946,6 +946,18 @@ I don’t like the default colors of the notifications though, let’s change th
       notify:*notify-server-body-color* "^7")
 #+end_src
 
+** Pinentry
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Pinentry-o6v95fu0z9j0
+:END:
+Out with GTK2’s pinentry program! Let’s use StumpWM’s! At least that’s
+what I’d like to say, but unfortunately there is a bug in the text
+reading devices of StumpWM that prevent the user from using modifiers
+when entering a password such as AltGr, so I can’t use it : /
+#+begin_src lisp
+;; (load-module "pinentry")
+#+end_src
+
 ** ~swm-ssh~
 :PROPERTIES:
 :CUSTOM_ID: Utilities-swm-ssh-s14ahrs0z9j0
