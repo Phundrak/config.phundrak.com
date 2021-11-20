@@ -895,6 +895,35 @@ Binwarp mode is now available from the keybind ~s-m~ at top level.
     ((kbd "q")   "exit-binwarp"))
 #+end_src
 
+** NetworkManager integration
+:PROPERTIES:
+:CUSTOM_ID: Utilities-NetworkManager-integration-nm7jxbt0z9j0
+:END:
+It is possible to have some kind of integration between StumpWM and
+NetworkManager. To do so, we have to load the related module, then
+create the two keybinds described in [[nm-keybinds]].
+#+name: nm-keybinds
+#+caption: ~*my-nm-keybinds*~
+| Keychord | Command                   |
+|----------+---------------------------|
+| ~W~        | ~nm-list-wireless-networks~ |
+
+A call to src_lisp[:exports code]{(ql:quickload :dbus)} is necessary
+for this module. Installing the ~dbus~ module in turn requires the
+library ~libfixposix~ installed on the user’s machine. On Arch, you can
+install it like so using ~paru~:
+#+begin_src fish
+paru -S libfixposix --noconfirm
+#+end_src
+
+#+begin_src lisp
+(ql:quickload :dbus)
+
+(load-module "stump-nm")
+
+<<keybinds-gen(map="*root-map*", keybinds=nm-keybinds)>>
+#+end_src
+
 ** Notifications
 :PROPERTIES:
 :CUSTOM_ID: Utilities-Notifications-g7rj2qu0z9j0
