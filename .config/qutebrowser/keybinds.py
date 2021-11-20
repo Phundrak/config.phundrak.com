@@ -196,8 +196,8 @@ config.bind('<F5>',      'reload')
 config.bind('<Ctrl-F5>', 'reload -f')
 
 # view
-config.bind('vh', 'history')
-config.bind('vs', 'view-source')
+config.bind(',vh', 'history')
+config.bind(',vs', 'view-source')
 
 # yank
 config.bind('yd', 'yank domain')
