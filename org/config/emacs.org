@@ -2880,7 +2880,9 @@ something more standard than fish:
 :END:
 I like to have at quick glance some information about my machine when
 I fire up a terminal. I haven’t found anything that does that the way
-I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]!
+I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]! It’s actually available on
+MELPA, but since I’m the main dev of this package, I’ll keep track of
+the git repository.
 #+begin_src emacs-lisp
 (use-package eshell-info-banner
   :after (eshell)
