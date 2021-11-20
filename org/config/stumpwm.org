@@ -517,7 +517,7 @@ when the `car' is a formatter and t when it is a shell command."
 #+end_src
 
 This variable as you can see is a list of elements, although here I am
-only using one string. But it is completely possible to insert some
+only using one string. But it is absolutely possible to insert some
 CLisp code in here that returns some string if the user needs some
 code to return data that cannot be easily accesible otherwise. I might
 add some at some point, but not today yet.
