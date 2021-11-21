@@ -447,8 +447,8 @@ formatter is U+E082, which symbolizes the CPU.
       wifi:*use-colors*              nil
       mpd:*mpd-modeline-fmt*         "%a - %t"
       mpd:*mpd-status-fmt*           "%a - %t"
-      ,*hidden-window-color*          "^**")
-      ,*mode-line-highlight-template* "«~A»"
+      ,*hidden-window-color*          "^**"
+      ,*mode-line-highlight-template* "«~A»")
 #+end_src
 
 We can indicate what to display in our modeline. Each formatter will
