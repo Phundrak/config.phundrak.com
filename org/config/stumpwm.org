@@ -813,7 +813,8 @@ name, limited to thirty characters.
 #+end_src
 
 I also have a [[https://github.com/Phundrak/stumpwm/tree/feature/no-hardcoded-which-key-format][StumpWM fork]] that introduces two new variables for
-customizing which-key keybindings.
+customizing which-key keybindings. I submitted a [[https://github.com/stumpwm/stumpwm/pull/931][pull request]], so it
+might come one day to StumpWM.
 #+begin_src lisp
 (setf *key-seq-color* "^2")
 (setf *which-key-format* (concat *key-seq-color* "*~5a^n ~a"))
