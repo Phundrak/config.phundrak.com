@@ -138,6 +138,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+name: first-loaded-files
 | File to be loaded |
 |-------------------|
+| bluetooth.lisp    |
 | commands.lisp     |
 | placement.lisp    |
 | keybindings.lisp  |
@@ -155,8 +156,9 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+end_src
 
 This is equivalent to the Common Lisp code:
-#+RESULTS[5ec83707b957847594f436dfabc8458904c4ab8b]: gen-load-files
+#+RESULTS[29848aaa616d9b2a828a5602ea6b42dd344efaf2]: gen-load-files
 #+begin_src lisp
+(load "~/.stumpwm.d/bluetooth.lisp")
 (load "~/.stumpwm.d/commands.lisp")
 (load "~/.stumpwm.d/placement.lisp")
 (load "~/.stumpwm.d/keybindings.lisp")
@@ -894,6 +896,165 @@ Binwarp mode is now available from the keybind ~s-m~ at top level.
     ((kbd "r")   "binwarp right")
     ((kbd "i")   "init-binwarp")
     ((kbd "q")   "exit-binwarp"))
+#+end_src
+
+** Bluetooth
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Bluetooth-rns0nr902aj0
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/bluetooth.lisp :noweb yes
+:END:
+Although there is a bluetooth module for the modeline, this is about
+the extent to which StumpWM can interact with the system’s bluetooth.
+However, I wish for some more interecactivity, like powering on and
+off bluetooth, connecting to devices and so on.
+
+First, out code relies on ~cl-ppcre~, so let’s quickload it.
+#+begin_src lisp
+(ql:quickload :cl-ppcre)
+#+end_src
+
+Let’s indicate which command we’ll be using.
+#+begin_src lisp
+(defvar *bluetooth-command* "bluetoothctl"
+  "Base command for interacting with bluetooth.")
+#+end_src
+
+*** Utilities
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Bluetooth-Utilities-3zicf7k03aj0
+:END:
+We’ll need a couple of functions that will take care of stuff for us
+so we don’t have to repeat ourselves. The first one is a way for us to
+share a message. The function ~bluetooth-message~ will first display
+~Bluetooth:~ in green, then it will display the message we want it to
+display.
+#+begin_src lisp
+(defun bluetooth-message (&rest message)
+  (message (format nil
+                   "^2Bluetooth:^7 ~{~A~^ ~}"
+                   message)))
+#+end_src
+
+This function is a builder function which will create our commands.
+For instance, src_lisp[:exports code]{(bluetooth-make-command "power"
+"on")} will return ~"bluetoothctl power on"~ with ~*bluetooth-ctl*~ set as
+~"bluetoothctl"~ --- simply put, it joins ~*bluetooth-command*~ with ~args~
+with a space as their separator.
+#+begin_src lisp
+(defun bluetooth-make-command (&rest args)
+  (format nil
+          "~a ~{~A~^ ~}"
+          ,*bluetooth-command*
+          args))
+#+end_src
+
+Now we can put ~bluetooth-make-command~ to use with ~bluetooth-command~
+which will actually run the result of the former. As you can see, it
+also collects the output so we can display it later in another
+function.
+#+begin_src lisp
+(defmacro bluetooth-command (&rest args)
+  `(run-shell-command (bluetooth-make-command ,@args) t))
+#+end_src
+
+Finally, ~bluetooth-message-command~ is the function that both executes
+and also displays the result of the bluetooth command we wanted to see
+executed. Each argument of the command is a separate string. For
+instance, if we want to power on the bluetooth on our device, we can
+call src_lisp[:exports code]{(bluetooth-message-command "power"
+"on")}.
+#+begin_src lisp
+(defmacro bluetooth-message-command (&rest args)
+  `(bluetooth-message (bluetooth-command ,@args)))
+#+end_src
+
+*** Toggle Bluetooth On and Off
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Bluetooth-Toggle-Bluetooth-On-and-Off-9pyfbtd02aj0
+:END:
+This part is easy. Now that we can call our bluetooth commands easily,
+we can easily define how to turn on bluetooth.
+#+begin_src lisp
+(defcommand bluetooth-turn-on () ()
+            "Turn on bluetooth."
+            (bluetooth-message-command "power" "on"))
+#+end_src
+
+And how to power it off.
+#+begin_src lisp
+(defcommand bluetooth-turn-off () ()
+            "Turn off bluetooth."
+            (bluetooth-message-command "power" "off"))
+#+end_src
+
+*** Bluetooth Devices
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Bluetooth-Bluetooth-Devices-196gbtd02aj0
+:END:
+In order to manipulate bluetooth device, which we can represent as a
+MAC address and a name, we can create a structure that will make use
+of a constructor for simpler use. The constructor
+~make-bluetooth-device-from-command~ expects an entry such as ~Device
+00:00:00:00:00:00 Home Speaker~. The constructor discards the term
+~Device~ and stores the MAC address separately from the rest of the
+string which is assumed to be the full name of the device.
+#+begin_src lisp
+(defstruct (bluetooth-device
+             (:constructor
+              make-bluetooth-device (&key (address "")
+                                          (name nil)))
+             (:constructor
+              make-bluetooth-device-from-command
+              (&key (raw-name "")
+               &aux (address (cadr (cl-ppcre:split " " raw-name)))
+                    (full-name (format nil "~{~A~^ ~}" (cddr (cl-ppcre:split " " raw-name)))))))
+  address
+  (full-name (progn
+                 (format nil "~{~A~^ ~}" name))))
+#+end_src
+
+We can now collect our devices easily.
+#+begin_src lisp
+(defun bluetooth-get-devices ()
+  (let ((literal-devices (bluetooth-command "devices")))
+    (mapcar (lambda (device)
+              (make-bluetooth-device-from-command :raw-name device))
+     (cl-ppcre:split "\\n" literal-devices))))
+#+end_src
+
+*** Connect to a device
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Bluetooth-Connect-to-a-device-tjqcf7k03aj0
+:END:
+When we want to connect to a bluetooth device, we always need
+bluetooth turned on, so ~bluetooth-turn-on~ will always be called. Then
+the function will attempt to connect to the device specified by the
+~device~ argument, whether the argument is a bluetooth structure as
+defined above or a plain MAC address.
+#+begin_src lisp
+(defun bluetooth-connect-device (device)
+  (progn
+    (bluetooth-turn-on)
+    (cond ((bluetooth-device-p device) ;; it is a bluetooth-device structure
+           (bluetooth-message-command "connect"
+                                      (bluetooth-device-address device)))
+          ((stringp device)            ;; assume it is a MAC address
+           (bluetooth-message-command "connect" device))
+          (t (message (format nil "Cannot work with device ~a" device))))))
+#+end_src
+
+The command to connect to a device displays a choice between the
+collected bluetooth device and the user only has to select it. It will
+then attempt to connect to it.
+#+begin_src lisp
+(defcommand bluetooth-connect () ()
+  (let* ((devices (bluetooth-get-devices))
+         (choice  (cdr (stumpwm:select-from-menu
+                        (stumpwm:current-screen)
+                        (mapcar (lambda (device)
+                                  `(,(bluetooth-device-full-name device) . ,device))
+                                devices)))))
+    (bluetooth-connect-device choice)))
 #+end_src
 
 ** NetworkManager integration
