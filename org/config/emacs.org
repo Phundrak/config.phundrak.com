@@ -4290,10 +4290,9 @@ icons!
   :defer t
   :straight (:type built-in)
   :config
-  (require 'cl-lib)
-  ;; (cl-pushnew 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
-  ;; (cl-pushnew 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
-  ;; (cl-pushnew 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
+  (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
+  (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
+  (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
   (setq ispell-program-name "aspell"
         ispell-extra-args   '("--sug-mode=ultra" "--run-together")
         ispell-aspell-dict-dir (ispell-get-aspell-config-value "dict-dir")
