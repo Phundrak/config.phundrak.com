@@ -2485,7 +2485,9 @@ much more intuitive way when writing Lisp code. However, it is now out
 of date (last commit was on January 2nd, 2019) and the repository has
 since been archived. New implementations then appeared, one of them is
 [[https://github.com/eraserhd/parinfer-rust][~parinfer-rust~]], obviously written in Rust, around which
-~parinfer-rust-mode~ is built.
+~parinfer-rust-mode~ is built. Enabling ~parinfer-rust-mode~ should also
+automatically disable ~smartparens-mode~ in order to avoid conflicting
+behavior.
 #+begin_src emacs-lisp
 (use-package parinfer-rust-mode
   :defer t
@@ -2496,6 +2498,8 @@ since been archived. New implementations then appeared, one of them is
   (setq parinfer-rust-auto-download     t
         parinfer-rust-library-directory (concat user-emacs-directory
                                                 "parinfer-rust/"))
+  (add-hook 'parinfer-rust-mode-hook
+            (lambda () (smartparens-mode -1)))
   :general
   (phundrak/major-leader-key
     :keymaps 'parinfer-rust-mode-map
@@ -4920,9 +4924,9 @@ update its fontlock.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-CommonLisp-gc2a7s31q5j0
 :END:
+In lisp buffers, let’s enable ~parinfer-rust-mode~.
 #+begin_src emacs-lisp
 (add-hook 'lisp-mode-hook #'parinfer-rust-mode)
-(add-hook 'lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
 #+begin_src emacs-lisp
