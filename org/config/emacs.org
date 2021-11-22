@@ -2691,13 +2691,13 @@ compilation buffer, as well as enable some syntax highlighting.
   (phundrak/evil
     :keymaps 'compilation-mode-map
     "g" nil
-    "r" #'recompile
+    "r" nil
+    "R" #'recompile
     "h" nil)
   (phundrak/leader-key
     "R" #'recompile)
   :config
   (setq compilation-scroll-output t))
-
 #+end_src
 
 *** Eshell
@@ -4991,7 +4991,7 @@ comma.
  "C"   '(:ignore :which-key "checkdoc")
  "Cc"  #'checkdoc
  "Cs"  #'checkdoc-start
- "e"   '(nil :which-key "eval")
+ "e"   '(:ignore :which-key "eval")
  "eb"  #'eval-buffer
  "ed"  #'eval-defun
  "ee"  #'eval-last-sexp
