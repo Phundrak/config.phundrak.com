@@ -1363,8 +1363,8 @@ know about it since I don’t want it to include it a second time after
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e5kx0fl6184j0
 :END:
 Mu4e is a very eye-pleasing email client for Emacs, built around ~mu~
-and which works very well with ~mbsync~ (found in Arch’s ~isync~ package).
-For me, the main advantage of mu4e is it has a modern interface for
+and which works well with ~mbsync~ (found in Arch’s ~isync~ package). For
+me, the main advantage of mu4e is it has a modern interface for
 emailing, and quite straightforward. I tried a couple of other email
 clients for Emacs, and I even was for some time a Gnus user, but in
 the end, mu4e really works best for me. Below you’ll find my
