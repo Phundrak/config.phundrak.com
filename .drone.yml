@@ -22,8 +22,7 @@ steps:
     target:
       from_secret: ssh_target
     source:
-      - !org/config/LICENSE.md
-      - org/config/*.html
+      - org/config/*
     strip_components: 2
     username:
       from_secret: ssh_username
