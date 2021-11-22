@@ -606,6 +606,9 @@ See `self-screenshot'."
   (self-screenshot 'png))
 #+end_src
 
+These functions were used to take the screenshots you can see in this
+document.
+
 ** Org Functions
 :PROPERTIES:
 :CUSTOM_ID: Custom-Elisp-Org-Functionsyshkel6184j0
