@@ -4946,10 +4946,17 @@ In lisp buffers, let’s enable ~parinfer-rust-mode~.
 (add-hook 'lisp-mode-hook #'parinfer-rust-mode)
 #+end_src
 
+My current window manager is StumpWM, inspired by Emacs and written in
+CommonLisp. ~stumpwm-mode~ offers some integration between Emacs and
+StumpWM so we can evaluate CLisp code and see its effects in StumpWM
+immediately. Since my only use for CommonLisp is for my StumpWM
+configuration, it should be automatically enabled when entering
+~lisp-mode~.
 #+begin_src emacs-lisp
 (use-package stumpwm-mode
   :straight (:build t)
   :defer t
+  :hook lisp-mode
   :config
   (phundrak/major-leader-key
    :keymaps 'stumpwm-mode-map
