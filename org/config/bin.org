@@ -281,6 +281,21 @@ printf "^f2^f0%s" $UNREAD
 :END:
 ~pinfo~ is a utility that shows system information
 
+** Post scrot script
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/post-scrot
+:CUSTOM_ID: cli-utilities-Post-scrot-script-88ccl7t01aj0
+:END:
+It is possible to call a script on the resulting image of a ~scrot~
+command. Not only do I want to move them to a specific directory, I
+also want to be able to see them in ~sxiv~ in case I want to edit the
+image, copy it or simply delete it (sometimes I take screenshots by
+accident).
+#+begin_src sh
+mv "$@" ~/Pictures/Screenshots/
+sxiv -abfs f "$HOME/Pictures/Screenshots/$*"
+#+end_src
+
 ** sshbind
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind

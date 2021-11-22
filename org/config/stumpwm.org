@@ -1259,12 +1259,12 @@ Here’s the equivalent in Common Lisp.
 Let’s also create a keymap for screenshots.
 #+name: screenshot-keymap
 #+caption: ~*my-screenshot-keymap*~
-| Keychord | Function                                             |
-|----------+------------------------------------------------------|
-| ~d~        | ~exec scrot -d 3 -e 'mv $f ~/Pictures/Screenshots'~     |
-| ~s~        | ~exec scrot -e 'mv $f ~/Pictures/Screenshots'~          |
-| ~S~        | ~exec scrot -s -e 'mv $f ~/Pictures/Screenshots'~       |
-| ~g~        | ~exec scrot -e 'gimp $f; mv $f ~/Pictures/Screenshots'~ |
+| Keychord | Function                               |
+|----------+----------------------------------------|
+| =d=        | =exec scrot -d 3 -e 'post-scrot $f'=     |
+| =s=        | =exec scrot -e 'post-scrot $f'=          |
+| =S=        | =exec scrot -s -e 'post-scrot $f'=       |
+| =g=        | =exec scrot -e 'gimp $f; post-scrot $f'= |
 
 Here’s the equivalent in Common Lisp.
 #+begin_src lisp
