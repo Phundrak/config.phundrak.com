@@ -400,7 +400,7 @@ on the matter.
         (:eval
          (let ((project-name (projectile-project-name)))
            (unless (string= "-" project-name)
-             (format (if (buffer-modified-p) " ◉ %s" "  ●  %s") project-name))))))
+             (format (if (buffer-modified-p) " ◉ %s" "  ●  %s - Emacs") project-name))))))
 #+end_src
 
 ** Nice Macros From Doom-Emacs
@@ -1403,8 +1403,7 @@ configuration for the ~mu4e~ package itself.
   (when (fboundp 'imagemagick-register-types)
     (imagemagick-register-types))
 
-  (add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser) t)
-  (add-to-list 'mu4e-view-actions '("PDF view"        . mu4e-action-open-as-pdf)     t)
+  (add-to-list 'mu4e-view-actions '("PDF view" . mu4e-action-open-as-pdf)     t)
 
   (require 'gnus-dired)
   (setq gnus-dired-mail-mode 'mu4e-user-agent)
