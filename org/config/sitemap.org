@@ -1,7 +1,6 @@
 #+TITLE: Sitemap for project config-website-org
 
 - [[file:bootstrap.org][Arch Linux, Phundrak-flavored]]
-- [[file:awesome.org][AwesomeWM configuration]]
 - [[file:desktop.org][Desktop settings]]
 - [[file:emacs.org][Emacs Configuration]]
 - [[file:bin.org][Executable scripts]]
@@ -14,6 +13,7 @@
 - [[file:stumpwm.org][StumpWM config]]
 - [[file:tmux.org][Tmux config]]
 - Deprecated
+  - [[file:awesome.org][AwesomeWM configuration]]
   - [[file:Deprecated/nano.org][Nano configuration]]
   - [[file:Deprecated/polybar.org][Polybar config]]
   - [[file:Deprecated/spacemacs.org][Spacemacs Configuration]]
