@@ -3264,7 +3264,6 @@ of languages are supported directly by Org-mode itself, and they need to be
 activated. Here are the languages I activated in my Org-mode configuration:
 #+NAME: org-babel-languages-table
 | C          |
-| dot        |
 | emacs-lisp |
 | gnuplot    |
 | latex      |
@@ -3283,9 +3282,8 @@ activated. Here are the languages I activated in my Org-mode configuration:
                    "\n  "))
 #+END_SRC
 
-#+RESULTS[6ee465842066eca1ca245b962239bd8a1ef84a10]: org-babel-languages-gen
+#+RESULTS[773757c6f64a90c690f49a47eaa3408ca7c80b64]: org-babel-languages-gen
 : '((C . t)
-:   (dot . t)
 :   (emacs-lisp . t)
 :   (gnuplot . t)
 :   (latex . t)
@@ -4608,8 +4606,27 @@ language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful grap
 visual graphs and networks.
 #+begin_src emacs-lisp
 (use-package graphviz-dot-mode
-  :straight (:build t)
   :defer t
+  :straight (:build t)
+  :mode (("\\.diag\\'"      . graphviz-dot-mode)
+         ("\\.blockdiag\\'" . graphviz-dot-mode)
+         ("\\.nwdiag\\'"    . graphviz-dot-mode)
+         ("\\.rackdiag\\'"  . graphviz-dot-mode)
+         ("\\.dot\\'"       . graphviz-dot-mode)
+         ("\\.gv\\'"        . graphviz-dot-mode))
+  :init
+  (setq graphviz-dot-indent-width tab-width)
+  (after! org-src
+    ;; (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
+    (add-to-list 'org-babel-load-languages '(dot . t))
+    (setq org-src-lang-modes
+          (append '(("dot" . graphviz-dot))
+                  (delete '("dot" . fundamental) org-src-lang-modes))))
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'graphviz-dot-mode-map
+    "=" #'graphviz-dot-indent-graph
+    "c" #'compile)
   :config
   (setq graphviz-dot-indent-width 4))
 #+end_src
