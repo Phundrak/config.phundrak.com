@@ -364,26 +364,6 @@ And with that we’re done!
 :CUSTOM_ID: Modeline-g2ofyw01v5j0
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/modeline.lisp
 :END:
-The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
-#+begin_src lisp
-(load "~/.stumpwm.d/colors.lisp")
-#+end_src
-
-Next, we can set some colors for the modeline. Let’s set the
-background of the modeline to Nord1 and the foreground to Nord5, I
-think this is a pretty good combination.
-#+begin_src lisp
-(setf *mode-line-background-color* phundrak-nord1
-      ,*mode-line-foreground-color* phundrak-nord5)
-#+end_src
-
-We /could/ also use some borders in the modeline. But we won’t. Let’s
-still set its color to Nord1, just in case.
-#+begin_src lisp
-(setf *mode-line-border-color* phundrak-nord1
-      ,*mode-line-border-width* 0)
-#+end_src
-
 The timeout of the modeline indicates how often it refreshes in
 seconds. I think two seconds is good.
 #+begin_src lisp
@@ -411,6 +391,34 @@ titled, limited to 30 characters.
 (setf *window-format* "%n: %30t")
 #+end_src
 
+** Mode-Line Theme
+:PROPERTIES:
+:CUSTOM_ID: Mode-Line-Mode-Line-Theme-4mm37x814aj0
+:END:
+The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
+#+begin_src lisp
+(load "~/.stumpwm.d/colors.lisp")
+#+end_src
+
+Next, we can set some colors for the modeline. Let’s set the
+background of the modeline to Nord1 and the foreground to Nord5, I
+think this is a pretty good combination.
+#+begin_src lisp
+(setf *mode-line-background-color* phundrak-nord1
+      ,*mode-line-foreground-color* phundrak-nord5)
+#+end_src
+
+We /could/ also use some borders in the modeline. But we won’t. Let’s
+still set its color to Nord1, just in case.
+#+begin_src lisp
+(setf *mode-line-border-color* phundrak-nord1
+      ,*mode-line-border-width* 0)
+#+end_src
+
+** Mode-Line Modules
+:PROPERTIES:
+:CUSTOM_ID: Mode-Line-Mode-Line-Modules-tlihmy814aj0
+:END:
 Here are some modules that we will load for the modeline:
 #+name: modeline-modules
 | Module Name      | Why Do I Need It?                                |
@@ -441,8 +449,7 @@ Here are some modules that we will load for the modeline:
 (load-module "wifi")
 #+end_src
 
-Some variables need to be set so modules are displayed correctly.
-
+We need to set some variables so modules can be displayed correctly.
 Note that the character between the font switchers in the second CPU
 formatter is U+E082, which symbolizes the CPU.
 #+begin_src lisp
