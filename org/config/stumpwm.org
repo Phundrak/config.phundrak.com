@@ -131,7 +131,7 @@ pointer as well as get a bunch of stuff started. To see what’s in the
 ~autostart~ script, [[file:bin.org::#Autostart-a99e99e7][see here]].
 #+begin_src lisp
 (run-shell-command "xsetroot -cursor_name left_ptr")
-(run-shell-command "autostart")
+(run-shell-command "sleep 1 && autorandr vertical && autorandr horizontal && autostart")
 #+end_src
 
 Now, we’ll load a couple of my custom files that will be described below:
