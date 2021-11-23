@@ -359,7 +359,7 @@ need to reload them now that we modified them.
 
 And with that we’re done!
 
-* Modeline
+* Mode-Line
 :PROPERTIES:
 :CUSTOM_ID: Modeline-g2ofyw01v5j0
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/modeline.lisp
@@ -390,6 +390,10 @@ seconds. I think two seconds is good.
 (setf *mode-line-timeout* 2)
 #+end_src
 
+** Formatting Options
+:PROPERTIES:
+:CUSTOM_ID: Mode-Line-Formatting-Options-3n494y814aj0
+:END:
 Next we get to the content of the modeline. This format follows the
 format indicated in the manpage of ~date~.
 #+begin_src lisp
@@ -409,13 +413,13 @@ titled, limited to 30 characters.
 
 Here are some modules that we will load for the modeline:
 #+name: modeline-modules
-| Module Name      | Why It Is Loaded                                 |
+| Module Name      | Why Do I Need It?                                |
 |------------------+--------------------------------------------------|
 | battery-portable | Get information on the battery level of a laptop |
 | cpu              | Get the CPU usage                                |
 | mpd              | Display MPD’s status                             |
 | mem              | Get the memory usage                             |
-| net              |                                                  |
+| net              | Display network usage                            |
 | wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
@@ -453,6 +457,10 @@ formatter is U+E082, which symbolizes the CPU.
       ,*mode-line-highlight-template* "«~A»")
 #+end_src
 
+** Generating the Mode-Line
+:PROPERTIES:
+:CUSTOM_ID: Modeline-Generating-the-Mode-Line-daw8qp814aj0
+:END:
 We can indicate what to display in our modeline. Each formatter will
 be separated by a Powerline separator with the code point ~0xE0B0~ in
 the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
