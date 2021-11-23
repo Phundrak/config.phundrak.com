@@ -1034,7 +1034,7 @@ rm $TMPBG
 
 * Polybar-launch (Deprecated)                                      :noexport:
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/polybar-launch
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/polybar-launch
 :CUSTOM_ID: Polybar-launch-36789edc
 :END:
 This scripts allows the user to kill polybar and relaunch it, or to simply
