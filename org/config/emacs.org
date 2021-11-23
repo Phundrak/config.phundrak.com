@@ -3472,6 +3472,41 @@ files.
   (setq preview-org-html-refresh-configuration 'save))
 #+end_src
 
+**** Hugo
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-Hugo-ca3473613aj0
+:END:
+I manage [[https://blog.phundrak.com][my blog]] with [[https://gohugo.io/][Hugo]]. Although it natively supports the org
+format, it’s not great compared to its markdown support. So, instead,
+let’s directly export our org files as markdown files and let Hugo do
+the rest of the job for us!
+#+begin_src emacs-lisp
+(use-package ox-hugo
+  :defer t
+  :after ox
+  :straight t)
+#+end_src
+
+I also have a function for publishing my blog once I exported my
+articles with ~ox-hugo~. It will compile blog into a ~public/~ directory
+and copy its content over to my remote server.
+#+begin_src emacs-lisp
+(defun phundrak/blog-publish ()
+  "Publish my blog through Hugo to my remote server."
+  (interactive)
+  (let* ((default-directory (expand-file-name "~/org/blog"))
+         (public-path       (concat default-directory "/public"))
+         (target-path       "/rsync:Tilo:/home/phundrak/www/phundrak.com/blog"))
+    (compile "hugo")
+    (let ((files (mapcar (lambda (file)
+                           (f-relative file public-path))
+                         (f-files public-path nil t))))
+      (dolist (file files)
+        (copy-file (concat public-path "/" file)
+                   (concat target-path "/" file)
+                   t nil t)))))
+#+end_src
+
 **** LaTeX
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-LaTeXg2b5fl6184j0
@@ -3553,22 +3588,6 @@ add their extension like so:
 #+begin_src emacs-lisp :tangle no
 (dolist (ext '("bbl" "lot"))
   (add-to-list 'org-latex-logfiles-extensions ext t))
-#+end_src
-
-**** Markdown
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Markdown-g2vh5vz095j0
-:END:
-There’s not really any unified Markdown specification, meaning
-everyone can pretty much do whatever they want with the syntax and
-still call it Markdown. Great… But something I appreciate is Github
-supports some extra HTML to make our files extra spicy! And lucky me,
-there’s a package for exporting my org files to Github-flavored
-Markdown!
-#+begin_src emacs-lisp
-(use-package ox-gfm
-  :after (ox org)
-  :straight (:build t))
 #+end_src
 
 **** Reveal.js
