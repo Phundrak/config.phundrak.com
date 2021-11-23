@@ -524,10 +524,11 @@ CLisp code in here that returns some string if the user needs some
 code to return data that cannot be easily accesible otherwise. I might
 add some at some point, but not today yet.
 
-** TODO Investigate why ~stumptray~ doesn’t work                    :noexport:
+** TODO Investigate why ~stumptray~ acts up                         :noexport:
 :PROPERTIES:
 :CUSTOM_ID: Modeline-Investigate-why-stumptray-doesn-t-work-0juh13g0m6j0
 :END:
+Systray overlaps with the far-right part of the modeline.
 
 # Also, let’s enable a system tray.
 # #+begin_src lisp
