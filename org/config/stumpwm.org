@@ -218,8 +218,7 @@ including a short description of what they are for:
 In order to be able to use MPD from StumpWM itself, we’ll need to
 connect to it.
 #+begin_src lisp
-(when *initializing*
-  (mpd-connect))
+(mpd:mpd-connect)
 #+end_src
 
 Finally, we can notify the user everything is ready.
