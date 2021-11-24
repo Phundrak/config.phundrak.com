@@ -10,14 +10,14 @@ depends=()
 makedepends=('rustup' 'git')
 options=('strip' 'zipman')
 source=("$pkgname::git+https://labs.phundrak.com/phundrak/pumopm.git#branch=develop")
-md5sums=('SKIP')
+sha512sums=('SKIP')
 conflicts=('pumopm' 'pumopm-bin')
 # If Phundrak’s Gitea takes too long to answer, or if it is down, use the
 # Github mirror
 # source=("$pkgname}::git+https://github.com/Phundrak/pumopm.git#branch=develop")
 
 pkgver() {
-	cd "$pkgname"
+  cd "$pkgname"
   git describe --tags --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 

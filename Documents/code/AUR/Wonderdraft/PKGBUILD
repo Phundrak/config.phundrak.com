@@ -23,7 +23,6 @@ sha512sums=('27b0a56c95efe99c2b3cadb10c4e70186591bef0793d58b1acff99f8dfc789806ae
 noextract=()
 
 package() {
-  # unzip "${srcdir}/${pkgname}-${pkgver}-Linux64.zip" -d "${srcdir}/${pkgname}/"
   mkdir -p "${pkgdir}/usr/share/applications/"
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/"
   mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"

@@ -14,29 +14,27 @@ makedepends=('git')
 conflicts=('sent' 'sent-git')
 source=("$pkgname::git+https://labs.phundrak.com/phundrak/sent")
 sha256sums=('SKIP')
-#        "config.h")
-#            'SKIP')
 
 pkgver() {
-	cd "${pkgname}"
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+        cd "${pkgname}"
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-	cd "${srcdir}/${pkgname}"
-	if [ -f "${srcdir}/config.h" ]; then
-		cp "${srcdir}/config.h" .
-	fi
+        cd "${srcdir}/${pkgname}"
+        if [ -f "${srcdir}/config.h" ]; then
+                cp "${srcdir}/config.h" .
+        fi
 }
 
 build() {
-	make -C "${srcdir}/${pkgname}"
+        make -C "${srcdir}/${pkgname}"
 }
 
 package() {
-	cd "${srcdir}/${pkgname}"
-	make PREFIX="/usr" \
-		 DESTDIR="${pkgdir}" \
-		 install
-	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+        cd "${srcdir}/${pkgname}"
+        make PREFIX="/usr" \
+                 DESTDIR="${pkgdir}" \
+                 install
+        install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

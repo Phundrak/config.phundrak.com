@@ -16,8 +16,8 @@ makedepends=('git')
 provides=("${_name}")
 conflicts=("${_name}" "${_name}-git")
 source=("${_name}::git+${url}.git" config.h)
-md5sums=('SKIP'
-         '0a944f532b962cac835ee65d616be61b')
+sha512sums=('SKIP'
+            'f3cd5532977033ffb878e397c76b4576f931b74dc2c158f373d6618d0d4155387bc983b745f0adeffeee85de9ebdc9e9418d823cceef8895b2d8e6ab1d4791ca')
 
 
 pkgver() {
@@ -26,10 +26,7 @@ pkgver() {
 }
 
 prepare() {
-  # echo =====================
-  # echo srcdir $srcdir
   cd "${srcdir}/${_name}"
-  # use your customisations if present
   [[ -f $srcdir/config.h ]] && cp $srcdir/config.h .
 
   # Allow custom FLAGS
