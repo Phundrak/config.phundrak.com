@@ -21,8 +21,8 @@
 #
 ################################################################################
 CHECK=            # Run tests. May fail, this is developement after all.
-CLANG="YES"       # Use clang.
-GOLD=             # Use the gold linker.
+CLANG=            # Use clang.
+GOLD="YES"        # Use the gold linker.
 LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
                   # attempting to use it with clang.
 JIT="YES"         # Enable native just-in-time compilation. libgccjit is in AUR.
@@ -44,8 +44,8 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
 GTK2=             # GTK2 support. Why would you?
 NOCAIRO=          # Disable here.
-XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
-DOCS_HTML=        # Generate and install html documentation.
+XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+DOCS_HTML="YES"   # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
                   # ImageMagick, like flash, won't die...
@@ -59,7 +59,7 @@ if [[ $CLI == "YES" ]] ; then
 else
     pkgname="emacs-phundrak-git"
 fi
-pkgver=28.0.60.150968
+pkgver=28.0.60.150971
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
