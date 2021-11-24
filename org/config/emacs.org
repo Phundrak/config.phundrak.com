@@ -1995,6 +1995,7 @@ notification system, and I’ll activate the modeline notification.
 #+begin_src emacs-lisp
 (use-package mu4e-alert
   :straight (:build t)
+  :after mu4e
   :defer t
   :init
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
@@ -2334,7 +2335,6 @@ with ~magit-gitflow~:
 #+begin_src emacs-lisp
 (use-package projectile
   :straight (:build t)
-  :defer t
   :diminish projectile-mode
   :config (projectile-mode)
   :custom ((projectile-completion-system 'ivy))
@@ -3312,6 +3312,7 @@ exporter I use afterwards. Its installation is pretty simple:
 (use-package ob-restclient
   :straight (:build t)
   :defer t
+  :after (org ob)
   :init
   (add-to-list 'org-babel-load-languages '(restclient . t)))
 #+end_src
@@ -4911,6 +4912,7 @@ or some I write myself.
 (use-package plantuml-mode
   :defer t
   :mode ("{{.\\(pum\\|puml\\)\\'" . plantuml-mode)
+  :after ob
   :init
   (add-to-list 'org-babel-load-languages '(plantuml . t))
   :general
@@ -5165,6 +5167,7 @@ comma.
 (use-package python
   :defer t
   :straight (:build t)
+  :after ob
   :mode (("SConstruct\\'" . python-mode)
          ("SConscript\\'" . python-mode)
          ("[./]flake8\\'" . conf-mode)
@@ -5581,6 +5584,7 @@ development. First, let’s install the most important package,
 (use-package rjsx-mode
   :defer t
   :straight (:build t)
+  :after compile
   :mode "\\.[mc]?js\\'"
   :mode "\\.es6\\'"
   :mode "\\.pac\\'"
