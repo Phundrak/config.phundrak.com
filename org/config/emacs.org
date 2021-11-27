@@ -3076,6 +3076,219 @@ I’ll also create a fuction for connecting to this new Tramp protocol:
   (magit-status "/yadm::"))
 #+end_src
 
+** EXWM
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-EXWM-pr14yxs09aj0
+:END:
+#+begin_src emacs-lisp
+(defvar phundrak/with-exwm (and (eq window-system 'x)
+                                (seq-contains command-line-args "--use-exwm")))
+
+(use-package xelb
+  :straight (xelb :build t
+                  :type git
+                  :host github
+                  :repo "ch11ng/xelb"))
+
+;; config.daviwil.com/desktop
+(defun exwm/run-in-background (command &optional once)
+  (let ((command-parts (split-string command " +")))
+    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+(use-package exwm
+  :straight (exwm :build t
+                  :type git
+                  :host github
+                  :repo "ch11ng/exwm")
+  :custom
+  (use-dialog-box nil "Disable dialog boxes since they are unusable in EXWM")
+  (exwm-input-line-mode-passthrough t "Pass all keypresses to emacs in line mode.")
+  :init
+  (require 'exwm-config)
+  (setq exwm-workspace-number 3)
+  :config
+  (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
+  (advice-add #'exwm-input-grab-keyboard :after (lambda (&optional id) (evil-normal-state)))
+  (advice-add #'exwm-input-release-keyboard :after (lambda (&optional id) (evil-insert-state)))
+
+  (general-define-key
+   :keymaps 'exwm-mode-map
+   :states 'normal
+   "i" #'exwm-input-release-keyboard)
+  (push ?\i exwm-input-prefix-keys)
+
+  (add-hook 'exwm-update-class-hook
+            (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+
+  (defconst exwm-workspace-keys '("*" "\"" "«" "»" "(" ")" "@" "+" "-" "/"))
+  (setq exwm-input-global-keys
+        `(,@exwm-input-global-keys
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%s" (nth i exwm-workspace-keys))) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-switch-create ,i))))
+                    (number-sequence 0 9))
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-move-window ,i))))
+                    (number-sequence 0 9))))
+
+  (exwm-input-set-key (kbd "C-q")   #'exwm-input-send-next-key)
+  (exwm-input-set-key (kbd "s-I")   #'exwm-input-toggle-keyboard)
+  (exwm-input-set-key (kbd "s-l")   (lambda () (start-process "" nil "plock")))
+  (exwm-input-set-key (kbd "s-r")   #'exwm-reset)
+  (exwm-input-set-key (kbd "s-R")   #'exwm-restart)
+  (exwm-input-set-key (kbd "s-w")   #'exwm-workspace-switch)
+  (exwm-input-set-key (kbd "s-<return>") (lambda ()
+                                           (interactive)
+                                           (start-process-shell-command "kitty" nil "kitty")))
+  (exwm-input-set-key (kbd "s-<escape>") #'exwm-input-grab-keyboard)
+  (exwm-input-set-key (kbd "s-d")        (lambda ()
+                                           (interactive)
+                                           (start-process "RUN" nil (string-trim (read-shell-command "RUN: ")))))
+
+  (phundrak/leader-key
+    :infix "x"
+    ""   '(:ignore t :which-key "EXWM")
+    "k"  #'exwm-input-send-next-key
+    "l"  '((lambda ()
+             (interactive)
+             (start-process "" nil "plock"))
+           :which-key "lock")
+    "r"  #'exwm-reset
+    "R"  #'exwm-restart
+    "t"  '(:ignore t :which-key "toggle")
+    "tf" #'exwm-layout-toggle-fullscreen
+    "tF" #'exwm-floating-toggle-floating
+    "tm" #'exwm-layout-toggle-mode-line
+    "w"  '(:ignore t :which-key "workspaces")
+    "wa" #'exwm-workspace-add
+    "wd" #'exwm-workspace-delete
+    "x"  '((lambda ()
+             (interactive)
+             (let ((command (string-trim (read-shell-command "RUN: "))))
+               (start-process command nil command)))
+           :which-key "run"))
+
+  (exwm/run-in-background "mpc stop")
+  (exwm/run-in-background "pumopm")
+  ;; (exwm/run-in-background "nm-applet")
+  (exwm/run-in-background "xss-lock")
+  (exwm/run-in-background "xrdb -merge $HOME/.Xresources")
+
+  (after! exwm-randr
+    (exwm-init)))
+
+(use-package evil-exwm-state
+  :defer t
+  :after exwm
+  :straight (evil-exwm-state :build t
+                             :type git
+                             :host github
+                             :repo "domenzain/evil-exwm-state"))
+
+(use-package desktop-environment
+  :defer t
+  :straight (desktop-environment :build t
+                                 :type git
+                                 :host github
+                                 :repo "DamienCassou/desktop-environment")
+  :diminish t
+  :config
+  (setq desktop-environment-update-exwm-global-keys :prefix)
+  (setq exwm-layout-show-al-buffers t))
+
+
+(use-package exwm-randr
+  :after exwm
+  :straight (exwm-randr :build t
+                        :type git
+                        :host github
+                        :repo "ch11ng/exwm"
+                        :files ("exwm-randr.el"))
+  :config
+  (setq exwm-randr-workspace-monitor-plist '(0 "eDP-1"
+                                             1 "HDMI1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               "autorandr" nil "autorandr horizontal")))
+  (exwm-randr-enable))
+#+end_src
+
+*** Bluetooth
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-EXWM-Bluetooth-k0zhpda0aaj0
+:END:
+#+begin_src emacs-lisp
+(defvar bluetooth-command "bluetoothctl")
+#+end_src
+
+#+RESULTS:
+: bluetooth-command
+
+#+begin_src emacs-lisp
+(defun bluetooth-turn-on ()
+  (interactive)
+  (let ((process-connection-type nil))
+    (start-process "" nil bluetooth-command "power" "on")))
+#+end_src
+
+#+RESULTS:
+: bluetooth-turn-on
+
+#+begin_src emacs-lisp
+(defun bluetooth-turn-off ()
+  (interactive)
+  (let ((process-connection-type nil))
+    (start-process "" nil bluetooth-command "power" "off")))
+#+end_src
+
+#+RESULTS:
+: bluetooth-turn-off
+
+#+begin_src emacs-lisp
+(defun create-bluetooth-device (raw-name)
+  "Create a bluetooth device cons from RAW NAME.
+The cons will hold first the MAC address of the device, then its
+human-friendly name."
+  (let ((split-name (split-string raw-name " " t)))
+    `(,(string-join (cddr split-name) " ") . ,(cadr split-name))))
+#+end_src
+
+#+RESULTS:
+: create-bluetooth-device
+
+#+begin_src emacs-lisp
+(defun bluetooth-get-devices ()
+  (let ((literal-devices (string-trim (shell-command-to-string
+                                       (concat bluetooth-command " devices")))))
+    (mapcar (lambda (device)
+              (create-bluetooth-device device))
+            (split-string literal-devices "\n"))))
+#+end_src
+
+#+RESULTS:
+: bluetooth-get-devices
+
+#+begin_src emacs-lisp
+(defun bluetooth-connect-device ()
+  (interactive)
+  (progn
+    (bluetooth-turn-on)
+    (let* ((devices (bluetooth-get-devices))
+           (target-device (completing-read "Device: "
+                                           devices))
+           (target-address (cdr (assoc target-device devices))))
+      (shell-command (string-join `(,bluetooth-command "connect" ,target-address) " ")))))
+#+end_src
+
+#+RESULTS:
+: bluetooth-connect-device
+
 ** Making my life easier
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Making-my-life-easier2kz4fl6184j0
