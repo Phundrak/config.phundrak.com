@@ -4903,6 +4903,7 @@ visual graphs and networks.
 (use-package graphviz-dot-mode
   :defer t
   :straight (:build t)
+  :after ob
   :mode (("\\.diag\\'"      . graphviz-dot-mode)
          ("\\.blockdiag\\'" . graphviz-dot-mode)
          ("\\.nwdiag\\'"    . graphviz-dot-mode)
@@ -4911,12 +4912,14 @@ visual graphs and networks.
          ("\\.gv\\'"        . graphviz-dot-mode))
   :init
   (setq graphviz-dot-indent-width tab-width)
-  (after! org-src
-    ;; (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
-    (add-to-list 'org-babel-load-languages '(dot . t))
-    (setq org-src-lang-modes
-          (append '(("dot" . graphviz-dot))
-                  (delete '("dot" . fundamental) org-src-lang-modes))))
+  (after! ob
+      (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
+      (add-to-list 'org-babel-load-languages '(dot . t))
+      (require 'ob-dot)
+      (setq org-src-lang-modes
+            (append '(("dot" . graphviz-dot))
+                    (delete '("dot" . fundamental) org-src-lang-modes))))
+
   :general
   (phundrak/major-leader-key
     :keymaps 'graphviz-dot-mode-map
