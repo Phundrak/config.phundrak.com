@@ -2080,6 +2080,7 @@ configuration [[file:mpd.org][here]]).
              (interactive)
              (shell-command-and-echo "mpc toggle"))
            :which-key "mpc toggle")
+    "s"  #'emms-stop
     "u"  '(nil :which-key "update")
     "um" #'emms-player-mpd-update-all
     "uc" #'emms-cache-set-from-mpd-all))
