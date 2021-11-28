@@ -3142,7 +3142,8 @@ from Git.
   :straight (xelb :build t
                   :type git
                   :host github
-                  :repo "ch11ng/xelb"))
+                  :repo "emacs-straiht/xelb"
+                  :fork "ch11ng/xelb"))
 #+end_src
 
 Next is a function I’ve +stolen+ copied from Daviwil’s [[https://config.daviwil.com/desktop][desktop
@@ -3171,28 +3172,24 @@ simply get the name of the current X window, I want Firefox and
 Qutebrowser to be prefixed with the name of the browser. Actually, all
 these will be renamed this way:
 #+name: exwm-renamed-buffers-list
-- Discord
-- Firefox
+- Kitty
 - Qutebrowser
 
 #+name: exwm-gen-buffers-rename
 #+headers: :exports none :tangle no
 #+begin_src emacs-lisp :var buffers=exwm-renamed-buffers-list :cache yes
-(mapconcat (lambda (buffer)
-             (let ((buffer-name (car buffer)))
-               (format "(\"%s\" %S)"
-                       (downcase buffer-name)
-                       `(exwm-workspace-rename-buffer (concat ,buffer-name
-                                                              " - "
-                                                              exwm-title)))))
-           buffers
-           "\n")
+(format "%s\n%S"
+        (mapconcat (lambda (buffer)
+                     (let ((buffer-name (car buffer)))
+                       (format "(\"%s\" %S)"
+                               (downcase buffer-name)
+                               `(exwm-workspace-rename-buffer (concat ,buffer-name
+                                                                      " - "
+                                                                      exwm-title)))))
+                   buffers
+                   "\n")
+        '(_otherwise (exwm-workspace-rename-buffer exwm-title)))
 #+end_src
-
-#+RESULTS[53d4805340ff070b477ea5d3725105c488ffb1fd]: exwm-gen-buffers-rename
-: ("discord" (exwm-workspace-rename-buffer (concat "Discord - %s" exwm-title)))
-: ("firefox" (exwm-workspace-rename-buffer (concat "Firefox - %s" exwm-title)))
-: ("qutebrowser" (exwm-workspace-rename-buffer (concat "Qutebrowser - %s" exwm-title)))
 
 #+name: exwm-buffers-name
 #+begin_src emacs-lisp :tangle no
@@ -3202,8 +3199,7 @@ these will be renamed this way:
 (add-hook 'exwm-update-title-hook
           (lambda ()
             (pcase exwm-class-name
-              <<exwm-gen-buffers-rename()>>
-              )))
+              <<exwm-gen-buffers-rename()>>)))
 #+end_src
 
 As you can see below, in the ~:config~ section I added two advices and one
@@ -3360,8 +3356,10 @@ The complete configuration for the ~exwm~ package can be found below.
   (exwm-input-line-mode-passthrough t "Pass all keypresses to emacs in line mode.")
   :init
   (require 'exwm-config)
-  (setq exwm-workspace-number 3)
+  (setq exwm-workspace-number 6)
   :config
+  <<exwm-randr>>
+
   <<exwm-buffers-name>>
 
   <<exwm-advices-evil>>
@@ -3395,22 +3393,14 @@ The complete configuration for the ~exwm~ package can be found below.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-EXWM-Multimonitor-support-l5pexz61aaj0
 :END:
-#+begin_src emacs-lisp
-(use-package exwm-randr
-  :after exwm
-  :straight (exwm-randr :build t
-                        :type git
-                        :host github
-                        :repo "ch11ng/exwm"
-                        :files ("exwm-randr.el"))
-  :config
-  (setq exwm-randr-workspace-monitor-plist '(0 "eDP-1"
-                                             1 "HDMI1"))
-  (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-              (start-process-shell-command
-               "autorandr" nil "autorandr horizontal")))
-  (exwm-randr-enable))
+#+name: exwm-randr
+#+begin_src emacs-lisp :tangle no
+(require 'exwm-randr)
+(exwm/run-in-background "xwallpaper --zoom \"${cat $HOME/.cache/wallpaper}\"")
+(start-process-shell-command
+ "xrandr" nil "xrandr --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI1 --primary --mode 2560x1080 --pos 1920x0 --rotate normal --output VIRTUAL1 --off --output DP-1-0 --off --output DP-1-1 --off")
+(exwm-randr-enable)
+(setq exwm-randr-workspace-monitor-plist '(3 "eDP1"))
 #+end_src
 
 *** Keybinds for a desktop environment
