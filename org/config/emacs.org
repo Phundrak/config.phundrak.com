@@ -3174,10 +3174,13 @@ However, when I exit one, I want to default back to normal-mode.
 Secondly, I add ~i~, ~C-SPC~, and ~M-m~ as exwm prefix keys so they aren’t
 sent directly to the X windows but caught by Emacs (and EXWM). I’ll
 use the ~i~ key in normal-mode to enter ~insert-mode~ and have Emacs
-release the keyboard so the X window can grab it. ~s-I~ will also toggle
-between releasing to and grabing the keyboard from X windows.
-~s-<escape>~ will be only useful for grabing back the keyboard, a bit
-like exiting the insert state from evil back to the normal state.
+release the keyboard so the X window can grab it. Initially, I had
+~s-<escape>~ as a keybind for grabbing back the keyboard from an X
+window, as if I were in insert mode and wanted to go back to normal
+mode, and I had ~s-I~ to toggle keyboard grabbing. But I found myself
+more than once trying to use ~s-<escape>~ to toggle this state, ~s-I~
+completely forgotten. So I removed ~s-I~ and made ~s-<escape>~ behave like
+~s-I~ once did.
 #+name: exwm-prefix-keys
 #+begin_src emacs-lisp :tangle no
 (general-define-key
@@ -3185,8 +3188,7 @@ like exiting the insert state from evil back to the normal state.
  :states 'normal
  "i" #'exwm-input-release-keyboard)
 
-(exwm-input-set-key (kbd "s-I")   #'exwm-input-toggle-keyboard)
-(exwm-input-set-key (kbd "s-<escape>") #'exwm-input-grab-keyboard)
+(exwm-input-set-key (kbd "s-<escape>") #'exwm-input-toggle-keyboard)
 
 (push ?\i exwm-input-prefix-keys)
 (push (kbd "C-SPC") exwm-input-prefix-keys)
