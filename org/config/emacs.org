@@ -1429,6 +1429,8 @@ configuration for the ~mu4e~ package itself.
   <<mu4e-keybindings-message>>
 
   :config
+  (evil-collection-mu4e-setup)
+
   <<mu4e-mail-service>>
   <<mu4e-mail-on-machine>>
   <<mu4e-no-signature>>
@@ -1975,6 +1977,9 @@ the major-mode leader and call a simple function.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Email-Composing-messagesth71fl6184j0
 :END:
+Org mime is cool and all, you can write some org-mode and then export
+it so you can send an HTML email. BUT, have you considered skipping
+the export part and write your emails directly in org-mode?
 #+begin_src emacs-lisp
 (use-package org-msg
   :after (org mu4e)
