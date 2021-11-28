@@ -801,25 +801,28 @@ can still feel some influence from my Spacemacs years here.
 
 #+name: general-keybindings-gen
 #+headers: :tangle no :exports none :results value :cache yes
-#+begin_src emacs-lisp :var table=mu4e-keybindings-view-tbl
+#+begin_src emacs-lisp :var table=keybinds-windows prefix=""
 (mapconcat (lambda (line)
              (let* ((key      (car line))
                     (function (cadr line))
-                    (function (if (or (string= "nil" function)
-                                      (string= ""    function))
-                                  ":ignore"
-                                function))
                     (comment  (caddr line)))
-               (format "\"%s\" %s" key
+               (format "\"%s%s\" %s"
+                       prefix
+                       key
                        (if (string= "" comment)
-                           (if (string= "nil" function)
+                           (if (or (string= "" function)
+                                   (string= "nil" function))
                                "nil"
-                            (concat "#'" function))
-                        (format "'(%s :which-key \"%s\")"
-                                function
-                                (if (string= "" function)
-                                    "nil"
-                                  comment))))))
+                             (concat "#'" function))
+                         (format "'(%s :wk %s)"
+                                 (if (or (string= "" function)
+                                         (string= "nil" function))
+                                     ":ignore t"
+                                   function)
+                                 (if (or (string= "none" comment)
+                                         (string= "nil" comment))
+                                     "t"
+                                   (concat "\"" comment "\"")))))))
            table
            "\n")
 #+end_src
@@ -1292,44 +1295,15 @@ in this code block all my keybinds for Elfeed here.
   (phundrak/evil
     :keymaps 'elfeed-show-mode-map
     :packages 'elfeed
-    "+" #'elfeed-show-tag
-    "-" #'elfeed-show-untag
-    "«" #'elfeed-show-prev
-    "»" #'elfeed-show-next
-    "b" #'elfeed-show-visit
-    "C" #'elfeed-kill-link-url-at-point
-    "d" #'elfeed-show-save-enclosure
-    "l" #'elfeed-show-next-link
-    "o" #'elfeed-goodies/show-ace-link
-    "q" #'elfeed-kill-buffer
-    "S" #'elfeed-show-new-live-search
-    "u" #'elfeed-show-tag--unread
-    "y" #'elfeed-show-yank)
+    <<general-keybindings-gen(table=elfeed-keybinds-show-mode)>>)
   (phundrak/evil
     :keymaps 'elfeed-search-mode-map
     :packages 'elfeed
-    "«"  #'elfeed-search-first-entry
-    "»"  #'elfeed-search-last-entry
-    "b"  #'elfeed-search-browse-url
-    "f"  '(nil :which-key "filter")
-    "fc" #'elfeed-search-clear-filter
-    "fl" #'elfeed-search-live-filter
-    "fs" #'elfeed-search-set-filter
-    "u"  '(nil :which-key "update")
-    "us" #'elfeed-search-fetch
-    "uS" #'elfeed-search-update
-    "uu" #'elfeed-update
-    "uU" #'elfeed-search-update--force
-    "y"  #'elfeed-search-yank)
+    <<general-keybindings-gen(table=elfeed-keybinds-search-mode)>>)
   (phundrak/major-leader-key
     :keymaps 'elfeed-search-mode-map
     :packages 'elfeed
-    "c"  #'elfeed-db-compact
-    "t"  '(nil :which-key "tag")
-    "tt" #'elfeed-search-tag-all-unread
-    "tu" #'elfeed-search-untag-all-unread
-    "tT" #'elfeed-search-tag-all
-    "tU" #'elfeed-search-untag-all))
+    <<general-keybindings-gen(table=elfeed-keybinds-search-mode-prefixed)>>))
 #+end_src
 
 Last but not least, my Elfeed configuration is stored in an org file
@@ -1344,6 +1318,61 @@ thanks to ~elfeed-org~.
   :config
   (setq rmh-elfeed-org-files '("~/org/elfeed.org")))
 #+end_src
+
+**** Keybinds
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Elfeed-Keybinds-9oeijjs0baj0
+:END:
+First, here are the keybinds for Elfeed’s ~elfeed-show-mode~. They
+aren’t prefixed by ~SPC~ like most of my keybinds, a direct keypress
+will directly launch the function.
+#+name: elfeed-keybinds-show-mode
+| Key | Function                      | Comment |
+|-----+-------------------------------+---------|
+| +   | elfeed-show-tag               |         |
+| -   | elfeed-show-untag             |         |
+| «   | elfeed-show-prev              |         |
+| »   | elfeed-show-next              |         |
+| b   | elfeed-show-visit             |         |
+| C   | elfeed-kill-link-url-at-point |         |
+| d   | elfeed-show-save-enclosure    |         |
+| l   | elfeed-show-next-link         |         |
+| o   | elfeed-goodies/show-ace-link  |         |
+| q   | elfeed-kill-buffer            |         |
+| S   | elfeed-show-new-live-search   |         |
+| u   | elfeed-show-tag--unread       |         |
+| y   | elfeed-show-yank              |         |
+
+Same thing, different mode, here are my keybinds for
+~elfeed-search-mode~.
+#+name: elfeed-keybinds-search-mode
+| Key | Function                    | Comment |
+|-----+-----------------------------+---------|
+| «   | elfeed-search-first-entry   |         |
+| »   | elfeed-search-last-entry    |         |
+| b   | elfeed-search-browse-url    |         |
+| f   |                             | filter  |
+| fc  | elfeed-search-clear-filter  |         |
+| fl  | elfeed-search-live-filter   |         |
+| fs  | elfeed-search-set-filter    |         |
+| u   |                             | update  |
+| us  | elfeed-search-fetch         |         |
+| uS  | elfeed-search-update        |         |
+| uu  | elfeed-update               |         |
+| uU  | elfeed-search-update--force |         |
+| y   | elfeed-search-yank          |         |
+
+I have some additional keybinds for ~elfeed-search-mode~, but these one
+are prefixed with ~,~ (and ~M-m~).
+#+name: elfeed-keybinds-search-mode-prefixed
+| Key | Function                       | Comment |
+|-----+--------------------------------+---------|
+| c   | elfeed-db-compact              |         |
+| t   |                                | tag     |
+| tt  | elfeed-search-tag-all-unread   |         |
+| tu  | elfeed-search-untag-all-unread |         |
+| tT  | elfeed-search-tag-all          |         |
+| tU  | elfeed-search-untag-all        |         |
 
 *** Email
 :PROPERTIES:
@@ -1904,15 +1933,20 @@ I’ll also declare two keybinds for mu4e’s headers mode.
 
 I will also redefine without a leader key ~ctsr~ in order to be able to
 move freely (remember, bépo layout for me).
+#+name: mu4e-keybindings-header-no-leader-table
+| Key | Function           | Comment |
+|-----+--------------------+---------|
+| c   | evil-backward-char |         |
+| t   | evil-next-line     |         |
+| s   | evil-previous-line |         |
+| r   | evil-forward-char  |         |
+
 #+name: mu4e-keybindings-header-no-leader
 #+begin_src emacs-lisp :tangle no
 (phundrak/evil
   :keymaps 'mu4e-headers-mode-map
   :packages 'mu4e
-  "c" #'evil-backward-char
-  "t" #'evil-next-line
-  "s" #'evil-previous-line
-  "r" #'evil-forward-char)
+  <<general-keybindings-gen(table=mu4e-keybindings-header-no-leader-table)>>)
 #+end_src
 
 Finally, let’s declare a couple of keybindings for when we are
@@ -1976,13 +2010,19 @@ the major-mode leader and call a simple function.
   (phundrak/major-leader-key
     :keymaps 'org-msg-edit-mode-map
     :packages 'org-msg
-    "," #'message-send-and-exit
-    "c" #'message-send-and-exit
-    "a" #'message-kill-buffer
-    "k" #'message-kill-buffer
-    "s" #'message-dont-send
-    "f" #'org-msg-attach))
+    <<general-keybindings-gen(table=org-msg-edit-mode-keybinds)>>))
 #+end_src
+
+The keybinds are relatively simple ~org-msg-edit-mode~:
+#+name: org-msg-edit-mode-keybinds
+| Key | Function              | Description |
+|-----+-----------------------+-------------|
+| ,   | message-send-and-exit |             |
+| c   | message-send-and-exit |             |
+| a   | message-kill-buffer   |             |
+| k   | message-kill-buffer   |             |
+| s   | message-dont-send     |             |
+| f   | org-msg-attach        |             |
 
 **** Email alerts
 :PROPERTIES:
@@ -2045,14 +2085,14 @@ configuration [[file:mpd.org][here]]).
     :packages 'emms
     "a"  #'emms-browser-add-tracks
     "A"  #'emms-browser-add-tracks-and-play
-    "b"  '(nil :which-key "browse by")
+    "b"  '(:ignore t :which-key "browse by")
     "bA" #'emms-browse-by-album
     "ba" #'emms-browse-by-artist
     "bg" #'emms-browse-by-genre
     "bs" #'emms-smart-browse
     "by" #'emms-browse-by-year
     "c"  #'emms-browser-clear-playlist
-    "S"  '(nil :which-key "search")
+    "S"  '(:ignore t :which-key "search")
     "SA" '(emms-browser-search-by-album  :which-key "by album")
     "Sa" '(emms-browser-search-by-artist :which-key "by artist")
     "Ss" '(emms-browser-search-by-names  :which-key "by name")
@@ -2067,12 +2107,12 @@ configuration [[file:mpd.org][here]]).
   (phundrak/leader-key
     :infix "m"
     :packages 'emms
-    ""   '(nil :which-key "media")
+    ""   '(:ignore t :which-key "media")
     "."  #'hydra-media/body
     "«"  #'emms-player-mpd-previous
     "»"  #'emms-player-mpd-next
     "c"  #'emms-player-mpd-clear
-    "e"  '(nil :which-key "emms")
+    "e"  '(:ignore t :which-key "emms")
     "eb" #'emms-browser
     "ep" #'emms-playlist-mode-go
     "es" #'emms-player-mpd-show
@@ -2081,14 +2121,19 @@ configuration [[file:mpd.org][here]]).
              (shell-command-and-echo "mpc toggle"))
            :which-key "mpc toggle")
     "s"  #'emms-stop
-    "u"  '(nil :which-key "update")
+    "u"  '(:ignore t :which-key "update")
     "um" #'emms-player-mpd-update-all
     "uc" #'emms-cache-set-from-mpd-all))
 #+end_src
 
+**** Keybinds
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-EMMS-and-Media-Keybinds-ue071zv0baj0
+:header-args:emacs-lisp: :tangle no
+:END:
 I also want to create a small hydra for manipulating MPD:
 #+name: emms-media-hydra
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (defun shell-command-and-echo (command &optional echo prefix)
   "Run COMMAND and display the result of ECHO prefixed by PREFIX.
 
@@ -2190,7 +2235,7 @@ dark mode for PDFs.
   (phundrak/major-leader-key
     :keymaps 'pdf-view-mode-map
     :packages 'pdf-tools
-    "a"  '(nil :which-key "annotations")
+    "a"  '(:ignore t :which-key "annotations")
     "aD" #'pdf-annot-delete
     "at" #'pdf-annot-attachment-dired
     "ah" #'pdf-annot-add-highlight-markup-annotation
@@ -2201,12 +2246,12 @@ dark mode for PDFs.
     "at" #'pdf-annot-add-text-annotation
     "au" #'pdf-annot-add-underline-markup-annotation
 
-    "f"  '(nil :which-key "fit")
+    "f"  '(:ignore t :which-key "fit")
     "fw" #'pdf-view-fit-width-to-window
     "fh" #'pdf-view-fit-height-to-window
     "fp" #'pdf-view-fit-page-to-window
 
-    "s"  '(nil :which-key "slice/search")
+    "s"  '(:ignore t :which-key "slice/search")
     "sb" #'pdf-view-set-slice-from-bounding-box
     "sm" #'pdf-view-set-slice-using-mouse
     "sr" #'pdf-view-reset-slice
@@ -2269,7 +2314,7 @@ doing and what Git is doing! In short, I absolutely love it!
   (phundrak/leader-key
     :infix   "g"
     :packages 'magit
-    ""   '(nil :wk "git")
+    ""   '(:ignore t :wk "git")
     "b"  #'magit-blame
     "c"  #'magit-clone
     "d"  #'magit-dispatch
@@ -2278,7 +2323,7 @@ doing and what Git is doing! In short, I absolutely love it!
     "y"  #'my/yadm
     "S"  #'magit-stage-file
     "U"  #'magit-unstage-file
-    "f"  '(nil :wk "file")
+    "f"  '(:ignore t :wk "file")
     "fd" #'magit-diff
     "fc" #'magit-file-checkout
     "fl" #'magit-file-dispatch
@@ -2517,7 +2562,7 @@ region or in a whole buffer.
   (phundrak/leader-key
     :infix "r"
     :packages 'iedit
-    "" '(nil :which-key "refactor")
+    "" '(:ignore t :which-key "refactor")
     "i" #'iedit-mode))
 #+end_src
 
@@ -3137,7 +3182,8 @@ these will be renamed this way:
              (let ((buffer-name (car buffer)))
                (format "(\"%s\" %S)"
                        (downcase buffer-name)
-                       `(exwm-workspace-rename-buffer (concat ,(concat buffer-name " - %s")
+                       `(exwm-workspace-rename-buffer (concat ,buffer-name
+                                                              " - "
                                                               exwm-title)))))
            buffers
            "\n")
@@ -3328,8 +3374,7 @@ The complete configuration for the ~exwm~ package can be found below.
 
   <<exwm-generate-autostarts()>>
 
-  <<exwm-init>>
-  )
+  <<exwm-init>>)
 #+end_src
 
 *** EXWM-Evil integration
@@ -3424,9 +3469,6 @@ The complete configuration for the ~exwm~ package can be found below.
 (defvar bluetooth-command "bluetoothctl")
 #+end_src
 
-#+RESULTS:
-: bluetooth-command
-
 #+begin_src emacs-lisp
 (defun bluetooth-turn-on ()
   (interactive)
@@ -3434,18 +3476,12 @@ The complete configuration for the ~exwm~ package can be found below.
     (start-process "" nil bluetooth-command "power" "on")))
 #+end_src
 
-#+RESULTS:
-: bluetooth-turn-on
-
 #+begin_src emacs-lisp
 (defun bluetooth-turn-off ()
   (interactive)
   (let ((process-connection-type nil))
     (start-process "" nil bluetooth-command "power" "off")))
 #+end_src
-
-#+RESULTS:
-: bluetooth-turn-off
 
 #+begin_src emacs-lisp
 (defun create-bluetooth-device (raw-name)
@@ -3456,9 +3492,6 @@ human-friendly name."
     `(,(string-join (cddr split-name) " ") . ,(cadr split-name))))
 #+end_src
 
-#+RESULTS:
-: create-bluetooth-device
-
 #+begin_src emacs-lisp
 (defun bluetooth-get-devices ()
   (let ((literal-devices (string-trim (shell-command-to-string
@@ -3467,9 +3500,6 @@ human-friendly name."
               (create-bluetooth-device device))
             (split-string literal-devices "\n"))))
 #+end_src
-
-#+RESULTS:
-: bluetooth-get-devices
 
 #+begin_src emacs-lisp
 (defun bluetooth-connect-device ()
@@ -3482,9 +3512,6 @@ human-friendly name."
            (target-address (cdr (assoc target-device devices))))
       (shell-command (string-join `(,bluetooth-command "connect" ,target-address) " ")))))
 #+end_src
-
-#+RESULTS:
-: bluetooth-connect-device
 
 ** Making my life easier
 :PROPERTIES:
@@ -3879,7 +3906,7 @@ files.
    :keymaps 'org-mode-map
    :packages 'preview-org-html-mode
    :infix "P"
-   ""  '(:ignore :which-key "preview")
+   ""  '(:ignore t :which-key "preview")
    "h" #'preview-org-html-mode
    "r" #'preview-org-html-refresh
    "p" #'preview-org-html-pop-window-to-frame)
@@ -4445,7 +4472,7 @@ The project is then defined like so:
    "i" #'org-ref-bibtex-hydra/org-ref-bibtex-new-entry/body-and-exit
    "s" #'org-ref-sort-bibtex-entry
 
-   "l" '(:ignore :which-key "lookup")
+   "l" '(:ignore t :which-key "lookup")
    "la" #'arxiv-add-bibtex-entry
    "lA" #'arxiv-get-pdf-add-bibtex-entry
    "ld" #'doi-utils-add-bibtex-entry-from-doi
@@ -4919,53 +4946,53 @@ And let’s enable some intergration with ~ivy~.
   :defer t
   :straight (:build t)
   :requires treemacs)
-
-(phundrak/leader-key
-  :infix "at"
-  :packages 'treemacs
-  ""   '(:ignore :which-key "treemacs")
-  "c"  '(:ignore :which-key "create")
-  "cd" #'treemacs-create-dir
-  "cf" #'treemacs-create-file
-  "ci" #'treemacs-create-icon
-  "ct" #'treemacs-create-theme
-  "cw" #'treemacs-create-workspace
-  "d"  #'treemacs-delete-file
-  "f"  '(:ignore :which-key "files")
-  "ff" #'treemacs-find-file
-  "ft" #'treemacs-find-tag
-  "l"  '(:ignore :which-key "lsp")
-  "ls" #'treemacs-expand-lsp-symbol
-  "ld" #'treemacs-expand-lsp-treemacs-deps
-  "lD" #'treemacs-collapse-lsp-treemacs-deps
-  "lS" #'treemacs-collapse-lsp-symbol
-  "p"  '(:ignore :which-key "projects")
-  "pa" #'treemacs-add-project
-  "pf" #'treemacs-project-follow-mode
-  "pn" #'treemacs-project-of-node
-  "pp" #'treemacs-project-at-point
-  "pr" #'treemacs-remove-project-from-workspace
-  "pt" #'treemacs-move-project-down
-  "ps" #'treemacs-move-project-up
-  "r"  '(:ignore :which-key "rename")
-  "rf" #'treemacs-rename-file
-  "rp" #'treemacs-rename-project
-  "rr" #'treemacs-rename
-  "rw" #'treemacs-rename-workspace
-  "t"  #'treemacs
-  "T"  '(:ignore :which-key "toggles")
-  "Td" #'treemacs-toggle-show-dotfiles
-  "Tn" #'treemacs-toggle-node
-  "v"  '(:ignore :wk "visit node")
-  "va" #'treemacs-visit-node-ace
-  "vc" #'treemacs-visit-node-close-treemacs
-  "vn" #'treemacs-visit-node-default
-  "y"  '(:ignore :which-key "yank")
-  "ya" #'treemacs-copy-absolute-path-at-point
-  "yp" #'treemacs-copy-project-path-at-point
-  "yr" #'treemacs-copy-relative-path-at-point
-  "yf" #'treemacs-copy-file)
 #+end_src
+
+#+name: treemacs-keybinds
+| Key | Function                               | Description |
+|-----+----------------------------------------+-------------|
+|     |                                        | treemacs    |
+| c   |                                        | create      |
+| cd  | treemacs-create-dir                    |             |
+| cf  | treemacs-create-file                   |             |
+| ci  | treemacs-create-icon                   |             |
+| ct  | treemacs-create-theme                  |             |
+| cw  | treemacs-create-workspace              |             |
+| d   | treemacs-delete-file                   |             |
+| f   |                                        | files       |
+| ff  | treemacs-find-file                     |             |
+| ft  | treemacs-find-tag                      |             |
+| l   |                                        | lsp         |
+| ls  | treemacs-expand-lsp-symbol             |             |
+| ld  | treemacs-expand-lsp-treemacs-deps      |             |
+| lD  | treemacs-collapse-lsp-treemacs-deps    |             |
+| lS  | treemacs-collapse-lsp-symbol           |             |
+| p   |                                        | projects    |
+| pa  | treemacs-add-project                   |             |
+| pf  | treemacs-project-follow-mode           |             |
+| pn  | treemacs-project-of-node               |             |
+| pp  | treemacs-project-at-point              |             |
+| pr  | treemacs-remove-project-from-workspace |             |
+| pt  | treemacs-move-project-down             |             |
+| ps  | treemacs-move-project-up               |             |
+| r   |                                        | rename      |
+| rf  | treemacs-rename-file                   |             |
+| rp  | treemacs-rename-project                |             |
+| rr  | treemacs-rename                        |             |
+| rw  | treemacs-rename-workspace              |             |
+| t   | treemacs                               |             |
+| T   |                                        | toggles     |
+| Td  | treemacs-toggle-show-dotfiles          |             |
+| Tn  | treemacs-toggle-node                   |             |
+| v   |                                        | visit node  |
+| va  | treemacs-visit-node-ace                |             |
+| vc  | treemacs-visit-node-close-treemacs     |             |
+| vn  | treemacs-visit-node-default            |             |
+| y   |                                        | yank        |
+| ya  | treemacs-copy-absolute-path-at-point   |             |
+| yp  | treemacs-copy-project-path-at-point    |             |
+| yr  | treemacs-copy-relative-path-at-point   |             |
+| yf  | treemacs-copy-file                     |             |
 
 #+begin_src emacs-lisp
 (use-package exec-path-from-shell
@@ -5165,7 +5192,7 @@ unfortunately.
     "p"   #'markdown-previous-link
     "f"   #'markdown-follow-thing-at-point
     "k"   #'markdown-kill-thing-at-point
-    "c"   '(nil :which-key "command")
+    "c"   '(:ignore t :which-key "command")
     "c]"  #'markdown-complete-buffer
     "cc"  #'markdown-check-refs
     "ce"  #'markdown-export
@@ -5175,7 +5202,7 @@ unfortunately.
     "cp"  #'markdown-preview
     "cv"  #'markdown-export-and-preview
     "cw"  #'markdown-kill-ring-save
-    "h"   '(nil :which-key "headings")
+    "h"   '(:ignore t :which-key "headings")
     "hi"  #'markdown-insert-header-dwim
     "hI"  #'markdown-insert-header-setext-dwim
     "h1"  #'markdown-insert-header-atx-1
@@ -5186,22 +5213,22 @@ unfortunately.
     "h6"  #'markdown-insert-header-atx-6
     "h!"  #'markdown-insert-header-setext-1
     "h@"  #'markdown-insert-header-setext-2
-    "i"   '(nil :which-key "insert")
+    "i"   '(:ignore t :which-key "insert")
     "i-"  #'markdown-insert-hr
     "if"  #'markdown-insert-footnote
     "ii"  #'markdown-insert-image
     "il"  #'markdown-insert-link
     "it"  #'markdown-insert-table
     "iw"  #'markdown-insert-wiki-link
-    "l"   '(nil :which-key "lists")
+    "l"   '(:ignore t :which-key "lists")
     "li"  #'markdown-insert-list-item
-    "T"   '(nil :which-key "toggle")
+    "T"   '(:ignore t :which-key "toggle")
     "Ti"  #'markdown-toggle-inline-images
     "Tu"  #'markdown-toggle-url-hiding
     "Tm"  #'markdown-toggle-markup-hiding
     "Tt"  #'markdown-toggle-gfm-checkbox
     "Tw"  #'markdown-toggle-wiki-links
-    "t"   '(nil :which-key "table")
+    "t"   '(:ignore t :which-key "table")
     "tc"  #'markdown-table-move-column-left
     "tt"  #'markdown-table-move-row-down
     "ts"  #'markdown-table-move-row-up
@@ -5209,13 +5236,13 @@ unfortunately.
     "ts"  #'markdown-table-sort-lines
     "tC"  #'markdown-table-convert-region
     "tt"  #'markdown-table-transpose
-    "td"  '(nil :which-key "delete")
+    "td"  '(:ignore t :which-key "delete")
     "tdc" #'markdown-table-delete-column
     "tdr" #'markdown-table-delete-row
-    "ti"  '(nil :which-key "insert")
+    "ti"  '(:ignore t :which-key "insert")
     "tic" #'markdown-table-insert-column
     "tir" #'markdown-table-insert-row
-    "x"   '(nil :which-key "text")
+    "x"   '(:ignore t :which-key "text")
     "xb"  #'markdown-insert-bold
     "xB"  #'markdown-insert-gfm-checkbox
     "xc"  #'markdown-insert-code
@@ -5336,7 +5363,7 @@ or some I write myself.
   (phundrak/major-leader-key
    :keymaps 'plantuml-mode-map
    :packages 'plantuml-mode
-   "c"  '(nil :which-key "compile")
+   "c"  '(:ignore t :which-key "compile")
    "cc" #'plantuml-preview
    "co" #'plantuml-set-output-type)
   :config
@@ -5516,11 +5543,11 @@ comma.
  "ee"  #'eval-last-sexp
  "er"  #'eval-region
 
- "h"   '(nil :which-key "help")
+ "h"   '(:ignore t :which-key "help")
  "hh"  #'helpful-at-point
 
- "t"   '(nil :wk "toggle")
- "tP"  '(nil :wk "parinfer")
+ "t"   '(:ignore t :wk "toggle")
+ "tP"  '(:ignore t :wk "parinfer")
  "tPs" #'parinfer-rust-switch-mode
  "tPd" #'parinfer-rust-mode-disable
  "tPp" #'parinfer-rust-toggle-paren-mode)
@@ -5926,17 +5953,17 @@ development. First, let’s install the most important package,
   (phundrak/major-leader-key
    :keymaps 'web-mode-map
    :packages 'web-mode
-   "="  '(nil :which-key "format")
-   "E"  '(nil :which-key "errors")
+   "="  '(:ignore t :which-key "format")
+   "E"  '(:ignore t :which-key "errors")
    "El" #'web-mode-dom-errors-show
    "gb" #'web-mode-element-beginning
-   "g"  '(nil :which-key "goto")
+   "g"  '(:ignore t :which-key "goto")
    "gc" #'web-mode-element-child
    "gp" #'web-mode-element-parent
    "gs" #'web-mode-element-sibling-next
-   "h"  '(nil :which-key "dom")
+   "h"  '(:ignore t :which-key "dom")
    "hp" #'web-mode-dom-xpath
-   "r"  '(nil :which-key "refactor")
+   "r"  '(:ignore t :which-key "refactor")
    "rc" #'web-mode-element-clone
    "rd" #'web-mode-element-vanish
    "rk" #'web-mode-element-kill
@@ -6476,143 +6503,268 @@ Undefining some stuff to make keybind prefixes work correctly.
   "SPC" '(counsel-M-x :wk "M-x")
   "'"   #'shell-pop
 
-  "a"   '(nil :wk "apps")
-  "ac"  #'calc
-  "ad"  #'docker
-  "ae"  #'elfeed
-  "aE"  #'eww
-  "ak"  #'keycast-mode
-  "aK"  #'keycast-log-mode
-  "aT"  #'tetris
-  "aw"  #'wttrin
-  "aC"  #'calendar
+  <<general-keybindings-gen(table=keybinds-apps, prefix="a")>>
+  <<general-keybindings-gen(table=keybinds-apps-shell, prefix="as")>>
+  <<general-keybindings-gen(table=treemacs-keybinds, prefix="at")>>
 
-  "as"  '(nil :wk "shells")
-  "ase" #'eshell-new
-  "asv" #'vterm
+  <<general-keybindings-gen(table=keybinds-buffers, prefix="b")>>
 
-  "b"   '(nil :wk "buffers")
-  "bb"  #'bufler-switch-buffer
-  "bB"  #'bury-buffer
-  "bl"  #'bufler
-  "bd"  #'kill-this-buffer
-  "bD"  #'kill-buffer
-  "bh"  #'dashboard-refresh-buffer
-  "bm"  #'switch-to-messages-buffer
-  "br"  #'counsel-buffer-or-recentf
-  "bs"  #'switch-to-scratch-buffer
-
-  "c"   '(nil :wk "code")
+  "c"   '(:ignore t :wk "code")
   "cl"  #'evilnc-comment-or-uncomment-lines
 
-  "e"   '(nil :wk "email")
-  "ec"  #'mu4e-compose-new
-  "em"  #'mu4e
+  <<general-keybindings-gen(table=keybinds-email, prefix="e")>>
 
-  "f"   '(nil :wk "files")
-  "fc"  '((lambda ()
-            (interactive)
-            (find-file "~/org/config/emacs.org"))
-          :wk "emacs.org")
-  "ff"  #'counsel-find-file
-  "fF"  #'ivy-quick-find-files
-  "fh"  #'hexl-find-file
-  "fi"  '((lambda ()
-            (interactive)
-            (find-file (concat user-emacs-directory "init.el")))
-          :which-key "init.el")
-  "fr"  #'counsel-recentf
-  "fs"  #'save-buffer
-  "fS"  '((lambda ()
-            (interactive)
-            (find-file "~/org/config/stumpwm.org"))
-          :which-key "stumpwm.org")
+  <<general-keybindings-gen(table=keybinds-files, prefix="f")>>
+  <<keybinds-specific-files>>
 
-  "h"   '(nil :wk "help")
-  "hk"  #'which-key-show-top-level
-  "hi"  #'info
-  "hI"  #'info-display-manual
-  "hd"  '(nil :wk "describe")
-  "hdc" #'describe-char
-  "hdC" #'helpful-command
-  "hdf" #'helpful-callable
-  "hdi" #'describe-input-method
-  "hdk" #'helpful-key
-  "hdm" #'helpful-macro
-  "hdM" #'helpful-mode
-  "hdp" #'describe-package
-  "hds" #'helpful-symbol
-  "hdv" #'helpful-variable
+  <<general-keybindings-gen(table=keybinds-help, prefix="h")>>
 
-  "i"   '(nil :wk "insert")
+  "i"   '(:ignore t :wk "insert")
 
-  "j"   '(nil :wk "jump")
-  "jd"  #'dired-jump
-  "jD"  #'dired-jump-other-window
+  <<general-keybindings-gen(table=keybinds-jump, prefix="j")>>
 
-  "p"   '(nil :wk "project")
-  "p!"  #'projectile-run-shell-command-in-root
-  "p&"  #'projectile-run-async-shell-command-in-root
-  "pb"  #'counsel-projectile-switch-to-buffer
-  "pc"  #'counsel-projectile
-  "pd"  #'counsel-projectile-find-dir
-  "pe"  #'projectile-edit-dir-locals
-  "pf"  #'counsel-projectile-find-file
-  "pg"  #'projectile-find-tag
-  "pk"  #'project-kill-buffers
-  "pp"  #'counsel-projectile-switch-project
-  "pt"  #'ivy-magit-todos
-  "pv"  #'projectile-vc
+  <<general-keybindings-gen(table=keybinds-project, prefix="p")>>
 
-  "t"   '(nil :wk "toggles")
-  "tt"  #'counsel-load-theme
-  "ti"  '(nil :wk "input method")
-  "tit" #'toggle-input-method
-  "tis" #'set-input-mode
+  <<general-keybindings-gen(table=keybinds-toggle, prefix="t")>>
+
+  <<general-keybindings-gen(table=keybinds-text, prefix="T")>>
+
+  <<general-keybindings-gen(table=keybinds-project, prefix="p")>>
+
+  <<general-keybindings-gen(table=keybinds-windows, prefix="w")>>
+
+  <<general-keybindings-gen(table=keybinds-quit, prefix="q")>>
 
   "u"   #'universal-argument
-  "U"   #'undo-tree-visualize
-
-  "w"   '(nil :wk "windows")
-  "w."  #'windows-adjust-size/body
-  "w-"  #'split-window-below-and-focus
-  "w/"  #'split-window-right-and-focus
-  "w$"  #'winum-select-window-by-number
-  "w0"  '(winum-select-window-0-or-10 :wk nil)
-  "w1"  '(winum-select-window-1 :wk nil)
-  "w2"  '(winum-select-window-2 :wk nil)
-  "w3"  '(winum-select-window-3 :wk nil)
-  "w4"  '(winum-select-window-4 :wk nil)
-  "w5"  '(winum-select-window-5 :wk nil)
-  "w6"  '(winum-select-window-6 :wk nil)
-  "w7"  '(winum-select-window-7 :wk nil)
-  "w8"  '(winum-select-window-8 :wk nil)
-  "w9"  '(winum-select-window-9 :wk nil)
-
-  "wb"  #'kill-buffer-and-delete-window
-  "wd"  #'delete-window
-  "wo"  #'other-window
-  "wD"  #'delete-other-windows
-  "ww"  '(nil :wk "writeroom")
-  "ww." #'writeroom-buffer-width/body
-  "www" #'writeroom-mode
-
-  "wc"  #'evil-window-left
-  "wt"  #'evil-window-down
-  "ws"  #'evil-window-up
-  "wr"  #'evil-window-right
-
-  "T"   '(nil :wk "text")
-  "Tz"  #'hydra-zoom/body
-  "Tu"  #'downcase-region
-  "TU"  #'upcase-region
-  "Te"  #'string-edit-at-point
-
-  "q"   '(nil :wk "quit")
-  "qf"  #'delete-frame
-  "qq"  #'save-buffers-kill-terminal
-  "qQ"  #'kill-emacs)
+  "U"   #'undo-tree-visualize)
 #+end_src
+
+** Apps
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Apps-wz2ajup0baj0
+:END:
+Here are my apps keybinds. Each one of them is prefixed by ~a~.
+#+name: keybinds-apps
+| Key | Function         | Description |
+|-----+------------------+-------------|
+|     |                  | apps        |
+| c   | calc             |             |
+| d   | docker           |             |
+| e   | elfeed           |             |
+| E   | eww              |             |
+| k   | keycast-mode     |             |
+| K   | keycast-log-mode |             |
+| T   | tetris           |             |
+| w   | wttrin           |             |
+| C   | calendar         |             |
+
+I also have two main shell-related functions, prefixed with ~as~.
+#+name: keybinds-apps-shell
+| Key | Function   | Description |
+|-----+------------+-------------|
+|     |            | shells      |
+| e   | eshell-new |             |
+| v   | vterm      |             |
+
+** Buffers
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Buffers-rj5ajup0baj0
+:END:
+My buffer-related keybinds are all prefixed by ~b~.
+#+name: keybinds-buffers
+| Key | Function                  | Description |
+|-----+---------------------------+-------------|
+|     |                           | buffers     |
+| b   | bufler-switch-buffer      |             |
+| B   | bury-buffer               |             |
+| l   | bufler                    |             |
+| d   | kill-this-buffer          |             |
+| D   | kill-buffer               |             |
+| h   | dashboard-refresh-buffer  |             |
+| m   | switch-to-messages-buffer |             |
+| r   | counsel-buffer-or-recentf |             |
+| s   | switch-to-scratch-buffer  |             |
+
+** Email
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Email-gv0ltxp0baj0
+:END:
+My two keybinds for my emails are prefixed by ~e~.
+#+name: keybinds-email
+| Key | Function         | Description |
+|-----+------------------+-------------|
+|     |                  | email       |
+| c   | mu4e-compose-new |             |
+| m   | mu4e             |             |
+
+** Files
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Files-9lj2j9q0baj0
+:END:
+My keybinds for file manipulation are prefixed by ~f~.
+#+name: keybinds-files
+| Key | Function             | Description |
+|-----+----------------------+-------------|
+|     |                      | files       |
+| f   | counsel-find-file    |             |
+| F   | ivy-quick-find-files |             |
+| h   | hexl-find-file       |             |
+| r   | counsel-recentf      |             |
+| s   | save-buffer          |             |
+
+I also have some keybinds dedicated to opening specific files.
+#+name: keybinds-specific-files
+#+begin_src emacs-lisp :tangle no
+"fc"  '((lambda ()
+          (interactive)
+          (find-file "~/org/config/emacs.org"))
+        :wk "emacs.org")
+"fi"  '((lambda ()
+          (interactive)
+          (find-file (concat user-emacs-directory "init.el")))
+        :which-key "init.el")
+"fS"  '((lambda ()
+          (interactive)
+          (find-file "~/org/config/stumpwm.org"))
+        :which-key "stumpwm.org")
+#+end_src
+
+** Help
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Help-ock4suq0baj0
+:END:
+My keybinds for help are prefixed by ~h~.
+#+name: keybinds-help
+| Key | Function                 | Description |
+|-----+--------------------------+-------------|
+|     |                          | help        |
+| k   | which-key-show-top-level |             |
+| i   | info                     |             |
+| I   | info-display-manual      |             |
+| d   |                          | describe    |
+| dc  | describe-char            |             |
+| dC  | helpful-command          |             |
+| df  | helpful-callable         |             |
+| di  | describe-input-method    |             |
+| dk  | helpful-key              |             |
+| dm  | helpful-macro            |             |
+| dM  | helpful-mode             |             |
+| dp  | describe-package         |             |
+| ds  | helpful-symbol           |             |
+| dv  | helpful-variable         |             |
+
+** Jump
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Jump-dt56n1r0baj0
+:END:
+My keybinds for jumping around are prefixed by ~j~.
+#+name: keybinds-jump
+| Key | Function                | Description |
+|-----+-------------------------+-------------|
+|     |                         | jump        |
+| c   | counsel-dired-jump      |             |
+| f   | counsel-file-jump       |             |
+| d   | dired-jump              |             |
+| D   | dired-jump-other-window |             |
+
+** Project
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Project-yfo8z3r0baj0
+:END:
+My keybinds for my projects are prefixed by ~p~.
+#+name: keybinds-project
+| Key | Function                                   | Description |
+|-----+--------------------------------------------+-------------|
+|     |                                            | project     |
+| !   | projectile-run-shell-command-in-root       |             |
+| &   | projectile-run-async-shell-command-in-root |             |
+| b   | counsel-projectile-switch-to-buffer        |             |
+| c   | counsel-projectile                         |             |
+| d   | counsel-projectile-find-dir                |             |
+| e   | projectile-edit-dir-locals                 |             |
+| f   | counsel-projectile-find-file               |             |
+| g   | projectile-find-tag                        |             |
+| k   | project-kill-buffers                       |             |
+| p   | counsel-projectile-switch-project          |             |
+| t   | ivy-magit-todos                            |             |
+| v   | projectile-vc                              |             |
+
+** Text
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Text-yf0cb4s0baj0
+:END:
+The prefix here is ~T~.
+#+name: keybinds-text
+| Key | Function             | Description |
+|-----+----------------------+-------------|
+|     |                      | text        |
+| e   | string-edit-at-point |             |
+| u   | downcase-region      |             |
+| U   | upcase-region        |             |
+| z   | hydra-zoom/body      |             |
+
+** Toggles
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Toggles-9hoj2br0baj0
+:END:
+My toggle keybinds are prefixed by ~t~.
+#+name: keybinds-toggle
+| Key | Function            | Description  |
+|-----+---------------------+--------------|
+|     |                     | toggles      |
+| t   | counsel-load-theme  |              |
+| i   |                     | input method |
+| it  | toggle-input-method |              |
+| is  | set-input-mode      |              |
+
+** Windows
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Windows-fbgcper0baj0
+:END:
+A couple of keybinds are hidden from which-key, otherwise there’s not
+much to say. The prefix here is ~w~.
+#+name: keybinds-windows
+| Key | Function                      | Description |
+|-----+-------------------------------+-------------|
+|     |                               | windows     |
+| c   | evil-window-left              |             |
+| t   | evil-window-down              |             |
+| s   | evil-window-up                |             |
+| r   | evil-window-right             |             |
+| .   | windows-adjust-size/body      |             |
+| -   | split-window-below-and-focus  |             |
+| /   | split-window-right-and-focus  |             |
+| $   | winum-select-window-by-number |             |
+| 0   | winum-select-window-0-or-10   | none        |
+| 1   | winum-select-window-1         | none        |
+| 2   | winum-select-window-2         | none        |
+| 3   | winum-select-window-3         | none        |
+| 4   | winum-select-window-4         | none        |
+| 5   | winum-select-window-5         | none        |
+| 6   | winum-select-window-6         | none        |
+| 7   | winum-select-window-7         | none        |
+| 8   | winum-select-window-8         | none        |
+| 9   | winum-select-window-9         | none        |
+| b   | kill-buffer-and-delete-window |             |
+| d   | delete-window                 |             |
+| o   | other-window                  |             |
+| D   | delete-other-windows          |             |
+| w   |                               | writeroom   |
+| w.  | writeroom-buffer-width/body   |             |
+| ww  | writeroom-mode                |             |
+
+** Quit
+:PROPERTIES:
+:CUSTOM_ID: Keybindings-Quit-bs8kh6s0baj0
+:END:
+Why would I ever use any of these keybinds? They are prefixed with ~q~.
+#+name: keybinds-quit
+| Key | Function                   | Description |
+|-----+----------------------------+-------------|
+|     |                            | quit        |
+| f   | delete-frame               |             |
+| q   | save-buffers-kill-terminal |             |
+| Q   | kill-emacs                 |             |
 
 * Various TODOs                                                    :noexport:
 :PROPERTIES:
