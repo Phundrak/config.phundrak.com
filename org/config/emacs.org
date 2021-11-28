@@ -32,13 +32,14 @@ still in the process of porting my [[file:spacemacs.org][Spacemacs]] configurati
 ** Early Init
 :PROPERTIES:
 :CUSTOM_ID: Basic-configuration-Early-Inityj7iel6184j0
+:header-args:emacs-lisp: :tangle ~/.emacs.d/early-init.el :mkdirp yes
+:header-args:emacs-lisp+: :exports code :results silent :lexical t
 :END:
 The early init file is the file loaded before anything else in
 Emacs. This is where I put some options in order to disable as quickly
 as possible some built-in features of Emacs before they can be even
 loaded, speeding Emacs up a bit.
-#+headers: :exports code :results silent :lexical t
-#+begin_src emacs-lisp :mkdirp yes :tangle ~/.emacs.d/early-init.el
+#+begin_src emacs-lisp :mkdirp yes
 (setq package-enable-at-startup nil
       inhibit-startup-message   t
       frame-resize-pixelwise    t  ; fine resize
