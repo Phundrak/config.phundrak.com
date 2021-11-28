@@ -10,21 +10,19 @@
 (package-install 'htmlize)
 
 (setq org-confirm-babel-evaluate nil
-      org-html-validation-link nil)
+      org-html-validation-link nil
+      make-backup-files nil)
 
 (defun export-and-clean (directory)
   (progn  (mapc (lambda (file)
-                  (progn (message (concat "====================\n"
+                  (progn (message (concat "=====================\n"
                                           "Exporting "
                                           file
                                           "\n"
-                                          "====================\n"))
+                                          "=====================\n"))
                          (with-current-buffer (find-file file)
                            (org-html-export-to-html))))
-                (directory-files directory t (regexp-quote ".org")))
-         (mapc (lambda (file)
-                 (delete-file file nil))
-               (directory-files directory t (regexp-quote "html~")))))
+                (directory-files directory t (regexp-quote ".org")))))
 
 (dolist (dir '("org/config/" "org/config/Deprecated/" "org/config/WIP"))
   (export-and-clean dir))
