@@ -2066,11 +2066,17 @@ configuration [[file:mpd.org][here]]).
   :straight (:build t)
   :init
   (require 'emms-setup)
+  (require 'emms-mark)
   (emms-all)
   (add-to-list 'emms-info-functions 'emms-info-mpd)
   (add-to-list 'emms-player-list    'emms-player-mpd)
   (emms-player-mpd-sync-from-mpd)
   (emms-player-mpd-connect)
+
+  <<emms-fd-name>>
+  <<emms-fd-function>>
+  <<emms-search-set-variable>>
+
   <<emms-media-hydra>>
   (defun emms-player-toggle-pause ()
     (interactive)
@@ -2079,7 +2085,11 @@ configuration [[file:mpd.org][here]]).
   ((emms-source-file-default-directory (expand-file-name "~/Music"))
    (emms-player-mpd-server-name "localhost")
    (emms-player-mpd-server-port "6600")
-   (emms-player-mpd-music-directory (expand-file-name "~/Music")))
+   (emms-player-mpd-music-directory (expand-file-name "~/Music"))
+   (emms-browser-thumbnail-small-size 64)
+   (emms-browser-thumbnail-medium-size 128)
+   (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+   (emms-playlist-default-major-mode 'emms-mark-mode))
   :general
   (phundrak/undefine
     :keymaps 'emms-browser-mode-map
@@ -2130,6 +2140,53 @@ configuration [[file:mpd.org][here]]).
     "u"  '(:ignore t :which-key "update")
     "um" #'emms-player-mpd-update-all
     "uc" #'emms-cache-set-from-mpd-all))
+#+end_src
+
+**** Finding files from EMMS
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-EMMS-and-Media-Finding-files-from-EMMS-as6fgpv0baj0
+:header-args:emacs-lisp: :tangle no
+:END:
+EMMS has two default ways of finding files: either a built-in function
+relatively slow but portable, or with ~find~ which is arguably faster
+but less portable. Honestly, I don’t care about portability, I’ll
+always use this Emacs config on Linux, but I don’t want to use ~find~
+either since there is something even faster: ~fd~.
+
+First we’ll declare a variable that can hold the path to the ~fd~
+executable:
+#+name: emms-fd-name
+#+begin_src emacs-lisp
+(defvar emms-source-file-fd (executable-find "fd"))
+#+end_src
+
+Then, we need to declare a new function that will use ~fd~ to find
+files. The function, as specified by the documentation of
+~emms-source-file-directory-tree-function~, receives two arguments ~dir~
+and ~regex~. We can work with that!
+#+name: emms-fd-function
+#+begin_src emacs-lisp
+(defun emms-source-file-directory-tree-fd (dir regex)
+  "Return a list of all files under DIR that match REGEX.
+This function uses the external fd utility. The name for fd may
+be supplied using `emms-source-file-fd'."
+  (with-temp-buffer
+    (call-process emms-source-file-fd
+                  nil t nil
+                  "-L" ; follow symlinks
+                  regex
+                  "-t f"
+                  (expand-file-name dir))
+    (delete ""
+            (split-string (buffer-substring (point-min)
+                                          (point-max))
+                          "\n"))))
+#+end_src
+
+We can finally set this function as our search function.
+#+name: emms-search-set-variable
+#+begin_src emacs-lisp
+(setq emms-source-file-directory-tree-function #'emms-source-file-directory-tree-fd)
 #+end_src
 
 **** Keybinds
