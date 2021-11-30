@@ -1421,15 +1421,14 @@ configuration for the ~mu4e~ package itself.
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :general
+
+  :config
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
   <<mu4e-keybindings-view-no-prefix>>
   <<mu4e-keybindings-header>>
   <<mu4e-keybindings-header-no-leader>>
   <<mu4e-keybindings-message>>
-
-  :config
-  (evil-collection-mu4e-setup)
 
   <<mu4e-mail-service>>
   <<mu4e-mail-on-machine>>
