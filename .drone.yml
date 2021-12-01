@@ -3,10 +3,11 @@ name: default
 
 steps:
 - name: build
-  image: silex/emacs:27-alpine
+  image: alpine
   commands:
-    - apk add git
-    - emacs --script export.el
+    - apk update
+    - apk add git emacs-nox
+    - emacs -Q --script export.el
   when:
     branch:
     - master
