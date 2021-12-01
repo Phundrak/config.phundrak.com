@@ -3251,6 +3251,11 @@ these will be renamed this way:
         '(_otherwise (exwm-workspace-rename-buffer exwm-title)))
 #+end_src
 
+#+RESULTS[65e7e5a72273bb2d3f820a85867dfdccb13ba550]: exwm-gen-buffers-rename
+: ("kitty" (exwm-workspace-rename-buffer (concat "EXWM: " "Kitty" " - " exwm-title)))
+: ("qutebrowser" (exwm-workspace-rename-buffer (concat "EXWM: " "Qutebrowser" " - " exwm-title)))
+: (_otherwise (exwm-workspace-rename-buffer exwm-title))
+
 #+name: exwm-buffers-name
 #+begin_src emacs-lisp :tangle no
 (add-hook 'exwm-update-class-hook
@@ -3474,8 +3479,10 @@ The complete configuration for the ~exwm~ package can be found below.
                                  :type git
                                  :host github
                                  :repo "DamienCassou/desktop-environment")
+  :after exwm
   :diminish t
   :config
+  (add-hook 'exwm-init-hook #'desktop-environment-mode)
   (setq desktop-environment-update-exwm-global-keys :prefix
         exwm-layout-show-al-buffers t)
 
