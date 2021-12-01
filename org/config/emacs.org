@@ -1420,8 +1420,6 @@ configuration for the ~mu4e~ package itself.
   (defmacro mu4e-view-mode--prepare ()
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
-  :general
-
   :config
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
