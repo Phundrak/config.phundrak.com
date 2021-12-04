@@ -1421,6 +1421,10 @@ configuration for the ~mu4e~ package itself.
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :config
+
+  (add-hook 'mu4e-view-mode-hook (lambda () (setq truncate-lines nil)))
+  (add-hook 'mu4e-headers-mode-hook (lambda () (setq truncate-lines t)))
+
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
   <<mu4e-keybindings-view-no-prefix>>
