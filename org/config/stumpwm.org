@@ -519,11 +519,11 @@ when the `car' is a formatter and t when it is a shell command."
               (format nil
                       " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^(:fg \"~A\") "
                       phundrak-nord1
-                      phundrak-nord15
-                      phundrak-nord3)
+                      phundrak-nord3
+                      ,*mode-line-foreground-color*)
               (format nil
                       " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^** "
-                      phundrak-nord15
+                      phundrak-nord3
                       phundrak-nord1))
           (let* ((current-element (car elements))
                  (formatter       (car current-element))
