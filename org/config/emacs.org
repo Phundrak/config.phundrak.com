@@ -3713,6 +3713,7 @@ extended however we like!
   <<org-html-validation>>
   <<org-latex-classes>>
   <<org-publish-projects>>
+  <<org-mode-visual-prettify-symbols>>
   :general
   (phundrak/evil
     :keymaps 'org-mode-map
@@ -4745,6 +4746,29 @@ icons!
     :packages 'org-ol-tree
     :keymaps 'org-mode-map
     "O" #'org-ol-tree))
+#+end_src
+
+#+name: org-mode-visual-prettify-symbols
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+          (lambda ()
+            (dolist (pair '(("[ ]"         . ?☐)
+                            ("[X]"         . ?☑)
+                            ("[-]"         . ?❍)
+                            ("#+title:"    . ?📕)
+                            ("#+TITLE:"    . ?📕)
+                            ("#+author:"   . ?✎)
+                            ("#+AUTHOR:"   . ?✎)
+                            ("#+email:"    . ?📧)
+                            ("#+EMAIL:"    . ?📧)
+                            ("#+include"   . ?⭳)
+                            ("#+INCLUDE"   . ?⭳)
+                            ("#+begin_src" . ?λ)
+                            ("#+BEGIN_SRC" . ?λ)
+                            ("#+end_src"   . ?λ)
+                            ("#+END_SRC"   . ?λ)))
+              (add-to-list 'prettify-symbols-alist pair))
+            (prettify-symbols-mode)))
 #+end_src
 
 *** Misc
@@ -6288,16 +6312,86 @@ command ~M-x all-the-icons-install-fonts~.
 
 ~prettify-symbols-mode~ is also a nifty feature of Emacs, and it is
 built-in! With that, I can replace strings of my choice by another
-character of my choice!
+character of my choice! First, let’s declare the general symbols that
+will be used everywhere.
 #+begin_src emacs-lisp
-(dolist (symbol '(("lambda" . 955)
-                  ("mapc" . 8614)))
-  (add-to-list 'prettify-symbols-alist symbol))
+
+
+(defun prog-mode-set-symbols-alist ()
+  (setq prettify-symbols-alist '(("lambda"  . ?λ)
+                                 ("return"  . ?⮐)
+                                 ("null"    . ?∅)
+                                 ("NULL"    . ?∅)
+                                 ("for"     . ?∀)
+                                 ("in"      . ?∈)
+                                 ("and"     . ?∧)
+                                 ("&&"      . ?∧)
+                                 ("or"      . ?∨)
+                                 ("||"      . ?∨)
+                                 ("xor"     . ?⊻)))
+  (prettify-symbols-mode 1))
+
+(add-hook 'prog-mode-hook #'prog-mode-set-symbols-alist)
 #+end_src
 
-Let’s enable this mode for any programming mode:
+We can now take care of the language-specific symbols. First, let’s
+declare some symbols for the Lisp languages.
 #+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+(setq-default lisp-prettify-symbols-alist '(("lambda"    . ?λ)
+                                            ("mapc"      . ?↦)
+                                            ("and"       . ?∧)
+                                            ("or"        . ?∨)
+                                            ("xor"       . ?⊻)
+                                            ("defun"     . ?𝑓)
+                                            ("defvar"    . ?𝑣)
+                                            ("defcustom" . ?𝑐)
+                                            ("defconst"  . ?𝐶)
+                                            ("not"       . ?!)
+                                            ("pi"        . ?π)))
+
+(defun lisp-mode-prettify ()
+  (setq prettify-symbols-alist lisp-prettify-symbols-alist)
+  (prettify-symbols-mode -1)
+  (prettify-symbols-mode 1))
+
+(dolist (lang '(emacs-lisp lisp common-lisp scheme))
+  (add-hook (intern (format "%S-mode-hook" lang))
+            #'lisp-mode-prettify))
+#+end_src
+
+Let’s declare also some for Rust:
+#+begin_src emacs-lisp
+(defun rust-mode-pretty-symbols ()
+  (push '("fn"     . ?𝑓) prettify-symbols-alist)
+  (push '("struct" . ?Λ) prettify-symbols-alist)
+  (prettify-symbols-mode -1)
+  (prettify-symbols-mode 1))
+
+(add-hook 'rustic-mode-hook #'rust-mode-pretty-symbols)
+#+end_src
+
+And some for C and C++.
+#+begin_src emacs-lisp
+(defun c-cpp-mode-pretty-symbols ()
+  (push '("int"      . ?ℤ) prettify-symbols-alist)
+  (push '("float"    . ?ℝ) prettify-symbols-alist)
+  (push '("#include" . ?⭳) prettify-symbols-alist)
+  (push '("struct"   . ?Λ) prettify-symbols-alist)
+  (prettify-symbols-mode -1)
+  (prettify-symbols-mode 1))
+
+(add-hook 'c-mode-hook #'c-cpp-mode-pretty-symbols)
+(add-hook 'c++-mode-hook #'c-cpp-mode-pretty-symbols)
+#+end_src
+
+#+begin_src emacs-lisp
+(defun)
+#+end_src
+
+Finally, similar to how ~org-appear~ behaves, let’s show the real string
+of our symbols when the cursor is on it.
+#+begin_src emacs-lisp
+(setq prettify-symbols-unprettify-at-point t)
 #+end_src
 
 *** Ligatures
