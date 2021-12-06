@@ -1885,9 +1885,6 @@ described with a simple function:
 | cf         | mu4e-compose-forward                 |                    |
 | cr         | mu4e-compose-reply                   |                    |
 | cR         | mu4e-compose-resend                  |                    |
-| g          | nil                                  | go to              |
-| gu         | mu4e-view-go-to-url                  |                    |
-| gX         | mu4e-view-fetch-url                  |                    |
 | l          | mu4e-show-log                        |                    |
 | m          | nil                                  | mark               |
 | md         | mu4e-view-mark-for-trash             |                    |
@@ -1905,6 +1902,9 @@ described with a simple function:
 | N          | mu4e-view-headers-next-unread        |                    |
 | p          | mu4e-view-headers-prev               |                    |
 | P          | mu4e-view-headers-prev-unread        |                    |
+| u          | nil                                  | url                |
+| uf         | mu4e-view-go-to-url                  |                    |
+| uF         | mu4e-view-fetch-url                  |                    |
 
 #+name: mu4e-keybindings-view
 #+begin_src emacs-lisp :tangle no
