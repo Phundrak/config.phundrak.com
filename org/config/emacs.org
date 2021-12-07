@@ -5568,7 +5568,7 @@ configuration, it should be automatically enabled when entering
   (phundrak/major-leader-key
    :keymaps 'stumpwm-mode-map
    :packages 'stumpwm-mode
-   "e"  '(:ignore :which-key "eval")
+   "e"  '(:ignore t :which-key "eval")
    "ee" #'stumpwm-eval-last-sexp
    "ed" #'stumpwm-eval-defun
    "er" #'stumpwm-eval-region))
@@ -5619,10 +5619,10 @@ comma.
  :keymaps 'emacs-lisp-mode-map
  "'"   #'ielm
  "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
- "C"   '(:ignore :which-key "checkdoc")
+ "C"   '(:ignore t :which-key "checkdoc")
  "Cc"  #'checkdoc
  "Cs"  #'checkdoc-start
- "e"   '(:ignore :which-key "eval")
+ "e"   '(:ignore t :which-key "eval")
  "eb"  #'eval-buffer
  "ed"  #'eval-defun
  "ee"  #'eval-last-sexp
@@ -5736,7 +5736,7 @@ comma.
    :keymaps 'python-mode-map
    :infix "t"
    :packages 'pytest
-   ""  '(:ignore :which-key "test")
+   ""  '(:ignore t :which-key "test")
    "a" #'python-pytest
    "f" #'python-pytest-file-dwim
    "F" #'python-pytest-file
@@ -5780,7 +5780,7 @@ comma.
    :keymaps 'python-mode-map
    :packages 'pipenv
    :infix "e"
-   ""  '(:ignore :which-key "pipenv")
+   ""  '(:ignore t :which-key "pipenv")
    "a" #'pipenv-activate
    "d" #'pipenv-deactivate
    "i" #'pipenv-install
@@ -5838,7 +5838,7 @@ comma.
     :packages 'pyimport
     :keymaps 'python-mode-map
     :infix "i"
-    ""  '(:ignore :which-key "imports")
+    ""  '(:ignore t :which-key "imports")
     "i" #'pyimport-insert-missing
     "r" #'pyimport-remove-unused))
 #+end_src
@@ -5852,7 +5852,7 @@ comma.
    :keymaps 'python-mode-map
    :packages 'py-isort
    :infix "i"
-   ""  '(:ignore :which-key "imports")
+   ""  '(:ignore t :which-key "imports")
    "s" #'py-isort-buffer
    "R" #'py-isort-region))
 #+end_src
@@ -5874,7 +5874,7 @@ comma.
    :keymaps 'python-mode-map
    :packages 'sphinx-doc
    :infix "S"
-   ""  '(:ignore :which-key "sphinx-doc")
+   ""  '(:ignore t :which-key "sphinx-doc")
    "e" #'sphinx-doc-mode
    "d" #'sphinx-doc))
 #+end_src
@@ -5891,7 +5891,7 @@ comma.
    :keymaps 'cython-mode-map
    :packages 'cython-mode
    :infix "c"
-   ""  '(:ignore :which-key "cython")
+   ""  '(:ignore t :which-key "cython")
    "c" #'cython-compile))
 #+end_src
 
@@ -5943,7 +5943,7 @@ development. First, let’s install the most important package,
   (phundrak/major-leader-key
    :keymaps 'rustic-mode-map
    :packages 'rustic
-   "b"  '(:ignore :which-key "build")
+   "b"  '(:ignore t :which-key "build")
    "bb" #'rustic-cargo-build
    "bB" #'rustic-cargo-bench
    "bc" #'rustic-cargo-check
@@ -5953,13 +5953,13 @@ development. First, let’s install the most important package,
    "bn" #'rustic-cargo-new
    "bo" #'rustic-cargo-outdated
    "br" #'rustic-cargo-run
-   "l"  '(:ignore :which-key "lsp")
+   "l"  '(:ignore t :which-key "lsp")
    "la" #'lsp-execute-code-action
    "lr" #'lsp-rename
    "lq" #'lsp-workspace-restart
    "lQ" #'lsp-workspace-shutdown
    "ls" #'lsp-rust-analyzer-status
-   "t"  '(:ignore :which-key "cargo test")
+   "t"  '(:ignore t :which-key "cargo test")
    "ta" #'rustic-cargo-test
    "tt" #'rustic-cargo-current-test)
   :config
@@ -6130,8 +6130,8 @@ development. First, let’s install the most important package,
     :keymaps 'rjsx-mode-map
     :infix "a"
     ""  '(:keymap lsp-command-map :which-key "lsp")
-    "=" '(:ignore :wk "format")
-    "a" '(:ignore :which-key "actions"))
+    "=" '(:ignore t :wk "format")
+    "a" '(:ignore t :which-key "actions"))
   :config
   (setq js-chain-indent                  t
         js2-basic-offset                 2
