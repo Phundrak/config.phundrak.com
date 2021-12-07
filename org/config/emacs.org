@@ -6185,7 +6185,19 @@ development. First, let’s install the most important package,
   :hook (typescript-tsx-mode . rainbow-delimiters-mode)
   :commands typescript-tsx-mode
   :init
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . #'typescript-tsx-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  :general
+  (phundrak/major-leader-key
+    :packages 'lsp
+    :keymaps '(typescript-mode-map typescript-tsx-mode-map)
+    :infix "a"
+    ""  '(:keymap lsp-command-map :which-key "lsp")
+    "=" '(:ignore t :wk "format")
+    "a" '(:ignore t :which-key "actions"))
+  (phundrak/major-leader-key
+    :packages 'typescript-mode
+    :keymaps '(typescript-mode-map typescript-tsx-mode-map)
+    "n" '(:keymap npm-mode-command-keymap :which-key "npm"))
   :config
   (after! flycheck
     (flycheck-add-mode 'javascript-eslint 'web-mode)
