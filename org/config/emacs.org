@@ -6384,10 +6384,6 @@ And some for C and C++.
 (add-hook 'c++-mode-hook #'c-cpp-mode-pretty-symbols)
 #+end_src
 
-#+begin_src emacs-lisp
-(defun)
-#+end_src
-
 Finally, similar to how ~org-appear~ behaves, let’s show the real string
 of our symbols when the cursor is on it.
 #+begin_src emacs-lisp
