@@ -572,16 +572,12 @@ I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
 is the list of groups I will be using:
 #+name: list-groups
-| Groups  | Number | Windows             | Type    |
-|---------+--------+---------------------+---------|
-| [DEV]   |      1 | Emacs, Virt-manager |         |
-| [SYS]   |      2 |                     | Dynamic |
-| [WWW]   |      3 | Firefox             |         |
-| [FILES] |      4 | Nemo                |         |
-| [MEDIA] |      5 | Gimp                |         |
-| [SOC]   |      6 | Signal, discord     |         |
-| [PRIV]  |      7 |                     |         |
-| [GAM]   |      8 | Steam               |         |
+| Groups  | Number | Windows | Type |
+|---------+--------+---------+------|
+| [DEV]   |      1 |         |      |
+| [PRIV]  |      4 |         |      |
+| [WWW]   |      2 |         |      |
+| [FILES] |      3 | Nemo    |      |
 
 #+name: gen-groups
 #+headers: :exports none
@@ -589,14 +585,12 @@ is the list of groups I will be using:
 (let ((make-group (lambda (group &optional first-p)
                     (let ((group-name (car group))
                           (group-type (nth 3 group)))
-                      (format "(%s \"%s\")"
-                              (if first-p
-                                  "grename"
-                                (pcase group-type
-                                  ("Dynamic"  "gnewbg-dynamic")
-                                  ("Floating" "gnewbg-float")
-                                  (otherwise  "gnewbg")))
-                              group-name)))))
+                      (format "%S" `(,(if first-p 'grename
+                                        (pcase group-type
+                                          ("Dynamic" 'gnewbg-dynamic)
+                                          ("Floating" 'gnewbg-float)
+                                          (otherwise 'gnewbg)))
+                                     ,group-name))))))
   (string-join `(,(funcall make-group (car groups) t)
                  ,@(mapcar (lambda (group)
                              (funcall make-group group))
@@ -604,15 +598,11 @@ is the list of groups I will be using:
                "\n"))
 #+end_src
 
-#+RESULTS[212d0f619fcfa8df9da1b051a3855491e53431b2]: gen-groups
+#+RESULTS[f5228a3752415c3d4dac5ce26ea36cc1cd74b21c]: gen-groups
 : (grename "[DEV]")
-: (gnewbg-dynamic "[SYS]")
+: (gnewbg "[PRIV]")
 : (gnewbg "[WWW]")
 : (gnewbg "[FILES]")
-: (gnewbg "[MEDIA]")
-: (gnewbg "[SOC]")
-: (gnewbg "[PRIV]")
-: (gnewbg "[GAM]")
 
 Groups are specified this way:
 #+begin_src lisp
@@ -660,46 +650,13 @@ class, so it will be pretty straightforward to the corresponding code.
 #+end_src
 
 This can be written this way:
-#+RESULTS[4affc294b6e643c957fceec5e084fae4933ac7f3]: gen-rules
+#+RESULTS[10defc1f5329a09215335793aaca66ca84449df7]: gen-rules
 #+begin_src lisp
-(define-frame-preference "[GAM]" (nil t t :class "Steam"))
-(define-frame-preference "[SOC]" (nil t t :class "discord"))
-(define-frame-preference "[SOC]" (nil t t :class "Signal"))
-(define-frame-preference "[MEDIA]" (nil t t :class "Gimp"))
 (define-frame-preference "[FILES]" (nil t t :class "Nemo"))
-(define-frame-preference "[WWW]" (nil t t :class "Firefox"))
-(define-frame-preference "[DEV]" (nil t t :class "Virt-manager"))
-(define-frame-preference "[DEV]" (nil t t :class "Emacs"))
 #+end_src
 
-Now, let’s do some automation. The reason why I want the first group
-to be a dynamic group is so that all terminal windows I’ll have there
-will be automatically arranged. If I switch to the ~[SYS]~ group, I want
-three terminal windows to open by default:
-- an ~htop~ window
-- and two terminals
-This can be done like so:
-#+begin_src lisp
-(defun my-term-init (current-group _last-group)
-  "Create terminals in the first group when none are already there."
-  (let ((term-group (select-group (current-screen) "2"))
-        (windows    (group-windows current-group)))
-    (when (and (equal current-group term-group)
-               (null windows))
-      (unless (= 1 (length (group-frames current-group)))
-        (only))
-      (term "btm -T")
-      (term)
-      (term))))
-#+end_src
-
-Let’s add a hook for that now:
-#+begin_src lisp
-(add-hook *focus-group-hook* 'my-term-init)
-#+end_src
-
-By the way, dynamic groups should have a split ratio of half of the
-available space.
+Dynamic groups, if any is created, should have a split ratio of half
+of the available space.
 #+begin_src lisp
 (setf *dynamic-group-master-split-ratio* 1/2)
 #+end_src
