@@ -2221,14 +2221,13 @@ minibuffer, both separated by a single space."
                  (string-trim
                   (shell-command-to-string "mpc volume")))))))
 
-(defhydra hydra-media ()
+(defhydra hydra-media (:hint nil)
   "
-^Tracks^     ^Volume^    ^Other^
-^^^^^^^^----------------------------
-[_c_] %s(all-the-icons-material \"skip_previous\" :height 1.0 :v-adjust -0.2)     [_t_] %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)    [_p_] %s(all-the-icons-material \"play_arrow\" :height 1.0 :v-adjust -0.2)
-[_r_] %s(all-the-icons-material \"skip_next\" :height 1.0 :v-adjust -0.2)     [_s_] %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)    [_S_] %s(all-the-icons-material \"stop\" :height 1.0 :v-adjust -0.2)
-
-[_q_] quit
+     %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)
+     [_s_]
+« [_c_] _p_ [_r_] » [_S_] %s(all-the-icons-material \"stop\")
+     [_t_]
+     %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)
 "
   ("c" emms-player-mpd-previous)
   ("r" emms-player-mpd-next)
