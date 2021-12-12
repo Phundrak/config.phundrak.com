@@ -2473,7 +2473,8 @@ with ~magit-gitflow~:
   :straight (screenshot :build t
                         :type git
                         :host github
-                        :repo "tecosaur/screenshot"))
+                        :repo "tecosaur/screenshot")
+  :config (load-file (locate-library "screenshot.el")))
 #+end_src
 
 *** Shells
