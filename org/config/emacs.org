@@ -5929,7 +5929,7 @@ development. First, let’s install the most important package,
 (use-package rustic
   :defer t
   :straight (:build t)
-  :mode ("\\.rs$" . rustic-mode)
+  :mode ("\\.rs\\'" . rustic-mode)
   :init
   (after! org-src
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
