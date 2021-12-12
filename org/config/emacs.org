@@ -6677,7 +6677,7 @@ Undefining some stuff to make keybind prefixes work correctly.
   "c"   '(:ignore t :wk "code")
   "cl"  #'evilnc-comment-or-uncomment-lines
 
-  <<general-keybindings-gen(table=keybinds-email, prefix="e")>>
+  <<keybindings-flycheck>>
 
   <<general-keybindings-gen(table=keybinds-files, prefix="f")>>
   <<keybinds-specific-files>>
@@ -6715,8 +6715,10 @@ Here are my apps keybinds. Each one of them is prefixed by ~a~.
 |     |                  | apps        |
 | c   | calc             |             |
 | d   | docker           |             |
-| e   | elfeed           |             |
-| E   | eww              |             |
+| E   | elfeed           |             |
+| e   |                  | email       |
+| c   | mu4e-compose-new |             |
+| ee  | mu4e             |             |
 | k   | keycast-mode     |             |
 | K   | keycast-log-mode |             |
 | T   | tetris           |             |
@@ -6750,17 +6752,29 @@ My buffer-related keybinds are all prefixed by ~b~.
 | r   | counsel-buffer-or-recentf |             |
 | s   | switch-to-scratch-buffer  |             |
 
-** Email
+** Errors
 :PROPERTIES:
 :CUSTOM_ID: Keybindings-Email-gv0ltxp0baj0
 :END:
-My two keybinds for my emails are prefixed by ~e~.
-#+name: keybinds-email
-| Key | Function         | Description |
-|-----+------------------+-------------|
-|     |                  | email       |
-| c   | mu4e-compose-new |             |
-| m   | mu4e             |             |
+#+begin_src emacs-lisp
+(defhydra hydra-flycheck
+  (:pre (flycheck-list-errors)
+   :post (quit-windows-on "*Flycheck errors*")
+   :hint nil)
+  ("f" flycheck-error-list-set-filter "Filter")
+  ("t" flycheck-next-error "Next")
+  ("s" flycheck-previous-error "Previous")
+  ("gg" flycheck-first-error "First")
+  ("G" (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+  ("q" nil))
+#+end_src
+
+#+name: keybindings-flycheck
+#+begin_src emacs-lisp :tangle no
+"e"  '(:ignore t :which-key "errors")
+"e." '(hydra-flycheck/body :wk "hydra")
+"ee" '(:keymap flycheck-command-map :wk "flycheck")
+#+end_src
 
 ** Files
 :PROPERTIES:
