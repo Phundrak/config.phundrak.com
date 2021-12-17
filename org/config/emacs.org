@@ -5189,6 +5189,35 @@ And finally, let’s enable some Eldoc integration for CMake.
   :after cmake-mode)
 #+end_src
 
+**** CSV
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-CSV-z1vh3rt0uaj0
+:END:
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :straight (:build t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'csv-mode-map
+    "a"  #'csv-align-fields
+    "d"  #'csv-kill-fields
+    "h"  #'csv-header-line
+    "i"  #'csv-toggle-invisibility
+    "n"  #'csv-forward-field
+    "p"  #'csv-backward-field
+    "r"  #'csv-reverse-region
+    "s"  '(:ignore t :wk "sort")
+    "sf" #'csv-sort-fields
+    "sn" #'csv-sort-numeric-fields
+    "so" #'csv-toggle-descending
+    "t"  #'csv-transpose
+    "u"  #'csv-unalign-fields
+    "y"  '(:ignore t :wk yank)
+    "yf" #'csv-yank-fields
+    "yt" #'csv-yank-as-new-table))
+#+end_src
+
 **** Gnuplot
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Gnuplot8zx5fl6184j0
