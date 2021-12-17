@@ -5701,6 +5701,9 @@ comma.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Python-7mwd2yq0z6j0
 :END:
+First, we need to set up the main Python mode. With this, we’ll also
+add Python to the list of LSP languages and to the list of languages
+org-babel supports.
 #+begin_src emacs-lisp
 (use-package python
   :defer t
@@ -5717,15 +5720,11 @@ comma.
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
   (when (and (executable-find "python3")
-             (string= python-shell-interpreter "python"))
+           (string= python-shell-interpreter "python"))
     (setq python-shell-interpreter "python3")))
 #+end_src
 
-#+begin_src emacs-lisp
-(after! org
-  (add-to-list 'org-babel-load-languages '(python . t)))
-#+end_src
-
+Now let’s add a package for [[https://docs.pytest.org/en/latest/][pytest]].
 #+begin_src emacs-lisp
 (use-package pytest
   :defer t
@@ -5755,6 +5754,8 @@ comma.
    "p" #'python-pytest-dispatch))
 #+end_src
 
+Poetry is a nice tool with which we can manage our Python runtime
+version as well as our dependencies.
 #+begin_src emacs-lisp
 (use-package poetry
   :defer t
@@ -5766,12 +5767,27 @@ comma.
   (add-hook 'python-mode-hook #'poetry-tracking-mode))
 #+end_src
 
+This package will bring a new major mode for editing pip requirements.
 #+begin_src emacs-lisp
 (use-package pip-requirements
   :defer t
   :straight (:build t))
 #+end_src
 
+Why use the command line to interact with pip when we can do it with
+an Emacs frontend?
+#+begin_src emacs-lisp
+(use-package pippel
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'pippel
+   "P" #'pippel-list-packages))
+#+end_src
+
+This is a [[https://github.com/pypa/pipenv][pipenv]] porcelain
 #+begin_src emacs-lisp
 (use-package pipenv
   :defer t
@@ -5800,6 +5816,7 @@ comma.
    "u" #'pipenv-uninstall))
 #+end_src
 
+This integrates ~pyenv~ into ~python-mode~.
 #+begin_src emacs-lisp
 (use-package pyenv
   :defer t
@@ -5811,6 +5828,7 @@ comma.
                'append))
 #+end_src
 
+Let’s also add a mode for ~pyenv~:
 #+begin_src emacs-lisp
 (use-package pyenv-mode
   :defer t
@@ -5827,17 +5845,7 @@ comma.
     "s" #'pyenv-mode-set))
 #+end_src
 
-#+begin_src emacs-lisp
-(use-package pippel
-  :defer t
-  :straight (:build t)
-  :general
-  (phundrak/major-leader-key
-   :keymaps 'python-mode-map
-   :packages 'pippel
-   "P" #'pippel-list-packages))
-#+end_src
-
+This package automatically imports packages we forgot to import.
 #+begin_src emacs-lisp
 (use-package pyimport
   :defer t
@@ -5852,6 +5860,7 @@ comma.
     "r" #'pyimport-remove-unused))
 #+end_src
 
+On the other hand, this one sorts our imports to make them more readable.
 #+begin_src emacs-lisp
 (use-package py-isort
   :defer t
@@ -5866,12 +5875,15 @@ comma.
    "R" #'py-isort-region))
 #+end_src
 
+Access pydoc through counsel.
 #+begin_src emacs-lisp
 (use-package counsel-pydoc
   :defer t
   :straight (:build t))
 #+end_src
 
+This generates Python documentation that is meant to be compatible
+with Sphinx, a documentation generaton for Python.
 #+begin_src emacs-lisp
 (use-package sphinx-doc
   :defer t
@@ -5888,6 +5900,9 @@ comma.
    "d" #'sphinx-doc))
 #+end_src
 
+Cython is a Python to C compiler. It also introduces the extended
+Cython programming language which makes writing C for Python easier.
+This package is a major mode for the Cython programming language.
 #+begin_src emacs-lisp
 (use-package cython-mode
   :defer t
@@ -5904,6 +5919,7 @@ comma.
    "c" #'cython-compile))
 #+end_src
 
+Flycheck can also be enabled for Cython:
 #+begin_src emacs-lisp
 (use-package flycheck-cython
   :defer t
@@ -5911,6 +5927,7 @@ comma.
   :after cython-mode)
 #+end_src
 
+Blacken uses the ~black~ formatter backend to format Python buffers.
 #+begin_src emacs-lisp
 (use-package blacken
   :defer t
@@ -5919,6 +5936,7 @@ comma.
   (add-hook 'python-mode-hook #'blacken-mode))
 #+end_src
 
+Finally, I’m using [[https://github.com/microsoft/pyright][Pyright]] as my LSP backend for Python.
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :after lsp-mode
@@ -5986,12 +6004,9 @@ development. First, let’s install the most important package,
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-7ca40po085j0
 :END:
-#+begin_src emacs-lisp
-(use-package company-web
-  :defer t
-  :straight (:build t))
-#+end_src
-
+[[https://emmet.io/][Emmet]] is a powerful templating engine that can generate through simple
+CSS-like expression some HTML so you don’t have to write everything by
+hand.
 #+begin_src emacs-lisp
 (use-package emmet-mode
   :straight (:build t)
@@ -6008,18 +6023,16 @@ development. First, let’s install the most important package,
    "C-RET" #'emmet-expand-yas))
 #+end_src
 
+Impatient mode serves web buffers live over HTTP so you can see your
+editions as you type them.
 #+begin_src emacs-lisp
 (use-package impatient-mode
   :straight (:build t)
   :defer t)
 #+end_src
 
-#+begin_src emacs-lisp
-(use-package slim-mode
-  :defer t
-  :straight (:build t))
-#+end_src
-
+Web mode is a sort of hybrid major mode that allows editing several
+languages in the same buffer, mainly HTML, CSS, and Javascript.
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
@@ -6066,23 +6079,25 @@ development. First, let’s install the most important package,
    "z"  #'web-mode-fold-or-unfold))
 #+end_src
 
+Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
+#+begin_src emacs-lisp
+(use-package company-web
+  :defer t
+  :straight (:build t)
+  :after (emmet-mode web-mode))
+#+end_src
+
 ***** CSS
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-CSS-que40po085j0
 :END:
+Let’s customize a bit the built-in CSS mode.
 #+begin_src emacs-lisp
-;; (add-hook 'css-mode-hook #'smartparens-mode)
-;; (put 'css-indent-offset 'safe-local-variable #'integerp)
-;; (after! css-mode
-;;   (phundrak/major-leader-key
-;;    :keymaps '(css-mode-map)
-;;    "=" '(:ignore :wk "format")
-;;    "g" '(:ignore :wk "goto")))
-
 (use-package css-mode
   :defer t
   :straight (:type built-in)
   :hook (css-mode . smartparens-mode)
+  :hook (css-mode . lsp-deferred)
   :init
   (put 'css-indent-offset 'safe-local-variable #'integerp)
   :general
@@ -6093,14 +6108,18 @@ development. First, let’s install the most important package,
     "g" '(:ignore :wk "goto")))
 #+end_src
 
+SCSS is much nicer to use than pure CSS in my opinion, so let’s add a
+mode for that.
 #+begin_src emacs-lisp
 (use-package scss-mode
   :straight (:build t)
   :hook (scss-mode . smartparens-mode)
+  :hook (scss-mode . lsp-deferred)
   :defer t
   :mode "\\.scss\\'")
 #+end_src
 
+And let’s add some autocompletion for CSS.
 #+begin_src emacs-lisp
 (use-package counsel-css
   :straight (:build t)
@@ -6118,6 +6137,9 @@ development. First, let’s install the most important package,
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Javascript-8k5arup085j0
 :END:
+~javascript-mode~ is meh at best, while ~rjsx-mode~ (Real JSX) is much
+better: it supports both Javascript and ~.jsx~ files for React and
+Next.JS.
 #+begin_src emacs-lisp
 (use-package rjsx-mode
   :defer t
@@ -6155,6 +6177,9 @@ development. First, let’s install the most important package,
         js2-idle-timer-delay             0.15))
 #+end_src
 
+~js2-refactor~ is an amazing tool for refactoring Javascript code. I
+mean, [[https://www.youtube.com/watch?v=-7yMWD1wUu4][look at this]]! And the video is only from 2013 and it still
+receives some commits!
 #+begin_src emacs-lisp
 (use-package js2-refactor
   :defer t
@@ -6164,6 +6189,8 @@ development. First, let’s install the most important package,
   :hook (rjsx-mode . js2-refactor-mode))
 #+end_src
 
+Which Emacser prefers the command line over Emacs itself? I don’t.
+Let’s interact with NPM through Emacs then.
 #+begin_src emacs-lisp
 (use-package npm-mode
   :defer t
@@ -6176,6 +6203,7 @@ development. First, let’s install the most important package,
     "n" '(:keymap npm-mode-command-keymap :which-key "npm")))
 #+end_src
 
+And finally, here is a formatter for Javascript.
 #+begin_src emacs-lisp
 (use-package prettier-js
   :defer t
@@ -6218,6 +6246,7 @@ development. First, let’s install the most important package,
   (autoload 'js2-line-break "js2-mode" nil t))
 #+end_src
 
+Tide enabled interactivity with Typescript.
 #+begin_src emacs-lisp
 (use-package tide
   :defer t
@@ -6454,6 +6483,7 @@ package for that.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Modelineavb6fl6184j0
 :END:
+The DoomEmacs modeline looks nice in my opinion, let’s use it.
 #+begin_src emacs-lisp
 (use-package doom-modeline
   :straight (:build t)
@@ -6481,6 +6511,8 @@ altogether my computer. In this case, ~secret-mode~ comes in handy.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
 :END:
+You may have noticed I use the Nord theme pretty much everywhere on my
+computer, why not Emacs?
 #+begin_src emacs-lisp
 (use-package doom-themes
   :straight (:build t)
@@ -6492,6 +6524,8 @@ altogether my computer. In this case, ~secret-mode~ comes in handy.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Rainbow-Delimiters3lg6fl6184j0
 :END:
+This makes Lisp especially more readable, but it’s also nice to have
+for any language that has delimiters like brackets too.
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :straight (:build t)
@@ -6600,6 +6634,9 @@ quickly find files across my filesystem.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-Keycast-nsqgl431t4j0
 :END:
+In case I am sharing my screen with people and I want to show which
+functions are called on my keystrokes since I don’t exactly use
+standard keybindings.
 #+begin_src emacs-lisp
 (use-package keycast
   :defer t
