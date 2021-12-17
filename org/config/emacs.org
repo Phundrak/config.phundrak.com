@@ -1259,6 +1259,7 @@ Due to this, I absolutely need a mode for editing Dockerfiles.
 (use-package dockerfile-mode
   :defer t
   :straight (:build t)
+  :hook (dockerfile-mode . lsp-deferred)
   :init
   (put 'docker-image-name 'safe-local-variable #'stringp)
   :mode "Dockerfile\\'")
@@ -4991,15 +4992,9 @@ awesome!
   :straight (:build t)
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((rust-mode       . lsp-deferred)
-         (c-mode          . lsp-deferred)
+  :hook ((c-mode          . lsp-deferred)
          (c++-mode        . lsp-deferred)
-         (css-mode        . lsp-deferred)
-         (dart-mode       . lsp-deferred)
          (html-mode       . lsp-deferred)
-         (lua-mode        . lsp-deferred)
-         (rust-mode       . lsp-deferred)
-         (dockerfile-mode . lsp-deferred)
          (lsp-mode        . lsp-enable-which-key-integration)
          (lsp-mode        . lsp-ui-mode))
   :commands (lsp lsp-deferred)
@@ -5634,6 +5629,7 @@ configuration for StumpWM]].
 (use-package dart-mode
   :straight (:build t)
   :defer t
+  :hook (dart-mode . lsp-deferred)
   :mode "\\.dart\\'")
 #+end_src
 
@@ -5706,38 +5702,39 @@ comma.
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Lua-p2odc7p0t4j0
 :END:
 #+begin_src emacs-lisp
-;; (use-package lua-mode
-;;   :defer t
-;;   :straight (:build t)
-;;   :mode "\\.lua$"
-;;   :interpreter "lua"
-;;   :init
-;;   (setq lua-indent-level           2
-;;         lua-indent-string-contents t)
-;;   :general
-;;   (phundrak/major-leader-key
-;;    :keymaps lua-mode-map
-;;    "'"  #'lua-show-process-buffer
-;;    "h"  '(:ignore :wk "help")
-;;    "hd" #'lua-search-documentation
-;;    "s"  '(:ignore :wk "REPL")
-;;    "sb" #'lua-send-buffer
-;;    "sf" #'lua-send-defun
-;;    "sl" #'lua-send-current-line
-;;    "sr" #'lua-send-region))
+(use-package lua-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.lua'$"
+  :interpreter "lua"
+  :hook (lua-mode . lsp-deferred)
+  :init
+  (setq lua-indent-level           2
+        lua-indent-string-contents t)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'lua-mode-map
+   "'"  #'lua-show-process-buffer
+   "h"  '(:ignore t :wk "help")
+   "hd" #'lua-search-documentation
+   "s"  '(:ignore t :wk "REPL")
+   "sb" #'lua-send-buffer
+   "sf" #'lua-send-defun
+   "sl" #'lua-send-current-line
+   "sr" #'lua-send-region))
 #+end_src
 
 #+begin_src emacs-lisp
-;; (use-package lsp-lua-emmy
-;;   :defer t
-;;   :after (lua-mode lsp-mode)
-;;   :straight (lsp-lua-emmy :build t
-;;                           :type git
-;;                           :host github
-;;                           :repo "EmmyLua/EmmyLua-LanguageServer")
-;;   :hook (lua-mode . lsp-deferred)
-;;   :config
-;;   (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
+(use-package lsp-lua-emmy
+  :defer t
+  :after (lua-mode lsp-mode)
+  :straight (lsp-lua-emmy :build t
+                          :type git
+                          :host github
+                          :repo "EmmyLua/EmmyLua-LanguageServer")
+  :hook (lua-mode . lsp-deferred)
+  :config
+  (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
 #+end_src
 
 **** Python
@@ -6000,10 +5997,13 @@ development. First, let’s install the most important package,
   :defer t
   :straight (:build t)
   :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode-local-vars . rustic-setup-lsp)
+  :hook (rustic-mode . lsp-deferred)
   :init
   (after! org-src
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
+  (setq rustic-lsp-client 'lsp-mode)
   :general
   (general-define-key
    :keymaps 'rustic-mode-map
@@ -6038,9 +6038,7 @@ development. First, let’s install the most important package,
         rustic-format-trigger         nil)
   (remove-hook 'rustic-mode-hook #'flycheck-mode)
   (remove-hook 'rustic-mode-hook #'flymake-mode-off)
-  (remove-hook 'rustic-mode-hook #'rustic-setup-lsp)
-  (add-hook 'rustic-mode-local-vars-hook #'rustic-setup-lsp)
-  (setq rustic-lsp-client 'lsp-mode))
+  (remove-hook 'rustic-mode-hook #'rustic-setup-lsp))
 #+end_src
 
 **** Web programming
@@ -6250,20 +6248,25 @@ And finally, here is a formatter for Javascript.
 #+begin_src emacs-lisp
 (use-package prettier-js
   :defer t
-  :straight (:build t))
+  :straight (:build t)
+  :hook (rjsx-mode . prettier-js-mode))
 #+end_src
 
 ***** Typescript
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Typescript-o0e8nh30z9j0
 :END:
+Typescript is a safer alternative to Javascript. Let’s install its major mode then.
 #+begin_src emacs-lisp
 (use-package typescript-mode
   :defer t
   :straight (:build t)
-  :hook (typescript-mode . rainbow-delimiters-mode)
+  :hook (typescript-mode     . rainbow-delimiters-mode)
+  :hook (typescript-mode     . lsp-deferred)
   :hook (typescript-tsx-mode . rainbow-delimiters-mode)
+  :hook (typescript-tsx-mode . lsp-deferred)
   :commands typescript-tsx-mode
+  :after flycheck
   :init
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
   :general
