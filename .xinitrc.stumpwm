@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# this makes it work in Ubuntu
-xhost +SI:localuser:$USER
-
-# wmname LG3D
-# export _JAVA_AWT_WM_NONREPARENTING=1
-
-exec stumpwm

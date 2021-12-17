@@ -26,6 +26,17 @@ This document was written in Emacs with Org-mode and is both the documentation
 and source code of my configuration file which can be extracted to
 ~$HOME/.config/awesome/rc.lua~ through a call to ~org-babel-tangle~.
 
+* Launching Awesome
+:PROPERTIES:
+:CUSTOM_ID: Launching-Awesome-lavgvvz00bj0
+:END:
+In order to launch Awesome with ~startx~, I need a ~xinit~-compatible
+script. Here is my ~$HOME/.xinitrc.awesome~ file:
+#+begin_src sh :tangle ~/.xinitrc.awesome
+xhost +
+exec awesome
+#+end_src
+
 * Loading libraries
 :PROPERTIES:
 :CUSTOM_ID: Loading_libraries-4df76999

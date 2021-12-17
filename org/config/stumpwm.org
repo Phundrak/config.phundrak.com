@@ -87,6 +87,28 @@ follows this architecture:
 - ~theme.lisp~ :: manages the color theme of StumpWM, the default
   placement of some windows and StumpWM’s gaps.
 
+You will also find below my ~xinit~ file for StumpWM, exported to
+~$HOME/.xinitrc.stumpwm~, which I use to start Stump through ~startx
+~/.xinitrc.stumpwm~.
+#+begin_src sh :tangle ~/.xinitrc.stumpwm
+#!/bin/sh
+
+# this makes it work in Ubuntu
+xhost +SI:localuser:$USER
+
+# Set fallback pointer
+xsetroot -cursor_name left_ptr
+
+# Fix scrolling on some GTK3 applications
+export GDK_CORE_DEVICE_EVENTS=1
+
+# in case Java applications display /nothing/
+# wmname LG3D
+# export _JAVA_AWT_WM_NONREPARENTING=1
+
+exec stumpwm
+#+end_src
+
 * Init file
 :PROPERTIES:
 :CUSTOM_ID: Init-file-l3q4snd1u5j0
