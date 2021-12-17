@@ -1125,6 +1125,28 @@ when entering a password such as AltGr, so I can’t use it : /
 ;; (load-module "pinentry")
 #+end_src
 
+** Sly
+:PROPERTIES:
+:CUSTOM_ID: Utilities-Sly-kkok6oi0yaj0
+:END:
+[[https://github.com/joaotavora/sly][Sly]] is a fork of SLIME with which I can connect StumpWM and Emacs
+together. Technically this is already done to some level with
+~stumpwm-mode~, but the latter doesn’t provide auto-completion or stuff
+like that.
+
+The first thing to do is load ~slynk~, SLY’s server:
+#+begin_src lisp
+(ql:quickload :slynk)
+#+end_src
+
+Now we can define a command to launch the server. I don’t want it to
+run all the time, just when I need it.
+#+begin_src lisp
+(stumpwm:defcommand start-sly-server () ()
+  "Start a SLYNK server for SLY"
+  (slynk:create-server :dont-close t))
+#+end_src
+
 ** ~swm-ssh~
 :PROPERTIES:
 :CUSTOM_ID: Utilities-swm-ssh-s14ahrs0z9j0

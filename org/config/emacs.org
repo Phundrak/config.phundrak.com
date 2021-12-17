@@ -5574,6 +5574,15 @@ configuration, it should be automatically enabled when entering
    "er" #'stumpwm-eval-region))
 #+end_src
 
+Sly enables some deep interactivity between Emacs and a CommonLisp
+application running the Slynk backend. For an example, see [[file:stumpwm.org::#Utilities-Sly-kkok6oi0yaj0][my Sly
+configuration for StumpWM]].
+#+begin_src emacs-lisp
+(use-package sly
+  :defer t
+  :straight (:build t))
+#+end_src
+
 **** Dart
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Dart-xkr3z8j0m6j0
