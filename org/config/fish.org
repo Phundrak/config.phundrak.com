@@ -59,74 +59,10 @@ end
 :CUSTOM_ID: Regular_fish_shell_appearance-c3e532e1
 :END:
 Now, there is only one function I modify when it comes to the appearance of fish
-when I’m the one using it: the ~fish_greeting~ function. I use it to give me an
-overview of my computer’s status, including its hostname, uptime, disks usage,
-ram usage, swap usage, and networking.
+when I’m the one using it: the ~fish_greeting~ function. I use it to display the output of [[https://labs.phundrak.com/phundrak/pumo-system-info][a utility I wrote]].
 #+BEGIN_SRC fish
-set RED '\033[0;31m'
-set GREEN '\033[0;32m'
-set NC '\033[0m'
-
-function display_slider # used total
-    set -l slider_length 38
-    set -l used $argv[1]
-    set -l total $argv[2]
-    set -l used_slider (math -s0 "($used * $slider_length) / $total")
-    set -l unused_slider (math -s0 "$slider_length - $used_slider")
-    echo -en "["
-    echo -en $RED
-    echo -en (string repeat -n $used_slider '=')
-    echo -en $GREEN
-    echo -en (string repeat -n $unused_slider '=')
-    echo -en $NC
-    echo -en "]"
-end
-
 function fish_greeting
-    set -l ruler_length 79
-    set -l ruler (string repeat -n $ruler_length "=")
-
-    set -l osname (cat /etc/os-release | grep -i pretty_name | sed 's/.*"\(.*\)".*/\1/')
-    set -l uptime (uptime -p | sed 's/up //')
-
-    set -l root (df -Ph | grep -E "/\$")
-    set -l root_p (echo $root | awk '{print $5}' | tr -d '%')
-    set -l root_used (echo $root | awk '{print $3}')
-    set -l root_total (echo $root | awk '{print $2}')
-
-    set -l ram (free -tm | grep Mem)
-    set -l ram_total (echo $ram | awk '{print $2}')
-    set -l ram_used (echo $ram | awk '{print $3}')
-    set -l ram_p (math -s0 "$ram_used / $ram_total * 100")
-
-    set -l swap (free -tm | grep Swap)
-    set -l swap_total (echo $swap | awk '{print $2}')
-    set -l swap_used (echo $swap | awk '{print $3}')
-    set -l swap_p (math -s0 "$swap_used / $swap_total * 100")
-
-    set -l connections (nmcli c s | grep -E "wifi|ethernet" | grep -v '\-\-')
-    set -l wifi (echo $connections | grep "wifi" | awk '{print $1}')
-    set -l ethernet (test "$connections" = "*ethernet*" && echo -e $GREEN"UP"$NC || echo -e $RED"DOWN"$NC)
-    set -l wifi (test -n wifi && echo -e $GREEN$wifi$NC || echo - $RED"DOWN"$NC)
-
-    echo $ruler
-    printf "OS......: %-30sKernel: %s %s\n" $osname (uname -s) (uname -r)
-    printf "Hostname: %-30sUptime: %s\n" (hostname) $uptime
-    printf "Ethernet: %-41sWifi..: %s\n" $ethernet $wifi
-    printf "Disks...: %-6s %s %6s / %6s (%2d%%)\n" "/" (display_slider $root_p 100) $root_used $root_total $root_p
-
-    # loop other mountpoints
-    for mp in (df -Ph 2> /dev/null | egrep "sd|tank|nvme" | egrep -v "boot|/\$")
-        set -l mp_p (echo $mp | awk '{print $5}' | tr -d '%')
-        set -l mp_used (echo $mp | awk '{print $3}')
-        set -l mp_total (echo $mp | awk '{print $2}')
-        set -l mp_name (echo $mp | awk '{print $6}')
-        printf "          %-6s %s %6s / %6s (%2d%%)\n" $mp_name (display_slider $mp_p 100) $mp_used $mp_total $mp_p
-    end
-
-    printf "Ram.....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $ram_used $ram_total) $ram_used $ram_total $ram_p
-    printf "Swap....:        %s %5dM / %5dM (%2d%%)\n" (display_slider $swap_used $swap_total) $swap_used $swap_total $swap_p
-    echo $ruler
+    pumo-system-info
 end
 #+END_SRC
 
