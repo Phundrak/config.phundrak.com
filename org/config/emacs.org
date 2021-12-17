@@ -315,10 +315,8 @@ transparency to the background of Emacs only and not to the entire
 frame.
 #+begin_src emacs-lisp
 (add-hook 'server-after-make-frame-hook (lambda ()
-                                          (interactive)
                                           (set-frame-parameter (selected-frame)
                                                                'alpha-background 0.9)))
-
 #+end_src
 
 *** Modeline Modules
