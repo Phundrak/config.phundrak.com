@@ -893,6 +893,22 @@ can still feel some influence from my Spacemacs years here.
   :after evil
   :straight (:build t)
   :config
+  ;; bépo conversion
+  (defun my/bépo-rotate-evil-collection (_mode mode-keymaps &rest _rest)
+    (evil-collection-translate-key 'normal mode-keymaps
+      ;; bépo ctsr is qwerty hjkl
+      "c" "h"
+      "t" "j"
+      "s" "k"
+      "r" "l"
+      ;; add back ctsr
+      "h" "c"
+      "j" "t"
+      "k" "s"
+      "l" "r"))
+
+  (add-hook 'evil-collection-setup-hook #'my/bépo-rotate-evil-collection)
+
   (evil-collection-init))
 #+end_src
 
