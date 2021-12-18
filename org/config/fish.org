@@ -66,22 +66,126 @@ function fish_greeting
 end
 #+END_SRC
 
-The theme I use for fish is [[https://github.com/oh-my-fish/theme-bobthefish][bobthefish]], which by default puts a really long
-timestamp to the right of the prompt. I want something shorter, so here is the
-variable to set, using the format specified in ~date(1)~.
-#+BEGIN_SRC fish
-set -g theme_date_format "+%g-%m-%d %H:%M:%S"
-#+END_SRC
+For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic prompt. Let’s load it:
+#+begin_src fish
+starship init fish | source
+#+end_src
 
-I also wish to have a kinda different newline prompt, so let’s set it:
-#+BEGIN_SRC fish
-set -g theme_newline_prompt 'λ '
-#+END_SRC
+* Starship configuration
+:PROPERTIES:
+:header-args:toml: :tangle ~/.config/starship.toml
+:CUSTOM_ID: Starship-configuration-lpz4tz410bj0
+:END:
+As mentioned above, starship is a shell-agnostic prompt, written in Rust and which can be configured separately from the shell. I decided to configure it here though, since fish is the only shell I use which is compatible with starship.
 
-Finally, let’s set our prompt’s theme to the Nord theme.
-#+BEGIN_SRC fish
-set -g theme_color_scheme nord
-#+END_SRC
+First I’ll modify the default format variable, removing the modules I don’t need.
+#+begin_src toml
+format = """
+$username\
+$hostname\
+$shlvl\
+$singularity\
+$kubernetes\
+$directory\
+$vcsh\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$dart\
+$deno\
+$lua\
+$nodejs\
+$python\
+$rlang\
+$rust\
+$scala\
+$zig\
+$memory_usage\
+$env_var\
+$custom\
+$cmd_duration\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$shell\
+$character"""
+#+end_src
+
+I want starship to be able to detect Lisp files, be it CommonLisp or EmacsLisp. Unfortunately, it seems nerd-font doesn’t have any symbol for either language, so I’m just using a lambda character.
+#+begin_src toml
+[custom.lisp]
+extensions = ["lisp", "el"]
+symbol = "λ"
+style = "bold green"
+#+end_src
+
+Finally, let’s disable all modules I don’t need.
+#+begin_src toml
+[cobol]
+disable = true
+[dotnet]
+disable = true
+[elixir]
+disable = true
+[elm]
+disable = true
+[erlang]
+disable = true
+[golang]
+disable = true
+[helm]
+disable = true
+[java]
+disable = true
+[julia]
+disable = true
+[kotlin]
+disable = true
+[nim]
+disable = true
+[ocaml]
+disable = true
+[perl]
+disable = true
+[php]
+disable = true
+[pulumi]
+disable = true
+[purescript]
+disable = true
+[red]
+disable = true
+[ruby]
+disable = true
+[swift]
+disable = true
+[terraform]
+disable = true
+[vlang]
+disable = true
+[vagrant]
+disable = true
+[nix_shell]
+disable = true
+[conda]
+disable = true
+[aws]
+disable = true
+[gcloud]
+disable = true
+[openstack]
+disable = true
+[crystal]
+disable = true
+#+end_src
 
 * Global variables
 :PROPERTIES:
