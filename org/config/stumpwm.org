@@ -531,29 +531,28 @@ As you can see, ~generate-modeline~ generates the string defining
 ~*screen-mode-line-format*~ from the list of formatters we gave it with
 the table [[modeline-format]].
 #+begin_src lisp
-(defun generate-modeline (elements &optional not-invertedp)
+(defun generate-modeline (elements &optional not-invertedp rightp)
   "Generate a modeline for StumpWM.
 ELEMENTS should be a list of `cons'es which `car' is the modeline
 formatter or the shell command to run, and their `cdr' is either nil
 when the `car' is a formatter and t when it is a shell command."
   (when elements
-    (cons (if not-invertedp
-              (format nil
-                      " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^(:fg \"~A\") "
-                      phundrak-nord1
-                      phundrak-nord3
-                      ,*mode-line-foreground-color*)
-              (format nil
-                      " ^(:fg \"~A\")^(:bg \"~A\")^f1^f0^** "
-                      phundrak-nord3
-                      phundrak-nord1))
+    (cons (format nil
+                  " ^[~A^]^(:bg \"~A\") "
+                  (format nil "^(:fg \"~A\")^(:bg \"~A\")^f1~A^f0"
+                          (if (xor not-invertedp rightp) phundrak-nord1 phundrak-nord3)
+                          (if (xor not-invertedp rightp) phundrak-nord3 phundrak-nord1)
+                          (if rightp "" ""))
+                  (if not-invertedp phundrak-nord3 phundrak-nord1))
           (let* ((current-element (car elements))
                  (formatter       (car current-element))
                  (commandp        (cdr current-element)))
             (cons (if commandp
                       `(:eval (run-shell-command ,formatter t))
-                      (format nil "~A" formatter))
-                  (generate-modeline (cdr elements) (not not-invertedp)))))))
+                    (format nil "~A" formatter))
+                  (generate-modeline (cdr elements)
+                                     (not not-invertedp)
+                                     (if (string= "^>" (caar elements)) t rightp)))))))
 #+end_src
 
 It is then easy to define a command that can call this function and
