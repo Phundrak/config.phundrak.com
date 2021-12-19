@@ -700,7 +700,6 @@ Elpa repositories now, and they were renamed in order to avoid any
 confusion between the two of them.
 #+begin_src emacs-lisp
 (setq package-archives '(("melpa"  . "https://melpa.org/packages/")
-                         ("org"    . "https://orgmode.org/elpa/")
                          ("gnu"    . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 #+end_src
