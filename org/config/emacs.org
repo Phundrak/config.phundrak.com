@@ -1505,6 +1505,7 @@ Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
 ~mu-git~ from the AUR in order to use mu4e. I also have a ~.desktop~ file
 so I can open mu4e directly from my program picker. It uses the shell
 script ~emacsmail~ I’ve written [[file:bin.org::#Emacsmail-afffb7cd][here]].
+#+header: :mkdirp yes
 #+begin_src conf-desktop :tangle ~/.local/share/applications/mu4e.desktop
 [Desktop Entry]
 Name=Mu4e
