@@ -1627,12 +1627,13 @@ issues and PRs from Github.
 #+name: mu4e-bookmarks-filter-github-list
 #+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
-(string-join '("list:/.*\\.github\\.com/"
-               "to:/.*noreply\\.github\\.com/")
-             " OR ")
+(mapconcat #'identity
+           '("list:/.*\\.github\\.com/"
+             "to:/.*noreply\\.github\\.com/")
+           " OR ")
 #+end_src
 
-#+RESULTS[e070eb4d48660380191a28686d8002378dfc5a9a]: mu4e-bookmarks-filter-github-list
+#+RESULTS[024adbd8fb765cf06d160c715ceb364dd3a94e89]: mu4e-bookmarks-filter-github-list
 : list:/.*\.github\.com/ OR to:/.*noreply\.github\.com/
 
 When it comes to the conlang mailing list, let’s not match anything
@@ -1659,34 +1660,34 @@ junk emails, so I end up with the following rule:
 #+name: mu4e-bookmarks-default-filter
 #+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
-(string-join `("NOT flag:trashed"
-               ,(format "(%s)" (mapconcat (lambda (maildir) (concat "maildir:" maildir))
-                                          '("/Inbox" "/Junk")
-                                          " OR ")))
-             " AND ")
+(mapconcat #'identity
+           `("NOT flag:trashed"
+             ,(format "(%s)" (mapconcat (lambda (maildir) (concat "maildir:" maildir))
+                                        '("/Inbox" "/Junk")
+                                        " OR ")))
+            " AND ")
 #+end_src
 
-#+RESULTS[ccf162e159f77ccf87ff4fae220106f0a91ad256]: mu4e-bookmarks-default-filter
+#+RESULTS[f3f96c07b8341c1b7b3d02688aa6faa2ceeca16f]: mu4e-bookmarks-default-filter
 : NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk)
 
 And for the last string-generating code, let’s describe my main inbox:
 #+name: mu4e-bookmarks-inbox-filters
 #+headers: :tangle no :cache yes
 #+begin_src emacs-lisp
-(string-join (cons
-              "<<mu4e-bookmarks-default-filter()>>"
-              `(
-                ,(format "(%s)"
-                         <<mu4e-bookmarks-filter-conlang-list>>)
-                ,(format "(%s)" "<<mu4e-bookmarks-filter-asso()>>")
-                ,(format "(%s)"
-                         <<mu4e-bookmarks-filter-emacs-list>>)
-                ,(format "(%s)"
-                         <<mu4e-bookmarks-filter-uni>>)))
-             " AND NOT ")
+(mapconcat #'identity
+           (cons "<<mu4e-bookmarks-default-filter()>>"
+                 `(,(format "(%s)"
+                            <<mu4e-bookmarks-filter-conlang-list>>)
+                   ,(format "(%s)" "<<mu4e-bookmarks-filter-asso()>>")
+                   ,(format "(%s)"
+                            <<mu4e-bookmarks-filter-emacs-list>>)
+                   ,(format "(%s)"
+                            <<mu4e-bookmarks-filter-uni>>)))
+           " AND NOT ")
 #+end_src
 
-#+RESULTS[f9397c5b9d6f7e371770c2a527536721f9bcc621]: mu4e-bookmarks-inbox-filters
+#+RESULTS[3be18eecb193c194e8525a0a6a76457b440befc1]: mu4e-bookmarks-inbox-filters
 : NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:CONLANG@LISTSERV.BROWN.EDU OR t:CONLANG@LISTSERV.BROWN.EDU OR list:CONLANG@LISTSERV.BROWN.EDU OR f:AUXLANG@LISTSERV.BROWN.EDU OR t:AUXLANG@LISTSERV.BROWN.EDU OR list:AUXLANG@LISTSERV.BROWN.EDU) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:ateliers-emacs.framalistes.org OR t:ateliers-emacs.framalistes.org OR f:ateliers-emacs.framalistes.org OR list:ateliers-paris.emacs-doctor.com OR t:ateliers-paris.emacs-doctor.com OR f:ateliers-paris.emacs-doctor.com) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
 
 We can finally define our bookmarks! The code reads as follows:
@@ -2938,7 +2939,7 @@ command into a single string:
   "Concatenate an eshell COMMAND into a single string.
 All elements of COMMAND will be joined in a single
 space-separated string."
-  (string-join command " "))
+  (mapconcat #'identity command " "))
 #+end_src
 
 I’ll also declare some aliases here, such as ~open~ and ~openo~ that
@@ -3586,7 +3587,7 @@ The complete configuration for the ~exwm~ package can be found below.
 The cons will hold first the MAC address of the device, then its
 human-friendly name."
   (let ((split-name (split-string raw-name " " t)))
-    `(,(string-join (cddr split-name) " ") . ,(cadr split-name))))
+    `(,(mapconcat #'identity (cddr split-name) " ") . ,(cadr split-name))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3607,7 +3608,7 @@ human-friendly name."
            (target-device (completing-read "Device: "
                                            devices))
            (target-address (cdr (assoc target-device devices))))
-      (shell-command (string-join `(,bluetooth-command "connect" ,target-address) " ")))))
+      (shell-command (mapconcat #'identity `(,bluetooth-command "connect" ,target-address) " ")))))
 #+end_src
 
 ** Making my life easier
