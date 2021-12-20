@@ -3837,27 +3837,6 @@ the usage of the ~:ignore:~ tag in org.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Babel9585fl6184j0
 :END:
-A package I use from time to time is ~ob-latex-as-png~ which allows me
-to easily convert a LaTeX snippet into a PNG, regardless of the
-exporter I use afterwards. Its installation is pretty simple:
-#+begin_src emacs-lisp
-(use-package ob-latex-as-png
-  :after org
-  :straight (:build t)
-  :defer t
-  :init
-  (add-to-list 'org-babel-load-languages '(latex-as-png . t)))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package ob-restclient
-  :straight (:build t)
-  :defer t
-  :after (org ob)
-  :init
-  (add-to-list 'org-babel-load-languages '(restclient . t)))
-#+end_src
-
 One of the amazing features of org-mode is its literary programming capacities
 by running code blocks from within Org-mode itself. But for that, only a couple
 of languages are supported directly by Org-mode itself, and they need to be
@@ -3898,6 +3877,27 @@ The corresponding code is as follows:
  'org-babel-load-languages
  <<org-babel-languages-gen()>>)
 #+END_SRC
+
+A package I use from time to time is ~ob-latex-as-png~ which allows me
+to easily convert a LaTeX snippet into a PNG, regardless of the
+exporter I use afterwards. Its installation is pretty simple:
+#+begin_src emacs-lisp
+(use-package ob-latex-as-png
+  :after org
+  :straight (:build t)
+  :defer t
+  :init
+  (add-to-list 'org-babel-load-languages '(latex-as-png . t)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package ob-restclient
+  :straight (:build t)
+  :defer t
+  :after (org ob)
+  :init
+  (add-to-list 'org-babel-load-languages '(restclient . t)))
+#+end_src
 
 *** Behavior
 :PROPERTIES:
