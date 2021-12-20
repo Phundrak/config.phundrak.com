@@ -123,7 +123,7 @@ I want starship to be able to detect Lisp files, be it CommonLisp or EmacsLisp. 
 #+begin_src toml
 [custom.lisp]
 extensions = ["lisp", "el"]
-symbol = "λ"
+symbol = "λ "
 style = "bold green"
 #+end_src
 
