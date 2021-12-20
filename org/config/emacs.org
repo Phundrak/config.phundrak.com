@@ -1196,6 +1196,7 @@ Finally, let’s make ~ivy~ richer:
 #+begin_src emacs-lisp
 (use-package counsel
   :straight (:build t)
+  :after recentf
   :defer t
   :after ivy
   :bind (("M-x"     . counsel-M-x)
@@ -2476,6 +2477,26 @@ with ~magit-gitflow~:
   :straight (:build t)
   :after (counsel projectile)
   :config (counsel-projectile-mode))
+#+end_src
+
+**** Recentf
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Project-Management-Recentf-kndiupi04bj0
+:END:
+The built-in package ~recentf~ keeps track of recently opened files. But
+by default, it only follows the twenty most recent files, that not
+nearly enough for me, so I raise it to two hundred. I also don’t want
+recentf to follow the Elfeed database, so I add it to the list of
+excluded files.
+#+begin_src emacs-lisp
+(use-package recentf
+  :straight (:build t :type built-in)
+  :defer t
+  :custom ((recentf-max-saved-items 200))
+  :init
+  (add-to-list 'recentf-exclude (rx (* any)
+                                    "elfeed-db"
+                                    (* any))))
 #+end_src
 
 *** Screenshot
