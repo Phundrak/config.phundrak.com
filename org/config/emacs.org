@@ -3243,7 +3243,7 @@ from Git.
   :straight (xelb :build t
                   :type git
                   :host github
-                  :repo "emacs-straiht/xelb"
+                  :repo "emacs-straight/xelb"
                   :fork "ch11ng/xelb"))
 #+end_src
 
@@ -4266,6 +4266,7 @@ Let’s now define some keybinds for inserting stuff in our org buffer:
 | ie        | org-set-effort                |             |
 | if        | org-footnote-new              |             |
 | ih        | org-insert-heading            |             |
+| iH        | counsel-org-link              |             |
 | ii        | org-insert-item               |             |
 | il        | org-insert-link               |             |
 | in        | org-add-note                  |             |
@@ -6821,6 +6822,7 @@ Undefining some stuff to make keybind prefixes work correctly.
   <<general-keybindings-gen(table=keybinds-help, prefix="h")>>
 
   "i"   '(:ignore t :wk "insert")
+  "iu"  #'counsel-unicode-char
 
   <<general-keybindings-gen(table=keybinds-jump, prefix="j")>>
 
@@ -6909,6 +6911,7 @@ My buffer-related keybinds are all prefixed by ~b~.
 #+begin_src emacs-lisp :tangle no
 "e"  '(:ignore t :which-key "errors")
 "e." '(hydra-flycheck/body :wk "hydra")
+"el" #'counsel-flycheck
 "ee" '(:keymap flycheck-command-map :wk "flycheck")
 #+end_src
 
