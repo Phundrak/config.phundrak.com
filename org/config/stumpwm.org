@@ -1329,6 +1329,7 @@ the above keymaps.
 | Keychord | Function                |
 |----------+-------------------------|
 | ~b~        | ~firefox~                 |
+| ~B~        | ~exec qutebrowser~        |
 | ~d~        | ~exec discord-canary~     |
 | ~e~        | ~exec emacsclient -c~     |
 | ~g~        | ~exec gimp~               |
