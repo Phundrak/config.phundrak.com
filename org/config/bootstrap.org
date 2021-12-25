@@ -768,11 +768,9 @@ I generally use the following extensions in my Fish shell.
 | decors/fish-colored-man     | Color man pages to make them more readable                       |
 | franciscolourenco/done      | Automatically receive notifications when a long process finishes |
 | jethrokuan/fzf              | Improved key bindings for [[https://github.com/junegunn/fzf][junegunn/fzf]]                           |
-| jethrokuan/z                | Pure-fish [[https://github.com/rupa/z][rupa/z]]-like directory jumping                          |
 | jorgebucaran/fish-bax       | Run bash scripts, replaying environment changes in fish          |
 | jorgebucaran/fish-getopts   | CLI options parser; alternative to the [[https://fishshell.com/docs/current/commands.html#argparse][argparse]] fish builtin     |
 | laughedelic/pisces          | Autoclose parentheses, braces, quotes and other paired symbols   |
-| oh-my-fish/theme-bobthefish | A Powerline-style, Git-aware fish theme optimized for awesome.   |
 
 #+NAME: fish-extensions-gen
 #+BEGIN_SRC emacs-lisp :var extensions=fish-extensions-table[,0]
@@ -781,15 +779,13 @@ I generally use the following extensions in my Fish shell.
            "\n")
 #+END_SRC
 
-#+RESULTS[a88b321ba9148acc8c28c7fb1aaf924c23b6b072]: fish-extensions-gen
+#+RESULTS[072e09f40140d1ff847826b8f44dd96f9e95a773]: fish-extensions-gen
 : fisher add decors/fish-colored-man
 : fisher add franciscolourenco/done
 : fisher add jethrokuan/fzf
-: fisher add jethrokuan/z
 : fisher add jorgebucaran/fish-bax
 : fisher add jorgebucaran/fish-getopts
 : fisher add laughedelic/pisces
-: fisher add oh-my-fish/theme-bobthefish
 
 #+BEGIN_SRC fish :noweb yes
 printf "\n# Installing Fisher Extensions ################################################\n\n"

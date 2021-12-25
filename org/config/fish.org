@@ -71,7 +71,11 @@ For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic pr
 starship init fish | source
 #+end_src
 
-* Starship configuration
+* Setting up external tools
+:PROPERTIES:
+:CUSTOM_ID: Setting-up-external-tools-2r4b97p0bbj0
+:END:
+** Starship configuration
 :PROPERTIES:
 :header-args:toml: :tangle ~/.config/starship.toml
 :CUSTOM_ID: Starship-configuration-lpz4tz410bj0
@@ -185,6 +189,15 @@ disable = true
 disable = true
 [crystal]
 disable = true
+#+end_src
+
+** Loading ~zoxide~
+:PROPERTIES:
+:CUSTOM_ID: Setting-up-external-tools-Loading-zoxide-y97b97p0bbj0
+:END:
+~zoxide~ is a smarter ~cd~ command, accessible through ~z~. It can be loaded like so:
+#+begin_src fish
+zoxide init fish | source
 #+end_src
 
 * Global variables
