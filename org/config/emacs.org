@@ -383,8 +383,13 @@ don’t. I prefer [[https://github.com/microsoft/cascadia-code][Cascadia Code]],
 (defvar phundrak/default-font-size 90
   "Default font size.")
 
-(when (equal system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Cascadia Code" :height phundrak/default-font-size))
+(defvar phundrak/default-font-name "Cascadia Code"
+  "Default font.")
+
+(when (find-font (font-spec :name phundrak/default-font-name))
+  (set-face-attribute 'default nil
+                      :font phundrak/default-font-name
+                      :height phundrak/default-font-size))
 #+end_src
 
 *** Frame Title
