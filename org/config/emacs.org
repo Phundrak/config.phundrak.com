@@ -7032,13 +7032,16 @@ The prefix here is ~T~.
 :END:
 My toggle keybinds are prefixed by ~t~.
 #+name: keybinds-toggle
-| Key | Function            | Description  |
-|-----+---------------------+--------------|
-|     |                     | toggles      |
-| t   | counsel-load-theme  |              |
-| i   |                     | input method |
-| it  | toggle-input-method |              |
-| is  | set-input-mode      |              |
+| Key | Function              | Description  |
+|-----+-----------------------+--------------|
+|     |                       | toggles      |
+| t   | counsel-load-theme    |              |
+| d   |                       | debug        |
+| de  | toggle-debug-on-error |              |
+| dq  | toggle-debug-on-quit  |              |
+| i   |                       | input method |
+| it  | toggle-input-method   |              |
+| is  | set-input-mode        |              |
 
 ** Windows
 :PROPERTIES:
