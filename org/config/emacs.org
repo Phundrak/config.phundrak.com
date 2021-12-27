@@ -3620,12 +3620,17 @@ human-friendly name."
 #+end_src
 
 #+begin_src emacs-lisp
+(require 'dbus)
 (defun bluetooth-get-devices ()
-  (let ((literal-devices (string-trim (shell-command-to-string
-                                       (concat bluetooth-command " devices")))))
+  (let ((bus-list (dbus-introspect-get-node-names :system "org.bluez" "/org/bluez/hci0")))
     (mapcar (lambda (device)
-              (create-bluetooth-device device))
-            (split-string literal-devices "\n"))))
+              `(,(dbus-get-property :system
+                                    "org.bluez"
+                                    (concat "/org/bluez/hci0/" device)
+                                    "org.bluez.Device1"
+                                    "Alias")
+                . ,device))
+            bus-list)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3634,10 +3639,15 @@ human-friendly name."
   (progn
     (bluetooth-turn-on)
     (let* ((devices (bluetooth-get-devices))
-           (target-device (completing-read "Device: "
-                                           devices))
-           (target-address (cdr (assoc target-device devices))))
-      (shell-command (mapconcat #'identity `(,bluetooth-command "connect" ,target-address) " ")))))
+           (device  (alist-get (completing-read "Device: " devices)
+                               devices nil nil #'string=)))
+      (dbus-call-method-asynchronously
+       :system "org.bluez"
+       (concat "/org/bluez/hci0" device)
+       "org.bluez.Device1"
+       "Connect"
+       (lambda (&optional msg)
+         (when msg (message "%s" msg)))))))
 #+end_src
 
 ** Making my life easier
