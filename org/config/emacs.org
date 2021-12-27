@@ -3398,7 +3398,11 @@ workspaces 0 to 9.
                     `(,(kbd (format "s-%d" i)) .
                       (lambda ()
                         (interactive)
-                        (exwm-workspace-move-window ,i))))
+                        (exwm-workspace-move-window ,(let ((index (1- i)))
+                                                       (if (< index 0)
+                                                           (- 10 index)
+                                                         ;; FIXME: does not work with s-0
+                                                         index))))))
                   (number-sequence 0 9))))
 #+end_src
 
