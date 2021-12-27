@@ -3778,6 +3778,8 @@ extended however we like!
         org-default-notes-file             (expand-file-name "notes.org" org-directory))
   <<org-agenda-files>>
   <<org-behavior-electric>>
+  <<org-capture-target-files>>
+  <<org-capture-templates>>
   <<org-babel-load-languages>>
   <<org-use-sub-superscripts>>
   <<org-latex-compiler>>
@@ -3807,7 +3809,7 @@ extended however we like!
     <<general-keybindings-gen(table=org-keybinds-jump)>>
     <<general-keybindings-gen(table=org-keybinds-tables)>>
     <<general-keybindings-gen(table=org-keybinds-toggles)>>)
-
+  <<org-capture-keybinds>>
   (phundrak/major-leader-key
     :packages 'org
     :keymaps 'org-src-mode-map
@@ -3981,6 +3983,183 @@ meaningful IDs for its headings. I actually wrote a package for this!
                    (when (and (eq major-mode       'org-mode)
                               (eq buffer-read-only nil))
                      (org-unique-id)))))))
+#+end_src
+
+*** Capture
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Capture-2j6hpyh0u9j0
+:END:
+Org capture is an amazing tool for taking quick notes, be it simple
+text, links, resources, or reminders. They are all organised is
+specified org files which are described below.
+#+name: org-capture-target-files
+#+begin_src emacs-lisp :tangle no
+(defvar org-conlanging-file "~/org/conlanging.org")
+(defvar org-notes-file "~/org/notes.org")
+(defvar org-journal-file "~/org/journal.org")
+(defvar org-linguistics-file "~/org/linguistics.org")
+(defvar org-novel-file "~/org/novel.org")
+(defvar org-agenda-file "~/org/agenda/private.org")
+(defvar org-school-file "~/org/agenda/school.org")
+(defvar org-worldbuilding-file "~/org/worldbuilding.org")
+#+end_src
+
+Let me describe a keybind to invoke org-capture from anywhere within
+Emacs.
+#+name: org-capture-keybinds
+#+begin_src emacs-lisp :tangle no
+(phundrak/leader-key
+  :packages 'org
+  :infix "o"
+  ""  '(:ignore t :which-key "org")
+  "c" #'org-capture)
+#+end_src
+
+When ~org-capture~ is invoked, it will ask which template we wish to
+use. In the table [[org-capture-shortcuts-table]], the /key/ column
+represents which keychord we need to hit, titled with /name/, we need to
+hit in order to use the /template/, inserted in the designated /file/ in
+the manner described by /insertion mode/.
+#+name: org-capture-shortcuts-table
+| Shortcut | Name          | Title     | Insertion mode | file                    | template                 |
+|----------+---------------+-----------+----------------+-------------------------+--------------------------|
+| e        | Email         |           |                |                         |                          |
+| ew       | Write Email   | Emails    | file+headline  | org-default-notes-file  | email.orgcaptmpl         |
+| j        | Journal       |           | file+datetree  | org-journal-file        | journal.orgcaptmpl       |
+| l        | Link          |           |                |                         |                          |
+| ll       | General       |           | file+headline  | org-default-notes-file  | link.orgcaptmpl          |
+| ly       | YouTube       |           | file+headline  | org-default-notes-file  | youtube.orgcaptmpl       |
+| L        | Protocol Link | Link      | file+headline  | org-default-notes-file  | protocol-link.orgcaptmpl |
+| n        | Notes         |           |                |                         |                          |
+| nc       | Conlanging    | Note      | file+headline  | org-conlanging-file     | notes.orgcaptmpl         |
+| nn       | General       |           | file+headline  | org-default-notes-file  | notes.orgcaptmpl         |
+| nN       | Novel         | Note      | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+| nq       | Quote         |           | file+headline  | org-default-notes-file  | notes-quote.orgcaptmpl   |
+| nw       | Worldbuilding | Note      | file+headline  | org-wordbuilding-file   | notes.orgcaptmpl         |
+| N        | Novel         |           |                |                         |                          |
+| Ni       | Ideas         |           | file+headline  | org-novel-notes-file    | notes.orgcaptmpl         |
+| p        | Protocol      | Link      | file+headline  | org-default-notes-file  | protocol.orgcaptmpl      |
+| r        | Resources     |           |                |                         |                          |
+| rc       | Conlanging    | Resources | file+headline  | org-conlanging-file     | resource.orgcaptmpl      |
+| re       | Emacs         |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| ri       | Informatique  |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rl       | Linguistics   |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rL       | Linux         |           | file+headline  | org-default-notes-file  | resource.orgcaptmpl      |
+| rw       | Worldbuilding | Resources | file+headline  | org-wordbuilding-file   | resource.orgcaptmpl      |
+| t        | Tasks         |           |                |                         |                          |
+| tb       | Birthday      |           | file+headline  | org-private-agenda-file | birthday.orgcaptmpl      |
+| te       | Event         |           | file+headline  | org-private-agenda-file | event.orgcaptmpl         |
+| th       | Health        |           | file+headline  | org-private-agenda-file | health.orgcaptmpl        |
+| ti       | Informatique  |           | file+headline  | org-private-agenda-file | informatique.orgcaptmpl  |
+
+All templates can be found [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/capture][in my dotfiles’ repository]].
+
+#+name: org-capture-shortcuts-gen
+#+header: :exports none :cache yes
+#+begin_src emacs-lisp :var entries=org-capture-shortcuts-table
+(mapconcat (lambda (entry)
+             (let ((key      (nth 0 entry))
+                   (name     (nth 1 entry))
+                   (title    (nth 2 entry))
+                   (ins-mode (nth 3 entry))
+                   (file     (nth 4 entry))
+                   (template (nth 5 entry)))
+               (if (string= "" ins-mode)
+                   (format "%S" `(,key ,name))
+                 (format "(\"%s\" \"%s\" entry\n  %S\n  %S)"
+                         key name
+                         `(,(intern ins-mode) ,(intern file) ,(if (string= "file+datetree" ins-mode)
+                                                                  (intern "")
+                                                                (if (string= title "")
+                                                                    name
+                                                                  title)))
+                         `(file ,(concat "~/org/capture/" template))))))
+           entries
+           "\n")
+#+end_src
+
+#+RESULTS[3de52378bf07bf60f73ab9ff4f26beafabb1ef12]: org-capture-shortcuts-gen
+#+begin_example
+("e" "Email")
+("ew" "Write Email" entry
+  (file+headline org-default-notes-file "Emails")
+  (file "~/org/capture/email.orgcaptmpl"))
+("j" "Journal" entry
+  (file+datetree org-journal-file ##)
+  (file "~/org/capture/journal.orgcaptmpl"))
+("l" "Link")
+("ll" "General" entry
+  (file+headline org-default-notes-file "General")
+  (file "~/org/capture/link.orgcaptmpl"))
+("ly" "YouTube" entry
+  (file+headline org-default-notes-file "YouTube")
+  (file "~/org/capture/youtube.orgcaptmpl"))
+("L" "Protocol Link" entry
+  (file+headline org-default-notes-file "Link")
+  (file "~/org/capture/protocol-link.orgcaptmpl"))
+("n" "Notes")
+("nc" "Conlanging" entry
+  (file+headline org-conlanging-file "Note")
+  (file "~/org/capture/notes.orgcaptmpl"))
+("nn" "General" entry
+  (file+headline org-default-notes-file "General")
+  (file "~/org/capture/notes.orgcaptmpl"))
+("nN" "Novel" entry
+  (file+headline org-novel-notes-file "Note")
+  (file "~/org/capture/notes.orgcaptmpl"))
+("nq" "Quote" entry
+  (file+headline org-default-notes-file "Quote")
+  (file "~/org/capture/notes-quote.orgcaptmpl"))
+("nw" "Worldbuilding" entry
+  (file+headline org-wordbuilding-file "Note")
+  (file "~/org/capture/notes.orgcaptmpl"))
+("N" "Novel")
+("Ni" "Ideas" entry
+  (file+headline org-novel-notes-file "Ideas")
+  (file "~/org/capture/notes.orgcaptmpl"))
+("p" "Protocol" entry
+  (file+headline org-default-notes-file "Link")
+  (file "~/org/capture/protocol.orgcaptmpl"))
+("r" "Resources")
+("rc" "Conlanging" entry
+  (file+headline org-conlanging-file "Resources")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("re" "Emacs" entry
+  (file+headline org-default-notes-file "Emacs")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("ri" "Informatique" entry
+  (file+headline org-default-notes-file "Informatique")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("rl" "Linguistics" entry
+  (file+headline org-default-notes-file "Linguistics")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("rL" "Linux" entry
+  (file+headline org-default-notes-file "Linux")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("rw" "Worldbuilding" entry
+  (file+headline org-wordbuilding-file "Resources")
+  (file "~/org/capture/resource.orgcaptmpl"))
+("t" "Tasks")
+("tb" "Birthday" entry
+  (file+headline org-private-agenda-file "Birthday")
+  (file "~/org/capture/birthday.orgcaptmpl"))
+("te" "Event" entry
+  (file+headline org-private-agenda-file "Event")
+  (file "~/org/capture/event.orgcaptmpl"))
+("th" "Health" entry
+  (file+headline org-private-agenda-file "Health")
+  (file "~/org/capture/health.orgcaptmpl"))
+("ti" "Informatique" entry
+  (file+headline org-private-agenda-file "Informatique")
+  (file "~/org/capture/informatique.orgcaptmpl"))
+#+end_example
+
+The capture templates are set like so:
+#+name: org-capture-templates
+#+begin_src emacs-lisp :tangle no :results silent
+(setq org-capture-templates
+      '(
+        <<org-capture-shortcuts-gen()>>))
 #+end_src
 
 *** Exporters
