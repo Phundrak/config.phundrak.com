@@ -3754,7 +3754,7 @@ extended however we like!
   (setq org-hide-leading-stars             nil
         org-hide-macro-markers             t
         org-ellipsis                       " ⤵"
-        org-image-actual-width             550
+        org-image-actual-width             600
         org-redisplay-inline-images        t
         org-display-inline-images          t
         org-startup-with-inline-images     "inlineimages"
