@@ -2498,7 +2498,6 @@ excluded files.
 #+begin_src emacs-lisp
 (use-package recentf
   :straight (:build t :type built-in)
-  :defer t
   :custom ((recentf-max-saved-items 200))
   :init
   (add-to-list 'recentf-exclude (rx (* any)
