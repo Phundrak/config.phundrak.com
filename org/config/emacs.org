@@ -3922,10 +3922,7 @@ exporter I use afterwards. Its installation is pretty simple:
 #+begin_src emacs-lisp
 (use-package ob-latex-as-png
   :after org
-  :straight (:build t)
-  :defer t
-  :init
-  (add-to-list 'org-babel-load-languages '(latex-as-png . t)))
+  :straight (:build t))
 #+end_src
 
 #+begin_src emacs-lisp
