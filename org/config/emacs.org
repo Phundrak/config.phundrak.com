@@ -386,10 +386,12 @@ don’t. I prefer [[https://github.com/microsoft/cascadia-code][Cascadia Code]],
 (defvar phundrak/default-font-name "Cascadia Code"
   "Default font.")
 
-(when (find-font (font-spec :name phundrak/default-font-name))
-  (set-face-attribute 'default nil
-                      :font phundrak/default-font-name
-                      :height phundrak/default-font-size))
+(add-hook 'server-after-make-frame-hook
+          (lambda ()
+            (when (find-font (font-spec :name phundrak/default-font-name))
+              (set-face-attribute 'default nil
+                                  :font phundrak/default-font-name
+                                  :height phundrak/default-font-size))))
 #+end_src
 
 *** Frame Title
