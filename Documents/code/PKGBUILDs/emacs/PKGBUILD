@@ -44,9 +44,9 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
 GTK2=             # GTK2 support. Why would you?
 NOCAIRO=          # Disable here.
-XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
+XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
-DOCS_PDF="YES"    # Generate and install pdf documentation.
+DOCS_PDF=         # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
                   # ImageMagick, like flash, won't die...
                   # -->>If you just *believe* you need ImageMagick, you don't.<<--
@@ -59,7 +59,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.153181
+pkgver=28.0.90.151075
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -68,14 +68,15 @@ license=('GPL3')
 depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
 depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
 makedepends=('git')
-provides=( 'emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs29-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-conflicts=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs29-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-replaces=( 'emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs29-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+provides=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+conflicts=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+replaces=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
 #source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 # If Savannah fails for reasons, use Github's mirror
-source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
-sha512sums=('SKIP')
-        # "https://raw.githubusercontent.com/TheVaffel/emacs/master/emacs_background_transparency.patch")
+source=("emacs-git::git://github.com/emacs-mirror/emacs.git#branch=emacs-28"
+        "https://raw.githubusercontent.com/TheVaffel/emacs/master/emacs_background_transparency.patch")
+sha512sums=('SKIP'
+            'd45043e6925358a41fbe42457de3233cd346a7e6133704426240a0c987587328ae08719413188b11db498f27794ee55662c20e8c4b58311bb806ad71e4798574')
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 ################################################################################
 
@@ -185,8 +186,8 @@ pkgver() {
 # Doing so, breaks incremental compilation.
 prepare() {
   cd "$srcdir/emacs-git"
-  # git apply --check "../../emacs_background_transparency.patch"
-  # git apply "../../emacs_background_transparency.patch"
+  git apply --check "../../emacs_background_transparency.patch"
+  git apply "../../emacs_background_transparency.patch"
   [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
 }
 
