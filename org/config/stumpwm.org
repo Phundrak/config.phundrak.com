@@ -198,11 +198,11 @@ it:
 
 Another thing I want to set is how focus is linked to my mouse: only
 on click. I /HATE/ it when focus follows my mouse like some damn dog
-after its ball. Also, the meta key will be used to move floating
+after its ball. Also, the super key will be used to move floating
 windows.
 #+begin_src lisp
 (setf *mouse-focus-policy*    :click
-      ,*float-window-modifier* :META)
+      ,*float-window-modifier* :SUPER)
 #+end_src
 
 Next, some modules will be loaded from the ~stumpwm-contrib~ package
