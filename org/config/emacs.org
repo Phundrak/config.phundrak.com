@@ -7026,6 +7026,26 @@ altogether my computer. In this case, ~secret-mode~ comes in handy.
                          :repo "bkaestner/secret-mode.el"))
 #+end_src
 
+*** Solaire: Incandescent Emacs
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Solaire-Incandescent-Emacs-ah27z1q0obj0
+:END:
+A common issue when you have a lot of windows opened in Emacs is
+sometimes there’s just too much. Is the first window source code? Is
+the other one just an open email? Oh, let’s not forget the ~*Messages*~
+buffer open next to another source buffer.
+
+Solaire-mode applies a subtle but useful tweak to your current color
+scheme: the background of programming buffers is slightly lighter than
+the background of other buffers. (Or is it other buffers that have a
+slightly darker background? I’m not sure.)
+#+begin_src emacs-lisp
+(use-package solaire-mode
+  :defer t
+  :straight (:build t)
+  :init (solaire-global-mode +1))
+#+end_src
+
 *** Theme
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
