@@ -3735,8 +3735,6 @@ enhances a couple of built-in functions from Emacs, namely:
 :CUSTOM_ID: Packages-Configuration-LaTeX-qfu4g180gbj0
 :END:
 #+begin_src emacs-lisp :noweb yes
-(require 'auctex)
-
 (use-package auctex
   :defer t
   :straight (:build t)
