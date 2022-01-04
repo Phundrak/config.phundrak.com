@@ -16,13 +16,26 @@
 :END:
 After a couple of years using Spacemacs and a failed attempt at
 switching to DoomEmacs, I’m finally switching back to a vanilla
-configuration! Be aware though this document is still very much a work
-in progress document, lots of comments on existing configuration are
-missing, and lots of functionalities are still not implemented. I’m
-still in the process of porting my [[file:spacemacs.org][Spacemacs]] configuration over here.
+configuration! Why? Because I got tired of the framework getting in my
+way when I wanted to do stuff. I’m sure this is more applicable to
+Spacemacs than DoomEmacs since the latter has nice macros written to
+easily add new packages and configure them, such as ~package!~, ~after!~,
+and others. But ultimately, I wanted to have a system I designed
+entirely, with the keybinds I want, the packages I want.
+
+Aso, why Emacs? You know this famous quote:
+#+begin_quote
+Emacs is a great operating system, it just lacks a good text editor.
+#+end_quote
+
+It’s actually pretty true in my opinion. Emacs is basically a Lisp
+machine with a default text editor, programmed with EmacsLisp, a
+general-purpose programming language. Therefore, if you want to do
+something in Emacs, with enough Elisp you can do it --- if it’s not in
+Emacs already, that is.
 
 #+attr_html: :alt Dammit Emacs… :loading lazy
-#+caption: XKCD n°378
+#+caption: [[https://xkcd.com/378/][XKCD n°378]]: Real Programmers
 [[file:./img/real_programmers.png]]
 
 * Basic configuration
