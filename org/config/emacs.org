@@ -3161,6 +3161,7 @@ the git repository.
   :straight (eshell-info-banner :build t
                                 :type git
                                 :host github
+                                :protocol ssh
                                 :repo "phundrak/eshell-info-banner.el")
   :hook (eshell-banner-load . eshell-info-banner-update-banner)
   :config
