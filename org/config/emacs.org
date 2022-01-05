@@ -6936,9 +6936,6 @@ declare some symbols for the Lisp languages.
 #+begin_src emacs-lisp
 (setq-default lisp-prettify-symbols-alist '(("lambda"    . ?λ)
                                             ("mapc"      . ?↦)
-                                            ("and"       . ?∧)
-                                            ("or"        . ?∨)
-                                            ("xor"       . ?⊻)
                                             ("defun"     . ?𝑓)
                                             ("defvar"    . ?𝑣)
                                             ("defcustom" . ?𝑐)
