@@ -5978,7 +5978,8 @@ or some I write myself.
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :defer t
-  :mode ("{{.\\(pum\\|puml\\)\\'" . plantuml-mode)
+  :straight (:build t)
+  :mode ("\\.\\(pum\\|puml\\)\\'" . plantuml-mode)
   :after ob
   :init
   (add-to-list 'org-babel-load-languages '(plantuml . t))
