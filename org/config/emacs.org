@@ -729,11 +729,11 @@ confusion between the two of them.
 :CUSTOM_ID: Package-Management-Straightry3lel6184j0
 :END:
 For my package management, I prefer to use ~straight~ ([[https://github.com/raxod502/straight.el][Github]]). This is
-due to its capacity of integrating nicely with ~use-package~, which is
-also supported by ~general~ which I use for my keybindings (see below),
-but also because with it I can specify where to retrieve packages that
-are not on MELPA or ELPA but on Github and other online Git
-repositories too.
+due to its capacity of integrating nicely with ~use-package~, which also
+supports ~general~ which I use for my keybindings (see below), but also
+because with it I can specify where to retrieve packages that are not
+on MELPA or ELPA but on Github and other online Git repositories too.
+First, let’s bootstrap straight.
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
 (defvar comp-deferred-compilation-deny-list ()) ; workaround, otherwise straight shits itself
@@ -748,16 +748,45 @@ repositories too.
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+#+end_src
 
+Now, we can refresh our package list in order to be able to install
+stuff.
+#+begin_src emacs-lisp
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
-;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+#+end_src
 
-(require 'use-package)
+From time to time, I fork some packages either because I’m trying to
+implement something new in said package, or because the package is
+unmaintained and I want to continue developing it a bit more. Straight
+provides a nice feature for using forks of a package with its ~:fork~
+option. If set to ~t~, then straight will attempt to retrieve the
+package with the same name but with a different username on the same
+host. This username is retrieved through the following variable:
+#+begin_src emacs-lisp
+(setq straight-host-usernames
+      '((github . "Phundrak")
+        (gitlab . "Phundrak")))
+#+end_src
+
+The huge advantage of straight is it clones through git the packages
+it installs. This means development can be done directly on the
+downloaded package. However, Forge (a Magit extension for interacting
+with websites such as Github, Gitlab, and such) interacts by default
+with the forge described by the ~origin~ remote, which isn’t necessarily
+the one I want Forge to interact with by default. Therefore, all
+default remotes are named ~straight~ so it won’t collide with my regular
+development flow.
+#+begin_src emacs-lisp
+(setq straight-vc-git-default-remote-name "straight")
+#+end_src
+
+We finally come to the ~use-package~ installation. This is done like so:
+#+begin_src emacs-lisp
+(straight-use-package '(use-package :build t))
 (setq use-package-always-ensure t)
 #+end_src
 
