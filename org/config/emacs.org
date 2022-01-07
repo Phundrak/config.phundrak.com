@@ -2441,10 +2441,30 @@ doing and what Git is doing! In short, I absolutely love it!
 [[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
 display in the Magit buffer a list of TODOs found in the current
 project to remind you of what to do next.
+
+But first, let’s setup our todo keywords with ~hl-todo~. A good few todo
+keywords are already defined in the ~hl-todo-keyword-faces~ variable.
+Why not use them? ~hl-todo-mode~ enables fontlock highlight of these
+keywords in a buffer. Let’s enable this mode globally.
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :defer t
+  :straight (:build t)
+  :init (global-hl-todo-mode 1)
+  :general
+  (phundrak/leader-key
+    :packages '(hl-todo)
+    :infix "c"
+    ""  '(:ignore t :which-key "todos")
+    "n" #'hl-todo-next
+    "p" #'hl-todo-previous))
+#+end_src
+
+We can now configure properly ~magit-todos~.
 #+begin_src emacs-lisp
 (use-package magit-todos
   :straight (:build t)
-  :after magit
+  :after (magit hl-todo)
   :config
   (setq magit-todos-ignore-case t))
 #+end_src
