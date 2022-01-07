@@ -2557,7 +2557,12 @@ excluded files.
                         :type git
                         :host github
                         :repo "tecosaur/screenshot")
-  :config (load-file (locate-library "screenshot.el")))
+  :config (load-file (locate-library "screenshot.el"))
+  :general
+  (phundrak/leader-key
+    :infix "a"
+    :packages '(screenshot)
+    "S" #'screenshot))
 #+end_src
 
 *** Shells
