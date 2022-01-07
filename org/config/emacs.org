@@ -7158,10 +7158,26 @@ configuration to make it bépo-compatible.
   :straight t
   :config
   (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
+  (defun my/avy-goto-url ()
+    "Jump to url with avy."
+    (interactive)
+    (avy-jump "https?://"))
+  (defun my/avy-open-url ()
+    "Open url selected with avy."
+    (interactive)
+    (my/avy-goto-url)
+    (browse-url-at-point))
   :general
   (phundrak/evil
     :packages 'avy
-    "gl" #'avy-goto-line))
+    "gl" #'avy-goto-line)
+  (phundrak/leader-key
+    :packages 'avy
+    :infix "j"
+    "j" #'evil-avy-goto-char-timer
+    "l" #'evil-avy-goto-line
+    "u" #'my/avy-goto-url
+    "U" #'my/avy-open-url))
 #+end_src
 
 *** Calc
