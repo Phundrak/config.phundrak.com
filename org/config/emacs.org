@@ -2688,6 +2688,19 @@ bit unfortunate Chrome’s name stuck in the package’s name though.
   (atomic-chrome-start-server))
 #+end_src
 
+*** Editorconfig
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Editing-Editorconfig-txn4dtx0rbj0
+:END:
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :defer t
+  :straight (:build t)
+  :diminish editorconfig-mode
+  :config
+  (editorconfig-mode t))
+#+end_src
+
 *** Evil Nerd Commenter
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Evil-Nerd-Commenterd2w1fl6184j0
