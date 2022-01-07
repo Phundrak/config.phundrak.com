@@ -259,28 +259,6 @@ files by default.
       auto-save-default t)
 #+end_src
 
-I’m also interested in keeping track of how fast Emacs loads on my
-computer, as well as for how long I keep it open. The values are
-stored in a ~.csv~ with three columns:
-- The date when Emacs was closed
-- Emacs’ init time
-- Emacs’ uptime
-#+begin_src emacs-lisp
-(defvar my/emacs-log-file-time (expand-file-name "emacs-time.csv" user-emacs-directory))
-
-(defun my/write-emacs-loadtime-and-uptime ()
-  (with-temp-buffer
-    (find-file my/emacs-log-file-time)
-    (goto-char (point-max))
-    (insert (format "%s,%s,%s\n"
-                    (string-trim (shell-command-to-string "date +%F-%H-%M-%S"))
-                    (emacs-init-time "%f")
-                    (emacs-uptime "%dd %hh %mm %ss")))
-    (save-buffer)))
-
-(add-to-list 'kill-emacs-hook #'my/write-emacs-loadtime-and-uptime)
-#+end_src
-
 #+begin_src emacs-lisp
 (setq window-combination-resize t) ; take new window space from all other windows
 #+end_src
