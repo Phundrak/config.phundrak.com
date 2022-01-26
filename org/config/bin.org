@@ -1934,7 +1934,7 @@ set-pape $PAPE
 :CUSTOM_ID: Wallpaper-utilities-Select-wallpaper-42f477a9
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/select-pape
 :END:
-This script is base on what ~sxiv~ can do as an image viewer as well as
+This script is based on what ~sxiv~ can do as an image viewer as well as
 xwallpaper.
 #+BEGIN_SRC sh
 PAPE=$(sxiv -orbft ~/Pictures/Wallpapers/*)
