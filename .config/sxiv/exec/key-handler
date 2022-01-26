@@ -11,6 +11,11 @@ switch "$argv[1]"
         rm $FILES
     case "g"
         gimp $FILES
+    case "j"
+        for f in $FILES
+            set basename (echo $f | sed 's/\.[^.]*$//')
+            convert $f $basename".jpg"
+        end
     case "r"
         echo ROTATE
         echo $FILES
