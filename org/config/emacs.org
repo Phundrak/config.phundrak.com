@@ -1463,6 +1463,9 @@ configuration for the ~mu4e~ package itself.
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :config
+  (with-eval-after-load "mm-decode"
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text-richtext"))
 
   (add-hook 'mu4e-view-mode-hook (lambda () (setq truncate-lines nil)))
   (add-hook 'mu4e-headers-mode-hook (lambda () (setq truncate-lines t)))
