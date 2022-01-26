@@ -291,7 +291,8 @@ my own executables, and some more.
 | $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
 | $HOME/go/bin              | Go binaries and executables          |
 | $HOME/.cargo/bin          | Rust binaries and executables        |
-| $HOME/.gem/ruby/2.6.0/bin | Ruby binaries and executables        |
+| $HOME/.gem/ruby/3.0.0/bin | Ruby 3.0 binaries and executables    |
+| $HOME/.gem/ruby/2.6.0/bin | Ruby 2.6 binaries and executables    |
 | $HOME/.cabal/bin          | Haskel binaries                      |
 
 #+NAME: generate-extra-paths
@@ -300,11 +301,12 @@ my own executables, and some more.
            paths " \\\n")
 #+END_SRC
 
-#+RESULTS[3fd24377f29513d4c7edcd9621d0462665efb403]: generate-extra-paths
+#+RESULTS[78b18fae502696c41836897c6fc3fd3dd82c98bd]: generate-extra-paths
 : $HOME/.pub-cache/bin \
 : $HOME/.local/bin \
 : $HOME/go/bin \
 : $HOME/.cargo/bin \
+: $HOME/.gem/ruby/3.0.0/bin \
 : $HOME/.gem/ruby/2.6.0/bin \
 : $HOME/.cabal/bin
 
