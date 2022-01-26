@@ -6836,6 +6836,112 @@ Tide enabled interactivity with Typescript.
     "roi" #'tide-organize-imports))
 #+end_src
 
+**** Zig
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Zig-ud8a6q504cj0
+:END:
+[[https://ziglang.org/][Zig]] is to C kind of what Rust is to C++: a modern replacement without
+sacrificing performance. It is much safer than C while providing
+interop with it. Plus, its [[https://ziglang.org/documentation/master/std/][standard library]] is pretty complete.
+
+First, here is its major mode.
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :defer t
+  :straight (:build t)
+  :after flycheck
+  :hook (zig-mode . lsp-deferred)
+  :config
+  ;; This is from DoomEmacs
+  (flycheck-define-checker zig
+    "A zig syntax checker using the zig-fmt interpreter."
+    :command ("zig" "fmt" (eval (buffer-file-name)))
+    :error-patterns
+    ((error line-start (file-name) ":" line ":" column ": error: " (mesage) line-end))
+    :modes zig-mode)
+  (add-to-list 'flycheck-checkers 'zig)
+  :general
+  (phundrak/major-leader-key
+    :packages 'zig-mode
+    :keymaps 'zig-mode-map
+    "c" #'zig-compile
+    "f" #'zig-format-buffer
+    "r" #'zig-run
+    "t" #'zig-test-buffer))
+#+end_src
+
+For LSP to work, we need ~zls~ to be installed.
+#+begin_src fish :results raw :wrap "src text" :exports code
+paru --skipreview --noconfirm -S zls-bin 2>&1
+#+end_src
+
+#+RESULTS:
+#+begin_src text
+:: Resolving dependencies...
+:: Calculating conflicts...
+:: Calculating inner conflicts...
+
+Aur (1) zls-bin-0.9.0-2
+
+:: Proceed with installation? [Y/n]:
+
+:: Downloading PKGBUILDs...
+ PKGBUILDs up to date
+fetching devel info...
+==> Making package: zls-bin 0.9.0-2 (2022-01-17T00:43:50 CET)
+==> Retrieving sources...
+  -> Found zls-LICENSE.txt
+  -> Found zls-bin-0.9.0.tar.gz
+==> Validating source files with sha256sums...
+    zls-LICENSE.txt ... Passed
+==> Validating source_x86_64 files with sha256sums...
+    zls-bin-0.9.0.tar.gz ... Passed
+==> Making package: zls-bin 0.9.0-2 (2022-01-17T00:43:51 CET)
+==> Checking runtime dependencies...
+==> Checking buildtime dependencies...
+==> Retrieving sources...
+  -> Found zls-LICENSE.txt
+  -> Found zls-bin-0.9.0.tar.gz
+==> Validating source files with sha256sums...
+    zls-LICENSE.txt ... Passed
+==> Validating source_x86_64 files with sha256sums...
+    zls-bin-0.9.0.tar.gz ... Passed
+==> Removing existing $srcdir/ directory...
+==> Extracting sources...
+  -> Extracting zls-bin-0.9.0.tar.gz with bsdtar
+==> Sources are ready.
+zls-bin-0.9.0-2: parsing pkg list...
+:: zls-bin-0.9.0-2 is up to date -- skipping build
+warning: zls-bin-0.9.0-2 is up to date -- reinstalling
+loading packages...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (1)  Old Version  New Version  Net Change
+
+zls-bin      0.9.0-2      0.9.0-2        0,00 MiB
+
+Total Installed Size:  1,16 MiB
+Net Upgrade Size:      0,00 MiB
+
+:: Proceed with installation? [Y/n]
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+checking available disk space...
+:: Processing package changes...
+reinstalling zls-bin...
+Consider re-running 'zls config' to reconfigure the language server
+
+Some options may have changed when upgrading from 0.9.0-2 -> 0.9.0-2
+
+Make sure to backup your old configuration!
+:: Running post-transaction hooks...
+(1/2) Arming ConditionNeedsUpdate...
+(2/2) Refreshing PackageKit...
+#+end_src
+
 ** Visual Configuration
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Visual-Configurationxr86fl6184j0
