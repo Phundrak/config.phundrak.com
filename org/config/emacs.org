@@ -7568,6 +7568,8 @@ My buffer-related keybinds are all prefixed by ~b~.
 "e." '(hydra-flycheck/body :wk "hydra")
 "el" #'counsel-flycheck
 "ee" '(:keymap flycheck-command-map :wk "flycheck")
+"ef" '(:keymap flyspell-mode-map :wk "flyspell")
+"eF" #'flyspell-hydra/body
 #+end_src
 
 ** Files
