@@ -1517,6 +1517,12 @@ configuration for the ~mu4e~ package itself.
   (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines t 'guess)))
   (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
 
+  ;; writeroom for plaintext emails
+  (add-hook 'mu4e-view-mode-hook
+            (lambda ()
+              (unless (mu4e~message-use-html-p (mu4e-message-at-point) nil)
+                (writeroom-mode))))
+
   (setq mu4e-change-filenames-when-moving t
         mu4e-update-interval              60
         mu4e-compose-format-flowed        t
