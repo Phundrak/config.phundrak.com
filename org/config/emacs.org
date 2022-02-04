@@ -2363,7 +2363,7 @@ dark mode for PDFs.
 (use-package pdf-tools
   :defer t
   :magic ("%PDF" . pdf-view-mode)
-  :straight (:build t :post-build (pdf-tools-install-noverify))
+  :straight (:build t)
   :mode (("\\.pdf\\'" . pdf-view-mode))
   :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
   :general
