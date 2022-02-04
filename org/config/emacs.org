@@ -307,7 +307,7 @@ frame.
 #+begin_src emacs-lisp
 (add-hook 'server-after-make-frame-hook (lambda ()
                                           (set-frame-parameter (selected-frame)
-                                                               'alpha-background 0.9)))
+                                                               'alpha-background 0.7)))
 #+end_src
 
 *** Modeline Modules
