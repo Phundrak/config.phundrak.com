@@ -1312,11 +1312,35 @@ database is to be stored.
 (use-package elfeed
   :defer t
   :straight (:build t)
+  :config
+  <<elfeed-open-youtube-with-mpv>>
   :custom
   ((elfeed-search-filter "@6-months-ago")
    (elfeed-db-directory  (expand-file-name ".elfeed-db"
                                            user-emacs-directory))))
 #+end_src
+
+<<elfeed-mpv>>I don’t want YouTube videos to be open with my web
+browser when I invoke ~elfeed-show-visit~, so I’ll advise this function
+so I can modify the behavior of said function.
+#+name: elfeed-open-youtube-with-mpv
+#+begin_src emacs-lisp
+(defun my/elfeed-filter-youtube-videos (orig-fun &rest args)
+  "Open with mpv the video leading to PATH"
+  (let ((link (elfeed-entry-link elfeed-show-entry)))
+    (when link
+      (if (string-match-p ".*youtube\.com.*watch.*" link)
+          ;; This is a YouTube video, open it with mpv
+          (async-shell-command (format "mpv \"%s\"" link) (current-buffer) (current-buffer))
+        (apply orig-fun args)))))
+
+(advice-add 'elfeed-show-visit :around #'my/elfeed-filter-youtube-videos)
+#+end_src
+
+A future improvement to be made is to let the user chose the
+resolution of the video before it is launched. I may not always have
+the best internet connection, and viewing 4K videos on a 1080p display
+is not something very useful.
 
 Elfeed-goodies is a package which enhances the Elfeed experience.
 Aside from running its setup command as soon as possible, I also set
