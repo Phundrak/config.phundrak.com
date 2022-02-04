@@ -5,7 +5,7 @@
 #+html_head: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
 #+html_head: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :tangle ~/.emacs.d/init.el
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/init.el
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 #+include: img/emacs.svg export html
@@ -45,7 +45,7 @@ Emacs already, that is.
 ** Early Init
 :PROPERTIES:
 :CUSTOM_ID: Basic-configuration-Early-Inityj7iel6184j0
-:header-args:emacs-lisp: :tangle ~/.emacs.d/early-init.el :mkdirp yes
+:header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el :mkdirp yes
 :header-args:emacs-lisp+: :exports code :results silent :lexical t
 :END:
 The early init file is the file loaded before anything else in
