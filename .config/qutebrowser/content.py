@@ -81,7 +81,7 @@ c.content.blocking.method = 'auto'
 # pattern instead.
 # Type: List of UrlPattern
 c.content.blocking.whitelist = [
-    'https://matomo.phundrak.com/*',
+    "https://*.phundrak.com/*",
 ]
 
 # Enable support for the HTML 5 web application cache feature. An
