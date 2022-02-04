@@ -1653,7 +1653,7 @@ with Emacs’ buffers.
 |----------+-------------------------|
 | ~b~        | ~windowlist~              |
 | ~d~        | ~delete-window~           |
-| ~D~        | ~window-window-and-frame~ |
+| ~D~        | ~delete-window-and-frame~ |
 | ~k~        | ~kill-window~             |
 | ~n~        | ~next~                    |
 | ~o~        | ~other-window~            |
