@@ -182,7 +182,9 @@ c.content.geolocation = 'ask'
 # Value to send in the `Accept-Language` header. Note that the value
 # read from JavaScript is always the global value.
 # Type: String
-c.content.headers.accept_language = 'en-US,en-UK,en-GB,en;q=0.9, fr-Fr,fr;q=0.8, ja,es;q=0.5, *;q=0.2'
+c.content.headers.accept_language = (
+    "en-US,en-UK,en-GB,en;q=0.9, fr-Fr,fr;q=0.8, ja,es;q=0.5, *;q=0.2"
+)
 
 # Custom headers for qutebrowser HTTP requests.
 # Type: Dict
@@ -259,7 +261,12 @@ c.content.javascript.enabled = True
 # following levels are valid: `none`, `debug`, `info`, `warning`,
 # `error`.
 # Type: Dict
-c.content.javascript.log = {'unknown': 'debug', 'info': 'debug', 'warning': 'debug', 'error': 'debug'}
+c.content.javascript.log = {
+    "unknown": "debug",
+    "info": "debug",
+    "warning": "debug",
+    "error": "debug",
+}
 
 # Use the standard JavaScript modal dialog for `alert()` and
 # `confirm()`.
