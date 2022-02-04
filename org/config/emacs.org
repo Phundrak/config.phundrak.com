@@ -6058,6 +6058,16 @@ config]]), therefore I need a mode for it.
   :defer t)
 #+end_src
 
+**** SSH Config files
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-SSH-Config-files-wt9j1c909cj0
+:END:
+#+begin_src emacs-lisp
+(use-package ssh-config-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
 **** Toml
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Toml-txu8xvk0k4j0
