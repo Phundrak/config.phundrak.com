@@ -271,7 +271,7 @@ StumpWM so I can switch from the main font to Siji for the caracter
 contained between them: U+E072 (an email icon).
 #+begin_src sh
 UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
-printf "^f2^f0%s" $UNREAD
+printf "^f2^f0%s" "$UNREAD"
 #+end_src
 
 ** Pinfo                                                          :noexport:
@@ -1161,23 +1161,23 @@ rofi -dmenu $argv
 
 ** Emoji picker
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
 :CUSTOM_ID: Emoji_picker-a1c374ec
 :END:
 The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]]
 to provide a small, local search for emojis. Once the emoji is selected, it is
 copied to the clipboard using =xclipboard=.
-#+BEGIN_SRC fish
+#+BEGIN_SRC bash
 grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
-awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+    awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
 #+END_SRC
 
 Also, let’s send a notification telling the user the emoji has been copied!
-#+BEGIN_SRC fish
-set emoji (xclip -o -selection clipboard | tr -d '\n')
-test -z "$emoji" && notify-send "No emoji copied" -u low && exit
-set -a emoji "copied to clipboard"
-notify-send -u low $emoji
+#+BEGIN_SRC bash
+EMOJI=$(xclip -o -selection clipboard | tr -d '\n')
+test -z "$EMOJI" && notify-send "No emoji copied -u low && exit"
+EMOJI="$EMOJI copied to clipboard"
+notify-send -u low "$EMOJI"
 #+END_SRC
 
 It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
@@ -1907,9 +1907,12 @@ or failure of the download.
 #+BEGIN_SRC bash
 if [ -n "$URL" ]; then
     notify-send -u normal "YTDL" "Starting downloading\n$URL"
-    ytdl "$URL" \
-        && notify-send -u normal "YTDL" "Finished downloading!" \
-            || notify-send -u critical "YTDL" "Failed downloading\n$URL"
+    if [[ $(ytdl "$URL") ]]
+    then
+        notify-send -u normal "YTDL" "Finished downloading!"
+    else
+        notify-send -u critical "YTDL" "Failed downloading\n$URL"
+    fi
 fi
 #+END_SRC
 
@@ -1925,8 +1928,8 @@ fi
 This little tool sets a random wallpaper using xwallpaper.
 #+BEGIN_SRC sh
 PAPESDIR=$HOME/Pictures/Wallpapers
-PAPE=$(find $PAPESDIR -type f | sort -R | tail -1)
-set-pape $PAPE
+PAPE=$(find "$PAPESDIR" -type f | sort -R | tail -1)
+set-pape "$PAPE"
 #+END_SRC
 
 ** Select wallpaper
@@ -1938,12 +1941,12 @@ This script is based on what ~sxiv~ can do as an image viewer as well as
 xwallpaper.
 #+BEGIN_SRC sh
 PAPE=$(sxiv -orbft ~/Pictures/Wallpapers/*)
-set-pape $PAPE
+set-pape "$PAPE"
 #+END_SRC
 
 ** Set a wallpaper
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/set-pape
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/set-pape
 :CUSTOM_ID: Wallpaper-utilities-Set-a-wallpaper-27eda9e6
 :END:
 This utility is not meant to be called by the user directly, but rather by
@@ -1952,11 +1955,11 @@ provided wallpaper exists and if it is an image. If both requirements are met,
 the path to this image is then stored in ~$XDG_CACHE_HOME/wallpaper~, or if this
 variable is empty in ~$HOME/.cache/wallpaper~.
 #+BEGIN_SRC sh
-CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo $XDG_CACHE_HOME/wallpaper || echo $HOME/.cache/wallpaper)
+CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo "$XDG_CACHE_HOME/wallpaper" || echo "$HOME/.cache/wallpaper")
 [[ -f $1 ]] &&                              \
-    grep image <(file -b --mime-type $1) && \
-    echo $1 > $CACHEFILE                    \
-    && xwallpaper --zoom $1
+    grep image <(file -b --mime-type "$1") && \
+    echo "$1" > "$CACHEFILE"                    \
+    && xwallpaper --zoom "$1"
 #+END_SRC
 
 * Weather
