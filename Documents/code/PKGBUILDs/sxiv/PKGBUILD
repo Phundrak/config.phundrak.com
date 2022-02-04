@@ -5,8 +5,8 @@
 
 _name=sxiv
 pkgname="${_name}-bepo-git"
-pkgver=2020.01.16
-pkgrel=2
+pkgver=2021.09.23
+pkgrel=1
 pkgdesc="Simple (or small or suckless) X Image Viewer"
 arch=('i686' 'x86_64')
 url="https://github.com/muennich/${_name}"
