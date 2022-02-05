@@ -1367,7 +1367,9 @@ database is to be stored.
 
 I don’t want YouTube videos to be open with my web browser when I
 invoke ~elfeed-show-visit~, so I’ll advise this function so I can modify
-the behavior of said function.
+the behavior of said function. Oh, and I already made [[#Packages-Configuration-Misc-Ytplay-wxm9weq0r4j0][a neat package]]
+for playing YouTube videos and friends through [[https://ytdl-org.github.io/youtube-dl/][youtube-dl]] or its
+superior fork [[https://github.com/yt-dlp/yt-dlp][yt-dlp]] in mpv.
 #+name: elfeed-open-youtube-with-mpv
 #+begin_src emacs-lisp
 (defun my/elfeed-filter-youtube-videos (orig-fun &rest args)
@@ -1376,7 +1378,9 @@ the behavior of said function.
     (when link
       (if (string-match-p ".*youtube\.com.*watch.*" link)
           ;; This is a YouTube video, open it with mpv
-          (async-shell-command (format "mpv \"%s\"" link) (current-buffer) (current-buffer))
+          (progn
+            (require 'ytplay)
+            (ytplay link))
         (apply orig-fun args)))))
 
 (advice-add 'elfeed-show-visit :around #'my/elfeed-filter-youtube-videos)
