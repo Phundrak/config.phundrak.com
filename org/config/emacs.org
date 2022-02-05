@@ -38,7 +38,52 @@ Emacs already, that is.
 #+caption: [[https://xkcd.com/378/][XKCD n°378]]: Real Programmers
 [[file:./img/real_programmers.png]]
 
-* Basic configuration
+* A Warning Before You Proceed
+:PROPERTIES:
+:CUSTOM_ID: A-Warning-Before-You-Proceed-mgyar9i0ucj0
+:header-args:emacs-lisp: :tangle no
+:END:
+This configuration makes heavy use of the [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] syntax. This means if
+you encounter some code that looks ~<<like-this>>~, org-mode will
+replace this snippet with another code snippet declared elsewhere in
+my configuration. If you see some code that looks ~<<like-this()>>~,
+some generating code will run and replace this piece of text with the
+text generated. A quick example:
+#+begin_src elisp
+(defun hello ()
+  <<generate-docstring()>>
+  <<print-hello>>)
+#+end_src
+
+Will instead appear as
+#+begin_src emacs-lisp :noweb yes
+(defun hello ()
+  <<generate-docstring()>>
+  <<print-hello>>)
+#+end_src
+
+This is because I have the block of code below named
+~generate-docstring~ which generates an output, which replaces its noweb
+tag. You can recognize noweb snippets generating code with the
+parenthesis. Often, such blocks aren’t visible in my HTML exports, but
+you can still see them if you open the actual org source file.
+#+name: generate-docstring
+#+begin_src emacs-lisp
+(concat "\""
+        "Print \\\"Hello World!\\\" in the minibuffer."
+        "\"")
+#+end_src
+
+On the other hand, noweb snippets without parenthesis simply replace
+the snippet with the equivalent named code block. For instance the one
+below is named ~print-hello~ and is placed as-is in the target source
+block.
+#+name: print-hello
+#+begin_src emacs-lisp
+(message "Hello World!")
+#+end_src
+
+* Basic Configuration
 :PROPERTIES:
 :CUSTOM_ID: Basic-configurationzt3iel6184j0
 :END:
@@ -1320,9 +1365,9 @@ database is to be stored.
                                            user-emacs-directory))))
 #+end_src
 
-<<elfeed-mpv>>I don’t want YouTube videos to be open with my web
-browser when I invoke ~elfeed-show-visit~, so I’ll advise this function
-so I can modify the behavior of said function.
+I don’t want YouTube videos to be open with my web browser when I
+invoke ~elfeed-show-visit~, so I’ll advise this function so I can modify
+the behavior of said function.
 #+name: elfeed-open-youtube-with-mpv
 #+begin_src emacs-lisp
 (defun my/elfeed-filter-youtube-videos (orig-fun &rest args)
