@@ -6042,7 +6042,10 @@ We then also have an autocompletion package that adds to ~company~ the
 Nginx syntax.
 #+begin_src emacs-lisp
 (use-package company-nginx
-  :straight (:build t)
+  :straight (company-nginx :build t
+                           :type git
+                           :host github
+                           :repo "emacsmirror/company-nginx")
   :defer t
   :config
   (add-hook 'nginx-mode-hook (lambda ()
