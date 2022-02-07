@@ -2901,11 +2901,13 @@ is a bit too small for me, and I prefer not to go fullscren.
 (use-package writeroom-mode
   :defer t
   :straight (:build t)
+  :init (global-writeroom-mode 1)
   :config
   (setq writeroom-width             100
         writeroom-fullscreen-effect nil
         writeroom-maximize-window   nil
-        writeroom-mode-line         t))
+        writeroom-mode-line         t
+        writeroom-major-modes       '(text-mode org-mode markdown-mode)))
 #+end_src
 
 ** Emacs built-ins
