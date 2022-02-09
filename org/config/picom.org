@@ -390,13 +390,6 @@ passing ~_NET_WM_OPACITY~ of client windows to frame windows.
 detect-client-opacity = true;
 #+END_SRC
 
-Specify refresh rate of the screen. If not specified or 0, picom will try
-detecting this with X RandR extension.
-| Default value | ~60~ |
-#+BEGIN_SRC conf
-refresh-rate = 120;
-#+END_SRC
-
 Limit picom to repaint at most once every 1 / ~refresh_rate~ second to boost
 performance. This should not be used with
 #+BEGIN_SRC text :tangle no
