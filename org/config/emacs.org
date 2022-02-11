@@ -3572,7 +3572,8 @@ mode), with the exception of ~s-RET~ which opens an eshell terminal.
              (shell-command "rofi -show drun" (current-buffer) (current-buffer))))
          :wk "drun")
   "rw" '((lambda () (interactive)
-           (with-temp-buffer "rofi -show window" (current-buffer) (current-buffer)))
+           (with-temp-buffer
+             (shell-command "rofi -show window" (current-buffer) (current-buffer))))
          :wk "windows")
   "R"  '(:ignore t :wk "restart")
   "Rr" #'exwm-reset
