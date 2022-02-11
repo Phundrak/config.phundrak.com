@@ -2907,7 +2907,7 @@ is a bit too small for me, and I prefer not to go fullscren.
         writeroom-fullscreen-effect nil
         writeroom-maximize-window   nil
         writeroom-mode-line         t
-        writeroom-major-modes       '(text-mode org-mode markdown-mode)))
+        writeroom-major-modes       '(text-mode org-mode markdown-mode nov-mode)))
 #+end_src
 
 ** Emacs built-ins
@@ -5893,6 +5893,7 @@ unfortunately.
    ("\\.mdk\\'" . markdown-mode)
    ("\\.mdx\\'" . markdown-mode))
   :hook (markdown-mode . orgtbl-mode)
+  :hook (markdown-mode . visual-line-mode)
   :general
   (phundrak/evil
     :keymaps 'markdown-mode-map
@@ -5981,7 +5982,7 @@ unfortunately.
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
-Since most of my Mardown files are related to Github, I’d like to be
+Since most of my Markdown files are related to Github, I’d like to be
 able to render Markdown through its API.
 #+begin_src emacs-lisp
 (use-package gh-md
