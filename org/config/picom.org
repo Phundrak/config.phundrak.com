@@ -131,7 +131,7 @@ shadow-ignore-shaped = ""
 :END:
 Here we can see the declaration of the corners’ radius:
 #+BEGIN_SRC conf
-corner-radius = 9.0;
+corner-radius = 10;
 #+END_SRC
 
 It is also possible to exclude some windows from getting their corners rounded.
@@ -287,7 +287,7 @@ blur: {
   strength = 7;
   background = false;
   background-frame = false;
-  background-fixed = true;
+  background-fixed = false;
 }
 #+END_SRC
 
