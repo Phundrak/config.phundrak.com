@@ -2909,7 +2909,7 @@ is a bit too small for me, and I prefer not to go fullscren.
         writeroom-fullscreen-effect nil
         writeroom-maximize-window   nil
         writeroom-mode-line         t
-        writeroom-major-modes       '(text-mode org-mode markdown-mode nov-mode)))
+        writeroom-major-modes       '(text-mode org-mode markdown-mode nov-mode Info-mode)))
 #+end_src
 
 ** Emacs built-ins
