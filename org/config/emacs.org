@@ -7473,6 +7473,27 @@ standard keybindings.
   (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
 #+end_src
 
+*** Mediawiki front-end
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Misc-Mediawiki-front-end-szfhri000dj0
+:END:
+#+begin_src emacs-lisp
+(use-package mediawiki
+  :defer t
+  :straight (:build t)
+  :config
+  (setq mediawiki-site-alist `(("WikiPhundrak"
+                                "https://wiki.phundrak.com/"
+                                "phundrak"
+                                ,(funcall
+                                  (plist-get (car (auth-source-search
+                                                   :max 1
+                                                   :host "wiki.phundrak.com"))
+                                             :secret))
+                                nil
+                                "Main Page"))))
+#+end_src
+
 *** SICP
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-SICP-96u6ukz0l4j0
