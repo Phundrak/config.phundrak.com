@@ -24,7 +24,6 @@ end
 set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 
 printf "\n# Set locale ##################################################################\n\n"
-
 for item in $mylocales
     whiptail --yesno "Set the \"$item\" locale?" 8 40
     if test $status -eq 0 -a (grep -e "#$item" /etc/locale.gen)
@@ -32,16 +31,14 @@ for item in $mylocales
     end
 end
 
-set localeconf "LANG=en_US.UTF-8
+set localeconf "LANG=en_DK.UTF-8
 LC_COLLATE=C
 LC_NAME=fr_FR.UTF-8
-LC_NUMERIC=fr_FR.UTF-8
 LC_IDENTIFICATION=fr_FR.UTF-8
 LC_TELEPHONE=fr_FR.UTF-8
 LC_MONETARY=fr_FR.UTF-8
 LC_PAPER=fr_FR.UTF-8
 LC_ADDRESS=fr_FR.UTF-8
-LC_TIME=fr_FR.UTF-8
 LC_MEASUREMENT=fr_FR.UTF-8"
 
 whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
@@ -64,34 +61,36 @@ end
 
 set PACKAGES \
 acpi acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii \
-aspell-en aspell-fr awesome awesome-terminal-fonts awesome-freedesktop-git \
-base-devel bashtop bat biber bitwarden-bin bluez-firmware bluez-utils bzip2 \
-chicken chromium clisp corrupter-git cppcheck cppreference \
-cppreference-devhelp cpupower discord-canary discount docker docker-compose \
-dockerfile-language-server-bin doxygen emacs emacs-org-mode exa exfat-utils \
-farbfeld fd ffmpegthumbnailer findutils firefox flake8 flat-remix-gtk freeglut \
-fzf gcc-libs gdb gimp gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts \
-gnuplot go go-tools golangci-lint-bin graphviz htop hugo i3lock-color \
-inetutils isync inter-font javascript-typescript-langserver js-beautify \
-jfsutils jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
-minted man-db man-pages mpc mpd mpd-rich-presence-discord-git mpv mupdf-tools \
-nano ncdu ncmpcpp nemo-fileroller nemo-preview neofetch netctl \
-network-manager-applet networkmanager networkmanager-openvpn \
-nm-connection-editor nodejs-vmd nomacs nordic-theme-git nordvpn-bin \
-noto-fonts-emoji npm ntfs-3g numlockx obs-studio openssh otf-fandol \
-otf-ipafont p7zip pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-git \
-powerline-fonts prettier pulseaudio-bluetooth python-autoflake python-epc \
-python-importmagic python-language-server python-nose python-pip python-poetry \
-python-ptvsd python-pytest qt5-imageformats qemu r raw-thumbnailer reflector \
-ripgrep rofi rsync rtv ruby-rb-fsevent ruby-sass rustup samba scrot sent \
-shadow siji-git simplescreenrecorder sshfs sxiv texlive-bibtexextra \
-texlive-fontsextra texlive-formatsextra texlive-humanities \
-texlive-langjapanese texlive-pictures texlive-pstricks texlive-publishers \
-texlive-science tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil \
-ttf-dejavu ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels \
-ttf-koruri ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine \
-typescript typescript-language-server-bin unicode-emoji unrar usbutils \
-valgrind vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
+aspell-en aspell-fr awesome awesome-terminal-fonts \
+awesome-freedesktop-git base-devel bashtop bat biber bitwarden-bin \
+bluez-firmware bluez-utils bzip2 chicken chromium clisp corrupter-git \
+cppcheck cppreference cppreference-devhelp cpupower discord-canary \
+discount docker docker-compose dockerfile-language-server-bin doxygen \
+emacs emacs-org-mode exa exfat-utils farbfeld fd ffmpegthumbnailer \
+findutils firefox flake8 flat-remix-gtk freeglut fzf gcc-libs gdb gimp \
+gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go \
+go-tools golangci-lint-bin graphviz htop hugo i3lock-color inetutils \
+isync inter-font javascript-typescript-langserver js-beautify jfsutils \
+jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
+minted man-db man-pages mpc mpd mpv mupdf-tools nano ncdu ncmpcpp \
+nemo-fileroller nemo-preview neofetch netctl network-manager-applet \
+networkmanager networkmanager-openvpn nm-connection-editor nodejs-vmd \
+nomacs nordic-theme-git nordvpn-bin noto-fonts-emoji npm ntfs-3g \
+numlockx obs-studio openssh otf-fandol otf-ipafont p7zip \
+pacman-contrib pandoc-bin pass pavucontrol pdfpc picom \
+powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
+python-epc python-importmagic python-language-server python-nose \
+python-pip python-poetry python-ptvsd python-pytest qt5-imageformats \
+qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv \
+ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
+simplescreenrecorder sshfs sxiv texlive-bibtexextra texlive-fontsextra \
+texlive-formatsextra texlive-humanities texlive-langjapanese \
+texlive-pictures texlive-pstricks texlive-publishers texlive-science \
+tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
+ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels ttf-koruri \
+ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
+typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
+vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
 x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
 xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
 yaml-language-server-bin zeal
@@ -99,12 +98,9 @@ yaml-language-server-bin zeal
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
 for pkg in $PACKAGES
-    paru -S --needed $pkg
+    paru -S --skipreview --needed $pkg
 end
 
-mkdir -p $HOME/.config/awesome
-mkdir -p $HOME/.config/awesome/theme
-mkdir -p $HOME/.config/emacs/private
 mkdir -p $HOME/.config/fish
 mkdir -p $HOME/.config/gtk-2.0
 mkdir -p $HOME/.config/gtk-3.0
@@ -113,14 +109,10 @@ mkdir -p $HOME/.config/neofetch
 mkdir -p $HOME/.config/picom
 mkdir -p $HOME/.config/yadm
 mkdir -p $HOME/.local/bin
+mkdir -p $HOME/.stumpwm.d
 mkdir -p $HOME/org/capture
 
 printf "\n# Tangling org files ##########################################################\n\n"
-printf '\n\n==== Tangling awesome.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/awesome.org")'
-
 printf '\n\n==== Tangling bin.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -141,6 +133,16 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/index.org")'
 
+printf '\n\n==== Tangling mpd.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/mpd.org")'
+
+printf '\n\n==== Tangling neofetch.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/neofetch.org")'
+
 printf '\n\n==== Tangling picom.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -151,17 +153,15 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
 
+printf '\n\n==== Tangling stumpwm.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/stumpwm.org")'
+
 printf '\n\n==== Tangling tmux.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/tmux.org")'
-
-printf "\n# Installing Spacemacs ########################################################\n\n"
-rm -rf $HOME/.config/emacs $HOME/.emacs* .spacemacs
-
-git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
-
-yadm checkout -- ~/.config/emacs/private/
 
 if test "$USER" = 'phundrak'
 
@@ -209,12 +209,10 @@ sudo systemctl enable --now nordvpnd
 
 nordvpn s protocol tcp
 
-for f in (find ~/.etc -type f)
-    set dest (echo $f | sed -n 's|^.*etc\(.*\)$|/etc\1|p')
-    sudo ln -s $f $dest
-end
+nordvpn set notify enabled
+nordvpn set ipv6 enabled
 
-sudo ln -s (which plock) /usr/bin/plock
+sudo ln -s ~/.local/bin/plock /usr/bin/plock
 
 mkdir -p ~/fromGIT
 
@@ -234,24 +232,13 @@ rustup component add rust-src
 rustup component add rls
 rustup component add clippy
 
-printf "\n# Installing Python packages ##################################################\n\n"
-pip install --user python-language-server[all] pyls-isort pyls-mypy pyls-black
-
-printf "\n# Setting up Chicken ##########################################################\n\n"
-chicken-install -s apropos chicken-doc
-
-cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
-curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
-
 printf "\n# Installing fisher ###########################################################\n\n"
-curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
 
 printf "\n# Installing Fisher Extensions ################################################\n\n"
-fisher add decors/fish-colored-man
-fisher add franciscolourenco/done
-fisher add jethrokuan/fzf
-fisher add jethrokuan/z
-fisher add jorgebucaran/fish-bax
-fisher add jorgebucaran/fish-getopts
-fisher add laughedelic/pisces
-fisher add oh-my-fish/theme-bobthefish
+fisher install decors/fish-colored-man
+fisher install franciscolourenco/done
+fisher install jethrokuan/fzf
+fisher install jorgebucaran/fish-bax
+fisher install jorgebucaran/fish-getopts
+fisher install laughedelic/pisces

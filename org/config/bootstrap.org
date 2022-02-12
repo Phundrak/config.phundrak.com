@@ -177,13 +177,12 @@ set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 I’ll let the user accept them one by one.
 #+BEGIN_SRC fish
 printf "\n# Set locale ##################################################################\n\n"
-
-  for item in $mylocales
-      whiptail --yesno "Set the \"$item\" locale?" 8 40
-      if test $status -eq 0 -a (grep -e "#$item" /etc/locale.gen)
-          sudo sed -i "/$item/s/^#//g" /etc/locale.gen
-      end
-  end
+for item in $mylocales
+    whiptail --yesno "Set the \"$item\" locale?" 8 40
+    if test $status -eq 0 -a (grep -e "#$item" /etc/locale.gen)
+        sudo sed -i "/$item/s/^#//g" /etc/locale.gen
+    end
+end
 #+END_SRC
 
 This is my configuration I usually use when it comes to my locale.
@@ -262,7 +261,7 @@ nemo-fileroller nemo-preview neofetch netctl network-manager-applet \
 networkmanager networkmanager-openvpn nm-connection-editor nodejs-vmd \
 nomacs nordic-theme-git nordvpn-bin noto-fonts-emoji npm ntfs-3g \
 numlockx obs-studio openssh otf-fandol otf-ipafont p7zip \
-pacman-contrib pandoc-bin pass pavucontrol pdfpc picom-git \
+pacman-contrib pandoc-bin pass pavucontrol pdfpc picom \
 powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
 python-epc python-importmagic python-language-server python-nose \
 python-pip python-poetry python-ptvsd python-pytest qt5-imageformats \
@@ -287,7 +286,7 @@ however you want. Let’s install those.
 printf "\n# Installing needed packages ##################################################\n\n"
 sudo pacman -Syu
 for pkg in $PACKAGES
-    paru -S --needed $pkg
+    paru -S --skipreview --needed $pkg
 end
 #+END_SRC
 
@@ -299,18 +298,16 @@ Before tangling our configuration files, we need to create some directories
 first so our files can be properly tangled. Here’s the list of directories we
 need to create:
 #+NAME: dirs-tangled-files
-| $HOME/.config/awesome       |
-| $HOME/.config/awesome/theme |
-| $HOME/.config/emacs/private |
-| $HOME/.config/fish          |
-| $HOME/.config/gtk-2.0       |
-| $HOME/.config/gtk-3.0       |
-| $HOME/.config/ncmpcpp       |
-| $HOME/.config/neofetch      |
-| $HOME/.config/picom         |
-| $HOME/.config/yadm          |
-| $HOME/.local/bin            |
-| $HOME/org/capture           |
+| $HOME/.config/fish     |
+| $HOME/.config/gtk-2.0  |
+| $HOME/.config/gtk-3.0  |
+| $HOME/.config/ncmpcpp  |
+| $HOME/.config/neofetch |
+| $HOME/.config/picom    |
+| $HOME/.config/yadm     |
+| $HOME/.local/bin       |
+| $HOME/.stumpwm.d       |
+| $HOME/org/capture      |
 
 #+NAME: gen-dirs-tangle
 #+BEGIN_SRC emacs-lisp :var dirs=dirs-tangled-files
@@ -319,11 +316,8 @@ need to create:
            "\n")
 #+END_SRC
 
-#+RESULTS[a95e25a5f3ac91b1f884b39dde38e3b51366b188]: gen-dirs-tangle
+#+RESULTS[250efd14cab8a0f03e5520e0d0bd96aa311aa45f]: gen-dirs-tangle
 #+begin_example
-mkdir -p $HOME/.config/awesome
-mkdir -p $HOME/.config/awesome/theme
-mkdir -p $HOME/.config/emacs/private
 mkdir -p $HOME/.config/fish
 mkdir -p $HOME/.config/gtk-2.0
 mkdir -p $HOME/.config/gtk-3.0
@@ -332,6 +326,7 @@ mkdir -p $HOME/.config/neofetch
 mkdir -p $HOME/.config/picom
 mkdir -p $HOME/.config/yadm
 mkdir -p $HOME/.local/bin
+mkdir -p $HOME/.stumpwm.d
 mkdir -p $HOME/org/capture
 #+end_example
 
@@ -343,16 +338,18 @@ Our code to generate such directories looks like this:
 The next step is to tangle all the Org files. Here is the list of files that are
 to be tangled:
 #+NAME: tangled-files
-| filename    |
-|-------------|
-| awesome.org |
-| bin.org     |
-| emacs.org   |
-| fish.org    |
-| index.org   |
-| picom.org   |
-| rustfmt.org |
-| tmux.org    |
+| filename     |
+|--------------|
+| bin.org      |
+| emacs.org    |
+| fish.org     |
+| index.org    |
+| mpd.org      |
+| neofetch.org |
+| picom.org    |
+| rustfmt.org  |
+| stumpwm.org  |
+| tmux.org     |
 
 #+NAME: generate-tangle
 #+BEGIN_SRC emacs-lisp :var files=tangled-files[,0]
@@ -365,13 +362,8 @@ to be tangled:
            "\n")
 #+END_SRC
 
-#+RESULTS[87a25d6c524e8d1346452c54aa42ac3ac09d94cf]: generate-tangle
+#+RESULTS[127dafd79461dab55296163e57fadb7b355a205a]: generate-tangle
 #+begin_example
-printf '\n\n==== Tangling awesome.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/awesome.org")'
-
 printf '\n\n==== Tangling bin.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -392,6 +384,16 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/index.org")'
 
+printf '\n\n==== Tangling mpd.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/mpd.org")'
+
+printf '\n\n==== Tangling neofetch.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/neofetch.org")'
+
 printf '\n\n==== Tangling picom.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -402,6 +404,11 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
 
+printf '\n\n==== Tangling stumpwm.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/stumpwm.org")'
+
 printf '\n\n==== Tangling tmux.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
@@ -411,32 +418,6 @@ emacs -q --batch --eval '(require \'ob-tangle)' \
 #+BEGIN_SRC fish :noweb yes
 printf "\n# Tangling org files ##########################################################\n\n"
 <<generate-tangle()>>
-#+END_SRC
-
-** Setting up Emacs: Installing Spacemacs
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Setting_up_Emacs:_Installing_Spacemacs-0b3d44b2
-:END:
-Now, the first thing we want to do with Emacs is install its Spacemacs
-distribution. We’ll clone its =develop= branch into =~/.config/emacs=. We need
-to do this prior to our dotfiles’ cloning because of some submodules that are
-cloned within our =~/.config/emacs= directory, and git won’t let us clone
-Spacemacs in an already existing and non-empty directory. To make sure it isn’t
-one, let’s delete any potentially existing =~/.config/emacs= directory:
-#+BEGIN_SRC fish
-printf "\n# Installing Spacemacs ########################################################\n\n"
-rm -rf $HOME/.config/emacs $HOME/.emacs* .spacemacs
-#+END_SRC
-
-Now we can clone Spacemacs:
-#+BEGIN_SRC fish
-git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.config/emacs
-#+END_SRC
-
-And we can restore what might have been deleted in our =~/.emacs.d/private=
-directory:
-#+BEGIN_SRC fish
-yadm checkout -- ~/.config/emacs/private/
 #+END_SRC
 
 ** Set up dotfiles’ git repository
@@ -539,6 +520,14 @@ printf "\n# Enabling Emacs as user service #####################################
 systemctl --user enable emacs
 #+END_SRC
 
+I don’t want to activate it immediately however, since the first
+startup might require some interactivity with the main Emacs frame,
+not with emacsclient. When Emacs will be ready, its service can be
+started like so (command not tangled in the bootstrap):
+#+begin_src fish :tangle no
+systemctl --user start emacs
+#+end_src
+
 *** Mpd
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Mpd-f0f5b9b7
@@ -569,10 +558,10 @@ end
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Acpilight-39152794
 :END:
-~acpilight~ is our utility managing the brightness of our screen. There is
-actually no service to enable here, but we must ensure the user is part of the
-~video~ group so we can modify the brightness of our screen without using
-~sudo~.
+~acpilight~ is our utility managing the brightness of our screen. There
+is actually no service to enable here, but we must ensure the user is
+part of the ~video~ group so we can modify the brightness of our screen
+without using ~sudo~.
 #+BEGIN_SRC fish
 sudo usermod -aG video $USER
 #+END_SRC
@@ -596,22 +585,45 @@ ports. Thanks University of Paris 8 for being SO paranoid.
 nordvpn s protocol tcp
 #+END_SRC
 
+Note that this change in protocol is only valid when using the OpenVPN
+technology. If we want to use the Wireguard technology through [[https://nordvpn.com/blog/nordlynx-protocol-wireguard/][Project
+NordLynx]], this option will no longer be available. To set NordVPN to
+use WireGuard, we can run this command (not tangled in the bootstrap).
+#+begin_src fish :tangle no
+nordvpn set technology NordLynx
+#+end_src
+
+Why WireGuard? Well, it can achieve better performances than OpenVPN
+with physically nearby servers, and according to [[https://restoreprivacy.com/vpn/wireguard-vs-openvpn/][this article]] the
+former can be more than half as fast as the latter. It is also much
+more auditable than OpenVPN (only a few thousands lines of code
+against some hundred of thousands). Oh, and WireGuard is part of the
+Linux kernel since its version 5.6. And Windows’ since August 2021,
+but I don’t really care about Windows.
+
+*But*, WireGuard is less privacy-oriented than OpenVPN. So, if I ever
+need to use my VPN for privacy reasons, I can simply revert back to
+the OpenVPN technology like shown with this command (not tangled in
+the bootstrap):
+#+begin_src fish :tangle no
+nordvpn set technology OpenVPN
+#+end_src
+
+Finally, I want to be notified of NordVPN’s actions, and I want to be
+able to use IPv6.
+#+begin_src fish
+nordvpn set notify enabled
+nordvpn set ipv6 enabled
+#+end_src
+
 ** Symlink some system config files
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Symlink_some_system_config_files-1dd95175
 :END:
-We have some files in [[file:ect/][etc/]] that are to be symlinked to =/etc=.
-#+BEGIN_SRC fish
-for f in (find ~/.etc -type f)
-    set dest (echo $f | sed -n 's|^.*etc\(.*\)$|/etc\1|p')
-    sudo ln -s $f $dest
-end
-#+END_SRC
-
-Let’s also symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source here]]) to ~/usr/bin~ so ~xss-lock~
+Let’s symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source here]]) to ~/usr/bin~ so ~xss-lock~
 can find it.
 #+BEGIN_SRC fish
-sudo ln -s (which plock) /usr/bin/plock
+sudo ln -s ~/.local/bin/plock /usr/bin/plock
 #+END_SRC
 
 ** Install packages from git
@@ -683,7 +695,7 @@ We will also need some components for development purposes.
            "\n")
 #+END_SRC
 
-#+RESULTS[b3935b1c09d86fe506b43670f52960306a1e9809]:
+#+RESULTS[b3935b1c09d86fe506b43670f52960306a1e9809]: rust-components-gen
 : rustup component add rust-src
 : rustup component add rls
 : rustup component add clippy
@@ -691,52 +703,6 @@ We will also need some components for development purposes.
 Here is the code to do so:
 #+BEGIN_SRC fish :noweb yes
 <<rust-components-gen()>>
-#+END_SRC
-
-** Install some python packages
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Install_some_python_packages-a4447a6f
-:END:
-Some packages will be needed from pip in order to get our Emacs setup correctly
-working.
-#+NAME: python-packages-table
-| Package                     | Why                     |
-|-----------------------------+-------------------------|
-| python-language-server[all] | Python LSP packages     |
-| pyls-isort                  | Import sortings for LSP |
-| pyls-mypy                   | Mypy linter for LSP     |
-| pyls-black                  | Black plugin for pyls   |
-
-#+NAME: python-packages-gen
-#+BEGIN_SRC emacs-lisp :var packages=python-packages-table[,0]
-(format "pip install --user %s"
-        (string-join packages " "))
-#+END_SRC
-
-#+RESULTS[29652be1076ffac01e34189067efa8fe9abda9d9]: python-packages-gen
-: pip install --user python-language-server[all] pyls-isort pyls-mypy pyls-black
-
-Let’s install them locally for our user.
-#+BEGIN_SRC fish :noweb yes
-printf "\n# Installing Python packages ##################################################\n\n"
-<<python-packages-gen()>>
-#+END_SRC
-
-** Set up Chicken (Scheme interpreter/compiler)
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Set_up_Chicken_(Scheme_interpreter-compiler)-3c1a3c4a
-:END:
-Chicken needs to be set up before being used. First, we need to install its
-documentation.
-#+BEGIN_SRC fish
-printf "\n# Setting up Chicken ##########################################################\n\n"
-chicken-install -s apropos chicken-doc
-#+END_SRC
-
-Then, we’ll complete the documentation like so:
-#+BEGIN_SRC fish
-cd (chicken-csi -b -e "(import (chicken platform))" -p "(chicken-home)")
-curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 #+END_SRC
 
 ** Set up our fish shell
@@ -753,7 +719,7 @@ order to improve the user experience.
 We will be using ~fisher~ as our extensions manager for Fish. Let’s install it.
 #+BEGIN_SRC fish
 printf "\n# Installing fisher ###########################################################\n\n"
-curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
 #+END_SRC
 
 *** Install our extensions
@@ -774,18 +740,18 @@ I generally use the following extensions in my Fish shell.
 
 #+NAME: fish-extensions-gen
 #+BEGIN_SRC emacs-lisp :var extensions=fish-extensions-table[,0]
-(mapconcat (lambda (x) (format "fisher add %s" x))
+(mapconcat (lambda (x) (format "fisher install %s" x))
            extensions
            "\n")
 #+END_SRC
 
-#+RESULTS[072e09f40140d1ff847826b8f44dd96f9e95a773]: fish-extensions-gen
-: fisher add decors/fish-colored-man
-: fisher add franciscolourenco/done
-: fisher add jethrokuan/fzf
-: fisher add jorgebucaran/fish-bax
-: fisher add jorgebucaran/fish-getopts
-: fisher add laughedelic/pisces
+#+RESULTS[d424f363a3c11c8598a20da525de5ba9dcfbe7e7]: fish-extensions-gen
+: fisher install decors/fish-colored-man
+: fisher install franciscolourenco/done
+: fisher install jethrokuan/fzf
+: fisher install jorgebucaran/fish-bax
+: fisher install jorgebucaran/fish-getopts
+: fisher install laughedelic/pisces
 
 #+BEGIN_SRC fish :noweb yes
 printf "\n# Installing Fisher Extensions ################################################\n\n"
