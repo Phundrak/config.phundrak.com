@@ -639,8 +639,9 @@ mkdir -p ~/fromGIT
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Install_packages_from_git-Reveal.JS-bb4da0bf
 :END:
-I sometimes use Reveal.JS to make presentations, and I set its location in my
-[[file:.spacemacs][dotspacemacs]] file to be in =~/fromGIT=, so let’s clone it there.
+I sometimes use Reveal.JS to make presentations, and I set its
+location in my [[file:emacs.org][Emacs config]] to be in =~/fromGIT=, so let’s clone it
+there.
 #+BEGIN_SRC fish
 printf "\n# Install Reveal.JS ###########################################################\n\n"
 cd ~/fromGIT

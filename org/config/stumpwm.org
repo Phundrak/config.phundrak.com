@@ -18,7 +18,7 @@
 :END:
 [[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written
 entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not an
-dynamic tiling window manager like [[file:awesome.org][Awesome]] is, its ability of managing
+dynamic tiling window manager like [[file:Deprecated/awesome.org][Awesome]] is, its ability of managing
 windows in frames and using keychords with keymaps like Emacs does is
 a huge plus for me, not to mention the fact its configuration file is
 written in Common Lisp, a general programming language, a bit like
@@ -169,7 +169,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 | modeline.lisp     |
 
 #+name: gen-load-files
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var files=first-loaded-files
 (mapconcat (lambda (file)
              (format "(load \"~/.stumpwm.d/%s\")" (car file)))
@@ -219,7 +219,7 @@ including a short description of what they are for:
 | urgentwindows   | Get urgent windows                                         |
 
 #+name: gen-load-modules
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var modules=loaded-modules
 (mapconcat (lambda (module)
              (format "(load-module \"%s\")" (car module)))
@@ -332,7 +332,7 @@ I’ll prefix the variables’ name with ~phundrak-~ just in case it might
 conflict with another package I might use in the future, so the CLisp
 code looks like so:
 #+name: gen-colors
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var colors=nord-colors
 (mapconcat (lambda (color)
              (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
@@ -452,7 +452,7 @@ Here are some modules that we will load for the modeline:
 | wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var modules=modeline-modules
 (mapconcat (lambda (module)
              (format "(load-module \"%s\")" (car module)))
@@ -601,7 +601,7 @@ is the list of groups I will be using:
 | [FILES] |      3 | Nemo    |      |
 
 #+name: gen-groups
-#+headers: :exports none
+#+header: :exports none
 #+begin_src emacs-lisp :var groups=list-groups
 (let ((make-group (lambda (group &optional first-p)
                     (let ((group-name (car group))
@@ -645,7 +645,7 @@ As you can see in the table [[list-groups]] above, I also indicated my
 window placement preferences. For now, they all rely on the window’s
 class, so it will be pretty straightforward to the corresponding code.
 #+name: gen-rules
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var rules=list-groups
 (require 'seq)
 (let ((output "")
@@ -753,7 +753,7 @@ list of fonts I want loaded:
 | Siji                           | Medium    |   10 |
 
 #+name: gen-fonts
-#+headers: :wrap src lisp
+#+header: :wrap src lisp
 #+begin_src emacs-lisp :var fonts=list-fonts
 (format "(set-font `(%s))"
         (mapconcat (lambda (font)

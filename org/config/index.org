@@ -25,7 +25,7 @@ When it comes to my graphical UI, I do not have any desktop
 environment. Instead, I have a tiling window managers, [[https://stumpwm.github.io/][StumpWM]]. I used
 to use [[https://github.com/Airblader/i3][i3-gaps]], an [[https://i3wm.org/][i3]] fork by [[https://github.com/Airblader/i3][Airblader]], with which I used [[https://polybar.github.io/][Polybar]] as
 well as [[https://github.com/dylanaraps/pywal][pywal]] to define my system’s color scheme, and then I used
-[[file:awesome.org][Awesome]]. But now, as said above, I prefer to use StumpWM. It has a
+[[file:Deprecated/awesome.org][Awesome]]. But now, as said above, I prefer to use StumpWM. It has a
 built-in status bar (called a mode-line, like in Emacs) which I use,
 and I settled on the dark [[https://www.nordtheme.com/][Nord theme]] for pretty much everything I use.
 
@@ -46,9 +46,10 @@ some games that do not offer to remap keys (I’m looking at you, Among Us).
 Most of the org files you will find in this repos are the actual
 source code of much of my config files. For instance, the bootstrap
 found in [[file:bootstrap.org][bootstrap.org]] exports almost all of its code snippets to
-[[file:.config/yadm/bootstrap][.config/yadm/bootstrap]] thanks to =M-x org-babel-tangle= from within
-Emacs. Below I will also present and comment some of my short config
-files which do not deserve to have a full org file dedicated to them.
+~$HOME/.config/yadm/bootstrap~ thanks to =M-x org-babel-tangle= from
+within Emacs. Below I will also present and comment some of my short
+config files which do not deserve to have a full org file dedicated to
+them.
 
 ** Tiling Window Managers
 :PROPERTIES:
@@ -73,14 +74,14 @@ AwesomeWM is the TWM I used for quite some time after switching from
 i3. This is an automatic tiling window manager written and configured
 mostly in Lua, with its core written in C (this is originally a dwm
 fork). My configuration for it is documented in detail in its
-corresponding document, which you can find [[file:awesome.org][here]].
+corresponding document, which you can find [[file:Deprecated/awesome.org][here]].
 
 *** i3 configuration (Deprecated)
 :PROPERTIES:
 :CUSTOM_ID: Features-Tiling_Window_Managers-i3_configuration-9c92e43c
 :END:
 The i3 configuration is detailed in its corresponding README which you
-can find [[file:i3.org][here]]. Be aware I do not use i3 anymore, and I will not update
+can find [[file:Deprecated/i3.org][here]]. Be aware I do not use i3 anymore, and I will not update
 it until I may someday use it again. This was deprecated on August
 22nd, 2020.
 
@@ -88,9 +89,9 @@ it until I may someday use it again. This was deprecated on August
 :PROPERTIES:
 :CUSTOM_ID: Features-Polybar_config_(Deprecated)-c8f95774
 :END:
-My annotated polybar config can be found [[file:polybar.org][here]], if you wish to use it. Be aware I
-do not use polybar anymore, and I will not update it until I may someday use it
-again. This was deprecated on August 22nd, 2020.
+My annotated polybar config can be found [[file:Deprecated/polybar.org][here]], if you wish to use it.
+Be aware I do not use polybar anymore, and I will not update it until
+I may someday use it again. This was deprecated on August 22nd, 2020.
 
 ** Text and source code editing
 :PROPERTIES:
@@ -118,9 +119,9 @@ on October 20th 2021. You can find it [[file:Deprecated/spacemacs.org][here]].
 :CUSTOM_ID: Features-Text_and_source_code_editing-Nano-a9d4839f
 :END:
 Although it is a very simple piece of software, nano does offer some
-customization. Mine can be found in my [[file:~/org/config-website/nano.org][nano.org]] file. Be aware I do not use nano
-anymore, and I will not update it until I may someday use it again. This was
-deprecated on August 28th, 2020.
+customization. Mine can be found in my [[file:Deprecated/nano.org][nano.org]] file. Be aware I do
+not use nano anymore, and I will not update it until I may someday use
+it again. This was deprecated on August 28th, 2020.
 
 *** Rustfmt
 :PROPERTIES:
@@ -147,8 +148,8 @@ their source code once the org-mode file gets tangled.
 :PROPERTIES:
 :CUSTOM_ID: Features-Fish_configuration_with_useful_abbreviations-c71ffba0
 :END:
-You can also find in my Fish shell configuration in my [[file:~/org/config-website/fish.org][fish.org]] file, which
-contains my usual abbreviations.
+You can also find in my Fish shell configuration in my [[file:fish.org][fish.org]] file,
+which contains my usual abbreviations.
 
 *** Tmux configuration
 :PROPERTIES:
@@ -166,17 +167,17 @@ You can find my tmux configuration in [[file:tmux.org][tmux.org]]. It depends on
 :HEADER-ARGS: :mkdirp yes :tangle ~/.gitignore_global
 :CUSTOM_ID: Features-And_some_minor_configuration_files-Global_gitignore-42467108
 :END:
-Sometimes, there are some lines that always reappear in gitignores. So, instead
-of always adding them, let git now that some elements are to be ignored by
-default, hence the [[file:.gitignore_global][~/.gitignore_global]] file. First, we don’t want nano’s backup
-files.
-#+BEGIN_SRC text
-~*
+Sometimes, there are some lines that always reappear in gitignores.
+So, instead of always adding them, let git now that some elements are
+to be ignored by default, hence the ~$HOME/.gitignore_global~ file.
+First, we don’t want nano’s backup files.
+#+BEGIN_SRC fundamental
+,*~
 #+END_SRC
 
 And object files and output binaries generated by =gcc= and the likes aren’t
 welcome either.
-#+BEGIN_SRC text
+#+BEGIN_SRC fundamental
 ,*.out
 ,*.o
 #+END_SRC
@@ -218,12 +219,12 @@ out my [[file:bootstrap.org][bootstrap]] file where I walk you through the first
 and through the bootstrap you can execute to automatically take care
 of a lot of elements.
 
-* Licence
+* License
 :PROPERTIES:
-:CUSTOM_ID: Licence-48911096
+:CUSTOM_ID: License-48911096
 :END:
-All of my dotfiles (and my dotfiles only) are available under the GNU GPLv3
-Licence. Please consult [[file:LICENCE.md]] for more information. In short: you are
-free to access, edit and redistribute all of my dotfiles under the same licence
-and as allowed by the licence, and if you fuck up something, it’s your own
-responsibility.
+All of my dotfiles (and my dotfiles only) are available under the GNU
+GPLv3 License. Please consult [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/LICENSE.md][the license file]] for more information.
+In short: you are free to access, edit and redistribute all of my
+dotfiles under the same license and as allowed by the license, and if
+you fuck up something, it’s your own responsibility.

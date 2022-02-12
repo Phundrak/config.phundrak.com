@@ -200,7 +200,7 @@ fit mine, so on top of ~prog-mode~, let’s add a few other modes.
 | latex-mode |
 
 #+name: prog-modes-gen
-#+headers: :cache yes :exports none :tangle no
+#+header: :cache yes :exports none :tangle no
 #+begin_src emacs-lisp :var modes=line-number-modes-table
 (mapconcat (lambda (mode) (format "%s-hook" (car mode)))
            modes
@@ -872,7 +872,7 @@ can still feel some influence from my Spacemacs years here.
 #+end_src
 
 #+name: general-keybindings-gen
-#+headers: :tangle no :exports none :results value :cache yes
+#+header: :tangle no :exports none :results value :cache yes
 #+begin_src emacs-lisp :var table=keybinds-windows prefix=""
 (mapconcat (lambda (line)
              (let* ((key      (car line))
@@ -1698,7 +1698,7 @@ Paris 8 (my university).
 #+end_src
 
 #+name: mu4e-bookmarks-mailing-lists
-#+headers: :tangle no :exports none
+#+header: :tangle no :exports none
 #+begin_src emacs-lisp :var lists=mu4e-emacs-mailing-lists
 (mapconcat (lambda (list)
              (let ((address (string-replace (regexp-quote "~") "" (car list))))
@@ -1711,7 +1711,7 @@ Paris 8 (my university).
 #+end_src
 
 #+name: mu4e-bookmarks-filter-uni
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 (let ((regex "/.*up8\\.edu|.*univ-paris8.*/"))
   <<mu4e-bookmarks-from-copy-to-gen>>)
@@ -1722,7 +1722,7 @@ Paris 8 (my university).
 
 Next I need an inbox dedicated to the association I’m part of.
 #+name: mu4e-bookmarks-filter-asso
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 (let ((regex "/.*supran\\.fr/"))
   <<mu4e-bookmarks-from-copy-to-gen>>)
@@ -1743,7 +1743,7 @@ match:
 - ~/.*eshell-info-banner.*/~
 
 #+name: mu4e-bookmarks-filter-emacs-list
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 "<<mu4e-bookmarks-mailing-lists(lists=mu4e-emacs-mailing-lists)>>"
 #+end_src
@@ -1757,7 +1757,7 @@ issues and PRs from Github.
 - ~/.*\\.github\\.com/~
 
 #+name: mu4e-bookmarks-filter-github-list
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 "<<mu4e-bookmarks-mailing-lists(lists=mu4e-github-mailing-lists)>>"
 #+end_src
@@ -1772,7 +1772,7 @@ subscribed anymore, but it’ll keep my inbox clean.
 - ~/.*LANG@LISTSERV.BROWN.EDU/~
 
 #+name: mu4e-bookmarks-filter-conlang-list
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 "<<mu4e-bookmarks-mailing-lists(lists=mu4e-conlanging-mailing-lists)>>"
 #+end_src
@@ -1784,7 +1784,7 @@ As I said earlier, something that will often come back in my bookmarks
 is the emails must not be trashed to appear. I want also to display
 junk emails, so I end up with the following rule:
 #+name: mu4e-bookmarks-default-filter
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 (mapconcat #'identity
            `("NOT flag:trashed"
@@ -1799,7 +1799,7 @@ junk emails, so I end up with the following rule:
 
 And for the last string-generating code, let’s describe my main inbox:
 #+name: mu4e-bookmarks-inbox-filters
-#+headers: :tangle no :cache yes
+#+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 (mapconcat #'identity
            (cons "<<mu4e-bookmarks-default-filter()>>"
@@ -3451,7 +3451,7 @@ these will be renamed this way:
 - Qutebrowser
 
 #+name: exwm-gen-buffers-rename
-#+headers: :exports none :tangle no
+#+header: :exports none :tangle no
 #+begin_src emacs-lisp :var buffers=exwm-renamed-buffers-list :cache yes
 (format "%s\n%S"
         (mapconcat (lambda (buffer)
@@ -3604,7 +3604,7 @@ A couple of commands are also automatically executed:
   file
 
 #+name: exwm-generate-autostarts
-#+headers: :exports results :tangle no
+#+header: :exports results :tangle no
 #+begin_src emacs-lisp :var autostarts=exwm-autostart-list :cache yes
 (mapconcat (lambda (command)
              (let* ((whitespace  (rx (+ space)))
