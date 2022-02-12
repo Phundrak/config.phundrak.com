@@ -31,7 +31,7 @@ of said command running.
 | Command     | Arguments                           | Run once? |
 |-------------+-------------------------------------+-----------|
 | ~mpc~         | ~stop~                                | no        |
-| ~picom~       |                                     | yes       |
+| ~picom~       | ~--experimental-backends~             | yes       |
 | ~set-screens~ |                                     | no        |
 | ~numlockx~    | ~on~                                  | yes       |
 | ~pumopm~      |                                     | yes       |
@@ -58,10 +58,10 @@ of said command running.
            "\n")
 #+END_SRC
 
-#+RESULTS[085e16ae9fd402b050b526763cc792af26aaaf41]: autostart-gen
+#+RESULTS[6246524876f7d46a8649c951a1145302c603bc78]: autostart-gen
 #+begin_example
 mpc stop &
-pgrep -x picom 2&>/dev/null || echo (picom & && disown) 2&>/dev/null
+pgrep -x picom 2&>/dev/null || echo (picom --experimental-backends & && disown) 2&>/dev/null
 set-screens  &
 pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
 pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
