@@ -1352,10 +1352,12 @@ The application keymap can now be bound to the root map like so:
 #+end_src
 
 I will also bind to the top map ~s-RET~ in order to open a new terminal
-window. The screenshot keymap is also bound to the ScreenPrint key.
+window. The screenshot keymap is also bound to the ScreenPrint key,
+and the ~XF86Mail~ key opens mu4e in Emacs.
 #+begin_src lisp
 (define-key *top-map* (kbd "s-RET") "term")
 (define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
+(define-key *top-map* (kbd "XF86Mail") "exec emacsclient -c -e \"(mu4e)\"")
 #+end_src
 
 ** End of Session, Powering Off, and the Likes
