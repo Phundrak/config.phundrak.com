@@ -7629,18 +7629,20 @@ I also have two main shell-related functions, prefixed with ~as~.
 :END:
 My buffer-related keybinds are all prefixed by ~b~.
 #+name: keybinds-buffers
-| Key | Function                  | Description |
-|-----+---------------------------+-------------|
-|     |                           | buffers     |
-| b   | bufler-switch-buffer      |             |
-| B   | bury-buffer               |             |
-| l   | bufler                    |             |
-| d   | kill-this-buffer          |             |
-| D   | kill-buffer               |             |
-| h   | dashboard-refresh-buffer  |             |
-| m   | switch-to-messages-buffer |             |
-| r   | counsel-buffer-or-recentf |             |
-| s   | switch-to-scratch-buffer  |             |
+| Key | Function                           | Description |
+|-----+------------------------------------+-------------|
+|     |                                    | buffers     |
+| b   | bufler-switch-buffer               |             |
+| B   | bury-buffer                        |             |
+| c   | clone-indirect-buffer              |             |
+| C   | clone-indirect-buffer-other-window |             |
+| l   | bufler                             |             |
+| d   | kill-this-buffer                   |             |
+| D   | kill-buffer                        |             |
+| h   | dashboard-refresh-buffer           |             |
+| m   | switch-to-messages-buffer          |             |
+| r   | counsel-buffer-or-recentf          |             |
+| s   | switch-to-scratch-buffer           |             |
 
 ** Errors
 :PROPERTIES:
