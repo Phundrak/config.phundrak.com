@@ -92,7 +92,7 @@ your computer.
 :END:
 The first thing I will do is add the [[https://aur.chaotic.cx/][Chaotic AUR]] repository so I can
 get access to ~paru~ as well as some AUR packages without the need of an
-AUR helper (ironic considering ~paru~ is one)..
+AUR helper (ironic considering ~paru~ is one).
 #+BEGIN_SRC sh
 sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign-key 3056513887B78AEB
@@ -241,54 +241,283 @@ end
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Install_basic_packages-17173316
 :END:
-Let’s set in a custom varible what packages we’ll be needing.
-#+BEGIN_SRC fish
-set PACKAGES \
-acpi acpilight adobe-source-han-sans-jp-fonts arc-gtk-theme asar ascii \
-aspell-en aspell-fr awesome awesome-terminal-fonts \
-awesome-freedesktop-git base-devel bashtop bat biber bitwarden-bin \
-bluez-firmware bluez-utils bzip2 chicken chromium clisp corrupter-git \
-cppcheck cppreference cppreference-devhelp cpupower discord-canary \
-discount docker docker-compose dockerfile-language-server-bin doxygen \
-emacs emacs-org-mode exa exfat-utils farbfeld fd ffmpegthumbnailer \
-findutils firefox flake8 flat-remix-gtk freeglut fzf gcc-libs gdb gimp \
-gnome-disk-utility gnome-epub-thumbnailer gnu-free-fonts gnuplot go \
-go-tools golangci-lint-bin graphviz htop hugo i3lock-color inetutils \
-isync inter-font javascript-typescript-langserver js-beautify jfsutils \
-jmtpfs kitty lain-git libxft-bgra linux-headers lldb logrotate meson \
-minted man-db man-pages mpc mpd mpv mupdf-tools nano ncdu ncmpcpp \
-nemo-fileroller nemo-preview neofetch netctl network-manager-applet \
-networkmanager networkmanager-openvpn nm-connection-editor nodejs-vmd \
-nomacs nordic-theme-git nordvpn-bin noto-fonts-emoji npm ntfs-3g \
-numlockx obs-studio openssh otf-fandol otf-ipafont p7zip \
-pacman-contrib pandoc-bin pass pavucontrol pdfpc picom \
-powerline-fonts prettier pulseaudio-bluetooth python-autoflake \
-python-epc python-importmagic python-language-server python-nose \
-python-pip python-poetry python-ptvsd python-pytest qt5-imageformats \
-qemu r raw-thumbnailer reflector ripgrep rofi rsync rtv \
-ruby-rb-fsevent ruby-sass rustup samba scrot sent shadow siji-git \
-simplescreenrecorder sshfs sxiv texlive-bibtexextra texlive-fontsextra \
-texlive-formatsextra texlive-humanities texlive-langjapanese \
-texlive-pictures texlive-pstricks texlive-publishers texlive-science \
-tldr tmux tree ttf-arphic-uming ttf-baekmuk ttf-charis-sil ttf-dejavu \
-ttf-google-fonts-opinionated-git ttf-hanazono ttf-joypixels ttf-koruri \
-ttf-liberation ttf-monapo ttf-sazanami ttf-tibetan-machine typescript \
-typescript-language-server-bin unicode-emoji unrar usbutils valgrind \
-vscode-css-languageserver-bin vscode-html-languageserver-bin w3m wget \
-x11-ssh-askpass xclip xdg-user-dirs-gtk xfce-polkit xidlehook xfsprogs \
-xorg-drivers xorg-server xorg-xinit xss-lock xvkbd xwallpaper \
-yaml-language-server-bin zeal
-#+END_SRC
+Ok, let’s list all the packages that I need. First, let’s begin with
+system packages.
+#+name: packages-system
+| Package name           | Why I need it                                                       |
+|------------------------+---------------------------------------------------------------------|
+| acpi                   | Battery, power, and thermal readings                                |
+| acpilight              | To modify the monitors’ brightness                                  |
+| bluez-firmware         | Firmware for my bluetooth device                                    |
+| bluez-utils            | To interact with bluez through custom tools                         |
+| bzip2                  | A compression algorithm and program                                 |
+| cpupower               | Tool to examine and tune power saving related features of the CPU   |
+| exfat-utils            | Utilities for exFAT filesystems                                     |
+| ffmpegthumbnailer      | Create thumbnails with ffmpeg                                       |
+| freeglut               | A small OpenGL library                                              |
+| gcc-libs               | Runtime libraries for GCC                                           |
+| gdb                    | The GCC debugger                                                    |
+| gnome-disk-utility     | To manage easily my disks and partitions                            |
+| gnome-epub-thumbnailer | Thumbnailer for Epub files                                          |
+| i3lock-color           | My screen locker                                                    |
+| corrupter-git          | A script for my script using also i3lock-color                      |
+| inetutils              | Common network programs                                             |
+| jfsutils               | JFS utilities to interact with Android                              |
+| jmtpfs                 | FUSE filesystem for the MTP protocol                                |
+| kitty                  | My current terminal emulator, works with Xorg and Wayland           |
+| logrotate              | Rotate system logs automatically                                    |
+| man-pages              | Linux man pages                                                     |
+| man-db                 | Read the Linux man pages                                            |
+| netctl                 | Profile based systemd network management                            |
+| network-manager-applet | System tray applet for NetworkManager                               |
+| networkmanager-openvpn | Connect to OpenVPN servers with NetworkManager                      |
+| nm-connection-editor   | Manager NetworkManager connections                                  |
+| ntfs-3g                | Utilities to access NTFS filesystems                                |
+| openssh                | SSH. Do I need to say anything more than that?                      |
+| pavucontrol            | Graphical interface to PulseAudio settings                          |
+| pulseaudio-bluetooth   | Bluetooth support for PulseAudio                                    |
+| raw-thumbnailer        | thumbnailer for RAW images                                          |
+| reflector              | Sort pacman mirrors                                                 |
+| shadow                 | Password & account management tools supporting shadow files and PAM |
+| sshfs                  | Mount remote filesystems through SSH                                |
+| usbutils               | USB utilities                                                       |
+| xdg-user-dirs-gtk      | Creates user dirs and asks to relocalize them                       |
+| xfce-polkit            | XFCE’s policy kit                                                   |
+| xidlehook              | xautolock with extra features                                       |
+| xfsprogs               | Access XFS filesystems                                              |
+| xorg-xinit             | xorg init program                                                   |
+| xss-lock               | Use an external program as X lock screen                            |
+| xwallpaper             | Set my Xorg session’s wallpaper                                     |
 
-These are the minimum I would have in my own installation. You can edit it
-however you want. Let’s install those.
-#+BEGIN_SRC fish
-printf "\n# Installing needed packages ##################################################\n\n"
-sudo pacman -Syu
-for pkg in $PACKAGES
+For development purposes, I need the following packages:
+#+name: packages-devel
+| Package name                     | Why I need it                                             |
+|----------------------------------+-----------------------------------------------------------|
+| asar                             | Package needed by some Electron programs                  |
+| base-devel                       | Metapackage providing lots of basic tools for development |
+| clang                            | LLVM’s C/C++ compiler                                     |
+| cppcheck                         | Static code analysis for C/C++                            |
+| cppreference                     | The cppreference wiki offline                             |
+| cppreference-devhelp             | Access cppreference through devhelp                       |
+| docker                           | VMs are too heavy, get a better virtualization engine!    |
+| docker-compose                   | Docker from the CLI? I prefer through a Yaml file.        |
+| dockerfile-language-server-bin   | Dockerfile LSP server                                     |
+| doxygen                          | A great tool for writing code documentation for C/C++     |
+| emacs                            | The best +text editor+ OS, hands down                       |
+| farbfeld                         | Lossless image format                                     |
+| flake8                           | Code checker for python                                   |
+| gnuplot                          | An awesome plotting tool                                  |
+| go                               | The Go programming language                               |
+| go-tools                         | Go’s tooling                                              |
+| graphviz                         | Graph visualization                                       |
+| hugo                             | Static website generator                                  |
+| javascript-typescript-langserver | LSP server for Javascript                                 |
+| js-beautify                      | Formatter for Javascript                                  |
+| libxft-bgra                      | FreeType library with support for BGRA glyphs and scaling |
+| linux-headers                    | Development with the Linux kernel                         |
+| lldb                             | The LLVM debugger                                         |
+| meson                            | Meson build system                                        |
+| mupdf-tools                      | Tools for PDF and XPS viewers                             |
+| nodejs-vmd                       | Markdown renderer and live previewer                      |
+| npm                              | Javascript package manager                                |
+| pacman-contrib                   | Create and install custom ArchLinux packages              |
+| pandoc-bin                       | Convert documents of various formats into other formats   |
+| prettier                         | Format various web files formats                          |
+| python-autoflake                 | Remove unused imports and variables in Python             |
+| python-epc                       | EPC (RPC stack for Emacs Lisp) for Python                 |
+| python-importmagic               | Automatically manage imports in Python                    |
+| pyright                          | Python LSP server                                         |
+| python-nose                      | A discovery-based test extension for Python               |
+| python-pip                       | The Python package manager                                |
+| python-poetry                    | Python dependency management and packaging made easy      |
+| python-ptvsd                     | Python debugger                                           |
+| python-pytest                    | Python testing suite                                      |
+| qemu                             | Machine emulator and virtualizer                          |
+| r                                | The R programming langugae                                |
+| rustup                           | The Rust toolchain installer                              |
+| sbcl                             | My favorite CommonLisp implementation                     |
+| typescript                       | Better Javascript                                         |
+| typescript-language-server-bin   | LSP server for Typescript                                 |
+| valgrind                         | Our lord and saviour when writing C code                  |
+| vscode-css-languageserver-bin    | LSP server for CSS                                        |
+| vscode-html-languageserver-bin   | LSP server for HTML                                       |
+| yaml-language-server-bin         | LSP server for Yaml                                       |
+| zeal                             | Offline documentation browser                             |
+
+A couple of packages need to be installed to make LaTeX usable.
+#+name: packages-latex
+| Package name         | Why I need it                                                        |
+|----------------------+----------------------------------------------------------------------|
+| biber                | A BibTex replacement, for citations in papers                        |
+| minted               | Syntax highlight for LaTeX                                           |
+| texlive-bibtexextra  | Additional BibTeX styles and bibliography databases                  |
+| texlive-fontsextra   | All sorts of extra fonts                                             |
+| texlive-formatsextra | Collection of extra TeX 'formats'                                    |
+| texlive-humanities   | LaTeX packages for law, linguistics, social sciences, and humanities |
+| texlive-langjapanese | Fonts and macro packages to typeset Japanese texts                   |
+| texlive-pictures     | Packages for drawings graphics                                       |
+| texlive-pstricks     | Additional PSTricks packages                                         |
+| texlive-publishers   | LaTeX classes and packages for specific publishers                   |
+| texlive-science      | Typesetting for mathematics, natural and computer sciences           |
+
+Some visual packages:
+#+name: packages-font
+| Package name                   | Why I need it                       |
+|--------------------------------+-------------------------------------|
+| adobe-source-han-sans-jp-fonts | Japanese fonts                      |
+| gnu-free-fonts                 | The font I use in StumpWM           |
+| inter-font                     | I’m not sure why I have these fonts |
+| nordic-theme-git               | Nord theme for GTK                  |
+| noto-fonts-emoji               | Font with emojis                    |
+| otf-ipafont                    | Japanese font                       |
+| picom                          | See [[file:picom.org]]                  |
+| powerline-fonts                | Powerline fonts                     |
+| siji-git                       | Siji font                           |
+| ttf-arphic-uming               | CJK font Ming style                 |
+| ttf-baekmuk                    | Korean font                         |
+| ttf-charis-sil                 | API font                            |
+| ttf-dejavu                     | DejaVu font                         |
+| ttf-hanazono                   | Japanese kanji font                 |
+| ttf-joypixels                  | Emoji font                          |
+| ttf-koruri                     | Japanese Truetype font              |
+| ttf-liberation                 | Liberation font                     |
+| ttf-monapo                     | Japanese font                       |
+| ttf-sazanami                   | Japanese fonts                      |
+| ttf-tibetan-machine            | Tibetan font                        |
+| unicode-emoji                  | Unicode emoji data files            |
+
+Terminal utilities
+#+name: packages-terminal
+| Package name    | Why I need it                                                   |
+|-----------------+-----------------------------------------------------------------|
+| ascii           | Work with ASCII                                                 |
+| aspell-en       | Aspell’s dictionary for English                                 |
+| aspell-fr       | Aspell’s dictionary for French                                  |
+| bat             | A better cat with syntax highlighting                           |
+| bitwarden-cli   | CLI application for my password manager                         |
+| bpytop          | A very beautiful htop alternative                               |
+| exa             | A great ~ls~ replacement                                          |
+| fd              | ~find~, but better                                                |
+| findutils       | ~find~ files on the system                                        |
+| fzf             | Command-line fuzzy finder                                       |
+| htop            | ~top~, but better                                                 |
+| isync           | Gives access to ~mbsync~ so I can check my mails                  |
+| mpc             | Dead simple MPD client                                          |
+| mpd             | Music Player Daemon                                             |
+| mpv             | The best video player in existance                              |
+| nano            | Simple text editor                                              |
+| ncdu            | Graphical representation of disk usage                          |
+| ncmpcpp         | TUI for MPD                                                     |
+| neofetch        | System info in the terminal                                     |
+| nordvpn-bin     | Connect to NordVPN on Linux                                     |
+| numlockx        | Turn on the numpad in Xorg                                      |
+| p7zip           | 7zip on Linux                                                   |
+| pass            | The standard UNIX password manager                              |
+| pdfpc           | PDF presentation tool in the console with multi-monitor support |
+| ripgrep         | ~grep~ but better                                                 |
+| rsync           | ~scp~ is dead, long live ~rsync~!                                   |
+| scrot           | To take screenshots                                             |
+| tealdeer        | ~tldr~ but faster, great cheatsheets in the terminal              |
+| tmux            | Terminal multiplexer                                            |
+| tree            | See files and directories as a tree                             |
+| unrar           | Support for rar file format                                     |
+| w3m             | Terminal web browser                                            |
+| wget            | Retrieve files from the web                                     |
+| x11-ssh-askpass | Passphrase dialog over SSH                                      |
+| xclip           | Interact with the X11 clipboard                                 |
+| yt-dlp-drop-in  | ~yt-dlp~ but it also replaces ~youtube-dl~                          |
+
+Let’s install some desktop applications too, shall we?
+#+name: packages-apps
+| Package name    | Why I need it                                           |
+|-----------------+---------------------------------------------------------|
+| bitwarden       | Desktop application for my password manager             |
+| discord         | For messaging friends                                   |
+| firefox         | Because I need a good browser                           |
+| gimp            | GIMP Is Mbetter than Photoshop                          |
+| nemo            | One of the best graphical file managers                 |
+| nemo-fileroller | Add compression options to Nemo                         |
+| nemo-preview    | Quick file previewer for Nemo                           |
+| obs-studio      | Simply the best screen recording and streaming software |
+| rofi            | A beautiful ~dmenu~ replacement                           |
+| sent            | Dead simple presentation tool                           |
+| sxiv            | The best keyboard-driven image viewer (after Emacs)     |
+
+All these packages will be installed with the command ~paru -S
+--skipreview --needed~ so it won’t nag me about the PKGBUILD when I
+want to install something from the AUR, and if something is already
+installed it paru won’t try to reinstall it.
+
+#+name: gen-package-list
+#+header: :wrap "src fish :exports none :tangle no"
+#+header: :exports none
+#+begin_src emacs-lisp :var packages=packages-apps[,0] varname="APPS"
+(format "set %s %s"
+        varname
+        (mapconcat #'identity packages " \\\n"))
+#+end_src
+
+#+RESULTS[c695e04be22173bb49245f65a25c375d0ad865bf]: gen-package-list
+#+begin_src fish :exports none :tangle no
+set APPS bitwarden \
+discord \
+firefox \
+gimp \
+nemo \
+nemo-fileroller \
+nemo-preview \
+obs-studio \
+rofi \
+sent \
+sxiv
+#+end_src
+
+#+name: gen-package-install
+#+header: :wrap "src fish :exports none :tangle no"
+#+header: :exports none
+#+begin_src emacs-lisp :var varname="APPS"
+(concat
+ (format "%s %s %s"
+         "printf \"\\n# Installing"
+         varname
+         "##################################################\\n\\n\"")
+ "\n"
+ (format "for pkg in $%s\n    paru -S --skipreview --needed $pkg\nend" varname))
+#+end_src
+
+#+RESULTS[8fc00f530b704dc6900087d5b91082e9fa1bb429]: gen-package-install
+#+begin_src fish :exports none :tangle no
+printf "\n# Installing APPS ##################################################\n\n"
+for pkg in $APPS
     paru -S --skipreview --needed $pkg
 end
-#+END_SRC
+#+end_src
+
+#+begin_src fish :noweb yes
+<<gen-package-list(packages=packages-system[,0],varname="SYSTEMPKG")>>
+
+<<gen-package-install(varname="SYSTEMPKG")>>
+
+
+<<gen-package-list(packages=packages-devel[,0],varname="DEVELPKG")>>
+
+<<gen-package-install(varname="DEVELPKG")>>
+
+
+<<gen-package-list(packages=packages-latex[,0],varname="LATEXPKG")>>
+
+<<gen-package-install(varname="LATEXPKG")>>
+
+
+<<gen-package-list(packages=packages-terminal[,0],varname="TERMINALPKG")>>
+
+<<gen-package-install(varname="TERMINALPKG")>>
+
+
+<<gen-package-list(packages=packages-apps[,0],varname="APPSPKG")>>
+
+<<gen-package-install(varname="APPSPKG")>>
+#+end_src
 
 ** Tangle configuration files from Org files
 :PROPERTIES:
