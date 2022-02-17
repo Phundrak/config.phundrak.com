@@ -309,6 +309,129 @@ intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
 ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
 #+END_SRC
 
+** Sxiv key handler
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle no :noweb yes
+:CUSTOM_ID: cli-utilities-Sxiv-key-handler-atganx41adj0
+:END:
+One thing I like with ~sxiv~ is you can trigger different behaviors
+based on keypresses. For instance, with my current sxiv configuration,
+if I press the space key followed by a character, it can delete to the
+trashcan, delete definitively, or open the current image in GIMP. All
+of that is done through one script file stored in
+~$HOME/.config/sxiv/exec/key-handler~. The fact it reacts to first the
+spacebar instead of /Ctrl-x/ is because I use a custom version of sxiv I
+first modified to fit the bépo layout, and then I decided to change
+the prefix to fit how I use Emacs and StumpWM. You can read the
+PKGBUILD and my sxiv patch [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/Documents/code/PKGBUILDs/sxiv][in my dotfiles repo]].
+
+#+header: :shebang "#!/usr/bin/env fish" :tangle ~/.config/sxiv/exec/key-handler
+#+begin_src fish
+<<sxiv-read-files>>
+
+<<sxiv-switch-statement>>
+#+end_src
+
+Here is a step by step explanation of the source code. First, we want
+to store in the variable ~FILES~ all the files marked in sxiv. This is
+done with a ~while~ loop and the ~read~ command.
+#+name: sxiv-read-files
+#+begin_src fish
+while read file
+    set -g FILES "$file" $FILES
+end
+#+end_src
+
+We can then read from the first member of ~argv~ which key the user
+pressed. Depending on it, we can chose what to execute.
+#+name: sxiv-switch-statement
+#+begin_src fish
+switch "$argv[1]"
+    <<sxiv-trash>>
+    <<sxiv-rm>>
+    <<sxiv-gimp>>
+    <<sxiv-jpeg>>
+    <<sxiv-rotate-clockwise>>
+    <<sxiv-rotate-counter-clockwise>>
+    <<sxiv-yank>>
+end
+#+end_src
+
+The first option with the letter ~d~ is to move the file to the trash
+can. For this, we use the ~trash~ command from ~trash-cli~.
+#+name: sxiv-trash
+#+begin_src fish
+case "d"
+    trash $FILES
+#+end_src
+
+In case we want to definitively delete a file without using the trash
+can, we can use ~rm~ instead when we press the ~D~ key.
+#+name: sxiv-rm
+#+begin_src fish
+case "D"
+    rm $FILES
+#+end_src
+
+It’s not rare I want to modify an image I have open in sxiv,
+especially since screenshots are automatically open in this image
+viewer aften they are taken. In that case, a simple command will do.
+#+name: sxiv-gimp
+#+begin_src fish
+case "g"
+    gimp $FILES
+#+end_src
+
+Often, I use sxiv to convert an image to a jpeg file, because my
+internet connection is not that great and jpeg screenshots are faster
+to upload than png screenshots. So what I do is for each file
+selected, I take the base name of the file (i.e. remove its
+extension), and then I use the ~convert~ command from ~imagemagik~ to
+convert it from its original format to a jpg format --- ~imagemagik~
+detects the formats based on the extension.
+#+name: sxiv-jpeg
+#+begin_src fish
+case "j"
+    for f in $FILES
+        set basename (echo "$f" | sed 's/\.[^.]*$//')
+        convert "$f" "$basename.jpg"
+    end
+#+end_src
+
+I have two commands to rotate my files, and both only differ by the
+angle of rotation. Once again I rely on ~convert~ in both cases. To
+rotate clockwise, this is the code needed.
+#+name: sxiv-rotate-clockwise
+#+begin_src fish
+case "r"
+    for f in $FILES
+        convert -rotate 90 "$f" "$f"
+    end
+#+end_src
+
+On the other hand, to rotate counter-clockwise, we need this code:
+#+name: sxiv-rotate-counter-clockwise
+#+begin_src fish
+case "R"
+    for f in $FILES
+        convert -rotate 270 "$f" "$f"
+    end
+#+end_src
+
+Lastly, when I want to copy a file, I just hit the ~y~ key for “yank”
+(that’s a term from Emacs). For that, I rely on ~file~ to tell me the
+mimetype of the image, then I can pass it to ~xclip~ along with the
+filename to copy it to the clipboard. In this case, we only copy the
+first of the selected files since the clipboard cannot hold several
+files at once.
+#+name: sxiv-yank
+#+begin_src fish
+case "y"
+    set FILE "$FILES[1]"
+    set TYPE (file -i "$FILE" | sed -r 's|.*(image/[a-z]+);.*|\1|')
+    xclip -sel clip -t "$TYPE" -i "$FILE"
+#+end_src
+
 ** Starwars
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars

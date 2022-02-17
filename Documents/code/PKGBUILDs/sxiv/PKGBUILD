@@ -3,18 +3,19 @@
 # Contributor: Army
 # Contributor: Bastien Dejean <baskerville@lavabit.com>
 
-_name=sxiv
+__name=sxiv
+_name="${__name}-flexipatch"
 pkgname="${_name}-bepo-git"
-pkgver=2021.09.23
+pkgver=2021.09.07
 pkgrel=1
 pkgdesc="Simple (or small or suckless) X Image Viewer"
 arch=('i686' 'x86_64')
-url="https://github.com/muennich/${_name}"
+url="https://github.com/bakkeby/${_name}"
 license=('GPL2')
 depends=('imlib2' 'libexif' 'libxft' 'hicolor-icon-theme')
 makedepends=('git')
-provides=("${_name}")
-conflicts=("${_name}" "${_name}-git")
+provides=("${__name}")
+conflicts=("${_name}" "${_name}-git" "${__name}" "${__name}-git")
 source=("${_name}::git+${url}.git" config.h)
 sha512sums=('SKIP'
             'f3cd5532977033ffb878e397c76b4576f931b74dc2c158f373d6618d0d4155387bc983b745f0adeffeee85de9ebdc9e9418d823cceef8895b2d8e6ab1d4791ca')
