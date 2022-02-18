@@ -1,0 +1,40 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+# Original Maintainer: Sanjay Pavan <withercubes@protonmail.com>
+
+_pkgname=nsxiv
+pkgname="${_pkgname}-bepo-git"
+pkgver=28.r29.g79556e9
+pkgrel=1
+pkgdesc='New Simple X Image Viewer'
+arch=('x86_64')
+license=('GPL2')
+conflicts=("$_pkgname" "${_pkgname}-git")
+provides=('sxiv')
+url="https://github.com/${_pkgname}/${_pkgname}"
+depends=('imlib2' 'desktop-file-utils' 'xdg-utils' 'hicolor-icon-theme' 'libexif' 'libxft' 'giflib' 'libwebp')
+makedepends=(git)
+source=("${_pkgname}::git+$url" config.h)
+sha512sums=('SKIP'
+            '83f8f9428be62a3065f4024f4b4ee0738d9aecfc40a5e814311000f527527a1bad39c397c650472ab82e6c6a5f7bf722d772faaf851bdaa0904dedc9b3fcda28')
+
+pkgver() {
+  cd "$srcdir/${_pkgname}"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$srcdir/${_pkgname}"
+  [[ -f $srcdir/config.h ]] && cp $srcdir/config.h .
+}
+
+build() {
+  make -C "$_pkgname"
+}
+
+package() {
+  cd "$srcdir/${_pkgname}"
+  make PREFIX=/usr DESTDIR="$pkgdir" install-all
+  ln -s /usr/bin/nsxiv "${pkgdir}/usr/bin/sxiv"
+}
+
+# vim:set ts=2 sw=2 et:
