@@ -440,8 +440,6 @@ Let’s install some desktop applications too, shall we?
 | nemo-preview    | Quick file previewer for Nemo                           |
 | obs-studio      | Simply the best screen recording and streaming software |
 | rofi            | A beautiful ~dmenu~ replacement                           |
-| sent            | Dead simple presentation tool                           |
-| sxiv            | The best keyboard-driven image viewer (after Emacs)     |
 
 All these packages will be installed with the command ~paru -S
 --skipreview --needed~ so it won’t nag me about the PKGBUILD when I
@@ -457,7 +455,7 @@ installed it paru won’t try to reinstall it.
         (mapconcat #'identity packages " \\\n"))
 #+end_src
 
-#+RESULTS[c695e04be22173bb49245f65a25c375d0ad865bf]: gen-package-list
+#+RESULTS[3ba0427505dea021df862ce544adec325416ecf1]: gen-package-list
 #+begin_src fish :exports none :tangle no
 set APPS bitwarden \
 discord \
@@ -468,8 +466,7 @@ nemo-fileroller \
 nemo-preview \
 obs-studio \
 rofi \
-sent \
-sxiv
+sent
 #+end_src
 
 #+name: gen-package-install
@@ -517,6 +514,38 @@ end
 <<gen-package-list(packages=packages-apps[,0],varname="APPSPKG")>>
 
 <<gen-package-install(varname="APPSPKG")>>
+#+end_src
+
+Finally, I wish to install some custom packages for which I’ve written
+a ~PKGBUILD~ file myself. I store all of them in a dedicated directory
+located in ~$HOME/Documents/code/PKGBUILDs~. I want to install some of
+them immediately.
+#+name: packages-pkgbuild
+| Package Name | What it is                                                       |
+|--------------+------------------------------------------------------------------|
+| emacs        | My custom Emacs build, it will replace the one already installed |
+| nsxiv        | The best image viewer after Emacs                                |
+| pumopm-git   | My very simple battery manager                                   |
+| sent         | A very simple presentation tool                                  |
+
+#+name: gen-package-pkgbuild
+#+header: :wrap "src fish :exports none"
+#+header: :exports none
+#+begin_src emacs-lisp :var packages=packages-pkgbuild[,0]
+(let ((base-dir "~/Documents/code/PKGBUILDs"))
+ (mapconcat (lambda (dir)
+              (format "cd %s && makepkg -si; cd .."
+                      (expand-file-name dir base-dir)))
+            packages
+            "\n"))
+#+end_src
+
+#+RESULTS[82db1c3f1b9c80b3c24075d1a20933be59baac47]: gen-package-pkgbuild
+#+begin_src fish :exports none
+cd /home/phundrak/Documents/code/PKGBUILDs/emacs && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/nsxiv && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/pumopm-git && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/sent && makepkg -si; cd ..
 #+end_src
 
 ** Tangle configuration files from Org files

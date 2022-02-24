@@ -625,11 +625,11 @@ videoIdentifier~ to get it through ~youtube-dl~.
 abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(uploader)s/%(title)s.%(ext)s"'
 #+END_SRC
 
-Some sane default options for ~sxiv~, a simple X image Viewer. This includes
-playing GIFs and not displaying the filename below. Sxiv will also open in
-fullscreen and will fit the displayed image to the frame.
+Some sane default options for [[https://github.com/nsxiv/nsxiv][~nsxiv~]]. This includes playing GIFs and
+not displaying the filename below. Nsxiv will also open in fullscreen
+and will fit the displayed image to the frame.
 #+BEGIN_SRC fish
-abbr sxiv 'sxiv -abfs f'
+abbr nsxiv 'nsxiv -abfs f'
 #+END_SRC
 
 Finally, let's declare the following abbreviation that will launch an mpv

@@ -234,14 +234,17 @@ nemo \
 nemo-fileroller \
 nemo-preview \
 obs-studio \
-rofi \
-sent \
-sxiv
+rofi
 
 printf "\n# Installing APPSPKG ##################################################\n\n"
 for pkg in $APPSPKG
     paru -S --skipreview --needed $pkg
 end
+
+cd /home/phundrak/Documents/code/PKGBUILDs/emacs && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/nsxiv && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/pumopm-git && makepkg -si; cd ..
+cd /home/phundrak/Documents/code/PKGBUILDs/sent && makepkg -si; cd ..
 
 mkdir -p $HOME/.config/fish
 mkdir -p $HOME/.config/gtk-2.0
