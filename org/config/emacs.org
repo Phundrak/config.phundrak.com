@@ -5283,20 +5283,6 @@ org-mode. ~mixed-pitch~ comes to the rescue!
   (add-hook 'org-agenda-mode-hook (lambda () (mixed-pitch-mode -1))))
 #+end_src
 
-With this, I also use ~org-pretty-tables~ in order to use some
-capabilities of Unicode in order to make tables nicer to look at.
-#+begin_src emacs-lisp
-(use-package org-pretty-table
-  :defer t
-  :after org
-  :straight (org-pretty-table :type git
-                              :host github
-                              :repo "Fuco1/org-pretty-table"
-                              :build t)
-  :hook (org-mode . org-pretty-table-mode)
-  :commands (org-pretty-table-mode global-org-pretty-table-mode))
-#+end_src
-
 I have an issue with org-mode’s emphasis markers: I find them ugly. I
 can of course hide them if I simply set ~org-hide-emphasis-markers~ to
 ~t~, but it makes editing hard since I never know whether I am before or
@@ -7294,6 +7280,27 @@ The DoomEmacs modeline looks nice in my opinion, let’s use it.
   :defer t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
+#+end_src
+
+*** Pixel-perfect alignment of Markdown and org-mode tables
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Visual-Configuration-Pixel-perfect-alignment-of-Markdown-and-org-mode-tables-u9rjl661bdj0
+:END:
+Usually, I have no issue with the alignment of the tables I write in
+org-mode and (more rarely) Markdown. However, there are occurences
+where I’ll use a character that does not exactly respect my monospace
+font, which messes with the alignment of the table (often when I do
+linguistics stuff). A solution to this is the package ~valign~. A little
+caveat though, as its name implies ~valign~ helps with vertical
+alignment. If some lines are too high, they won’t exactly fit. Unless?
+Unless ~valign-fancy-bar~ is set to ~t~.
+#+begin_src emacs-lisp
+(use-package valign
+  :defer t
+  :straight (:build t)
+  :after (org markdown-mode)
+  :hook ((org-mode markdown-mode) . valign-mode)
+  :custom ((valign-fancy-bar t)))
 #+end_src
 
 *** Secret mode
