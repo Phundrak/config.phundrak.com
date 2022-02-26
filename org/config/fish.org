@@ -294,6 +294,7 @@ my own executables, and some more.
 | $HOME/.gem/ruby/3.0.0/bin | Ruby 3.0 binaries and executables    |
 | $HOME/.gem/ruby/2.6.0/bin | Ruby 2.6 binaries and executables    |
 | $HOME/.cabal/bin          | Haskel binaries                      |
+| /usr/lib/xfce-polkit      | Path to XFCE’s PolKit             |
 
 #+NAME: generate-extra-paths
 #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
@@ -301,14 +302,15 @@ my own executables, and some more.
            paths " \\\n")
 #+END_SRC
 
-#+RESULTS[78b18fae502696c41836897c6fc3fd3dd82c98bd]: generate-extra-paths
+#+RESULTS[caa6bfe135b035f54500ca04ba157e5698adb657]: generate-extra-paths
 : $HOME/.pub-cache/bin \
 : $HOME/.local/bin \
 : $HOME/go/bin \
 : $HOME/.cargo/bin \
 : $HOME/.gem/ruby/3.0.0/bin \
 : $HOME/.gem/ruby/2.6.0/bin \
-: $HOME/.cabal/bin
+: $HOME/.cabal/bin \
+: /usr/lib/xfce-polkit
 
 So, let’s set our user paths:
 #+BEGIN_SRC fish :noweb yes
@@ -630,6 +632,7 @@ not displaying the filename below. Nsxiv will also open in fullscreen
 and will fit the displayed image to the frame.
 #+BEGIN_SRC fish
 abbr nsxiv 'nsxiv -abfs f'
+abbr sxiv  'nsxiv -abfs f' # old habits die hard
 #+END_SRC
 
 Finally, let's declare the following abbreviation that will launch an mpv
