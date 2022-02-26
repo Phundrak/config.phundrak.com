@@ -244,50 +244,53 @@ end
 Ok, let’s list all the packages that I need. First, let’s begin with
 system packages.
 #+name: packages-system
-| Package name           | Why I need it                                                       |
-|------------------------+---------------------------------------------------------------------|
-| acpi                   | Battery, power, and thermal readings                                |
-| acpilight              | To modify the monitors’ brightness                                  |
-| bluez-firmware         | Firmware for my bluetooth device                                    |
-| bluez-utils            | To interact with bluez through custom tools                         |
-| bzip2                  | A compression algorithm and program                                 |
-| cpupower               | Tool to examine and tune power saving related features of the CPU   |
-| exfat-utils            | Utilities for exFAT filesystems                                     |
-| ffmpegthumbnailer      | Create thumbnails with ffmpeg                                       |
-| freeglut               | A small OpenGL library                                              |
-| gcc-libs               | Runtime libraries for GCC                                           |
-| gdb                    | The GCC debugger                                                    |
-| gnome-disk-utility     | To manage easily my disks and partitions                            |
-| gnome-epub-thumbnailer | Thumbnailer for Epub files                                          |
-| i3lock-color           | My screen locker                                                    |
-| corrupter-git          | A script for my script using also i3lock-color                      |
-| inetutils              | Common network programs                                             |
-| jfsutils               | JFS utilities to interact with Android                              |
-| jmtpfs                 | FUSE filesystem for the MTP protocol                                |
-| kitty                  | My current terminal emulator, works with Xorg and Wayland           |
-| logrotate              | Rotate system logs automatically                                    |
-| man-pages              | Linux man pages                                                     |
-| man-db                 | Read the Linux man pages                                            |
-| netctl                 | Profile based systemd network management                            |
-| network-manager-applet | System tray applet for NetworkManager                               |
-| networkmanager-openvpn | Connect to OpenVPN servers with NetworkManager                      |
-| nm-connection-editor   | Manager NetworkManager connections                                  |
-| ntfs-3g                | Utilities to access NTFS filesystems                                |
-| openssh                | SSH. Do I need to say anything more than that?                      |
-| pavucontrol            | Graphical interface to PulseAudio settings                          |
-| pulseaudio-bluetooth   | Bluetooth support for PulseAudio                                    |
-| raw-thumbnailer        | thumbnailer for RAW images                                          |
-| reflector              | Sort pacman mirrors                                                 |
-| shadow                 | Password & account management tools supporting shadow files and PAM |
-| sshfs                  | Mount remote filesystems through SSH                                |
-| usbutils               | USB utilities                                                       |
-| xdg-user-dirs-gtk      | Creates user dirs and asks to relocalize them                       |
-| xfce-polkit            | XFCE’s policy kit                                                   |
-| xidlehook              | xautolock with extra features                                       |
-| xfsprogs               | Access XFS filesystems                                              |
-| xorg-xinit             | xorg init program                                                   |
-| xss-lock               | Use an external program as X lock screen                            |
-| xwallpaper             | Set my Xorg session’s wallpaper                                     |
+| Package name                | Why I need it                                                |
+|-----------------------------+--------------------------------------------------------------|
+| acpi                        | Battery, power, and thermal readings                         |
+| acpilight                   | To modify the monitors’ brightness                           |
+| bluez-firmware              | Firmware for my bluetooth device                             |
+| bluez-utils                 | To interact with bluez through custom tools                  |
+| bzip2                       | A compression algorithm and program                          |
+| cpupower                    | Examine and tune power saving related features of the CPU    |
+| exfat-utils                 | Utilities for exFAT filesystems                              |
+| ffmpegthumbnailer           | Create thumbnails with ffmpeg                                |
+| freeglut                    | A small OpenGL library                                       |
+| gcc-libs                    | Runtime libraries for GCC                                    |
+| gdb                         | The GCC debugger                                             |
+| gnome-disk-utility          | To manage easily my disks and partitions                     |
+| gnome-epub-thumbnailer      | Thumbnailer for Epub files                                   |
+| i3lock-color                | My screen locker                                             |
+| corrupter-git               | A script for my script using also i3lock-color               |
+| inetutils                   | Common network programs                                      |
+| jfsutils                    | JFS utilities to interact with Android                       |
+| jmtpfs                      | FUSE filesystem for the MTP protocol                         |
+| kitty                       | My current terminal emulator, works with Xorg and Wayland    |
+| logrotate                   | Rotate system logs automatically                             |
+| man-pages                   | Linux man pages                                              |
+| man-db                      | Read the Linux man pages                                     |
+| netctl                      | Profile based systemd network management                     |
+| network-manager-applet      | System tray applet for NetworkManager                        |
+| networkmanager-openvpn      | Connect to OpenVPN servers with NetworkManager               |
+| nm-connection-editor        | Manager NetworkManager connections                           |
+| ntfs-3g                     | Utilities to access NTFS filesystems                         |
+| openssh                     | SSH. Do I need to say anything more than that?               |
+| pavucontrol                 | Graphical interface to PulseAudio settings                   |
+| wireplumber                 | Session manager for PipeWire                                 |
+| pipewire-pulse              | PipeWire replacement for ~pulseaudio~ and ~pulseaudio-bluetooth~ |
+| gst-plugin-pipewire         | PipeWire plugin for GStreamer                                |
+| noise-suppression-for-voice | Realtime noise suppression plugin for voice                  |
+| raw-thumbnailer             | thumbnailer for RAW images                                   |
+| reflector                   | Sort pacman mirrors                                          |
+| shadow                      | Password & account management tools                          |
+| sshfs                       | Mount remote filesystems through SSH                         |
+| usbutils                    | USB utilities                                                |
+| xdg-user-dirs-gtk           | Creates user dirs and asks to relocalize them                |
+| xfce-polkit                 | XFCE’s policy kit                                            |
+| xidlehook                   | xautolock with extra features                                |
+| xfsprogs                    | Access XFS filesystems                                       |
+| xorg-xinit                  | xorg init program                                            |
+| xss-lock                    | Use an external program as X lock screen                     |
+| xwallpaper                  | Set my Xorg session’s wallpaper                              |
 
 For development purposes, I need the following packages:
 #+name: packages-devel
@@ -435,6 +438,7 @@ Let’s install some desktop applications too, shall we?
 | discord         | For messaging friends                                   |
 | firefox         | Because I need a good browser                           |
 | gimp            | GIMP Is Mbetter than Photoshop                          |
+| helvum          | Pipewire patchbay                                       |
 | nemo            | One of the best graphical file managers                 |
 | nemo-fileroller | Add compression options to Nemo                         |
 | nemo-preview    | Quick file previewer for Nemo                           |
@@ -455,18 +459,18 @@ installed it paru won’t try to reinstall it.
         (mapconcat #'identity packages " \\\n"))
 #+end_src
 
-#+RESULTS[3ba0427505dea021df862ce544adec325416ecf1]: gen-package-list
+#+RESULTS[53aa8b22c675edad2d6d21c0095ff233bb5e26c4]: gen-package-list
 #+begin_src fish :exports none :tangle no
 set APPS bitwarden \
 discord \
 firefox \
 gimp \
+helvum \
 nemo \
 nemo-fileroller \
 nemo-preview \
 obs-studio \
-rofi \
-sent
+rofi
 #+end_src
 
 #+name: gen-package-install
@@ -746,6 +750,18 @@ synced.
 sudo timedatectl set-ntp true
 #+END_SRC
 
+*** Acpilight
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Acpilight-39152794
+:END:
+~acpilight~ is our utility managing the brightness of our screen. There
+is actually no service to enable here, but we must ensure the user is
+part of the ~video~ group so we can modify the brightness of our screen
+without using ~sudo~.
+#+BEGIN_SRC fish
+sudo usermod -aG video $USER
+#+END_SRC
+
 *** Docker
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Enable_some_services-Docker-305e8309
@@ -798,32 +814,6 @@ mkdir -p ~/.config/mpd/playlists
 systemctl --user enable --now mpd
 #+END_SRC
 
-*** SSH server
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Enable_some_services-SSH_server-204f5997
-:END:
-Maybe we want to activate an SSH server on our machine. If so, we can enable it.
-Let’s ask the question.
-#+BEGIN_SRC fish
-whiptail --yesno 'Do you want to activate the ssh server?' 8 50
-if test $status -eq 0
-    printf "\n# Enabling ssh server #########################################################\n\n"
-    sudo systemctl enable --now sshd
-end
-#+END_SRC
-
-*** Acpilight
-:PROPERTIES:
-:CUSTOM_ID: Execute_bootstrap-Enable_some_services-Acpilight-39152794
-:END:
-~acpilight~ is our utility managing the brightness of our screen. There
-is actually no service to enable here, but we must ensure the user is
-part of the ~video~ group so we can modify the brightness of our screen
-without using ~sudo~.
-#+BEGIN_SRC fish
-sudo usermod -aG video $USER
-#+END_SRC
-
 *** NordVPN
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Enable_some_services-NordVPN-75c1bd88
@@ -873,6 +863,46 @@ able to use IPv6.
 nordvpn set notify enabled
 nordvpn set ipv6 enabled
 #+end_src
+
+*** PipeWire
+:PROPERTIES:
+:CUSTOM_ID: Execute-bootstrap-Enable-some-services-PipeWire-sihc11b0mdj0
+:END:
+PipeWire is a replacement for PulseAudio, ALSA and the likes, and it
+is /*much*/ better in terms of security and performance. However, unlike
+PulseAudio, Pipewire is a user service that needs to be enabled per
+user.
+#+begin_src fish
+systemctl --user enable --now pipewire-pulse.service
+#+end_src
+
+I also installed ~noise-suppression-for-voice~ which is a plugin usable
+by PipeWire to remove all noise the microphone might record save for
+the voice. It is damn effective, and it can be activated as a user
+service! In fact, I have in my dotfiles the service saved, so let’s
+activate it right away:
+#+begin_src fish
+systemctl --user enable --now pipewire-input-filter-chain.service
+#+end_src
+
+Just make sure afterwards the microphone is redirected to the noise
+canceling source. The same source should be your input device where
+you want to use your microphone. The only downside is this is ony a
+mono input, but it shouldn’t matter for most people.
+
+*** SSH server
+:PROPERTIES:
+:CUSTOM_ID: Execute_bootstrap-Enable_some_services-SSH_server-204f5997
+:END:
+Maybe we want to activate an SSH server on our machine. If so, we can enable it.
+Let’s ask the question.
+#+BEGIN_SRC fish
+whiptail --yesno 'Do you want to activate the ssh server?' 8 50
+if test $status -eq 0
+    printf "\n# Enabling ssh server #########################################################\n\n"
+    sudo systemctl enable --now sshd
+end
+#+END_SRC
 
 ** Symlink some system config files
 :PROPERTIES:

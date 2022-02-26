@@ -88,7 +88,10 @@ nm-connection-editor \
 ntfs-3g \
 openssh \
 pavucontrol \
-pulseaudio-bluetooth \
+wireplumber \
+pipewire-pulse \
+gst-plugin-pipewire \
+noise-suppression-for-voice \
 raw-thumbnailer \
 reflector \
 shadow \
@@ -230,6 +233,7 @@ set APPSPKG bitwarden \
 discord \
 firefox \
 gimp \
+helvum \
 nemo \
 nemo-fileroller \
 nemo-preview \
@@ -327,6 +331,8 @@ sudo systemctl enable --now systemd-timesyncd
 
 sudo timedatectl set-ntp true
 
+sudo usermod -aG video $USER
+
 printf "\n# Enabling and starting Docker ################################################\n\n"
 sudo systemctl enable --now docker
 
@@ -342,20 +348,22 @@ printf "\n# Enabling Mpd as a user service #####################################
 mkdir -p ~/.config/mpd/playlists
 systemctl --user enable --now mpd
 
-whiptail --yesno 'Do you want to activate the ssh server?' 8 50
-if test $status -eq 0
-    printf "\n# Enabling ssh server #########################################################\n\n"
-    sudo systemctl enable --now sshd
-end
-
-sudo usermod -aG video $USER
-
 sudo systemctl enable --now nordvpnd
 
 nordvpn s protocol tcp
 
 nordvpn set notify enabled
 nordvpn set ipv6 enabled
+
+systemctl --user enable --now pipewire-pulse.service
+
+systemctl --user enable --now pipewire-input-filter-chain.service
+
+whiptail --yesno 'Do you want to activate the ssh server?' 8 50
+if test $status -eq 0
+    printf "\n# Enabling ssh server #########################################################\n\n"
+    sudo systemctl enable --now sshd
+end
 
 sudo ln -s ~/.local/bin/plock /usr/bin/plock
 
