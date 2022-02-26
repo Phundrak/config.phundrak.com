@@ -3085,6 +3085,11 @@ though.
    "C-a" #'eshell-bol
    "C-e" #'end-of-line)
   :config
+  (setq eshell-prompt-function
+        (lambda ()
+          (concat (abbreviate-file-name (eshell/pwd))
+                  (if (= (user-uid) 0) " # " " λ ")))
+        eshell-prompt-regexp "^[^#λ\n]* [#λ] ")
   <<eshell-alias-file>>
   <<eshell-concat-shell-command>>
   <<eshell-alias-open>>
