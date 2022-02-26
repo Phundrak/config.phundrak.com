@@ -7445,9 +7445,10 @@ What’s the point of using Emacs if you can’t tell everyone?
   :config
   (setq elcord-use-major-mode-as-main-icon t
         elcord-refresh-rate                5
-        elcord-display-elapsed             nil)
-
-  (add-to-list 'elcord-boring-buffers-regexp-list ".*window-managers.*"))
+        elcord-display-elapsed             nil
+        elcord-boring-buffers-regexp-list  '("\\\\*.*"
+                                             ".*window-manager.*"
+                                             ".*mu4e.*")))
 #+end_src
 
 *** Enime
