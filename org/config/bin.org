@@ -17,7 +17,7 @@ from this file to the actual executables.
 
 * Autostart
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/autostart
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/autostart
 :CUSTOM_ID: Autostart-a99e99e7
 :END:
 Because I sometimes switch from window manager to window manager, creating a
@@ -28,64 +28,98 @@ of said command running.
 
 ~set-screens~ is a custom script declared [[*set-screens][below]].
 #+NAME: autostart-table
-| Command     | Arguments                           | Run once? |
-|-------------+-------------------------------------+-----------|
-| ~mpc~         | ~stop~                                | no        |
-| ~picom~       | ~--experimental-backends~             | yes       |
-| ~set-screens~ |                                     | no        |
-| ~numlockx~    | ~on~                                  | yes       |
-| ~pumopm~      |                                     | yes       |
-| ~xfce-polkit~ |                                     | yes       |
-| ~nm-applet~   |                                     | yes       |
-| ~xwallpaper~  | ~--zoom (cat $HOME/.cache/wallpaper)~ | no        |
-| ~xss-lock~    | ~plock~                               | yes       |
-| ~xrdb~        | ~-merge $HOME/.Xresources~            | no        |
+| Command     | Arguments                                | Run once? |
+|-------------+------------------------------------------+-----------|
+| ~pactl~       | ~load-module module-switch-on-connect~     |           |
+| ~mpc~         | ~stop~                                     | no        |
+| ~picom~       | ~--experimental-backends~                  | yes       |
+| ~set-screens~ |                                          | no        |
+| ~numlockx~    | ~on~                                       | yes       |
+| ~pumopm~      |                                          | yes       |
+| ~xfce-polkit~ |                                          | yes       |
+| ~nm-applet~   |                                          | yes       |
+| ~xwallpaper~  | ~--zoom "$(cat "$HOME"/.cache/wallpaper)"~ | no        |
+| ~xss-lock~    | ~plock~                                    | yes       |
+| ~xrdb~        | ~-merge "$HOME"/.Xresources~               | no        |
 
 #+NAME: autostart-gen
+#+header: :wrap "src bash :exports code"
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
 (mapconcat (lambda (start-command)
              (let ((command   (replace-regexp-in-string (regexp-quote "~") "" (nth 0 start-command)))
                    (arguments (replace-regexp-in-string (regexp-quote "~") "" (nth 1 start-command)))
                    (oncep     (string= "yes"    (nth 2 start-command))))
                (if oncep
-                   (format "pgrep -x %s 2&>/dev/null || echo (%s) 2&>/dev/null"
-                           command
-                           (replace-regexp-in-string " +" " " (format "%s %s & && disown"
-                                                                      command
-                                                                      arguments)))
+                   (format
+                    (concat "if pgrep -x %s ; then\n"
+                            "    echo \"%s already running\"\n"
+                            "else\n"
+                            "    %s &\n"
+                            "    disown\n"
+                            "fi")
+                    command
+                    command
+                    (replace-regexp-in-string " +" " " (format "%s %s"
+                                                               command
+                                                               arguments)))
                  (format "%s %s &" command arguments))))
            table
            "\n")
 #+END_SRC
 
-#+RESULTS[6246524876f7d46a8649c951a1145302c603bc78]: autostart-gen
-#+begin_example
+#+RESULTS[337fc252540623d17d47dc7e0661840db2a4eab5]: autostart-gen
+#+begin_src bash :exports code
+pactl load-module module-switch-on-connect &
 mpc stop &
-pgrep -x picom 2&>/dev/null || echo (picom --experimental-backends & && disown) 2&>/dev/null
+if pgrep -x picom ; then
+    echo "picom already running"
+else
+    picom --experimental-backends &
+    disown
+fi
 set-screens  &
-pgrep -x numlockx 2&>/dev/null || echo (numlockx on & && disown) 2&>/dev/null
-pgrep -x pumopm 2&>/dev/null || echo (pumopm & && disown) 2&>/dev/null
-pgrep -x xfce-polkit 2&>/dev/null || echo (xfce-polkit & && disown) 2&>/dev/null
-pgrep -x nm-applet 2&>/dev/null || echo (nm-applet & && disown) 2&>/dev/null
-xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
-pgrep -x xss-lock 2&>/dev/null || echo (xss-lock plock & && disown) 2&>/dev/null
-xrdb -merge $HOME/.Xresources &
-#+end_example
+if pgrep -x numlockx ; then
+    echo "numlockx already running"
+else
+    numlockx on &
+    disown
+fi
+if pgrep -x pumopm ; then
+    echo "pumopm already running"
+else
+    pumopm  &
+    disown
+fi
+if pgrep -x xfce-polkit ; then
+    echo "xfce-polkit already running"
+else
+    xfce-polkit  &
+    disown
+fi
+if pgrep -x nm-applet ; then
+    echo "nm-applet already running"
+else
+    nm-applet  &
+    disown
+fi
+xwallpaper --zoom "$(cat "$HOME"/.cache/wallpaper)" &
+if pgrep -x xss-lock ; then
+    echo "xss-lock already running"
+else
+    xss-lock plock &
+    disown
+fi
+xrdb -merge "$HOME"/.Xresources &
+#+end_src
 
 I also have an external sound card, a Scarlet 2i2 G3, that I would like to use
 as my default audio output. However, it might not be always connected, hence the
 following code:
-#+NAME: default-soundcard
-#+BEGIN_SRC fish :tangle no
-set SOUNDCARD "alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8KJ6NH094EF1C-00.analog-stereo"
-pactl list short sinks | grep $SOUNDCARD 2&> /dev/null && pactl set-default-sink $SOUNDCARD
-#+END_SRC
-
-#+BEGIN_SRC fish :noweb yes
-set -l PATH $PATH /usr/lib/xfce-polkit
-<<autostart-gen()>>
-<<default-soundcard>>
-#+END_SRC
+# #+NAME: default-soundcard
+# #+BEGIN_SRC fish
+# # set SOUNDCARD "alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8KJ6NH094EF1C-00.analog-stereo"
+# # pactl list short sinks | grep $SOUNDCARD 2&> /dev/null && pactl set-default-sink $SOUNDCARD
+# #+END_SRC
 
 * Screen utilities
 :PROPERTIES:
@@ -625,7 +659,7 @@ adjust_device
 :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/dired
 :END:
 #+BEGIN_SRC bash
-emacsclient -c -a emacs -e "(dired \"$@\")"
+emacsclient -c -a emacs -e "(dired \"$*\")"
 #+END_SRC
 
 ** Emacsmail
@@ -636,7 +670,7 @@ emacsclient -c -a emacs -e "(dired \"$@\")"
 This short script is used in my =~/.local/share/applications/mu4e.desktop= file
 in order to send to Emacs any ~mailto:~ requests made in my system.
 #+BEGIN_SRC bash
-emacsclient -c -n -a emacs -e "(browse-url-mail \"$@\")"
+emacsclient -c -n -a emacs -e "(browse-url-mail \"$*\")"
 #+END_SRC
 
 * Media
