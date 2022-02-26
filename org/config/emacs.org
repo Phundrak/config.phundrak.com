@@ -3311,6 +3311,14 @@ a more human-readable name, see [[https://protesilaos.com/codelog/2021-10-15-ema
   (setq eww-auto-rename-buffer 'title))
 #+end_src
 
+*** Image-mode
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Image-mode-dchdl251jdj0
+:END:
+#+begin_src emacs-lisp
+(setq image-use-external-converter t)
+#+end_src
+
 *** Info
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Info-r7x90j20c5j0
