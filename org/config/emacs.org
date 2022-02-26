@@ -6147,6 +6147,21 @@ config]]), therefore I need a mode for it.
   :straight (:build t))
 #+end_src
 
+**** Systemd
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Systemd-3a1dt090mdj0
+:END:
+#+begin_src emacs-lisp
+(use-package systemd
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps '(systemd-mode-map)
+    "d" '(systemd-doc-directives :which-key "directives manpage")
+    "o" 'systemd-doc-open))
+#+end_src
+
 **** Toml
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Toml-txu8xvk0k4j0
