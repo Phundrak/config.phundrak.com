@@ -150,7 +150,7 @@ wallpaper and Polybar on the new screen.
 set externaldisplay (xrandr -q --current | grep -A 1 -i "$external connected")
 if test -n "$externaldisplay"
     set resolution (echo $externaldisplay[2] | awk '{$1=$1;print $1}')
-    xrandr --output "$external" --primary --auto --mode "$resolution" --right-of "$internal"
+    xrandr --output "$external" --primary --auto --mode "$resolution" --left-of "$internal"
 end
 #+END_SRC
 
