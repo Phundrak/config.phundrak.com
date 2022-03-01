@@ -520,134 +520,21 @@ xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
 
 ** Wacom setup
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/wacom-setup
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/wacom-setup
 :CUSTOM_ID: Wacom_setup-331fb024
 :END:
-I made a small and quick utility to set up my Wacom tablet so it is only bound
-to one screen.
+I made a small and quick utility to set up my Wacom tablet so it is
+only bound to one screen. This is quite easy, we simply need to find
+the Wacom stylus’ ID and assign it to the display we want.
 
-*** Set our variables
-:PROPERTIES:
-:CUSTOM_ID: Wacom_setup-Set_our_variables-3cb6d58e
-:END:
-We need some variables in order to correctly set our tablet. First, let’s get
-declare what the name of our tablet is, and what the name of its touchpad is.
-#+BEGIN_SRC fish
-set -g DEVICE "Wacom USB Bamboo PAD Pen stylus"
-#+END_SRC
-
-To get the correct values for the area it can cover, we’ll need to reset our
-tablet.
-#+BEGIN_SRC fish
-xsetwacom set "$DEVICE" ResetArea
-#+END_SRC
-
-Now we can get the X and Y areas.
-#+BEGIN_SRC fish
-set -g AREATOT (xsetwacom get "$DEVICE" Area)
-set -g AREAX (echo $AREATOT | awk '{print $3}')
-set -g AREAY (echo $AREATOT | awk '{print $4}')
-#+END_SRC
-
-*** Select our screen
-:PROPERTIES:
-:CUSTOM_ID: Wacom_setup-Select_our_screen-7822c0c3
-:END:
-This function will allow us to select the screen on which the tablet will be
-active. We can also select the option “desktop” so that all screens are
-selected. Let’s declare our function.
-#+BEGIN_SRC fish :noweb yes
-function set_screen
-    <<wacom-screen-get-displays>>
-    <<wacom-screens-select-screen>>
-    <<wacom-screen-get-position>>
-    <<wacom-screen-get-dimensions>>
-end
-#+END_SRC
-
-First, let’s set what screens are available, including the desktop option.
-#+NAME: wacom-screen-get-displays
-#+BEGIN_SRC fish :tangle no
-set CONNECTED_DISPLAYS (xrandr -q --current | \
-sed -n 's/^\([^ ]\+\) connected .*/\1/p') desktop
-#+END_SRC
-
-Now, let’s select the one we wish to use using rofi.
-#+NAME: wacom-screens-select-screen
-#+BEGIN_SRC fish :tangle no
-set -g SCREEN (for d in $CONNECTED_DISPLAYS
-    echo $d
-end | rofi -dmenu -i -p "Select your dispaly" | tr -d '\n')
-#+END_SRC
-
-We can now get the position of our screen.
-#+NAME: wacom-screen-get-position
-#+BEGIN_SRC fish :tangle no
-set -g POSITION (xrandr -q --current | sed -nr "s/^$SCREEN connected (primary )*([0-9x\+]+).*/\2/p")
-#+END_SRC
-
-We’ll also get the width and height of the screen so we can set correctly the
-drawing area of the tablet.
-#+NAME: wacom-screen-get-dimensions
-#+BEGIN_SRC fish :tangle no
-set -g HEIGHT (echo $POSITION | sed -nr 's/[0-9]+x([0-9]+).*/\1/p')
-set -g WIDTH  (echo $POSITION | sed -nr 's/([0-9]+)x.*/\1/p')
-#+END_SRC
-
-*** Adjust the tablet
-:PROPERTIES:
-:CUSTOM_ID: Wacom_setup-Adjust_the_tablet-342acaf3
-:END:
-This function will take care of adjusting our tablet to our screen. Let’s
-declare our function.
-#+BEGIN_SRC fish :noweb yes
-function adjust_device
-    <<wacom-tablet-set-ration-area>>
-    <<wacom-tablet-set-new-area>>
-    <<wacom-tablet-set-device-area-and-screen>>
-end
-#+END_SRC
-
-If our screen is too high or too wide for our tablet, we will have to adjust the
-height or width of the area used by the tablet. So let’s get the theoretical new
-height and width of the area.
-#+NAME: wacom-tablet-set-ration-area
-#+BEGIN_SRC fish :tangle no
-set RATIOAREAY (math ceil \($AREAX \* $HEIGHT \/ $WIDTH\))
-set RATIOAREAX (math ceil \($AREAY \* $WIDTH \/ $HEIGHT\))
-#+END_SRC
-
-Now, if the current height of the tablet’s area is greater than the theoretical
-new area, it means the current area is too high. Otherwise, it should be the
-other way around. Let’s set =NEWAREAX= and =NEWAREAY= that will be used to set
-the new area for the tablet.
-#+NAME: wacom-tablet-set-new-area
-#+BEGIN_SRC fish :tangle no
-if test $AREAY -gt $RATIOAREAY
-    set -g NEWAREAX $AREAX
-    set -g NEWAREAY $RATIOAREAY
-else
-    set -g NEWAREAX $RATIOAREAX
-    set -g NEWAREAY $AREAY
-end
-#+END_SRC
-
-Alright, now let’s set the new area with these new variables.
-#+NAME: wacom-tablet-set-device-area-and-screen
-#+BEGIN_SRC fish :tangle no
-xsetwacom set "$DEVICE" Area 0 0 $NEWAREAX $NEWAREAY
-#+END_SRC
-
-*** Lauch the functions
-:PROPERTIES:
-:CUSTOM_ID: Wacom_setup-Lauch_the_functions-2ab8b4d9
-:END:
-Back to the main body of the script, we can now launch the functions
-sequencially.
-#+BEGIN_SRC fish
-set_screen
-adjust_device
-#+END_SRC
+#+begin_src sh
+ID=$(xinput | grep -oPi "wacom.+stylus.+id=\K([0-9]+)")
+SCREEN=$(xrandr -q --current | \
+             grep -iPo '^([^ ])+(?= connected)' | \
+             rofi -dmenu -i -p 'Select your display' | \
+             tr -d '\n')
+xinput map-to-output "$ID" "$SCREEN"
+#+end_src
 
 * Emacs stuff
 :PROPERTIES:
