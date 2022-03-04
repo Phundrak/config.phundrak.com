@@ -1323,6 +1323,22 @@ Finally, let’s make ~ivy~ richer:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications94i0fl6184j0
 :END:
+*** Bitwarden
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Bitwarden-cjme4wv0rdj0
+:END:
+This package is still a very much work in progress one I’m developing
+in order to interact with Bitwarden in Emacs with the help of the
+[[https://github.com/bitwarden/cli][Bitwarden CLI]]. Use at your own risks.
+#+begin_src emacs-lisp
+(use-package bitwarden
+  :defer t
+  :straight (bitwarden :build t
+                       :type git
+                       :host nil
+                       :repo "https://labs.phundrak.com/phundrak/bitwarden.el"))
+#+end_src
+
 *** Docker
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Docker5ul0fl6184j0
