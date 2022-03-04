@@ -3662,6 +3662,7 @@ exwm-randr ran, because otherwise having multiple monitors don’t work.
 The complete configuration for the ~exwm~ package can be found below.
 #+begin_src emacs-lisp :noweb yes
 (use-package exwm
+  :if (seq-contains-p command-line-args "--use-exwm")
   :straight (exwm :build t
                   :type git
                   :host github
@@ -3696,6 +3697,7 @@ The complete configuration for the ~exwm~ package can be found below.
 :END:
 #+begin_src emacs-lisp
 (use-package evil-exwm-state
+  :if (seq-contains-p command-line-args "--use-exwm")
   :defer t
   :after exwm
   :straight (evil-exwm-state :build t
