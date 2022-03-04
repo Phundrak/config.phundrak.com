@@ -2641,10 +2641,10 @@ excluded files.
 (use-package recentf
   :straight (:build t :type built-in)
   :custom ((recentf-max-saved-items 200))
-  :init
-  (add-to-list 'recentf-exclude (rx (* any)
-                                    "elfeed-db"
-                                    (* any))))
+  :config
+  (add-to-list 'recentf-exclude (rx (* print)
+                                    (or "elfeed-db" "eln-cache")
+                                    (* print))))
 #+end_src
 
 *** Screenshot
