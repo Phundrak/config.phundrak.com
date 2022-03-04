@@ -7761,6 +7761,13 @@ I also have some keybinds dedicated to opening specific files.
           (interactive)
           (find-file (concat user-emacs-directory "init.el")))
         :which-key "init.el")
+"fR"  '((lambda ()
+          (interactive)
+          (counsel-find-file ""
+                             (concat user-emacs-directory
+                                    (file-name-as-directory "straight")
+                                    (file-name-as-directory "repos"))))
+        :which-key "straight package")
 "fS"  '((lambda ()
           (interactive)
           (find-file "~/org/config/stumpwm.org"))
