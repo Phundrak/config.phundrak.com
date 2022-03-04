@@ -7310,12 +7310,16 @@ linguistics stuff). A solution to this is the package ~valign~. A little
 caveat though, as its name implies ~valign~ helps with vertical
 alignment. If some lines are too high, they won’t exactly fit. Unless?
 Unless ~valign-fancy-bar~ is set to ~t~.
+
+For now, I disabled the hook with org-mode and markdown-mode because
+it slows down opening these files quite a lot. I’ll re-enable the hook
+once it is fixed.
 #+begin_src emacs-lisp
 (use-package valign
   :defer t
   :straight (:build t)
   :after (org markdown-mode)
-  :hook ((org-mode markdown-mode) . valign-mode)
+  ;; :hook ((org-mode markdown-mode) . valign-mode)
   :custom ((valign-fancy-bar t)))
 #+end_src
 
