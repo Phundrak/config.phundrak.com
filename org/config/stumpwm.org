@@ -1163,9 +1163,13 @@ The first thing to do is load ~slynk~, SLY’s server:
 Now we can define a command to launch the server. I don’t want it to
 run all the time, just when I need it.
 #+begin_src lisp
-(stumpwm:defcommand start-sly-server () ()
-  "Start a SLYNK server for SLY"
+(stumpwm:defcommand sly-start-server () ()
+  "Start a slynk server for sly."
   (slynk:create-server :dont-close t))
+
+(stumpwm:defcommand sly-stop-server () ()
+  "Stop current slynk server for sly."
+  (slynk:stop-server 4005))
 #+end_src
 
 ** ~swm-ssh~
