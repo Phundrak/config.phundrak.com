@@ -28,19 +28,20 @@ of said command running.
 
 ~set-screens~ is a custom script declared [[*set-screens][below]].
 #+NAME: autostart-table
-| Command     | Arguments                                | Run once? |
-|-------------+------------------------------------------+-----------|
-| ~pactl~       | ~load-module module-switch-on-connect~     |           |
-| ~mpc~         | ~stop~                                     | no        |
-| ~picom~       | ~--experimental-backends~                  | yes       |
-| ~set-screens~ |                                          | no        |
-| ~numlockx~    | ~on~                                       | yes       |
-| ~pumopm~      |                                          | yes       |
-| ~xfce-polkit~ |                                          | yes       |
-| ~nm-applet~   |                                          | yes       |
-| ~xwallpaper~  | ~--zoom "$(cat "$HOME"/.cache/wallpaper)"~ | no        |
-| ~xss-lock~    | ~plock~                                    | yes       |
-| ~xrdb~        | ~-merge "$HOME"/.Xresources~               | no        |
+| Command              | Arguments                                | Run once? |
+|----------------------+------------------------------------------+-----------|
+| ~pactl~                | ~load-module module-switch-on-connect~     |           |
+| ~mpc~                  | ~stop~                                     | no        |
+| ~xrdb~                 | ~-merge "$HOME"/.Xresources~               | no        |
+| ~picom~                | ~--experimental-backends~                  | yes       |
+| ~set-screens~          |                                          | no        |
+| ~numlockx~             | ~on~                                       | yes       |
+| ~pumopm~               |                                          | yes       |
+| ~xfce-polkit~          |                                          | yes       |
+| ~nm-applet~            |                                          | yes       |
+| ~xwallpaper~           | ~--zoom "$(cat "$HOME"/.cache/wallpaper)"~ | no        |
+| ~xss-lock~             | ~plock~                                    | yes       |
+| ~/usr/lib/kdeconnectd~ |                                          | yes       |
 
 #+NAME: autostart-gen
 #+header: :wrap "src bash :exports code"
@@ -67,10 +68,11 @@ of said command running.
            "\n")
 #+END_SRC
 
-#+RESULTS[337fc252540623d17d47dc7e0661840db2a4eab5]: autostart-gen
+#+RESULTS[7f5adf8d562e118b8e468d7c62c94a8708d32d9e]: autostart-gen
 #+begin_src bash :exports code
 pactl load-module module-switch-on-connect &
 mpc stop &
+xrdb -merge "$HOME"/.Xresources &
 if pgrep -x picom ; then
     echo "picom already running"
 else
@@ -109,17 +111,24 @@ else
     xss-lock plock &
     disown
 fi
-xrdb -merge "$HOME"/.Xresources &
+if pgrep -x /usr/lib/kdeconnectd ; then
+    echo "/usr/lib/kdeconnectd already running"
+else
+    /usr/lib/kdeconnectd  &
+    disown
+fi
 #+end_src
 
-I also have an external sound card, a Scarlet 2i2 G3, that I would like to use
-as my default audio output. However, it might not be always connected, hence the
-following code:
-# #+NAME: default-soundcard
-# #+BEGIN_SRC fish
-# # set SOUNDCARD "alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8KJ6NH094EF1C-00.analog-stereo"
-# # pactl list short sinks | grep $SOUNDCARD 2&> /dev/null && pactl set-default-sink $SOUNDCARD
-# #+END_SRC
+I also have an external sound card, a Scarlet 2i2 G3, that I would
+like to use as my default audio output. However, it might not be
+always connected, hence the following code:
+#+NAME: default-soundcard
+#+BEGIN_SRC bash
+SOUNDCARD=$(pactl list short sinks | grep "Focusrite")
+if [[ -n $SOUNDCARD ]]; then
+    pactl set-default-sink "$(echo "$SOUNDCARD" | awk '{print $2}')"
+fi
+#+END_SRC
 
 * Screen utilities
 :PROPERTIES:
