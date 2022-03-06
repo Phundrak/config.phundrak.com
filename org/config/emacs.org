@@ -5062,26 +5062,33 @@ project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
 #+BEGIN_SRC emacs-lisp
 (defvar phundrak//projects-conlanging-target
-  "/ssh:Tilo:~/www/phundrak.com/langue/"
-  "Points to where exported files for langue.phundrak.com should be put")
+  "/ssh:Tilo:~/www/phundrak.com/conlang"
+  "Points to where exported files for langue.phundrak.com should be put.")
 (defvar phundrak//projects-conlanging-source
   "~/Documents/conlanging/content/"
-  "Points to where the sources for langue.phundrak.com are")
+  "Points to where the sources for langue.phundrak.com are.")
 (defvar phundrak//projects-conlanging-language
-  "fr"
-  "Language of langue.phundrak.com")
+  "en"
+  "Language of langue.phundrak.com.")
 (defvar phundrak//projects-conlanging-recursive
   t
-  "Defines whether subdirectories should be parsed for langue.phundrak.com")
+  "Defines whether subdirectories should be parsed for langue.phundrak.com.")
 #+END_SRC
 
 The first component is the one generating the HTML files from the org files.
 #+NAME: org-proj-lang-html
 #+BEGIN_SRC emacs-lisp
-("langue-phundrak-com-org"
+("conlang-phundrak-com-org"
  :base-directory ,phundrak//projects-conlanging-source
  :base-extension "org"
- :exclude "\\./\\(CONTRIB\\|README\\|head\\|temp\\|svg-ink\\).*"
+ :exclude ,(rx (* print)
+               (or "CONTRIB"
+                   "README"
+                   "header"
+                   "temp"
+                   "private"
+                   "svg-ink")
+               (* print))
  :publishing-directory ,phundrak//projects-conlanging-target
  :recursive ,phundrak//projects-conlanging-recursive
  :language ,phundrak//projects-conlanging-language
@@ -5094,10 +5101,19 @@ The first component is the one generating the HTML files from the org files.
 We also have the component for the LaTeX and PDF part of the website:
 #+NAME: org-proj-lang-pdf
 #+BEGIN_SRC emacs-lisp
-("langue-phundrak-com-pdf"
+("conlang-phundrak-com-pdf"
  :base-directory ,phundrak//projects-conlanging-source
  :base-extension "org"
- :exclude "\\./\\(CONTRIB\\|README\\|index\\|head\\|temp\\|svg-ink\\).*"
+ :exclude ,(rx (* print)
+               (or "CONTRIB"
+                   "README"
+                   "header"
+                   "temp"
+                   "index"
+                   "sitemap"
+                   "private"
+                   "svg-ink")
+               (* print))
  :publishing-directory ,phundrak//projects-conlanging-target
  :recursive ,phundrak//projects-conlanging-recursive
  :language ,phundrak//projects-conlanging-language
@@ -5110,7 +5126,7 @@ And lastly, we have the component for all the static files needed to run the
 website:
 #+NAME: org-proj-lang-static
 #+BEGIN_SRC emacs-lisp
-("langue-phundrak-com-static"
+("conlang-phundrak-com-static"
  :base-directory ,phundrak//projects-conlanging-source
  :base-extension "png\\|jpg\\|gif\\|webp\\|svg\\|jpeg\\|ttf\\|woff\\|txt\\|epub"
  :publishing-directory ,phundrak//projects-conlanging-target
@@ -5122,10 +5138,10 @@ website:
 The project is then defined like so:
 #+NAME: org-proj-lang
 #+BEGIN_SRC emacs-lisp
-("langue-phundrak-com"
- :components ("langue-phundrak-com-org"
-              "langue-phundrak-com-static"
-              "langue-phundrak-com-pdf"))
+("conlang-phundrak-com"
+ :components ("conlang-phundrak-com-org"
+              "conlang-phundrak-com-static"
+              "conlang-phundrak-com-pdf"))
 #+END_SRC
 
 *** Org-ref and Bibtex configuration
