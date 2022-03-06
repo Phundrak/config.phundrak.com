@@ -2640,11 +2640,15 @@ excluded files.
 #+begin_src emacs-lisp
 (use-package recentf
   :straight (:build t :type built-in)
-  :custom ((recentf-max-saved-items 200))
+  :custom ((recentf-max-saved-items 2000))
   :config
-  (add-to-list 'recentf-exclude (rx (* print)
-                                    (or "elfeed-db" "eln-cache")
-                                    (* print))))
+  (add-to-list 'recentf-exclude (rx (or (seq (* print)
+                                             (or "elfeed-db" "eln-cache")
+                                             (* print))
+                                        (seq (* print)
+                                             "conlanging/content"
+                                             (* print)
+                                             (or "html" "pdf" "tex"))))))
 #+end_src
 
 *** Screenshot
