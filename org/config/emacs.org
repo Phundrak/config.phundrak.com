@@ -5148,6 +5148,26 @@ The project is then defined like so:
               "conlang-phundrak-com-pdf"))
 #+END_SRC
 
+This project leaves a lot of junk files here and there. This is why I
+have this command to remove them easily.
+#+begin_src emacs-lisp
+(defun phundrak/clean-conlanging-directory ()
+  "Clean my conlanging directory from junk files."
+  (interactive)
+  (let ((files (directory-files-recursively phundrak//projects-conlanging-source
+                                            (rx (* print)
+                                                "."
+                                                (or "glo"
+                                                    "html"
+                                                    "ist"
+                                                    "tex"
+                                                    "pdf")))))
+    (mapc (lambda (file) (delete-file file))
+       (cl-remove-if (lambda (str)
+                       (string-match-p (regexp-quote "headers.tex") str))
+                     files))))
+#+end_src
+
 *** Org-ref and Bibtex configuration
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-org-ref-1h586cd085j0
