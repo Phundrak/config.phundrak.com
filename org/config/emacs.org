@@ -638,13 +638,9 @@ and ending with the extension of the requested TYPE."
 I used this function to take the screenshots you can see in this
 document.
 
-** Org Functions
+** Handle new windows
 :PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Org-Functionsyshkel6184j0
-:END:
-*** Handle new windows
-:PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Org-Functions-Handle-new-windowst7pkel6184j0
+:CUSTOM_ID: Custom-Elisp-Handle-new-windows-f1za1rl02ej0
 :END:
 The two functions below allow the user to not only create a new window
 to the right or below the current window (respectively), but also to
