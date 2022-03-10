@@ -721,12 +721,13 @@ the value `split-window-right', then it will be changed to
 :END:
 By default, only GNU’s repositories are available to the package
 managers of Emacs. I also want to use Melpa and org-mode’s repository,
-so let’s add them! Note that the /Elpa/ repository has been renamed to
-the /gnu/ repository due to the addition of another Elpa repository,
-/nongnu/, which will hosts packages that do not conform to the FSF’s
-copyright assignment. Both the /gnu/ and the /nonfree/ repositories are
-Elpa repositories now, and they were renamed in order to avoid any
-confusion between the two of them.
+so let’s add them! Note that the stock /elpa/ repository is renamed to
+/gnu/ due to the addition of another Elpa repository, /nongnu/, which will
+hosts packages that do not conform to the FSF’s copyright assignment.
+Both the /gnu/ and the /nonfree/ repositories are Elpa repositories now,
+and they are renamed here in order to avoid any confusion between the
+two of them. Melpa is a community-maintained repository which contains
+an absurd amount of Emacs packages.
 #+begin_src emacs-lisp
 (setq package-archives '(("melpa"  . "https://melpa.org/packages/")
                          ("gnu"    . "https://elpa.gnu.org/packages/")
