@@ -635,23 +635,7 @@ and ending with the extension of the requested TYPE."
     (message filename)))
 #+end_src
 
-For convenience’s sake, I’ll also write two functions dedicated to
-taking a screenshot in the SVG format and the PNG format respectively.
-#+begin_src emacs-lisp
-(defun self-screenshot-svg ()
-  "Save an SVG screenshot of Emacs.
-See `self-screenshot'."
-  (interactive)
-  (self-screenshot 'svg))
-
-(defun self-screenshot-png ()
-  "Save a PNG screenshot of Emacs.
-See `self-screenshot'."
-  (interactive)
-  (self-screenshot 'png))
-#+end_src
-
-These functions were used to take the screenshots you can see in this
+I used this function to take the screenshots you can see in this
 document.
 
 ** Org Functions
