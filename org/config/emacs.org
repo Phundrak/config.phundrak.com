@@ -2633,7 +2633,10 @@ excluded files.
                                         (seq (* print)
                                              "conlanging/content"
                                              (* print)
-                                             (or "html" "pdf" "tex"))))))
+                                             (or "html" "pdf" "tex"))
+                                        (seq (* any)
+                                             "/Mail/Sent"
+                                             (* any))))))
 #+end_src
 
 *** Screenshot
