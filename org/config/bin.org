@@ -42,33 +42,35 @@ of said command running.
 | ~xwallpaper~           | ~--zoom "$(cat "$HOME"/.cache/wallpaper)"~ | no        |
 | ~xss-lock~             | ~plock~                                    | yes       |
 | ~/usr/lib/kdeconnectd~ |                                          | yes       |
+| ~dunst~                |                                          | yes       |
 
 #+NAME: autostart-gen
 #+header: :wrap "src bash :exports code"
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
 (mapconcat (lambda (start-command)
-             (let ((command   (replace-regexp-in-string (regexp-quote "~") "" (nth 0 start-command)))
-                   (arguments (replace-regexp-in-string (regexp-quote "~") "" (nth 1 start-command)))
-                   (oncep     (string= "yes"    (nth 2 start-command))))
+             (let* ((command   (replace-regexp-in-string (regexp-quote "~") "" (nth 0 start-command)))
+                    (arguments (replace-regexp-in-string (regexp-quote "~") "" (nth 1 start-command)))
+                    (oncep     (string= "yes"    (nth 2 start-command)))
+                    (full-command (replace-regexp-in-string " +"
+                                                            " "
+                                                            (format "%s %s &" command arguments))))
                (if oncep
                    (format
                     (concat "if pgrep -x %s ; then\n"
                             "    echo \"%s already running\"\n"
                             "else\n"
-                            "    %s &\n"
+                            "    %s\n"
                             "    disown\n"
                             "fi")
                     command
                     command
-                    (replace-regexp-in-string " +" " " (format "%s %s"
-                                                               command
-                                                               arguments)))
-                 (format "%s %s &" command arguments))))
+                    full-command)
+                 full-command)))
            table
            "\n")
 #+END_SRC
 
-#+RESULTS[7f5adf8d562e118b8e468d7c62c94a8708d32d9e]: autostart-gen
+#+RESULTS[97a97fceb694333615e59599d7c2d7fac52c5e8d]: autostart-gen
 #+begin_src bash :exports code
 pactl load-module module-switch-on-connect &
 mpc stop &
@@ -79,7 +81,7 @@ else
     picom --experimental-backends &
     disown
 fi
-set-screens  &
+set-screens &
 if pgrep -x numlockx ; then
     echo "numlockx already running"
 else
@@ -89,19 +91,19 @@ fi
 if pgrep -x pumopm ; then
     echo "pumopm already running"
 else
-    pumopm  &
+    pumopm &
     disown
 fi
 if pgrep -x xfce-polkit ; then
     echo "xfce-polkit already running"
 else
-    xfce-polkit  &
+    xfce-polkit &
     disown
 fi
 if pgrep -x nm-applet ; then
     echo "nm-applet already running"
 else
-    nm-applet  &
+    nm-applet &
     disown
 fi
 xwallpaper --zoom "$(cat "$HOME"/.cache/wallpaper)" &
@@ -114,7 +116,13 @@ fi
 if pgrep -x /usr/lib/kdeconnectd ; then
     echo "/usr/lib/kdeconnectd already running"
 else
-    /usr/lib/kdeconnectd  &
+    /usr/lib/kdeconnectd &
+    disown
+fi
+if pgrep -x dunst ; then
+    echo "dunst already running"
+else
+    dunst &
     disown
 fi
 #+end_src

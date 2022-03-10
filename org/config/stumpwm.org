@@ -1112,28 +1112,6 @@ paru -S libfixposix --noconfirm
 <<keybinds-gen(map="*root-map*", keybinds=nm-keybinds)>>
 #+end_src
 
-** Notifications
-:PROPERTIES:
-:CUSTOM_ID: Utilities-Notifications-g7rj2qu0z9j0
-:END:
-No need for ~dunst~ or something like that, the contrib modules of
-StumpWM have got us covered! Simply load the module and toggle the
-server on.
-#+begin_src lisp
-(load-module "notify")
-
-(notify:notify-server-toggle)
-
-#+end_src
-
-I don’t like the default colors of the notifications though, let’s change that.
-#+begin_src lisp
-(load "~/.stumpwm.d/colors.lisp")
-
-(setf notify:*notify-server-title-color* "^2"
-      notify:*notify-server-body-color* "^7")
-#+end_src
-
 ** Pinentry
 :PROPERTIES:
 :CUSTOM_ID: Utilities-Pinentry-o6v95fu0z9j0
