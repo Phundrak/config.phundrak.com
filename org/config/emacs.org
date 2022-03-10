@@ -642,26 +642,6 @@ document.
 :PROPERTIES:
 :CUSTOM_ID: Custom-Elisp-Org-Functionsyshkel6184j0
 :END:
-*** Emphasize text                                               :noexport:
-:PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Org-Functions-Emphasize-textkilkel6184j0
-:END:
-| /        |    <c>    |      <c>       |
-| Emphasis | Character | Character code |
-|----------+-----------+----------------|
-| Bold     |     ~*~     |       42       |
-| Italic   |     ~/~     |       47       |
-| Code     |     ~~~     |      126       |
-
-#+begin_src emacs-lisp
-(defun org-mode-emphasize-bold ()
-  "Emphasize as bold the current region.
-
-See also `org-emphasize'."
-  (interactive)
-  (org-emphasize 42))
-#+end_src
-
 *** Handle new windows
 :PROPERTIES:
 :CUSTOM_ID: Custom-Elisp-Org-Functions-Handle-new-windowst7pkel6184j0
@@ -690,26 +670,6 @@ focus the new window immediately.
     (delete-window)))
 #+end_src
 
-*** ~phundrak/toggle-org-src-window-split~
-:PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Org-Functions-phundrak-toggle-org-src-window-splito2tkel6184j0
-:END:
-#+begin_src emacs-lisp
-(defun phundrak/toggle-org-src-window-split ()
-  "This function allows the user to toggle the behavior of
-`org-edit-src-code'. If the variable `org-src-window-setup' has
-the value `split-window-right', then it will be changed to
-`split-window-below'. Otherwise, it will be set back to
-`split-window-right'"
-  (interactive)
-  (if (equal org-src-window-setup 'split-window-right)
-      (setq org-src-window-setup 'split-window-below)
-    (setq org-src-window-setup 'split-window-right))
-  (message "Org-src buffers will now split %s"
-           (if (equal org-src-window-setup 'split-window-right)
-               "vertically"
-             "horizontally")))
-#+end_src
 
 * Package Management
 :PROPERTIES:
@@ -4170,6 +4130,7 @@ extended however we like!
   <<org-behavior-electric>>
   <<org-capture-target-files>>
   <<org-capture-templates>>
+  <<org-create-emphasis-functions()>>
   <<org-babel-load-languages>>
   <<org-use-sub-superscripts>>
   <<org-latex-compiler>>
@@ -4552,6 +4513,104 @@ The capture templates are set like so:
         <<org-capture-shortcuts-gen()>>))
 #+end_src
 
+*** Custom functions
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Custom-functions-h3v07sl02ej0
+:END:
+**** Emphasize text
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functions-Emphasize-textkilkel6184j0
+:END:
+Sometimes, I want to emphasize some text in my org-mode documents.
+It’s very possible to just go to the begining of the chosen text, add
+the marker, then go to the end of the text than needs emphasis and add
+another marker, and I’m sure most people are fine with that. But I
+also like being able to select a region and hit a keybind to emphasize
+it that way. The table [[org-emphasis-character]] lists the emphasis
+characters in org-mode, their role, and the character code of each
+emphasis character. From that, creating functions that emphasize a
+selected text is quite easy.
+
+#+name: org-emphasis-character
+| Emphasis       | Character | Character code |
+|----------------+-----------+----------------|
+| bold           | ~*~         |             42 |
+| italic         | ~/~         |             47 |
+| underline      | ~_~         |             95 |
+| verbatim       | ~=~         |             61 |
+| code           | ~~~         |            126 |
+| strike-through | ~+~         |             43 |
+
+#+name: org-create-emphasis-functions
+#+header: :tangle no :exports results
+#+header: :wrap "src emacs-lisp :tangle no :exports code"
+#+begin_src emacs-lisp :var emphasis-list=org-emphasis-character
+(mapconcat (lambda (emphasis)
+             (let ((type (car emphasis))
+                   (code (nth 2 emphasis)))
+               (format "(defun org-emphasize-%s ()
+  \"Emphasize as %s the current region.\"
+  (interactive)
+  (org-emphasize %s))"
+                       type
+                       type
+                       code)))
+           emphasis-list
+           "\n")
+#+end_src
+
+#+RESULTS: org-create-emphasis-functions
+#+begin_src emacs-lisp :tangle no :exports code
+(defun org-emphasize-bold ()
+  "Emphasize as bold the current region."
+  (interactive)
+  (org-emphasize 42))
+(defun org-emphasize-italic ()
+  "Emphasize as italic the current region."
+  (interactive)
+  (org-emphasize 47))
+(defun org-emphasize-underline ()
+  "Emphasize as underline the current region."
+  (interactive)
+  (org-emphasize 95))
+(defun org-emphasize-verbatim ()
+  "Emphasize as verbatim the current region."
+  (interactive)
+  (org-emphasize 61))
+(defun org-emphasize-code ()
+  "Emphasize as code the current region."
+  (interactive)
+  (org-emphasize 126))
+(defun org-emphasize-strike-through ()
+  "Emphasize as strike-through the current region."
+  (interactive)
+  (org-emphasize 43))
+#+end_src
+
+You can find the keybinds for these functions in the chapter
+§[[#Packages-Configuration-Org-mode-Keybindingsv0e5fl6184j0]].
+
+**** ~phundrak/toggle-org-src-window-split~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Org-Functions-phundrak-toggle-org-src-window-splito2tkel6184j0
+:END:
+#+begin_src emacs-lisp
+(defun phundrak/toggle-org-src-window-split ()
+  "This function allows the user to toggle the behavior of
+`org-edit-src-code'. If the variable `org-src-window-setup' has
+the value `split-window-right', then it will be changed to
+`split-window-below'. Otherwise, it will be set back to
+`split-window-right'"
+  (interactive)
+  (if (equal org-src-window-setup 'split-window-right)
+      (setq org-src-window-setup 'split-window-below)
+    (setq org-src-window-setup 'split-window-right))
+  (message "Org-src buffers will now split %s"
+           (if (equal org-src-window-setup 'split-window-right)
+               "vertically"
+             "horizontally")))
+#+end_src
+
 *** Exporters
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-exportik95fl6184j0
@@ -4848,7 +4907,14 @@ Let’s now define some keybinds for inserting stuff in our org buffer:
 | i         | nil                           | insert      |
 | ib        | org-insert-structure-template |             |
 | id        | org-insert-drawer             |             |
-| ie        | org-set-effort                |             |
+| ie        | nil                           | emphasis    |
+| ieb       | org-emphasize-bold            |             |
+| iec       | org-emphasize-code            |             |
+| iei       | org-emphasize-italic          |             |
+| ies       | org-emphasize-strike-through  |             |
+| ieu       | org-emphasize-underline       |             |
+| iev       | org-emphasize-verbatim        |             |
+| iE        | org-set-effort                |             |
 | if        | org-footnote-new              |             |
 | ih        | org-insert-heading            |             |
 | iH        | counsel-org-link              |             |
