@@ -2483,7 +2483,7 @@ doing and what Git is doing! In short, I absolutely love it!
 display in the Magit buffer a list of TODOs found in the current
 project to remind you of what to do next.
 
-But first, let’s setup our todo keywords with ~hl-todo~. A good few todo
+First, let’s setup our todo keywords with ~hl-todo~. A good few todo
 keywords are already defined in the ~hl-todo-keyword-faces~ variable.
 Why not use them? ~hl-todo-mode~ enables fontlock highlight of these
 keywords in a buffer. Let’s enable this mode globally.
@@ -3162,7 +3162,7 @@ here!
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Commands-n8w3fh2195j0
 :END:
 When I’m in Eshell, sometimes I wish to open multiple files at once in
-Emacs.  For this, when I have several arguments for ~find-file~, I want
+Emacs. For this, when I have several arguments for ~find-file~, I want
 to be able to open them all at once. Let’s modify ~find-file~ like so:
 #+BEGIN_SRC emacs-lisp
 (defadvice find-file (around find-files activate)
@@ -5425,9 +5425,8 @@ care of that for you!
           ("[X]"  . 9745))))
 #+end_src
 
-~org-fancy-priorities~ change the priority of an org element such such
-as ~#A~ to anything user-defined. Let’s make this anything all-the-icons
-icons!
+~org-fancy-priorities~ change the priority of an org element such as ~#A~
+to anything user-defined. Let’s all-the-iconify this!
 #+begin_src emacs-lisp
 (use-package org-fancy-priorities
   :after (org all-the-icons)
