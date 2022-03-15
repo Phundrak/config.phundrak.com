@@ -3540,6 +3540,7 @@ mode), with the exception of ~s-RET~ which opens an eshell terminal.
 (phundrak/leader-key
   :infix "x"
   ""   '(:ignore t :which-key "EXWM")
+  "d"  #'exwm-debug
   "k"  #'exwm-input-send-next-key
   "l"  '((lambda ()
            (interactive)
@@ -3547,12 +3548,10 @@ mode), with the exception of ~s-RET~ which opens an eshell terminal.
          :which-key "lock")
   "r"  '(:ignore t :wk "rofi")
   "rr" '((lambda () (interactive)
-           (with-temp-buffer
-             (shell-command "rofi -show drun" (current-buffer) (current-buffer))))
+           (shell-command "rofi -show drun" (current-buffer) (current-buffer)))
          :wk "drun")
   "rw" '((lambda () (interactive)
-           (with-temp-buffer
-             (shell-command "rofi -show window" (current-buffer) (current-buffer))))
+           (shell-command "rofi -show window" (current-buffer) (current-buffer)))
          :wk "windows")
   "R"  '(:ignore t :wk "restart")
   "Rr" #'exwm-reset
@@ -3573,32 +3572,12 @@ mode), with the exception of ~s-RET~ which opens an eshell terminal.
   "RET" #'eshell-new)
 #+end_src
 
-A couple of commands are also automatically executed:
-#+name: exwm-autostart-list
-- ~mpc stop~ :: stops any music played by MPD (if any) when Emacs is
-  launched.
-- ~pumopm~ :: my power manager, you can see its code source [[https://labs.phundrak.com/phundrak/pumopm][here]].
-- ~xss-lock plock~ :: automatically lock the desktop with my script [[file:bin.org::#Lock-635fcb38][plock]].
-- ~xrdb -merge $HOME/.Xresources~ :: use the settings from my xresources
-  file
-
-#+name: exwm-generate-autostarts
-#+header: :exports results :tangle no
-#+begin_src emacs-lisp :var autostarts=exwm-autostart-list :cache yes
-(mapconcat (lambda (command)
-             (let* ((whitespace  (rx (+ space)))
-                    (raw-command (car (split-string (car command) "::" t whitespace)))
-                    (command     (replace-regexp-in-string (regexp-quote "~") "" raw-command)))
-               (format "%S" `(exwm/run-in-background ,command))))
-           autostarts
-           "\n")
+A couple of commands are also automatically executed through my
+~autostart~ script written [[file:bin.org::#Autostart-a99e99e7][here]].
+#+name: exwm-autostart
+#+begin_src emacs-lisp :tangle no
+(exwm/run-in-background "autostart")
 #+end_src
-
-#+RESULTS[c480df0f806b0007d125e570ab95c7e17dc2199d]: exwm-generate-autostarts
-: (exwm/run-in-background "mpc stop")
-: (exwm/run-in-background "pumopm")
-: (exwm/run-in-background "xss-lock plock")
-: (exwm/run-in-background "xrdb -merge $HOME/.Xresources")
 
 Finally, let’s only initialize and start EXWM once functions from
 exwm-randr ran, because otherwise having multiple monitors don’t work.
@@ -3611,7 +3590,7 @@ exwm-randr ran, because otherwise having multiple monitors don’t work.
 The complete configuration for the ~exwm~ package can be found below.
 #+begin_src emacs-lisp :noweb yes
 (use-package exwm
-  :if (seq-contains-p command-line-args "--use-exwm")
+  :if (seq-contains-p command-line-args "--with-exwm")
   :straight (exwm :build t
                   :type git
                   :host github
@@ -3635,7 +3614,7 @@ The complete configuration for the ~exwm~ package can be found below.
 
   <<exwm-keybinds>>
 
-  <<exwm-generate-autostarts()>>
+  <<exwm-autostart>>
 
   <<exwm-init>>)
 #+end_src
@@ -3646,7 +3625,7 @@ The complete configuration for the ~exwm~ package can be found below.
 :END:
 #+begin_src emacs-lisp
 (use-package evil-exwm-state
-  :if (seq-contains-p command-line-args "--use-exwm")
+  :if (seq-contains-p command-line-args "--with-exwm")
   :defer t
   :after exwm
   :straight (evil-exwm-state :build t
@@ -3664,7 +3643,7 @@ The complete configuration for the ~exwm~ package can be found below.
 (require 'exwm-randr)
 (exwm/run-in-background "xwallpaper --zoom \"${cat $HOME/.cache/wallpaper}\"")
 (start-process-shell-command
- "xrandr" nil "xrandr --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI1 --primary --mode 2560x1080 --pos 1920x0 --rotate normal --output VIRTUAL1 --off --output DP-1-0 --off --output DP-1-1 --off")
+ "xrandr" nil "xrandr --output eDP1 --mode 1920x1080 --pos 2560x0 --rotate normal --output HDMI1 --primary --mode 2560x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off --output DP-1-0 --off --output DP-1-1 --off")
 (exwm-randr-enable)
 (setq exwm-randr-workspace-monitor-plist '(3 "eDP1"))
 #+end_src
