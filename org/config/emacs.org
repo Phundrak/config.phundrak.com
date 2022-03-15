@@ -3035,18 +3035,6 @@ though.
 (use-package eshell
   :defer t
   :straight (:type built-in :build t)
-  :general
-  (phundrak/evil
-    :keymaps 'eshell-mode-map
-    "c" #'evil-backward-char
-    "t" #'evil-next-line
-    "s" #'evil-previous-line
-    "r" #'evil-forward-char)
-  (general-define-key
-   :keymaps 'eshell-mode-map
-   :states 'insert
-   "C-a" #'eshell-bol
-   "C-e" #'end-of-line)
   :config
   (setq eshell-prompt-function
         (lambda ()
@@ -3058,7 +3046,20 @@ though.
   <<eshell-alias-open>>
   <<eshell-alias-buffers>>
   <<eshell-alias-emacs>>
-  <<eshell-alias-mkcd>>)
+  <<eshell-alias-mkcd>>
+  :general
+  (phundrak/evil
+    :keymaps 'eshell-mode-map
+    [remap evil-collection-eshell-evil-change] #'evil-backward-char
+    "t" #'evil-next-line
+    "s" #'evil-previous-line
+    "r" #'evil-forward-char
+    "h" #'evil-collection-eshell-evil-change)
+  (general-define-key
+   :keymaps 'eshell-mode-map
+   :states 'insert
+   "C-a" #'eshell-bol
+   "C-e" #'end-of-line))
 #+end_src
 
 **** Aliases
