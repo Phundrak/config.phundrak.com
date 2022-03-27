@@ -1765,18 +1765,18 @@ so that they are immediately accessible. Again, this isn’t technically
 media-related, but I’ll add keybinds for my screen’s backlight.
 #+name: media-top-level
 #+caption: Top-level media keys
-| Keychord              | Function                                       |
-|-----------------------+------------------------------------------------|
-| ~XF86AudioPlay~         | ~mpd-toggle-pause~                               |
-| ~XF86AudioPause~        | ~exec mpc pause~                                 |
-| ~XF86AudioStop~         | ~mpd-stop~                                       |
-| ~XF86AudioPrev~         | ~mpd-prev~                                       |
-| ~XF86AudioNext~         | ~mpd-next~                                       |
-| ~XF86AudioRaiseVolume~  | ~exec pactl set-sink-volume @DEFAULT_SINK@ +2~   |
-| ~XF86AudioLowerVolume~  | ~exec pactl set-sink-volume @DEFAULT_SINK@ -2~   |
-| ~XF86AudioMute~         | ~exec pactl set-sink-mute @DEFAULT_SINK@ toggle~ |
-| ~XF86MonBrightnessDown~ | ~exec xbacklight -dec 2~                         |
-| ~XF86MonBrightnessUp~   | ~exec xbacklight -inc 2~                         |
+| Keychord              | Function               |
+|-----------------------+------------------------|
+| ~XF86AudioPlay~         | ~mpd-toggle-pause~       |
+| ~XF86AudioPause~        | ~exec mpc pause~         |
+| ~XF86AudioStop~         | ~mpd-stop~               |
+| ~XF86AudioPrev~         | ~mpd-prev~               |
+| ~XF86AudioNext~         | ~mpd-next~               |
+| ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~      |
+| ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~      |
+| ~XF86AudioMute~         | ~exec pamixer -t~        |
+| ~XF86MonBrightnessDown~ | ~exec xbacklight -dec 2~ |
+| ~XF86MonBrightnessUp~   | ~exec xbacklight -inc 2~ |
 
 #+begin_src lisp
 <<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>

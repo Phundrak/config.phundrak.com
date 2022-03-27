@@ -3678,11 +3678,11 @@ The complete configuration for the ~exwm~ package can be found below.
         desktop-environment-brightness-small-increment  "-inc 2"
         desktop-environment-brightness-small-decrement  "-dec 2"
 
-        desktop-environment-volume-normal-decrement "5%-"
-        desktop-environment-volume-normal-increment "5%+"
-        desktop-environment-volume-small-decrement  "2%-"
-        desktop-environment-volume-small-increment  "2%+"
-        desktop-environment-volume-set-command      "amixer -q Master %s unmute"
+        desktop-environment-volume-normal-decrement "-d 5"
+        desktop-environment-volume-normal-increment "-i 5"
+        desktop-environment-volume-small-decrement  "-d 2"
+        desktop-environment-volume-small-increment  "-i 2"
+        desktop-environment-volume-set-command      "pamixer -u %s"
 
         desktop-environment-screenshot-directory "~/Pictures/Screenshots"
         desktop-environment-screenlock-command   "plock"
