@@ -5088,16 +5088,22 @@ The project is then defined like so:
               "config-website-static"))
 #+END_SRC
 
-**** Linguistics website
+**** Conlanging website
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Projects-Linguistics-websitey4k5fl6184j0
 :END:
-My linguistics website is made out of three projects. As for the previous
-project, let’s declare the common values for these.
+#+begin_info
+/Conlangs/, or /constructed languages/, are artificial languages created
+by individuals or by groups of individuals, unlike natural languages
+which evolve and appear naturally from other languages.
+#+end_info
+
+My conlanging website is made out of three projects. As for the
+previous project, let’s declare the common values for these.
 #+NAME: org-proj-lang-setup
 #+BEGIN_SRC emacs-lisp
 (defvar phundrak//projects-conlanging-target
-  "/ssh:Tilo:~/www/phundrak.com/conlang"
+  "/rsync:Tilo:~/www/phundrak.com/conlang"
   "Points to where exported files for langue.phundrak.com should be put.")
 (defvar phundrak//projects-conlanging-source
   "~/Documents/conlanging/content/"
