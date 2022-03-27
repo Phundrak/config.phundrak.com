@@ -1,12 +1,8 @@
 # pylint: disable=C0111
-from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
-from qutebrowser.config.config import ConfigContainer  # noqa: F401
-config: ConfigAPI = config  # noqa: F821 pylint: disable=E0602,C0103
-c: ConfigContainer = c  # noqa: F821 pylint: disable=E0602,C0103
 
 # This is here so configs done via the GUI are still loaded.
 # Remove it to not load settings done via the GUI.
-config.load_autoconfig(True)
+config.load_autoconfig(False)
 
 # Aliases for commands. The keys of the given dictionary are the
 # aliases, while the values are the commands they map to.
