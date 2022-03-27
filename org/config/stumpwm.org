@@ -1725,20 +1725,20 @@ Then, let’s declare a keymap for our media controls.
 
 #+name: media-management
 #+caption: ~*my-media-keymap*~
-| Keychord | Function                    |
-|----------+-----------------------------|
-| ~.~        | ~media-interactive~           |
-| ~a~        | ~'*my-mpd-add-map*~           |
-| ~b~        | ~'*my-mpd-browse-map*~        |
-| ~c~        | ~mpd-clear~                   |
-| ~m~        | ~mpc-interactive~             |
-| ~p~        | ~mpd-prev~                    |
-| ~n~        | ~mpd-next~                    |
-| ~P~        | ~mpd-toggle-pause~            |
-| ~s~        | ~mpd-stop~                    |
-| ~u~        | ~mpd-update~                  |
-| ~N~        | ~term ncmpcpp -q~             |
-| ~v~        | ~term ncmpcpp -qs visualizer~ |
+| Keychord       | Function                    |
+|----------------+-----------------------------|
+| ~.~              | ~media-interactive~           |
+| ~guillemotleft~  | ~mpd-prev~                    |
+| ~guillemotright~ | ~mpd-next~                    |
+| ~a~              | ~'*my-mpd-add-map*~           |
+| ~b~              | ~'*my-mpd-browse-map*~        |
+| ~c~              | ~mpd-clear~                   |
+| ~m~              | ~mpc-interactive~             |
+| ~p~              | ~mpd-toggle-pause~            |
+| ~s~              | ~mpd-stop~                    |
+| ~u~              | ~mpd-update~                  |
+| ~N~              | ~term ncmpcpp -q~             |
+| ~v~              | ~term ncmpcpp -qs visualizer~ |
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
@@ -1791,6 +1791,7 @@ anywhere else:
 #+name: misc-root-map
 | Keychord | Function   |
 |----------+------------|
+| ~SPC~      | ~colon~      |
 | ~B~        | ~beckon~     |
 | ~C-b~      | ~banish~     |
 | ~l~        | ~exec plock~ |
