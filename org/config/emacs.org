@@ -108,6 +108,7 @@ loaded, speeding Emacs up a bit.
 (set-fringe-mode 10)               ; give some breathing room
 (menu-bar-mode -1)                 ; disable menubar
 (blink-cursor-mode 0)              ; disable blinking cursor
+(setq gc-cons-threshold (* 1024 1024 1024))
 #+end_src
 
 ** Emacs Behavior
@@ -5702,6 +5703,7 @@ awesome!
   (lsp-eldoc-render-all t)
   (lsp-idle-delay 0.6)
   (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-use-plist t)
   :config
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-tramp-connection "shellcheck")
