@@ -153,37 +153,56 @@ not show up. Hopefully this can be implemented someday in StumpWM.
 #+header: :var keymap=emacs-stumpwm-media-control keymap-name="my-mpd-add-map" prefix="m"
 #+begin_src emacs-lisp :exports none :tangle no :wrap "src lisp :tangle no" :noweb yes
 (require 'seq)
-(format "%S"
-        `(defvar ,(intern (format "*%s*" keymap-name))
-           (let ((m (make-sparse-keymap)))
-             ,@(mapcar (lambda (keybind)
-                         (let ((keychord (replace-regexp-in-string (format "^%s" prefix)
-                                                                   ""
-                                                                   (car keybind)))
-                               (function (cdr keybind)))
-                           `(define-key m (kbd ,keychord) ,function)))
-                       <<stumpwm-filter-keybinds>>
-                       )
-             m)))
+(format "(defvar *%s*
+  (let %S
+    %s
+    m))"
+        keymap-name
+        `((m (make-sparse-keymap)))
+        (mapconcat (lambda (keybind)
+                     (let ((keychord (replace-regexp-in-string (format "^%s" prefix)
+                                                               ""
+                                                               (car keybind)))
+                           (function (cdr keybind)))
+                       (format "%S" `(define-key m (kbd ,keychord) ,function))))
+                   <<stumpwm-filter-keybinds>>
+                   "\n    "))
 #+end_src
 
 #+RESULTS: stumpwm-keybinds-gen
 #+begin_src lisp :tangle no
-(defvar *my-mpd-add-map* (let ((m (make-sparse-keymap))) (define-key m (kbd ".") "media-interactive") (define-key m (kbd "«") "mpd-prev") (define-key m (kbd "»") "mpd-next") (define-key m (kbd "a") "'*my-mpd-add-keymap*") (define-key m (kbd "b") "'*my-mpd-browse-keymap*") (define-key m (kbd "c") "mpd-clear") (define-key m (kbd "p") "mpd-toggle-pause") m))
+(defvar *my-mpd-add-map*
+  (let ((m (make-sparse-keymap)))
+    (define-key m (kbd ".") "media-interactive")
+    (define-key m (kbd "«") "mpd-prev")
+    (define-key m (kbd "»") "mpd-next")
+    (define-key m (kbd "a") "'*my-mpd-add-keymap*")
+    (define-key m (kbd "b") "'*my-mpd-browse-keymap*")
+    (define-key m (kbd "c") "mpd-clear")
+    (define-key m (kbd "p") "mpd-toggle-pause")
+    m))
 #+end_src
 
 #+name: stumpwm-interactive-keybinds-gen
 #+header: :var keymap=emacs-stumpwm-resize-frame prefix=""
+#+header: :wrap "src lisp :exports none"
 #+begin_src emacs-lisp :noweb yes
-(format "%S" `,@(mapcar (lambda (keybind)
-                             (let ((keychord (car keybind))
-                                   (function (cdr keybind)))
-                               `((kbd ,keychord) ,function)))
-                     <<stumpwm-filter-keybinds>>))
+(format "(%s)"
+        (mapconcat (lambda (keybind)
+                     (let ((keychord (car keybind))
+                           (function (cdr keybind)))
+                       (format "%S" `((kbd ,keychord) ,function))))
+                   <<stumpwm-filter-keybinds>>
+                   "\n "))
 #+end_src
 
 #+RESULTS: stumpwm-interactive-keybinds-gen
-: (((kbd "c") "resize-direction left") ((kbd "t") "resize-direction down") ((kbd "s") "resize-direction up") ((kbd "r") "resize-direction right"))
+#+begin_src lisp :exports none
+(((kbd "c") "resize-direction left")
+ ((kbd "t") "resize-direction down")
+ ((kbd "s") "resize-direction up")
+ ((kbd "r") "resize-direction right"))
+#+end_src
 
 #+name: stumpwm-interactive-gen
 #+header: :var keymap=emacs-stumpwm-resize-frame keymap-name="my-mpd-add-map" prefix=""
