@@ -1253,6 +1253,34 @@ following characters:
 So if you see any weird keybind involving these characters, this is
 because of my layout.
 
+Something a bit annoying though is Lisp doesn’t know some characters
+by their actual name, rather by another one that I find too long and
+too bothersome to remember. So here’s a list, if you see any of the
+characters on the left column in my config, with some org-mode magic,
+my actual config will use their name as specified in the right column.
+Actually, you even saw some if not all in the previous table.
+#+name: tbl-char-to-name
+| Character | Name             |
+|-----------+------------------|
+| ~«~         | ~guillemotleft~    |
+| ~»~         | ~guillemotright~   |
+
+#+name: char-to-name
+#+header: :exports none :noweb yes :results verbatim
+#+begin_src emacs-lisp :var table=tbl-char-to-name
+(defun my/stumpwm-char-to-name (char)
+  (let* ((table (mapcar (lambda (entry)
+                          (cons (replace-regexp-in-string "^~" "" (car entry))
+                                (replace-regexp-in-string "^~" "" (cadr entry))))
+                        table))
+         (table (mapcar (lambda (entry)
+                          (cons (replace-regexp-in-string "~$" "" (car entry))
+                                (replace-regexp-in-string "~$" "" (cdr entry))))
+                        table)))
+    (or (cdr (assoc char table))
+        char)))
+#+end_src
+
 ** Applications
 :PROPERTIES:
 :CUSTOM_ID: Keybinds-Applications-2t512k00w5j0
@@ -1725,20 +1753,20 @@ Then, let’s declare a keymap for our media controls.
 
 #+name: media-management
 #+caption: ~*my-media-keymap*~
-| Keychord       | Function                    |
-|----------------+-----------------------------|
-| ~.~              | ~media-interactive~           |
-| ~guillemotleft~  | ~mpd-prev~                    |
-| ~guillemotright~ | ~mpd-next~                    |
-| ~a~              | ~'*my-mpd-add-map*~           |
-| ~b~              | ~'*my-mpd-browse-map*~        |
-| ~c~              | ~mpd-clear~                   |
-| ~m~              | ~mpc-interactive~             |
-| ~p~              | ~mpd-toggle-pause~            |
-| ~s~              | ~mpd-stop~                    |
-| ~u~              | ~mpd-update~                  |
-| ~N~              | ~term ncmpcpp -q~             |
-| ~v~              | ~term ncmpcpp -qs visualizer~ |
+| Keychord | Function                    |
+|----------+-----------------------------|
+| ~.~        | ~media-interactive~           |
+| ~«~        | ~mpd-prev~                    |
+| ~»~        | ~mpd-next~                    |
+| ~a~        | ~'*my-mpd-add-map*~           |
+| ~b~        | ~'*my-mpd-browse-map*~        |
+| ~c~        | ~mpd-clear~                   |
+| ~m~        | ~mpc-interactive~             |
+| ~p~        | ~mpd-toggle-pause~            |
+| ~s~        | ~mpd-stop~                    |
+| ~u~        | ~mpd-update~                  |
+| ~N~        | ~term ncmpcpp -q~             |
+| ~v~        | ~term ncmpcpp -qs visualizer~ |
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
@@ -1826,12 +1854,15 @@ games and the bépo layout most of the time. I’ll use the command
 :END:
 
 #+name: keybinds-gen
-#+begin_src emacs-lisp :var map="m" keybinds=frames-float
+#+header: :wrap "src lisp :exports none" :exports none :noweb yes
+#+begin_src emacs-lisp :var map="m" keybinds=media-management :var table=tbl-char-to-name
+<<char-to-name>>
 (mapconcat (lambda (keybind)
-             (format "%s" (let ((key      (let ((s (car keybind)))
-                                            (substring-no-properties s 1 (1- (length s)))))
-                                (function (let ((s (cadr keybind)))
-                                            (substring-no-properties s 1 (1- (length s))))))
+             (format "%s" (let* ((key      (let ((s (car keybind)))
+                                             (substring-no-properties s 1 (1- (length s)))))
+                                 (function (let ((s (cadr keybind)))
+                                             (substring-no-properties s 1 (1- (length s)))))
+                                 (key      (my/stumpwm-char-to-name key)))
                             `(define-key ,map
                                (kbd ,(format "\"%s\"" key))
                                ,(if (string-prefix-p "'" function t)
@@ -1839,6 +1870,22 @@ games and the bépo layout most of the time. I’ll use the command
                                   (format "\"%s\"" function))))))
            keybinds
            "\n")
+#+end_src
+
+#+RESULTS[a20994f97465549466dd676b4b452593194e0495]: keybinds-gen
+#+begin_src lisp :exports none
+(define-key m (kbd ".") "media-interactive")
+(define-key m (kbd "guillemotleft") "mpd-prev")
+(define-key m (kbd "guillemotright") "mpd-next")
+(define-key m (kbd "a") '*my-mpd-add-map*)
+(define-key m (kbd "b") '*my-mpd-browse-map*)
+(define-key m (kbd "c") "mpd-clear")
+(define-key m (kbd "m") "mpc-interactive")
+(define-key m (kbd "p") "mpd-toggle-pause")
+(define-key m (kbd "s") "mpd-stop")
+(define-key m (kbd "u") "mpd-update")
+(define-key m (kbd "N") "term ncmpcpp -q")
+(define-key m (kbd "v") "term ncmpcpp -qs visualizer")
 #+end_src
 
 #+name: interactive-gen
@@ -1863,7 +1910,7 @@ games and the bépo layout most of the time. I’ll use the command
 #+end_src
 
 #+name: num-to-char
-#+begin_src emacs-lisp :var table=number-to-char-table num=0
+#+begin_src emacs-lisp :var table=number-to-char-table num=2
 (let ((char (replace-regexp-in-string (regexp-quote "~")
                                       ""
                                       (let* ((row (assoc num table))
@@ -1877,5 +1924,5 @@ games and the bépo layout most of the time. I’ll use the command
     char))
 #+end_src
 
-#+RESULTS[6934c27c10c3f968f70b0112d4639298e519fe61]: num-to-char
-: *
+#+RESULTS[0c35d70ec5195a6f24fdaa1f5847c1bda7ae18be]: num-to-char
+: guillemotleft
