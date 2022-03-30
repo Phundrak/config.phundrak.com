@@ -4921,6 +4921,7 @@ Tables get a bit more love:
 | ta        | org-table-align                      |             |
 | te        | org-table-eval-formula               |             |
 | tf        | org-table-field-info                 |             |
+| tF        | org-table-edit-formulas              |             |
 | th        | org-table-convert                    |             |
 | tl        | org-table-recalculate                |             |
 | tp        | org-plot/gnuplot                     |             |
