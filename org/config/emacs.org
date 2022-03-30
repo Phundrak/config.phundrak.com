@@ -7259,16 +7259,8 @@ will be used everywhere.
 
 (defun prog-mode-set-symbols-alist ()
   (setq prettify-symbols-alist '(("lambda"  . ?λ)
-                                 ("return"  . ?⮐)
                                  ("null"    . ?∅)
-                                 ("NULL"    . ?∅)
-                                 ("for"     . ?∀)
-                                 ("in"      . ?∈)
-                                 ("and"     . ?∧)
-                                 ("&&"      . ?∧)
-                                 ("or"      . ?∨)
-                                 ("||"      . ?∨)
-                                 ("xor"     . ?⊻)))
+                                 ("NULL"    . ?∅)))
   (prettify-symbols-mode 1))
 
 (add-hook 'prog-mode-hook #'prog-mode-set-symbols-alist)
@@ -7278,13 +7270,10 @@ We can now take care of the language-specific symbols. First, let’s
 declare some symbols for the Lisp languages.
 #+begin_src emacs-lisp
 (setq-default lisp-prettify-symbols-alist '(("lambda"    . ?λ)
-                                            ("mapc"      . ?↦)
                                             ("defun"     . ?𝑓)
                                             ("defvar"    . ?𝑣)
                                             ("defcustom" . ?𝑐)
-                                            ("defconst"  . ?𝐶)
-                                            ("not"       . ?!)
-                                            ("pi"        . ?π)))
+                                            ("defconst"  . ?𝐶)))
 
 (defun lisp-mode-prettify ()
   (setq prettify-symbols-alist lisp-prettify-symbols-alist)
