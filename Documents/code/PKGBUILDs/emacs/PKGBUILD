@@ -23,17 +23,22 @@
 CHECK=            # Run tests. May fail, this is developement after all.
 CLANG=            # Use clang.
 GOLD="YES"        # Use the gold linker.
-LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
-                  # attempting to use it with clang.
+LTO="YES"         # Enable link-time optimization. Still experimental.
 JIT="YES"         # Enable native just-in-time compilation. libgccjit is in AUR.
                   # This compiles only performance critical elisp files.
-                  # To compile all elisp on demand, set
-                  # comp-deferred-compilation non-nil
+                  #
+                  # To compile all elisp on demand, add
+                  #    (setq comp-deferred-compilation t)
+                  # to your .emacs file.
 AOT="YES"         # Precompile all included elisp. It takes a long time.
                   # You still need to enable on-demand compilation
                   # for your own packages.
 CLI=              # CLI only binary.
+GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+                  # Bitmap fonts only, 1337!
+PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
+GTK3=             # GTK3 old windowing interface.
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
                   # Read https://wiki.archlinux.org/index.php/X_resources
@@ -41,16 +46,14 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # and https://www.emacswiki.org/emacs/XftGnuEmacs
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
-                  #
-GTK2=             # GTK2 support. Why would you?
+XI2="YES"         # Use Xinput2 support.
+                  # https://www.x.org/releases/X11R7.7/doc/inputproto/XI2proto.txt
+ALSA="YES"        # Linux sound support.
 NOCAIRO=          # Disable here.
 XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
-DOCS_PDF=         # Generate and install pdf documentation.
-MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
-                  # ImageMagick, like flash, won't die...
-                  # -->>If you just *believe* you need ImageMagick, you don't.<<--
-NOGZ=             # Don't compress .el files.
+DOCS_PDF="YES"    # Generate and install pdf documentation.
+NOGZ="YES"        # Don't compress .el files.
 ################################################################################
 
 ################################################################################
@@ -59,25 +62,23 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=28.0.91.151170
+pkgver=29.0.50.155319
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
-depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
-depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
+depends_nox=('gnutls' 'libxml2' 'jansson')
+depends=("${depends_nox[@]}" 'harfbuzz')
 makedepends=('git')
-provides=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-conflicts=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-replaces=('emacs' 'emacs26-git' 'emacs27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
-#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-# If Savannah fails for reasons, use Github's mirror
-source=("emacs-git::git://github.com/emacs-mirror/emacs.git#branch=emacs-28"
-        "https://raw.githubusercontent.com/TheVaffel/emacs/master/emacs_background_transparency.patch")
-sha512sums=('SKIP'
-            'd45043e6925358a41fbe42457de3233cd346a7e6133704426240a0c987587328ae08719413188b11db498f27794ee55662c20e8c4b58311bb806ad71e4798574')
+provides=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+conflicts=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+replaces=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox' 'emacs-git')
+source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+b2sums=('SKIP')
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
+install=emacs-git.install
+
 ################################################################################
 
 ################################################################################
@@ -108,16 +109,6 @@ if [[ $CLANG == "YES" ]]; then
   makedepends+=( 'clang' 'lld' 'llvm') ;
 fi
 
-if [[ $LTO == "YES" ]]; then
-  if [[ $CLANG != "YES" ]]; then
-    CFLAGS+=" -flto -fuse-linker-plugin"
-    CXXFLAGS+=" -flto -fuse-linker-plugin"
-  else
-    CFLAGS+=" -flto"
-    CXXFLAGS+=" -flto"
-  fi
-fi
-
 if [[ $JIT == "YES" ]]; then
   if [[ $CLI == "YES" ]]; then
     depends_nox+=( 'libgccjit' );
@@ -126,44 +117,62 @@ if [[ $JIT == "YES" ]]; then
   fi
 fi
 
+if [[ ! $CLI == "YES" ]]; then
+  depends+=( 'libxi' );
+fi
+
 if [[ $CLI == "YES" ]]; then
   depends=("${depends_nox[@]}");
 elif [[ $NOTKIT == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' 'libxi' 'libsm' 'xcb-util' 'libxcb' );
   makedepends+=( 'xorgproto' );
 elif [[ $LUCID == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' 'libxi' 'libsm' 'xcb-util' 'libxcb' );
   makedepends+=( 'xorgproto' );
-elif [[ $GTK2 == "YES" ]]; then
-  depends+=( 'gtk2' 'lcms2' );
-  makedepends+=( 'xorgproto' );
-else
-  depends+=( 'gtk3' );
-  makedepends+=( 'xorgproto' );
+elif [[ $GTK3 == "YES" ]]; then
+  depends+=( 'gtk3' 'libsm' 'xcb-util' 'libxcb' );
+  makedepends+=( 'xorgproto' 'libxi' );
+elif [[ $PGTK == "YES" ]]; then
+  depends+=( 'gtk3' 'libsm' 'xcb-util' 'libxcb' );
+  makedepends+=( 'xorgproto' 'libxi' );
 fi
 
-if [[ $MAGICK == "YES" ]]; then
-  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
-elif [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
+if [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
   depends+=( 'libjpeg-turbo' 'giflib' );
 elif [[ $CLI == "YES" ]]; then
   depends+=();
 fi
 
-if [[ ! $NOCAIRO == "YES" ]] && [[ ! $CLI == "YES" ]] ; then
+if [[ $ALSA == "YES" ]]; then
+  if [[ $CLI == "YES" ]]; then
+    depends_nox+=( 'alsa-lib' );
+  else
+    depends+=( 'alsa-lib' );
+  fi
+fi
+
+if [[ ! $NOCAIRO == "YES" ]] && [[ ! $CLI == "YES" ]] && [[ ! $PGTK == "YES" ]] ; then
   depends+=( 'cairo' );
 fi
 
 if [[ $XWIDGETS == "YES" ]]; then
-  if [[ $GTK2 == "YES" ]] || [[ $LUCID == "YES" ]] || [[ $NOTKIT == "YES" ]] || [[ $CLI == "YES" ]]; then
+  if [[ $LUCID == "YES" ]] || [[ $NOTKIT == "YES" ]] || [[ $CLI == "YES" ]]; then
     echo "";
     echo "";
-    echo "Xwidgets support *requires* gtk+3!!!";
+    echo "Xwidgets support **requires** GTK+3!!!";
     echo "";
     echo "";
     exit 1;
   else
     depends+=( 'webkit2gtk' );
+  fi
+fi
+
+if [[ $GPM == "YES" ]]; then
+  if [[ $CLI == "YES" ]]; then
+    depends_nox+=( 'gpm' );
+  else
+    depends+=( 'gpm' );
   fi
 fi
 
@@ -177,17 +186,15 @@ pkgver() {
   cd "$srcdir/emacs-git"
 
   printf "%s.%s" \
-         "$(grep AC_INIT configure.ac | \
+    "$(grep AC_INIT configure.ac | \
     sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
-         "$(git rev-list --count HEAD)"
+    "$(git rev-list --count HEAD)"
 }
 
 # There is no need to run autogen.sh after first checkout.
 # Doing so, breaks incremental compilation.
 prepare() {
   cd "$srcdir/emacs-git"
-  git apply --check "../../emacs_background_transparency.patch"
-  git apply "../../emacs_background_transparency.patch"
   [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
 }
 
@@ -210,67 +217,78 @@ build() {
     --with-gameuser=:games
     --with-sound=alsa
     --with-modules
-    --with-json
-    # Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
-    # dconf and gconf break font settings you set in ~/.emacs.
-    # If you insist you'll need to read that bug report in *full*.
-    # Good luck!
-    --without-gconf
-    --without-gsettings
+    --without-libotf
+    --without-m17n-flt
+# Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+# dconf and gconf break font settings you set in ~/.emacs.
+# If you insist you'll need to read that bug report in *full*.
+# Good luck!
+   --without-gconf
+   --without-gsettings
   )
 
-  ################################################################################
+################################################################################
 
-  ################################################################################
+################################################################################
 
-  if [[ $CLANG == "YES" ]]; then
-    _conf+=( '--enable-autodepend' );
-  fi
+if [[ $CLANG == "YES" ]]; then
+  _conf+=( '--enable-autodepend' );
+fi
 
-  if [[ $LTO == "YES" ]]; then
-    _conf+=( '--enable-link-time-optimization' );
-  fi
+if [[ $LTO == "YES" ]]; then
+  _conf+=( '--enable-link-time-optimization' );
+fi
 
-  if [[ $JIT == "YES" ]]; then
-    _conf+=( '--with-native-compilation' );
-  fi
+if [[ $JIT == "YES" ]]; then
+  _conf+=( '--with-native-compilation' );
+fi
 
-  if [[ $CLI == "YES" ]]; then
-    _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' '--without-jpeg' '--without-gif' '--without-tiff' '--without-png' );
-  elif [[ $NOTKIT == "YES" ]]; then
-    _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
-  elif [[ $LUCID == "YES" ]]; then
-    _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
-  elif [[ $GTK2 == "YES" ]]; then
-    _conf+=( '--with-x-toolkit=gtk2' '--without-gsettings' '--without-xaw3d' );
-  else
-    _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
-  fi
+if [[ $XI2 == "YES" ]]; then
+  _conf+=( '--with-xinput2' );
+fi
 
-  if [[ $MAGICK == "YES" ]]; then
-    _conf+=( '--with-imagemagick');
-  else
-    _conf+=();
-  fi
+if [[ $CLI == "YES" ]]; then
+  _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' '--without-jpeg' '--without-gif' '--without-tiff' '--without-png' );
+elif [[ $NOTKIT == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--without-xft' '--without-xaw3d' );
+elif [[ $LUCID == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
+elif [[ $GTK3 == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
+elif [[ $PGTK == "YES" ]]; then
+  _conf+=( '--with-pgtk' '--without-xaw3d' );
+fi
 
-  if [[ $NOCAIRO == "YES" || $CLI == "YES" ]]; then
-    _conf+=( '--without-cairo' );
-  fi
+if [[ $NOCAIRO == "YES" || $CLI == "YES" || $NOTKIT == "YES" || $LUCID == "YES" ]]; then
+  _conf+=( '--without-cairo' );
+fi
 
-  if [[ $XWIDGETS == "YES" ]]; then
-    _conf+=( '--with-xwidgets' );
-  fi
+if [[ $ALSA == "YES" ]]; then
+    _conf+=( '--with-sound=alsa' );
+else
+    _conf+=( '--with-sound=no' );
+fi
 
-  if [[ $NOGZ == "YES" ]]; then
-    _conf+=( '--without-compress-install' );
-  fi
+if [[ $XWIDGETS == "YES" ]]; then
+  _conf+=( '--with-xwidgets' );
+fi
 
-  # ctags/etags may be provided by other packages, e.g, universal-ctags
-  _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
+if [[ $GPM == "YES" ]]; then
+    true
+else
+  _conf+=( '--without-gpm' );
+fi
 
-  ################################################################################
+if [[ $NOGZ == "YES" ]]; then
+  _conf+=( '--without-compress-install' );
+fi
 
-  ################################################################################
+# ctags/etags may be provided by other packages, e.g, universal-ctags
+_conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
+
+################################################################################
+
+################################################################################
 
   ./configure "${_conf[@]}"
 
@@ -324,4 +342,4 @@ package() {
 }
 
 ################################################################################
-# vim:set ft=sh ts=2 sw=2 et:
+# vim:set ft=bash ts=2 sw=2 et:
