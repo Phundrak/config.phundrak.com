@@ -1753,20 +1753,20 @@ Then, let’s declare a keymap for our media controls.
 
 #+name: media-management
 #+caption: ~*my-media-keymap*~
-| Keychord | Function                    |
-|----------+-----------------------------|
-| ~.~        | ~media-interactive~           |
-| ~«~        | ~mpd-prev~                    |
-| ~»~        | ~mpd-next~                    |
-| ~a~        | ~'*my-mpd-add-map*~           |
-| ~b~        | ~'*my-mpd-browse-map*~        |
-| ~c~        | ~mpd-clear~                   |
-| ~m~        | ~mpc-interactive~             |
-| ~p~        | ~mpd-toggle-pause~            |
-| ~s~        | ~mpd-stop~                    |
-| ~u~        | ~mpd-update~                  |
-| ~N~        | ~term ncmpcpp -q~             |
-| ~v~        | ~term ncmpcpp -qs visualizer~ |
+| Keychord | Function                          |
+|----------+-----------------------------------|
+| ~.~        | ~media-interactive~                 |
+| ~«~        | ~mpd-prev~                          |
+| ~»~        | ~mpd-next~                          |
+| ~a~        | ~'*my-mpd-add-map*~                 |
+| ~b~        | ~'*my-mpd-browse-map*~              |
+| ~c~        | ~mpd-clear~                         |
+| ~m~        | ~mpc-interactive~                   |
+| ~p~        | ~mpd-toggle-pause~                  |
+| ~s~        | ~mpd-stop~                          |
+| ~u~        | ~mpd-update~                        |
+| ~N~        | ~exec kitty ncmpcpp -q~             |
+| ~v~        | ~exec kitty ncmpcpp -qs visualizer~ |
 
 Let’s translate this table in CommonLisp:
 #+begin_src lisp
@@ -1872,7 +1872,7 @@ games and the bépo layout most of the time. I’ll use the command
            "\n")
 #+end_src
 
-#+RESULTS[a20994f97465549466dd676b4b452593194e0495]: keybinds-gen
+#+RESULTS[017aa07fd2bba7a85e92534b1a46ef338d683af5]: keybinds-gen
 #+begin_src lisp :exports none
 (define-key m (kbd ".") "media-interactive")
 (define-key m (kbd "guillemotleft") "mpd-prev")
@@ -1884,8 +1884,8 @@ games and the bépo layout most of the time. I’ll use the command
 (define-key m (kbd "p") "mpd-toggle-pause")
 (define-key m (kbd "s") "mpd-stop")
 (define-key m (kbd "u") "mpd-update")
-(define-key m (kbd "N") "term ncmpcpp -q")
-(define-key m (kbd "v") "term ncmpcpp -qs visualizer")
+(define-key m (kbd "N") "exec kitty ncmpcpp -q")
+(define-key m (kbd "v") "exec kitty ncmpcpp -qs visualizer")
 #+end_src
 
 #+name: interactive-gen
