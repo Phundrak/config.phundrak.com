@@ -4601,6 +4601,17 @@ describing phonetics evolution. So, let’s disable it:
 (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
+**** Gemini
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-Gemini-4td3dk21kej0
+:END:
+#+begin_src emacs-lisp
+(use-package ox-gemini
+  :defer t
+  :straight (:build t)
+  :after (ox org))
+#+end_src
+
 **** Epub
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Epub-w5ycfuz095j0
@@ -6101,6 +6112,13 @@ able to render Markdown through its API.
     :packages 'gh-md
     :keymaps 'markdown-mode-map
     "cr" #'gh-md-render-buffer))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package ox-gfm
+  :straight (:build t)
+  :defer t
+  :after (org ox))
 #+end_src
 
 Tables of content are always nice to have for large files, just like
