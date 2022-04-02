@@ -1317,12 +1317,11 @@ Here’s the equivalent in Common Lisp.
 Let’s also create a keymap for screenshots.
 #+name: screenshot-keymap
 #+caption: ~*my-screenshot-keymap*~
-| Keychord | Function                               |
-|----------+----------------------------------------|
-| =d=        | =exec scrot -d 3 -e 'post-scrot $f'=     |
-| =s=        | =exec scrot -e 'post-scrot $f'=          |
-| =S=        | =exec scrot -s -e 'post-scrot $f'=       |
-| =g=        | =exec scrot -e 'gimp $f; post-scrot $f'= |
+| Keychord | Function                   |
+|----------+----------------------------|
+| =d=        | =exec flameshot gui -d 3000= |
+| =s=        | =exec flameshot full=        |
+| =S=        | =exec flameshot gui=         |
 
 Here’s the equivalent in Common Lisp.
 #+begin_src lisp
