@@ -3387,6 +3387,7 @@ doesn’t seem to be available in any repo, so I’ll install it directly
 from Git.
 #+begin_src emacs-lisp
 (use-package xelb
+  :if (seq-contains-p command-line-args "--with-exwm")
   :straight (xelb :build t
                   :type git
                   :host github
