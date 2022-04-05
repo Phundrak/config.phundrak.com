@@ -1319,9 +1319,9 @@ Let’s also create a keymap for screenshots.
 #+caption: ~*my-screenshot-keymap*~
 | Keychord | Function                   |
 |----------+----------------------------|
-| =d=        | =exec flameshot gui -d 3000= |
-| =s=        | =exec flameshot full=        |
-| =S=        | =exec flameshot gui=         |
+| ~d~        | ~exec flameshot gui -d 3000~ |
+| ~s~        | ~exec flameshot full~        |
+| ~S~        | ~exec flameshot gui~         |
 
 Here’s the equivalent in Common Lisp.
 #+begin_src lisp
