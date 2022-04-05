@@ -2983,7 +2983,16 @@ And let’s add some fancy icons in dired!
   :after (all-the-icons)
   :straight (:build t)
   :defer t
-  :hook (dired-mode . all-the-icons-dired-mode))
+  :hook (dired-mode . all-the-icons-dired-mode)
+  :config
+  (defun my/all-the-icons-dired--refresh (orig-fun &rest args)
+    (unless (or (not (file-remote-p default-directory))
+                (<= (count-lines (point-min)
+                                 (point-max))
+                    512))
+      (apply orig-fun args)))
+
+  (advice-add #'all-the-icons-dired--refresh :around #'my/all-the-icons-dired--refresh))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3328,7 +3337,9 @@ supported natively. I will describe them here.
   :init
   <<tramp-add-yadm>>
   :config
-  (setq tramp-ssh-controlmaster-options ""))
+  (setq tramp-ssh-controlmaster-options "")
+  (add-to-list 'backup-directory-alist ; deactivate auto-save with TRAMP
+               (cons tramp-file-name-regexp nil)))
 #+end_src
 
 **** Yadm
