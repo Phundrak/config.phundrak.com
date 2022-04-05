@@ -2583,16 +2583,19 @@ excluded files.
   :straight (:build t :type built-in)
   :custom ((recentf-max-saved-items 2000))
   :config
-  (add-to-list 'recentf-exclude (rx (or (seq (* print)
-                                             (or "elfeed-db" "eln-cache")
-                                             (* print))
-                                        (seq (* print)
-                                             "conlanging/content"
-                                             (* print)
-                                             (or "html" "pdf" "tex"))
-                                        (seq (* any)
-                                             "/Mail/Sent"
-                                             (* any))))))
+  (add-to-list 'recentf-exclude (rx (* any)
+                                    (or "elfeed-db" "eln-cache")
+                                    (* any)))
+  (add-to-list 'recentf-exclude (rx (* any)
+                                    "/Mail/Sent"
+                                    (* any)))
+  (add-to-list 'recentf-exclude (rx (* any)
+                                    "conlanging/content"
+                                    (* any)
+                                    (or "html" "pdf" "tex")))
+  (add-to-list 'recentf-exclude (rx (* any)
+                                    ".cache/paru/"
+                                    (* any))))
 #+end_src
 
 *** Screenshot
