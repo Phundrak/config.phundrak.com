@@ -4470,6 +4470,8 @@ exporter I use afterwards. Its installation is pretty simple:
   :straight (:build t))
 #+end_src
 
+A nice thing to have when working with REST APIs is to have a REST
+client. Even better if it can work inside org-mode!
 #+begin_src emacs-lisp
 (use-package ob-restclient
   :straight (:build t)
