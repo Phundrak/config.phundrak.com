@@ -5801,6 +5801,8 @@ to anything user-defined. Let’s all-the-iconify this!
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Langtool-sjr1oox0y9j0
 :END:
+LanguageTool is a great tool for catching typos and grammatical errors
+in quite a few languages.
 #+begin_src emacs-lisp
 (use-package langtool
   :defer t
@@ -5809,10 +5811,24 @@ to anything user-defined. Let’s all-the-iconify this!
              langtool-check-done
              langtool-show-message-at-point
              langtool-correct-buffer)
-  :init
-  (setq langtool-default-language "en-US")
+  :custom
+  (langtool-default-language "en-US")
+  (langtool-mother-tongue "fr")
   :config
-  (setq langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"))
+  (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
+                                               "/usr/share/java/languagetool/*")
+                                             ":"))
+  :general
+  (phundrak/leader-key
+    :packages 'langtool
+    :infix "l"
+    ""  '(:ignore t :which-key "LangTool")
+    "B" #'langtool-correct-buffer
+    "b" #'langtool-check-buffer
+    "c" #'langtool-check
+    "d" #'langtool-check-done
+    "l" #'langtool-switch-default-language
+    "p" #'langtool-show-message-at-point))
 #+end_src
 
 #+begin_src emacs-lisp
