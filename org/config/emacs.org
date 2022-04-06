@@ -6632,6 +6632,16 @@ in the echo area at the bottom of the frame. Quite useful indeed.
 (add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1)))
 #+end_src
 
+Still on the topic of documentation, I sometimes find it lacks
+examples on how to use Elisp functions. ~elisp-demos~ got you covered!
+#+begin_src emacs-lisp
+(use-package elisp-demos
+  :defer t
+  :straight (:build t)
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+#+end_src
+
 Let’s also declare some Elisp-dedicated keybindings, prefixed by a
 comma.
 #+begin_src emacs-lisp
@@ -6658,6 +6668,8 @@ comma.
  "tPp" #'parinfer-rust-toggle-paren-mode)
 #+end_src
 
+Package linting is important when you want to publish your packages to
+the world.
 #+begin_src emacs-lisp
 (use-package package-lint
   :defer t
