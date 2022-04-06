@@ -951,12 +951,63 @@ additional code compared to most people due to the bépo layout.
   (evil-collection-init))
 #+end_src
 
+~undo-tree~ is my preferred way of undoing and redoing stuff. The main
+reason is it doesn’t create a linear undo/redo history, but rather a
+complete tree you can navigate to see your complete editing history.
+One of the two obvious things to do are to tell Emacs to save all its
+undo history fies in a dedicated directory, otherwise we’d risk
+littering all of our directories. The second thing is to simply
+globally enable its mode.
 #+begin_src emacs-lisp
 (use-package undo-tree
   :defer t
   :straight (:build t)
+  :custom
+  (undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name (file-name-as-directory "undo-tree-hist")
+                               user-emacs-directory))))
   :init
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  :config
+  <<undo-tree-ignore-text-properties>>
+  <<undo-tree-compress-files>>
+  (setq undo-tree-visualizer-diff       t
+        undo-tree-auto-save-history     t
+        undo-tree-enable-undo-in-region t
+        undo-limit        (* 800 1024)
+        undo-strong-limit (* 12 1024 1024)
+        undo-outer-limit  (* 128 1024 1024)))
+#+end_src
+
+DoomEmacs implements two interesting behaviors I replicate here. The
+first one is to ignore text properties in the history files. Not only
+will this reduce the size of our files, but it will also ease the load
+on Emacs and its GC.
+#+name: undo-tree-ignore-text-properties
+#+begin_src emacs-lisp :tangle no
+(defun my/undo-tree-strip-text-properties (&rest args)
+  (message "undo-tree stripping args: %S" args))
+
+(advice-add 'undo-list-transfer-to-tree
+            :before
+            #'my/undo-tree-strip-text-properties)
+#+end_src
+
+The second thing to do is to compress the history files with ~zstd~ when
+it is present on the system. Not only do we enjoy much smaller files
+(according to DoomEmacs, we get something like 80% file savings),
+Emacs can load them much faster than the regular files. Sure, it uses
+more CPU time uncompressing these files, but it’s insignificant and
+it’s still faster than loading a heavier file.
+#+name: undo-tree-compress-files
+#+begin_src emacs-lisp :tangle no
+(when (executable-find "zstd")
+  (defun my/undo-tree-append-zst-to-filename (filename)
+    "Append .zst to the FILENAME in order to compress it."
+    (concat filename ".zst"))
+  (advice-add 'undo-tree-make-history-save-file-name
+              :filter-return
+              #'my/undo-tree-append-zst-to-filename))
 #+end_src
 
 ** Hydra
