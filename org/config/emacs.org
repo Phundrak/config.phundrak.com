@@ -3069,16 +3069,21 @@ me.
     "n" #'evil-next-line
     "p" #'evil-previous-line)
   :config
-  (setq dired-dwim-target       t
-        dired-recursive-copies  t
-        dired-recursive-deletes t
-        dired-listing-switches  "-ahl --group-directories-first"))
+  (setq dired-dwim-target           t
+        dired-recursive-copies      'always
+        dired-recursive-deletes     'top
+        dired-listing-switches      "-ahl --group-directories-first"
+        dired-auto-revert-buffer    t
+        image-dired-thumb-size      150
+        image-dired-dir             (expand-file-name (file-name-as-directory "dired-img"
+                                                            user-emacs-directory))
+        image-dired-db-file         (expand-file-name "dired-db.el" user-emacs-directory)
+        image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery"
+                                                         user-emacs-directory))
+        image-dired-temp-image-file (expand-file-name "temp-image" image-dired-dir)
+        image-dired-temp-rotate-image-file (expand-file-name "temp-rotate-image"
+                                                             image-dired-dir)))
 #+end_src
-
-Note that I am activating by default ~gnus-dired-mode~. This is just for
-the sake of convenience, since I’m not penalized with activating this
-mode when it is not needed, but I don’t have to manually activate it
-each time I need it.
 
 Dired-x stands for “dired extra” which provides a couple more features
 that are for some reason not included in dired yet.
@@ -3092,6 +3097,23 @@ that are for some reason not included in dired yet.
     :keymaps 'dired-mode-map
     :packages 'dired-x
     "«" #'dired-omit-mode))
+#+end_src
+
+Copying files with Dired is a blocking process. It’s usually fine when
+there’s not a lot to copy, but it becomes more annoying when moving
+larger files. The package ~dired-rsync~ allows to copy files with ~rsync~
+in the background so we can carry on with our tasks while the copy is
+happening.
+#+begin_src emacs-lisp
+(use-package dired-rsync
+  :if (executable-find "rsync")
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/evil
+    :keymaps 'dired-mode-map
+    :packages 'dired-rsync
+    "C-r" #'dired-rsync))
 #+end_src
 
 ~dired-du~ provides the user with the option to be able to see the size
@@ -3136,6 +3158,17 @@ Diredfl makes dired colorful, and much more readable in my opinion.
   (diredfl-global-mode 1))
 #+end_src
 
+Dired can benefit from ~fd~, a fast reimplementation of ~find~, to
+increase the speed of ~find-dired~.
+#+begin_src emacs-lisp
+(use-package fd-dired
+  :if (executable-find "fd")
+  :defer t
+  :straight (:build t)
+  :init
+  (global-set-key [remap find-dired] #'fd-dired))
+#+end_src
+
 And let’s add some fancy icons in dired!
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
@@ -3146,12 +3179,11 @@ And let’s add some fancy icons in dired!
   :config
   (defun my/all-the-icons-dired--refresh (orig-fun &rest args)
     (unless (or (not (file-remote-p default-directory))
-                (<= (count-lines (point-min)
-                                 (point-max))
-                    512))
+                (<= (count-lines (point-min) (point-max)) 512))
       (apply orig-fun args)))
-
-  (advice-add #'all-the-icons-dired--refresh :around #'my/all-the-icons-dired--refresh))
+  (advice-add #'all-the-icons-dired--refresh
+              :around
+              #'my/all-the-icons-dired--refresh))
 #+end_src
 
 Lastly, let’s install some extensions to ~image-dired~.
