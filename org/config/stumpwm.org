@@ -1764,7 +1764,7 @@ Then, let’s declare a keymap for our media controls.
 | ~p~        | ~mpd-toggle-pause~                  |
 | ~s~        | ~mpd-stop~                          |
 | ~u~        | ~mpd-update~                        |
-| ~N~        | ~exec kitty ncmpcpp -q~             |
+| ~n~        | ~exec kitty ncmpcpp -q~             |
 | ~v~        | ~exec kitty ncmpcpp -qs visualizer~ |
 
 Let’s translate this table in CommonLisp:
