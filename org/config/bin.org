@@ -187,6 +187,25 @@ source code here:
 cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
 #+END_SRC
 
+** CPU Scaling
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/cpu-scaling
+:CUSTOM_ID: cli-utilities-CPU-Scaling-f64iyk608fj0
+:END:
+As I am using a laptop, maximum performance isn’t always what I want.
+Sometimes, it’s just better to have not so great but less
+battery-demanding performance. It is possible to achieve this by
+modifying the CPU governor with ~cpupower~. The [[https://wiki.archlinux.org/title/CPU_frequency_scaling#Scaling_governors][Arch Wiki]] has, as usual,
+some really good documentation on this.
+
+The following script asks the user through ~rofi~ which governor to
+apply, and it relies on [[#Askpass-d0d7a8c0][~askpass~]] to retrieve the user’s password.
+#+begin_src bash
+governors=("performance" "powersave" "userspace" "ondemand" "conservative" "schedutil")
+governor=$(printf "%s\n" "${governors[@]}" | rofi -dmenu)
+sudo -A cpupower frequency-set -g "$governor"
+#+end_src
+
 ** Development
 :PROPERTIES:
 :CUSTOM_ID: cli-utilities-Development-baec808a
