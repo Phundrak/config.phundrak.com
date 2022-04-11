@@ -139,6 +139,14 @@ in camelCase words, and allows us to jump words on this finer level.
 (global-subword-mode 1)
 #+end_src
 
+Changing half my screen each time my cursor goes too high or too low
+is not exactly ideal. Fortunately, if we set ~scroll-conservatively~
+high enough we can have the cursor stay on top or at the bottom of the
+screen while the text scrolls progressively.
+#+begin_src emacs-lisp
+(setq scroll-conservatively 1000)
+#+end_src
+
 Lastly, I want the default mode for Emacs to be Emacs Lisp.
 #+begin_src emacs-lisp
 (setq-default initial-major-mode 'emacs-lisp-mode)
