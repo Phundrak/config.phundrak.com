@@ -5791,7 +5791,7 @@ to anything user-defined. Let’s all-the-iconify this!
     "u" #'org-tree-slide-content))
 #+end_src
 
-** Programming languages
+** Programming
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages6et5fl6184j0
 :END:
@@ -5799,6 +5799,34 @@ to anything user-defined. Let’s all-the-iconify this!
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-w3q5rsg0k4j0
 :END:
+**** Copilot
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-Tools-Copilot-ik2ddc804fj0
+:END:
+#+begin_src emacs-lisp
+(use-package copilot
+  :defer t
+  :straight (copilot :type git
+                     :host github
+                     :repo "zerolfx/copilot.el"
+                     :files ("dist" "copilot.el")
+                     :build t)
+  :custom
+  (copilot-enable-predicates '(evil-insert-state-p))
+  :config
+  (defun my/copilot-tab ()
+    (interactive)
+    (or (copilot-accept-completion)
+        (company-indent-or-complete-common nil)))
+
+  (with-eval-after-load 'company
+    (delq 'company-preview-if-just-one-frontend company-frontends)
+    (phundrak/evil
+      :packages '(copilot company)
+      :keymaps '(company-mode-map company-active-map)
+      "TAB" #'my/copilot-tab)))
+#+end_src
+
 **** Flycheck
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Flycheckb446fl6184j0
