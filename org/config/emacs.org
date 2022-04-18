@@ -7597,31 +7597,6 @@ declare some symbols for the Lisp languages.
             #'lisp-mode-prettify))
 #+end_src
 
-Let’s declare also some for Rust:
-#+begin_src emacs-lisp
-(defun rust-mode-pretty-symbols ()
-  (push '("fn"     . ?𝑓) prettify-symbols-alist)
-  (push '("struct" . ?Λ) prettify-symbols-alist)
-  (prettify-symbols-mode -1)
-  (prettify-symbols-mode 1))
-
-(add-hook 'rustic-mode-hook #'rust-mode-pretty-symbols)
-#+end_src
-
-And some for C and C++.
-#+begin_src emacs-lisp
-(defun c-cpp-mode-pretty-symbols ()
-  (push '("int"      . ?ℤ) prettify-symbols-alist)
-  (push '("float"    . ?ℝ) prettify-symbols-alist)
-  (push '("#include" . ?⭳) prettify-symbols-alist)
-  (push '("struct"   . ?Λ) prettify-symbols-alist)
-  (prettify-symbols-mode -1)
-  (prettify-symbols-mode 1))
-
-(add-hook 'c-mode-hook #'c-cpp-mode-pretty-symbols)
-(add-hook 'c++-mode-hook #'c-cpp-mode-pretty-symbols)
-#+end_src
-
 Finally, similar to how ~org-appear~ behaves, let’s show the real string
 of our symbols when the cursor is on it.
 #+begin_src emacs-lisp
