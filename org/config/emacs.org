@@ -4826,15 +4826,45 @@ describing phonetics evolution. So, let’s disable it:
 (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
-**** Gemini
+**** ConlangDict
 :PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-Gemini-4td3dk21kej0
+:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-ConlangDict-wvi7vaa16fj0
 :END:
+I am currently working on two new exporters as well as custom links
+for my org websites. The first one is the most generic one, it exports
+my org files to ~.tsx~ files NextJS will use to render them.
 #+begin_src emacs-lisp
-(use-package ox-gemini
+(use-package ox-conlang-tsx
   :defer t
-  :straight (:build t)
-  :after (ox org))
+  :after '(org ox)
+  :straight (ox-conlang-tsx :type git
+                            :host nil
+                            :repo "https://labs.phundrak.com/phundrak/ox-conlang-tsx"
+                            :build t))
+#+end_src
+
+The second exporter is similar to ~ox-json~, but with some special
+twists for my needs. Indeed, I need some elements of ~ox-conlang-json~
+to be compatible with ~ox-conlang-tsx~.
+#+begin_src emacs-lisp
+;; (use-package ox-conlang-json
+;;   :defer t
+;;   :after '(org ox)
+;;   :straight (ox-conlang-json :type git
+;;                              :local-repo "~/fromGIT/emacs-packages/ox-conlang-json"
+;;                              :build t))
+#+end_src
+
+Finally, I also need a handler for custom links begining in ~conlang~,
+like ~[[conlang:English:dog]]~. ~ol-conlang~ handles that.
+#+begin_src emacs-lisp
+(use-package ol-conlang
+  :defer t
+  :after '(org ol)
+  :straight (ol-conlang :type git
+                        :host nil
+                        :repo "https://labs.phundrak.com/phundrak/ol-conlang"
+                        :build t))
 #+end_src
 
 **** Epub
@@ -4847,6 +4877,17 @@ you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/]
 (use-package ox-epub
   :after (org ox)
   :straight (:build t))
+#+end_src
+
+**** Gemini
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-Gemini-4td3dk21kej0
+:END:
+#+begin_src emacs-lisp
+(use-package ox-gemini
+  :defer t
+  :straight (:build t)
+  :after (ox org))
 #+end_src
 
 **** HTML
