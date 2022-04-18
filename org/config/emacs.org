@@ -3084,11 +3084,11 @@ me.
         dired-listing-switches      "-ahl --group-directories-first"
         dired-auto-revert-buffer    t
         image-dired-thumb-size      150
-        image-dired-dir             (expand-file-name (file-name-as-directory "dired-img"
-                                                            user-emacs-directory))
+        image-dired-dir             (expand-file-name (file-name-as-directory "dired-img")
+                                                      user-emacs-directory)
         image-dired-db-file         (expand-file-name "dired-db.el" user-emacs-directory)
-        image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery"
-                                                         user-emacs-directory))
+        image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery")
+                                                      user-emacs-directory)
         image-dired-temp-image-file (expand-file-name "temp-image" image-dired-dir)
         image-dired-temp-rotate-image-file (expand-file-name "temp-rotate-image"
                                                              image-dired-dir)))
@@ -7831,8 +7831,6 @@ What’s the point of using Emacs if you can’t tell everyone?
                    :repo "xl666/enime"
                    :fork t
                    :build nil)
-  :init
-  (require 'enime)
   :config
   (setq enime-storage-file "~/.cache/enime.db"))
 #+end_src
