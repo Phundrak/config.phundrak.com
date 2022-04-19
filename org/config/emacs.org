@@ -2597,6 +2597,13 @@ doing and what Git is doing! In short, I absolutely love it!
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   :config
   (setq magit-clone-default-directory "~/fromGIT/")
+  (with-eval-after-load 'evil-collection
+    (phundrak/evil
+      :packages '(evil-collection magit)
+      :keymaps '(magit-mode-map magit-log-mode-map magit-status-mode-map)
+      :states 'normal
+      "t" #'magit-tag
+      "s" #'magit-stage))
   :general
   (:keymaps '(git-rebase-mode-map)
    :packages 'magit
