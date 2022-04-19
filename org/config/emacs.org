@@ -953,9 +953,7 @@ additional code compared to most people due to the bépo layout.
       "j" "t"
       "k" "s"
       "l" "r"))
-
   (add-hook 'evil-collection-setup-hook #'my/bépo-rotate-evil-collection)
-
   (evil-collection-init))
 #+end_src
 
@@ -987,26 +985,12 @@ globally enable its mode.
         undo-outer-limit  (* 128 1024 1024)))
 #+end_src
 
-DoomEmacs implements two interesting behaviors I replicate here. The
-first one is to ignore text properties in the history files. Not only
-will this reduce the size of our files, but it will also ease the load
-on Emacs and its GC.
-#+name: undo-tree-ignore-text-properties
-#+begin_src emacs-lisp :tangle no
-(defun my/undo-tree-strip-text-properties (&rest args)
-  (message "undo-tree stripping args: %S" args))
-
-(advice-add 'undo-list-transfer-to-tree
-            :before
-            #'my/undo-tree-strip-text-properties)
-#+end_src
-
-The second thing to do is to compress the history files with ~zstd~ when
-it is present on the system. Not only do we enjoy much smaller files
-(according to DoomEmacs, we get something like 80% file savings),
-Emacs can load them much faster than the regular files. Sure, it uses
-more CPU time uncompressing these files, but it’s insignificant and
-it’s still faster than loading a heavier file.
+An interesting behavior from DoomEmacs is to compress the history
+files with ~zstd~ when it is present on the system. Not only do we enjoy
+much smaller files (according to DoomEmacs, we get something like 80%
+file savings), Emacs can load them much faster than the regular files.
+Sure, it uses more CPU time uncompressing these files, but it’s
+insignificant and it’s still faster than loading a heavier file.
 #+name: undo-tree-compress-files
 #+begin_src emacs-lisp :tangle no
 (when (executable-find "zstd")
