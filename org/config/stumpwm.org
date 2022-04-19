@@ -891,14 +891,14 @@ mouse clicks as well as bépo-compatible mouse movements. This new
 Binwarp mode is now available from the keybind ~s-m~ at top level.
 #+begin_src lisp
 (binwarp:define-binwarp-mode my-binwarp-mode "s-m" (:map *top-map*)
-    ((kbd "SPC") "ratclick 1")
-    ((kbd "RET") "ratclick 3")
-    ((kbd "c")   "binwarp left")
-    ((kbd "t")   "binwarp down")
-    ((kbd "s")   "binwarp up")
-    ((kbd "r")   "binwarp right")
-    ((kbd "i")   "init-binwarp")
-    ((kbd "q")   "exit-binwarp"))
+    ((my/kbd "SPC") "ratclick 1")
+    ((my/kbd "RET") "ratclick 3")
+    ((my/kbd "c")   "binwarp left")
+    ((my/kbd "t")   "binwarp down")
+    ((my/kbd "s")   "binwarp up")
+    ((my/kbd "r")   "binwarp right")
+    ((my/kbd "i")   "init-binwarp")
+    ((my/kbd "q")   "exit-binwarp"))
 #+end_src
 
 ** Bluetooth
@@ -1080,7 +1080,7 @@ bind to ~s-SPC B~.
     <<keybinds-gen(map="m", keybinds=bluetooth-keymap)>>
     m))
 
-(define-key *root-map* (kbd "B") '*my-bluetooth-keymap*)
+(define-key *root-map* (my/kbd "B") '*my-bluetooth-keymap*)
 #+end_src
 
 ** NetworkManager integration
@@ -1170,7 +1170,7 @@ call ~urxvtc~ which is not installed on my system.
 Now, to call the main command of this module we can define the
 following keybind.
 #+begin_src lisp
-(define-key *root-map* (kbd "s") "swm-ssh-menu")
+(define-key *root-map* (my/kbd "s") "swm-ssh-menu")
 #+end_src
 
 * Keybinds
@@ -1222,7 +1222,7 @@ it with ~set-prefix-key~. I personally like to have my space key as a
 leader key, but in order to not have it conflict with Emacs, I also
 need to press the super key too.
 #+begin_src lisp
-(set-prefix-key (kbd "s-SPC"))
+(set-prefix-key (my/kbd "s-SPC"))
 #+end_src
 
 Also, let’s enable ~which-key~:
@@ -1237,18 +1237,18 @@ the numbers themselves. Also, some characters are not recognized as is
 by ~kbd~, so we need to use a special name (not fun…). Below are the
 following characters:
 #+name: number-to-char-table
-| Number | Character | Lisp Character |
-|--------+-----------+----------------|
-|      1 | ~"~         |                |
-|      2 | ~«~         | ~guillemotleft~  |
-|      3 | ~»~         | ~guillemotright~ |
-|      4 | ~(~         |                |
-|      5 | ~)~         |                |
-|      6 | ~@~         |                |
-|      7 | ~+~         |                |
-|      8 | ~-~         |                |
-|      9 | ~/~         |                |
-|      0 | ~*~         |                |
+| Number | Character |
+|--------+-----------|
+|      1 | ~"~         |
+|      2 | ~«~         |
+|      3 | ~»~         |
+|      4 | ~(~         |
+|      5 | ~)~         |
+|      6 | ~@~         |
+|      7 | ~+~         |
+|      8 | ~-~         |
+|      9 | ~/~         |
+|      0 | ~*~         |
 
 So if you see any weird keybind involving these characters, this is
 because of my layout.
@@ -1256,29 +1256,41 @@ because of my layout.
 Something a bit annoying though is Lisp doesn’t know some characters
 by their actual name, rather by another one that I find too long and
 too bothersome to remember. So here’s a list, if you see any of the
-characters on the left column in my config, with some org-mode magic,
-my actual config will use their name as specified in the right column.
-Actually, you even saw some if not all in the previous table.
+characters on the left column in my config, with the function
+described below, my actual config will use their name as specified in
+the right column.
 #+name: tbl-char-to-name
 | Character | Name             |
 |-----------+------------------|
 | ~«~         | ~guillemotleft~    |
 | ~»~         | ~guillemotright~   |
 
-#+name: char-to-name
+#+name: chars-table-to-list
 #+header: :exports none :noweb yes :results verbatim
-#+begin_src emacs-lisp :var table=tbl-char-to-name
-(defun my/stumpwm-char-to-name (char)
-  (let* ((table (mapcar (lambda (entry)
-                          (cons (replace-regexp-in-string "^~" "" (car entry))
-                                (replace-regexp-in-string "^~" "" (cadr entry))))
-                        table))
-         (table (mapcar (lambda (entry)
-                          (cons (replace-regexp-in-string "~$" "" (car entry))
-                                (replace-regexp-in-string "~$" "" (cdr entry))))
-                        table)))
-    (or (cdr (assoc char table))
-        char)))
+#+begin_src emacs-lisp :var chars=tbl-char-to-name
+;; chars
+(let ((filter (lambda (str)
+                (replace-regexp-in-string "^~\\|~$" "" str))))
+  (mapcar (lambda (row)
+            `(,(apply filter `(,(car row))) . ,(apply filter `(,(cadr row)))))
+          chars))
+#+end_src
+
+#+RESULTS[8ceb9b882276931ad0dba7dcf38d163f7674f547]: chars-table-to-list
+: (("«" . "guillemotleft") ("»" . "guillemotright"))
+
+To convert these characters, I have my own macro which is a wrapper
+around the function ~kbd~:
+#+begin_src lisp :noweb yes
+(defun my/kbd (keys)
+  "Prepares KEYS for function `stumpwm:kbd'.
+If a character declared in the car of a member of the variable char,
+it is replaced with its cdr. This allows the user to input characters
+such as « or » and have them replaced with their actual name when
+`stumpwm:kbd' is called."
+  (kbd (let ((chars '<<chars-table-to-list()>>))
+           (dolist (row chars keys)
+             (setf keys (cl-ppcre:regex-replace-all (car row) keys (cdr row)))))))
 #+end_src
 
 ** Applications
@@ -1357,16 +1369,16 @@ This translates to:
 
 The application keymap can now be bound to the root map like so:
 #+begin_src lisp
-(define-key *root-map* (kbd "a") '*my-applications-keymap*)
+(define-key *root-map* (my/kbd "a") '*my-applications-keymap*)
 #+end_src
 
 I will also bind to the top map ~s-RET~ in order to open a new terminal
 window. The screenshot keymap is also bound to the ScreenPrint key,
 and the ~XF86Mail~ key opens mu4e in Emacs.
 #+begin_src lisp
-(define-key *top-map* (kbd "s-RET") "term")
-(define-key *top-map* (kbd "Print") '*my-screenshot-keymap*)
-(define-key *top-map* (kbd "XF86Mail") "exec emacsclient -c -e \"(mu4e)\"")
+(define-key *top-map* (my/kbd "s-RET") "term")
+(define-key *top-map* (my/kbd "Print") '*my-screenshot-keymap*)
+(define-key *top-map* (my/kbd "XF86Mail") "exec emacsclient -c -e \"(mu4e)\"")
 #+end_src
 
 ** End of Session, Powering Off, and the Likes
@@ -1398,7 +1410,7 @@ This translates to:
 
 Which is bound in the root map to ~q~:
 #+begin_src lisp
-(define-key *root-map* (kbd "q") '*my-end-session-keymap*)
+(define-key *root-map* (my/kbd "q") '*my-end-session-keymap*)
 #+end_src
 
 ** Groups
@@ -1417,7 +1429,7 @@ this:
              (let ((group-nbr (nth 1 group)))
                (format "%S" `(define-key
                                ,(make-symbol map)
-                               (kbd ,(format "%s-%s"
+                               (my/kbd ,(format "%s-%s"
                                              mod
                                              (if (string= "yes" convert)
                                                  (format "<<num-to-char(num=%s)>>" group-nbr)
@@ -1427,31 +1439,23 @@ this:
            "\n")
 #+end_src
 
-#+RESULTS[09b139b0e127a88b3e4e2a05a609ccfcb7825b3c]: group-keybind-gen
-: "(define-key *top-map* (kbd \"s-1\") \"gselect 1\")
-: (define-key *top-map* (kbd \"s-2\") \"gselect 2\")
-: (define-key *top-map* (kbd \"s-3\") \"gselect 3\")
-: (define-key *top-map* (kbd \"s-4\") \"gselect 4\")
-: (define-key *top-map* (kbd \"s-5\") \"gselect 5\")
-: (define-key *top-map* (kbd \"s-6\") \"gselect 6\")
-: (define-key *top-map* (kbd \"s-7\") \"gselect 7\")
-: (define-key *top-map* (kbd \"s-8\") \"gselect 8\")"
+#+RESULTS[2735a7d6fe1b2d293eb8003a276344deaa888e0c]: group-keybind-gen
+: "(define-key *top-map* (my/kbd \"s-1\") \"gselect 1\")
+: (define-key *top-map* (my/kbd \"s-4\") \"gselect 4\")
+: (define-key *top-map* (my/kbd \"s-2\") \"gselect 2\")
+: (define-key *top-map* (my/kbd \"s-3\") \"gselect 3\")"
 
 #+header: :cache yes :noweb yes :wrap src lisp
 #+begin_src emacs-lisp
 <<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
 #+end_src
 
-#+RESULTS[627ef5c7e456944dd624c322529699e11f2a041b]:
+#+RESULTS[b40b6f5faeaf996dca43a3fd0343b2955c24b4b5]:
 #+begin_src lisp
-(define-key *top-map* (kbd "s-<<num-to-char(num=1)>>") "gselect 1")
-(define-key *top-map* (kbd "s-<<num-to-char(num=2)>>") "gselect 2")
-(define-key *top-map* (kbd "s-<<num-to-char(num=3)>>") "gselect 3")
-(define-key *top-map* (kbd "s-<<num-to-char(num=4)>>") "gselect 4")
-(define-key *top-map* (kbd "s-<<num-to-char(num=5)>>") "gselect 5")
-(define-key *top-map* (kbd "s-<<num-to-char(num=6)>>") "gselect 6")
-(define-key *top-map* (kbd "s-<<num-to-char(num=7)>>") "gselect 7")
-(define-key *top-map* (kbd "s-<<num-to-char(num=8)>>") "gselect 8")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=1)>>") "gselect 1")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=4)>>") "gselect 4")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=2)>>") "gselect 2")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=3)>>") "gselect 3")
 #+end_src
 
 Another batch of keybinds I use a lot is keybinds to send the
@@ -1463,15 +1467,12 @@ so there’s no need to convert the group number to another character.
 <<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
 #+end_src
 
-#+RESULTS[6577510905e5cce124ff563a6d68a7f64fc8683c]:
+#+RESULTS[4c263fdbd52639dc6280827ebcf15769c798f96a]:
 #+begin_src lisp
-(define-key *top-map* (kbd "s-1") "gmove-and-follow 1")
-(define-key *top-map* (kbd "s-2") "gmove-and-follow 2")
-(define-key *top-map* (kbd "s-3") "gmove-and-follow 3")
-(define-key *top-map* (kbd "s-4") "gmove-and-follow 4")
-(define-key *top-map* (kbd "s-5") "gmove-and-follow 5")
-(define-key *top-map* (kbd "s-6") "gmove-and-follow 6")
-(define-key *top-map* (kbd "s-7") "gmove-and-follow 7")
+(define-key *top-map* (my/kbd "s-1") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-2") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-3") "gmove-and-follow 3")
 #+end_src
 
 If I want to send a window to another group without following it, I’ll
@@ -1480,15 +1481,12 @@ use ~s-S-C-<group number>~, which gives us the following:
 <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
 #+end_src
 
-#+RESULTS[55852a5a035c23f078ba0a97120151c059fa955f]:
+#+RESULTS[c9a7532871d9824660ad956e4fcbd06e24ccef97]:
 #+begin_src lisp
-(define-key *top-map* (kbd "s-C-1") "gmove-and-follow 1")
-(define-key *top-map* (kbd "s-C-2") "gmove-and-follow 2")
-(define-key *top-map* (kbd "s-C-3") "gmove-and-follow 3")
-(define-key *top-map* (kbd "s-C-4") "gmove-and-follow 4")
-(define-key *top-map* (kbd "s-C-5") "gmove-and-follow 5")
-(define-key *top-map* (kbd "s-C-6") "gmove-and-follow 6")
-(define-key *top-map* (kbd "s-C-7") "gmove-and-follow 7")
+(define-key *top-map* (my/kbd "s-C-1") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-C-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-2") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-C-3") "gmove-and-follow 3")
 #+end_src
 
 And if I want to bring the windows of another group into the current
@@ -1497,15 +1495,12 @@ group, I’ll use ~s-C-<group number>~:
 <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
 #+end_src
 
-#+RESULTS[b536bb0359e6e9e10e98635c82bed3d348d75ac5]:
+#+RESULTS[c88622e10857ba0e6f8b8fe88e074343d65b13bf]:
 #+begin_src lisp
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=1)>>") "gmove-and-follow 1")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=2)>>") "gmove-and-follow 2")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=3)>>") "gmove-and-follow 3")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=5)>>") "gmove-and-follow 5")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=6)>>") "gmove-and-follow 6")
-(define-key *top-map* (kbd "s-C-<<num-to-char(num=7)>>") "gmove-and-follow 7")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=1)>>") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=2)>>") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=3)>>") "gmove-and-follow 3")
 #+end_src
 
 StumpWM also has already a nice keymap for managing groups called
@@ -1513,19 +1508,19 @@ StumpWM also has already a nice keymap for managing groups called
 already bound, but since I plan on erasing ~*root-map*~ in the near
 future before binding stuff to it, I prefer to bind it already)
 #+begin_src lisp
-(define-key *root-map* (kbd "g") '*groups-map*)
+(define-key *root-map* (my/kbd "g") '*groups-map*)
 #+end_src
 
 And a binding to ~vgroups~ is done on ~*groups-map*~ in order to regroup
 similar keybinds.
 #+begin_src lisp
-(define-key *groups-map* (kbd "G") "vgroups")
+(define-key *groups-map* (my/kbd "G") "vgroups")
 #+end_src
 
 I grew accustomed to ~s-ESC~ bringing me to the previous group when
 using AwesomeWM, so let’s define that:
 #+begin_src lisp
-(define-key *top-map* (kbd "s-ESC") "gother")
+(define-key *top-map* (my/kbd "s-ESC") "gother")
 #+end_src
 
 ** Frames and Windows management
@@ -1603,7 +1598,7 @@ in ~*my-frames-float-keymap*~.
 
 Let’s bind ~*my-frames-management-keymap*~ in ~*root-keymap*~:
 #+begin_src lisp
-(define-key *root-map* (kbd "w") '*my-frames-management-keymap*)
+(define-key *root-map* (my/kbd "w") '*my-frames-management-keymap*)
 #+end_src
 
 That way, if we want for instance to split our current frame
@@ -1639,16 +1634,16 @@ redefine it:
 (define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
                                                  :on-exit  #'resize-unhide
                                                  :abort-if #'abort-resize-p)
-  ((kbd "c") "resize-direction left")
-  ((kbd "t") "resize-direction down")
-  ((kbd "s") "resize-direction up")
-  ((kbd "r") "resize-direction right"))
+  ((my/kbd "c") "resize-direction left")
+  ((my/kbd "t") "resize-direction down")
+  ((my/kbd "s") "resize-direction up")
+  ((my/kbd "r") "resize-direction right"))
 #+end_src
 
 As with groups management, I grew used to ~s-TAB~ in AwesomeWM bringing
 me back to the previously focused window.
 #+begin_src lisp
-(define-key *top-map* (kbd "s-TAB") "other-window")
+(define-key *top-map* (my/kbd "s-TAB") "other-window")
 #+end_src
 
 ** Windows management
@@ -1676,7 +1671,7 @@ with Emacs’ buffers.
     <<keybinds-gen(map="m", keybinds=window-management)>>
     m))
 
-(define-key *root-map* (kbd "b") '*my-buffers-management-keymap*)
+(define-key *root-map* (my/kbd "b") '*my-buffers-management-keymap*)
 #+end_src
 
 ** Media and Media Control
@@ -1784,7 +1779,7 @@ Let’s translate this table in CommonLisp:
     <<keybinds-gen(map="m", keybinds=media-management)>>
     m))
 
-(define-key *root-map* (kbd "m") '*my-media-keymap*)
+(define-key *root-map* (my/kbd "m") '*my-media-keymap*)
 #+end_src
 
 I will also define on ~*top-map*~ some basic volume management keybinds
@@ -1844,7 +1839,7 @@ games and the bépo layout most of the time. I’ll use the command
     <<keybinds-gen(map="m", keybinds=keyboard-layout-map)>>
     m))
 
-(define-key *root-map* (kbd "k") '*my-keyboard-layout-keymap*)
+(define-key *root-map* (my/kbd "k") '*my-keyboard-layout-keymap*)
 #+end_src
 
 * org functions                                                    :noexport:
@@ -1854,16 +1849,14 @@ games and the bépo layout most of the time. I’ll use the command
 
 #+name: keybinds-gen
 #+header: :wrap "src lisp :exports none" :exports none :noweb yes
-#+begin_src emacs-lisp :var map="m" keybinds=media-management :var table=tbl-char-to-name
-<<char-to-name>>
+#+begin_src emacs-lisp :var map="m" keybinds=media-management
 (mapconcat (lambda (keybind)
-             (format "%s" (let* ((key      (let ((s (car keybind)))
-                                             (substring-no-properties s 1 (1- (length s)))))
-                                 (function (let ((s (cadr keybind)))
-                                             (substring-no-properties s 1 (1- (length s)))))
-                                 (key      (my/stumpwm-char-to-name key)))
+             (format "%s" (let* ((filter   (lambda (str)
+                                             (replace-regexp-in-string "^~\\|~$" "" str)))
+                                 (key      (funcall filter (car keybind)))
+                                 (function (funcall filter (cadr keybind))))
                             `(define-key ,map
-                               (kbd ,(format "\"%s\"" key))
+                               (my/kbd ,(format "\"%s\"" key))
                                ,(if (string-prefix-p "'" function t)
                                     function
                                   (format "\"%s\"" function))))))
@@ -1871,20 +1864,20 @@ games and the bépo layout most of the time. I’ll use the command
            "\n")
 #+end_src
 
-#+RESULTS[017aa07fd2bba7a85e92534b1a46ef338d683af5]: keybinds-gen
+#+RESULTS[9744c4aacf38058ba47743b738704ac624c3469a]: keybinds-gen
 #+begin_src lisp :exports none
-(define-key m (kbd ".") "media-interactive")
-(define-key m (kbd "guillemotleft") "mpd-prev")
-(define-key m (kbd "guillemotright") "mpd-next")
-(define-key m (kbd "a") '*my-mpd-add-map*)
-(define-key m (kbd "b") '*my-mpd-browse-map*)
-(define-key m (kbd "c") "mpd-clear")
-(define-key m (kbd "m") "mpc-interactive")
-(define-key m (kbd "p") "mpd-toggle-pause")
-(define-key m (kbd "s") "mpd-stop")
-(define-key m (kbd "u") "mpd-update")
-(define-key m (kbd "N") "exec kitty ncmpcpp -q")
-(define-key m (kbd "v") "exec kitty ncmpcpp -qs visualizer")
+(define-key m (my/kbd ".") "media-interactive")
+(define-key m (my/kbd "«") "mpd-prev")
+(define-key m (my/kbd "»") "mpd-next")
+(define-key m (my/kbd "a") '*my-mpd-add-map*)
+(define-key m (my/kbd "b") '*my-mpd-browse-map*)
+(define-key m (my/kbd "c") "mpd-clear")
+(define-key m (my/kbd "m") "mpc-interactive")
+(define-key m (my/kbd "p") "mpd-toggle-pause")
+(define-key m (my/kbd "s") "mpd-stop")
+(define-key m (my/kbd "u") "mpd-update")
+(define-key m (my/kbd "n") "exec kitty ncmpcpp -q")
+(define-key m (my/kbd "v") "exec kitty ncmpcpp -qs visualizer")
 #+end_src
 
 #+name: interactive-gen
@@ -1894,34 +1887,32 @@ games and the bépo layout most of the time. I’ll use the command
            "\n "
            ,(mapconcat (lambda (keybind)
                          (format "%s"
-                                 (let ((key     (let ((s (car keybind)))
-                                                  (substring-no-properties s
-                                                                           1
-                                                                           (1- (length s)))))
-                                       (command (let ((s (cadr keybind)))
-                                                  (substring-no-properties s
-                                                                           1
-                                                                           (1- (length s))))))
-                                   `((kbd ,(format "\"%s\"" key))
+                                 (let* ((filter  (lambda (str)
+                                                   (replace-regexp-in-string "^~\\|~$" "" str)))
+                                        (key     (funcall filter (car keybind)))
+                                        (command (funcall filter (cadr keybind))))
+                                   `((my/kbd ,(format "\"%s\"" key))
                                      ,(format "\"%s\"" command)))))
                        keys
                        "\n  ")))
 #+end_src
 
+#+RESULTS[5f0a947d35c7efa568ec89859bed9e9f6ed0fa51]: interactive-gen
+: (define-interactive-keymap inter nil
+:   ((my/kbd "c") "mpd-prev")
+:   ((my/kbd "t") "mpd-volume-down")
+:   ((my/kbd "s") "mpd-volume-up")
+:   ((my/kbd "r") "mpd-next"))
+
 #+name: num-to-char
 #+begin_src emacs-lisp :var table=number-to-char-table num=2
-(let ((char (replace-regexp-in-string (regexp-quote "~")
-                                      ""
-                                      (let* ((row (assoc num table))
-                                             (char (cadr row))
-                                             (lispchar (caddr row)))
-                                        (if (string= "" lispchar)
-                                            char
-                                          lispchar)))))
+(let* ((filter (lambda (str)
+                 (replace-regexp-in-string "^~\\|~$" "" str)))
+       (char (funcall filter (cadr (assoc num table)))))
   (if (string= char "\"")
       "\\\""
     char))
 #+end_src
 
-#+RESULTS[0c35d70ec5195a6f24fdaa1f5847c1bda7ae18be]: num-to-char
-: guillemotleft
+#+RESULTS[f66a1c4f98f4e8def9867862da252249b6a65749]: num-to-char
+: «
