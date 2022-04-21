@@ -4293,6 +4293,7 @@ extended however we like!
   :config
   <<org-hydra-babel>>
   (require 'ox-beamer)
+  (require 'org-protocol)
   (setq org-hide-leading-stars             nil
         org-hide-macro-markers             t
         org-ellipsis                       " ⤵"
