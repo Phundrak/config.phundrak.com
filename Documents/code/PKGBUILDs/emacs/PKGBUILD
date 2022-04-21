@@ -50,7 +50,7 @@ XI2="YES"         # Use Xinput2 support.
                   # https://www.x.org/releases/X11R7.7/doc/inputproto/XI2proto.txt
 ALSA="YES"        # Linux sound support.
 NOCAIRO=          # Disable here.
-XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
 DOCS_PDF="YES"    # Generate and install pdf documentation.
 NOGZ="YES"        # Don't compress .el files.
@@ -62,7 +62,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.155319
+pkgver=29.0.50.155812
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
