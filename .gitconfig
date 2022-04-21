@@ -112,6 +112,9 @@
         whitespace-error-style = 22 reverse
 
 [delta "decorations"]
-       commit-decoration-style = bold yellow box ul
-       file-style = bold yellow ul
-       file-decoration-style = none
+        commit-decoration-style = bold yellow box ul
+        file-style = bold yellow ul
+        file-decoration-style = none
+
+[credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
+        helper = "pass Email/lucien@phundrak.com | head -n1 | tr -d '\n'"
