@@ -1417,10 +1417,10 @@ for my screen’s backlight.
 #+caption: Interactive keybinds for general media interaction
 | Keys | Function                             |
 |------+--------------------------------------|
-| ~c~    | ~exec xbacklight -dec 2~               |
+| ~c~    | ~exec xbacklight -perceived -dec 2~    |
 | ~t~    | ~exec amixer -q set Master 2%- unmute~ |
 | ~s~    | ~exec amixer -q set Master 2%+ unmute~ |
-| ~r~    | ~exec xbacklight -inc 2~               |
+| ~r~    | ~exec xbacklight -perceived -inc 2~    |
 | ~m~    | ~exec amixer -q set Master 1+ toggle~  |
 
 #+begin_src lisp
@@ -1491,18 +1491,18 @@ so that they are immediately accessible. Again, this isn’t technically
 media-related, but I’ll add keybinds for my screen’s backlight.
 #+name: media-top-level
 #+caption: Top-level media keys
-| Keychord              | Function               |
-|-----------------------+------------------------|
-| ~XF86AudioPlay~         | ~mpd-toggle-pause~       |
-| ~XF86AudioPause~        | ~exec mpc pause~         |
-| ~XF86AudioStop~         | ~mpd-stop~               |
-| ~XF86AudioPrev~         | ~mpd-prev~               |
-| ~XF86AudioNext~         | ~mpd-next~               |
-| ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~      |
-| ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~      |
-| ~XF86AudioMute~         | ~exec pamixer -t~        |
-| ~XF86MonBrightnessDown~ | ~exec xbacklight -dec 2~ |
-| ~XF86MonBrightnessUp~   | ~exec xbacklight -inc 2~ |
+| Keychord              | Function                          |
+|-----------------------+-----------------------------------|
+| ~XF86AudioPlay~         | ~mpd-toggle-pause~                  |
+| ~XF86AudioPause~        | ~exec mpc pause~                    |
+| ~XF86AudioStop~         | ~mpd-stop~                          |
+| ~XF86AudioPrev~         | ~mpd-prev~                          |
+| ~XF86AudioNext~         | ~mpd-next~                          |
+| ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~                 |
+| ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~                 |
+| ~XF86AudioMute~         | ~exec pamixer -t~                   |
+| ~XF86MonBrightnessDown~ | ~exec xbacklight -perceived -dec 2~ |
+| ~XF86MonBrightnessUp~   | ~exec xbacklight -perceived -inc 2~ |
 
 #+begin_src lisp
 <<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>
@@ -1874,22 +1874,6 @@ following keybind.
                                   (format "\"%s\"" function))))))
            keybinds
            "\n")
-#+end_src
-
-#+RESULTS[9744c4aacf38058ba47743b738704ac624c3469a]: keybinds-gen
-#+begin_src lisp :exports none
-(define-key m (my/kbd ".") "media-interactive")
-(define-key m (my/kbd "«") "mpd-prev")
-(define-key m (my/kbd "»") "mpd-next")
-(define-key m (my/kbd "a") '*my-mpd-add-map*)
-(define-key m (my/kbd "b") '*my-mpd-browse-map*)
-(define-key m (my/kbd "c") "mpd-clear")
-(define-key m (my/kbd "m") "mpc-interactive")
-(define-key m (my/kbd "p") "mpd-toggle-pause")
-(define-key m (my/kbd "s") "mpd-stop")
-(define-key m (my/kbd "u") "mpd-update")
-(define-key m (my/kbd "n") "exec kitty ncmpcpp -q")
-(define-key m (my/kbd "v") "exec kitty ncmpcpp -qs visualizer")
 #+end_src
 
 #+name: interactive-gen
