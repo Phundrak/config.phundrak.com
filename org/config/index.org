@@ -194,7 +194,7 @@ it can be a security issue if someone ever get access to my computer while paru
 is running, but if it ever happens it will be already concerning enough they
 managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my custom script dired]] so I can use Emacs’ Dired
 as the file manager for ~paru~.
-#+BEGIN_SRC conf :tangle ~/.config/paru/paru.conf
+#+BEGIN_SRC conf :tangle ~/.config/paru/paru.conf :mkdirp yes
 [options]
 BottomUp
 Devel
