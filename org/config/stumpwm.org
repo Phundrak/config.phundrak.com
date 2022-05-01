@@ -716,6 +716,30 @@ This will make ~clx-truetype~ available to quicklisp, and you can run
 again src_lisp[:exports code]{(ql:quickload :clx-truetype)} without an
 issue (running it again is necessary to install its dependencies).
 
+In order for it to work, install [[https://www.quicklisp.org/beta/][quicklisp]] and don’t forget to run
+src_lisp[:exports code]{(ql:add-to-init-file)} so it is loaded each
+time you start your Lisp interpreter. ~SBCL~ should be your CommonLisp
+interpreter of choice since StumpWM is generally compiled with it. The
+main advantage is also that SBCL supports multithreading, unlike
+clisp. In case StumpWM doesn’t find your font, spin up SBCL and
+execute the following lines:
+#+begin_src lisp :tangle no
+(ql:quickload :clx-truetype)
+(xft:cache-fonts)
+#+end_src
+
+If you want a list of font families available, you can execute the
+following:
+#+begin_src lisp :tangle no
+(clx-truetype:get-font-families)
+#+end_src
+
+If you want to know the subfamilies of a certain family, you can
+execute this:
+#+begin_src lisp :tangle no
+(clx-truetype:get-font-subfamilies "Family Name")
+#+end_src
+
 Now that this is out of the way, let’s add two lines so we can use TTF
 fonts:
 #+begin_src lisp
