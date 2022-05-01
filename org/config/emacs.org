@@ -4320,6 +4320,8 @@ extended however we like!
         org-log-done                       'time
         org-directory                      "~/org"
         org-default-notes-file             (expand-file-name "notes.org" org-directory))
+  (with-eval-after-load 'oc
+   (setq org-cite-global-bibliography '("~/org/bibliography/references.bib")))
   <<org-agenda-files>>
   <<org-behavior-electric>>
   <<org-capture-target-files>>
