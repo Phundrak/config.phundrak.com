@@ -62,7 +62,7 @@ Now, there is only one function I modify when it comes to the appearance of fish
 when I’m the one using it: the ~fish_greeting~ function. I use it to display the output of [[https://labs.phundrak.com/phundrak/pumo-system-info][a utility I wrote]].
 #+BEGIN_SRC fish
 function fish_greeting
-    pumo-system-info
+    which pumo-system-info 2&> /dev/null && pumo-system-info || df -H | grep -v Filesystem | sort -rk 5
 end
 #+END_SRC
 
