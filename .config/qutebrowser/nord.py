@@ -1,1 +1,1 @@
-/home/phundrak/fromGIT/nord-qutebrowser/nord-qutebrowser.py
+../../fromGIT/qutebrowser-nord/nord-qutebrowser.py
