@@ -2742,15 +2742,12 @@ excluded files.
                                     (or "elfeed-db" "eln-cache")
                                     (* any)))
   (add-to-list 'recentf-exclude (rx (* any)
-                                    "/Mail/Sent"
-                                    (* any)))
-  (add-to-list 'recentf-exclude (rx (* any)
                                     "conlanging/content"
                                     (* any)
                                     (or "html" "pdf" "tex")))
-  (add-to-list 'recentf-exclude (rx (* any)
-                                    ".cache/paru/"
-                                    (* any))))
+  (add-to-list 'recentf-exclude ".*/Mail/Sent.*")
+  (add-to-list 'recentf-exclude ".*\\.cache/.*")
+  (add-to-list 'recentf-exclude "/rsync.*"))
 #+end_src
 
 *** Screenshot
@@ -8082,6 +8079,8 @@ My buffer-related keybinds are all prefixed by ~b~.
 | D   | kill-buffer                        |             |
 | h   | dashboard-refresh-buffer           |             |
 | m   | switch-to-messages-buffer          |             |
+| n   | next-buffer                        |             |
+| p   | previous-buffer                    |             |
 | r   | counsel-buffer-or-recentf          |             |
 | s   | switch-to-scratch-buffer           |             |
 
