@@ -3,7 +3,7 @@
 
 _pkgname=nsxiv
 pkgname="${_pkgname}-bepo-git"
-pkgver=28.r29.g79556e9
+pkgver=29.r13.g6922d5d
 pkgrel=1
 pkgdesc='New Simple X Image Viewer'
 arch=('x86_64')
@@ -15,7 +15,7 @@ depends=('imlib2' 'desktop-file-utils' 'xdg-utils' 'hicolor-icon-theme' 'libexif
 makedepends=(git)
 source=("${_pkgname}::git+$url" config.h)
 sha512sums=('SKIP'
-            '83f8f9428be62a3065f4024f4b4ee0738d9aecfc40a5e814311000f527527a1bad39c397c650472ab82e6c6a5f7bf722d772faaf851bdaa0904dedc9b3fcda28')
+            'fc4d8327b2de66f90af245d8670c4fd0169ba172fcdd0344d3ba6d72b13f54583b7042b4f7bfc891645675c3a0771c0144a6c0486a8380af93b7d090f990c6aa')
 
 pkgver() {
   cd "$srcdir/${_pkgname}"
