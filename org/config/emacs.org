@@ -1643,6 +1643,7 @@ configuration for the ~mu4e~ package itself.
   <<mu4e-mail-on-machine>>
   <<mu4e-no-signature>>
   <<mu4e-bookmarks>>
+  <<mu4e-maildirs>>
 
   (when (fboundp 'imagemagick-register-types)
     (imagemagick-register-types))
@@ -1952,6 +1953,27 @@ We can finally define our bookmarks! The code reads as follows:
         (:name "This Week"  :key ?w :query "date:7d..now    AND NOT flag:trashed")
         (:name "This Month" :key ?m :query "date:1m..now    AND NOT flag:trashed")
         (:name "This Year"  :key ?y :query "date:1y..now    AND NOT flag:trashed")))
+#+end_src
+
+***** Maildirs
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Applications-Email-Mu4e-Maildirs-miy134713gj0
+:END:
+Sometimes, bookmarks are a bit too restrictive when I want to search
+for stuff. Simply jumping to a mail directory, or maildir, is more
+than enough. In mu4e, with my current setup, I can jump to any maildir
+with the shortcut ~Jo~ in normal-mode, and I just need to chose in a
+list the maildir I want to jump to. But it can be faster.
+
+With this piece of code, I can simply jump to my inbox maildir with
+~Ji~, to my sent messages with ~Js~, and so on.
+#+name: mu4e-maildirs
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-maildir-shortcuts
+      '((:maildir "/Inbox" :key ?i)
+        (:maildir "/Sent" :key ?s)
+        (:maildir "/Junk" :key ?j)
+        (:maildir "/Trash" :key ?t)))
 #+end_src
 
 ***** Dealing with spammers
