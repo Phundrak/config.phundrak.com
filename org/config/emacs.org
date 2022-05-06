@@ -675,6 +675,25 @@ focus the new window immediately.
     (delete-window)))
 #+end_src
 
+** Extend ~add-to-list~
+:PROPERTIES:
+:CUSTOM_ID: Custom-Elisp-Extend-add-to-list-eh2325605gj0
+:END:
+One function I find missing regarding ~add-to-list~ is ~add-all-to-list~
+so I can add multiple elements to a list at once. Instead, with
+vanilla Emacs, I have to repeatedly call ~add-to-list~. That’s not very
+clean. Let’s declare this missing function:
+#+begin_src emacs-lisp
+(defun add-all-to-list (list-var elements &optional append compare-fn)
+  "Add ELEMENTS to the value of LIST-VAR if it isn’t there yet.
+
+ELEMENTS is a list of values. For documentation on the variables
+APPEND and COMPARE-FN, see `add-to-list'."
+  (let (return)
+    (dolist (elt elements return)
+      (setq return (add-to-list list-var elt append compare-fn)))))
+#+end_src
+
 * Package Management
 :PROPERTIES:
 :CUSTOM_ID: Package-Managementqpwkel6184j0
@@ -2760,16 +2779,20 @@ excluded files.
   :straight (:build t :type built-in)
   :custom ((recentf-max-saved-items 2000))
   :config
-  (add-to-list 'recentf-exclude (rx (* any)
-                                    (or "elfeed-db" "eln-cache")
-                                    (* any)))
-  (add-to-list 'recentf-exclude (rx (* any)
-                                    "conlanging/content"
-                                    (* any)
-                                    (or "html" "pdf" "tex")))
-  (add-to-list 'recentf-exclude ".*/Mail/Sent.*")
-  (add-to-list 'recentf-exclude ".*\\.cache/.*")
-  (add-to-list 'recentf-exclude "/rsync.*"))
+  ;; no Elfeed or native-comp files
+  (add-all-to-list 'recentf-exclude
+                   `(,(rx (* any)
+                          (or "elfeed-db"
+                              "eln-cache"
+                              "conlanging/content"
+                              "org/config"
+                              "/Mail/Sent"
+                              ".cache/")
+                          (* any)
+                          (? (or "html" "pdf" "tex" "epub")))
+                     ,(rx "/"
+                          (or "rsync" "ssh" "tmp")
+                          (* any)))))
 #+end_src
 
 *** Screenshot
