@@ -2791,7 +2791,7 @@ excluded files.
                           (* any)
                           (? (or "html" "pdf" "tex" "epub")))
                      ,(rx "/"
-                          (or "rsync" "ssh" "tmp")
+                          (or "rsync" "ssh" "tmp" "yadm")
                           (* any)))))
 #+end_src
 
