@@ -775,7 +775,7 @@ list of fonts I want loaded:
 |--------------------------------+-----------+------|
 | Unifont-JP                     | Regular   |   10 |
 | DejaVu Sans Mono for Powerline | Book      |  8.5 |
-| Siji                           | Medium    |   10 |
+| siji                           | Medium    |   10 |
 
 #+name: gen-fonts
 #+header: :wrap src lisp
@@ -795,7 +795,7 @@ list of fonts I want loaded:
 #+end_src
 
 The code equivalent of this table can be seen below:
-#+RESULTS[4792ccbea35e0666b555ccf10bc3abcf85763ef0]: gen-fonts
+#+RESULTS[8f33434f3332d94fa0d7306c1233c824a26fde93]: gen-fonts
 #+begin_src lisp
 (set-font `(,(make-instance 'xft:font :family "Unifont-JP" :subfamily "Regular" :size 10 :antialias t)
             ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)
