@@ -493,19 +493,20 @@ We can indicate what to display in our modeline. Each formatter will
 be separated by a Powerline separator with the code point ~0xE0B0~ in
 the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 #+name: modeline-format
-| Formatter | What it does                                          | Command? |
-|-----------+-------------------------------------------------------+----------|
-| ~%g~        | Display list of groups                                |          |
-| ~%W~        | Display list of windows in the current group and head |          |
-| ~^>~        | Rest of the modeline align to the right               |          |
-| ~mu-unread~ | Display number of unread emails                       | yes      |
-| ~%m~        | Display current MPD song                              |          |
-| ~%I~        | Display Wifi status                                   |          |
-| ~%l~        | Display network usage                                 |          |
-| ~%C~        | Display CPU usage                                     |          |
-| ~%M~        | Display RAM usage                                     |          |
-| ~%B~        | Display battery status                                |          |
-| ~%d~        | Display date                                          |          |
+| Formatter     | What it does                                          | Command? |
+|---------------+-------------------------------------------------------+----------|
+| ~%g~            | Display list of groups                                |          |
+| ~%W~            | Display list of windows in the current group and head |          |
+| ~^>~            | Rest of the modeline align to the right               |          |
+| ~stump-weather~ | Display the current weather                           | yes      |
+| ~mu-unread~     | Display number of unread emails                       | yes      |
+| ~%m~            | Display current MPD song                              |          |
+| ~%I~            | Display Wifi status                                   |          |
+| ~%l~            | Display network usage                                 |          |
+| ~%C~            | Display CPU usage                                     |          |
+| ~%M~            | Display RAM usage                                     |          |
+| ~%B~            | Display battery status                                |          |
+| ~%d~            | Display date                                          |          |
 
 #+name: modeline-format-gen
 #+begin_src emacs-lisp :var elements=modeline-format :exports none
@@ -518,8 +519,8 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
         elements)
 #+end_src
 
-#+RESULTS[7f62146daae5aab6014d303b57c306fe44c4087b]: modeline-format-gen
-: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%I") ("%l") ("%C") ("%M") ("%B") ("%d"))
+#+RESULTS[4a774559ef9c88c74aa62a42c6f53fdc401815aa]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("stump-weather" . t) ("mu-unread" . t) ("%m") ("%I") ("%l") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
 (defvar *mode-line-formatter-list*

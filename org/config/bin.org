@@ -2044,18 +2044,77 @@ CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo "$XDG_CACHE_HOME/wallpaper" || echo
 
 * Weather
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
 :CUSTOM_ID: Weather-4ed00bb0
 :END:
-A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a
-weather forecast in the terminal. By default, I want the request to be about the
-city I live in, but it is also possible for the script to accept as its
-arguments a search inquiry.
-#+BEGIN_SRC fish
-if count $argv > /dev/null
-    set -l SEARCH (string join '+' $argv)
-    curl http://v2.wttr.in/~$SEARCH
+** StumpWM utilities
+:PROPERTIES:
+:CUSTOM_ID: Weather-StumpWM-utilities-okvit9r05gj0
+:END:
+*** ~stump-choose-city~
+:PROPERTIES:
+:CUSTOM_ID: Weather-StumpWM-utilities-stump-choose-city-adyit9r05gj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/stump-choose-city
+:END:
+This script does two things. First, I get to choose a location which
+weather will be displayed in StumpWM’s mode-line. The script stores
+the selected location in the file ~$HOME/.cache/weather-city~, but only
+if the input is not an empty string, otherwise nothing will change.
+Secondly, if this change is applied, ~stump-weather~ (described below)
+is called in order to update what StumpWM displays.
+#+begin_src sh
+CITY=$(rofi -p "City:" -dmenu | sed -r 's/ +/\+/g')
+if [ -n "$CITY" ]; then
+    printf "%s" "$CITY" > "$HOME"/.cache/weather-city
+    stump-weather > /dev/null 2>&1
+fi
+#+end_src
+
+*** ~stump-weather~
+:PROPERTIES:
+:CUSTOM_ID: Weather-StumpWM-utilities-stump-weather-i21jt9r05gj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/stump-weather
+:END:
+This stript is quite simple: it displays some weather information in
+the format /Location: weather temperature (felt temperature)/. We use
+the content of the file ~$HOME/.cache/weather-city~ to know which
+location to use in our request to ~wttr.in~. If ~wttr.in~ is unreachable
+after two second, the request aborts and the script displays an error
+message instead.
+#+begin_src sh
+CITY=$(cat "$HOME/.cache/weather-city")
+WEATHER=$(curl wttr.in/~"${CITY}"?format="${CITY}:+%C+%t+(%f)" --connect-timeout 1 2> /dev/null)
+if [ -n "$WEATHER" ]; then
+    printf "%s" "$WEATHER"
 else
-    curl http://v2.wttr.in/Aubervilliers
-end
+    printf "wttr.in unreachable"
+fi
+#+end_src
+
+** ~we~
+:PROPERTIES:
+:CUSTOM_ID: Weather-we-514jt9r05gj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/we
+:END:
+A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]]
+to get a weather forecast in the terminal. If the user passes no
+arguments to ~we~, the script will use the location designated in
+~$HOME/.cache/weather-city~. Otherwise, it will use the options passed
+by the user.
+#+BEGIN_SRC sh
+COUNT=0
+LOCATION=""
+if [ "$#" = 0 ]; then
+    LOCATION=$(cat "$HOME"/.cache/weather-city)
+fi
+if [ -z "$LOCATION" ]; then
+    for ARG in $*; do
+        if [ "${COUNT}" = 0 ]; then
+            LOCATION="${ARG}"
+        else
+            LOCATION="${LOCATION}+${ARG}"
+        fi
+        COUNT=$((COUNT + 1))
+    done
+fi
+curl https://v2.wttr.in/~"${LOCATION}"
 #+END_SRC
