@@ -6521,6 +6521,15 @@ Markdown file quickly. That’s neat!
     "cP" #'vmd-mode))
 #+end_src
 
+Lastly, ~edit-indirect~ is a package that allows to edit code blocks as
+in org-mode but with other major modes, such as code blocks in
+Markdown.
+#+begin_src emacs-lisp
+(use-package edit-indirect
+  :straight (:build t)
+  :defer t)
+#+end_src
+
 **** Nginx
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Nginxjiz5fl6184j0
