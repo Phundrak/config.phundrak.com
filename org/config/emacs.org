@@ -6722,9 +6722,15 @@ update its fontlock.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-CommonLisp-gc2a7s31q5j0
 :END:
-In lisp buffers, let’s enable ~parinfer-rust-mode~.
+In Lisp buffers, let’s enable ~parinfer-rust-mode~.
 #+begin_src emacs-lisp
-(add-hook 'lisp-mode-hook #'parinfer-rust-mode)
+(use-package lisp-mode
+  :straight (:type built-in)
+  :defer t
+  :after parinfer-rust-mode
+  :hook (lisp-mode . parinfer-rust-mode)
+  :config
+  (put 'defcommand 'lisp-indent-function 'defun))
 #+end_src
 
 My current window manager is StumpWM, inspired by Emacs and written in
