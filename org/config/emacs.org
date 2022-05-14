@@ -4488,6 +4488,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | gnuplot    |
 | latex      |
 | makefile   |
+| python     |
 | sass       |
 | shell      |
 
@@ -4502,12 +4503,13 @@ activated. Here are the languages I activated in my Org-mode configuration:
                    "\n  "))
 #+END_SRC
 
-#+RESULTS[773757c6f64a90c690f49a47eaa3408ca7c80b64]: org-babel-languages-gen
+#+RESULTS[950a986eb2df1e9ebf0564f945fc997412fdf1f7]: org-babel-languages-gen
 : '((C . t)
 :   (emacs-lisp . t)
 :   (gnuplot . t)
 :   (latex . t)
 :   (makefile . t)
+:   (python . t)
 :   (sass . t)
 :   (shell . t))
 
@@ -6883,7 +6885,6 @@ org-babel supports.
   :init
   (setq python-indent-guess-indent-offset-verbose nil)
   (add-hook 'python-mode-local-vars-hook #'lsp)
-  (add-to-list 'org-babel-load-languages '(python . t))
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
   (when (and (executable-find "python3")
