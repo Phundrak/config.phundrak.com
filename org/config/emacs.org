@@ -923,8 +923,8 @@ as leaders for my keybinds, and I’m way too used to Emacs’ ~C-t~, ~C-a~,
 #+end_src
 
 Something else that really bugs me is I use the bépo layout, which is
-not at all like the qwerty layout. For instance, <hjkl> becomes
-<ctsr>. Thus, I need some bépo-spécific changes.
+not at all like the qwerty layout. For instance, ~hjkl~ becomes ~ctsr~.
+Thus, I need some bépo-specific changes.
 #+name: evil-bepo
 #+begin_src emacs-lisp :tangle no
 (dolist (key '("c" "C" "t" "T" "s" "S" "r" "R" "h" "H" "j" "J" "k" "K" "l" "L"))
