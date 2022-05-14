@@ -5030,11 +5030,21 @@ variable:
 (setq org-latex-compiler "xelatex")
 #+END_SRC
 
-I also want to get by default ~minted~ for LaTeX listings so I can have
-syntax highlights:
+A new backend that was introduced in org-mode for LaTeX source block
+coloring is ~engraved~, relying on ~engraved-faces~. Let’s install this
+package.
+#+begin_src emacs-lisp
+(use-package engrave-faces
+  :straight (:build t)
+  :defer t
+  :after ox)
+#+end_src
+
+We can now tell Emacs to use the ~engraved~ backend.
 #+NAME: org-latex-listings
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq org-latex-listings 'minted)
+(with-eval-after-load 'engrave-faces
+ (setq org-latex-listings 'engraved))
 #+END_SRC
 
 The default packages break my LaTeX exports: for some reasons, images
