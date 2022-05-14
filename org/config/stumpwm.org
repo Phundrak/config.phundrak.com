@@ -261,41 +261,43 @@ running and an instance is launched, or one already is and we are
 brought to it. This is done like so:
 #+begin_src lisp
 (defcommand firefox () ()
-            "Run or raise Firefox."
-            (run-or-raise "firefox" '(:class "Firefox") t nil))
+  "Run or raise Firefox."
+  (sb-thread:make-thread (lambda () (run-or-raise "firefox" '(:class "Firefox") t nil))))
 #+end_src
 
 Next, this command will not only close the current window, but it will
 also close the current frame.
 #+begin_src lisp
 (defcommand delete-window-and-frame () ()
-            "Delete the current frame with its window."
-            (delete-window)
-            (remove-split))
+  "Delete the current frame with its window."
+  (delete-window)
+  (remove-split))
 #+end_src
 
 The two following commands will create a new frame to the right and
 below the current frame respectively, then focus it.
 #+begin_src lisp
 (defcommand hsplit-and-focus () ()
-            "Create a new frame on the right and focus it."
-            (hsplit)
-            (move-focus :right))
+  "Create a new frame on the right and focus it."
+  (hsplit)
+  (move-focus :right))
 
 (defcommand vsplit-and-focus () ()
-            "Create a new frame below and move focus to it."
-            (vsplit)
-            (move-focus :down))
+  "Create a new frame below and move focus to it."
+  (vsplit)
+  (move-focus :down))
 #+end_src
 
 Now, let’s create a command for invoking the terminal, optionally with
 a program.
 #+begin_src lisp
 (defcommand term (&optional program) ()
-            "Invoke a terminal, possibly with a @arg{program}."
-            (run-shell-command (if program
-                                   (format nil "kitty ~A" program)
-                                   "kitty")))
+  "Invoke a terminal, possibly with a @arg{program}."
+  (sb-thread:make-thread
+   (lambda ()
+     (run-shell-command (if program
+                            (format nil "kitty ~A" program)
+                            "kitty")))))
 #+end_src
 
 And done! Next!
@@ -559,9 +561,11 @@ It is then easy to define a command that can call this function and
 set this variable so we can sort of reload the mode-line.
 #+begin_src lisp
 (defcommand reload-modeline () ()
-            "Reload modeline."
-            (setf *screen-mode-line-format*
-                  (cdr (generate-modeline *mode-line-formatter-list*))))
+  "Reload modeline."
+  (sb-thread:make-thread
+   (lambda ()
+     (setf *screen-mode-line-format*
+           (cdr (generate-modeline *mode-line-formatter-list*))))))
 #+end_src
 
 And actually, let’s reload the modeline immediately.
@@ -1684,15 +1688,17 @@ This part is easy. Now that we can call our bluetooth commands easily,
 we can easily define how to turn on bluetooth.
 #+begin_src lisp
 (defcommand bluetooth-turn-on () ()
-            "Turn on bluetooth."
-            (bluetooth-message-command "power" "on"))
+  "Turn on bluetooth."
+  (sb-thread:make-thread
+   (lambda () (bluetooth-message-command "power" "on"))))
 #+end_src
 
 And how to power it off.
 #+begin_src lisp
 (defcommand bluetooth-turn-off () ()
-            "Turn off bluetooth."
-            (bluetooth-message-command "power" "off"))
+  "Turn off bluetooth."
+  (sb-thread:make-thread
+   (lambda () (bluetooth-message-command "power" "off"))))
 #+end_src
 
 *** Bluetooth Devices
@@ -1756,13 +1762,15 @@ collected bluetooth device and the user only has to select it. It will
 then attempt to connect to it.
 #+begin_src lisp
 (defcommand bluetooth-connect () ()
-  (let* ((devices (bluetooth-get-devices))
-         (choice  (cdr (stumpwm:select-from-menu
-                        (stumpwm:current-screen)
-                        (mapcar (lambda (device)
-                                  `(,(bluetooth-device-full-name device) . ,device))
-                                devices)))))
-    (bluetooth-connect-device choice)))
+  (sb-thread:make-thread
+   (lambda ()
+    (let* ((devices (bluetooth-get-devices))
+           (choice  (cdr (stumpwm:select-from-menu
+                          (stumpwm:current-screen)
+                          (mapcar (lambda (device)
+                                    `(,(bluetooth-device-full-name device) . ,device))
+                                  devices)))))
+      (bluetooth-connect-device choice)))))
 #+end_src
 
 *** Keybinds
@@ -1848,11 +1856,11 @@ run all the time, just when I need it.
 #+begin_src lisp
 (stumpwm:defcommand sly-start-server () ()
   "Start a slynk server for sly."
-  (slynk:create-server :dont-close t))
+  (sb-thread:make-thread (lambda () (slynk:create-server :dont-close t))))
 
 (stumpwm:defcommand sly-stop-server () ()
   "Stop current slynk server for sly."
-  (slynk:stop-server 4005))
+  (sb-thread:make-thread (lambda () (slynk:stop-server 4005))))
 #+end_src
 
 ** ~swm-ssh~
