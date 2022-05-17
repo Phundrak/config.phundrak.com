@@ -355,13 +355,11 @@ character of three dots. Let’s make it so:
 (setq truncate-string-ellipsis "…")
 #+end_src
 
-Thanks to [[https://github.com/TheVaffel/emacs][this fork]] of Emacs, it is now possible to set some
-transparency to the background of Emacs only and not to the entire
-frame.
+With Emacs 29.0.50 onwards, a new frame parameter exists:
+~alpha-background~. Unlike ~alpha~, this frame parameter only makes Emacs’
+background transparent, excluding images and text.
 #+begin_src emacs-lisp
-(add-hook 'server-after-make-frame-hook (lambda ()
-                                          (set-frame-parameter (selected-frame)
-                                                               'alpha-background 0.7)))
+(add-to-list 'default-frame-alist '(alpha-background . 0.7))
 #+end_src
 
 *** Modeline Modules
@@ -3875,6 +3873,7 @@ The complete configuration for the ~exwm~ package can be found below.
   (require 'exwm-config)
   (setq exwm-workspace-number 6)
   :config
+  (set-frame-parameter (selected-frame) 'alpha-background 0.7)
   <<exwm-randr>>
 
   <<exwm-buffers-name>>
