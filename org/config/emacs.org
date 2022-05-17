@@ -2624,6 +2624,8 @@ doing and what Git is doing! In short, I absolutely love it!
 (use-package magit
   :straight (:build t)
   :defer t
+  :init
+  (setq forge-add-default-bindings t)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   :config
