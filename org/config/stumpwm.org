@@ -1689,16 +1689,14 @@ we can easily define how to turn on bluetooth.
 #+begin_src lisp
 (defcommand bluetooth-turn-on () ()
   "Turn on bluetooth."
-  (sb-thread:make-thread
-   (lambda () (bluetooth-message-command "power" "on"))))
+  (bluetooth-message-command "power" "on"))
 #+end_src
 
 And how to power it off.
 #+begin_src lisp
 (defcommand bluetooth-turn-off () ()
   "Turn off bluetooth."
-  (sb-thread:make-thread
-   (lambda () (bluetooth-message-command "power" "off"))))
+  (bluetooth-message-command "power" "off"))
 #+end_src
 
 *** Bluetooth Devices
