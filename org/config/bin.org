@@ -1255,7 +1255,7 @@ grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
 Also, let’s send a notification telling the user the emoji has been copied!
 #+BEGIN_SRC bash
 EMOJI=$(xclip -o -selection clipboard | tr -d '\n')
-test -z "$EMOJI" && notify-send "No emoji copied -u low && exit"
+test -z "$EMOJI" && notify-send "No emoji copied" -u low && exit
 EMOJI="$EMOJI copied to clipboard"
 notify-send -u low "$EMOJI"
 #+END_SRC
