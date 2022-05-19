@@ -4910,13 +4910,13 @@ to be compatible with ~ox-conlang-tsx~.
 Finally, I also need a handler for custom links begining in ~conlang~,
 like ~[[conlang:English:dog]]~. ~ol-conlang~ handles that.
 #+begin_src emacs-lisp
-(use-package ol-conlang
+(use-package org-conlang
   :defer t
-  :after '(org ol)
-  :straight (ol-conlang :type git
-                        :host nil
-                        :repo "https://labs.phundrak.com/phundrak/ol-conlang"
-                        :build t))
+  :after '(org ol ox)
+  :straight (org-conlang :type git
+                         :host nil
+                         :repo "https://labs.phundrak.com/phundrak/org-conlang"
+                         :build t))
 #+end_src
 
 **** Epub
