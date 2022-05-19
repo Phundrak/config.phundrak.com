@@ -2945,7 +2945,8 @@ bit unfortunate Chrome’s name stuck in the package’s name though.
   (setq atomic-chrome-default-major-mode 'markdown-mode
         atomic-chrome-url-major-mode-alist `(("github\\.com"          . gfm-mode)
                                              ("gitlab\\.com"          . gfm-mode)
-                                             ("labs\\.phundrak\\.com" . markdown-mode))))
+                                             ("reddit\\.com"          . markdown-mode))))
+                                             ("labs\\.phundrak\\.com" . markdown-mode)
 #+end_src
 
 *** Editorconfig
