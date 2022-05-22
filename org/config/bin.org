@@ -48,81 +48,85 @@ of said command running.
 #+header: :wrap "src bash :exports code"
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
 (mapconcat (lambda (start-command)
-             (let* ((command   (replace-regexp-in-string (regexp-quote "~") "" (nth 0 start-command)))
-                    (arguments (replace-regexp-in-string (regexp-quote "~") "" (nth 1 start-command)))
-                    (oncep     (string= "yes"    (nth 2 start-command)))
-                    (full-command (replace-regexp-in-string " +"
-                                                            " "
-                                                            (format "%s %s &" command arguments))))
-               (if oncep
-                   (format
-                    (concat "if pgrep -x %s ; then\n"
-                            "    echo \"%s already running\"\n"
-                            "else\n"
-                            "    %s\n"
-                            "    disown\n"
-                            "fi")
-                    command
-                    command
-                    full-command)
-                 full-command)))
+             (let* ((command      (replace-regexp-in-string "~" "" (nth 0 start-command)))
+                    (arguments    (replace-regexp-in-string "~" "" (nth 1 start-command)))
+                    (oncep        (string= "yes" (nth 2 start-command)))
+                    (full-command (replace-regexp-in-string
+                                   " +"
+                                   " "
+                                   (format "%s %s &" command arguments))))
+
+               (concat (format "which %s && %s"
+                               command
+                               (if (not oncep)
+                                   full-command
+                                 (format (concat "if pgrep -x %s ; then\n"
+                                                 "    echo %s already running\n"
+                                                 "else\n"
+                                                 "    %s\n"
+                                                 "    disown\n"
+                                                 "fi")
+                                         command
+                                         command
+                                         command
+                                         full-command))))))
            table
            "\n")
 #+END_SRC
 
-#+RESULTS[97a97fceb694333615e59599d7c2d7fac52c5e8d]: autostart-gen
+#+RESULTS[64fcf7c33f989171bc7582495cd508959f4030c3]: autostart-gen
 #+begin_src bash :exports code
-pactl load-module module-switch-on-connect &
-mpc stop &
-xrdb -merge "$HOME"/.Xresources &
-if pgrep -x picom ; then
-    echo "picom already running"
+which pactl && pactl load-module module-switch-on-connect &
+which mpc && mpc stop &
+which xrdb && xrdb -merge "$HOME"/.Xresources &
+which picom && if pgrep -x picom ; then
+    echo picom already running
 else
-    picom --experimental-backends &
+    picom
     disown
 fi
-set-screens &
-if pgrep -x numlockx ; then
-    echo "numlockx already running"
+which set-screens && set-screens &
+which numlockx && if pgrep -x numlockx ; then
+    echo numlockx already running
 else
-    numlockx on &
+    numlockx
     disown
 fi
-if pgrep -x pumopm ; then
-    echo "pumopm already running"
+which pumopm && if pgrep -x pumopm ; then
+    echo pumopm already running
 else
-    pumopm &
+    pumopm
     disown
 fi
-if pgrep -x xfce-polkit ; then
-    echo "xfce-polkit already running"
+which xfce-polkit && if pgrep -x xfce-polkit ; then
+    echo xfce-polkit already running
 else
-    xfce-polkit &
+    xfce-polkit
     disown
 fi
-if pgrep -x nm-applet ; then
-    echo "nm-applet already running"
+which nm-applet && if pgrep -x nm-applet ; then
+    echo nm-applet already running
 else
-    nm-applet &
+    nm-applet
     disown
 fi
-xwallpaper --zoom "$(cat "$HOME"/.cache/wallpaper)" &
-if pgrep -x xss-lock ; then
-    echo "xss-lock already running"
+which xwallpaper && xwallpaper --zoom "$(cat "$HOME"/.cache/wallpaper)" &
+which xss-lock && if pgrep -x xss-lock ; then
+    echo xss-lock already running
 else
-    xss-lock plock &
+    xss-lock
     disown
 fi
-if pgrep -x /usr/lib/kdeconnectd ; then
-    echo "/usr/lib/kdeconnectd already running"
+which /usr/lib/kdeconnectd && if pgrep -x /usr/lib/kdeconnectd ; then
+    echo /usr/lib/kdeconnectd already running
 else
-    /usr/lib/kdeconnectd &
+    /usr/lib/kdeconnectd
     disown
 fi
-if pgrep -x dunst ; then
-    echo "dunst already running"
+which dunst && if pgrep -x dunst ; then
+    echo dunst already running
 else
-    dunst &
+    dunst
     disown
 fi
 #+end_src
