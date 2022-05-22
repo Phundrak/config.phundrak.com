@@ -554,19 +554,20 @@ of a directory. Notice also the =--preserve-root= which will prevent me from
 accidentally removing the root folder. I added the same option to =chgrp=,
 =chmod=, and =chown=.
 #+NAME: sec-abbr
-| abbreviation | command                  |
-|--------------+--------------------------|
-| cp           | cp -i                    |
-| ln           | ln -i                    |
-| lns          | ln -si                   |
-| mv           | mv -i                    |
-| rm           | rm -Iv                   |
-| rmd          | rm --preserve-root -Irv  |
-| rmdf         | rm --preserve-root -Irfv |
-| rmf          | rm --preserve-root -Ifv  |
-| chgrp        | chgrp --preserve-root -v |
-| chmod        | chmod --preserve-root -v |
-| chown        | chown --preserve-root -v |
+| abbreviation | command                   |
+|--------------+---------------------------|
+| cp           | cp -i                     |
+| rsync        | rsync -ruvtEhl --progress |
+| ln           | ln -i                     |
+| lns          | ln -si                    |
+| mv           | mv -i                     |
+| rm           | rm -Iv                    |
+| rmd          | rm --preserve-root -Irv   |
+| rmdf         | rm --preserve-root -Irfv  |
+| rmf          | rm --preserve-root -Ifv   |
+| chgrp        | chgrp --preserve-root -v  |
+| chmod        | chmod --preserve-root -v  |
+| chown        | chown --preserve-root -v  |
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
