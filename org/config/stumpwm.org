@@ -599,10 +599,11 @@ is the list of groups I will be using:
 #+name: list-groups
 | Groups  | Number | Windows | Type |
 |---------+--------+---------+------|
-| [DEV]   |      1 |         |      |
+| [TERM]  |      1 |         |      |
+| [EMACS] |      2 |         |      |
+| [WWW]   |      3 |         |      |
 | [PRIV]  |      4 |         |      |
-| [WWW]   |      2 |         |      |
-| [FILES] |      3 | Nemo    |      |
+| [FILES] |      5 | Nemo    |      |
 
 #+name: gen-groups
 #+header: :exports none
@@ -623,10 +624,11 @@ is the list of groups I will be using:
                "\n"))
 #+end_src
 
-#+RESULTS[f5228a3752415c3d4dac5ce26ea36cc1cd74b21c]: gen-groups
-: (grename "[DEV]")
-: (gnewbg "[PRIV]")
+#+RESULTS[80f994f9e2436c4c5e2f9916b93813083135c1d2]: gen-groups
+: (grename "[TERM]")
+: (gnewbg "[EMACS]")
 : (gnewbg "[WWW]")
+: (gnewbg "[PRIV]")
 : (gnewbg "[FILES]")
 
 Groups are specified this way:
@@ -675,7 +677,7 @@ class, so it will be pretty straightforward to the corresponding code.
 #+end_src
 
 This can be written this way:
-#+RESULTS[10defc1f5329a09215335793aaca66ca84449df7]: gen-rules
+#+RESULTS[6121129a3a3aa07c6decc78cb46a1520dcae1156]: gen-rules
 #+begin_src lisp
 (define-frame-preference "[FILES]" (nil t t :class "Nemo"))
 #+end_src
@@ -1171,23 +1173,25 @@ this:
            "\n")
 #+end_src
 
-#+RESULTS[2735a7d6fe1b2d293eb8003a276344deaa888e0c]: group-keybind-gen
+#+RESULTS[282113d17ea21f02dc7c87059d787e62b5886b16]: group-keybind-gen
 : "(define-key *top-map* (my/kbd \"s-1\") \"gselect 1\")
-: (define-key *top-map* (my/kbd \"s-4\") \"gselect 4\")
 : (define-key *top-map* (my/kbd \"s-2\") \"gselect 2\")
-: (define-key *top-map* (my/kbd \"s-3\") \"gselect 3\")"
+: (define-key *top-map* (my/kbd \"s-3\") \"gselect 3\")
+: (define-key *top-map* (my/kbd \"s-4\") \"gselect 4\")
+: (define-key *top-map* (my/kbd \"s-5\") \"gselect 5\")"
 
 #+header: :cache yes :noweb yes :wrap src lisp
 #+begin_src emacs-lisp
 <<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
 #+end_src
 
-#+RESULTS[b40b6f5faeaf996dca43a3fd0343b2955c24b4b5]:
+#+RESULTS[35268fd11d1fe4fa4065c98a0b7bc723a56c09a7]:
 #+begin_src lisp
 (define-key *top-map* (my/kbd "s-<<num-to-char(num=1)>>") "gselect 1")
-(define-key *top-map* (my/kbd "s-<<num-to-char(num=4)>>") "gselect 4")
 (define-key *top-map* (my/kbd "s-<<num-to-char(num=2)>>") "gselect 2")
 (define-key *top-map* (my/kbd "s-<<num-to-char(num=3)>>") "gselect 3")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=4)>>") "gselect 4")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=5)>>") "gselect 5")
 #+end_src
 
 Another batch of keybinds I use a lot is keybinds to send the
@@ -1199,12 +1203,13 @@ so there’s no need to convert the group number to another character.
 <<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
 #+end_src
 
-#+RESULTS[4c263fdbd52639dc6280827ebcf15769c798f96a]:
+#+RESULTS[bd9b499dfad0fdf1f54db146ded1a60c6674f8ea]:
 #+begin_src lisp
 (define-key *top-map* (my/kbd "s-1") "gmove-and-follow 1")
-(define-key *top-map* (my/kbd "s-4") "gmove-and-follow 4")
 (define-key *top-map* (my/kbd "s-2") "gmove-and-follow 2")
 (define-key *top-map* (my/kbd "s-3") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-5") "gmove-and-follow 5")
 #+end_src
 
 If I want to send a window to another group without following it, I’ll
@@ -1213,12 +1218,13 @@ use ~s-S-C-<group number>~, which gives us the following:
 <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
 #+end_src
 
-#+RESULTS[c9a7532871d9824660ad956e4fcbd06e24ccef97]:
+#+RESULTS[68f918c24a6cc0efa1503ed57841c40f4ec2ec4a]:
 #+begin_src lisp
 (define-key *top-map* (my/kbd "s-C-1") "gmove-and-follow 1")
-(define-key *top-map* (my/kbd "s-C-4") "gmove-and-follow 4")
 (define-key *top-map* (my/kbd "s-C-2") "gmove-and-follow 2")
 (define-key *top-map* (my/kbd "s-C-3") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-C-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-5") "gmove-and-follow 5")
 #+end_src
 
 And if I want to bring the windows of another group into the current
@@ -1227,12 +1233,13 @@ group, I’ll use ~s-C-<group number>~:
 <<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
 #+end_src
 
-#+RESULTS[c88622e10857ba0e6f8b8fe88e074343d65b13bf]:
+#+RESULTS[36b3ded631cd0bad400c4847f6937cde4f11b4b7]:
 #+begin_src lisp
 (define-key *top-map* (my/kbd "s-C-<<num-to-char(num=1)>>") "gmove-and-follow 1")
-(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
 (define-key *top-map* (my/kbd "s-C-<<num-to-char(num=2)>>") "gmove-and-follow 2")
 (define-key *top-map* (my/kbd "s-C-<<num-to-char(num=3)>>") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=5)>>") "gmove-and-follow 5")
 #+end_src
 
 StumpWM also has already a nice keymap for managing groups called
