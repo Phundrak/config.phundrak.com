@@ -287,7 +287,6 @@ my own executables, and some more.
 #+NAME: extra-paths
 | additional path           | what it leads to                     |
 |---------------------------+--------------------------------------|
-| $HOME/.pub-cache/bin      | Dart binaries and executables        |
 | $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
 | $HOME/go/bin              | Go binaries and executables          |
 | $HOME/.cargo/bin          | Rust binaries and executables        |
@@ -302,8 +301,7 @@ my own executables, and some more.
            paths " \\\n")
 #+END_SRC
 
-#+RESULTS[caa6bfe135b035f54500ca04ba157e5698adb657]: generate-extra-paths
-: $HOME/.pub-cache/bin \
+#+RESULTS[7d02a0a6d8acf31d148e071a87c69b5f944e0a5f]: generate-extra-paths
 : $HOME/.local/bin \
 : $HOME/go/bin \
 : $HOME/.cargo/bin \
