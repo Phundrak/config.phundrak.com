@@ -68,13 +68,12 @@ of said command running.
                                                  "fi")
                                          command
                                          command
-                                         command
                                          full-command))))))
            table
            "\n")
 #+END_SRC
 
-#+RESULTS[64fcf7c33f989171bc7582495cd508959f4030c3]: autostart-gen
+#+RESULTS[df901bd50f82a683a738efd18f4aa650eff4b222]: autostart-gen
 #+begin_src bash :exports code
 which pactl && pactl load-module module-switch-on-connect &
 which mpc && mpc stop &
@@ -82,51 +81,51 @@ which xrdb && xrdb -merge "$HOME"/.Xresources &
 which picom && if pgrep -x picom ; then
     echo picom already running
 else
-    picom
+    picom --experimental-backends &
     disown
 fi
 which set-screens && set-screens &
 which numlockx && if pgrep -x numlockx ; then
     echo numlockx already running
 else
-    numlockx
+    numlockx on &
     disown
 fi
 which pumopm && if pgrep -x pumopm ; then
     echo pumopm already running
 else
-    pumopm
+    pumopm &
     disown
 fi
 which xfce-polkit && if pgrep -x xfce-polkit ; then
     echo xfce-polkit already running
 else
-    xfce-polkit
+    xfce-polkit &
     disown
 fi
 which nm-applet && if pgrep -x nm-applet ; then
     echo nm-applet already running
 else
-    nm-applet
+    nm-applet &
     disown
 fi
 which xwallpaper && xwallpaper --zoom "$(cat "$HOME"/.cache/wallpaper)" &
 which xss-lock && if pgrep -x xss-lock ; then
     echo xss-lock already running
 else
-    xss-lock
+    xss-lock plock &
     disown
 fi
 which /usr/lib/kdeconnectd && if pgrep -x /usr/lib/kdeconnectd ; then
     echo /usr/lib/kdeconnectd already running
 else
-    /usr/lib/kdeconnectd
+    /usr/lib/kdeconnectd &
     disown
 fi
 which dunst && if pgrep -x dunst ; then
     echo dunst already running
 else
-    dunst
+    dunst &
     disown
 fi
 #+end_src
