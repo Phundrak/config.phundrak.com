@@ -6860,46 +6860,6 @@ If I need to run CI on a package, [[https://github.com/cask/cask][Cask]] manages
   :straight (:build t))
 #+end_src
 
-**** Lua
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Lua-p2odc7p0t4j0
-:END:
-#+begin_src emacs-lisp
-(use-package lua-mode
-  :defer t
-  :straight (:build t)
-  :mode "\\.lua'$"
-  :interpreter "lua"
-  :hook (lua-mode . lsp-deferred)
-  :init
-  (setq lua-indent-level           2
-        lua-indent-string-contents t)
-  :general
-  (phundrak/major-leader-key
-   :keymaps 'lua-mode-map
-   "'"  #'lua-show-process-buffer
-   "h"  '(:ignore t :wk "help")
-   "hd" #'lua-search-documentation
-   "s"  '(:ignore t :wk "REPL")
-   "sb" #'lua-send-buffer
-   "sf" #'lua-send-defun
-   "sl" #'lua-send-current-line
-   "sr" #'lua-send-region))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package lsp-lua-emmy
-  :defer t
-  :after (lua-mode lsp-mode)
-  :straight (lsp-lua-emmy :build t
-                          :type git
-                          :host github
-                          :repo "EmmyLua/EmmyLua-LanguageServer")
-  :hook (lua-mode . lsp-deferred)
-  :config
-  (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory)))
-#+end_src
-
 **** Python
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Python-7mwd2yq0z6j0
