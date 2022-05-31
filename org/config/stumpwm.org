@@ -156,6 +156,14 @@ pointer as well as get a bunch of stuff started. To see what’s in the
 (run-shell-command "sleep 1 && autorandr -l home && autostart")
 #+end_src
 
+Next I need to register the AltGr key so it works correctly when used.
+On my system, the value of ~*altgr-offset*~ is 4, but on yours it might
+be 6, so be careful and refer to the manual on that matter.
+#+begin_src lisp
+(setf *altgr-offset* 4)
+(register-altgr-as-modifier)
+#+end_src
+
 Now, we’ll load a couple of my custom files that will be described below:
 #+name: first-loaded-files
 | File to be loaded |
