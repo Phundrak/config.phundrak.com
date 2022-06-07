@@ -4,7 +4,7 @@
 (require 'org)
 (require 'ox-html)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 (package-refresh-contents)
 (package-install 'htmlize)
