@@ -52,7 +52,7 @@ alias exti       exit
 alias exi        exit
 alias clean      clear
 
-alias vi         emacs
-alias vim        emacs
-alias ed         emacs
-alias nano       emacs
+alias vi         find-file
+alias vim        find-file
+alias ed         find-file
+alias nano       find-file

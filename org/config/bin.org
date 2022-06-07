@@ -32,7 +32,7 @@ of said command running.
 |----------------------+------------------------------------------+-----------|
 | ~pactl~                | ~load-module module-switch-on-connect~     |           |
 | ~mpc~                  | ~stop~                                     | no        |
-| ~xrdb~                 | ~-merge "$HOME"/.Xresources~               | no        |
+| ~xrdb~                 | ~-merge "$XDG_CONFIG_HOME"/X11/Xresources~ | no        |
 | ~picom~                | ~--experimental-backends~                  | yes       |
 | ~set-screens~          |                                          | no        |
 | ~numlockx~             | ~on~                                       | yes       |

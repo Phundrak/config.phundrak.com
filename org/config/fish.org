@@ -35,6 +35,173 @@ if test -n "$EMACS"
 end
 #+END_SRC
 
+* Global variables
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-1c84df8b
+:END:
+In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t
+have to call my web browser directly but rather with this variable.
+#+BEGIN_SRC fish
+set -gx BROWSER firefox
+#+END_SRC
+
+Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can
+get the sudo password. So, let’s declare it.
+#+BEGIN_SRC fish
+set -gx SUDO_ASKPASS ~/.local/bin/askpass
+#+END_SRC
+
+In general, I prefer using ~bat~ to ~less~, although the former relies on the
+latter, but ~bat~ provides nice wrapping around ~less~, including syntax
+highlighting. Let’s set the manpager to bat then:
+#+BEGIN_SRC fish
+set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+#+END_SRC
+
+~XMODIFIERS~ is set to nothing as to not impede Emacs’ inputs.
+#+begin_src fish
+set -x XMODIFIERS
+#+end_src
+
+Let’s start the Gnome keyring daemon. It will return a variable which must be set.
+#+begin_src fish
+if test -n "$DESKTOP_SESSION"
+    set -x (gnome-keyring-daemon --start | string split "=")
+end
+#+end_src
+
+** XDG user directories
+:PROPERTIES:
+:CUSTOM_ID: Global-variables-XDG-user-directories-ata8fwf0bhj0
+:END:
+There’s a couple of XDG user directories that are not set, let’s fix
+that.
+#+begin_src fish
+set -x XDG_CACHE_HOME  $HOME/.cache
+set -x XDG_CONFIG_HOME $HOME/.config
+set -x XDG_DATA_HOME   $HOME/.local/share
+set -x XDG_STATE_HOME  $HOME/.local/state
+#+end_src
+
+Now, let's clean the ~$HOME~ directory. Be aware it will require quite a
+few lines.
+#+begin_src fish
+set -x HISTFILE "$XDG_STATE_HOME"/bash/history
+set -x _Z_DATA "$XDG_DATA_HOME"/z
+set -x XAUTHORITY "$XDG_RUNTIME_DIR"/Xauthority
+set -x WINEPREFIX "$XDG_DATA_HOME"/wine
+set -x TEXMFVAR "$XDG_CACHE_HOME"/texlive/texmf-var
+set -x RUSTUP_HOME "$XDG_DATA_HOME"/rustup
+set -x BUNDLE_USER_CONFIG "$XDG_CONFIG_HOME"/bundle
+set -x BUNDLE_USER_CACHE "$XDG_CACHE_HOME"/bundle
+set -x BUNDLE_USER_PLUGIN "$XDG_DATA_HOME"/bundle
+set -x PYLINTHOME "$XDG_CACHE_HOME"/pylint
+set -x PYENV_ROOT "$XDG_DATA_HOME"/pyenv
+set -x PASSWORD_STORE_DIR "$XDG_DATA_HOME"/pass
+set -x PARALLEL_HOME "$XDG_CONFIG_HOME"/parallel
+set -x _JAVA_OPTIONS -Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+set -x NVM_DIR "$XDG_DATA_HOME"/nvm
+set -x CUDA_CACHE_PATH "$XDG_CACHE_HOME"/nv
+set -x __GL_SHADER_DISK_CACHE_PATH "$XDG_CACHE_HOME"/nv
+set -x NUGET_PACKAGES "$XDG_CACHE_HOME"/NuGetPackages
+set -x NPM_CONFIG_USERCONFIG "$XDG_CONFIG_HOME"/npm/npmrc
+set -x TERMINFO "$XDG_DATA_HOME"/terminfo
+set -x TERMINFO_DIRS "$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
+set -x MPLAYER_HOME "$XDG_CONFIG_HOME"/mplayer
+set -x ICEAUTHORITY "$XDG_CACHE_HOME"/ICEauthority
+set -x LESSHISTFILE "$XDG_CACHE_HOME"/less/history
+set -x GTK2_RC_FILES "$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+set -x GOPATH "$XDG_DATA_HOME"/go
+set -x GNUPGHOME "$XDG_DATA_HOME"/gnupg
+set -x GEM_HOME "$XDG_DATA_HOME"/gem
+set -x GEM_SPEC_CACHE "$XDG_CACHE_HOME"/gem
+set -x DOCKER_CONFIG "$XDG_CONFIG_HOME"/docker
+set -x CARGO_HOME "$XDG_DATA_HOME"/cargo
+#+end_src
+
+** Development
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-Development-76b3ff13
+:END:
+Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since it
+will most often be just quick edits, nothing too heavy, if it is called from the
+~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
+#+BEGIN_SRC fish
+set -gx EDITOR emacsclient -c
+set -gx VISUAL emacsclient -c
+#+END_SRC
+
+We also need to set the path to the Dart SDK.
+#+BEGIN_SRC fish
+set -gx DART_SDK /opt/dart-sdk/bin
+#+END_SRC
+
+And we also need to specify where the Android SDK it located.
+#+BEGIN_SRC fish
+set -gx ANDROID_HOME $HOME/Android/Sdk
+#+END_SRC
+
+Still related to Dart and Flutter development,
+#+BEGIN_SRC fish
+set -gx CHROME_EXECUTABLE /usr/bin/chromium
+#+END_SRC
+
+Next, we have two variables from Deno, the Node.js destroyer. Its base directory
+will be set in my XDG config directory, and its binaries will be located in my
+local binaries directory (see below).
+#+BEGIN_SRC fish
+set -gx DENO_DIR $HOME/.config/deno
+set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
+#+END_SRC
+
+Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so
+let’s do so.
+#+BEGIN_SRC fish
+set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
+#+END_SRC
+
+** ~$PATH~
+:PROPERTIES:
+:CUSTOM_ID: Global_variables-$PATH-e1320303
+:END:
+A variable available with the fish shell is ~fish_user_paths~ which lists custom
+paths to binaries specified by the user. Using this variable ensures they are
+included in the ~$PATH~ variable only once without the need to set it directly.
+For instance, my ~PATH~ variable needs Rust’s Cargo’s binaries, Go’s binaries,
+my own executables, and some more.
+
+#+NAME: extra-paths
+| additional path          | what it leads to                     |
+|--------------------------+--------------------------------------|
+| $HOME/.local/bin         | Custom executables, see [[file:bin.org]] |
+| $GOPATH/bin              | Go binaries and executables          |
+| $CARGO_HOME/bin          | Rust binaries and executables        |
+| $GEM_HOME/ruby/3.0.0/bin | Ruby 3.0 binaries and executables    |
+| $GEM_HOME/ruby/2.6.0/bin | Ruby 2.6 binaries and executables    |
+| $HOME/.cabal/bin         | Haskel binaries                      |
+| /usr/lib/xfce-polkit     | Path to XFCE’s PolKit                |
+
+#+NAME: generate-extra-paths
+#+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
+(mapconcat #'identity
+           paths " \\\n")
+#+END_SRC
+
+#+RESULTS[8fe70e73420376a50897de0f9518689ec3088288]: generate-extra-paths
+: $HOME/.local/bin \
+: $GOPATH/bin \
+: $CARGO_HOME/bin \
+: $GEM_HOME/ruby/3.0.0/bin \
+: $GEM_HOME/ruby/2.6.0/bin \
+: $HOME/.cabal/bin \
+: /usr/lib/xfce-polkit
+
+So, let’s set our user paths:
+#+BEGIN_SRC fish :noweb yes
+set -g fish_user_paths \
+<<generate-extra-paths()>>
+#+END_SRC
+
 * Tramp remote access
 :PROPERTIES:
 :CUSTOM_ID: Tramp_remote_access-72aedec2
@@ -199,122 +366,6 @@ disable = true
 #+begin_src fish
 zoxide init fish | source
 #+end_src
-
-* Global variables
-:PROPERTIES:
-:CUSTOM_ID: Global_variables-1c84df8b
-:END:
-In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t
-have to call my web browser directly but rather with this variable.
-#+BEGIN_SRC fish
-set -gx BROWSER firefox
-#+END_SRC
-
-Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can
-get the sudo password. So, let’s declare it.
-#+BEGIN_SRC fish
-set -gx SUDO_ASKPASS ~/.local/bin/askpass
-#+END_SRC
-
-In general, I prefer using ~bat~ to ~less~, although the former relies on the
-latter, but ~bat~ provides nice wrapping around ~less~, including syntax
-highlighting. Let’s set the manpager to bat then:
-#+BEGIN_SRC fish
-set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
-#+END_SRC
-
-#+begin_src fish
-set -x XMODIFIERS
-#+end_src
-
-#+begin_src fish
-if test -n "$DESKTOP_SESSION"
-    set -x (gnome-keyring-daemon --start | string split "=")
-end
-#+end_src
-
-** Development
-:PROPERTIES:
-:CUSTOM_ID: Global_variables-Development-76b3ff13
-:END:
-Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since it
-will most often be just quick edits, nothing too heavy, if it is called from the
-~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
-#+BEGIN_SRC fish
-set -gx EDITOR emacsclient -c
-set -gx VISUAL emacsclient -c
-#+END_SRC
-
-We also need to set the path to the Dart SDK.
-#+BEGIN_SRC fish
-set -gx DART_SDK /opt/dart-sdk/bin
-#+END_SRC
-
-And we also need to specify where the Android SDK it located.
-#+BEGIN_SRC fish
-set -gx ANDROID_HOME $HOME/Android/Sdk
-#+END_SRC
-
-Still related to Dart and Flutter development,
-#+BEGIN_SRC fish
-set -gx CHROME_EXECUTABLE /usr/bin/chromium
-#+END_SRC
-
-Next, we have two variables from Deno, the Node.js destroyer. Its base directory
-will be set in my XDG config directory, and its binaries will be located in my
-local binaries directory (see below).
-#+BEGIN_SRC fish
-set -gx DENO_DIR $HOME/.config/deno
-set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
-#+END_SRC
-
-Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so
-let’s do so.
-#+BEGIN_SRC fish
-set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
-#+END_SRC
-
-** ~$PATH~
-:PROPERTIES:
-:CUSTOM_ID: Global_variables-$PATH-e1320303
-:END:
-A variable available with the fish shell is ~fish_user_paths~ which lists custom
-paths to binaries specified by the user. Using this variable ensures they are
-included in the ~$PATH~ variable only once without the need to set it directly.
-For instance, my ~PATH~ variable needs Rust’s Cargo’s binaries, Go’s binaries,
-my own executables, and some more.
-
-#+NAME: extra-paths
-| additional path           | what it leads to                     |
-|---------------------------+--------------------------------------|
-| $HOME/.local/bin          | Custom executables, see [[file:bin.org]] |
-| $HOME/go/bin              | Go binaries and executables          |
-| $HOME/.cargo/bin          | Rust binaries and executables        |
-| $HOME/.gem/ruby/3.0.0/bin | Ruby 3.0 binaries and executables    |
-| $HOME/.gem/ruby/2.6.0/bin | Ruby 2.6 binaries and executables    |
-| $HOME/.cabal/bin          | Haskel binaries                      |
-| /usr/lib/xfce-polkit      | Path to XFCE’s PolKit             |
-
-#+NAME: generate-extra-paths
-#+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-(mapconcat #'identity
-           paths " \\\n")
-#+END_SRC
-
-#+RESULTS[7d02a0a6d8acf31d148e071a87c69b5f944e0a5f]: generate-extra-paths
-: $HOME/.local/bin \
-: $HOME/go/bin \
-: $HOME/.cargo/bin \
-: $HOME/.gem/ruby/3.0.0/bin \
-: $HOME/.gem/ruby/2.6.0/bin \
-: $HOME/.cabal/bin \
-: /usr/lib/xfce-polkit
-
-So, let’s set our user paths:
-#+BEGIN_SRC fish :noweb yes
-set -g fish_user_paths \
-<<generate-extra-paths()>>
-#+END_SRC
 
 * Abbreviations
 :PROPERTIES:
@@ -734,7 +785,7 @@ the US.
 :END:
 By default, continue a download that was interupted.
 #+BEGIN_SRC fish
-abbr wget 'wget -c'
+abbr wget 'wget --hsts-file="$XDG_DATA_HOME/wget-hsts" -c'
 #+END_SRC
 
 * Last thing before we’re done

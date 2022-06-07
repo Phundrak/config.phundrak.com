@@ -409,12 +409,13 @@ Below you will find my window management keybinds.
 :END:
 **** General configuration
 :PROPERTIES:
-:HEADER-ARGS: :mkdirp yes :tangle ~/.gtkrc-2.0
+:HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-2.0/gtkrc
 :CUSTOM_ID: Theme-and-graphical-tweaks-GTK-Settings-GTK2-General-configuration-xod7gbc0l9j0
 :END:
-This file is tangled at ~$HOME/.gtkrc-2.0~. This is an equivalent for the GTK3
-configuration file you will see below, and it shares most of its settings.
-First, let’s select the Nordic theme for GTK2. Let’s also set the icon theme.
+This file is tangled at ~$HOME/.config/gtk-2.0/gtkrc~. This is an
+equivalent for the GTK3 configuration file you will see below, and it
+shares most of its settings. First, let’s select the Nordic theme for
+GTK2. Let’s also set the icon theme.
 #+BEGIN_SRC conf-unix
 # -*- mode: unix-config -*-
 gtk-theme-name="Nordic"
@@ -555,7 +556,7 @@ You can find my Picom configuration [[file:picom.org][here]].
 
 ** Xresources
 :PROPERTIES:
-:HEADER-ARGS: :mkdirp yes :tangle ~/.Xresources :exports code
+:HEADER-ARGS: :mkdirp yes :tangle ~/.config/X11/Xresources :exports code
 :CUSTOM_ID: Theme-and-graphical-tweaks-Xresources-4dr7gbc0l9j0
 :END:
 The main body in my Xresources declaration is the declaration of my
