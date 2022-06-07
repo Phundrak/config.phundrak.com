@@ -3330,7 +3330,7 @@ First, let’s declare our list of “dumb” aliases we’ll use in
 Eshell. You can find them here.
 #+name: eshell-alias-file
 #+begin_src emacs-lisp :tangle no
-(setq eshell-aliases-file (expand-file-name "eshell-aliases" user-emacs-directory))
+(setq eshell-aliases-file (expand-file-name "eshell-alias" user-emacs-directory))
 #+end_src
 
 A couple of other aliases will be defined through custom Elisp
