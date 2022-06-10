@@ -2085,11 +2085,7 @@ Let’s enable them and set them:
         (threshold (+ 120 80)))
     (setq mu4e-split-view (if (> width threshold)
                               'vertical
-                            'horizontal))
-    (message "Window width: %d\tthreshold: %d\nSplit: %S"
-             width
-             threshold
-             mu4e-split-view)))
+                            'horizontal))))
 
 (setq mu4e-headers-visible-columns 120
       mu4e-headers-visible-lines   15)
@@ -4683,7 +4679,7 @@ All templates can be found [[https://labs.phundrak.com/phundrak/dotfiles/src/bra
            "\n")
 #+end_src
 
-#+RESULTS[3de52378bf07bf60f73ab9ff4f26beafabb1ef12]: org-capture-shortcuts-gen
+#+RESULTS[9f565c3dd73becfad0a99c0cfaf4521762334b40]: org-capture-shortcuts-gen
 #+begin_example
 ("e" "Email")
 ("ew" "Write Email" entry
@@ -5627,11 +5623,6 @@ have this command to remove them easily.
     :keymaps '(bibtex-mode-map)
     :packages 'ivy-bibtex
     "m" #'ivy-bibtex))
-#+end_src
-
-#+begin_src emacs-lisp
-(after! org
-  (require 'org-ref))
 #+end_src
 
 *** Org-present
