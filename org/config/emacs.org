@@ -1861,6 +1861,7 @@ Another bookmark I wish to have is one dedicated to emails related to
 more general development topics, including issues and PRs from Github.
 #+name: mu4e-github-mailing-lists
 - ~/.*\\.github\\.com/~
+- ~/.*\\.gitlab\\.com/~
 - ~stumpwm-devel@nongnu.org~
 - ~/.*sr\\.ht/~
 
@@ -1875,8 +1876,8 @@ more general development topics, including issues and PRs from Github.
              " ")
 #+end_src
 
-#+RESULTS[78779f69614ad7648a53134cc9f5c25d11325c76]: mu4e-bookmarks-filter-github-list
-: list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )
+#+RESULTS[673f76e7a682ed64f98dbe6d4a06810436ba6799]: mu4e-bookmarks-filter-github-list
+: list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )
 
 When it comes to the conlang mailing list, let’s not match anything
 from or to them. I’ll also include the auxlang mailing list –I’m not
@@ -1928,8 +1929,8 @@ And for the last string-generating code, let’s describe my main inbox:
            " AND NOT ")
 #+end_src
 
-#+RESULTS[0a526762e5250d1baf0b6c8de0d67889405c10fe]: mu4e-bookmarks-inbox-filters
-: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (list:/.*LANG@LISTSERV.BROWN.EDU/ OR t:/.*LANG@LISTSERV.BROWN.EDU/ OR f:/.*LANG@LISTSERV.BROWN.EDU/ OR contact:/.*LANG@LISTSERV.BROWN.EDU/) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/) AND NOT (list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
+#+RESULTS[78b388eafb2fdb1c0a8140cc0566c2de227439de]: mu4e-bookmarks-inbox-filters
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (list:/.*LANG@LISTSERV.BROWN.EDU/ OR t:/.*LANG@LISTSERV.BROWN.EDU/ OR f:/.*LANG@LISTSERV.BROWN.EDU/ OR contact:/.*LANG@LISTSERV.BROWN.EDU/) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/) AND NOT (list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/)
 
 We can finally define our bookmarks! The code reads as follows:
 #+name: mu4e-bookmarks
