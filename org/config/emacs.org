@@ -6124,7 +6124,9 @@ And let’s enable some intergration with ~ivy~.
 (use-package lsp-treemacs
   :defer t
   :straight (:build t)
-  :requires treemacs)
+  :requires treemacs
+  :config
+  (treemacs-resize-icons 15))
 #+end_src
 
 #+name: treemacs-keybinds
