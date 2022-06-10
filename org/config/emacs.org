@@ -5982,6 +5982,7 @@ in quite a few languages.
 :END:
 #+begin_src emacs-lisp
 (use-package ispell
+  :if (executable-find "aspell")
   :defer t
   :straight (:type built-in)
   :config
