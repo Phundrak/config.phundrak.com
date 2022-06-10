@@ -4660,7 +4660,7 @@ the manner described by /insertion mode/.
 All templates can be found [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/org/capture][in my dotfiles’ repository]].
 
 #+name: org-capture-shortcuts-gen
-#+header: :exports none :cache yes
+#+header: :exports none :cache yes :tangle no
 #+begin_src emacs-lisp :var entries=org-capture-shortcuts-table
 (mapconcat (lambda (entry)
              (let ((key      (nth 0 entry))
