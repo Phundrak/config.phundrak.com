@@ -4240,34 +4240,16 @@ From Doom Emacs’ configuration:
         ("crefname" "{")))
 #+end_src
 
-#+begin_src elisp
-(use-package smartparens-latex
-  :after auctex
-  :defer t
-  :straight (:build t)
-  :config
-  (let ((modes '(tex-mode plain-tex-mode latex-mode LaTeX-mode)))
-    ;; From DoomEmacs
-    ;; We have to use lower case modes here, because `smartparens-mode' uses
-    ;; the same during configuration.
-    (dolist (open '("\\left(" "\\left[" "\\left\\{" "\\left|"
-                    "\\bigl(" "\\biggl(" "\\Bigl(" "\\Biggl(" "\\bigl["
-                    "\\biggl[" "\\Bigl[" "\\Biggl[" "\\bigl\\{" "\\biggl\\{"
-                    "\\Bigl\\{" "\\Biggl\\{"
-                    "\\lfloor" "\\lceil" "\\langle"
-                    "\\lVert" "\\lvert" "`"))
-      (sp-local-pair modes open nil :actions :rem))
-    (sp-local-pair-modes $``$ nil :unless '(:add sp-in-math-p))))
-#+end_src
-
 #+begin_src emacs-lisp
-(after! latex
-  (setq LaTeX-section-hook
-        '(LaTeX-section-heading
-          LaTeX-section-title
-          LaTeX-section-toc
-          LaTeX-section-section
-          LaTeX-section-label)
+(use-package tex-mode
+  :defer t
+  :straight (:type built-in)
+  :config
+  (setq LaTeX-section-hook '(LaTeX-section-heading
+                             LaTeX-section-title
+                             LaTeX-section-toc
+                             LaTeX-section-section
+                             LaTeX-section-label)
         LaTeX-fill-break-at-separators nil
         LaTeX-item-indent              0))
 #+end_src
