@@ -7229,6 +7229,7 @@ hand.
     "e" '(:ignore t :which-key "emmet")
     "ee" #'emmet-expand-line
     "ep" #'emmet-preview
+    "eP" #'emmet-preview-mode
     "ew" #'emmet-wrap-with-markup))
 #+end_src
 
@@ -7286,7 +7287,11 @@ languages in the same buffer, mainly HTML, CSS, and Javascript.
    "rk" #'web-mode-element-kill
    "rr" #'web-mode-element-rename
    "rw" #'web-mode-element-wrap
-   "z"  #'web-mode-fold-or-unfold))
+   "z"  #'web-mode-fold-or-unfold)
+  (phundrak/major-leader-key
+    :keymaps 'web-mode-map
+    :packages '(lsp-mode web-mode)
+    "l" '(:keymap lsp-command-map :which-key "lsp")))
 #+end_src
 
 Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
@@ -7406,10 +7411,11 @@ Let’s interact with NPM through Emacs then.
   :defer t
   :straight (:build t)
   :hook (js-mode . npm-mode)
+  :hook (web-mode . npm-mode)
   :general
   (phundrak/major-leader-key
-    :packages '(npm-mode rjsx-mode)
-    :keymaps 'rjsx-mode-map
+    :packages '(npm-mode rjsx-mode web-mode)
+    :keymaps '(rjsx-mode-map web-mode-map)
     "n" '(:keymap npm-mode-command-keymap :which-key "npm")))
 #+end_src
 
@@ -7419,6 +7425,7 @@ And finally, here is a formatter for Javascript.
   :defer t
   :straight (:build t)
   :hook (rjsx-mode . prettier-js-mode)
+  :hook (web-mode . prettier-js-mode)
   :custom
   (prettier-js-args '("--single-quote"
                       "--jsx-single-quote")))
