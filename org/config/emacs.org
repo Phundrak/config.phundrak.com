@@ -455,61 +455,6 @@ on the matter.
              (format (if (buffer-modified-p) " ◉ %s" "  ●  %s - Emacs") project-name))))))
 #+end_src
 
-** Nice Macros From Doom-Emacs
-:PROPERTIES:
-:CUSTOM_ID: Basic-configuration-Nice-Macros-From-Doom-Emacsgyrjel6184j0
-:END:
-Doom-Emacs has some really nice macros that can come in really handy,
-but since I prefer to rely on my own configuration, I’ll instead just
-copy their code here. First we get the ~after!~ macro:
-#+begin_src emacs-lisp
-(require 'cl-lib)
-(defmacro after! (package &rest body)
-  "Evaluate BODY after PACKAGE have loaded.
-
-PACKAGE is a symbol or list of them. These are package names, not modes,
-functions or variables. It can be:
-
-- An unquoted package symbol (the name of a package)
-    (after! helm BODY...)
-- An unquoted list of package symbols (i.e. BODY is evaluated once both magit
-  and git-gutter have loaded)
-    (after! (magit git-gutter) BODY...)
-- An unquoted, nested list of compound package lists, using any combination of
-  :or/:any and :and/:all
-    (after! (:or package-a package-b ...)  BODY...)
-    (after! (:and package-a package-b ...) BODY...)
-    (after! (:and package-a (:or package-b package-c) ...) BODY...)
-  Without :or/:any/:and/:all, :and/:all are implied.
-
-This is a wrapper around `eval-after-load' that:
-
-1. Suppresses warnings for disabled packages at compile-time
-2. Supports compound package statements (see below)
-3. Prevents eager expansion pulling in autoloaded macros all at once"
-  (declare (indent defun) (debug t))
-  (if (symbolp package)
-      (list (if (or (not (bound-and-true-p byte-compile-current-file))
-                    (require package nil 'noerror))
-                #'progn
-              #'with-no-warnings)
-            ;; We intentionally avoid `with-eval-after-load' to prevent eager
-            ;; macro expansion from pulling (or failing to pull) in autoloaded
-            ;; macros/packages.
-            `(eval-after-load ',package ',(macroexp-progn body)))
-    (let ((p (car package)))
-      (cond ((not (keywordp p))
-             `(after! (:and ,@package) ,@body))
-            ((memq p '(:or :any))
-             (macroexp-progn
-              (cl-loop for next in (cdr package)
-                       collect `(after! ,next ,@body))))
-            ((memq p '(:and :all))
-             (dolist (next (cdr package))
-               (setq body `((after! ,next ,@body))))
-             (car body))))))
-#+end_src
-
 ** A better custom variable setter
 :PROPERTIES:
 :CUSTOM_ID: Basic-Configuration-A-better-custom-variable-setter-56z4ni61lhj0
@@ -4253,7 +4198,10 @@ From Doom Emacs’ configuration:
 #+end_src
 
 #+begin_src emacs-lisp
-(after! preview
+(use-package preview
+  :defer t
+  :straight (:type built-in)
+  :config
   (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
   (setq-default preview-scale 1.4
                 preview-scale-function
@@ -5939,7 +5887,7 @@ to anything user-defined. Let’s all-the-iconify this!
   :hook (flycheck-mode . flycheck-popup-tip-mode)
   :config
   (setq flycheck-popup-tip-error-prefix "X ")
-  (after! evil
+  (with-eval-after-load evil
     (add-hook 'evil-insert-state-entry-hook
               #'flycheck-popup-tip-delete-popup)
     (add-hook 'evil-replace-state-entry-hook
@@ -6384,7 +6332,7 @@ visual graphs and networks.
          ("\\.gv\\'"        . graphviz-dot-mode))
   :init
   (setq graphviz-dot-indent-width tab-width)
-  (after! ob
+  (with-eval-after-load ob
       (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
       (add-to-list 'org-babel-load-languages '(dot . t))
       (require 'ob-dot)
@@ -7165,7 +7113,7 @@ development. First, let’s install the most important package,
   :hook (rustic-mode-local-vars . rustic-setup-lsp)
   :hook (rustic-mode . lsp-deferred)
   :init
-  (after! org-src
+  (with-eval-after-load org-src
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
   (setq rustic-lsp-client 'lsp-mode)
@@ -7465,7 +7413,7 @@ Typescript is a safer alternative to Javascript. Let’s install its major mode 
     :keymaps '(typescript-mode-map typescript-tsx-mode-map)
     "n" '(:keymap npm-mode-command-keymap :which-key "npm"))
   :config
-  (after! flycheck
+  (with-eval-after-load flycheck
     (flycheck-add-mode 'javascript-eslint 'web-mode)
     (flycheck-add-mode 'javascript-eslint 'typescript-mode)
     (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)
