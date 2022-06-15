@@ -6850,6 +6850,15 @@ examples on how to use Elisp functions. ~elisp-demos~ got you covered!
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package epdh
+  :straight (epdh :type git
+                  :host github
+                  :repo "alphapapa/emacs-package-dev-handbook"
+                  :build t)
+  :defer t)
+#+end_src
+
 Let’s also declare some Elisp-dedicated keybindings, prefixed by a
 comma.
 #+begin_src emacs-lisp
