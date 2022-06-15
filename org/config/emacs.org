@@ -527,9 +527,13 @@ to the one ~setq~ uses?
   "Bind each custom variable FORM to the value of its VAL.
 
 FORMS is a list of pairs of values [FORM VAL].
+`customize-set-variable' is called sequentially on each pairs
+contained in FORMS. This means `csetq' has a similar behaviour as
+`setq': each VAL expression are evaluated sequentially, i.e. the
+first VAL is evaluated before the second, and so on. This means
+the value of the first FORM can be used to set the second FORM.
 
-If FORM has a custom setter, use it to set FORM to VAL.
-Otherwise, use `set-default'.
+The return value of `csetq' is the value of the last VAL.
 
 \(fn [FORM VAL]...)"
   (declare (debug (&rest sexp form))
@@ -537,15 +541,9 @@ Otherwise, use `set-default'.
   ;; Check if we have an even number of arguments
   (when (= (mod (length forms) 2) 1)
     (signal 'wrong-number-of-arguments (list 'csetq (1+ (length forms)))))
-  (let (sexps)
     ;; Transform FORMS into a list of pairs (FORM . VALUE)
-    `(progn ,@(progn
-                (while forms
-                  (let ((form (pop forms))
-                        (value (pop forms)))
-                    (push `(customize-set-variable ',form ,value)
-                          sexps)))
-                (reverse sexps)))))
+  `(progn ,@(cl-loop for (form value) on forms by 'cddr
+                     collect `(customize-set-variable ',form ,value))))
 #+end_src
 
 I first got inspired by [[https://oremacs.com/2015/01/17/setting-up-ediff/][this blog article]] (archived article, just in
