@@ -5818,6 +5818,14 @@ to anything user-defined. Let’s all-the-iconify this!
     "u" #'org-tree-slide-content))
 #+end_src
 
+~org-roll~ is a simple package for tabletop RPGs for rolling dice.
+#+begin_src emacs-lisp
+(use-package org-roll
+  :defer t
+  :after org
+  :straight (:build t :type git :host github :repo "zaeph/org-roll"))
+#+end_src
+
 ** Programming
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages6et5fl6184j0
