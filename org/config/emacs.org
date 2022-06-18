@@ -5883,11 +5883,11 @@ to anything user-defined. Let’s all-the-iconify this!
 
 (use-package flycheck-popup-tip
   :straight (:build t)
-  :after flycheck
+  :after (flycheck evil)
   :hook (flycheck-mode . flycheck-popup-tip-mode)
   :config
   (setq flycheck-popup-tip-error-prefix "X ")
-  (with-eval-after-load evil
+  (with-eval-after-load 'evil
     (add-hook 'evil-insert-state-entry-hook
               #'flycheck-popup-tip-delete-popup)
     (add-hook 'evil-replace-state-entry-hook
@@ -6323,7 +6323,7 @@ visual graphs and networks.
 (use-package graphviz-dot-mode
   :defer t
   :straight (:build t)
-  :after ob
+  :after org
   :mode (("\\.diag\\'"      . graphviz-dot-mode)
          ("\\.blockdiag\\'" . graphviz-dot-mode)
          ("\\.nwdiag\\'"    . graphviz-dot-mode)
@@ -6332,7 +6332,7 @@ visual graphs and networks.
          ("\\.gv\\'"        . graphviz-dot-mode))
   :init
   (setq graphviz-dot-indent-width tab-width)
-  (with-eval-after-load ob
+  (with-eval-after-load 'org
       (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
       (add-to-list 'org-babel-load-languages '(dot . t))
       (require 'ob-dot)
@@ -7113,7 +7113,7 @@ development. First, let’s install the most important package,
   :hook (rustic-mode-local-vars . rustic-setup-lsp)
   :hook (rustic-mode . lsp-deferred)
   :init
-  (with-eval-after-load org-src
+  (with-eval-after-load 'org
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
   (setq rustic-lsp-client 'lsp-mode)
