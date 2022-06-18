@@ -4852,33 +4852,13 @@ describing phonetics evolution. So, let’s disable it:
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-ConlangDict-wvi7vaa16fj0
 :END:
-I am currently working on two new exporters as well as custom links
-for my org websites. The first one is the most generic one, it exports
-my org files to ~.tsx~ files NextJS will use to render them.
-#+begin_src emacs-lisp
-(use-package ox-conlang-tsx
-  :defer t
-  :after '(org ox)
-  :straight (ox-conlang-tsx :type git
-                            :host nil
-                            :repo "https://labs.phundrak.com/phundrak/ox-conlang-tsx"
-                            :build t))
-#+end_src
-
-The second exporter is similar to ~ox-json~, but with some special
-twists for my needs. Indeed, I need some elements of ~ox-conlang-json~
-to be compatible with ~ox-conlang-tsx~.
-#+begin_src emacs-lisp
-;; (use-package ox-conlang-json
-;;   :defer t
-;;   :after '(org ox)
-;;   :straight (ox-conlang-json :type git
-;;                              :local-repo "~/fromGIT/emacs-packages/ox-conlang-json"
-;;                              :build t))
-#+end_src
-
-Finally, I also need a handler for custom links begining in ~conlang~,
-like ~[[conlang:English:dog]]~. ~ol-conlang~ handles that.
+I am currently working on new exporters as well as custom links for my
+org websites. They are first thought for my [[https://conlang.phundrak.com][conlanging website]], hence
+the name, but one can use the package for any org-generated website.
+This package provides two exporters, ~ox-conlang-md~ and
+~ox-conlang-json~, as well as ~ol-conlang~ to handle links to and inside
+the dictionary. The markdown files are meant to be used with my custom
+Vue front-end (not publicly released yet).
 #+begin_src emacs-lisp
 (use-package org-conlang
   :defer t
