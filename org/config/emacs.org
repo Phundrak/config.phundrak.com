@@ -1085,6 +1085,39 @@ windows.
   ("r" enlarge-window-horizontally))
 #+end_src
 
+This one allows me to manipulate my Emacs frames’ background
+transparency.
+#+begin_src emacs-lisp
+(defun my/increase-frame-alpha-background ()
+  "Increase current frame’s alpha background."
+  (interactive)
+  (set-frame-parameter nil
+                       'alpha-background
+                       (min 1.0
+                            (+ (frame-parameter nil 'alpha-background) 0.1)))
+  (message "%s" (frame-parameter nil 'alpha-background)))
+
+(defun my/decrease-frame-alpha-background ()
+  "Decrease current frame’s alpha background."
+  (interactive)
+  (set-frame-parameter nil
+                       'alpha-background
+                       (max 0.0
+                            (- (frame-parameter nil 'alpha-background) 0.1)))
+  (message "%s" (frame-parameter nil 'alpha-background)))
+
+(defhydra my/modify-frame-alpha-background ()
+  "
+^Transparency^              ^Other^
+^^^^^^^^^^^^^^------------------------
+[_t_] increase transparency [_q_] quit
+[_s_] decrease transparency
+"
+  ("q" nil :exit t)
+  ("s" my/decrease-frame-alpha-background)
+  ("t" my/increase-frame-alpha-background))
+#+end_src
+
 * Packages Configuration
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configurationije0fl6184j0
@@ -5099,19 +5132,21 @@ servers on my repos though.
 Be prepared, I have a lot of keybindings for org-mode! They are all
 prefixed with a comma ~,~ in normal mode.
 #+name: org-keybinds-various
-| Key chord | Function            | Description |
-|-----------+---------------------+-------------|
-| RET       | org-ctrl-c-ret      |             |
-| *         | org-ctrl-c-star     |             |
-| ,         | org-ctrl-c-ctrl-c   |             |
-| '         | org-edit-special    |             |
-| -         | org-ctrl-c-minus    |             |
-| a         | org-agenda          |             |
-| c         | org-capture         |             |
-| e         | org-export-dispatch |             |
-| l         | org-store-link      |             |
-| p         | org-priority        |             |
-| r         | org-reload          |             |
+| Key chord | Function                  | Description |
+|-----------+---------------------------+-------------|
+| RET       | org-ctrl-c-ret            |             |
+| *         | org-ctrl-c-star           |             |
+| ,         | org-ctrl-c-ctrl-c         |             |
+| '         | org-edit-special          |             |
+| -         | org-ctrl-c-minus          |             |
+| a         | org-agenda                |             |
+| c         | org-capture               |             |
+| e         | org-export-dispatch       |             |
+| l         | org-store-link            |             |
+| p         | org-priority              |             |
+| r         | org-reload                |             |
+| t         | evil-next-visual-line     |             |
+| s         | evil-previous-visual-line |             |
 
 I then have a couple of babel-related functions.
 #+name: org-keybinds-babel
@@ -6358,12 +6393,14 @@ unfortunately.
   :general
   (phundrak/evil
     :keymaps 'markdown-mode-map
-    :packages 'markdown-mode
+    :packages '(markdown-mode evil)
     "M-RET" #'markdown-insert-list-item
     "M-c"   #'markdown-promote
     "M-t"   #'markdown-move-down
     "M-s"   #'markdown-move-up
-    "M-r"   #'markdown-demote)
+    "M-r"   #'markdown-demote
+    "t"     #'evil-next-visual-line
+    "s"     #'evil-previous-visual-line)
   (phundrak/major-leader-key
     :keymaps 'markdown-mode-map
     :packages 'markdown-mode
@@ -8256,16 +8293,17 @@ The prefix here is ~T~.
 :END:
 My toggle keybinds are prefixed by ~t~.
 #+name: keybinds-toggle
-| Key | Function              | Description  |
-|-----+-----------------------+--------------|
-|     |                       | toggles      |
-| t   | counsel-load-theme    |              |
-| d   |                       | debug        |
-| de  | toggle-debug-on-error |              |
-| dq  | toggle-debug-on-quit  |              |
-| i   |                       | input method |
-| it  | toggle-input-method   |              |
-| is  | set-input-mode        |              |
+| Key | Function                              | Description  |
+|-----+---------------------------------------+--------------|
+|     |                                       | toggles      |
+| t   | my/modify-frame-alpha-background/body |              |
+| T   | counsel-load-theme                    |              |
+| d   |                                       | debug        |
+| de  | toggle-debug-on-error                 |              |
+| dq  | toggle-debug-on-quit                  |              |
+| i   |                                       | input method |
+| it  | toggle-input-method                   |              |
+| is  | set-input-mode                        |              |
 
 ** Windows
 :PROPERTIES:
