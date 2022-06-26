@@ -1662,7 +1662,7 @@ configuration for the ~mu4e~ package itself.
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :config
-  (with-eval-after-load "mm-decode"
+  (with-eval-after-load 'mm-decode
     (add-to-list 'mm-discouraged-alternatives "text/html")
     (add-to-list 'mm-discouraged-alternatives "text-richtext"))
 
@@ -4386,7 +4386,6 @@ extended however we like!
   <<org-babel-load-languages>>
   <<org-use-sub-superscripts>>
   <<org-latex-compiler>>
-  <<org-latex-listings>>
   <<org-latex-default-packages>>
   <<org-export-latex-hyperref-format>>
   <<org-export-latex-minted-options>>
@@ -5015,20 +5014,15 @@ variable:
 #+END_SRC
 
 A new backend that was introduced in org-mode for LaTeX source block
-coloring is ~engraved~, relying on ~engraved-faces~. Let’s install this
-package.
-#+begin_src emacs-lisp
+coloring is ~engraved~.
+#+BEGIN_SRC emacs-lisp
 (use-package engrave-faces
-  :straight (:build t)
   :defer t
-  :after ox)
-#+end_src
-
-We can now tell Emacs to use the ~engraved~ backend.
-#+NAME: org-latex-listings
-#+BEGIN_SRC emacs-lisp :tangle no
-(with-eval-after-load 'engrave-faces
- (setq org-latex-listings 'engraved))
+  :straight (:build t)
+  :after org
+  :config
+  (with-eval-after-load 'org
+   (csetq org-latex-src-block-backend 'engraved)))
 #+END_SRC
 
 The default packages break my LaTeX exports: for some reasons, images
