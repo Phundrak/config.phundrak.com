@@ -1110,8 +1110,8 @@ transparency.
   "
 ^Transparency^              ^Other^
 ^^^^^^^^^^^^^^------------------------
-[_t_] increase transparency [_q_] quit
-[_s_] decrease transparency
+[_t_] decrease transparency [_q_] quit
+[_s_] increase transparency
 "
   ("q" nil :exit t)
   ("s" my/decrease-frame-alpha-background)
