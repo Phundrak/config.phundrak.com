@@ -7251,6 +7251,12 @@ languages in the same buffer, mainly HTML, CSS, and Javascript.
          ("\\.ctp\\'"        . web-mode)
          ("\\.djhtml\\'"     . web-mode)
          ("\\.vue\\'"        . web-mode))
+  :config
+  (csetq web-mode-markup-indent-offset 2
+         web-mode-code-indent-offset   2
+         web-mode-css-indent-offset    2
+         web-mode-style-padding        0
+         web-mode-script-padding       0)
   :general
   (phundrak/major-leader-key
    :keymaps 'web-mode-map
@@ -7408,11 +7414,9 @@ And finally, here is a formatter for Javascript.
 (use-package prettier-js
   :defer t
   :straight (:build t)
-  :hook (rjsx-mode . prettier-js-mode)
-  :hook (web-mode . prettier-js-mode)
-  :custom
-  (prettier-js-args '("--single-quote"
-                      "--jsx-single-quote")))
+  :hook ((rjsx-mode web-mode) . prettier-js-mode)
+  :config
+  (csetq prettier-js-args '("--single-quote" "--jsx-single-quote")))
 #+end_src
 
 ***** Typescript
