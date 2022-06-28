@@ -8368,9 +8368,3 @@ Why would I ever use any of these keybinds? They are prefixed with ~q~.
 :END:
 Advise ~evil-insert~ to go to the end of the buffer while in
 ~eshell-mode~.
-** TODO Write macro wrapper around ~general~
-:PROPERTIES:
-:CUSTOM_ID: Various-TODOs-Write-macro-wrapper-around-generalfew6fl6184j0
-:END:
-Write a macro wrapper around ~general~ for when an evil state is used in
-order to make the keybind available when in ~insert-mode~ through ~M-m~.
