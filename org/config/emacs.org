@@ -1662,6 +1662,7 @@ configuration for the ~mu4e~ package itself.
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
   :config
+  (require 'mu4e-view)
   (with-eval-after-load 'mm-decode
     (add-to-list 'mm-discouraged-alternatives "text/html")
     (add-to-list 'mm-discouraged-alternatives "text-richtext"))
