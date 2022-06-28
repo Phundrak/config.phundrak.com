@@ -7442,7 +7442,7 @@ Typescript is a safer alternative to Javascript. Let’s install its major mode 
     :keymaps '(typescript-mode-map typescript-tsx-mode-map)
     "n" '(:keymap npm-mode-command-keymap :which-key "npm"))
   :config
-  (with-eval-after-load flycheck
+  (with-eval-after-load 'flycheck
     (flycheck-add-mode 'javascript-eslint 'web-mode)
     (flycheck-add-mode 'javascript-eslint 'typescript-mode)
     (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)
