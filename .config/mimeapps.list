@@ -50,6 +50,7 @@ video/x-msvideo=mpv.desktop;
 x-scheme-handler/https=firefox.desktop;
 x-scheme-handler/mailto=mu4e.desktop
 application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;
+audio/x-ms-wma=mpv.desktop;
 
 [Default Applications]
 application/epub+zip=emacsclient.desktop
@@ -91,3 +92,4 @@ x-scheme-handler/mailto=mu4e.desktop
 x-scheme-handler/unknown=firefox.desktop
 application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop
 x-scheme-handler/discord-693493612754763907=discord-693493612754763907.desktop
+audio/x-ms-wma=mpv.desktop
