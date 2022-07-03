@@ -2279,13 +2279,11 @@ the export part and write your emails directly in org-mode?
         org-msg-convert-citation     t
         org-msg-greeting-name-limit  3
         org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
-                                             (string-trim
-                                              (replace-regexp-in-string
-                                               (regexp-quote "\n")
-                                               "\n\n"
-                                               (with-temp-buffer
-                                                 (insert-file-contents mail-signature-file)
-                                                 (buffer-string))))))
+                                             (with-temp-buffer
+                                               (insert-file-contents mail-signature-file)
+                                               (while (re-search-forward "\n" nil t)
+                                                 (replace-match "\n\n"))
+                                               (buffer-string))))
   :general
   (phundrak/major-leader-key
     :keymaps 'org-msg-edit-mode-map
