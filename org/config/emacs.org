@@ -2631,11 +2631,10 @@ doing and what Git is doing! In short, I absolutely love it!
   :straight (:build t)
   :defer t
   :init
-  (setq forge-add-default-bindings t)
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (setq forge-add-default-bindings nil)
   :config
-  (setq magit-clone-default-directory "~/fromGIT/")
+  (csetq magit-clone-default-directory "~/fromGIT/"
+         magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (with-eval-after-load 'evil-collection
     (phundrak/evil
       :packages '(evil-collection magit)
