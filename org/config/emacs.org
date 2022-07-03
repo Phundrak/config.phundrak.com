@@ -2865,6 +2865,23 @@ an interrupt signal.
   (setq vterm-shell "/usr/bin/fish"))
 #+end_src
 
+One annoying think with vterm is it only can create one buffer, you
+can’t have multiple vterm buffers by default. ~multi-vterm~ fixes this
+issue.
+#+begin_src emacs-lisp
+(use-package multi-vterm
+  :after vterm
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :packages '(vterm multi-vterm)
+    :keymap 'vterm-mode-map
+    "c" #'multi-vterm
+    "n" #'multi-vterm-next
+    "p" #'multi-vterm-prev))
+#+end_src
+
 *** XWidgets Webkit Browser
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-XWidgets-Webkit-Browsertui1fl6184j0
@@ -8120,11 +8137,12 @@ Here are my apps keybinds. Each one of them is prefixed by ~a~.
 
 I also have two main shell-related functions, prefixed with ~as~.
 #+name: keybinds-apps-shell
-| Key | Function   | Description |
-|-----+------------+-------------|
-|     |            | shells      |
-| e   | eshell-new |             |
-| v   | vterm      |             |
+| Key | Function    | Description |
+|-----+-------------+-------------|
+|     |             | shells      |
+| e   | eshell-new  |             |
+| v   | vterm       |             |
+| V   | multi-vterm |             |
 
 ** Buffers
 :PROPERTIES:
