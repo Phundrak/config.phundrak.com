@@ -171,15 +171,16 @@ For instance, my ~PATH~ variable needs Rust’s Cargo’s binaries, Go’s binar
 my own executables, and some more.
 
 #+NAME: extra-paths
-| additional path          | what it leads to                     |
-|--------------------------+--------------------------------------|
-| $HOME/.local/bin         | Custom executables, see [[file:bin.org]] |
-| $GOPATH/bin              | Go binaries and executables          |
-| $CARGO_HOME/bin          | Rust binaries and executables        |
-| $GEM_HOME/ruby/3.0.0/bin | Ruby 3.0 binaries and executables    |
-| $GEM_HOME/ruby/2.6.0/bin | Ruby 2.6 binaries and executables    |
-| $HOME/.cabal/bin         | Haskel binaries                      |
-| /usr/lib/xfce-polkit     | Path to XFCE’s PolKit                |
+| additional path          | what it leads to                                  |
+|--------------------------+---------------------------------------------------|
+| node_modules/.bin        | The current directory’s NPM binaries if it exists |
+| $HOME/.local/bin         | Custom executables, see [[file:bin.org]]              |
+| $GOPATH/bin              | Go binaries and executables                       |
+| $CARGO_HOME/bin          | Rust binaries and executables                     |
+| $GEM_HOME/ruby/3.0.0/bin | Ruby 3.0 binaries and executables                 |
+| $GEM_HOME/ruby/2.6.0/bin | Ruby 2.6 binaries and executables                 |
+| $HOME/.cabal/bin         | Haskel binaries                                   |
+| /usr/lib/xfce-polkit     | Path to XFCE’s PolKit                             |
 
 #+NAME: generate-extra-paths
 #+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
@@ -187,7 +188,8 @@ my own executables, and some more.
            paths " \\\n")
 #+END_SRC
 
-#+RESULTS[8fe70e73420376a50897de0f9518689ec3088288]: generate-extra-paths
+#+RESULTS[5dedcba52b12f9026e90c3b1b91a65d60c139ede]: generate-extra-paths
+: node_modules/.bin \
 : $HOME/.local/bin \
 : $GOPATH/bin \
 : $CARGO_HOME/bin \
