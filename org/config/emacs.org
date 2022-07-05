@@ -5888,6 +5888,28 @@ to anything user-defined. Let’s all-the-iconify this!
     "Cp"   #'copilot-previous-completion))
 #+end_src
 
+**** Databases
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-Tools-Databases-73nhsqt09ij0
+:END:
+A really cool tool in Emacs for manipulating databases is ~emacsql~.
+It’s able to manipulate Sqlite databases by default, but it’s also
+possible to manipulate MariaDB and PostgreSQL databases by installing
+additional packages. For now, I just need Sqlite and PostgreSQL
+interfaces, so let’s install the relevant packages.
+#+begin_src emacs-lisp
+(use-package emacsql-psql
+  :defer t
+  :after (emacsql)
+  :straight (:build t))
+
+(with-eval-after-load 'emacsql
+  (phundrak/major-leader-key
+    :keymaps 'emacs-lisp-mode-map
+    :packages '(emacsql)
+    "E" #'emacsql-fix-vector-indentation))
+#+end_src
+
 **** Flycheck
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Flycheckb446fl6184j0
