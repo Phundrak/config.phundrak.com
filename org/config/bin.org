@@ -48,8 +48,9 @@ of said command running.
 #+header: :wrap "src bash :exports code"
 #+BEGIN_SRC emacs-lisp :var table=autostart-table :cache yes
 (mapconcat (lambda (start-command)
-             (let* ((command      (replace-regexp-in-string "~" "" (nth 0 start-command)))
-                    (arguments    (replace-regexp-in-string "~" "" (nth 1 start-command)))
+             (let* ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str)))
+                    (command      (funcall clean-string (nth 0 start-command)))
+                    (arguments    (funcall clean-string (nth 1 start-command)))
                     (oncep        (string= "yes" (nth 2 start-command)))
                     (full-command (replace-regexp-in-string
                                    " +"
@@ -681,13 +682,13 @@ some global variables that won’t change:
 #+NAME: ytdl-default-vars
 | Variable Name    | Default Value                                             | String? |
 |------------------+-----------------------------------------------------------+---------|
-| YTDL_SHARED_DIR  | $HOME/.local/share/ytdl                                   | no      |
-| FORMAT_DEFAULT   | %(uploader)s/%(upload_date)s - %(title)s.%(ext)s          | yes     |
-| DOWNFILE_DEFAULT | $YTDL_SHARED_DIR/downloaded                               | no      |
-| ERRFILE_DEFAULT  | $YTDL_SHARED_DIR/video-errors                             | no      |
-| LOGFILE_DEFAULT  | $YTDL_SHARED_DIR/ytdl.log                                 | no      |
-| PREFFERED_FORMAT | bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio | yes     |
-| VERSION          | 0.3                                                       | yes     |
+| ~YTDL_SHARED_DIR~  | ~$HOME/.local/share/ytdl~                                   | no      |
+| ~FORMAT_DEFAULT~   | ~%(uploader)s/%(upload_date)s ~- ~%(title)s.%(ext)s~          | yes     |
+| ~DOWNFILE_DEFAULT~ | ~$YTDL_SHARED_DIR/downloaded~                               | no      |
+| ~ERRFILE_DEFAULT~  | ~$YTDL_SHARED_DIR/video-errors~                             | no      |
+| ~LOGFILE_DEFAULT~  | ~$YTDL_SHARED_DIR/ytdl.log~                                 | no      |
+| ~PREFFERED_FORMAT~ | ~bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio~ | yes     |
+| ~VERSION~          | ~0.3~                                                       | yes     |
 
 There is one more default variable pointing to ytdl’s root directory which
 depends on whether the videos directory has a French or English name:
@@ -701,25 +702,28 @@ end
 #+END_SRC
 
 #+NAME: ytdl-default-vars-make
-#+BEGIN_SRC emacs-lisp :var vars=ytdl-default-vars
-(mapconcat (lambda (var)
-             (let ((varname  (car  var))
-                   (varvalue (cadr var))
-                   (string?  (string= (nth 2 var) "yes")))
-               (format "set -g %-16s %s" varname (if string? (format "\"%s\"" varvalue)
-                                                 varvalue))))
-           vars
-           "\n")
+#+header:  :wrap "src fish :tangle no"
+#+BEGIN_SRC emacs-lisp :var vars=ytdl-default-vars :exports results
+(let ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str))))
+ (mapconcat (lambda (var)
+              (let ((varname  (funcall clean-string (car  var)))
+                    (varvalue (funcall clean-string (cadr var)))
+                    (string?  (string= (nth 2 var) "yes")))
+                (format "set -g %-16s \"%s\"" varname varvalue)))
+            vars
+            "\n"))
 #+END_SRC
 
 #+RESULTS: ytdl-default-vars-make
-: set -g YTDL_SHARED_DIR  $HOME/.local/share/ytdl
-: set -g FORMAT_DEFAULT   "%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"
-: set -g DOWNFILE_DEFAULT $YTDL_SHARED_DIR/downloaded
-: set -g ERRFILE_DEFAULT  $YTDL_SHARED_DIR/video-errors
-: set -g LOGFILE_DEFAULT  $YTDL_SHARED_DIR/ytdl.log
-: set -g PREFFERED_FORMAT "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio"
-: set -g VERSION          "0.3"
+#+begin_src fish :tangle no
+set -g YTDL_SHARED_DIR  "$HOME/.local/share/ytdl"
+set -g FORMAT_DEFAULT   "%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"
+set -g DOWNFILE_DEFAULT "$YTDL_SHARED_DIR/downloaded"
+set -g ERRFILE_DEFAULT  "$YTDL_SHARED_DIR/video-errors"
+set -g LOGFILE_DEFAULT  "$YTDL_SHARED_DIR/ytdl.log"
+set -g PREFFERED_FORMAT "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio"
+set -g VERSION          "0.3"
+#+end_src
 
 #+BEGIN_SRC fish :noweb yes
 <<ytdl-default-vars-make()>>
@@ -811,15 +815,15 @@ do:
 #+NAME: ytdl-table-arguments
 | Short | Long       | Takes a value? | Associated Variable | Default Value     | What it does         |
 |-------+------------+----------------+---------------------+-------------------+----------------------|
-| 4     | ipv4       | no             | IPV4                | None              | Force IPv4           |
-| 6     | ipv6       | no             | IPV6                | None              | Force IPv6           |
-| a     | batch-file | yes            | FILE                | None              | Batch file           |
-| c     | cache      | yes            | DOWNFILE            | $DOWNFILE_DEFAULT | Cache file           |
-| d     | directory  | yes            | ROOTDIR             | $ROOTDIR_DEFAULT  | Root directory       |
-| e     | error-file | yes            | ERRFILE             | $ERRFILE_DEFAULT  | Error logs           |
-| f     | format     | yes            | FORMAT              | $FORMAT_DEFAULT   | Filename format      |
-| l     | logs       | yes            | LOGFILE             | $LOGFILE_DEFAULT  | Logs                 |
-| V     | verbose    | no             | VERBOSE             | 1                 | Verbose output       |
+| 4     | ipv4       | no             | ~IPV4~                | None              | Force IPv4           |
+| 6     | ipv6       | no             | ~IPV6~                | None              | Force IPv6           |
+| a     | batch-file | yes            | ~FILE~                | None              | Batch file           |
+| c     | cache      | yes            | ~DOWNFILE~            | ~$DOWNFILE_DEFAULT~ | Cache file           |
+| d     | directory  | yes            | ~ROOTDIR~             | ~$ROOTDIR_DEFAULT~  | Root directory       |
+| e     | error-file | yes            | ~ERRFILE~             | ~$ERRFILE_DEFAULT~  | Error logs           |
+| f     | format     | yes            | ~FORMAT~              | ~$FORMAT_DEFAULT~   | Filename format      |
+| l     | logs       | yes            | ~LOGFILE~             | ~$LOGFILE_DEFAULT~  | Logs                 |
+| V     | verbose    | no             | ~VERBOSE~             | ~1~                 | Verbose output       |
 | v     | version    | command        | None                | None              | Script version       |
 | h     | help       | command        | None                | None              | Display this message |
 
@@ -827,25 +831,27 @@ We can also pass individual YouTube URLs without any options or switches
 associated to them, they will be downloaded as part of a single queue.
 
 #+NAME: ytdl-arg-handling-gen
-#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
-(mapconcat (lambda (arg)
-             (let* ((short (format "%s" (nth 0 arg)))
-                    (long  (nth 1 arg))
-                    (arg?  (string= "yes" (nth 2 arg)))
-                    (var   (unless (string= "None" (nth 3 arg))
-                             (nth 3 arg))))
-               (format "case %s %s\n\t%s"
-                       short long
-                       (if var (format "set -g %s %s" var
-                                       (if arg? "$value" ""))
-                         (format "_ytdl_%s && exit"
-                                 (if (string= "h" short) "help" "version"))))))
-           args
-           "\n")
+#+header: :cache yes :wrap "src fish :tangle no :exports code"
+#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments :exports results
+(let ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str))))
+    (mapconcat (lambda (arg)
+                 (let* ((short (format "%s" (nth 0 arg)))
+                        (long  (nth 1 arg))
+                        (arg?  (string= "yes" (nth 2 arg)))
+                        (var   (unless (string= "None" (nth 3 arg))
+                                 (funcall clean-string (nth 3 arg)))))
+                   (format "case %s %s\n\t%s"
+                           short long
+                           (if var (format "set -g %s %s" var
+                                           (if arg? "$value" ""))
+                             (format "_ytdl_%s && exit"
+                                     (if (string= "h" short) "help" "version"))))))
+               args
+               "\n"))
 #+END_SRC
 
-#+RESULTS: ytdl-arg-handling-gen
-#+begin_example
+#+RESULTS[df04709ff17a3d37a20528a5066a2efcda0cad5c]: ytdl-arg-handling-gen
+#+begin_src fish :tangle no :exports code
 case 4 ipv4
         set -g IPV4
 case 6 ipv6
@@ -868,7 +874,7 @@ case v version
         _ytdl_version && exit
 case h help
         _ytdl_help && exit
-#+end_example
+#+end_src
 
 The following shows how ~getopts~ is used to catch the options and switches
 passed to the script:
@@ -886,24 +892,28 @@ end
 #+END_SRC
 
 #+NAME: ytdl-arg-set-default-value-gen
+#+header: :cache yes :wrap "src fish :tangle no :exports code"
 #+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
-(let* ((args (seq-filter (lambda (arg)
-                           (let* ((var     (unless (string= "None" (nth 3 arg)) (nth 3 arg)))
-                                  (default (format "%s" (nth 4 arg)))
-                                  (default (unless (string= "None" default) default)))
+(let* ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str)))
+       (args (seq-filter (lambda (arg)
+                           (let* ((var     (unless (string= "None" (nth 3 arg))
+                                             (funcall clean-string (nth 3 arg))))
+                                  (default (funcall clean-string (format "%s" (nth 4 arg))))
+                                  (default (unless (string= "None" default)
+                                             default)))
                              (and var default)))
                          args)))
   (mapconcat (lambda (arg)
-               (let* ((var     (nth 3 arg))
-                      (default (format "%s" (nth 4 arg))))
+               (let* ((var     (funcall clean-string (nth 3 arg)))
+                      (default (funcall clean-string (format "%s" (nth 4 arg)))))
                  (format "if set -q $%s\n\tset -g %s %s\nend"
                          var var default)))
              args
              "\n"))
 #+END_SRC
 
-#+RESULTS: ytdl-arg-set-default-value-gen
-#+begin_example
+#+RESULTS[5a32e875ea434a3522bd2272f4e5fd422d722dca]: ytdl-arg-set-default-value-gen
+#+begin_src fish :tangle no :exports code
 if set -q $DOWNFILE
         set -g DOWNFILE $DOWNFILE_DEFAULT
 end
@@ -922,7 +932,7 @@ end
 if set -q $VERBOSE
         set -g VERBOSE 1
 end
-#+end_example
+#+end_src
 
 Some values need to be set to their default, so let’s assign them their value if
 no user value was passed:
