@@ -8088,10 +8088,12 @@ Undefining some stuff to make keybind prefixes work correctly.
  "<mouse-3>" nil)
 
 (phundrak/evil
- "U"   #'evil-redo
- "C-a" #'beginning-of-line
- "C-e" #'end-of-line
- "C-y" #'yank)
+  :packages '(counsel)
+  "U"   #'evil-redo
+  "C-a" #'beginning-of-line
+  "C-e" #'end-of-line
+  "C-y" #'yank
+  "M-y" #'counsel-yank-pop)
 #+end_src
 
 #+begin_src emacs-lisp
