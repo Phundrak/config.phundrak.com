@@ -2282,7 +2282,6 @@ the export part and write your emails directly in org-mode?
         org-msg-default-alternatives '((new           . (text html))
                                        (reply-to-html . (text html))
                                        (reply-to-text . (text)))
-        org-msg-convert-citation     t
         org-msg-greeting-name-limit  3
         org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
                                              (with-temp-buffer
