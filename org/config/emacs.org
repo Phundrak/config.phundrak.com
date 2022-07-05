@@ -1088,13 +1088,18 @@ windows.
 This one allows me to manipulate my Emacs frames’ background
 transparency.
 #+begin_src emacs-lisp
+(defun my/transparency-round (val)
+  "Round VAL to the nearest tenth of an integer."
+  (/ (round (* 10 val)) 10.0))
+
 (defun my/increase-frame-alpha-background ()
   "Increase current frame’s alpha background."
   (interactive)
   (set-frame-parameter nil
                        'alpha-background
-                       (min 1.0
-                            (+ (frame-parameter nil 'alpha-background) 0.1)))
+                       (my/transparency-round
+                        (min 1.0
+                             (+ (frame-parameter nil 'alpha-background) 0.1))))
   (message "%s" (frame-parameter nil 'alpha-background)))
 
 (defun my/decrease-frame-alpha-background ()
@@ -1102,8 +1107,9 @@ transparency.
   (interactive)
   (set-frame-parameter nil
                        'alpha-background
-                       (max 0.0
-                            (- (frame-parameter nil 'alpha-background) 0.1)))
+                       (my/transparency-round
+                        (max 0.0
+                             (- (frame-parameter nil 'alpha-background) 0.1))))
   (message "%s" (frame-parameter nil 'alpha-background)))
 
 (defhydra my/modify-frame-alpha-background ()
