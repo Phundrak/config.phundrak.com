@@ -4398,9 +4398,9 @@ extended however we like!
   <<org-babel-load-languages>>
   <<org-use-sub-superscripts>>
   <<org-latex-compiler>>
+  <<org-latex-src-block-backend>>
   <<org-latex-default-packages>>
   <<org-export-latex-hyperref-format>>
-  <<org-export-latex-minted-options>>
   <<org-latex-pdf-process>>
   <<org-latex-logfiles-add-extensions>>
   <<org-re-reveal>>
@@ -5031,18 +5031,20 @@ coloring is ~engraved~.
 (use-package engrave-faces
   :defer t
   :straight (:build t)
-  :after org
-  :config
-  (with-eval-after-load 'org
-   (csetq org-latex-src-block-backend 'engraved)))
+  :after org)
 #+END_SRC
+
+#+name: org-latex-src-block-backend
+#+begin_src emacs-lisp :tangle no
+(require 'engrave-faces)
+(csetq org-latex-src-block-backend 'engraved)
+#+end_src
 
 The default packages break my LaTeX exports: for some reasons, images
 are not loaded and exported in PDFs, so I needed to redifine the
 default packages excluding the one that broke my exports; namely, I
 need to remove ~inputenc~, ~fontenc~ and ~grffile~. I also added some default
 packages:
-- ~minted~ for syntax highlighting
 - ~cleveref~ for better references to various elements.
 - ~svg~ for inserting SVG files in PDF outputs
 - ~booktabs~ for nicer tables
@@ -5054,8 +5056,7 @@ packages:
                    (""     "grffile"  t)))
   (delete package org-latex-default-packages-alist))
 
-(dolist (package '((""           "minted")
-                   ("capitalize" "cleveref")
+(dolist (package '(("capitalize" "cleveref")
                    (""           "svg")
                    (""           "booktabs")
                    (""           "tabularx")))
@@ -5070,15 +5071,6 @@ since we are using ~cleveref~:
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-export-latex-hyperref-format "\\ref{%s}")
 #+END_SRC
-
-And Minted should be default break lines if a line is too long:
-#+name: org-export-latex-minted-options
-#+begin_src emacs-lisp :tangle no
-(setq org-latex-minted-options '(("breaklines")
-                                 ("tabsize" "2")
-                                 ("frame" "single")
-                                 ("autogobble")))
-#+end_src
 
 When it comes to the export itself, the latex file needs to be
 processed several times through XeLaTeX in order to get some
