@@ -2261,7 +2261,7 @@ it so you can send an HTML email. BUT, have you considered skipping
 the export part and write your emails directly in org-mode?
 #+begin_src emacs-lisp
 (use-package org-msg
-  :after (org mu4e)
+  :after (mu4e)
   :straight (:build t)
   :hook ((mu4e-compose-pre . org-msg-mode))
   :custom-face
