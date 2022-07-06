@@ -7375,7 +7375,7 @@ Next.JS.
   :defer t
   :straight (:build t)
   :after compile
-  :mode "\\.[mc]?js\\'"
+  :mode "\\.[mc]?jsx?\\'"
   :mode "\\.es6\\'"
   :mode "\\.pac\\'"
   :interpreter "node"
