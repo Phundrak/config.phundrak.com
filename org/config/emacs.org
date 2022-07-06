@@ -7972,10 +7972,12 @@ What’s the point of using Emacs if you can’t tell everyone?
   :straight (:built t)
   :defer t
   :config
-  (setq elcord-use-major-mode-as-main-icon t
-        elcord-refresh-rate                5
-        elcord-boring-buffers-regexp-list  '("\\\\*Messages\\\\*"
-                                             "\\\\*scratch\\\\*")))
+  (csetq elcord-use-major-mode-as-main-icon t
+         elcord-refresh-rate                5
+         elcord-boring-buffers-regexp-list  `("^ "
+                                              ,(rx "*" (+ any) "*")
+                                              ,(rx bol (or "Re: "
+                                                           "Fwd: ")))))
 #+end_src
 
 *** Enime
