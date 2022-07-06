@@ -2698,13 +2698,26 @@ keywords in a buffer. Let’s enable this mode globally.
     "p" #'hl-todo-previous))
 #+end_src
 
-We can now configure properly ~magit-todos~.
+We can now configure properly ~magit-todos~. Notice my custom function
+hooked to ~magit-mode-hook~. This is because this package tries to find
+TODOs in all files in the current project, and my yadm repository’s
+root is my ~$HOME~. So, yeah, no ~magit-todos~ in yadm.
 #+begin_src emacs-lisp
 (use-package magit-todos
   :straight (:build t)
   :after (magit hl-todo)
+  :init
+  (with-eval-after-load 'magit
+   (defun my/magit-todos-if-not-yadm ()
+     "Deactivate magit-todos if in yadm Tramp connection.
+If `magit--default-directory' points to a yadm Tramp directory,
+deactivate `magit-todos-mode', otherwise enable it."
+     (if (string-prefix-p "/yadm:" magit--default-directory)
+         (magit-todos-mode -1)
+       (magit-todos-mode +1)))
+   (add-hook 'magit-mode-hook #'my/magit-todos-if-not-yadm))
   :config
-  (setq magit-todos-ignore-case t))
+  (csetq magit-todos-ignore-case t))
 #+end_src
 
 Finally, it is also possible to use Gitflow’s framework with Magit
@@ -7420,11 +7433,15 @@ receives some commits!
 #+end_src
 
 Which Emacser prefers the command line over Emacs itself? I don’t.
-Let’s interact with NPM through Emacs then.
+Let’s interact with NPM through Emacs then. For the record, I’m using
+my own fork of npm-mode which fixes the issue of the npm buffer being
+unreadable.
 #+begin_src emacs-lisp
 (use-package npm-mode
   :defer t
-  :straight (:build t)
+  :straight (npm-mode :build t
+                      :type git
+                      :fork t)
   :hook (js-mode . npm-mode)
   :hook (web-mode . npm-mode)
   :general
