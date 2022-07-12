@@ -7450,22 +7450,19 @@ receives some commits!
 #+end_src
 
 Which Emacser prefers the command line over Emacs itself? I don’t.
-Let’s interact with NPM through Emacs then. For the record, I’m using
-my own fork of npm-mode which fixes the issue of the npm buffer being
-unreadable.
+Let’s interact with NPM through Emacs then.
 #+begin_src emacs-lisp
-(use-package npm-mode
+(use-package npm-transient
   :defer t
-  :straight (npm-mode :build t
-                      :type git
-                      :fork t)
-  :hook (js-mode . npm-mode)
-  :hook (web-mode . npm-mode)
-  :general
-  (phundrak/major-leader-key
-    :packages '(npm-mode rjsx-mode web-mode)
-    :keymaps '(rjsx-mode-map web-mode-map)
-    "n" '(:keymap npm-mode-command-keymap :which-key "npm")))
+  :straight (npm-transient :build t
+                           :type git
+                           :host github
+                           :repo "Phundrak/npm-transient"))
+  ;; :general
+  ;; (phundrak/major-leader-key
+  ;;   :packages '(npm-transient rjsx-mode web-mode)
+  ;;   :keymaps '(rjsx-mode-map web-mode-map)
+  ;;   "n" #'npm-transient))
 #+end_src
 
 And finally, here is a formatter for Javascript.
