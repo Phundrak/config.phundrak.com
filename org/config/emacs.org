@@ -6369,6 +6369,23 @@ And finally, let’s enable some Eldoc integration for CMake.
     "yt" #'csv-yank-as-new-table))
 #+end_src
 
+**** Dotenv
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-DSLs-Dotenv-b7kb2gr0kij0
+:END:
+It is not rare to encounter a dotenv file, that is, a file with either
+the ~.env~ extension or simply called ~.env~. They contain environment
+variables for projects which might rely on values you do not want to
+upload to a public git repository and such. While their syntax is
+similar to shell files, they’re not exactly shell files either since
+there’s rarely any script inside running. So, let’s install a simple
+package which will dumb down a lot ~sh-mode~ for these dotenv files.
+#+begin_src emacs-lisp
+(use-package dotenv-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
 **** Gnuplot
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Gnuplot8zx5fl6184j0
