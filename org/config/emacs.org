@@ -5859,6 +5859,25 @@ to anything user-defined. Let’s all-the-iconify this!
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-w3q5rsg0k4j0
 :END:
+**** Appwrite
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-Tools-Appwrite-c1e4fh51mij0
+:END:
+[[https://appwrite.io][Appwrite]] is an open-source and self-hostable alternative to Firebase.
+I am currently working on a server SDK for Appwrite in Emacs, so here
+it is.
+#+begin_src emacs-lisp
+(use-package appwrite
+  :defer t
+  :straight (appwrite :build t
+                      :type git
+                      :host github
+                      :repo "Phundrak/appwrite.el")
+  :config
+  (csetq appwrite-endpoint "https://appwrite.phundrak.com"
+         appwrite-devel t))
+#+end_src
+
 **** Copilot
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-Tools-Copilot-ik2ddc804fj0
