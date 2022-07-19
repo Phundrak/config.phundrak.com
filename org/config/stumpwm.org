@@ -153,7 +153,7 @@ pointer as well as get a bunch of stuff started. To see what’s in the
 ~autostart~ script, [[file:bin.org::#Autostart-a99e99e7][see here]].
 #+begin_src lisp
 (run-shell-command "xsetroot -cursor_name left_ptr")
-(run-shell-command "sleep 1 && autorandr -l home && autostart")
+(run-shell-command "sleep 1 && autorandr -l home; autostart")
 #+end_src
 
 Next I need to register the AltGr key so it works correctly when used.
