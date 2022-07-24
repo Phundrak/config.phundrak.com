@@ -7972,14 +7972,24 @@ either in Emacs or in an external web browser. I prefer the defaults.
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-avyral6fl6184j0
 :END:
-~avy~ is a really convenient way of jumping around, but I’ll need some
-configuration to make it bépo-compatible.
+~avy~ is a really convenient way of jumping around and performing
+actions on these selections, but I’ll need some configuration to make
+it bépo-compatible.
 #+begin_src emacs-lisp
 (use-package avy
   :defer t
   :straight t
   :config
-  (setq avy-keys '(?a ?u ?i ?e ?c ?t ?s ?r ?n))
+  (csetq avy-keys           '(?a ?u ?i ?e ?c ?t ?s ?r ?n)
+         avy-dispatch-alist '((?x . avy-action-kill-move)
+                              (?X . avy-action-kill-stay)
+                              (?T . avy-action-teleport)
+                              (?m . avy-action-mark)
+                              (?C . avy-action-copy)
+                              (?y . avy-action-yank)
+                              (?Y . avy-action-yank-line)
+                              (?I . avy-action-ispell)
+                              (?z . avy-action-zap-to-char)))
   (defun my/avy-goto-url ()
     "Jump to url with avy."
     (interactive)
@@ -7991,15 +8001,40 @@ configuration to make it bépo-compatible.
     (browse-url-at-point))
   :general
   (phundrak/evil
-    :packages 'avy
-    "gl" #'avy-goto-line)
+    :pakages 'avy
+    "gc" #'evil-avy-goto-char-timer
+    "gl" #'evil-avy-goto-line)
   (phundrak/leader-key
     :packages 'avy
     :infix "j"
-    "j" #'evil-avy-goto-char-timer
-    "l" #'evil-avy-goto-line
-    "u" #'my/avy-goto-url
-    "U" #'my/avy-open-url))
+    "b" #'avy-pop-mark
+    "c" #'evil-avy-goto-char-timer
+    "l" #'avy-goto-line)
+  (phundrak/leader-key
+    :packages 'avy
+    :infix "A"
+    "c"  '(:ignore t :which-key "copy")
+    "cl" #'avy-copy-line
+    "cr" #'avy-copy-region
+    "k"  '(:ignore t :which-key "kill")
+    "kl" #'avy-kill-whole-line
+    "kL" #'avy-kill-ring-save-whole-line
+    "kr" #'avy-kill-region
+    "kR" #'avy-kill-ring-save-region
+    "m"  '(:ignore t :which-key "move")
+    "ml" #'avy-move-line
+    "mr" #'avy-move-region
+    "mt" #'avy-transpose-lines-in-region
+    "n"  #'avy-next
+    "p"  #'avy-prev
+    "u"  #'my/avy-goto-url
+    "U"  #'my/avy-open-url)
+  (phundrak/major-leader-key
+    :packages '(avy org)
+    :keymaps 'org-mode-map
+    "A" '(:ignore t :which-key "avy")
+    "Ar" #'avy-org-refile-as-child
+    "Ah" #'avy-org-goto-heading-timer))
 #+end_src
 
 *** Calc
@@ -8337,7 +8372,6 @@ My keybinds for jumping around are prefixed by ~j~.
 | Key | Function                | Description |
 |-----+-------------------------+-------------|
 |     |                         | jump        |
-| c   | counsel-dired-jump      |             |
 | f   | counsel-file-jump       |             |
 | d   | dired-jump              |             |
 | D   | dired-jump-other-window |             |
