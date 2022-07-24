@@ -3164,20 +3164,20 @@ me.
     "n" #'evil-next-line
     "p" #'evil-previous-line)
   :config
-  (setq dired-dwim-target           t
-        dired-recursive-copies      'always
-        dired-recursive-deletes     'top
-        dired-listing-switches      "-ahl --group-directories-first"
-        dired-auto-revert-buffer    t
-        image-dired-thumb-size      150
-        image-dired-dir             (expand-file-name (file-name-as-directory "dired-img")
-                                                      user-emacs-directory)
-        image-dired-db-file         (expand-file-name "dired-db.el" user-emacs-directory)
-        image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery")
-                                                      user-emacs-directory)
-        image-dired-temp-image-file (expand-file-name "temp-image" image-dired-dir)
-        image-dired-temp-rotate-image-file (expand-file-name "temp-rotate-image"
-                                                             image-dired-dir)))
+  (csetq dired-dwim-target           t
+         dired-recursive-copies      'always
+         dired-recursive-deletes     'top
+         dired-listing-switches      "-ahl1v --time-style=long-iso --group-directories-first"
+         dired-auto-revert-buffer    t
+         image-dired-thumb-size      150
+         image-dired-dir             (expand-file-name (file-name-as-directory "dired-img")
+                                                       user-emacs-directory)
+         image-dired-db-file         (expand-file-name "dired-db.el" user-emacs-directory)
+         image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery")
+                                                       user-emacs-directory)
+         image-dired-temp-image-file (expand-file-name "temp-image" image-dired-dir)
+         image-dired-temp-rotate-image-file (expand-file-name "temp-rotate-image"
+                                                              image-dired-dir)))
 #+end_src
 
 Dired-x stands for “dired extra” which provides a couple more features
