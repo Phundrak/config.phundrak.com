@@ -7484,7 +7484,8 @@ And finally, here is a formatter for Javascript.
 (use-package prettier-js
   :defer t
   :straight (:build t)
-  :hook ((rjsx-mode web-mode) . prettier-js-mode)
+  :after (rjsx-mode web-mode typescript-mode)
+  :hook ((rjsx-mode web-mode typescript-mode) . prettier-js-mode)
   :config
   (csetq prettier-js-args '("--single-quote" "--jsx-single-quote")))
 #+end_src
