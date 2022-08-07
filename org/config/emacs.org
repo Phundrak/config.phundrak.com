@@ -3149,50 +3149,110 @@ any graphical file manager for me most of the time because:
 - All actions can be done with keybindings
 - I get a consistent behavior between Dired and Emacs, since it’s the
   same thing.
-However, the only thing I lack still is thumbnails. In any case, I
-need still to make some tweaks in order to make it usable for
-me.
+I used to have an extensive configuration for Dired with a couple of
+additional packages to make it more usable. Dirvish rendered that
+obsolete!
 #+begin_src emacs-lisp
-(use-package dired
-  :straight (:type built-in)
+(use-package dirvish
+  :straight (:build t)
   :defer t
-  :hook (dired-mode . turn-on-gnus-dired-mode)
+  :init (dirvish-override-dired-mode)
+  :custom
+  (dirvish-quick-access-entries
+   '(("h" "~/" "Home")
+     ("d" "~/Downloads/" "Downloads")
+     ("c" "~/org/config" "Config")
+     ("C" "~/Documents/conlanging/content" "Conlanging")))
+  (dirvish-mode-line-format
+   '(:left (sort file-time "" file-size symlink) :right (omit yank index)))
+  (dirvish-attributes '(all-the-icons file-size collapse subtree-state vc-state git-msg))
+  :config
+  (dirvish-peek-mode)
+  <<dired-drag-and-drop>>
+  <<dired-listing-flags>>
+  <<dired-files-and-dirs>>
+  <<dirvish-exa-offload>>
+  (csetq dired-dwim-target         t
+         dired-recursive-copies    'always
+         dired-recursive-deletes   'top
+         delete-by-moving-to-trash t)
   :general
   (phundrak/evil
-    :keymaps 'dired-mode-map
-    :packages 'dired
-    "(" #'dired-hide-details-mode
-    "n" #'evil-next-line
-    "p" #'evil-previous-line)
-  :config
-  (csetq dired-dwim-target           t
-         dired-recursive-copies      'always
-         dired-recursive-deletes     'top
-         dired-listing-switches      "-ahl1v --time-style=long-iso --group-directories-first"
-         dired-auto-revert-buffer    t
-         image-dired-thumb-size      150
-         image-dired-dir             (expand-file-name (file-name-as-directory "dired-img")
-                                                       user-emacs-directory)
-         image-dired-db-file         (expand-file-name "dired-db.el" user-emacs-directory)
-         image-dired-gallery-dir     (expand-file-name (file-name-as-directory "gallery")
-                                                       user-emacs-directory)
-         image-dired-temp-image-file (expand-file-name "temp-image" image-dired-dir)
-         image-dired-temp-rotate-image-file (expand-file-name "temp-rotate-image"
-                                                              image-dired-dir)))
+    :keymaps 'dirvish-mode-map
+    :packages '(dired dirvish)
+    "q" #'dirvish-quit
+    "TAB" #'dirvish-subtree-toggle)
+  (phundrak/major-leader-key
+    :keymaps 'dirvish-mode-map
+    :packages '(dired dirvish)
+    "a"   #'dirvish-quick-access
+    "e"   #'dirvish-emerge-menu
+    "f"   #'dirvish-fd-jump
+    "F"   #'dirvish-file-info-menu
+    "h"   '(:ignore t :which-key "history")
+    "hp"  #'dirvish-history-go-backward
+    "hn"  #'dirvish-history-go-forward
+    "hj"  #'dirvish-history-jump
+    "hl"  #'dirvish-history-last
+    "l"   '(:ignore t :which-key "layout")
+    "ls"  #'dirvish-layout-switch
+    "lt"  #'dirvish-layout-toggle
+    "m"   #'dirvish-mark-menu
+    "s"   #'dirvish-quicksort
+    "S"   #'dirvish-setup-menu
+    "y"   #'dirvish-yank-menu
+    "n"   #'dirvish-narrow))
 #+end_src
 
-Dired-x stands for “dired extra” which provides a couple more features
-that are for some reason not included in dired yet.
-#+begin_src emacs-lisp
-(use-package dired-x
-  :straight (:type built-in)
-  :after dired
-  :commands (dired-jump dired-jump-other-window dired-omit-mode)
-  :general
-  (phundrak/evil
-    :keymaps 'dired-mode-map
-    :packages 'dired-x
-    "«" #'dired-omit-mode))
+Since Emacs 29, it is possible to enable drag-and-drop between Emacs
+and other applications.
+#+name: dired-drag-and-drop
+#+begin_src emacs-lisp :tangle no
+(csetq dired-mouse-drag-files                   t
+       mouse-drag-and-drop-region-cross-program t)
+#+end_src
+
+In Dirvish, it’s best to use the long name of flags whenever possible,
+otherwise some commands won’t work.
+#+name: dired-listing-flags
+#+begin_src emacs-lisp :tangle no
+(csetq dired-listing-switches (string-join '("--all"
+                                             "--human-readable"
+                                             "--time-style=long-iso"
+                                             "--group-directories-first"
+                                             "-lv1")
+                                           " "))
+#+end_src
+
+However, it is possible to instead use ~exa~ when it is available.
+Instead of making Emacs’ main thread to the file listing in a
+directory, we offload it to an external thread.
+#+name: dirvish-exa-offload
+#+begin_src emacs-lisp :tangle no
+(dirvish-define-preview exa (file)
+  "Use `exa' to generate directory preview."
+  :require ("exa")
+  (when (file-directory-p file)
+    `(shell . ("exa" "--color=always" "-al" ,file))))
+
+(add-to-list 'dirvish-preview-dispatchers 'exa)
+#+end_src
+
+Finally, some directories need to be set for Dired to store various
+files and images.
+#+name: dired-files-and-dirs
+#+begin_src emacs-lisp :tangle no
+(let ((my/file (lambda (path &optional dir)
+                 (expand-file-name path (or dir user-emacs-directory))))
+      (my/dir (lambda (path &optional dir)
+                (expand-file-name (file-name-as-directory path)
+                                  (or dir user-emacs-directory)))))
+  (csetq image-dired-thumb-size             150
+         image-dired-dir                    (funcall my/dir "dired-img")
+         image-dired-db-file                (funcall my/file "dired-db.el")
+         image-dired-gallery-dir            (funcall my/dir "gallery")
+         image-dired-temp-image-file        (funcall my/file "temp-image" image-dired-dir)
+         image-dired-temp-rotate-image-file (funcall my/file "temp-rotate-image" image-dired-dir)))
 #+end_src
 
 Copying files with Dired is a blocking process. It’s usually fine when
@@ -3210,84 +3270,6 @@ happening.
     :keymaps 'dired-mode-map
     :packages 'dired-rsync
     "C-r" #'dired-rsync))
-#+end_src
-
-~dired-du~ provides the user with the option to be able to see the size
-of directories as they are, rather than just the size of their
-inode. However, I will not enable it by default as it can take some
-time to get the actual size of a directory.
-#+begin_src emacs-lisp
-(use-package dired-du
-  :after dired
-  :straight (:build t)
-  :general
-  (phundrak/evil
-   :keymaps 'dired-mode-map
-   :packages 'dired-du
-   "»" #'dired-du-mode))
-#+end_src
-
-This package on the other hand provides Git information to the user in
-the current dired buffer in a similar way to how Github and Gitea
-display the latest commit message and its age about a file in the file
-tree. And by default, I want ~dired-git-info~ to hide file details.
-#+begin_src emacs-lisp
-(use-package dired-git-info
-  :after (dired)
-  :straight (:build t)
-  :hook (dired-after-reading . dired-git-info-auto-enable)
-  :general
-  (phundrak/evil
-    :keymaps 'dired-mode-map
-    :packages 'dired-git-info
-    ")" #'dired-git-info-mode)
-  :config
-  (setq dgi-auto-hide-details-p t))
-#+end_src
-
-Diredfl makes dired colorful, and much more readable in my opinion.
-#+begin_src emacs-lisp
-(use-package diredfl
-  :after (dired all-the-icons)
-  :straight (:build t)
-  :init
-  (diredfl-global-mode 1))
-#+end_src
-
-Dired can benefit from ~fd~, a fast reimplementation of ~find~, to
-increase the speed of ~find-dired~.
-#+begin_src emacs-lisp
-(use-package fd-dired
-  :if (executable-find "fd")
-  :defer t
-  :straight (:build t)
-  :init
-  (global-set-key [remap find-dired] #'fd-dired))
-#+end_src
-
-And let’s add some fancy icons in dired!
-#+begin_src emacs-lisp
-(use-package all-the-icons-dired
-  :after (all-the-icons)
-  :straight (:build t)
-  :defer t
-  :hook (dired-mode . all-the-icons-dired-mode)
-  :config
-  (defun my/all-the-icons-dired--refresh (orig-fun &rest args)
-    (unless (or (not (file-remote-p default-directory))
-                (<= (count-lines (point-min) (point-max)) 512))
-      (apply orig-fun args)))
-  (advice-add #'all-the-icons-dired--refresh
-              :around
-              #'my/all-the-icons-dired--refresh))
-#+end_src
-
-Lastly, let’s install some extensions to ~image-dired~.
-#+begin_src emacs-lisp
-(use-package image-dired+
-  :after (image-dired)
-  :straight (:build t)
-  :init (image-diredx-adjust-mode 1))
 #+end_src
 
 *** Compilation mode
@@ -3624,13 +3606,15 @@ various hosts using various protocols, such as ~ssh~ and
 ~rsync~. However, I have some use-case for Tramp which are not
 supported natively. I will describe them here.
 #+begin_src emacs-lisp
-(require 'tramp)
 (use-package tramp
   :straight (tramp :type built-in :build t)
   :init
   <<tramp-add-yadm>>
   :config
-  (setq tramp-ssh-controlmaster-options "")
+  (csetq tramp-ssh-controlmaster-options nil
+         tramp-verbose 0
+         tramp-auto-save-directory (locate-user-emacs-file "tramp/")
+         tramp-chunksize 2000)
   (add-to-list 'backup-directory-alist ; deactivate auto-save with TRAMP
                (cons tramp-file-name-regexp nil)))
 #+end_src
@@ -8374,7 +8358,7 @@ My keybinds for jumping around are prefixed by ~j~.
 |-----+-------------------------+-------------|
 |     |                         | jump        |
 | f   | counsel-file-jump       |             |
-| d   | dired-jump              |             |
+| d   | dirvish-dwim            |             |
 | D   | dired-jump-other-window |             |
 
 ** Project
