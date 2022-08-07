@@ -4533,6 +4533,14 @@ The corresponding code is as follows:
  <<org-babel-languages-gen()>>)
 #+END_SRC
 
+Some languages can run asynchronously with the help of ~ob-async~.
+#+begin_src emacs-lisp
+(use-package ob-async
+  :straight (:build t)
+  :defer t
+  :after (org ob))
+#+end_src
+
 A package I use from time to time is ~ob-latex-as-png~ which allows me
 to easily convert a LaTeX snippet into a PNG, regardless of the
 exporter I use afterwards. Its installation is pretty simple:
