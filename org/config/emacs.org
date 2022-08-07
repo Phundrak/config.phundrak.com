@@ -5734,25 +5734,16 @@ just the generated image!
   :hook (org-mode . org-fragtog-mode))
 #+end_src
 
-Tired of seeing lots of actual stars ~*~ in your headers, and you want a
-fancier remplacement? Or you are still using ~org-bullets~ but just
-found out how out-of-date and abandoned it is? (Last commit was on
-September 18th, 2014… damn…) Search no more, ~org-superstar~ will take
-care of that for you!
+Org-modern modernizes a bit the appearance of org buffers, including
+tables, source blocks, and tags,, and it applies settings similar to
+~org-superstar~ which I used to use.
 #+begin_src emacs-lisp
-(use-package org-superstar
-  :after org
+(use-package org-modern
   :straight (:build t)
-  :hook (org-mode . org-superstar-mode)
-  :config
-  (setq org-superstar-leading-bullet   ?\s
-        org-superstar-leading-fallback ?\s
-        org-hide-leading-stars         nil
-        org-superstar-todo-bullet-alist
-        '(("TODO" . 9744)
-          ("[ ]"  . 9744)
-          ("DONE" . 9745)
-          ("[X]"  . 9745))))
+  :after org
+  :defer t
+  :hook (org-mode . org-modern-mode)
+  :hook (org-agenda-finalize . org-modern-agenda))
 #+end_src
 
 ~org-fancy-priorities~ change the priority of an org element such as ~#A~
