@@ -2776,6 +2776,7 @@ project manager in Emacs. I know there’s ~project.el~, but,… Eh…
   :config
   (projectile-mode)
   (add-to-list 'projectile-ignored-projects "~/")
+  (add-to-list 'projectile-globally-ignored-directories "^node_modules$")
   :general
   (phundrak/leader-key
     "p" '(:keymap projectile-command-map :which-key "projectile")))
