@@ -3702,22 +3702,22 @@ easily.
 
 In order to launch Emacs with EXWM with ~startx~, I need a ~xinit~ file.
 This one is exported to ~$HOME/.xinitrc.emacs~.
-#+begin_src sh :tangle ~/.xinitrc.emacs
-#!/bin/sh
-
+#+begin_src sh :tangle ~/.xinitrc.emacs :shebang "#!/bin/sh"
 xhost +SI:localuser:$USER
 
 # Set fallback cursor
 xsetroot -cursor_name left_ptr
 
-# If Emacs is started in server mode, `emacsclient` is a convenient way to edit
-# files in place (used by e.g. `git commit`)
+# If Emacs is started in server mode, `emacsclient` is a convenient
+# way to edit files in place (used by e.g. `git commit`)
 export VISUAL=emacsclient
 export EDITOR="$VISUAL"
 
 # in case Java applications display /nothing/
 # wmname LG3D
 # export _JAVA_AWT_WM_NONREPARENTING=1
+
+autorandr -l home
 
 exec emacs --with-exwm
 #+end_src

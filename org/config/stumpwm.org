@@ -90,9 +90,7 @@ follows this architecture:
 You will also find below my ~xinit~ file for StumpWM, exported to
 ~$HOME/.xinitrc.stumpwm~, which I use to start Stump through ~startx
 ~/.xinitrc.stumpwm~.
-#+begin_src sh :tangle ~/.xinitrc.stumpwm
-#!/bin/sh
-
+#+begin_src sh :tangle ~/.xinitrc.stumpwm :shebang "#!/bin/sh"
 # this makes it work in Ubuntu
 xhost +SI:localuser:$USER
 
@@ -105,6 +103,8 @@ export GDK_CORE_DEVICE_EVENTS=1
 # in case Java applications display /nothing/
 # wmname LG3D
 # export _JAVA_AWT_WM_NONREPARENTING=1
+
+autorandr -l home
 
 exec stumpwm
 #+end_src
@@ -152,8 +152,7 @@ The first thing I want to do after that is to set some decent cursor
 pointer as well as get a bunch of stuff started. To see what’s in the
 ~autostart~ script, [[file:bin.org::#Autostart-a99e99e7][see here]].
 #+begin_src lisp
-(run-shell-command "xsetroot -cursor_name left_ptr")
-(run-shell-command "sleep 1 && autorandr -l home; autostart")
+(run-shell-command "autostart")
 #+end_src
 
 Next I need to register the AltGr key so it works correctly when used.
