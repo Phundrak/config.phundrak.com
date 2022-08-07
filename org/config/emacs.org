@@ -359,7 +359,7 @@ With Emacs 29.0.50 onwards, a new frame parameter exists:
 ~alpha-background~. Unlike ~alpha~, this frame parameter only makes Emacs’
 background transparent, excluding images and text.
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(alpha-background . 0.7))
+(add-to-list 'default-frame-alist '(alpha-background . 0.9))
 #+end_src
 
 *** Modeline Modules
