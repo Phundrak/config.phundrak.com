@@ -6283,6 +6283,17 @@ DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
 such as SQL.
 
+**** Makefiles
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-DSLs-Makefiles-2855jdn06jj0
+:END:
+#+begin_src emacs-lisp
+(defun my/local-tab-indent ()
+  (setq-local indent-tabs-mode 1))
+
+(add-hook 'makefile-mode-hook #'my/local-tab-indent)
+#+end_src
+
 **** Caddy
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Caddy0fw5fl6184j0
