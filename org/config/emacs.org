@@ -6940,6 +6940,16 @@ If I need to run CI on a package, [[https://github.com/cask/cask][Cask]] manages
   :straight (:build t))
 #+end_src
 
+However, I recently began using [[https://github.com/emacs-eask/eask][Eask]] more and more, I find it nicer to
+work with and it has a lot more features than Cask.
+#+begin_src emacs-lisp
+(use-package eask-mode
+  :defer t
+  :straight (eask-mode :type git
+                       :host github
+                       :repo "emacs-eask/eask-mode"))
+#+end_src
+
 **** Python
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Python-7mwd2yq0z6j0
