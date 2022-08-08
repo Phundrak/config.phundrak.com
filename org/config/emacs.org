@@ -6565,6 +6565,19 @@ org-mode and then export it with ~ox-gfm~.
   :after (org ox))
 #+end_src
 
+Nuxt has its own flavour of Markdown, called [[https://content.nuxtjs.org/guide/writing/mdc/][MDC]] (/MarkDown Components/)
+which is a godsend to write content for Nuxt websites! However, no
+~mdc-mode~ existed when I began working with it, so I’m working on one.
+#+begin_src emacs-lisp
+(use-package mdc-mode
+  :defer t
+  :after markdown-mode
+  :straight (mdc-mode :type git
+                      :host github
+                      :repo "Phundrak/mdc-mode"
+                      :build t))
+#+end_src
+
 Tables of content are always nice to have for large files, just like
 with the ~toc-org~ package for org-mode.
 #+begin_src emacs-lisp
