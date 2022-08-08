@@ -457,8 +457,6 @@ Here are some modules that we will load for the modeline:
 | cpu              | Get the CPU usage                                |
 | mpd              | Display MPD’s status                             |
 | mem              | Get the memory usage                             |
-| net              | Display network usage                            |
-| wifi             | Display information about Wifi connectivity      |
 
 #+name: gen-load-modeline-modules
 #+header: :wrap src lisp
@@ -469,14 +467,12 @@ Here are some modules that we will load for the modeline:
            "\n")
 #+end_src
 
-#+RESULTS[5d4a6c25675e69770eec211c3e07048b62864363]: gen-load-modeline-modules
+#+RESULTS[20a1d5d9c6e0136d6a130b1c1b4bd4d742aead8a]: gen-load-modeline-modules
 #+begin_src lisp
 (load-module "battery-portable")
 (load-module "cpu")
 (load-module "mpd")
 (load-module "mem")
-(load-module "net")
-(load-module "wifi")
 #+end_src
 
 We need to set some variables so modules can be displayed correctly.
@@ -486,8 +482,6 @@ formatter is U+E082, which symbolizes the CPU.
 (setf cpu::*cpu-modeline-fmt*        "%c"
       cpu::*cpu-usage-modeline-fmt*  "^f2^f0^[~A~2D%^]"
       mem::*mem-modeline-fmt*        "%a%p"
-      wifi:*wifi-modeline-fmt*       "%e %P"
-      wifi:*use-colors*              nil
       mpd:*mpd-modeline-fmt*         "%a - %t"
       mpd:*mpd-status-fmt*           "%a - %t"
       ,*hidden-window-color*          "^**"
@@ -509,8 +503,6 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 | ~^>~        | Rest of the modeline align to the right               |          |
 | ~mu-unread~ | Display number of unread emails                       | yes      |
 | ~%m~        | Display current MPD song                              |          |
-| ~%I~        | Display Wifi status                                   |          |
-| ~%l~        | Display network usage                                 |          |
 | ~%C~        | Display CPU usage                                     |          |
 | ~%M~        | Display RAM usage                                     |          |
 | ~%B~        | Display battery status                                |          |
@@ -527,8 +519,8 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
         elements)
 #+end_src
 
-#+RESULTS[7f62146daae5aab6014d303b57c306fe44c4087b]: modeline-format-gen
-: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%I") ("%l") ("%C") ("%M") ("%B") ("%d"))
+#+RESULTS[89f2af6e60ba033da3f22eb62c229293103fe266]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
 (defvar *mode-line-formatter-list*
