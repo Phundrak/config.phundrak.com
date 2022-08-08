@@ -6555,6 +6555,9 @@ able to render Markdown through its API.
     "cr" #'gh-md-render-buffer))
 #+end_src
 
+Sometimes, I have to work with Github’s markdown flavour, but I’m not
+really a huge fan of writing it by hand. So instead, I’ll write it in
+org-mode and then export it with ~ox-gfm~.
 #+begin_src emacs-lisp
 (use-package ox-gfm
   :straight (:build t)
