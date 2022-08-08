@@ -6260,21 +6260,6 @@ And let’s enable some intergration with ~ivy~.
          :cwd nil)))
 #+end_src
 
-**** ltex-lsp
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Programming-Tools-ltex-lsp-7jd3l8k0chj0
-:END:
-#+begin_src emacs-lisp
-(use-package lsp-ltex
-  :defer t
-  :straight (:build t)
-  :after (lsp-mode org)
-  :config
-  (setq lsp-ltex-mother-tongue "fr-FR"
-        lsp-ltex-server-store-path (executable-find "ltex-ls")
-        lsp-ltex-version "15.2.0"))
-#+end_src
-
 *** DSLs
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLsbwu5fl6184j0
