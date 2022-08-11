@@ -807,7 +807,6 @@ by ~C-SPC~ and ~M-m~ respectively when in ~insert-mode~ or ~emacs-mode~). You
 can still feel some influence from my Spacemacs years here.
 #+begin_src emacs-lisp
 (use-package general
-  :defer t
   :straight (:build t)
   :init
   (general-auto-unbind-keys)
