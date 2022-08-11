@@ -1772,7 +1772,7 @@ then attempt to connect to it.
            (choice  (cdr (stumpwm:select-from-menu
                           (stumpwm:current-screen)
                           (mapcar (lambda (device)
-                                    `(,(bluetooth-device-full-name device) . ,device))
+                                    `(,(bluetooth-device-full-name device) ,device))
                                   devices)))))
       (bluetooth-connect-device choice)))))
 #+end_src
