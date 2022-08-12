@@ -1769,11 +1769,11 @@ then attempt to connect to it.
   (sb-thread:make-thread
    (lambda ()
     (let* ((devices (bluetooth-get-devices))
-           (choice  (cdr (stumpwm:select-from-menu
-                          (stumpwm:current-screen)
-                          (mapcar (lambda (device)
-                                    `(,(bluetooth-device-full-name device) ,device))
-                                  devices)))))
+           (choice  (cadr (stumpwm:select-from-menu
+                           (stumpwm:current-screen)
+                           (mapcar (lambda (device)
+                                     `(,(bluetooth-device-full-name device) ,device))
+                                   devices)))))
       (bluetooth-connect-device choice)))))
 #+end_src
 
