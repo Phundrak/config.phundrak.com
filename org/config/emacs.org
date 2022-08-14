@@ -3190,6 +3190,7 @@ obsolete!
     :keymaps 'dirvish-mode-map
     :packages '(dired dirvish)
     "a"   #'dirvish-quick-access
+    "d"   #'dirvish-dispatch
     "e"   #'dirvish-emerge-menu
     "f"   #'dirvish-fd-jump
     "F"   #'dirvish-file-info-menu
@@ -3206,6 +3207,12 @@ obsolete!
     "S"   #'dirvish-setup-menu
     "y"   #'dirvish-yank-menu
     "n"   #'dirvish-narrow))
+#+end_src
+
+It requires some programs which can be installed like so:
+#+begin_src sh :dir /sudo::~/ :exports code :tangle no :results verbatim
+pacman -S --needed --noprogressbar --noconfirm --color=never \
+       fd poppler ffmpegthumbnailer mediainfo imagemagick tar unzip
 #+end_src
 
 Since Emacs 29, it is possible to enable drag-and-drop between Emacs
