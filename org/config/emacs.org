@@ -486,9 +486,14 @@ The return value of `csetq' is the value of the last VAL.
   ;; Check if we have an even number of arguments
   (when (= (mod (length forms) 2) 1)
     (signal 'wrong-number-of-arguments (list 'csetq (1+ (length forms)))))
-    ;; Transform FORMS into a list of pairs (FORM . VALUE)
-  `(progn ,@(cl-loop for (form value) on forms by 'cddr
-                     collect `(customize-set-variable ',form ,value))))
+  ;; Transform FORMS into a list of pairs (FORM . VALUE)
+  (let (sexps)
+    (while forms
+      (let ((form  (pop forms))
+            (value (pop forms)))
+        (push `(customize-set-variable ',form ,value)
+              sexps)))
+    `(progn ,@(nreverse sexps))))
 #+end_src
 
 I first got inspired by [[https://oremacs.com/2015/01/17/setting-up-ediff/][this blog article]] (archived article, just in
