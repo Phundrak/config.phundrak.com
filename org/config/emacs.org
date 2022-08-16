@@ -7324,6 +7324,7 @@ languages in the same buffer, mainly HTML, CSS, and Javascript.
   :straight (:build t)
   :hook html-mode
   :hook (web-mode . prettier-js-mode)
+  :hook (web-mode . lsp-deferred)
   :mode (("\\.phtml\\'"      . web-mode)
          ("\\.tpl\\.php\\'"  . web-mode)
          ("\\.twig\\'"       . web-mode)
