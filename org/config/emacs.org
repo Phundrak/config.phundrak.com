@@ -7321,11 +7321,8 @@ languages in the same buffer, mainly HTML, CSS, and Javascript.
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
-  :after (prettier-js)
   :straight (:build t)
-  :hook ((html-mode . web-mode)
-         (web-mode . lsp-deferred)
-         (web-mode . prettier-js-mode))
+  :hook ((html-mode . web-mode))
   :mode (("\\.phtml\\'"      . web-mode)
          ("\\.tpl\\.php\\'"  . web-mode)
          ("\\.twig\\'"       . web-mode)
@@ -7509,8 +7506,8 @@ And finally, here is a formatter for Javascript.
 (use-package prettier-js
   :defer t
   :straight (:build t)
-  :after (rjsx-mode typescript-mode)
-  :hook ((rjsx-mode typescript-mode) . prettier-js-mode)
+  :after (rjsx-mode web-mode typescript-mode)
+  :hook ((rjsx-mode web-mode typescript-mode) . prettier-js-mode)
   :config
   (csetq prettier-js-args '("--single-quote" "--jsx-single-quote")))
 #+end_src
