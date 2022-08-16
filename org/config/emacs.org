@@ -7322,7 +7322,8 @@ languages in the same buffer, mainly HTML, CSS, and Javascript.
 (use-package web-mode
   :defer t
   :straight (:build t)
-  :hook ((html-mode . web-mode))
+  :hook html-mode
+  :hook (web-mode . prettier-js-mode)
   :mode (("\\.phtml\\'"      . web-mode)
          ("\\.tpl\\.php\\'"  . web-mode)
          ("\\.twig\\'"       . web-mode)
@@ -7507,7 +7508,7 @@ And finally, here is a formatter for Javascript.
   :defer t
   :straight (:build t)
   :after (rjsx-mode web-mode typescript-mode)
-  :hook ((rjsx-mode web-mode typescript-mode) . prettier-js-mode)
+  :hook ((rjsx-mode typescript-mode) . prettier-js-mode)
   :config
   (csetq prettier-js-args '("--single-quote" "--jsx-single-quote")))
 #+end_src
