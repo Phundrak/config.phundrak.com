@@ -1379,7 +1379,6 @@ ones I find most useful are ~counsel-M-x~ and ~counsel-find-file~.
 (use-package counsel
   :straight (:build t)
   :after recentf
-  :defer t
   :after ivy
   :bind (("M-x"     . counsel-M-x)
          ("C-x b"   . counsel-ibuffer)
