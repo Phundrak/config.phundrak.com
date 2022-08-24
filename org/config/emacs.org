@@ -4608,14 +4608,7 @@ meaningful IDs for its headings. I actually wrote a package for this!
                            :repo "Phundrak/org-unique-id")
   :defer t
   :after org
-  :init
-  (add-hook 'org-mode-hook
-     (lambda ()
-       (add-hook 'before-save-hook
-                 (lambda ()
-                   (when (and (eq major-mode       'org-mode)
-                              (eq buffer-read-only nil))
-                     (org-unique-id)))))))
+  :init (add-hook 'before-save-hook #'org-unique-id-maybe))
 #+end_src
 
 *** Capture
