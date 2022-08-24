@@ -5873,47 +5873,6 @@ it is.
          appwrite-devel t))
 #+end_src
 
-**** Copilot
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Programming-Tools-Copilot-ik2ddc804fj0
-:END:
-#+begin_src emacs-lisp
-(use-package copilot
-  :defer t
-  :straight (copilot :type git
-                     :host github
-                     :repo "zerolfx/copilot.el"
-                     :files ("dist" "copilot.el")
-                     :build t)
-  :config
-  (csetq copilot-enable-predicates '(evil-insert-state-p)
-         copilot-node-executable
-         (expand-file-name ".local/share/nvm/versions/node/v17.9.1/bin/node"
-                           (getenv "HOME")))
-
-  (defun my/copilot-tab ()
-    (interactive)
-    (or (copilot-accept-completion)
-        (company-indent-or-complete-common nil)))
-
-  (with-eval-after-load 'company
-    (delq 'company-preview-if-just-one-frontend company-frontends)
-    (phundrak/evil
-      :packages '(copilot company)
-      :keymaps '(company-mode-map company-active-map)
-      "TAB" #'my/copilot-tab))
-  :general
-  (phundrak/major-leader-key
-    :packages 'copilot
-    "C"     '(:ignore t :wk "Copilot")
-    "Cc" #'copilot-accept-completion
-    "CC" #'copilot-complete
-    "Cm"   #'copilot-mode
-    "Cd"   #'copilot-diagnose
-    "Cn"   #'copilot-next-completion
-    "Cp"   #'copilot-previous-completion))
-#+end_src
-
 **** Databases
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-Tools-Databases-73nhsqt09ij0
