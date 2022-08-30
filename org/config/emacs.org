@@ -4493,7 +4493,7 @@ the usage of the ~:ignore:~ tag in org.
 :END:
 #+name: org-agenda-files
 #+begin_src emacs-lisp
-(setq-default org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
+(setq org-agenda-files (list "~/org/agenda" "~/org/notes.org" "~/org/internship.org"))
 #+end_src
 
 *** Babel
@@ -7685,6 +7685,7 @@ Make sure to backup your old configuration!
                                 (straight-rebuild-all)))))))
 
   (setq dashboard-items '((recents  . 15)
+                          (agenda   . 10)
                           (projects . 10)))
   (dashboard-setup-startup-hook)
   :init
