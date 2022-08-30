@@ -5147,6 +5147,7 @@ prefixed with a comma ~,~ in normal mode.
 | -         | org-ctrl-c-minus          |             |
 | a         | org-agenda                |             |
 | c         | org-capture               |             |
+| C         | org-columns               |             |
 | e         | org-export-dispatch       |             |
 | l         | org-store-link            |             |
 | p         | org-priority              |             |
