@@ -1,0 +1,10 @@
+[Unit]
+Description=MPRIS implementation for MPD
+Requires=mpd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mpd-mpris
+
+[Install]
+WantedBy=default.target
