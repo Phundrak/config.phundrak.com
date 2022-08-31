@@ -33,7 +33,6 @@ of said command running.
 | ~xrdb~                 | ~-merge "$XDG_CONFIG_HOME"/X11/Xresources~ | no        |
 | ~picom~                | ~--experimental-backends~                  | yes       |
 | ~numlockx~             | ~on~                                       | yes       |
-| ~pumopm~               |                                          | yes       |
 | ~xfce-polkit~          |                                          | yes       |
 | ~nm-applet~            |                                          | yes       |
 | ~xwallpaper~           | ~--zoom "$(cat "$HOME"/.cache/wallpaper)"~ | no        |
@@ -71,7 +70,7 @@ of said command running.
            "\n")
 #+END_SRC
 
-#+RESULTS[aa17455bbc7ba3f6fcf543c0ebf6eb85342bb77d]: autostart-gen
+#+RESULTS[aa4d3befb57ec44dc2a4d8dcd84fad5780c61186]: autostart-gen
 #+begin_src bash :exports code
 which pactl && pactl load-module module-switch-on-connect &
 which mpc && mpc stop &
@@ -86,12 +85,6 @@ which numlockx && if pgrep -x numlockx ; then
     echo numlockx already running
 else
     numlockx on &
-    disown
-fi
-which pumopm && if pgrep -x pumopm ; then
-    echo pumopm already running
-else
-    pumopm &
     disown
 fi
 which xfce-polkit && if pgrep -x xfce-polkit ; then
