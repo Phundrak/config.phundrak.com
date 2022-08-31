@@ -1416,10 +1416,10 @@ with Emacs’ buffers.
 :PROPERTIES:
 :CUSTOM_ID: Keybinds-Media-and-Media-Control-hbv5uk91z5j0
 :END:
-My music is managed through MPD, and I often use ~mpc~ commands in order
-to interact with it without any GUI application. So, we’ll see a lot
-of its usage here, and numerous commands used here come from the ~mpd~
-minor mode loaded [[#Init-file-l3q4snd1u5j0][above]].
+My music is managed through MPD, and I often use ~playerctl~ commands in
+order to interact with it without any GUI application. So, we’ll see a
+lot of its usage here, and numerous commands used here come from the
+~mpd~ minor mode loaded [[#Init-file-l3q4snd1u5j0][above]].
 
 First, let’s declare an interactive keymap in order to easily change
 several times in a row either the current song playing or the volume
@@ -1488,14 +1488,14 @@ Then, let’s declare a keymap for our media controls.
 | Keychord | Function                          |
 |----------+-----------------------------------|
 | ~.~        | ~media-interactive~                 |
-| ~«~        | ~mpd-prev~                          |
-| ~»~        | ~mpd-next~                          |
+| ~«~        | ~exec playerctl previous~           |
+| ~»~        | ~exec playerctl next~               |
 | ~a~        | ~'*my-mpd-add-map*~                 |
 | ~b~        | ~'*my-mpd-browse-map*~              |
 | ~c~        | ~mpd-clear~                         |
 | ~m~        | ~mpc-interactive~                   |
-| ~p~        | ~mpd-toggle-pause~                  |
-| ~s~        | ~mpd-stop~                          |
+| ~p~        | ~exec playerctl play-pause~         |
+| ~s~        | ~exec playerctl stop~               |
 | ~u~        | ~mpd-update~                        |
 | ~n~        | ~exec kitty ncmpcpp -q~             |
 | ~v~        | ~exec kitty ncmpcpp -qs visualizer~ |
@@ -1527,11 +1527,11 @@ media-related, but I’ll add keybinds for my screen’s backlight.
 #+caption: Top-level media keys
 | Keychord              | Function                          |
 |-----------------------+-----------------------------------|
-| ~XF86AudioPlay~         | ~mpd-toggle-pause~                  |
-| ~XF86AudioPause~        | ~exec mpc pause~                    |
-| ~XF86AudioStop~         | ~mpd-stop~                          |
-| ~XF86AudioPrev~         | ~mpd-prev~                          |
-| ~XF86AudioNext~         | ~mpd-next~                          |
+| ~XF86AudioPlay~         | ~exec playerctl play-pause~         |
+| ~XF86AudioPause~        | ~exec playerctl pause~              |
+| ~XF86AudioStop~         | ~exec playerctl stop~               |
+| ~XF86AudioPrev~         | ~exec playerctl previous~           |
+| ~XF86AudioNext~         | ~exec playerctl next~               |
 | ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~                 |
 | ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~                 |
 | ~XF86AudioMute~         | ~exec pamixer -t~                   |
