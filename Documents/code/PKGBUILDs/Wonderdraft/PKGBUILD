@@ -1,6 +1,6 @@
 # Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
 pkgname=Wonderdraft
-pkgver=1.1.6.1
+pkgver=1.1.7.3
 pkgrel=1
 epoch=
 pkgdesc=""
@@ -19,7 +19,7 @@ options=(!strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 install=
 changelog=
 source=($pkgname-$pkgver-Linux64.zip)
-sha512sums=('27b0a56c95efe99c2b3cadb10c4e70186591bef0793d58b1acff99f8dfc789806ae7821adcdfc10af1c46e4801a8fe753380913ea4aeb4fb8030fe7cf80ea090')
+sha512sums=('4eaff01dad549223265cca10c3f9bf9cdbee4542b6a4afbf513fd655a47238e2d757c36d8ed7ffe16a19879f6d41739ee1e722ebc120507cde3b39250ae22c9c')
 noextract=()
 
 package() {
