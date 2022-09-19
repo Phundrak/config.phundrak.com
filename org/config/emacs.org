@@ -4453,7 +4453,7 @@ the usage of the ~:ignore:~ tag in org.
 :END:
 #+name: org-agenda-files
 #+begin_src emacs-lisp
-(setq org-agenda-files (list "~/org/agenda" "~/org/notes.org" "~/org/internship.org"))
+(setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
 *** Babel
