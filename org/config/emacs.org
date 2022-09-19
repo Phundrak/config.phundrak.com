@@ -7848,12 +7848,14 @@ slightly darker background? I’m not sure.)
 :CUSTOM_ID: Packages-Configuration-Visual-Configuration-Themeded6fl6184j0
 :END:
 You may have noticed I use the Nord theme pretty much everywhere on my
-computer, why not Emacs?
+computer, why not Emacs? In my opinion, its aurora variant is nicer
+than the default Nord theme since it is richer in colors --- just a
+personal preference.
 #+begin_src emacs-lisp
 (use-package doom-themes
   :straight (:build t)
   :defer t
-  :init (load-theme 'doom-nord t))
+  :init (load-theme 'doom-nord-aurora t))
 #+end_src
 
 *** Rainbow Delimiters
