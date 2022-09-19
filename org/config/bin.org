@@ -31,7 +31,7 @@ of said command running.
 | ~pactl~                | ~load-module module-switch-on-connect~     |           |
 | ~mpc~                  | ~stop~                                     | no        |
 | ~xrdb~                 | ~-merge "$XDG_CONFIG_HOME"/X11/Xresources~ | no        |
-| ~picom~                | ~--experimental-backends~                  | yes       |
+| ~picom~                |                                          | yes       |
 | ~numlockx~             | ~on~                                       | yes       |
 | ~xfce-polkit~          |                                          | yes       |
 | ~nm-applet~            |                                          | yes       |
@@ -70,7 +70,7 @@ of said command running.
            "\n")
 #+END_SRC
 
-#+RESULTS[aa4d3befb57ec44dc2a4d8dcd84fad5780c61186]: autostart-gen
+#+RESULTS[8c42a43989020c61050b2930ae60c81248c2dd44]: autostart-gen
 #+begin_src bash :exports code
 which pactl && pactl load-module module-switch-on-connect &
 which mpc && mpc stop &
@@ -78,7 +78,7 @@ which xrdb && xrdb -merge "$XDG_CONFIG_HOME"/X11/Xresources &
 which picom && if pgrep -x picom ; then
     echo picom already running
 else
-    picom --experimental-backends &
+    picom &
     disown
 fi
 which numlockx && if pgrep -x numlockx ; then
