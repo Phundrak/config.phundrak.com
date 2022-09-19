@@ -2987,31 +2987,34 @@ enough for me.
 :END:
 Iedit is a powerful text editing tool that can be used to refactor
 code through the edition of multiple regions at once, be it in a
-region or in a whole buffer.
-#+begin_src emacs-lisp
-(use-package iedit
-  :defer t
-  :straight (:build t)
-  :general
-  (phundrak/leader-key
-    :infix "r"
-    :packages 'iedit
-    "" '(:ignore t :which-key "refactor")
-    "i" #'iedit-mode))
-#+end_src
-
-Since I’m using evil, I’ll also use a compatibility package that adds
-states for iedit.
+region or in a whole buffer. Since I’m using evil, I’ll also use a
+compatibility package that adds states for iedit.
 #+begin_src emacs-lisp
 (use-package evil-iedit-state
-  :after iedit
   :defer t
   :straight (:build t)
   :commands (evil-iedit-state evil-iedit-state/iedit-mode)
   :init
   (setq iedit-curent-symbol-default     t
         iedit-only-at-symbol-boundaries t
-        iedit-toggle-key-default        nil))
+        iedit-toggle-key-default        nil)
+  :general
+  (phundrak/leader-key
+    :infix "r"
+    :packages '(iedit evil-iedit-state)
+    "" '(:ignore t :which-key "refactor")
+    "i" #'evil-iedit-state/iedit-mode)
+  (general-define-key
+   :keymaps 'evil-iedit-state-map
+   "c" nil
+   "s" nil
+   "J" nil
+   "S" #'iedit-expand-down-a-line
+   "T" #'iedit-expand-up-a-line
+   "h" #'evil-iedit-state/evil-change
+   "k" #'evil-iedit-state/evil-substitute
+   "K" #'evil-iedit-state/substitute
+   "q" #'evil-iedit-state/quit-iedit-mode))
 #+end_src
 
 *** Parinfer
