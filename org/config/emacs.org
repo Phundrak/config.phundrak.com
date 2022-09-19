@@ -352,7 +352,8 @@ It is nicer to see a cursor cover the actual space of a character.
 When text is ellipsed, I want the ellipsis marker to be a single
 character of three dots. Let’s make it so:
 #+begin_src emacs-lisp
-(setq truncate-string-ellipsis "…")
+(with-eval-after-load 'mule-util
+ (setq truncate-string-ellipsis "…"))
 #+end_src
 
 With Emacs 29.0.50 onwards, a new frame parameter exists:
@@ -371,6 +372,7 @@ hidden. This is why I want the current date and time to be displayed,
 in an ISO-8601 style, although not exactly ISO-8601 (this is the best
 time format, fight me).
 #+begin_src emacs-lisp
+(require 'time)
 (setq display-time-format "%Y-%m-%d %H:%M")
 (display-time-mode 1) ; display time in modeline
 #+end_src
@@ -518,7 +520,7 @@ This function allows the user to open all marked files from a dired
 buffer as new Emacs buffers.
 #+begin_src emacs-lisp
 (defun phundrak/open-marked-files (&optional files)
-  "Open all marked FILES in dired buffer as new Emacs buffers."
+  "Open all marked FILES in Dired buffer as new Emacs buffers."
   (interactive)
   (let* ((file-list (if files
                         (list files)
@@ -528,50 +530,6 @@ buffer as new Emacs buffers.
    (mapc (lambda (file-path)
            (find-file file-path))
          (file-list))))
-#+end_src
-
-*** ~xah/open-in-external-app~
-:PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Dired-functions-xah-open-in-external-appnm6kel6184j0
-:END:
-#+begin_src emacs-lisp
-(defun xah/open-in-external-app (&optional file)
-  "Open FILE or dired marked FILE in external app.
-The app is chosen from the user’s OS preference."
-  (interactive)
-  (let ((file-list (if file
-                       (list file)
-                     (if (equal major-mode "dired-mode")
-                         (dired-get-marked-files)
-                       (list (buffer-file-name)))))
-        (do-it-p   (if (<= (length file-list) 5)
-                       t
-                     (y-or-n-p "Open more than 5 files? "))))
-    (when do-it-p
-      (mapc (lambda (file-path)
-              (let ((process-connection-type nil))
-                (start-process "" nil "xdg-open" file-path)))
-            file-list))))
-#+end_src
-
-*** ~xah/dired-sort~
-:PROPERTIES:
-:CUSTOM_ID: Custom-Elisp-Dired-functions-xah-dired-sort9fakel6184j0
-:END:
-#+begin_src emacs-lisp
-(defun xah/dired-sort ()
-  "Sort dired dir listing in different ways.
-Prompt for a choice."
-  (interactive)
-  (let (sort-by arg)
-    (setq sort-by (completing-read "Sort by:" '("name" "size" "date" "extension")))
-    (pcase sort-by
-      ("name" (setq arg "-ahl --group-directories-first"))
-      ("date" (setq arg "-ahl -t --group-directories-first"))
-      ("size" (setq arg "-ahl -S --group-directories-first"))
-      ("extension" (setq arg "ahlD -X --group-directories-first"))
-      (otherwise (error "Dired-sort: unknown option %s" otherwise)))
-    (dired-sort-other arg)))
 #+end_src
 
 ** Switch between buffers
