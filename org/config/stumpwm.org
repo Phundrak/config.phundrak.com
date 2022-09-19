@@ -596,13 +596,13 @@ I’ve been used to ten groups, or workspaces, or tags, since I began
 using tiling window managers. I shall then continue this habit. Here
 is the list of groups I will be using:
 #+name: list-groups
-| Groups  | Number | Windows | Type |
-|---------+--------+---------+------|
-| [TERM]  |      1 |         |      |
-| [EMACS] |      2 |         |      |
-| [WWW]   |      3 |         |      |
-| [PRIV]  |      4 |         |      |
-| [FILES] |      5 | Nemo    |      |
+| Groups  | Number | Windows | Type   |
+|---------+--------+---------+--------|
+| [EMACS] |      1 |         | Tiling |
+| [TERM]  |      2 |         | Tiling |
+| [WWW]   |      3 |         | Tiling |
+| [PRIV]  |      4 |         | Tiling |
+| [FILES] |      5 | Nemo    | Tiling |
 
 #+name: gen-groups
 #+header: :exports none
@@ -623,9 +623,9 @@ is the list of groups I will be using:
                "\n"))
 #+end_src
 
-#+RESULTS[80f994f9e2436c4c5e2f9916b93813083135c1d2]: gen-groups
-: (grename "[TERM]")
-: (gnewbg "[EMACS]")
+#+RESULTS[7c58aa808149319f652155b05c9324b841324f23]: gen-groups
+: (grename "[EMACS]")
+: (gnewbg "[TERM]")
 : (gnewbg "[WWW]")
 : (gnewbg "[PRIV]")
 : (gnewbg "[FILES]")
