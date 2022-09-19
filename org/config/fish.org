@@ -687,6 +687,12 @@ abbr nsxiv 'nsxiv -abfs f'
 abbr sxiv  'nsxiv -abfs f' # old habits die hard
 #+END_SRC
 
+The following abbreviation is here so I can easily launch software
+with my Nvidia GPU.
+#+begin_src fish
+abbr nv 'env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
+#+end_src
+
 Finally, let's declare the following abbreviation that will launch an mpv
 instance displaying my webcam:
 #+BEGIN_SRC fish
