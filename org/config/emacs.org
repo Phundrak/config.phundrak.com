@@ -3579,9 +3579,8 @@ supported natively. I will describe them here.
 #+begin_src emacs-lisp
 (use-package tramp
   :straight (tramp :type built-in :build t)
-  :init
-  <<tramp-add-yadm>>
   :config
+  <<tramp-add-yadm>>
   (csetq tramp-ssh-controlmaster-options nil
          tramp-verbose 0
          tramp-auto-save-directory (locate-user-emacs-file "tramp/")
