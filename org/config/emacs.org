@@ -3513,6 +3513,7 @@ Powerline prompts are nice, git-aware prompts are even better!
 that.
 #+begin_src emacs-lisp
 (use-package powerline-eshell
+  :if (string= (string-trim (shell-command-to-string "uname -n")) "leon")
   :load-path "~/fromGIT/emacs-packages/powerline-eshell.el/"
   :after eshell)
 #+end_src
