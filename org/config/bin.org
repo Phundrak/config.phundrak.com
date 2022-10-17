@@ -2011,6 +2011,36 @@ CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo "$XDG_CACHE_HOME/wallpaper" || echo
     && xwallpaper --zoom "$1"
 #+END_SRC
 
+* Wayland
+:PROPERTIES:
+:CUSTOM_ID: Wayland-3e7jdch05mj0
+:END:
+** Hyprland
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-hyprland
+:CUSTOM_ID: Hyprland-i1v993a05mj0
+:END:
+#+begin_src sh
+export MOZ_ENABLE_WAYLAND=1
+export SDL_VIDEODRIVER=wayland
+export GTK_THEME="Nordic"
+export GTK_ICON_THEME="Flat-Remix-Dark"
+exec Hyprland
+#+end_src
+
+** Newm
+:PROPERTIES:
+:CUSTOM_ID: WaylandNewm-t3hjdch05mj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-newm
+:END:
+#+begin_src sh
+export MOZ_ENABLE_WAYLAND=1
+export SDL_VIDEODRIVER=wayland
+export GTK_THEME="Nordic"
+export GTK_ICON_THEME="Flat-Remix-Dark"
+exec start-newm
+#+end_src
+
 * Weather
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
