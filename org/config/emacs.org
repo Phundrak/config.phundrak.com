@@ -5822,6 +5822,24 @@ to anything user-defined. Let’s all-the-iconify this!
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-w3q5rsg0k4j0
 :END:
+**** Treesitter
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationProgrammingToolsTreesitter-pbbjc4a05mj0
+:END:
+[[https://emacs-tree-sitter.github.io/][Tree sitter]] is a package for emacs based on [[https://tree-sitter.github.io/tree-sitter/][~tree-sitter~]] which
+provides a very fast and flexible way of performing code-highlighting
+in Emacs.
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :defer t
+  :straight (:build t)
+  :init (global-tree-sitter-mode))
+(use-package tree-sitter-langs
+  :defer t
+  :after tree-sitter
+  :straight (:build t))
+#+end_src
+
 **** Appwrite
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-Tools-Appwrite-c1e4fh51mij0
@@ -6642,6 +6660,14 @@ config]]), therefore I need a mode for it.
   :defer t)
 #+end_src
 
+When editing some scripts though, I need to use the built-in ~shell-mode~.
+#+begin_src emacs-lisp
+(use-package shell
+  :defer t
+  :straight (:type built-in)
+  :hook (shell-mode . tree-sitter-hl-mode))
+#+end_src
+
 **** SSH Config files
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-SSH-Config-files-wt9j1c909cj0
@@ -6708,6 +6734,8 @@ still somewhat related, and Emacs thinks so too.
   :defer t
   :init
   (put 'c-c++-backend 'safe-local-variable 'symbolp)
+  (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
+  (add-hook 'c++-mode-hook #'tree-sitter-hl-mode)
   :config
   (require 'compile)
   :general
@@ -7167,6 +7195,7 @@ development. First, let’s install the most important package,
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
   (setq rustic-lsp-client 'lsp-mode)
+  (add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
   :general
   (general-define-key
    :keymaps 'rustic-mode-map
