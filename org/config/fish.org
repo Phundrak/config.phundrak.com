@@ -173,7 +173,6 @@ my own executables, and some more.
 #+NAME: extra-paths
 | additional path          | what it leads to                                  |
 |--------------------------+---------------------------------------------------|
-| node_modules/.bin        | The current directory’s NPM binaries if it exists |
 | $HOME/.local/bin         | Custom executables, see [[file:bin.org]]              |
 | $GOPATH/bin              | Go binaries and executables                       |
 | $CARGO_HOME/bin          | Rust binaries and executables                     |
@@ -188,8 +187,7 @@ my own executables, and some more.
            paths " \\\n")
 #+END_SRC
 
-#+RESULTS[5dedcba52b12f9026e90c3b1b91a65d60c139ede]: generate-extra-paths
-: node_modules/.bin \
+#+RESULTS[8fe70e73420376a50897de0f9518689ec3088288]: generate-extra-paths
 : $HOME/.local/bin \
 : $GOPATH/bin \
 : $CARGO_HOME/bin \
