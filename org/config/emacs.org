@@ -890,9 +890,9 @@ Thus, I need some bépo-specific changes.
 
  "c" 'evil-backward-char
  "C" 'evil-window-top
- "t" 'evil-next-line
+ "t" 'evil-next-visual-line
  "T" 'evil-join
- "s" 'evil-previous-line
+ "s" 'evil-previous-visual-line
  "S" 'evil-lookup
  "r" 'evil-forward-char
  "R" 'evil-window-bottom)
@@ -2177,12 +2177,12 @@ I’ll also declare two keybinds for mu4e’s headers mode.
 I will also redefine without a leader key ~ctsr~ in order to be able to
 move freely (remember, bépo layout for me).
 #+name: mu4e-keybindings-header-no-leader-table
-| Key | Function           | Comment |
-|-----+--------------------+---------|
-| c   | evil-backward-char |         |
-| t   | evil-next-line     |         |
-| s   | evil-previous-line |         |
-| r   | evil-forward-char  |         |
+| Key | Function                  | Comment |
+|-----+---------------------------+---------|
+| c   | evil-backward-char        |         |
+| t   | evil-next-visual-line     |         |
+| s   | evil-previous-visual-line |         |
+| r   | evil-forward-char         |         |
 
 #+name: mu4e-keybindings-header-no-leader
 #+begin_src emacs-lisp :tangle no
@@ -3306,8 +3306,9 @@ though.
   (phundrak/evil
     :keymaps 'eshell-mode-map
     [remap evil-collection-eshell-evil-change] #'evil-backward-char
-    "t" #'evil-next-line
-    "s" #'evil-previous-line
+    "c" #'evil-backward-char
+    "t" #'evil-next-visual-line
+    "s" #'evil-previous-visual-line
     "r" #'evil-forward-char
     "h" #'evil-collection-eshell-evil-change)
   (general-define-key
