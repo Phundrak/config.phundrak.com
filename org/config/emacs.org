@@ -7352,6 +7352,7 @@ Let’s customize a bit the built-in CSS mode.
   :straight (:type built-in)
   :hook (css-mode . smartparens-mode)
   :hook (css-mode . lsp-deferred)
+  :hook (scss-mode . prettier-js-mode)
   :init
   (put 'css-indent-offset 'safe-local-variable #'integerp)
   :general
@@ -7369,6 +7370,7 @@ mode for that.
   :straight (:build t)
   :hook (scss-mode . smartparens-mode)
   :hook (scss-mode . lsp-deferred)
+  :hook (scss-mode . prettier-js-mode)
   :defer t
   :mode "\\.scss\\'")
 #+end_src
