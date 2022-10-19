@@ -6668,6 +6668,18 @@ When editing some scripts though, I need to use the built-in ~shell-mode~.
   :hook (shell-mode . tree-sitter-hl-mode))
 #+end_src
 
+**** Solidity
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationProgrammingDSLsSolidity-xhjjc4a05mj0
+:END:
+#+begin_src emacs-lisp
+(use-package solidity-mode
+  :defer t
+  :straight (:build t)
+  :config
+  (csetq solidity-comment-style 'slash))
+#+end_src
+
 **** SSH Config files
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-SSH-Config-files-wt9j1c909cj0
