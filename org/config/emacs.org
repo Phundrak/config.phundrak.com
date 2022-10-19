@@ -2560,7 +2560,7 @@ dark mode for PDFs.
     "m"  'pdf-view-midnight-minor-mode)
   :config
   (with-eval-after-load 'pdf-view
-    (setq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
+    (csetq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
 #+end_src
 
 One thing ~pdf-tools~ doesn’t handle is restoring the PDF to the last
@@ -2709,7 +2709,23 @@ pull requests, create them, and fork projects among other things.
 #+begin_src emacs-lisp
 (use-package forge
   :after magit
-  :straight (:build t))
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'forge-topic-mode-map
+    "c"  #'forge-create-post
+    "e"  '(:ignore t :which-key "edit")
+    "ea" #'forge-edit-topic-assignees
+    "ed" #'forge-edit-topic-draft
+    "ek" #'forge-delete-comment
+    "el" #'forge-edit-topic-labels
+    "em" #'forge-edit-topic-marks
+    "eM" #'forge-merge
+    "en" #'forge-edit-topic-note
+    "ep" #'forge-edit-post
+    "er" #'forge-edit-topic-review-requests
+    "es" #'forge-edit-topic-state
+    "et" #'forge-edit-topic-title))
 #+end_src
 
 **** Projectile
