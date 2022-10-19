@@ -37,14 +37,14 @@ Picom can also apply some level of opacity on shadows.
 | Min value     | ~0.0~  |
 | Max value     | ~1.0~  |
 #+BEGIN_SRC conf
-shadow-opacity = 0.6
+shadow-opacity = 1
 #+END_SRC
 
 The left and top offsets for shadows are expressed in pixels.
 | Default value | ~-15~ |
 #+BEGIN_SRC conf
-shadow-offset-x = -12;
-shadow-offset-y = -12;
+shadow-offset-x = -13;
+shadow-offset-y = -13;
 #+END_SRC
 
 It is possible to set the color of the shadow with the string contained in
@@ -52,7 +52,7 @@ It is possible to set the color of the shadow with the string contained in
 config, but this value will override any value in ~shadow-red~, ~shadow-green~,
 or ~shadow-blue~.
 #+BEGIN_SRC conf
-shadow-color = "#000000"
+shadow-color = "#171A20"
 #+END_SRC
 
 It is possible to specify a list  of conditions of windows that should have no
