@@ -6011,11 +6011,12 @@ Spell Commands^^           Add To Dictionary^^              Other
 [_d_] change dictionary    [_S_] add word to dict (session) [_Q_] exit and disable spell check
 [_n_] next error
 [_c_] correct before point
-[_s_] correct at point"
+[_s_] correct at point
+"
     ("B" nil)
     ("b" flyspell-buffer)
     ("r" flyspell-region)
-    ("d" nil)
+    ("d" ispell-change-dictionary)
     ("G" nil)
     ("n" flyspell-goto-next-error)
     ("c" flyspell-correct-wrapper)
