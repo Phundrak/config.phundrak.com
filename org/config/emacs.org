@@ -4488,6 +4488,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | gnuplot    |
 | latex      |
 | makefile   |
+| plantuml   |
 | python     |
 | sass       |
 | shell      |
@@ -4503,12 +4504,13 @@ activated. Here are the languages I activated in my Org-mode configuration:
                    "\n  "))
 #+END_SRC
 
-#+RESULTS[950a986eb2df1e9ebf0564f945fc997412fdf1f7]: org-babel-languages-gen
+#+RESULTS[c17ed46f816ab4113f6b13066b3c39e1217e106e]: org-babel-languages-gen
 : '((C . t)
 :   (emacs-lisp . t)
 :   (gnuplot . t)
 :   (latex . t)
 :   (makefile . t)
+:   (plantuml . t)
 :   (python . t)
 :   (sass . t)
 :   (shell . t))
