@@ -5129,8 +5129,6 @@ prefixed with a comma ~,~ in normal mode.
 | l         | org-store-link            |             |
 | p         | org-priority              |             |
 | r         | org-reload                |             |
-| t         | evil-next-visual-line     |             |
-| s         | evil-previous-visual-line |             |
 
 I then have a couple of babel-related functions.
 #+name: org-keybinds-babel
