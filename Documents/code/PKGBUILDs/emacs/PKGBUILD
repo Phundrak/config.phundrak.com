@@ -36,7 +36,7 @@ CLI=              # CLI only binary.
 GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
-PGTK=             # Use native GTK3 build. Supports Wayland, yay!
+PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
 GTK3=             # GTK3 old windowing interface.
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -51,7 +51,7 @@ ALSA=             # Linux sound support.
 NOCAIRO=          # Disable here.
 XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
-DOCS_PDF="YES"    # Generate and install pdf documentation.
+DOCS_PDF=         # Generate and install pdf documentation.
 NOGZ="YES"        # Don't compress .el files.
 ################################################################################
 
@@ -61,7 +61,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.159501
+pkgver=29.0.50.161366
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -70,13 +70,10 @@ license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" 'harfbuzz')
 makedepends=('git')
-b2sums=('SKIP')
 provides=('emacs')
 replaces=('emacs')
 # source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git")
-b2sums=('SKIP')
-b2sums=('SKIP')
 b2sums=('SKIP')
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 install=emacs-git.install
