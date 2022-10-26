@@ -1798,11 +1798,13 @@ Paris 8 (my university).
 #+header: :tangle no :cache yes
 #+begin_src emacs-lisp
 (let ((regex "/.*up8\\.edu|.*univ-paris8.*/"))
-  <<mu4e-bookmarks-from-copy-to-gen>>)
+  (concat
+   <<mu4e-bookmarks-from-copy-to-gen>>
+   " OR maildir:/Univ/Inbox OR maildir:/Univ/Junk"))
 #+end_src
 
-#+RESULTS[f1b50a07521c59a4ccd72f6f8ec11431ac618139]: mu4e-bookmarks-filter-uni
-: f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/
+#+RESULTS[083992a66ea6339d3a55773108e520a6024102c5]: mu4e-bookmarks-filter-uni
+: f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk
 
 Next I need an inbox dedicated to the association I’m part of.
 #+name: mu4e-bookmarks-filter-asso
@@ -1944,7 +1946,7 @@ We can finally define our bookmarks! The code reads as follows:
          :query ,(format "%s AND %s"
                          "<<mu4e-bookmarks-default-filter()>>"
                          "<<mu4e-bookmarks-filter-asso()>>"))
-        (:name "Sent"       :key ?S :query "maildir:/Sent")
+        (:name "Sent"       :key ?S :query "maildir:/Sent OR maildir:/Univ/Sent")
         (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
         (:name "Today"      :key ?t :query "date:today..now AND NOT flag:trashed")
         (:name "This Week"  :key ?w :query "date:7d..now    AND NOT flag:trashed")
