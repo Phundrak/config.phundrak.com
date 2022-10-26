@@ -174,6 +174,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 | theme.lisp        |
 | utilities.lisp    |
 | modeline.lisp     |
+| systemd.lisp      |
 
 #+name: gen-load-files
 #+header: :wrap src lisp
@@ -185,7 +186,7 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+end_src
 
 This is equivalent to the Common Lisp code:
-#+RESULTS[29848aaa616d9b2a828a5602ea6b42dd344efaf2]: gen-load-files
+#+RESULTS[ed4f3fe4f7f82b11cd3cd262578abc7146f5807d]: gen-load-files
 #+begin_src lisp
 (load "~/.stumpwm.d/bluetooth.lisp")
 (load "~/.stumpwm.d/commands.lisp")
@@ -194,6 +195,7 @@ This is equivalent to the Common Lisp code:
 (load "~/.stumpwm.d/theme.lisp")
 (load "~/.stumpwm.d/utilities.lisp")
 (load "~/.stumpwm.d/modeline.lisp")
+(load "~/.stumpwm.d/systemd.lisp")
 #+end_src
 
 Once the modeline file is loaded, let’s indicate StumpWM to activate
@@ -1888,6 +1890,79 @@ Now, to call the main command of this module we can define the
 following keybind.
 #+begin_src lisp
 (define-key *root-map* (my/kbd "s") "swm-ssh-menu")
+#+end_src
+
+** Systemd
+:PROPERTIES:
+:CUSTOM_ID: UtilitiesSystemd-rfb6hs30hmj0
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/systemd.lisp :noweb yes
+:END:
+I’m currently in the process of writing functions to interact with
+Systemd directly through StumpWM. For now, not much work is done, but
+it’s a start.
+
+First of all, I have the following function that lists all the system
+or user services.
+#+begin_src lisp
+(defun systemd-get-services (&key user-p)
+  "Collect all systemd services running.
+
+If USER-P is t, collect user services, otherwise collect system
+services.
+
+The value returned is a list of lists. The first element is the
+service’s name, the second is its load state, the third the high-level
+activation state of the service, and the fourth its low-level
+activation state."
+  (mapcar (lambda (elt)
+            (multiple-value-bind (_ result)
+                (ppcre:scan-to-strings "(.*\\.service) *([^ ]+) *([^ ]+) *([^ ]+).*"
+                                       elt)
+              result))
+          (ppcre:split
+           " *\\n●? *"
+           (ppcre:regex-replace
+            "^ *"
+            (run-shell-command (concat "systemctl list-units --type service --all -q"
+                                       (if user-p " --user" ""))
+                               t)
+            ""))))
+#+end_src
+
+The only command I have right now is for listing the system or user
+services with ~message~. Unfortunately, if there are too many services,
+the list will overflow the screen. I do not know how to fix that yet.
+I set the timeout to 600 seconds in order to have all the time in the
+world to read the services list. It goes away as soon as something
+else appears, such as a ~s-SPC C-g~ since I have ~which-key-mode~ enabled.
+#+begin_src lisp
+(defcommand systemd-list-services (user-p) ((:y-or-n "User services? "))
+  (let ((stumpwm::*timeout-wait* 600))
+   (message (format nil "~{~a~^~&~}"
+                    (mapcar (lambda (service)
+                              (let ((name (aref service 0))
+                                    (load (aref service 1))
+                                    (active (aref service 2))
+                                    (sub (aref service 3)))
+                                (cond ((member load '("not-found" "bad-setting"
+                                                      "error" "masked")
+                                               :test #'string=)
+                                       (format nil
+                                               "^~A~A^0 ^>  Load: ~12@A"
+                                               (if (string= "masked" load) 4 1)
+                                               name load))
+                                      ((member active '("failed" "reloading" "activating"
+                                                        "deactivating" "inactive")
+                                               :test #'string=)
+                                       (format nil "^~A~A^0 ^>Active: ~12@A"
+                                               (case active
+                                                 ("failed" 1)
+                                                 ("inactive" 0)
+                                                 (t 3))
+                                               name
+                                               active))
+                                      (t (format nil "^2~A^0 ^>   Sub: ~12@A" name sub)))))
+                            (systemd-get-services :user-p user-p))))))
 #+end_src
 
 * org functions                                                    :noexport:
