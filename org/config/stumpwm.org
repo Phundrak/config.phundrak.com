@@ -1373,7 +1373,9 @@ redefine it:
 #+begin_src lisp
 (define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
                                                  :on-exit  #'resize-unhide
-                                                 :abort-if #'abort-resize-p)
+                                                 :abort-if #'abort-resize-p
+                                                 :exit-on  ((kbd "RET") (kbd "ESC")
+                                                            (kbd "C-g") (kbd "q")))
   ((my/kbd "c") "resize-direction left")
   ((my/kbd "t") "resize-direction down")
   ((my/kbd "s") "resize-direction up")
@@ -1990,7 +1992,9 @@ else appears, such as a ~s-SPC C-g~ since I have ~which-key-mode~ enabled.
 #+name: interactive-gen
 #+begin_src emacs-lisp :var name="inter" keys=inter-mpc
 (format "%s"
-        `(define-interactive-keymap ,name ()
+        `(define-interactive-keymap ,name
+           "\n                           (:exit-on ((kbd \"RET\") (kbd \"ESC\")"
+           "\n                                      (kbd \"C-g\") (kbd \"q\")))"
            "\n "
            ,(mapconcat (lambda (keybind)
                          (format "%s"
@@ -2004,12 +2008,16 @@ else appears, such as a ~s-SPC C-g~ since I have ~which-key-mode~ enabled.
                        "\n  ")))
 #+end_src
 
-#+RESULTS[5f0a947d35c7efa568ec89859bed9e9f6ed0fa51]: interactive-gen
-: (define-interactive-keymap inter nil
-:   ((my/kbd "c") "mpd-prev")
-:   ((my/kbd "t") "mpd-volume-down")
-:   ((my/kbd "s") "mpd-volume-up")
-:   ((my/kbd "r") "mpd-next"))
+#+RESULTS[b7d91bafe659a77aef5059ae17859a7fc715255e]: interactive-gen
+#+begin_src lisp
+(define-interactive-keymap inter
+                           (:exit-on ((kbd "RET") (kbd "ESC")
+                                       (kbd "C-g") (kbd "q")))
+  ((my/kbd "c") "mpd-prev")
+  ((my/kbd "t") "mpd-volume-down")
+  ((my/kbd "s") "mpd-volume-up")
+  ((my/kbd "r") "mpd-next"))
+#+end_src
 
 #+name: num-to-char
 #+begin_src emacs-lisp :var table=number-to-char-table num=2
