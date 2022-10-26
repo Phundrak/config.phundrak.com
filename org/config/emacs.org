@@ -6797,7 +6797,8 @@ In Lisp buffers, let’s enable ~parinfer-rust-mode~.
   :after parinfer-rust-mode
   :hook (lisp-mode . parinfer-rust-mode)
   :config
-  (put 'defcommand 'lisp-indent-function 'defun))
+  (put 'defcommand 'lisp-indent-function 'defun)
+  (setq inferior-lisp-program "/usr/bin/sbcl --noinform"))
 #+end_src
 
 My current window manager is StumpWM, inspired by Emacs and written in
