@@ -7403,6 +7403,18 @@ And let’s add some autocompletion for CSS.
             "gh" #'counsel-css)))
 #+end_src
 
+For some reason, although it is built-in, ~less-css-mode~ does not
+activate when I open ~.less~ files by default. Let’s fix that.
+#+begin_src emacs-lisp
+(use-package less-css-mode
+  :straight  (:type built-in)
+  :defer t
+  :mode "\\.less\\'"
+  :hook (less-css-mode . smartparens-mode)
+  :hook (less-css-mode . lsp-deferred)
+  :hook (less-css-mode . prettier-js-mode))
+#+end_src
+
 ***** Javascript
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-General-Programming-Languages-Web-programming-Javascript-8k5arup085j0
