@@ -3,8 +3,6 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-
-export PATH="$HOME/.cargo/bin:$PATH"
 export EMAIL="lucien@phundrak.com"
 export NAME="Lucien Cartier-Tilet"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
@@ -74,3 +72,11 @@ export QSYS_ROOTDIR="/home/phundrak/.cache/paru/clone/quartus-free/pkg/quartus-f
 export XMODIFIERS=
 
 alias wget="wget --hsts-file${XDG_DATA_HOME}/wget-hsts"
+PATH="/usr/lib/xfce-polkit/:$PATH"
+PATH="$HOME/.cabal/bin:$PATH"
+PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH"
+PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH"
+PATH="$GOPATH/bin:$PATH"
+PATH="${CARGO_HOME}/bin:$PATH"
+PATH="$HOME/.local/bin:$PATH"
+export PATH

@@ -63,48 +63,6 @@ let’s do so.
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 #+END_SRC
 
-** ~$PATH~
-:PROPERTIES:
-:CUSTOM_ID: Global_variables-$PATH-e1320303
-:END:
-A variable available with the fish shell is ~fish_user_paths~ which lists custom
-paths to binaries specified by the user. Using this variable ensures they are
-included in the ~$PATH~ variable only once without the need to set it directly.
-For instance, my ~PATH~ variable needs Rust’s Cargo’s binaries, Go’s binaries,
-my own executables, and some more.
-
-#+NAME: extra-paths
-| additional path          | what it leads to                                  |
-|--------------------------+---------------------------------------------------|
-| $HOME/.local/bin         | Custom executables, see [[file:bin.org]]              |
-| $GOPATH/bin              | Go binaries and executables                       |
-| $CARGO_HOME/bin          | Rust binaries and executables                     |
-| $GEM_HOME/ruby/3.0.0/bin | Ruby 3.0 binaries and executables                 |
-| $GEM_HOME/ruby/2.6.0/bin | Ruby 2.6 binaries and executables                 |
-| $HOME/.cabal/bin         | Haskel binaries                                   |
-| /usr/lib/xfce-polkit     | Path to XFCE’s PolKit                             |
-
-#+NAME: generate-extra-paths
-#+BEGIN_SRC emacs-lisp :var paths=extra-paths[,0] :exports none :cache yes
-(mapconcat #'identity
-           paths " \\\n")
-#+END_SRC
-
-#+RESULTS[8fe70e73420376a50897de0f9518689ec3088288]: generate-extra-paths
-: $HOME/.local/bin \
-: $GOPATH/bin \
-: $CARGO_HOME/bin \
-: $GEM_HOME/ruby/3.0.0/bin \
-: $GEM_HOME/ruby/2.6.0/bin \
-: $HOME/.cabal/bin \
-: /usr/lib/xfce-polkit
-
-So, let’s set our user paths:
-#+BEGIN_SRC fish :noweb yes
-set -g fish_user_paths \
-<<generate-extra-paths()>>
-#+END_SRC
-
 * Tramp remote access
 :PROPERTIES:
 :CUSTOM_ID: Tramp_remote_access-72aedec2
