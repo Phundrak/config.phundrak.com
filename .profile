@@ -1,0 +1,76 @@
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+
+export PATH="$HOME/.cargo/bin:$PATH"
+export EMAIL="lucien@phundrak.com"
+export NAME="Lucien Cartier-Tilet"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+export LSP_USE_PLISTS=true
+
+export HISTFILE="${XDG_STATE_HOME}/bash/history"
+export _Z_DATA="$XDG_DATA_HOME"/z
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+export WINEPREFIX="$XDG_DATA_HOME"/wine
+export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export BUNDLE_USER_CONFIG="$XDG_CONFIG_HOME"/bundle
+export BUNDLE_USER_CACHE="$XDG_CACHE_HOME"/bundle
+export BUNDLE_USER_PLUGIN="$XDG_DATA_HOME"/bundle
+export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
+export PYENV_ROOT="$XDG_DATA_HOME"/pyenv
+export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
+export PARALLEL_HOME="$XDG_CONFIG_HOME"/parallel
+export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java"
+export NVM_DIR="$XDG_DATA_HOME"/nvm
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
+export __GL_SHADER_DISK_CACHE_PATH="$XDG_CACHE_HOME"/nv
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
+export TERMINFO="$XDG_DATA_HOME"/terminfo
+export TERMINFO_DIRS="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
+export MPLAYER_HOME="$XDG_CONFIG_HOME"/mplayer
+export ICEAUTHORITY="$XDG_CACHE_HOME"/ICEauthority
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
+export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+export GOPATH="$XDG_DATA_HOME"/go
+export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+export GEM_HOME="${XDG_DATA_HOME}"/gem
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+
+export EDITOR="emacsclient -c"
+export VISUAL="emacsclient -c"
+
+export GTK_THEME="Nordic"
+export GTK_ICON_THEME="Flat-Remix-Dark"
+
+export DART_SDK=/opt/dart-sdk/bin
+export ANDROID_HOME="$HOME/Android/Sdk"
+export CHROME_EXECUTABLE=/usr/bin/chromium
+
+export DENO_DIR="$HOME/.config/deno"
+export DENO_INSTALL_ROOT="$HOME/.local/bin/deno"
+
+export SUDO_ASKPASS="$HOME/.local/bin/askpass"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+export BROWSER=firefox
+export XMODIFIERS=
+
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;32m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;4;31m'
+
+export QSYS_ROOTDIR="/home/phundrak/.cache/paru/clone/quartus-free/pkg/quartus-free-quartus/opt/intelFPGA/20.1/quartus/sopc_builder/bin"
+
+export XMODIFIERS=
+
+alias wget="wget --hsts-file${XDG_DATA_HOME}/wget-hsts"

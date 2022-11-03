@@ -39,28 +39,11 @@ end
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-1c84df8b
 :END:
-In order to keep some other code clean, I set the ~$BROWSER~ variable so I don’t
-have to call my web browser directly but rather with this variable.
-#+BEGIN_SRC fish
-set -gx BROWSER firefox
-#+END_SRC
-
-Sometimes, software will rely on =SUDO_ASKPASS= to get a GUI from which it can
-get the sudo password. So, let’s declare it.
-#+BEGIN_SRC fish
-set -gx SUDO_ASKPASS ~/.local/bin/askpass
-#+END_SRC
-
-In general, I prefer using ~bat~ to ~less~, although the former relies on the
-latter, but ~bat~ provides nice wrapping around ~less~, including syntax
-highlighting. Let’s set the manpager to bat then:
-#+BEGIN_SRC fish
-set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
-#+END_SRC
-
-~XMODIFIERS~ is set to nothing as to not impede Emacs’ inputs.
+The first thing I want to do is to load all variables from my
+=~/.profile= file (which you can find [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.profile][here]]). The [[https://github.com/oh-my-fish/plugin-foreign-env][foreign-env]] plugin
+comes in handy:
 #+begin_src fish
-set -x XMODIFIERS
+fenv source ~/.profile
 #+end_src
 
 Let’s start the Gnome keyring daemon. It will return a variable which must be set.
@@ -70,90 +53,10 @@ if test -n "$DESKTOP_SESSION"
 end
 #+end_src
 
-** XDG user directories
-:PROPERTIES:
-:CUSTOM_ID: Global-variables-XDG-user-directories-ata8fwf0bhj0
-:END:
-There’s a couple of XDG user directories that are not set, let’s fix
-that.
-#+begin_src fish
-set -x XDG_CACHE_HOME  $HOME/.cache
-set -x XDG_CONFIG_HOME $HOME/.config
-set -x XDG_DATA_HOME   $HOME/.local/share
-set -x XDG_STATE_HOME  $HOME/.local/state
-#+end_src
-
-Now, let's clean the ~$HOME~ directory. Be aware it will require quite a
-few lines.
-#+begin_src fish
-set -x HISTFILE "$XDG_STATE_HOME"/bash/history
-set -x _Z_DATA "$XDG_DATA_HOME"/z
-set -x XAUTHORITY "$XDG_RUNTIME_DIR"/Xauthority
-set -x WINEPREFIX "$XDG_DATA_HOME"/wine
-set -x TEXMFVAR "$XDG_CACHE_HOME"/texlive/texmf-var
-set -x RUSTUP_HOME "$XDG_DATA_HOME"/rustup
-set -x BUNDLE_USER_CONFIG "$XDG_CONFIG_HOME"/bundle
-set -x BUNDLE_USER_CACHE "$XDG_CACHE_HOME"/bundle
-set -x BUNDLE_USER_PLUGIN "$XDG_DATA_HOME"/bundle
-set -x PYLINTHOME "$XDG_CACHE_HOME"/pylint
-set -x PYENV_ROOT "$XDG_DATA_HOME"/pyenv
-set -x PASSWORD_STORE_DIR "$XDG_DATA_HOME"/pass
-set -x PARALLEL_HOME "$XDG_CONFIG_HOME"/parallel
-set -x _JAVA_OPTIONS -Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
-set -x NVM_DIR "$XDG_DATA_HOME"/nvm
-set -x CUDA_CACHE_PATH "$XDG_CACHE_HOME"/nv
-set -x __GL_SHADER_DISK_CACHE_PATH "$XDG_CACHE_HOME"/nv
-set -x NUGET_PACKAGES "$XDG_CACHE_HOME"/NuGetPackages
-set -x NPM_CONFIG_USERCONFIG "$XDG_CONFIG_HOME"/npm/npmrc
-set -x TERMINFO "$XDG_DATA_HOME"/terminfo
-set -x TERMINFO_DIRS "$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
-set -x MPLAYER_HOME "$XDG_CONFIG_HOME"/mplayer
-set -x ICEAUTHORITY "$XDG_CACHE_HOME"/ICEauthority
-set -x LESSHISTFILE "$XDG_CACHE_HOME"/less/history
-set -x GTK2_RC_FILES "$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
-set -x GOPATH "$XDG_DATA_HOME"/go
-set -x GNUPGHOME "$XDG_DATA_HOME"/gnupg
-set -x GEM_HOME "$XDG_DATA_HOME"/gem
-set -x GEM_SPEC_CACHE "$XDG_CACHE_HOME"/gem
-set -x DOCKER_CONFIG "$XDG_CONFIG_HOME"/docker
-set -x CARGO_HOME "$XDG_DATA_HOME"/cargo
-#+end_src
-
 ** Development
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-Development-76b3ff13
 :END:
-Now, let’s declare our editor of choice, EmacsClient; not Emacs itself since it
-will most often be just quick edits, nothing too heavy, if it is called from the
-~EDITOR~ variable (from Git, for example), or from the ~VISUAL~ variable.
-#+BEGIN_SRC fish
-set -gx EDITOR emacsclient -c
-set -gx VISUAL emacsclient -c
-#+END_SRC
-
-We also need to set the path to the Dart SDK.
-#+BEGIN_SRC fish
-set -gx DART_SDK /opt/dart-sdk/bin
-#+END_SRC
-
-And we also need to specify where the Android SDK it located.
-#+BEGIN_SRC fish
-set -gx ANDROID_HOME $HOME/Android/Sdk
-#+END_SRC
-
-Still related to Dart and Flutter development,
-#+BEGIN_SRC fish
-set -gx CHROME_EXECUTABLE /usr/bin/chromium
-#+END_SRC
-
-Next, we have two variables from Deno, the Node.js destroyer. Its base directory
-will be set in my XDG config directory, and its binaries will be located in my
-local binaries directory (see below).
-#+BEGIN_SRC fish
-set -gx DENO_DIR $HOME/.config/deno
-set -gx DENO_INSTALL_ROOT $HOME/.local/bin/deno
-#+END_SRC
-
 Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so
 let’s do so.
 #+BEGIN_SRC fish

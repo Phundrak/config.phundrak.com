@@ -2023,8 +2023,6 @@ CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo "$XDG_CACHE_HOME/wallpaper" || echo
 #+begin_src sh
 export MOZ_ENABLE_WAYLAND=1
 export SDL_VIDEODRIVER=wayland
-export GTK_THEME="Nordic"
-export GTK_ICON_THEME="Flat-Remix-Dark"
 exec Hyprland
 #+end_src
 
@@ -2036,8 +2034,6 @@ exec Hyprland
 #+begin_src sh
 export MOZ_ENABLE_WAYLAND=1
 export SDL_VIDEODRIVER=wayland
-export GTK_THEME="Nordic"
-export GTK_ICON_THEME="Flat-Remix-Dark"
 exec start-newm
 #+end_src
 
