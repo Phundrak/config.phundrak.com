@@ -39,18 +39,10 @@ end
 :PROPERTIES:
 :CUSTOM_ID: Global_variables-1c84df8b
 :END:
-The first thing I want to do is to load all variables from my
-=~/.profile= file (which you can find [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.profile][here]]). The [[https://github.com/oh-my-fish/plugin-foreign-env][foreign-env]] plugin
-comes in handy:
+An important thing to do is to load all variables from my =~/.profile=
+file (which you can find [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/.profile][here]]). The [[https://github.com/oh-my-fish/plugin-foreign-env][foreign-env]] plugin comes in handy:
 #+begin_src fish
 fenv source ~/.profile
-#+end_src
-
-Let’s start the Gnome keyring daemon. It will return a variable which must be set.
-#+begin_src fish
-if test -n "$DESKTOP_SESSION"
-    set -x (gnome-keyring-daemon --start | string split "=")
-end
 #+end_src
 
 ** Development

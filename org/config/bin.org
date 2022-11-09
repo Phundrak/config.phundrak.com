@@ -2015,14 +2015,66 @@ CACHEFILE=$([ -n "$XDG_CACHE_HOME" ] && echo "$XDG_CACHE_HOME/wallpaper" || echo
 :PROPERTIES:
 :CUSTOM_ID: Wayland-3e7jdch05mj0
 :END:
+** Wayland Environment Variables Setup
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/way-env-setup
+:CUSTOM_ID: WaylandWaylandEnvironmentVariablesSetup-ik05m461rmj0
+:END:
+#+begin_src sh
+#export GDK_BACKEND=wayland # May cause problems with some xorg applications
+export TDESKTOP_DISABLE_GTK_INTEGRATION=1
+export CLUTTER_BACKEND=wayland
+export BEMENU_BACKEND=wayland
+
+# Firefox
+export MOZ_ENABLE_WAYLAND=1
+
+#
+# Qt environment
+#
+export QT_QPA_PLATFORM=wayland-egl #error with apps xcb
+export QT_WAYLAND_FORCE_DPI=physical
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+
+#
+# Elementary environment
+#
+export ELM_DISPLAY=wl
+export ECORE_EVAS_ENGINE=wayland_egl
+export ELM_ENGINE=wayland_egl
+export ELM_ACCEL=opengl
+# export ELM_SCALE=1
+
+#
+# SDL environment
+#
+export SDL_VIDEODRIVER=wayland
+
+#
+# Java environment
+#
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+export NO_AT_BRIDGE=1
+export WINIT_UNIX_BACKEND=wayland
+export DBUS_SESSION_BUS_ADDRESS
+export DBUS_SESSION_BUS_PID
+#+end_src
+
 ** Hyprland
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-hyprland
 :CUSTOM_ID: Hyprland-i1v993a05mj0
 :END:
 #+begin_src sh
-export MOZ_ENABLE_WAYLAND=1
 export SDL_VIDEODRIVER=wayland
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=wlroots
+export XDG_CURRENT_TYPE=wlroots
+export XDG_CURRENT_DESKTOP=wlroots
+. /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
+. way-env-setup
+systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec Hyprland
 #+end_src
 
@@ -2032,8 +2084,14 @@ exec Hyprland
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-newm
 :END:
 #+begin_src sh
-export MOZ_ENABLE_WAYLAND=1
 export SDL_VIDEODRIVER=wayland
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=wlroots
+export XDG_CURRENT_TYPE=wlroots
+export XDG_CURRENT_DESKTOP=wlroots
+. /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
+. way-env-setup
+systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec start-newm
 #+end_src
 
