@@ -532,10 +532,11 @@ abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(upl
 
 Some sane default options for [[https://github.com/nsxiv/nsxiv][~nsxiv~]]. This includes playing GIFs and
 not displaying the filename below. Nsxiv will also open in fullscreen
-and will fit the displayed image to the frame.
+and will fit the displayed image to the frame. It will also output to
+stdout the selected files in case I want to pipe them to another
+program.
 #+BEGIN_SRC fish
-abbr nsxiv 'nsxiv -abfs f'
-abbr sxiv  'nsxiv -abfs f' # old habits die hard
+abbr nsxiv 'nsxiv -abfos f'
 #+END_SRC
 
 The following abbreviation is here so I can easily launch software
