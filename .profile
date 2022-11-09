@@ -59,19 +59,23 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BROWSER=firefox
 export XMODIFIERS=
 
-export LESS_TERMCAP_mb=$'\e[1;32m'
-export LESS_TERMCAP_md=$'\e[1;32m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[01;33m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[1;4;31m'
+LESS_TERMCAP_mb="$(printf '\e[1;32m')"
+LESS_TERMCAP_md="$(printf '\e[1;32m')"
+LESS_TERMCAP_me="$(printf '\e[0m')"
+LESS_TERMCAP_se="$(printf '\e[0m')"
+LESS_TERMCAP_so="$(printf '\e[01;33m')"
+LESS_TERMCAP_ue="$(printf '\e[0m')"
+LESS_TERMCAP_us="$(printf '\e[1;4;31m')"
+export LESS_TERMCAP_mb
+export LESS_TERMCAP_md
+export LESS_TERMCAP_me
+export LESS_TERMCAP_se
+export LESS_TERMCAP_so
+export LESS_TERMCAP_ue
+export LESS_TERMCAP_us
 
-export QSYS_ROOTDIR="/home/phundrak/.cache/paru/clone/quartus-free/pkg/quartus-free-quartus/opt/intelFPGA/20.1/quartus/sopc_builder/bin"
+alias wget='wget --hsts-file=$XDG_DATA_HOME/wget-hsts'
 
-export XMODIFIERS=
-
-alias wget="wget --hsts-file${XDG_DATA_HOME}/wget-hsts"
 PATH="/usr/lib/xfce-polkit/:$PATH"
 PATH="$HOME/.cabal/bin:$PATH"
 PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH"
