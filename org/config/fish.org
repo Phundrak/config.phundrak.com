@@ -379,7 +379,7 @@ In case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
 #+NAME: abbr-text-ed
 | abbreviation | command               |
 |--------------+-----------------------|
-| e            | emacsclient -c -nw    |
+| e            | emacsclient -c -n     |
 | egui         | devour emacsclient -c |
 
 Here is the corresponding fish configuration:
