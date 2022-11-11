@@ -221,12 +221,12 @@ def unread_emails() -> str:
 
 def cpu_usage() -> str:
     cpu: str = format(psutil.cpu_percent(interval=None), ".1f")
-    return f"CPU: {cpu}%"
+    return f" {cpu}%"
 
 
 def mem_usage() -> str:
     mem: str = format(psutil.virtual_memory().percent, ".1f")
-    return f"RAM: {mem}%"
+    return f" {mem}%"
 
 
 def right_text() -> str:
@@ -256,13 +256,14 @@ panels = {
     "launcher": {"cmd": "kitty -e newm-panel-basic launcher"},
     "top_bar": {
         "native": {
+            "font": "JetBrainsMono Nerd Font",
             "enabled": True,
             "texts": lambda: [
                 "",
                 center_text(),
                 right_text(),
             ],
-        }
+        },
     },
     "bottom_bar": {
         "native": {
