@@ -52,7 +52,7 @@ NOCAIRO=          # Disable here.
 XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
-NOGZ="YES"        # Don't compress .el files.
+NOGZ=             # Don't compress .el files.
 ################################################################################
 
 ################################################################################
@@ -61,7 +61,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.161366
+pkgver=29.0.50.161872
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
