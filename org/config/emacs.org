@@ -1599,6 +1599,103 @@ know about it since I don’t want it to include it a second time after
 (setq message-signature nil
       mail-signature    nil)
 #+end_src
+**** Gnus
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationApplicationsEmailGnus-ucbe71h01nj0
+:END:
+#+begin_src emacs-lisp
+(use-package gnus
+  :straight (:type built-in)
+  :defer t
+  :config
+  (require 'gnus-topic)
+  (setq gnus-select-method '(nnnil))
+  (setq gnus-secondary-select-methods
+        '((nntp "news.gwene.org")
+          (nnimap "prv"
+                  (nnimap-address "mail.phundrak.com")
+                  (nnimap-stream ssl)
+                  (nnimap-authinfo-file "~/.authinfo.gpg"))))
+
+  (setq gnus-asynchronous t ;; async
+        gnus-use-article-prefetch 15
+        ;; article
+        gnus-visible-headers (mapcar (lambda (str) (concat "^" str ":"))
+                                     '("From" "To" "Cc" "Subject" "Newsgroup"
+                                       "Date" "Followup-To" "Reply-To"
+                                       "Organization" "X-Newsreader" "X-Mailer"))
+        gnus-sorted-header-list gnus-visible-headers
+        gnus-thread-sort-functions '(gnus-thread-sort-by-number
+                                     gnus-thread-sort-by-subject
+                                     (not gnus-thread-sort-by-date))
+        gnus-fetch-old-headers t
+        ;; group
+        gnus-level-subscribed 6
+        gnus-level-unsubscribed 7
+        gnus-level-zombie 8
+        gnus-group-sort-function '((gnus-group-sort-by-unread)
+                                   (gnus-group-sort-by-alphabet)
+                                   (gnus-group-sort-by-rank))
+        gnus-group-line-format "%M%p%P%5y:%B%(%g%)\n"
+        gnus-group-mode-line-format "%%b"
+        gnus-topic-display-empty-topics nil
+        ;; summary
+        gnus-auto-select-first nil
+        gnus-summary-ignore-duplicates t
+        gnus-suppress-duplicates t
+        gnus-summary-to-prefix "To:"
+        gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n"
+        gnus-summary-mode-line-format "[%U] %p"
+        gnus-sum-thread-tree-false-root ""
+        gnus-sum-thread-tree-indent " "
+        gnus-sum-thread-tree-single-indent ""
+        gnus-sum-thread-tree-leaf-with-other "+->"
+        gnus-sum-thread-tree-root ""
+        gnus-sum-thread-tree-single-leaf "\\->"
+        gnus-sum-thread-tree-vertical "|")
+
+  (add-hook 'dired-mode-hook #'gnus-dired-mode)
+  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
+  (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
+
+  (dolist (mode '(gnus-group-mode-hook gnus-summary-mode-hook gnus-browse-mode-hook))
+    (add-hook mode #'hl-line-mode))
+
+  :general
+  (phundrak/evil
+    :keymaps 'gnus-summary-mode-map
+    :packages 'gnus
+    "«" #'gnus-summary-prev-article
+    "»" #'gnus-summary-next-article)
+  (phundrak/major-leader-key
+    :keymaps 'gnus-summary-mode-map
+    :packages 'gnus
+    "d"  #'gnus-summary-delete-article
+    "f"  #'gnus-summary-mail-forward
+    "r"  '(:ignore t :wk "reply")
+    "rr" #'gnus-summary-reply-with-original
+    "rl" #'gnus-summary-reply-to-list-with-original
+    "rw" #'gnus-summary-wide-reply-with-original
+    "rW" #'gnus-summary-very-wide-reply-with-original)
+  (phundrak/evil
+    :keymaps 'gnus-group-mode-map
+    :packages 'gnus
+    "«" #'gnus-group-prev-group
+    "»" #'gnus-group-next-group)
+  (phundrak/major-leader-key
+    :keymaps '(gnus-group-mode-map)
+    :packages 'gnus
+    "SPC" #'gnus-topic-read-group
+    "c"  '(gnus-topic-catchup-articles :which-key "catchup")
+    "f"  '(gnus-fetch-group :which-key "fetch")
+    "j"  '(:ignore t :which-key "jump")
+    "jg" #'gnus-group-jump-to-group
+    "jt" #'gnus-topic-jump-to-topic
+    "L"  #'gnus-group-list-all-groups
+    "n"  #'gnus-group-news
+    "t"  '(gnus-group-topic-map :which-key "topics")
+    "u"  #'gnus-group-unsubscribe))
+#+end_src
 
 **** Mu4e
 :PROPERTIES:
@@ -3167,6 +3264,7 @@ obsolete!
   (phundrak/major-leader-key
     :keymaps 'dirvish-mode-map
     :packages '(dired dirvish)
+    "A"   #'gnus-dired-attach
     "a"   #'dirvish-quick-access
     "d"   #'dirvish-dispatch
     "e"   #'dirvish-emerge-menu
