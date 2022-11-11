@@ -94,6 +94,7 @@ def synchronous_update() -> None:
 def rules(m_view):
     blur_apps = ("kitty", "wofi", "emacsclient", "emacs")
     float_apps = ("Rofi",)
+    nonfloat_apps = ("discord",)
     if debug_windows:
         with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
             file.write(str(m_view.app_id))
@@ -103,6 +104,8 @@ def rules(m_view):
         m_rules.update({"blur": {"radius": 6, "passes": 2}})
     if m_view.app_id in float_apps:
         m_rules.update({"float": True})
+    if m_view.app_id in nonfloat_apps:
+        m_rules.update({"float": False})
     return m_rules
 
 
