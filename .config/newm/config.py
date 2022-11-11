@@ -15,6 +15,8 @@ from pywm import PYWM_MOD_LOGO, PYWM_MOD_ALT
 
 logger = logging.getLogger(__name__)
 
+debug_windows = False
+
 
 def run_shell(command: str):
     """Run a shell command asynchronously
@@ -92,9 +94,10 @@ def synchronous_update() -> None:
 def rules(m_view):
     blur_apps = ("kitty", "wofi", "emacsclient", "emacs")
     float_apps = ("Rofi",)
-    # with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
-    #     file.write(str(m_view.app_id))
-    #     file.write("\n")
+    if debug_windows:
+        with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
+            file.write(str(m_view.app_id))
+            file.write("\n")
     m_rules = {}
     if m_view.app_id in blur_apps:
         m_rules.update({"blur": {"radius": 6, "passes": 2}})
