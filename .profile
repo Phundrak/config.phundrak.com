@@ -82,5 +82,6 @@ PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH"
 PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH"
 PATH="$GOPATH/bin:$PATH"
 PATH="${CARGO_HOME}/bin:$PATH"
+PATH="$HOME/Android/Sdk/tools/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
 export PATH
