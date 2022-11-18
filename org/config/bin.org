@@ -2061,10 +2061,10 @@ export DBUS_SESSION_BUS_ADDRESS
 export DBUS_SESSION_BUS_PID
 #+end_src
 
-** Hyprland
+** Qtile
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-hyprland
-:CUSTOM_ID: Hyprland-i1v993a05mj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-qtile
+:CUSTOM_ID: WaylandQtile-v5l2wdx03nj0
 :END:
 #+begin_src sh
 export SDL_VIDEODRIVER=wayland
@@ -2075,7 +2075,7 @@ export XDG_CURRENT_DESKTOP=wlroots
 . /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
 . way-env-setup
 systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-exec Hyprland
+exec qtile start -b wayland
 #+end_src
 
 ** Newm
