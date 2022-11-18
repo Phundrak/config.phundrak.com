@@ -61,7 +61,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.161872
+pkgver=29.0.50.162035
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
