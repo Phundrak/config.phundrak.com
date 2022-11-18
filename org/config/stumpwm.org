@@ -1536,6 +1536,8 @@ media-related, but I’ll add keybinds for my screen’s backlight.
 | ~XF86AudioStop~         | ~exec playerctl stop~               |
 | ~XF86AudioPrev~         | ~exec playerctl previous~           |
 | ~XF86AudioNext~         | ~exec playerctl next~               |
+| ~XF86AudioRewind~       | ~exec playerctl position -1~        |
+| ~XF86AudioForward~      | ~exec playerctl position +1~        |
 | ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~                 |
 | ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~                 |
 | ~XF86AudioMute~         | ~exec pamixer -t~                   |
