@@ -1610,12 +1610,7 @@ know about it since I don’t want it to include it a second time after
   :config
   (require 'gnus-topic)
   (setq gnus-select-method '(nnnil))
-  (setq gnus-secondary-select-methods
-        '((nntp "news.gwene.org")
-          (nnimap "prv"
-                  (nnimap-address "mail.phundrak.com")
-                  (nnimap-stream ssl)
-                  (nnimap-authinfo-file "~/.authinfo.gpg"))))
+  (setq gnus-secondary-select-methods '((nntp "news.gwene.org")))
 
   (setq gnus-asynchronous t ;; async
         gnus-use-article-prefetch 15
