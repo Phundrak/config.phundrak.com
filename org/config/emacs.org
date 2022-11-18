@@ -1623,7 +1623,6 @@ know about it since I don’t want it to include it a second time after
         gnus-thread-sort-functions '(gnus-thread-sort-by-number
                                      gnus-thread-sort-by-subject
                                      (not gnus-thread-sort-by-date))
-        gnus-fetch-old-headers t
         ;; group
         gnus-level-subscribed 6
         gnus-level-unsubscribed 7
