@@ -1,6 +1,7 @@
 [Unit]
 Description=MPRIS implementation for MPD
 Requires=mpd.service
+After=mpd.service
 
 [Service]
 Type=simple
