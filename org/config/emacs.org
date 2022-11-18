@@ -4591,6 +4591,7 @@ activated. Here are the languages I activated in my Org-mode configuration:
 | python     |
 | sass       |
 | shell      |
+| sql        |
 
 #+NAME: org-babel-languages-gen
 #+header: :cache yes :results replace
@@ -4603,16 +4604,19 @@ activated. Here are the languages I activated in my Org-mode configuration:
                    "\n  "))
 #+END_SRC
 
-#+RESULTS[c17ed46f816ab4113f6b13066b3c39e1217e106e]: org-babel-languages-gen
-: '((C . t)
-:   (emacs-lisp . t)
-:   (gnuplot . t)
-:   (latex . t)
-:   (makefile . t)
-:   (plantuml . t)
-:   (python . t)
-:   (sass . t)
-:   (shell . t))
+#+RESULTS[b0a5bea13e6ba99525ad166ea5538e74ba4c6ddc]: org-babel-languages-gen
+#+begin_example
+'((C . t)
+  (emacs-lisp . t)
+  (gnuplot . t)
+  (latex . t)
+  (makefile . t)
+  (plantuml . t)
+  (python . t)
+  (sass . t)
+  (shell . t)
+  (sql . t))
+#+end_example
 
 The corresponding code is as follows:
 #+NAME: org-babel-load-languages
