@@ -3188,7 +3188,7 @@ so on.
 a string and get it automatically escaped for you. No more manually
 escaping your strings!
 #+begin_src emacs-lisp
-(use-package string-edit
+(use-package string-edit-at-point
   :defer t
   :straight (:build t))
 #+end_src
@@ -7037,6 +7037,12 @@ If I need to run CI on a package, [[https://github.com/cask/cask][Cask]] manages
 However, I recently began using [[https://github.com/emacs-eask/eask][Eask]] more and more, I find it nicer to
 work with and it has a lot more features than Cask.
 #+begin_src emacs-lisp
+(use-package eask-api
+  :defer t
+  :straight (eask-api :type git
+                      :host github
+                      :repo "emacs-eask/eask-api"))
+
 (use-package eask-mode
   :defer t
   :straight (eask-mode :type git
