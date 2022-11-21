@@ -93,7 +93,7 @@ def synchronous_update() -> None:
 
 def rules(m_view):
     blur_apps = ("kitty", "wofi", "emacsclient", "emacs")
-    float_apps = ("Rofi",)
+    float_apps = ("Rofi", "xfce-polkit")
     nonfloat_apps = ("discord",)
     if debug_windows:
         with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
@@ -176,7 +176,7 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         (leader + "w r t", lambda: layout.resize_focused_view(0, 1)),
         (leader + "w r s", lambda: layout.resize_focused_view(0, -1)),
         (leader + "w r r", lambda: layout.resize_focused_view(1, 0)),
-        ("L-", layout.toggle_overview),
+        ("L-", lambda: layout.toggle_overview(only_active_workspace=True)),
         (
             "XF86MonBrightnessUp",
             lambda: backlight_manager.set(backlight_manager.get() + 0.1),
