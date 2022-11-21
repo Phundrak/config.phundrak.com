@@ -143,6 +143,8 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         (leader + "w v", layout.toggle_focused_view_floating),
         (leader + "w +", lambda: layout.basic_scale(1)),
         (leader + "w -", lambda: layout.basic_scale(-1)),
+        ("L-o", layout.move_workspace),
+        ("L-O", layout.move_workspace),
         (leader + "w c", lambda: layout.move(-1, 0)),
         (leader + "w t", lambda: layout.move(0, 1)),
         (leader + "w s", lambda: layout.move(0, -1)),
