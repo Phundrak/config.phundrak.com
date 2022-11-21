@@ -139,6 +139,7 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         (leader + "a b", lambda: run_shell("firefox")),
         (leader + "a d", lambda: run_shell("discord")),
         (leader + "a e", lambda: run_shell("emacsclient -c")),
+        (leader + "l", layout.ensure_locked),
         (leader + "w f", layout.toggle_fullscreen),
         (leader + "w v", layout.toggle_focused_view_floating),
         (leader + "w +", lambda: layout.basic_scale(1)),
