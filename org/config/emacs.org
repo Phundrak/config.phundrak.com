@@ -8223,6 +8223,26 @@ standard keybindings.
   (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
 #+end_src
 
+*** Keyfreq
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationMiscKeyfreq-6ib0ovv0cnj0
+:END:
+Keyfreq is a package that records all the commands I call from Emacs
+and builds a heatmap out of it.
+#+begin_src emacs-lisp
+(use-package keyfreq
+  :straight (:build t)
+  :init
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  :config
+  (setq keyfreq-excluded-commands '(self-insert-command org-self-insert-command
+                                    evil-previous-visual-line evil-next-visual-line
+                                    ivy-next-line evil-backward-char evil-forward-char
+                                    evil-next-line evil-previous-line evil-normal-state
+                                    text-scale-pinch)))
+#+end_src
+
 *** SICP
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-SICP-96u6ukz0l4j0
