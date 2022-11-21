@@ -8182,22 +8182,6 @@ What’s the point of using Emacs if you can’t tell everyone?
                                                            "Fwd: ")))))
 #+end_src
 
-*** Enime
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Misc-Enime-avr3mbs0qcj0
-:END:
-#+begin_src emacs-lisp
-(use-package enime
-  :defer t
-  :straight (enime :type git
-                   :host github
-                   :repo "xl666/enime"
-                   :fork t
-                   :build nil)
-  :config
-  (setq enime-storage-file "~/.cache/enime.db"))
-#+end_src
-
 *** ~ivy-quick-find-files.el~
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-ivy-quick-find-files-el2yp6fl6184j0
