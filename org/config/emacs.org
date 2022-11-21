@@ -4200,8 +4200,8 @@ enhances a couple of built-in functions from Emacs, namely:
   :straight (:build t)
   :after (counsel ivy)
   :custom
-  (counsel-describe-function-function #'helpfull-callable)
-  (counsel-describe-variable-function #'helpfull-variable)
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
   :bind
   ([remap describe-function] . counsel-describe-function)
   ([remap describe-command]  . helpful-command)
