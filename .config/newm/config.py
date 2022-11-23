@@ -197,13 +197,28 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
     ]
 
 
+battery_icons = {
+    100: {True: "", False: ""},
+    90: {True: "", False: ""},
+    80: {True: "", False: ""},
+    70: {True: "", False: ""},
+    60: {True: "", False: ""},
+    50: {True: "", False: ""},
+    40: {True: "", False: ""},
+    30: {True: "", False: ""},
+    20: {True: "", False: ""},
+    10: {True: "", False: ""},
+    0: {True: "", False: ""},
+}
+
+
 def battery_status() -> str:
     battery = psutil.sensors_battery()
-    plugged = "+" if battery.power_plugged else "-"
     percent = format(battery.percent, ".1f")
     minutes = battery.secsleft // 60
     remaining = "{0:0>2}:{1:0>2}".format(minutes // 60, minutes % 60)
-    return f"{percent}%{plugged} ({remaining})"
+    icon = battery_icons[(int(float(percent)) // 10) * 10][battery.power_plugged]
+    return f"{icon} {percent}% ({remaining})"
 
 
 def unread_emails() -> str:
@@ -214,11 +229,11 @@ def unread_emails() -> str:
         check=True,
     ).stdout
     nbr_unread: int = len(str(unread).split("\n"))
-    return f"Emails: {nbr_unread}"
+    return f" {nbr_unread}"
 
 
 def cpu_usage() -> str:
-    cpu: str = format(psutil.cpu_percent(interval=None), ".1f")
+    cpu: str = format(psutil.cpu_percent(interval=1), ".1f")
     return f" {cpu}%"
 
 
