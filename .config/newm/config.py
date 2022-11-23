@@ -193,6 +193,7 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("XF86AudioRaiseVolume", lambda: pactl.volume_adj(5)),
         ("XF86AudioLowerVolume", lambda: pactl.volume_adj(-5)),
         ("XF86AudioMute", pactl.mute),
+        ("Print", lambda: run_shell("env XDG_CURRENT_DESKTOP=Sway flameshot gui")),
     ]
 
 
