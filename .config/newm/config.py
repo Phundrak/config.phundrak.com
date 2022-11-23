@@ -243,11 +243,7 @@ def cpu_usage() -> str:
 
 def mem_usage() -> str:
     mem: str = format(psutil.virtual_memory().percent, ".1f")
-    return f" {mem}%"
-
-
-def right_text() -> str:
-    return " | ".join([unread_emails(), cpu_usage(), mem_usage(), battery_status()])
+    return f" {mem}%"
 
 
 def get_bluetooth_devices() -> str:
@@ -350,8 +346,24 @@ def get_time() -> str:
     return time.strftime("%a %Y-%m-%d %X")
 
 
-def center_text() -> str:
-    return f"{get_time()}"
+def bar_text() -> str:
+    return " | ".join(
+        [
+            f
+            for f in [
+                get_currently_playing(),
+                get_network(),
+                display_docker(),
+                get_bluetooth_devices(),
+                unread_emails(),
+                cpu_usage(),
+                mem_usage(),
+                get_time(),
+                battery_status(),
+            ]
+            if f
+        ]
+    )
 
 
 def max_width(strings: list[str]) -> int:
@@ -372,9 +384,7 @@ panels = {
             "font": "JetBrainsMono Nerd Font",
             "enabled": True,
             "texts": lambda: [
-                "",
-                center_text(),
-                right_text(),
+                bar_text(),
             ],
         },
     },
