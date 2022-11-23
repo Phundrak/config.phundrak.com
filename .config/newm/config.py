@@ -6,6 +6,7 @@ import time
 import logging
 import psutil
 import subprocess
+import dbus
 import docker
 
 docker_client = docker.from_env()
@@ -247,6 +248,35 @@ def mem_usage() -> str:
 
 def right_text() -> str:
     return " | ".join([unread_emails(), cpu_usage(), mem_usage(), battery_status()])
+
+
+def get_bluetooth_devices() -> str:
+    import xml.etree.ElementTree as ET
+
+    bus = dbus.SystemBus()
+    service_name = "org.bluez"
+
+    # Verify if bluetooth is turned on
+    proxy = bus.get_object(service_name, "/org/bluez/hci0")
+    props = dbus.Interface(proxy, "org.freedesktop.DBus.Properties")
+    if not props.Get("org.bluez.Adapter1", "Powered"):
+        return ""
+
+    # Grab all known devices
+    bt_intro_iface = dbus.Interface(proxy, "org.freedesktop.DBus.Introspectable")
+    bt_intro = str(bt_intro_iface.Introspect())
+    root_node = ET.fromstring(bt_intro)
+    known_devices = [n.get("name") for n in root_node.findall("node")]
+
+    # Check if all devices are connected
+    counter = 0
+    for device in known_devices:
+        object_path = f"/org/bluez/hci0/{device}"
+        proxy = bus.get_object(service_name, object_path)
+        props = dbus.Interface(proxy, "org.freedesktop.DBus.Properties")
+        if props.Get("org.bluez.Device1", "Connected"):
+            counter = counter + 1
+    return f" {counter}"
 
 
 def display_docker() -> str:
