@@ -279,6 +279,21 @@ def get_bluetooth_devices() -> str:
     return f" {counter}"
 
 
+def get_currently_playing():
+    bus = dbus.SessionBus()
+    service_name = "org.mpris.MediaPlayer2.playerctld"
+    service_props = "org.mpris.MediaPlayer2.Player"
+    proxy = bus.get_object(service_name, "/org/mpris/MediaPlayer2")
+    props = dbus.Interface(proxy, "org.freedesktop.DBus.Properties")
+    metadata = props.Get(service_props, "Metadata")
+    status = str(props.Get(service_props, "PlaybackStatus"))
+    if status != "Playing":
+        return ""
+    artist = ", ".join(metadata.get("xesam:artist"))
+    title = metadata.get("xesam:title")
+    return f" {artist} — {title}"
+
+
 def display_docker() -> str:
     containers = docker_client.containers.list(sparse=True)
     return f"  {len(containers)}"
