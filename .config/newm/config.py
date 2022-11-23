@@ -279,6 +279,53 @@ def get_bluetooth_devices() -> str:
     return f" {counter}"
 
 
+def get_wifi_name(iface) -> str:
+    bus = dbus.SystemBus()
+    service_name = "org.freedesktop.NetworkManager"
+    proxy = bus.get_object(service_name, "/org/freedesktop/NetworkManager/Settings")
+
+    # Get the device object path based on interface name
+    proxy = bus.get_object(service_name, "/org/freedesktop/NetworkManager")
+    nm = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+    devpath = nm.GetDeviceByIpIface(iface)
+
+    # Get a proxy to the wifi device and get the active access point's object path
+    proxy = bus.get_object(service_name, devpath)
+    props = dbus.Interface(proxy, "org.freedesktop.DBus.Properties")
+    active_ap_path = props.Get(
+        "org.freedesktop.NetworkManager.Device.Wireless", "ActiveAccessPoint"
+    )
+    if active_ap_path == "/":
+        return ""
+
+    # Get the active access point's SSID and BSSID
+    ap_proxy = bus.get_object(service_name, active_ap_path)
+    ap_props = dbus.Interface(ap_proxy, "org.freedesktop.DBus.Properties")
+    raw_ssid = ap_props.Get("org.freedesktop.NetworkManager.AccessPoint", "Ssid")
+    ssid = b"".join([bytes([v]) for v in raw_ssid]).decode("utf-8")
+    return ssid
+
+
+def get_local_address(wifi_iface, eth_iface) -> str:
+    if_addrs = psutil.net_if_addrs()
+    wifi = if_addrs.get(wifi_iface)
+    eth = if_addrs.get(eth_iface)
+    wifi_addr = wifi[0].address if wifi else ""
+    eth_addr = eth[0].address if eth else ""
+    wifi_addr = wifi_addr if not ":" in wifi_addr else ""
+    eth_addr = eth_addr if not ":" in eth_addr else ""
+    return wifi_addr or eth_addr
+
+
+def get_network() -> str:
+    wifi_interface = "wlp8s0"
+    eth_interface = "enp9s0f1"
+    network_name = get_wifi_name(wifi_interface)
+    network_name = f"  {network_name}" if network_name else "  eth"
+    addr = get_local_address(wifi_interface, eth_interface)
+    return f"{network_name} ({addr})" if addr else "睊 disconnected"
+
+
 def get_currently_playing():
     bus = dbus.SessionBus()
     service_name = "org.mpris.MediaPlayer2.playerctld"
