@@ -6,6 +6,9 @@ import time
 import logging
 import psutil
 import subprocess
+import docker
+
+docker_client = docker.from_env()
 
 from newm.layout import Layout
 from newm.helper import BacklightManager, WobRunner, PaCtl
@@ -244,6 +247,11 @@ def mem_usage() -> str:
 
 def right_text() -> str:
     return " | ".join([unread_emails(), cpu_usage(), mem_usage(), battery_status()])
+
+
+def display_docker() -> str:
+    containers = docker_client.containers.list(sparse=True)
+    return f"  {len(containers)}"
 
 
 def get_time() -> str:
