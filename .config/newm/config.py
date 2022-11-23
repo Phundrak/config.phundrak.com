@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Callable, Any
 
 import os
-import pwd
 import time
 import logging
 import psutil
@@ -11,7 +10,6 @@ import subprocess
 from newm.layout import Layout
 from newm.helper import BacklightManager, WobRunner, PaCtl
 
-from pywm import PYWM_MOD_LOGO, PYWM_MOD_ALT
 
 logger = logging.getLogger(__name__)
 
