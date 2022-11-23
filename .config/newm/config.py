@@ -22,7 +22,7 @@ debug_windows = False
 
 def run_shell(command: str):
     """Run a shell command asynchronously
-    If the shell command doesn’t already end with "&", add it.
+    If the shell command doesn't already end with "&", add it.
     """
     if not command.endswith("&"):
         command = command + " &"
