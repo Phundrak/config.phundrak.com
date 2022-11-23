@@ -944,6 +944,7 @@ globally enable its mode.
   <<undo-tree-ignore-text-properties>>
   <<undo-tree-compress-files>>
   (setq undo-tree-visualizer-diff       t
+        undo-tree-visualizer-timestamps t
         undo-tree-auto-save-history     t
         undo-tree-enable-undo-in-region t
         undo-limit        (* 800 1024)
