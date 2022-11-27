@@ -1,0 +1,25 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+_pkgname=appwrite
+_orgname=appwrite
+_reponame=sdk-for-cli
+_dlcliname=appwrite-cli-linux-x64
+pkgname="nodejs-$_pkgname-cli"
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Appwrite CLI'
+arch=('any')
+url="https://github.com/${_orgname}/${_reponame}"
+license=('BSD-3-Clause')
+depends=('nodejs')
+makedepends=('npm')
+options=()
+install=
+changelog=
+source=("https://github.com/${_orgname}/${_reponame}/releases/download/${pkgver}/$_dlcliname")
+sha256sums=('99c3aa4f3f9c240ac4e660546cd1a9bd0788e1dd56c018e07c19eb37273e13f6')
+
+package() {
+  install -Dm755 "$_dlcliname" "$pkgdir/usr/bin/$_pkgname"
+}
+
+# vim:set ts=2 sw=2 et:
