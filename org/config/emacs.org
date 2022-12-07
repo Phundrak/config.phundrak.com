@@ -7618,9 +7618,11 @@ Typescript is a safer alternative to Javascript. Let’s install its major mode 
   :defer t
   :straight (:build t)
   :hook (typescript-mode     . rainbow-delimiters-mode)
-  :hook (typescript-mode     . lsp-deferred)
   :hook (typescript-tsx-mode . rainbow-delimiters-mode)
+  :hook (typescript-mode     . lsp-deferred)
   :hook (typescript-tsx-mode . lsp-deferred)
+  :hook (typescript-mode     . prettier-js-mode)
+  :hook (typescript-tsx-mode . prettier-js-mode)
   :commands typescript-tsx-mode
   :after flycheck
   :init
