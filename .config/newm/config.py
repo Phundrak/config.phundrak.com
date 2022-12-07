@@ -129,9 +129,6 @@ view = {
 }
 
 
-energy = {"idle_times": [5 * 60, 30 * 60, 24 * 60 * 60]}
-
-
 leader: str = "L-Spc "
 
 
@@ -405,4 +402,7 @@ panels = {
     },
 }
 
-energy = {"idle_callback": backlight_manager.callback}
+energy = {
+    "idle_callback": backlight_manager.callback,
+    "idle_times": [5 * 60, 30 * 60, 24 * 60 * 60],
+}
