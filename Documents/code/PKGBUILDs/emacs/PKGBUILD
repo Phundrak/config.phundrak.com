@@ -53,6 +53,10 @@ XWIDGETS="YES"    # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML="YES"   # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
 NOGZ=             # Don't compress .el files.
+TREESITTER="YES"  # Enable Emacs' native tree-sitter implementation.
+                  # It is necessary to also install tree-sitter
+                  # packages per language, such as tree-sitter-c for
+                  # c-ts-mode.
 ################################################################################
 
 ################################################################################
@@ -61,7 +65,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=29.0.50.162035
+pkgver=30.0.50.162621
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -106,6 +110,14 @@ if [[ $CLANG == "YES" ]]; then
   export CCFLAGS+=' -fuse-ld=lld' ;
   export CXXFLAGS+=' -fuse-ld=lld' ;
   makedepends+=( 'clang' 'lld' 'llvm') ;
+fi
+
+if [[ $TREESITTER == "YES" ]]; then
+  if [[ $CLI == "YES" ]]; then
+    depends_nox+=( 'tree-sitter' );
+  else
+    depends+=( 'tree-sitter' );
+  fi
 fi
 
 if [[ $JIT == "YES" ]]; then
@@ -283,6 +295,10 @@ fi
 
 if [[ $NOGZ == "YES" ]]; then
   _conf+=( '--without-compress-install' );
+fi
+
+if [[ $TREESITTER == "YES" ]]; then
+  _conf+=( '--with-tree-sitter' );
 fi
 
 # ctags/etags may be provided by other packages, e.g, universal-ctags
