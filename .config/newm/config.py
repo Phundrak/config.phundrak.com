@@ -327,11 +327,16 @@ def get_network() -> str:
     return f"{network_name} ({addr})" if addr else "睊 disconnected"
 
 
-def get_currently_playing():
+def get_playerctl_bus():
     bus = dbus.SessionBus()
     service_name = "org.mpris.MediaPlayer2.playerctld"
     service_props = "org.mpris.MediaPlayer2.Player"
     proxy = bus.get_object(service_name, "/org/mpris/MediaPlayer2")
+    return (service_props, proxy)
+
+
+def get_currently_playing():
+    (service_props, proxy) = get_playerctl_bus()
     props = dbus.Interface(proxy, "org.freedesktop.DBus.Properties")
     metadata = props.Get(service_props, "Metadata")
     status = str(props.Get(service_props, "PlaybackStatus"))
