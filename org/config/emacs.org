@@ -8246,6 +8246,23 @@ and builds a heatmap out of it.
                                     text-scale-pinch)))
 #+end_src
 
+*** Mastodon
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationMiscMastodon-3jtkg080znj0
+:END:
+#+begin_src emacs-lisp
+(use-package mastodon
+  :defer t
+  :ensure t
+  :straight (mastodon :type git
+                      :host nil
+                      :repo "https://codeberg.org/martianh/mastodon.el.git"
+                      :branch "develop")
+  :config
+  (setq mastodon-instance-url "https://fosstodon.org"
+        mastodon-active-user  "phundrak"))
+#+end_src
+
 *** SICP
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-SICP-96u6ukz0l4j0
