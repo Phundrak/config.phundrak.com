@@ -362,9 +362,9 @@ def bar_text() -> str:
             f
             for f in [
                 get_currently_playing(),
-                get_network(),
+                # get_network(),
                 display_docker(),
-                get_bluetooth_devices(),
+                # get_bluetooth_devices(),
                 unread_emails(),
                 cpu_usage(),
                 mem_usage(),
