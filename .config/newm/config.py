@@ -232,7 +232,7 @@ def unread_emails() -> str:
         text=True,
         check=True,
     ).stdout
-    nbr_unread: int = len(str(unread).split("\n"))
+    nbr_unread: int = len(str(unread).strip().split("\n"))
     return f" {nbr_unread}"
 
 
