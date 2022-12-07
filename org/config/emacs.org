@@ -2809,6 +2809,8 @@ pull requests, create them, and fork projects among other things.
 (use-package forge
   :after magit
   :straight (:build t)
+  :init
+  (evil-collection-forge-setup)
   :general
   (phundrak/major-leader-key
     :keymaps 'forge-topic-mode-map
