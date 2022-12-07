@@ -61,10 +61,11 @@ def on_startup():
     )
 
 
-background = {
-    "path": os.environ["HOME"] + "/Pictures/Wallpapers/1561879941868.jpg",
-    "anim": True,
-}
+with open("{}/.cache/wallpaper".format(os.environ["HOME"])) as file:
+    background = {
+        "path": file.read().strip(),
+        "anim": True,
+    }
 
 pywm = {
     "xkb_layout": "fr",
