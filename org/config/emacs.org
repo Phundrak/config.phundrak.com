@@ -8243,11 +8243,13 @@ and builds a heatmap out of it.
   :ensure t
   :straight (mastodon :type git
                       :host nil
-                      :repo "https://codeberg.org/martianh/mastodon.el.git"
-                      :branch "develop")
+                      :repo "https://codeberg.org/rougier/mastodon.el"
+                      :branch "alt-timeline")
   :config
   (setq mastodon-instance-url "https://fosstodon.org"
-        mastodon-active-user  "phundrak"))
+        mastodon-active-user  "phundrak")
+  (require 'mastodon-alt-tl)
+  (mastodon-alt-tl-activate))
 #+end_src
 
 *** SICP
