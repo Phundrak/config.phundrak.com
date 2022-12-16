@@ -7590,7 +7590,7 @@ And finally, here is a formatter for Javascript.
   :after (rjsx-mode web-mode typescript-mode)
   :hook ((rjsx-mode typescript-mode) . prettier-js-mode)
   :config
-  (csetq prettier-js-args '("--single-quote" "--jsx-single-quote")))
+  (setq prettier-js-args '("--single-quote" "--jsx-single-quote")))
 #+end_src
 
 ***** Typescript
