@@ -670,3 +670,9 @@ end
 #+END_SRC
 
 Tadah! No more package suggestions from fish!
+
+I also have some private abbreviations I don’t want people to know
+about that I store in a separate configuration file.
+#+begin_src fish
+source $HOME/.config/fish/private.fish
+#+end_src
