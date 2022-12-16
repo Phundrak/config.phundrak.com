@@ -2338,8 +2338,8 @@ the export part and write your emails directly in org-mode?
               :around 'my/org-msg-signature-convert)
   (add-hook 'mu4e-headers-mode (lambda () (toggle-truncate-lines -1)))
   (setq org-msg-startup              "inlineimages"
-        org-msg-default-alternatives '((new           . (text html))
-                                       (reply-to-html . (text html))
+        org-msg-default-alternatives '((new           . (text))
+                                       (reply-to-html . (text))
                                        (reply-to-text . (text)))
         org-msg-greeting-name-limit  3
         org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
