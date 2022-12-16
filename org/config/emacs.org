@@ -6653,21 +6653,6 @@ with the ~toc-org~ package for org-mode.
     "iT" #'markdown-toc-generate-toc))
 #+end_src
 
-~vmd-mode~ allows the user to live-preview their Github-flavored
-Markdown file quickly. That’s neat!
-#+begin_src emacs-lisp
-(use-package vmd-mode
-  :defer t
-  :after markdown-mode
-  :straight (:build t)
-  :custom ((vmd-binary-path (executable-find "vmd")))
-  :general
-  (phundrak/major-leader-key
-    :packages 'vmd-mode
-    :keymaps 'markdown-mode-map
-    "cP" #'vmd-mode))
-#+end_src
-
 Lastly, ~edit-indirect~ is a package that allows to edit code blocks as
 in org-mode but with other major modes, such as code blocks in
 Markdown.
