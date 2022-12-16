@@ -8252,6 +8252,23 @@ and builds a heatmap out of it.
   (mastodon-alt-tl-activate))
 #+end_src
 
+*** Mediawiki
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationMiscMediawiki-3oaekxb03oj0
+:END:
+#+begin_src emacs-lisp
+(use-package mediawiki
+  :defer t
+  :straight (:build t)
+  :custom
+  (mediawiki-site-alist '(("PhundrakWiki" ; Title
+                           "https://wiki.phundrak.com/" ; URL
+                           "phundrak" ; username
+                           nil ; password
+                           nil ; LDAP
+                           "Main Page")))) ; Default page
+#+end_src
+
 *** SICP
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Misc-SICP-96u6ukz0l4j0
