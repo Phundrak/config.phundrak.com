@@ -8334,6 +8334,8 @@ Undefining some stuff to make keybind prefixes work correctly.
   "SPC" '(counsel-M-x :wk "M-x")
   "'"   #'shell-pop
 
+  <<general-keybindings-gen(table=keybinds-tabs, prefix="TAB ")>>
+
   <<general-keybindings-gen(table=keybinds-apps, prefix="a")>>
   <<general-keybindings-gen(table=keybinds-apps-shell, prefix="as")>>
   <<general-keybindings-gen(table=treemacs-keybinds, prefix="at")>>
@@ -8544,6 +8546,26 @@ My keybinds for my projects are prefixed by ~p~.
 | p   | counsel-projectile-switch-project          |             |
 | t   | ivy-magit-todos                            |             |
 | v   | projectile-vc                              |             |
+
+** Tabs
+:PROPERTIES:
+:CUSTOM_ID: KeybindingsTabs-kx5gn8b0foj0
+:END:
+Emacs has native tabs available, which can be interesting when working
+on multiple projects at once between which we may want to switch. Tabs
+allow the user not to have multiple frames while keeping the
+advantages of having multiple frames.
+
+My keybinds are prefixed by ~SPC TAB~.
+#+name: keybinds-tabs
+| Key | Function     | Description |
+|-----+--------------+-------------|
+|     |              | tabs        |
+| »   | tab-next     |             |
+| «   | tab-previous |             |
+| n   | tab-new      |             |
+| N   | tab-new-to   |             |
+| r   | tab-rename   |             |
 
 ** Text
 :PROPERTIES:
