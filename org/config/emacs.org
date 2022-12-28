@@ -8561,10 +8561,14 @@ My keybinds are prefixed by ~SPC TAB~.
 | Key | Function     | Description |
 |-----+--------------+-------------|
 |     |              | tabs        |
+| TAB | tab-switch   |             |
 | »   | tab-next     |             |
 | «   | tab-previous |             |
-| n   | tab-new      |             |
-| N   | tab-new-to   |             |
+| c   | tab-new      |             |
+| C   | tab-new-to   |             |
+| d   | tab-close    |             |
+| n   | tab-next     |             |
+| p   | tab-previous |             |
 | r   | tab-rename   |             |
 
 ** Text
