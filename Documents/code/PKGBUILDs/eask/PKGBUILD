@@ -1,0 +1,27 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+
+_pkgname=eask
+_orgname=emacs-eask
+_nodepkgname=cli
+pkgname="nodejs-${_pkgname}"
+pkgver=0.7.6
+pkgrel=1
+pkgdesc="Command-line tool for building and testing Emacs Lisp packages"
+url="https://github.com/${_orgname}/${_pkgname}"
+license=("GPL3")
+arch=("any")
+depends=("nodejs")
+makedepends=("npm")
+source=("https://registry.npmjs.org/@{_orgname}/${_nodepkgname}/-/${_nodepkgname}-${pkgver}.tgz")
+sha256sums=('1ecac21fc31563db32a6107b0a203fd92a3538adc6dea75b1de56b34aaa4e81c')
+noextract=("$_pkgname-$pkgver.tgz")
+
+prepare() {
+  tar xf "$_nodepkgname-$pkgver.tgz" package/COPYING
+}
+
+package() {
+  npm i --location=global --cache "${srcdir}/npm-cache" --prefix "$pkgdir/usr" "$srcdir/$_nodepkgname-$pkgver.tgz"
+  install -Dm644 package/COPYING "$pkgdir/usr/share/licenses/$_pkgname/COPYING"
+  # install -Dm644 <(nps eask) "$pkgdir/usr/share/bash-completion/completions/$_pkgname"
+}
