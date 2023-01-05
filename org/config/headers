@@ -32,16 +32,12 @@
 #+html_head: <script>
 #+html_head:   var _paq = window._paq = window._paq || [];
 #+html_head:   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-#+html_head:   _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-#+html_head:   _paq.push(["setCookieDomain", "*.conlang.phundrak.com"]);
-#+html_head:   _paq.push(["setDomains", ["*.conlang.phundrak.com","*.config.phundrak.com","*.langue.phundrak.com","*.phundrak.com"]]);
-#+html_head:   _paq.push(["enableCrossDomainLinking"]);
 #+html_head:   _paq.push(['trackPageView']);
 #+html_head:   _paq.push(['enableLinkTracking']);
 #+html_head:   (function() {
 #+html_head:     var u="//matomo.phundrak.com/";
 #+html_head:     _paq.push(['setTrackerUrl', u+'matomo.php']);
-#+html_head:     _paq.push(['setSiteId', '5']);
+#+html_head:     _paq.push(['setSiteId', '1']);
 #+html_head:     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 #+html_head:     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
 #+html_head:   })();
