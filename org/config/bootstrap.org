@@ -692,7 +692,6 @@ dotfiles to be set to ssh remotes using my ssh keys.
 #+BEGIN_SRC fish
 printf "\n# Update yadm’s remotes #######################################################\n\n"
 yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
-yadm remote add github git@github.com:phundrak/dotfiles.git
 #+END_SRC
 
 I will also want to decrypt my encrypted files, such as said ssh keys.

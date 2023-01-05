@@ -314,7 +314,6 @@ if test "$USER" = 'phundrak'
 
 printf "\n# Update yadm’s remotes #######################################################\n\n"
 yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
-yadm remote add github git@github.com:phundrak/dotfiles.git
 
 printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
 yadm decrypt
