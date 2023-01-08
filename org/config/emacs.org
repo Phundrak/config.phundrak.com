@@ -2621,7 +2621,6 @@ dark mode for PDFs.
   :defer t
   :magic ("%PDF" . pdf-view-mode)
   :straight (:build t)
-  :mode (("\\.pdf\\'" . pdf-view-mode))
   :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
   :general
   (phundrak/evil
