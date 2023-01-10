@@ -78,8 +78,14 @@ pywm = {
 }
 
 outputs = [
-    {"name": "eDP-1"},
-    {"name": "HDMI-A-1", "pos_x": -2560, "pos_y": 0, "width": 2560, "height": 1080},
+    {"name": "eDP-1", "mHz": 120_000},
+    {
+        "name": "HDMI-A-1",
+        "pos_x": -2560,
+        "pos_y": 0,
+        "width": 2560,
+        "height": 1080,
+    },
 ]
 
 wob_runner = WobRunner("wob -a bottom -M 100")
@@ -95,7 +101,7 @@ def synchronous_update() -> None:
 
 
 def rules(m_view):
-    blur_apps = ("kitty", "wofi", "emacsclient", "emacs")
+    blur_apps = ("kitty", "wofi", "rofi", "emacsclient", "emacs")
     float_apps = ("Rofi", "xfce-polkit")
     nonfloat_apps = ("discord",)
     if debug_windows:
@@ -115,8 +121,8 @@ def rules(m_view):
 pactl = PaCtl(0, wob_runner)
 
 focus = {
-    "animate_on_change": True,
-    "distance": 4,
+    "animate_on_change": False,
+    "distance": 6,
     "width": 2,
     "color": "#5E81ACDD",
     "anim_time": 0.1,
@@ -135,7 +141,7 @@ leader: str = "L-Spc "
 def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
     return [
         ("L-Return", lambda: os.system("kitty &")),
-        (leader + "a r", lambda: run_shell("wofi --show drun")),
+        (leader + "a r", lambda: run_shell("rofi -combi-modi drun,window -show combi")),
         (leader + "a b", lambda: run_shell("firefox")),
         (leader + "a d", lambda: run_shell("discord")),
         (leader + "a e", lambda: run_shell("emacsclient -c")),
