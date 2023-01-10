@@ -61,9 +61,9 @@ def on_startup():
     )
 
 
-with open("{}/.cache/wallpaper".format(os.environ["HOME"])) as file:
+with open("{}/.cache/wallpaper".format(os.environ["HOME"])) as wp_cache:
     background = {
-        "path": file.read().strip(),
+        "path": wp_cache.read().strip(),
         "anim": True,
     }
 
