@@ -35,9 +35,9 @@
 #+html_head:   _paq.push(['trackPageView']);
 #+html_head:   _paq.push(['enableLinkTracking']);
 #+html_head:   (function() {
-#+html_head:     var u="//matomo.phundrak.com/";
+#+html_head:     var u="https://matomo.phundrak.com/";
 #+html_head:     _paq.push(['setTrackerUrl', u+'matomo.php']);
-#+html_head:     _paq.push(['setSiteId', '1']);
+#+html_head:     _paq.push(['setSiteId', '2']);
 #+html_head:     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 #+html_head:     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
 #+html_head:   })();
