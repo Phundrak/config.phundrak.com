@@ -103,11 +103,7 @@ def synchronous_update() -> None:
 def rules(m_view):
     blur_apps = ("kitty", "wofi", "rofi", "emacsclient", "emacs")
     float_apps = ("Rofi", "xfce-polkit")
-    nonfloat_apps = ("discord",)
-    if debug_windows:
-        with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
-            file.write(str(m_view.app_id))
-            file.write("\n")
+    nonfloat_apps = ("discord", "Discord")
     m_rules = {}
     if m_view.app_id in blur_apps:
         m_rules.update({"blur": {"radius": 6, "passes": 2}})
@@ -115,6 +111,9 @@ def rules(m_view):
         m_rules.update({"float": True})
     if m_view.app_id in nonfloat_apps:
         m_rules.update({"float": False})
+    if debug_windows:
+        with open("/tmp/newm_windows.txt", "a", encoding="utf-8") as file:
+            file.write(f"{str(m_view.app_id)}\t{m_rules}\n")
     return m_rules
 
 
@@ -130,8 +129,9 @@ focus = {
 
 view = {
     "corner_radius": 8,
-    "padding": 10,
+    "padding": 20,
     "rules": rules,
+    "floating_min_size": False,
 }
 
 
