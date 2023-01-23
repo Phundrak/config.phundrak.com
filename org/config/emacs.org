@@ -7741,7 +7741,8 @@ First, here is its major mode.
     "t" #'zig-test-buffer))
 #+end_src
 
-For LSP to work, we need ~zls~ to be installed.
+For LSP to work, we need ~zls~ to be installed. In my case, as I am on
+ArchLinux, I can install it from the AUR, and my AUR helper is ~paru~.
 #+begin_src fish :results raw :wrap "src text" :exports code
 paru --skipreview --noconfirm -S zls-bin 2>&1
 #+end_src
