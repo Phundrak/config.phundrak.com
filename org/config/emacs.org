@@ -1428,7 +1428,12 @@ Due to this, I absolutely need a mode for editing Dockerfiles.
   :hook (dockerfile-mode . lsp-deferred)
   :init
   (put 'docker-image-name 'safe-local-variable #'stringp)
-  :mode "Dockerfile\\'")
+  :mode "Dockerfile\\'"
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'general-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
 #+end_src
 
 The ~docker~ package also provides interactivity with Docker and
@@ -4271,6 +4276,10 @@ enhances a couple of built-in functions from Emacs, namely:
   (add-hook 'TeX-update-style-hook #'rainbow-delimiters-mode)
   :general
   (phundrak/major-leader-key
+    :packages 'lsp-mode
+    :keymaps  '(latex-mode-map LaTeX-mode-map)
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
     :packages 'auctex
     :keymaps  '(latex-mode-map LaTeX-mode-map)
     "v" '(TeX-view            :which-key "View")
@@ -6957,7 +6966,12 @@ configuration for StumpWM]].
 #+begin_src emacs-lisp
 (use-package lsp-dart
   :straight (:build t)
-  :defer t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'dart-mode-map
+   :packages '(lsp-mode lsp-dart)
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
 #+end_src
 
 **** EmacsLisp
@@ -7085,7 +7099,12 @@ org-babel supports.
   (setq python-indent-guess-indent-offset-verbose nil)
   (when (and (executable-find "python3")
            (string= python-shell-interpreter "python"))
-    (setq python-shell-interpreter "python3")))
+    (setq python-shell-interpreter "python3"))
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
 #+end_src
 
 Now let’s add a package for [[https://docs.pytest.org/en/latest/][pytest]].
@@ -7337,6 +7356,10 @@ development. First, let’s install the most important package,
    "M-?" #'lsp-find-references)
   (phundrak/major-leader-key
    :keymaps 'rustic-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+   :keymaps 'rustic-mode-map
    :packages 'rustic
    "b"  '(:ignore t :which-key "build")
    "bb" #'rustic-cargo-build
@@ -7348,12 +7371,6 @@ development. First, let’s install the most important package,
    "bn" #'rustic-cargo-new
    "bo" #'rustic-cargo-outdated
    "br" #'rustic-cargo-run
-   "l"  '(:ignore t :which-key "lsp")
-   "la" #'lsp-execute-code-action
-   "lr" #'lsp-rename
-   "lq" #'lsp-workspace-restart
-   "lQ" #'lsp-workspace-shutdown
-   "ls" #'lsp-rust-analyzer-status
    "t"  '(:ignore t :which-key "cargo test")
    "ta" #'rustic-cargo-test
    "tt" #'rustic-cargo-current-test)
@@ -7490,6 +7507,10 @@ Let’s customize a bit the built-in CSS mode.
   (put 'css-indent-offset 'safe-local-variable #'integerp)
   :general
   (phundrak/major-leader-key
+   :keymaps 'css-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
     :keymaps 'css-mode-map
     :packages 'css-mode
     "=" '(:ignore :wk "format")
@@ -7531,7 +7552,12 @@ activate when I open ~.less~ files by default. Let’s fix that.
   :mode "\\.less\\'"
   :hook (less-css-mode . smartparens-mode)
   :hook (less-css-mode . lsp-deferred)
-  :hook (less-css-mode . prettier-js-mode))
+  :hook (less-css-mode . prettier-js-mode)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'less-css-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
 #+end_src
 
 ***** Javascript
@@ -7559,11 +7585,9 @@ Next.JS.
                       2 3 4))
   :general
   (phundrak/major-leader-key
-    :keymaps 'rjsx-mode-map
-    :infix "a"
-    ""  '(:keymap lsp-command-map :which-key "lsp")
-    "=" '(:ignore t :wk "format")
-    "a" '(:ignore t :which-key "actions"))
+   :keymaps 'rjsx-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
   :config
   (setq js-chain-indent                  t
         js2-basic-offset                 2
@@ -7638,12 +7662,9 @@ Typescript is a safer alternative to Javascript. Let’s install its major mode 
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
   :general
   (phundrak/major-leader-key
-    :packages 'lsp
-    :keymaps '(typescript-mode-map typescript-tsx-mode-map)
-    :infix "a"
-    ""  '(:keymap lsp-command-map :which-key "lsp")
-    "=" '(:ignore t :wk "format")
-    "a" '(:ignore t :which-key "actions"))
+   :keymaps '(typescript-mode-map typescript-tsx-mode-map)
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
   (phundrak/major-leader-key
     :packages 'typescript-mode
     :keymaps '(typescript-mode-map typescript-tsx-mode-map)
@@ -7707,6 +7728,10 @@ First, here is its major mode.
     :modes zig-mode)
   (add-to-list 'flycheck-checkers 'zig)
   :general
+  (phundrak/major-leader-key
+   :keymaps 'zip-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
   (phundrak/major-leader-key
     :packages 'zig-mode
     :keymaps 'zig-mode-map
