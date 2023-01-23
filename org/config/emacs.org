@@ -3083,7 +3083,7 @@ Emacs users.
   :defer t
   :straight (:build t)
   :diminish editorconfig-mode
-  :config
+  :init
   (editorconfig-mode t))
 #+end_src
 
