@@ -2881,7 +2881,6 @@ excluded files.
   :straight (:build t :type built-in)
   :custom ((recentf-max-saved-items 2000))
   :config
-  ;; no Elfeed or native-comp files
   (add-all-to-list 'recentf-exclude
                    `(,(rx (* any)
                           (or "elfeed-db"
@@ -2892,6 +2891,9 @@ excluded files.
                               ".cache/")
                           (* any)
                           (? (or "html" "pdf" "tex" "epub")))
+                     ,(rx (* any)
+                          ".elc"
+                          eol)
                      ,(rx "/"
                           (or "rsync" "ssh" "tmp" "yadm" "sudoedit" "sudo")
                           (* any)))))
