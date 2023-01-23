@@ -3708,7 +3708,7 @@ Let’s define some more intuitive keybinds for ~info-mode~.
   (tab-bar-new-tab-choice "*dashboard*")
   :custom-face
   (tab-bar ((t (:background "#272C36"
-                :foreground "#E5E9F0"
+                :foreground "#272C36"
                 :box (:line-width (8 . 5) :style flat-button)))))
   :init
   (advice-add #'tab-new
