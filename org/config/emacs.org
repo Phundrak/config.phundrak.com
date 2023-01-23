@@ -5500,7 +5500,7 @@ automatically generated, which comes in handy with the online sitemap that is
 available through the navigation bar.
 #+NAME: org-proj-config-html
 #+BEGIN_SRC emacs-lisp
-("config-website-org"
+("config-website-html"
  :base-directory ,phundrak//projects-config-source
  :base-extension "org"
  :publishing-directory ,phundrak//projects-config-target
@@ -5564,7 +5564,7 @@ previous project, let’s declare the common values for these.
 The first component is the one generating the HTML files from the org files.
 #+NAME: org-proj-lang-html
 #+BEGIN_SRC emacs-lisp
-("conlang-phundrak-com-org"
+("conlang-phundrak-com-html"
  :base-directory ,phundrak//projects-conlanging-source
  :base-extension "org"
  :exclude ,(rx (* print)
