@@ -6205,7 +6205,8 @@ awesome!
   :defer t
   :straight (:build t)
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-c l"
+        read-process-output-max (* 3 1024 1024))
   :hook ((c-mode          . lsp-deferred)
          (c++-mode        . lsp-deferred)
          (html-mode       . lsp-deferred)
