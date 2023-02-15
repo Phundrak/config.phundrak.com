@@ -10,7 +10,7 @@ alias df         df -H $*
 alias du         du -ch $*
 
 alias grep       grep --color=auto $*
-alias ls         exa -halg@ --group-directories-first --git $*
+alias lsl        exa -halg@ --group-directories-first --git $*
 alias lns        ln -si $*
 alias mkdir      mkdir -p $*
 
