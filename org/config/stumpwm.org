@@ -206,9 +206,10 @@ it:
 #+end_src
 
 Another thing I want to set is to use the super key to move floating
-windows.
+windows and window focus to transfer from one window to another only
+on click.
 #+begin_src lisp
-(setf *mouse-focus-policy*    :sloppy
+(setf *mouse-focus-policy*    :click
       ,*float-window-modifier* :SUPER)
 #+end_src
 
