@@ -354,6 +354,7 @@ full command, so I use these instead.
 | dcb          | docker-compose build         |
 | dcd          | docker-compose down          |
 | dcl          | docker-compose logs          |
+| dclf         | docker-compose logs -f       |
 | dcp          | docker-compose pull          |
 | dcr          | docker-compose run --rm      |
 | dcu          | docker-compose up            |
