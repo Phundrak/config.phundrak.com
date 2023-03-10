@@ -2728,6 +2728,7 @@ doing and what Git is doing! In short, I absolutely love it!
     "d"  #'magit-dispatch
     "i"  #'magit-init
     "s"  #'magit-status
+    "l"  #'magit-log
     "y"  #'my/yadm
     "S"  #'magit-stage-file
     "U"  #'magit-unstage-file
