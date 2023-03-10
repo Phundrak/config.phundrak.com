@@ -5892,18 +5892,43 @@ to anything user-defined. Let’s all-the-iconify this!
 :PROPERTIES:
 :CUSTOM_ID: PackagesConfigurationProgrammingToolsTreesitter-pbbjc4a05mj0
 :END:
-[[https://emacs-tree-sitter.github.io/][Tree sitter]] is a package for emacs based on [[https://tree-sitter.github.io/tree-sitter/][~tree-sitter~]] which
-provides a very fast and flexible way of performing code-highlighting
-in Emacs.
+Treesit is a native Emacs [[https://tree-sitter.github.io/tree-sitter/][tree-sitter]] implementation which provides a
+very fast and flexible way of performing code-highlighting in Emacs.
+It is built-in in Emacs 29 and newer, and I just need to tweak one
+variable for now so I can install grammars for different languages.
 #+begin_src emacs-lisp
-(use-package tree-sitter
+(use-package treesit
   :defer t
-  :straight (:build t)
-  :init (global-tree-sitter-mode))
-(use-package tree-sitter-langs
-  :defer t
-  :after tree-sitter
-  :straight (:build t))
+  :straight (:type built-in)
+  :hook ((bash-ts-mode c-ts-mode c++-ts-mode
+          html-ts-mode js-ts-mode typescript-ts-mode
+          json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
+          css-ts-mode yaml-ts-mode) . lsp-deferred)
+  :init
+  (setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (lua "https://github.com/Azganoth/tree-sitter-lua")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (r "https://github.com/r-lib/tree-sitter-r")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml"))))
 #+end_src
 
 **** Appwrite
