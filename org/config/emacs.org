@@ -3521,23 +3521,6 @@ if needed, then move there."
   (cd dir))
 #+end_src
 
-**** Autosuggestion
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Autosuggestion-kf6ipm1195j0
-:END:
-I really like fish’s autosuggestion feature, so let’s reproduce it
-here!
-#+begin_src emacs-lisp
-(use-package esh-autosuggest
-  :defer t
-  :after eshell
-  :straight (:build t)
-  :hook (eshell-mode . esh-autosuggest-mode)
-  :general
-  (:keymaps 'esh-autosuggest-active-map
-   "C-e" #'company-complete-selection))
-#+end_src
-
 **** Commands
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Emacs-built-ins-Eshell-Commands-n8w3fh2195j0
