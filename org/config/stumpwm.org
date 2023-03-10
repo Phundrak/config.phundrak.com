@@ -497,17 +497,18 @@ We can indicate what to display in our modeline. Each formatter will
 be separated by a Powerline separator with the code point ~0xE0B0~ in
 the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
 #+name: modeline-format
-| Formatter | What it does                                          | Command? |
-|-----------+-------------------------------------------------------+----------|
-| ~%g~        | Display list of groups                                |          |
-| ~%W~        | Display list of windows in the current group and head |          |
-| ~^>~        | Rest of the modeline align to the right               |          |
-| ~mu-unread~ | Display number of unread emails                       | yes      |
-| ~%m~        | Display current MPD song                              |          |
-| ~%C~        | Display CPU usage                                     |          |
-| ~%M~        | Display RAM usage                                     |          |
-| ~%B~        | Display battery status                                |          |
-| ~%d~        | Display date                                          |          |
+| Formatter        | What it does                                          | Command? |
+|------------------+-------------------------------------------------------+----------|
+| ~%g~               | Display list of groups                                |          |
+| ~%W~               | Display list of windows in the current group and head |          |
+| ~^>~               | Rest of the modeline align to the right               |          |
+| ~docker-running~   | Display number of docker containers currently running | yes      |
+| ~mu-unread~        | Display number of unread emails                       | yes      |
+| ~%m~               | Display current MPD song                              |          |
+| ~%C~               | Display CPU usage                                     |          |
+| ~%M~               | Display RAM usage                                     |          |
+| ~%B~               | Display battery status                                |          |
+| ~%d~               | Display date                                          |          |
 
 #+name: modeline-format-gen
 #+begin_src emacs-lisp :var elements=modeline-format :exports none
@@ -520,8 +521,8 @@ the font I am using (see §[[#Theme-Fonts-28pc8141v5j0]]).
         elements)
 #+end_src
 
-#+RESULTS[89f2af6e60ba033da3f22eb62c229293103fe266]: modeline-format-gen
-: (("%g") ("%W") ("^>") ("mu-unread" . t) ("%m") ("%C") ("%M") ("%B") ("%d"))
+#+RESULTS[4246baab1293d54bcd2223590f274152f24934c3]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("docker-running" . t) ("mu-unread" . t) ("%m") ("%C") ("%M") ("%B") ("%d"))
 
 #+begin_src lisp :noweb yes
 (defvar *mode-line-formatter-list*
@@ -705,9 +706,10 @@ We can now go onto more serious business.
 :CUSTOM_ID: Theme-Fonts-28pc8141v5j0
 :END:
 This gave me quite the headache when I tried to set this up: in order
-to use TTF or OTF fonts, we need to use the ~ttf-fonts~ module which
-relies on the ~clx-truetype~ library. A few years back, it should have
-been possible to get it installed with a call to src_lisp[:exports
+to use TTF fonts (note: it is not possible to use OTF fonts, see
+below), we need to use the ~ttf-fonts~ module which relies on the
+~clx-truetype~ library. A few years back, it should have been possible
+to get it installed with a call to src_lisp[:exports
 code]{(ql:quickload :clx-truetype)}, but it is no longer available!
 There’s a quickfix available while we wait for ~clx-truetype~ to be once
 again available: clone it in quicklisp’s local projects. You will
@@ -776,11 +778,12 @@ cannot render a character, it will simply display an empty rectangle
 instead of falling back to another font. That’s annoying… Here is my
 list of fonts I want loaded:
 #+name: list-fonts
-| Family                         | Subfamily | Size |
-|--------------------------------+-----------+------|
-| Unifont-JP                     | Regular   |   10 |
-| DejaVu Sans Mono for Powerline | Book      |  8.5 |
-| siji                           | Medium    |   10 |
+| Family                           | Subfamily | Size |
+|----------------------------------+-----------+------|
+| Unifont-JP                       | Regular   |   10 |
+| DejaVu Sans Mono for Powerline   | Book      |  8.5 |
+| siji                             | Medium    |   10 |
+| FantasqueSansMono Nerd Font Mono | Regular   |  9.5 |
 
 #+name: gen-fonts
 #+header: :wrap src lisp
@@ -800,11 +803,12 @@ list of fonts I want loaded:
 #+end_src
 
 The code equivalent of this table can be seen below:
-#+RESULTS[8f33434f3332d94fa0d7306c1233c824a26fde93]: gen-fonts
+#+RESULTS[1693001a9a9c0e274a9b7097665e9795783ae8a2]: gen-fonts
 #+begin_src lisp
 (set-font `(,(make-instance 'xft:font :family "Unifont-JP" :subfamily "Regular" :size 10 :antialias t)
             ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)
-            ,(make-instance 'xft:font :family "siji" :subfamily "Medium" :size 10 :antialias t)))
+            ,(make-instance 'xft:font :family "siji" :subfamily "Medium" :size 10 :antialias t)
+            ,(make-instance 'xft:font :family "FantasqueSansMono Nerd Font Mono" :subfamily "Regular" :size 9.5 :antialias t)))
 #+end_src
 
 As far as I know, Unifont is the only font I’ve tested that displays

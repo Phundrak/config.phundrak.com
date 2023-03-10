@@ -288,6 +288,20 @@ sudo chmod a+rw /opt/flutter/version
 sudo chown $USER:(id -g $USER) /opt/flutter/bin/cache
 #+END_SRC
 
+** docker-running
+:PROPERTIES:
+:CUSTOM_ID: cliutilitiesdockerrunning-awb2jbx09rj0
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/docker-running
+:END:
+As with =mu-unread= below, =docker-running= is a small and simple utility
+for my StumpWM configuration which indicates how many Docker
+containers are currently running.
+
+#+begin_src sh
+NB_CONTAINERS=$(docker ps -q | wc -l | tr -d '\n')
+printf "^f3^f0 %d" $NB_CONTAINERS
+#+end_src
+
 ** mu-unread
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/mu-unread
