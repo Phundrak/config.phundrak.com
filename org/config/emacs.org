@@ -8196,7 +8196,6 @@ quickly find files across my filesystem.
   :config
   (setq ivy-quick-find-files-program 'fd
         ivy-quick-find-files-dirs-and-exts '(("~/org"                  . "org")
-                                             ("~/Documents/conlanging" . "org")
                                              ("~/Documents/university" . "org"))))
 #+end_src
 
