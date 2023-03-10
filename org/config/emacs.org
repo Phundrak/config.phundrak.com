@@ -1901,7 +1901,7 @@ Paris 8 (my university).
 #+header: :tangle no :exports none
 #+begin_src emacs-lisp :var lists=mu4e-emacs-mailing-lists
 (mapconcat (lambda (list)
-             (let ((address (string-replace (regexp-quote "~") "" (car list))))
+             (let ((address (string-replace (regexp-quote "~") "" list)))
                (mapconcat (lambda (flag)
                             (concat flag ":" address))
                           '("list" "t" "f" "contact")
@@ -3848,10 +3848,11 @@ these will be renamed this way:
 #+begin_src emacs-lisp :var buffers=exwm-renamed-buffers-list :cache yes
 (format "%s\n%S"
         (mapconcat (lambda (buffer)
-                     (let ((buffer-name (car buffer)))
+                     (let ((buffer-name buffer))
                        (format "(\"%s\" %S)"
                                (downcase buffer-name)
-                               `(exwm-workspace-rename-buffer (concat ,buffer-name
+                               `(exwm-workspace-rename-buffer (concat "EXWM: "
+                                                                      ,buffer-name
                                                                       " - "
                                                                       exwm-title)))))
                    buffers
@@ -3859,7 +3860,7 @@ these will be renamed this way:
         '(_otherwise (exwm-workspace-rename-buffer exwm-title)))
 #+end_src
 
-#+RESULTS[65e7e5a72273bb2d3f820a85867dfdccb13ba550]: exwm-gen-buffers-rename
+#+RESULTS[6811bb0d3e54e891d39c3814f239e4c5ce497214]: exwm-gen-buffers-rename
 : ("kitty" (exwm-workspace-rename-buffer (concat "EXWM: " "Kitty" " - " exwm-title)))
 : ("qutebrowser" (exwm-workspace-rename-buffer (concat "EXWM: " "Qutebrowser" " - " exwm-title)))
 : (_otherwise (exwm-workspace-rename-buffer exwm-title))
