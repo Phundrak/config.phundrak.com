@@ -7873,12 +7873,8 @@ built-in! With that, I can replace strings of my choice by another
 character of my choice! First, let’s declare the general symbols that
 will be used everywhere.
 #+begin_src emacs-lisp
-
-
 (defun prog-mode-set-symbols-alist ()
-  (setq prettify-symbols-alist '(("lambda"  . ?λ)
-                                 ("null"    . ?∅)
-                                 ("NULL"    . ?∅)))
+  (setq prettify-symbols-alist '(("lambda"  . ?λ)))
   (prettify-symbols-mode 1))
 
 (add-hook 'prog-mode-hook #'prog-mode-set-symbols-alist)
