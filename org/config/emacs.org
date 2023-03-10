@@ -6194,10 +6194,7 @@ And let’s enable some intergration with ~ivy~.
 #+begin_src emacs-lisp
 (use-package lsp-treemacs
   :defer t
-  :straight (:build t)
-  :requires treemacs
-  :config
-  (treemacs-resize-icons 15))
+  :straight (:build t))
 #+end_src
 
 #+name: treemacs-keybinds
@@ -6220,7 +6217,7 @@ And let’s enable some intergration with ~ivy~.
 | lD  | treemacs-collapse-lsp-treemacs-deps    |             |
 | lS  | treemacs-collapse-lsp-symbol           |             |
 | p   |                                        | projects    |
-| pa  | treemacs-add-project                   |             |
+| pa  | treemacs-add-project-to-workspace      |             |
 | pf  | treemacs-project-follow-mode           |             |
 | pn  | treemacs-project-of-node               |             |
 | pp  | treemacs-project-at-point              |             |
