@@ -6935,7 +6935,11 @@ in the echo area at the bottom of the frame. Quite useful indeed.
 #+end_src
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1)))
+(use-package elisp-mode
+  :straight (:type built-in)
+  :requires smartparens
+  :config
+  (add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1))))
 #+end_src
 
 Still on the topic of documentation, I sometimes find it lacks
