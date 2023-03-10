@@ -1318,6 +1318,20 @@ you considered a floating buffer in the center of your frame?
           (min-height . ,ivy-height))))
 #+end_src
 
+Something that can be missing sometimes in Ivy is the ability to
+select multiple entries at once. For instance, when programming in
+Java, LPS can offer you to automatically generate the methods ~equals~
+and ~hashCode~ based on selected members, but with vanilla Ivy, you can
+only select one. Not really useful. ~ivy-hydra~ is a package that offers
+a Hydra interface when in Ivy which allows you to select multiple
+choices among other things.
+#+begin_src emacs-lisp
+(use-package ivy-hydra
+  :requires (ivy hydra)
+  :after ivy
+  :straight (:build t))
+#+end_src
+
 Finally, let’s make ~ivy~ richer:
 #+begin_src emacs-lisp
 (use-package ivy-rich
@@ -6978,6 +6992,21 @@ work with and it has a lot more features than Cask.
   :straight (eask-mode :type git
                        :host github
                        :repo "emacs-eask/eask-mode"))
+#+end_src
+
+**** Java
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationProgrammingGeneralProgrammingLanguagesJava-7p420oc0rqj0
+:END:
+Emacs has built-in support for Java, but it still lacks some features.
+The main one is being able to replace an IDE, so let’s install its LSP
+package.
+#+begin_src emacs-lisp
+(use-package lsp-java
+  :requires lsp
+  :straight (:build t)
+  :after lsp
+  :hook (java-mode . lsp-deferred))
 #+end_src
 
 **** Python
