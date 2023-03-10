@@ -141,7 +141,11 @@ leader: str = "L-Spc "
 def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
     return [
         ("L-Return", lambda: os.system("kitty &")),
-        (leader + "a r", lambda: run_shell("rofi -combi-modi drun,window -show combi")),
+        (leader + "a r b", lambda: run_shell("bluetooth-connect")),
+        (
+            leader + "a r r",
+            lambda: run_shell("rofi -combi-modi drun,window -show combi"),
+        ),
         (leader + "a b", lambda: run_shell("firefox")),
         (leader + "a d", lambda: run_shell("discord")),
         (leader + "a e", lambda: run_shell("emacsclient -c")),
