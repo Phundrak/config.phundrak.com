@@ -5766,7 +5766,7 @@ just the generated image!
 #+end_src
 
 Org-modern modernizes a bit the appearance of org buffers, including
-tables, source blocks, and tags,, and it applies settings similar to
+tables, source blocks, and tags, and it applies settings similar to
 ~org-superstar~ which I used to use.
 #+begin_src emacs-lisp
 (use-package org-modern
