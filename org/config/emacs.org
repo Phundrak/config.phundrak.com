@@ -3381,7 +3381,7 @@ compilation buffer, as well as enable some syntax highlighting.
 (use-package compile
   :defer t
   :straight (compile :type built-in)
-  :hook (compilation-mode . colorize-compilation-buffer)
+  :hook (compilation-filter . colorize-compilation-buffer)
   :init
   (require 'ansi-color)
   (defun colorize-compilation-buffer ()
