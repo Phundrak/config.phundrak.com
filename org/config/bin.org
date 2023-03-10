@@ -340,6 +340,74 @@ mv "$@" ~/Pictures/Screenshots/
 nsxiv -abfs f "$HOME/Pictures/Screenshots/$*"
 #+end_src
 
+** screenshot
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/screenshot
+:CUSTOM_ID: cliutilitiesscreenshot-3t27a7k0crj0
+:END:
+This is a utility only useful with Wayland for now, using =grim=, =slurp=
+(in order to select which area of the screen I wish to capture) and
+=wl-copy= (from =wl-clipboard=). It saves the screenshot in my
+=$HOME/Pictures/Screenshots= directory with a name formated as
+=Screenshot_20230425_134550.png= if the screenshot was taken on the 25th
+of April 2023 at 1:45:50PM. If the file already exists, the script
+will suffix the name with an underscore followed by an incremental
+number like =Screenshot_20230425_134550_1.png= or
+=Screenshot_20230425_134550_2.png=.
+
+If the argument =select= is passed to =screenshot=, as in =screenshot
+select=, then use =slurp= to select the area to capture.
+#+begin_src sh
+OUTFILE_BASE="$HOME/Pictures/Screenshots/Screenshot_$(date +%Y%m%d)_$(date +%H%M%S)"
+OUTFILE="$OUTFILE_BASE.png"
+SUFFIX=0
+
+while getopts ':cd:gs' OPTION; do
+    case "$OPTION" in
+        c )
+            COPY="yes"
+            ;;
+        d )
+            DELAY="$OPTARG"
+            ;;
+        g )
+            GIMP="yes"
+            ;;
+        s )
+            SELECT="yes"
+            ;;
+        ? )
+            echo "Usage: $(basename "$0") [-c] [-d DELAY] [-g] [-s]"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -n "$DELAY" ]
+then sleep "$DELAY"
+fi
+
+if [ "$SELECT" = "yes" ]
+then grim -g "$(slurp)" "$OUTFILE"
+else grim "$OUTFILE"
+fi
+
+if [ "$GIMP" = "yes" ]
+then gimp "$OUTFILE"
+fi
+
+if [ "$COPY" = "yes" ]
+then wl-copy < "$OUTFILE"
+fi
+
+# wl-copy < "$OUTFILE"
+#+end_src
+
+** color-picker
+:PROPERTIES:
+:CUSTOM_ID: cliutilitiescolorpicker-jf6g8ul0crj0
+:END:
+
 ** sshbind
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
@@ -1081,17 +1149,26 @@ downloading one video once, I wrote a small [[#rofi-ytdl-ff8f789d][~rofi-ytdl~]]
 ~rofi~ utility to specify a single link and download it.
 * Plock
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/plock
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/plock
 :CUSTOM_ID: Lock-635fcb38
 :END:
 ~plock~ is a simple script that locks the screen with ~i3lock~ while setting as
 the background image of the locked screen a corrupted screenshot of the screen
 before it was locked.
-#+BEGIN_SRC fish
-set TMPBG /tmp/screen.png
-scrot $TMPBG
-corrupter -add 0 $TMPBG $TMPBG
-i3lock -t -e -f -i $TMPBG
+#+BEGIN_SRC sh
+TMPBG="/tmp/screen.png"
+if [ "$XDG_SESSION_TYPE" = "wayland" ]
+then
+    SCREENER=grim
+    LOCKER="swaylock -feF"
+else
+    SCREENER=scrot
+    LOCKER="scrot -ef"
+fi
+
+$SCREENER "$TMPBG"
+corrupter -add 0 "$TMPBG" "$TMPBG"
+$LOCKER -ti "$TMPBG"
 rm $TMPBG
 #+END_SRC
 
@@ -1227,17 +1304,29 @@ rofi -dmenu $argv
 :HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
 :CUSTOM_ID: Emoji_picker-a1c374ec
 :END:
-The emoji picker is a simple fish script that uses rofi and [[file:~/.config/emoji.txt][~/.config/emoji.txt]]
-to provide a small, local search for emojis. Once the emoji is selected, it is
-copied to the clipboard using =xclipboard=.
+The emoji picker is a simple fish script that uses rofi and
+[[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. It is
+relatively easy to build this file from the Unicode’s [[https://unicode.org/Public/emoji/15.0/emoji-test.txt][test file]]. Once
+the emoji is selected, it is copied to the clipboard using =xclipboard=
+when in a Xorg session or =wl-copy= from =wl-clipboard= when in a Wayland
+session.
 #+BEGIN_SRC bash
-grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | \
-    awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
+SELECTED_EMOJI=$(grep -v "#" ~/.config/emoji.txt | rofi -dmenu -p "Select emoji" -i | awk '{print $1}' | tr -d '\n')
+if [ "$XDG_SESSION_TYPE" = "wayland" ]
+then printf "%s" "$SELECTED_EMOJI" | wl-copy
+else printf "%s" "$SELECTED_EMOJI" | xclip -sel clip
+fi
 #+END_SRC
 
 Also, let’s send a notification telling the user the emoji has been copied!
 #+BEGIN_SRC bash
-EMOJI=$(xclip -o -selection clipboard | tr -d '\n')
+# EMOJI=$([ "$XDG_SESSION_TYPE" = "wayland" ] && xclip -o -selection clipboard || wl-paste)
+if [ "$XDG_SESSION_TYPE" = "wayland" ]
+then EMOJI=$(wl-paste)
+else EMOJI=$(xclip -o)
+fi
+
+# EMOJI=$(xclip -o -selection clipboard | tr -d '\n')
 test -z "$EMOJI" && notify-send "No emoji copied" -u low && exit
 EMOJI="$EMOJI copied to clipboard"
 notify-send -u low "$EMOJI"
@@ -2107,6 +2196,23 @@ export XDG_CURRENT_DESKTOP=wlroots
 . way-env-setup
 systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec start-newm
+#+end_src
+
+** Sway
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-sway
+:CUSTOM_ID: WaylandSway-a8lge8m0arj0
+:END:
+#+begin_src sh
+export SDL_VIDEODRIVER=wayland
+# export XDG_SESSION_TYPE=wayland
+# export XDG_SESSION_DESKTOP=wlroots
+# export XDG_CURRENT_TYPE=wlroots
+export XDG_CURRENT_DESKTOP=sway
+. /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
+. way-env-setup
+systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec sway --unsupported-gpu
 #+end_src
 
 * Weather
