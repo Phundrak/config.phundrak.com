@@ -318,13 +318,6 @@ UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
 printf "^f2^f0%s" "$UNREAD"
 #+end_src
 
-** Pinfo                                                          :noexport:
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :tangle no
-:CUSTOM_ID: Pinfo-f3644596
-:END:
-~pinfo~ is a utility that shows system information
-
 ** Post scrot script
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/post-scrot
