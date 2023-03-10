@@ -8337,6 +8337,10 @@ Undefining some stuff to make keybind prefixes work correctly.
 #+end_src
 
 #+begin_src emacs-lisp
+(general-define-key
+ "<f5>" #'compile
+ "<f6>" #'recompile)
+
 (phundrak/leader-key
   "SPC" '(counsel-M-x :wk "M-x")
   "'"   #'shell-pop
