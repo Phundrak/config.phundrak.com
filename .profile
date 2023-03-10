@@ -10,7 +10,6 @@ export LSP_USE_PLISTS=true
 
 export HISTFILE="${XDG_STATE_HOME}/bash/history"
 export _Z_DATA="$XDG_DATA_HOME"/z
-export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
 export WINEPREFIX="$XDG_DATA_HOME"/wine
 export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
