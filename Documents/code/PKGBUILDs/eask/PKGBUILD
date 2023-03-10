@@ -4,7 +4,7 @@ _pkgname=eask
 _orgname=emacs-eask
 _nodepkgname=cli
 pkgname="nodejs-${_pkgname}"
-pkgver=0.7.7
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="Command-line tool for building and testing Emacs Lisp packages"
 url="https://github.com/${_orgname}/${_pkgname}"
@@ -13,7 +13,7 @@ arch=("any")
 depends=("nodejs")
 makedepends=("npm")
 source=("https://registry.npmjs.org/@${_orgname}/${_nodepkgname}/-/${_nodepkgname}-${pkgver}.tgz")
-sha256sums=('6664b69d22e34c7647e69b3b379a808e8695ed3817ffce1c70df02b269a530b5')
+sha256sums=('deac9ac83c013ef05339cb71c552a71fdbc3b3dd0387031c884bbd9b10fcf4b0')
 noextract=("$_pkgname-$pkgver.tgz")
 
 prepare() {
