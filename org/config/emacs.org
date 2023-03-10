@@ -6712,6 +6712,20 @@ or some I write myself.
         org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
 #+end_src
 
+**** SDLang
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationProgrammingDSLsSDLang-x4q2uwx05rj0
+:END:
+I don’t actually use [[https://sdlang.org/][SDLang]] but [[https://kdl.dev/][KDL]] in order to configure [[https://zellij.dev/][Zellij]], but
+KDL doesn’t have a major mode for Emacs yet. Maybe I should work on
+that?
+#+begin_src emacs-lisp
+(use-package sdlang-mode
+  :straight (:build t)
+  :defer t
+  :mode "\\.kdl\\'")
+#+end_src
+
 **** Shells
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Shellsn116fl6184j0
