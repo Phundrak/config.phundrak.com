@@ -5016,27 +5016,6 @@ describing phonetics evolution. So, let’s disable it:
 (setq org-use-sub-superscripts (quote {}))
 #+END_SRC
 
-**** ConlangDict
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-ConlangDict-wvi7vaa16fj0
-:END:
-I am currently working on new exporters as well as custom links for my
-org websites. They are first thought for my [[https://conlang.phundrak.com][conlanging website]], hence
-the name, but one can use the package for any org-generated website.
-This package provides two exporters, ~ox-conlang-md~ and
-~ox-conlang-json~, as well as ~ol-conlang~ to handle links to and inside
-the dictionary. The markdown files are meant to be used with my custom
-Vue front-end (not publicly released yet).
-#+begin_src emacs-lisp
-(use-package org-conlang
-  :defer t
-  :after '(org ol ox)
-  :straight (org-conlang :type git
-                         :host nil
-                         :repo "https://labs.phundrak.com/phundrak/org-conlang"
-                         :build t))
-#+end_src
-
 **** Epub
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-Epub-w5ycfuz095j0
