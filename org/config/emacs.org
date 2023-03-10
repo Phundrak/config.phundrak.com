@@ -6261,7 +6261,9 @@ And let’s enable some intergration with ~ivy~.
     [remap xref-find-apropos] #'consult-lsp-symbols))
 #+end_src
 
-~dap-mode~ is an advanced debugging mode that works through lsp.
+~dap-mode~ is an advanced debugging mode that works through LSP. Note
+that currently, ~dap-firefox~ and ~dap-chrome~ don’t work correctly due to
+[[https://github.com/emacs-lsp/dap-mode/issues/547][this issue]]. A workaround can be found in [[https://github.com/emacs-lsp/dap-mode/issues/554#issuecomment-1171256089][this comment]] though.
 #+begin_src emacs-lisp
 (use-package dap-mode
   :after lsp
@@ -6270,19 +6272,27 @@ And let’s enable some intergration with ~ivy~.
   :config
   (dap-ui-mode)
   (dap-ui-controls-mode 1)
+  (add-hook 'dap-stopped-hook
+            (lambda (arg) (call-interactively #'dap-hydra)))
+  :init
+  ;; JS/TS
+  (with-eval-after-load 'web-mode
+    (require 'dap-firefox)
+    (require 'dap-chrome)
+    (require 'dap-node))
 
-  (require 'dap-lldb)
-  (require 'dap-gdb-lldb)
-
-  (dap-gdb-lldb-setup)
-  (dap-register-debug-template
-   "Rust::LLDB Run Configuration"
-   (list :type "lldb"
-         :request "launch"
-         :name "LLDB::Run"
-         :gdbpath "rust-lldb"
-         :target nil
-         :cwd nil)))
+  ;; Rust
+  (with-eval-after-load 'rustic-mode
+    (require 'dap-lldb)
+    (require 'dap-gdb-lldb)
+    (dap-register-debug-template
+     "Rust::LLDB Run Configuration"
+     (list :type "lldb"
+           :request "launch"
+           :name "LLDB::Run"
+           :gdbpath "rust-lldb"
+           :target nil
+           :cwd nil))))
 #+end_src
 
 *** DSLs
