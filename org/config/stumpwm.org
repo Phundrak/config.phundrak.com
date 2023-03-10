@@ -1386,9 +1386,11 @@ redefine it:
 #+end_src
 
 As with groups management, I grew used to ~s-TAB~ in AwesomeWM bringing
-me back to the previously focused window.
+me back to the previously focused window, and I also grew used to ~s-o~
+doing the same thing.
 #+begin_src lisp
 (define-key *top-map* (my/kbd "s-TAB") "other-window")
+(define-key *top-map* (my/kbd "s-o") "other-window")
 #+end_src
 
 ** Windows management
