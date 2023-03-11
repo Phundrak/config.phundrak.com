@@ -1901,7 +1901,9 @@ Paris 8 (my university).
 #+header: :tangle no :exports none
 #+begin_src emacs-lisp :var lists=mu4e-emacs-mailing-lists
 (mapconcat (lambda (list)
-             (let ((address (string-replace (regexp-quote "~") "" list)))
+             (let ((address (string-replace (regexp-quote "~")
+                                            ""
+                                            (if (stringp list) list (car list)))))
                (mapconcat (lambda (flag)
                             (concat flag ":" address))
                           '("list" "t" "f" "contact")
@@ -3848,21 +3850,22 @@ these will be renamed this way:
 #+begin_src emacs-lisp :var buffers=exwm-renamed-buffers-list :cache yes
 (format "%s\n%S"
         (mapconcat (lambda (buffer)
-                     (let ((buffer-name buffer))
+                     (let ((buffer-name (if (stringp buffer)
+                                            buffer
+                                          (car buffer))))
                        (format "(\"%s\" %S)"
                                (downcase buffer-name)
-                               `(exwm-workspace-rename-buffer (concat "EXWM: "
-                                                                      ,buffer-name
-                                                                      " - "
-                                                                      exwm-title)))))
+                               `(exwm-workspace-rename-buffer
+                                 (concat ,(concat "EXWM: " buffer-name " - ")
+                                         exwm-title)))))
                    buffers
                    "\n")
         '(_otherwise (exwm-workspace-rename-buffer exwm-title)))
 #+end_src
 
-#+RESULTS[6811bb0d3e54e891d39c3814f239e4c5ce497214]: exwm-gen-buffers-rename
-: ("kitty" (exwm-workspace-rename-buffer (concat "EXWM: " "Kitty" " - " exwm-title)))
-: ("qutebrowser" (exwm-workspace-rename-buffer (concat "EXWM: " "Qutebrowser" " - " exwm-title)))
+#+RESULTS[64fdbf1e8957b82aad801ec57f2155a0a8f5be54]: exwm-gen-buffers-rename
+: ("kitty" (exwm-workspace-rename-buffer (concat "EXWM: Kitty - " exwm-title)))
+: ("qutebrowser" (exwm-workspace-rename-buffer (concat "EXWM: Qutebrowser - " exwm-title)))
 : (_otherwise (exwm-workspace-rename-buffer exwm-title))
 
 #+name: exwm-buffers-name
