@@ -203,11 +203,12 @@ bindgesture swipe:4:up    move up
 bindgesture swipe:4:down  move down
 
 mode "screenshot" {
-  bindsym Print exec "screenshot";      mode "default"
-  bindsym c     exec "screenshot -c";   mode "default"
-  bindsym s     exec "screenshot -s";   mode "default"
-  bindsym g     exec "screenshot -g";   mode "default"
-  bindsym d     exec "screenshot -d 3"; mode "default"
+  bindsym Print   exec "screenshot";      mode "default"
+  bindsym c       exec "screenshot -c";   mode "default"
+  bindsym s       exec "screenshot -s";   mode "default"
+  bindsym g       exec "screenshot -g";   mode "default"
+  bindsym d       exec "screenshot -d 3"; mode "default"
+  bindsym Shift+s exec "screenshot -sc";  mode "default"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
