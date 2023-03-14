@@ -3616,6 +3616,11 @@ the git repository.
                                 :protocol ssh
                                 :repo "phundrak/eshell-info-banner.el")
   :hook (eshell-banner-load . eshell-info-banner-update-banner)
+  :custom-face
+  (eshell-info-banner-normal-face ((t :foreground "#A3BE8C")))
+  (eshell-info-banner-background-face ((t :foreground "#E5E9F0")))
+  (eshell-info-banner-warning-face ((t :foreround "#D08770")))
+  (eshell-info-banner-critical-face ((t :foreground "#BF616A")))
   :config
   (setq eshell-info-banner-width 80
         eshell-info-banner-partition-prefixes '("/dev" "zroot" "tank")))
