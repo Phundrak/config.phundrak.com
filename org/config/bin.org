@@ -1156,7 +1156,7 @@ then
     LOCKER="swaylock -feF"
 else
     SCREENER=scrot
-    LOCKER="scrot -ef"
+    LOCKER="i3lock -ef"
 fi
 
 $SCREENER "$TMPBG"
