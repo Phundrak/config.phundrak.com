@@ -526,11 +526,11 @@ abbr work 'autorandr -l work && xwallpaper --zoom (cat $HOME/.cache/wallpaper) &
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Misc-Media-e4b85d56
 :END:
-Here you will find various commands related to media in general. the first one
-is a command to play some chillhop from the [[https://www.youtube.com/user/Chillhopdotcom][Chillhop YouTube channel]]'s
-livestream.
+Here you will find various commands related to media in general. The
+first one is a command to play some chillhop from the [[https://www.youtube.com/@LofiGirl][Lofi Girl
+YouTube channel]]'s livestream.
 #+BEGIN_SRC fish
-abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/user/Chillhopdotcom/live" &'
+abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/watch?v=jfKfPfyJRdk" &'
 #+END_SRC
 
 When it comes to mpv, I do not want to force it to open a graphical window if
