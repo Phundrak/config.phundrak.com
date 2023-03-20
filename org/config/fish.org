@@ -508,6 +508,20 @@ Here is the corresponding fish configuration:
 Finally, some miscellaneous abbreviations that don't really fit into any of the
 above categories.
 
+*** Screens setup
+:PROPERTIES:
+:CUSTOM_ID: AbbreviationsMiscScreenssetup-27c5xn50srj0
+:END:
+I have an automatic screen setup for when I am at home, but it
+unfortunately doesn’t match my setup at work. =autorandr horizontal=
+does not work because my third screen is vertical, the wallpaper is
+misaligned, and picom becomes too taxing on my system. I ended up
+writing the following command each morning, but now a simple abbrev
+does the work for me.
+#+begin_src fish
+abbr work 'autorandr -l work && xwallpaper --zoom (cat $HOME/.cache/wallpaper) && pkill picom'
+#+end_src
+
 *** Media
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Misc-Media-e4b85d56
