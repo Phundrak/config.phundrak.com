@@ -574,11 +574,10 @@ As shown by the function `', type can weild the value `svg',
 
 This function will output in /tmp a file beginning with \"Emacs\"
 and ending with the extension of the requested TYPE."
-  (interactive)
-  (let* ((type (if type type
-                 (intern (completing-read "Screenshot Type: "
-                                          '(png svg pdf postscript)))))
-         (extension (pcase type
+  (interactive (list
+                (intern (completing-read "Screenshot type: "
+                                         '(png svg pdf postscript)))))
+  (let* ((extension (pcase type
                       ('png        ".png")
                       ('svg        ".svg")
                       ('pdf        ".pdf")
