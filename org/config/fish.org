@@ -564,7 +564,7 @@ abbr nv 'env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
 Finally, let's declare the following abbreviation that will launch a MPV
 instance displaying my webcam:
 #+BEGIN_SRC fish
-abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
+abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0 --profile=low-latency --untimed'
 #+END_SRC
 
 *** Sudo
