@@ -65,7 +65,7 @@ input "1386:792:Wacom_USB_Bamboo_PAD_Finger" {
 }
 
 input "1386:792:Wacom_USB_Bamboo_PAD_Pen" {
-  map_to_output eDP-1
+  map_to_output HDMI-A-1
 }
 
 input * {
