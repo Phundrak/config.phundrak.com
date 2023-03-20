@@ -89,8 +89,8 @@ mode "resize" {
   bindsym q      mode "default"
 }
 
-mode "bluetooth" {
-  bindsym c exec bluetooth-connect; mode "default"
+mode "buffers" {
+  bindsym d kill; mode "default"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
@@ -99,12 +99,13 @@ mode "bluetooth" {
 }
 
 mode "rofi" {
-  bindsym a       exec awiki;          mode "default"
-  bindsym e       exec rofi-emoji;     mode "default"
-  bindsym r       exec $menu;          mode "default"
-  bindsym s       exec rofi -show ssh; mode "default"
-  bindsym y       exec ytplay;         mode "default"
-  bindsym Shift+y exec rofi-ytdl;      mode "default"
+  bindsym a       exec awiki;             mode "default"
+  bindsym b       exec bluetooth-connect; mode "default"
+  bindsym e       exec rofi-emoji;        mode "default"
+  bindsym r       exec $menu;             mode "default"
+  bindsym s       exec rofi -show ssh;    mode "default"
+  bindsym y       exec ytplay;            mode "default"
+  bindsym Shift+y exec rofi-ytdl;         mode "default"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
@@ -175,7 +176,7 @@ mode "leader" {
   bindsym plus  scratchpad show; mode "default"
 
   bindsym a     mode "apps"
-  bindsym b     mode "bluetooth"
+  bindsym b     mode "buffers"
   bindsym q     mode "sway"
   bindsym w     mode "windows"
   bindsym Print mode "screenshot"
