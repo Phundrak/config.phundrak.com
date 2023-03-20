@@ -37,9 +37,10 @@ first column the keychord following the leader key, on the second
 column the EmacsLisp function to be called, and on the third the
 StumpWM command. If one of the ELisp or StumpWM case’s is empty, it
 means there is no equivalence. If it’s ~nil~, then it means it is a
-prefix key. The fourth column is for now reserved for Emacs’ which-key
-so I can give it a better name. If its value is ~nil~, then it should
-not show up. Hopefully this can be implemented someday in StumpWM.
+prefix key. The fourth column is for now reserved for Emacs’
+which-key, so I can give it a better name. If its value is ~nil~, then
+it should not show up. Hopefully this can be implemented someday in
+StumpWM.
 
 ** Generating Code                                                :noexport:
 :PROPERTIES:
@@ -503,8 +504,9 @@ IconViewScale=-1
 :HEADER-ARGS: :mkdirp yes :tangle ~/.config/gtk-3.0/settings.ini
 :CUSTOM_ID: Theme-and-graphical-tweaks-GTK-Settings-GTK3-ojl7gbc0l9j0
 :END:
-The following file helps me choosing the aspect of various GTK+ 3 software,
-including their theme and icons. First, let’s declare the header:
+The following file helps me to choose the aspect of various GTK+ 3
+software, including their theme and icons. First, let’s declare the
+header:
 #+BEGIN_SRC conf-unix
 [Settings]
 #+END_SRC
@@ -632,15 +634,15 @@ Sent from GNU/Emacs
 :END:
 Some software I use are not packaged (yet) on my system. Therefore, in
 order to make them available in ~rofi~, I need to write a ~.desktop~ file
-so I can launch them.
+to launch them.
 
 ** Emacs
 :PROPERTIES:
 :CUSTOM_ID: -desktop-files-for-custom-applications-Emacs-6e9actg0m9j0
 :END:
-Emacs does have a default ~.desktop~ file, but I want to override it so
-I can just “open with Emacs” from other software (such as Nemo) and it
-will instead open with ~emacsclient~.
+Emacs does have a default ~.desktop~ file, but I want to override it to
+just “open with Emacs” from other software (such as Nemo) and it will
+open with ~emacsclient~ instead of just =emacs=.
 #+begin_src conf-desktop :tangle ~/.local/share/applications/emacs.desktop
 [Desktop Entry]
 Name=Emacs
@@ -673,7 +675,7 @@ StartupWMClass=Gnus
 Keywords=Text;Editor;
 #+end_src
 
-Then I also have ~org-protocol.desktop~ so I can capture elements from
+Then I also have ~org-protocol.desktop~ that helps capture elements from
 other software, mainly web pages from Firefox through the [[https://github.com/sprig/org-capture-extension][org-capture
 extension]].
 #+begin_src conf-desktop :tangle ~/.local/share/applications/org-protocol.desktop
@@ -730,8 +732,8 @@ Categories=Development
 :CUSTOM_ID: -desktop-files-for-custom-applications-Minecraft-tds7ddh0m9j0
 :END:
 Yup, I play Minecraft. And yes, it does have a default ~.desktop~ file,
-but this one overrides it so it launches automatically Minecraft with
-[[https://wiki.archlinux.org/title/PRIME][prime-run]] so my GPU is used.
+but this one overrides it to launch automatically Minecraft with
+[[https://wiki.archlinux.org/title/PRIME][prime-run]], using my Nvidia GPU instead of my integrated GPU.
 #+begin_src conf-desktop :tangle ~/.local/share/applications/minecraft-launcher.desktop
 [Desktop Entry]
 Type=Application

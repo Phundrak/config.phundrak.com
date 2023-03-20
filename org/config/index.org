@@ -38,15 +38,15 @@ some games that do not offer to remap keys (I’m looking at you, Among Us).
 :PROPERTIES:
 :CUSTOM_ID: Features-5ab2a2c0
 :END:
-- Emacs configuration perfectly tailored for my own use
+- Emacs' configuration perfectly tailored for my own use
 - Beautiful and comfy StumpWM configuration
 - And enough information below to get basically the same distro
   install as I have on computer.
 
-Most of the org files you will find in this repos are the actual
-source code of much of my config files. For instance, the bootstrap
-found in [[file:bootstrap.org][bootstrap.org]] exports almost all of its code snippets to
-~$HOME/.config/yadm/bootstrap~ thanks to =M-x org-babel-tangle= from
+Most of the org files you will find in this repo are the actual source
+code of much of my config files. For instance, the bootstrap found in
+[[file:bootstrap.org][bootstrap.org]] exports almost all of its code snippets to
+=$HOME/.config/yadm/bootstrap= thanks to =M-x org-babel-tangle= from
 within Emacs. Below I will also present and comment some of my short
 config files which do not deserve to have a full org file dedicated to
 them.
@@ -186,14 +186,15 @@ welcome either.
 :PROPERTIES:
 :CUSTOM_ID: Features-And-some-minor-configuration-files-Paru-1f3ef49e
 :END:
-~paru~ is an AUR helper for Arch Linux which aims to be a replacement for ~yay~.
-A couple of the options you will see below aim at restoring the behavior of
-~yay~ in ~paru~. I also activated the sudo loop so I don’t have to enter my
-password if one package takes too much time to compile and/or compress. I know
-it can be a security issue if someone ever get access to my computer while paru
-is running, but if it ever happens it will be already concerning enough they
-managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my custom script dired]] so I can use Emacs’ Dired
-as the file manager for ~paru~.
+~paru~ is an AUR helper for Arch Linux which aims to be a replacement
+for ~yay~. A couple of the options you will see below aim at restoring
+the behavior of ~yay~ in ~paru~. Sudo loop avoids me having to enter again
+my password if one package takes too much time to compile and/or
+compress. I know it can be a security issue if someone ever get access
+to my computer while paru is running, but if it ever happens it will
+be already concerning enough they managed to. I also make use of [[file:bin.org::#Emacs-stuff-Dired-2eeca9da][my
+custom script dired]] so I can use Emacs’ Dired as the file manager
+for ~paru~.
 #+BEGIN_SRC conf :tangle ~/.config/paru/paru.conf :mkdirp yes
 [options]
 BottomUp

@@ -405,7 +405,7 @@ gtk3="off"
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_brand-5b25776b
 :END:
-With this variables, it is possible to show or hide the brand of a CPU in the
+With these variables, it is possible to show or hide the brand of a CPU in the
 ~cpu~ output.
 - Default value :: ~"on"~
 - Values ::
@@ -459,8 +459,8 @@ speed_type="bios_limit"
 :PROPERTIES:
 :CUSTOM_ID: Information_settings-Hardware-CPU-CPU_speed_shorthand-0d15fe08
 :END:
-This value allows to show sorter CPU speed with less digits. This flag is not
-supported in systems with CPU speed below 1GHz.
+This value allows showing sorter CPU speed with fewer digits. This flag
+is not supported in systems with CPU speed below 1GHz.
 - Default value :: ~"off"~
 - Values ::
   - ~"on"~

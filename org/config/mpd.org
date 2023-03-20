@@ -62,9 +62,9 @@ log_file "~/.config/mpd/log"
 :PROPERTIES:
 :CUSTOM_ID: Optional-Parameters-hkw8zz71v8j0
 :END:
-While these values are not strictly necessary, some are still
-extremely useful such as ~music_directory~ so we don’t have to manually
-add our music to MPD each time we run it.
+While these values are not strictly necessary, some are still useful
+such as ~music_directory~: we don’t have to manually add our music to
+MPD each time we run it.
 #+name: mpd-optional-parameters
 | Parameter          | Value               | Comment                                                   |
 |--------------------+---------------------+-----------------------------------------------------------|
@@ -83,9 +83,8 @@ add our music to MPD each time we run it.
 :PROPERTIES:
 :CUSTOM_ID: Audio-outputs-emqjro81v8j0
 :END:
-Two audio outputs will be defined. The first one is dedicated to
-Pulseaudio so I can actually hear my music. Its configuration is
-simple, really.
+Two audio outputs will be defined. The first one sets Pulseaudio up so
+I can actually hear my music. Its configuration is simple, really.
 #+begin_src conf-space
 audio_output {
   type  "pulse"
@@ -93,9 +92,8 @@ audio_output {
 }
 #+end_src
 
-Another one is created, but this time for the visualizer of ~ncmpcpp~.
-It is not necessary to create this one if you don’t plan on using this
-feature.
+Another one sets up the visualizer of ~ncmpcpp~. It is not necessary to
+create this one if you don’t plan on using this feature.
 #+begin_src conf-space
 audio_output {
   type "fifo"

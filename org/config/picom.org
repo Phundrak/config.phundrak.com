@@ -26,7 +26,7 @@ requested using the wintypes option.
 shadow = true;
 #+END_SRC
 
-The blur radius radius for shadows is measured in pixels, and it defaults to
+The blur radius for shadows is measured in pixels, and it defaults to
 12px.
 #+BEGIN_SRC conf
 shadow-radius = 17;
@@ -55,8 +55,8 @@ or ~shadow-blue~.
 shadow-color = "#171A20"
 #+END_SRC
 
-It is possible to specify a list  of conditions of windows that should have no
-shadow.
+It is possible to specify a list of conditions of windows that should
+have no shadow.
 | Default value | ~[]~ |
 #+BEGIN_SRC conf
 shadow-exclude = [
@@ -102,9 +102,9 @@ config file instead.
 no-dock-shadow = false;
 #+END_SRC
 
-This option allows Picom not to draw on drag-and-drop windows. This option is
-deprecated, and users should use the ~wintypes~ option in their config file
-instead.
+This option allows Picom not to draw on drag-and-drop windows. It is
+deprecated, and users should use the ~wintypes~ option in their config
+file instead.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 no-dnd-shadow = false;
@@ -156,7 +156,8 @@ feature on or off. However, its behavior can be changed with
 fading = true
 #+END_SRC
 
-These values controls the opacity change between steps while fading in and out.
+These values control the opacity change between steps while fading in
+and out.
 | Default value | ~0.028~ (fade-in), ~0.03~ (fade-out) |
 | Min value     | ~0.01~                             |
 | Max value     | ~1.0~                              |
@@ -268,7 +269,7 @@ focus-exclude = [
 #+END_SRC
 
 The user can also specify a list of opacity rules, in the format
-~PERCENT:PATTERN~, like ~50:name *= "Firefox"~ . ~picom-trans~ is recommended
+~PERCENT:PATTERN~, like ~50:name *= "Firefox"~ . ~picom-trans~ is recommended
 over this. Note we don't make any guarantee about possible conflicts with other
 programs that set ~_NET_WM_WINDOW_OPACITY~ on frame or client windows.
 | Default value | ~[]~ |
@@ -336,8 +337,8 @@ blur-background-exclude = [
 :PROPERTIES:
 :CUSTOM_ID: General_settings-41398de7
 :END:
-Daemonize process. Fork to background after initialization. Causes issues with
-certain (badly-written) drivers.
+Daemonize process. Fork to background after initialization. Can cause
+issues with certain (badly-written) drivers.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 daemon = true;
@@ -391,13 +392,10 @@ passing ~_NET_WM_OPACITY~ of client windows to frame windows.
 detect-client-opacity = true;
 #+END_SRC
 
-Limit picom to repaint at most once every 1 / ~refresh_rate~ second to boost
-performance. This should not be used with
-#+BEGIN_SRC text :tangle no
-vsync drm/opengl/opengl-oml
-#+END_SRC
-as they essentially does sw-opti's job already, unless you wish to specify a
-lower refresh rate than the actual value.
+Limit picom to repaint at most once every 1 / ~refresh_rate~ second to
+boost performance. This should not be used with ~vsync
+drm/opengl/opengl-oml~ as they essentially do sw-opti's job already,
+unless you wish to specify a lower refresh rate than the actual value.
 | Default value | ~""~ |
 #+BEGIN_SRC conf
 # sw-opti =;
@@ -411,10 +409,10 @@ the WM supports it.
 # use-ewmh-active-win = false;
 #+END_SRC
 
-Unredirect all windows if a full-screen opaque window is detected, to maximize
-performance for full-screen windows. Known to cause flickering when
-redirecting/unredirecting windows. paint-on-overlay may make the flickering less
-obvious.
+Unredirect all windows if a full-screen opaque window is detected, to
+maximize performance for full-screen windows. Known to cause
+flickering when redirecting/unredirecting windows. =paint-on-overlay=
+may make the flickering less obvious.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 unredir-if-possible = false;
@@ -500,10 +498,10 @@ fullscreen based only on its size and coordinates.
 no-ewmh-fullscreen = false;
 #+END_SRC
 
-Dimming bright windows so their brightness doesn't exceed this set value.
-Brightness of a window is estimated by averaging all pixels in the window, so
-this could comes with a performance hit. Setting this to 1.0 disables this
-behaviour. Requires ~--use-damage~ to be disabled.
+Dimming bright windows so their brightness doesn't exceed this set
+value. Brightness of a window is estimated by averaging all pixels in
+the window, so this could come with a performance hit. Setting this to
+1.0 disables this behaviour. Requires ~--use-damage~ to be disabled.
 | Default value | ~1.0~ |
 #+BEGIN_SRC conf
 max-brightness = 1.0;
@@ -516,24 +514,25 @@ instead of blending on top of them.
 transparent-clipping = false;
 #+END_SRC
 
-Set the log level. Possible values are:
+Set the log level. Possible values in increasing level of importance are:
 - ~trace~
 - ~debug~
 - ~info~
 - ~warn~
 - ~error~
-in increasing level of importance. Case doesn't matter. If using the "TRACE" log
-level, it's better to log into a file using ~--log-file~, since it can generate
-a huge stream of logs.
+Case doesn't matter. If using the "TRACE" log level, it's better to
+log into a file using ~--log-file~, since it can generate a huge stream
+of logs.
 | Default value | ~"debug"~ |
 #+BEGIN_SRC conf
 log-level = "warn";
 #+END_SRC
 
-Set the log file. If ~--log-file~ is never specified, logs will be written to
-stderr. Otherwise, logs will to written to the given file, though some of the
-early logs might still be written to the stderr. When setting this option from
-the config file, it is recommended to use an absolute path.
+Set the log file. If ~--log-file~ is never specified, logs will be
+written to stderr. Otherwise, logs will to written to the given file,
+though some early logs might still be written to the stderr. When
+setting this option from the config file, it is recommended to use an
+absolute path.
 | Default value | ~''~ |
 #+BEGIN_SRC conf
 # log-file = '/path/to/your/log/file';
@@ -577,10 +576,10 @@ Following per window-type options are available:
 - full-shadow :: Controls whether shadow is drawn under the parts of the window
   that you normally won't be able to see. Useful when the window has parts of it
   transparent, and you want shadows in those areas.
-- redir-ignore :: Controls whether this type of windows should cause screen to
-  become redirected again after been unredirected. If you have
-  unredir-if-possible set, and doesn't want certain window to cause unnecessary
-  screen redirection, you can set this to `true`.
+- redir-ignore :: Controls whether this type of windows should cause
+  screen to become redirected again after being unredirected. If you
+  have =unredir-if-possible= set, and doesn't want certain window to
+  cause unnecessary screen redirection, you can set this to =true=.
 #+BEGIN_SRC conf
 wintypes:
 {

@@ -38,8 +38,8 @@ have a swap partition at least twice the size of your installed RAM. That is
 because when this command will be run, the system will try to save the current
 state of your machine, stored in your RAM, to the swap filesystem. If there is
 not enough space, the command will fail, and you won’t be able to use this
-command. For instance, my current computer has 32GB of RAM, hence my SWAP
-partition is 16GB large.
+command. For instance, my current computer has 32 GB of RAM, hence my SWAP
+partition is 16 GB large.
 
 ** Get the latest, fastest mirrors
 :PROPERTIES:
@@ -70,7 +70,7 @@ by default on Arch ISOs anymore, so I’ll need to install it.
 pacman -S wget
 #+END_SRC
 
-Now, let’s grab the script. You can check it on [[https://github.com/matmoul/archfi][Github]].
+Now, let’s grab the script. You can check it on [[https://github.com/matmoul/archfi][GitHub]].
 #+BEGIN_SRC sh
 wget archfi.sf.net/archfi
 # Or from matmoul.github.io/archfi if SourceForge is down
@@ -80,7 +80,7 @@ sh archfi
 Then, follow the instructions and install Arch Linux. Take the opportunity to
 install as many packages as you need, mainly ~paru~ which I use as my package
 manager (it is just a wrapper for ~pacman~) and AUR helper, and ~pacman-contrib~
-which will help us installing some packages later.
+which will help us to install some packages later.
 
 Once your system is installed, reboot and remove your installation media from
 your computer.
@@ -90,9 +90,9 @@ your computer.
 :HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
 :CUSTOM_ID: Execute_bootstrap-e37054ef
 :END:
-The first thing I will do is add the [[https://aur.chaotic.cx/][Chaotic AUR]] repository so I can
-get access to ~paru~ as well as some AUR packages without the need of an
-AUR helper (ironic considering ~paru~ is one). We can then install ~fish~,
+The first thing I will do is add the [[https://aur.chaotic.cx/][Chaotic AUR]] repository to get
+access to ~paru~ as well as some AUR packages without the need of an AUR
+helper (ironic considering ~paru~ is one). We can then install ~fish~,
 ~git~, and ~paru~:
 #+BEGIN_SRC sh
 sudo pacman -S fish git paru
@@ -221,7 +221,7 @@ sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Set_user’s_shell_to_fish-1a794be2
 :END:
-First of all, the bootstrap shell will set the user’s shell to fish.
+First, the bootstrap shell will set the user’s shell to fish.
 #+BEGIN_SRC fish
 printf "\n# Set fish as the default shell ###############################################\n\n"
 whiptail --yesno "Set the current user’s default shell to fish?" 8 50
@@ -259,7 +259,7 @@ system packages.
 | jmtpfs                      | FUSE filesystem for the MTP protocol                         |
 | kitty                       | My current terminal emulator, works with Xorg and Wayland    |
 | logrotate                   | Rotate system logs automatically                             |
-| man-pages                   | Linux man pages                                              |
+| man-pages                   | Linux's man pages                                            |
 | man-db                      | Read the Linux man pages                                     |
 | netctl                      | Profile based systemd network management                     |
 | network-manager-applet      | System tray applet for NetworkManager                        |
@@ -437,9 +437,9 @@ Let’s install some desktop applications too, shall we?
 | rofi            | A beautiful ~dmenu~ replacement                           |
 
 All these packages will be installed with the command ~paru -S
---skipreview --needed~ so it won’t nag me about the PKGBUILD when I
-want to install something from the AUR, and if something is already
-installed it paru won’t try to reinstall it.
+--skipreview --needed~ to prevent it from nagging me about the PKGBUILD
+when I want to install something from the AUR, and if something is
+already installed it paru won’t try to reinstall it.
 
 #+name: gen-package-list
 #+header: :wrap "src fish :exports none :tangle no"
@@ -547,9 +547,9 @@ cd /home/phundrak/Documents/code/PKGBUILDs/sent && makepkg -si; cd ..
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Tangle_configuration_files_from_Org_files-cc524361
 :END:
-Before tangling our configuration files, we need to create some directories
-first so our files can be properly tangled. Here’s the list of directories we
-need to create:
+Before tangling our configuration files, we need to create some
+directories first to make sure our files can be properly tangled.
+Here’s the list of directories we need to create:
 #+NAME: dirs-tangled-files
 | $HOME/.config/fish     |
 | $HOME/.config/gtk-2.0  |
@@ -746,8 +746,8 @@ sudo timedatectl set-ntp true
 :END:
 ~acpilight~ is our utility managing the brightness of our screen. There
 is actually no service to enable here, but we must ensure the user is
-part of the ~video~ group so we can modify the brightness of our screen
-without using ~sudo~.
+part of the ~video~ group to enable the user modifying the brightness of
+our screen without using ~sudo~.
 #+BEGIN_SRC fish
 sudo usermod -aG video $USER
 #+END_SRC
@@ -762,8 +762,8 @@ printf "\n# Enabling and starting Docker #######################################
 sudo systemctl enable --now docker
 #+END_SRC
 
-Now, if we wish it, we can be added to the =docker= group so we won’t have to
-type =sudo= each time we call Docker or Docker Compose.
+Now, if we wish it, we can add ourselves to the =docker= group to avoid
+typing =sudo= each time we call Docker or Docker Compose.
 #+BEGIN_SRC fish
 read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
 if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
@@ -815,10 +815,11 @@ activate:
 sudo systemctl enable --now nordvpnd
 #+END_SRC
 
-Let’s also set its default protocol to UDP. This will allow me to use any port
-while connected to any WiFi as long as the 443 port is available. Because yes, I
-do connect to a WiFi that blocks some important ports, such as the IMAP and SMTP
-ports. Thanks University of Paris 8 for being SO paranoid.
+Let’s also set its default protocol to UDP. This will allow me to use
+any port while connected to any Wi-Fi as long as the 443 port is
+available. Because yes, I do connect to a Wi-Fi that blocks some
+important ports, such as the IMAP and SMTP ports. Thanks University of
+Paris 8 for being SO paranoid.
 #+BEGIN_SRC fish
 nordvpn s protocol tcp
 #+END_SRC
@@ -840,9 +841,9 @@ Linux kernel since its version 5.6. And Windows’ since August 2021,
 but I don’t really care about Windows.
 
 *But*, WireGuard is less privacy-oriented than OpenVPN. So, if I ever
-need to use my VPN for privacy reasons, I can simply revert back to
-the OpenVPN technology like shown with this command (not tangled in
-the bootstrap):
+need to use my VPN for privacy reasons, I can simply revert to the
+OpenVPN technology like shown with this command (not tangled in the
+bootstrap):
 #+begin_src fish :tangle no
 nordvpn set technology OpenVPN
 #+end_src
@@ -875,10 +876,10 @@ activate it right away:
 systemctl --user enable --now pipewire-input-filter-chain.service
 #+end_src
 
-Just make sure afterwards the microphone is redirected to the noise
-canceling source. The same source should be your input device where
-you want to use your microphone. The only downside is this is ony a
-mono input, but it shouldn’t matter for most people.
+Just make sure afterwards the microphone is redirected to the
+noise-canceling source. The same source should be your input device
+where you want to use your microphone. The only downside is this is
+ony a mono input, but it shouldn’t matter for most people.
 
 *** SSH server
 :PROPERTIES:
@@ -995,7 +996,7 @@ order to improve the user experience.
 :PROPERTIES:
 :CUSTOM_ID: Execute_bootstrap-Set_up_our_fish_shell-Install_=fisher=-3a44531b
 :END:
-We will be using ~fisher~ as our extensions manager for Fish. Let’s install it.
+We will be using ~fisher~ as our extension manager for Fish. Let’s install it.
 #+BEGIN_SRC fish
 printf "\n# Installing fisher ###########################################################\n\n"
 curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher

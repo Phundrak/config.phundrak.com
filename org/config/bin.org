@@ -188,7 +188,7 @@ go. I even made it so that you can execute it as an executable file, like
 The choice is given to the user which of them to use with options that will be
 given to =cppnew=.
 
-First of all, if no arguments were passed, return an error.
+First, if no arguments were passed, return an error.
 #+begin_src fish
 if ! count $argv >/dev/null
     echo "Missing argument: PROJECT" && return -1
@@ -280,7 +280,7 @@ analysis server as requested.
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/UpdateFlutter
 :CUSTOM_ID: UpdateFlutter-1e8fbeb7
 :END:
-This is a simple utility to be ran when the ~flutter~ package is updated.
+This is a simple utility to run when the ~flutter~ package is updated.
 #+BEGIN_SRC fish
 sudo chown -R :flutterusers /opt/flutter
 sudo chmod -R g+w /opt/flutter
@@ -406,10 +406,11 @@ fi
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
 :CUSTOM_ID: sshbind-756fabb1
 :END:
-Something that I did not know for quite some time but that is actually crazy
-useful about SSH is its ability to bind locally the port of a remote machine,
-and vice versa. The syntax is actually very simple, but I prefer a more
-intuitive way of writing it. Its usage is ~sshbind PORT FROMHOST TOHOST~.
+Something that I did not know for quite some time, but that is
+actually crazy useful about SSH is its ability to bind locally the
+port of a remote machine, and vice versa. The syntax is actually very
+simple, but I prefer a more intuitive way of writing it. Its usage is
+~sshbind PORT FROMHOST TOHOST~.
 #+BEGIN_SRC fish
 ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
 #+END_SRC
@@ -448,7 +449,7 @@ end
 #+end_src
 
 We can then read from the first member of ~argv~ which key the user
-pressed. Depending on it, we can chose what to execute.
+pressed. Depending on it, we can choose what to execute.
 #+name: nsxiv-switch-statement
 #+begin_src fish
 switch "$argv[1]"
@@ -487,12 +488,12 @@ case "g"
     gimp $FILES
 #+end_src
 
-Often, I use nsxiv to convert an image to a jpeg file, because my
-internet connection is not that great and jpeg screenshots are faster
-to upload than png screenshots. So what I do is for each file
+Often, I use nsxiv to convert an image to a JPEG file, because my
+internet connection is not that great and JPEG screenshots are faster
+to upload than PNG screenshots. So what I do is for each file
 selected, I take the base name of the file (i.e. remove its
 extension), and then I use the ~convert~ command from ~imagemagik~ to
-convert it from its original format to a jpg format --- ~imagemagik~
+convert it from its original format to a JPG format --- ~imagemagik~
 detects the formats based on the extension.
 #+name: nsxiv-jpeg
 #+begin_src fish
@@ -594,10 +595,9 @@ xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/wacom-setup
 :CUSTOM_ID: Wacom_setup-331fb024
 :END:
-I made a small and quick utility to set up my Wacom tablet so it is
-only bound to one screen. This is quite easy, we simply need to find
+I made a small and quick utility to set up my Wacom tablet to bind it
+to one screen when in Xorg. This is quite easy, we simply need to find
 the Wacom stylus’ ID and assign it to the display we want.
-
 #+begin_src sh
 ID=$(xinput | grep -oPi "wacom.+stylus.+id=\K([0-9]+)")
 SCREEN=$(xrandr -q --current | \
@@ -640,8 +640,8 @@ emacsclient -c -n -a emacs -e "(browse-url-mail \"$*\")"
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
 :CUSTOM_ID: mp42webm-aeacca58
 :END:
-This function allows me to convert easily an mp4 video to the webm format.
-Nothing too fancy here.
+This function allows me to convert easily a MP4 video to the webm
+format. Nothing too fancy here.
 #+BEGIN_SRC fish
 ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
 #+END_SRC
@@ -692,13 +692,14 @@ Categories=Media
 :HEADER-ARGS:EMACS-LISP: :exports none :tangle no
 :CUSTOM_ID: ytdl-a-youtube-dl-wrapper-03bd63e0
 :END:
-This script is a wrapper around ~youtube-dl~ which I use mainly for archiving
-YouTube videos on my NAS (at the time I’m writing this, I have already 2.1TB
-worth of videos archived). The principle behind this script is quite simple: I
-want to avoid as much as possible to redownload any video already downloaded in
-order to avoid pinging too much YouTube’s servers, 429 Too Many Requests errors
-are really annoying, and it comes really early when you have only a couple of
-new videos to download among the few 14k videos already downloaded.
+This script is a wrapper around ~youtube-dl~ which I use mainly for
+archiving YouTube videos on my NAS (at the time I’m writing this, I
+have already 2.1 TB worth of videos archived). The principle behind
+this script is quite simple: I want to avoid as much as possible to
+redownload any video already downloaded in order to avoid pinging too
+much YouTube’s servers, 429 Too Many Requests errors are really
+annoying, and it comes really early when you have only a couple of new
+videos to download among the few 14k videos already downloaded.
 
 Be aware this script was written for the Fish shell (3.1.0 and above), and makes
 use of youtube-dl 2020.03.24 and above, [[https://github.com/jorgebucaran/fish-getopts][Fish getopts]] and [[https://github.com/BurntSushi/ripgrep][ripgrep]].

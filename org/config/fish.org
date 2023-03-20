@@ -15,7 +15,7 @@ The file present in =~/.config/fish/config.fish= is the configuration file for
 the [[https://fishshell.com/][fish shell]]. It contains custom functions, environment variables and
 abbreviations.
 
-Just in case, we might need sometimes to declare the fish function =fish_title=
+Just in case, we might sometimes need to declare the fish function =fish_title=
 as =true=, so let’s do so.
 #+BEGIN_SRC fish
 function fish_title
@@ -59,10 +59,11 @@ set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 :PROPERTIES:
 :CUSTOM_ID: Tramp_remote_access-72aedec2
 :END:
-When accessing from a remote machine our computer from Emacs, tramp needs a
-precise shell appearance: a simple =$= followed by a space after which to put
-the commands it needs to execute, and nothing else. Due to this, let’s
-deactivate and redefine some of the functions defining the appearance of fish.
+When accessing from a remote machine our computer from Emacs, tramp
+needs a precise shell appearance: a simple =$= followed by a space after
+which to put the commands it needs to execute, and nothing else. Due
+to this, let’s deactivate and redefine some functions defining the
+appearance of fish.
 #+BEGIN_SRC fish
 if test "$TERM" = "dumb"
     function fish_prompt
@@ -245,16 +246,17 @@ the terminal window will come back.
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-System_monitoring-bd909755
 :END:
-Here I have some abbreviations which are quite useful when performing some
-system monitoring. With =df=, we can get an overview of our filesystem usage,
-while with =diskspace= we get some more precise information. =meminfo= is a call
-to =free= with sane defaults, and similar to =meminfo=, we also have
-=gpumeminfo= so we can get a quick look at the memory-related logs of our X
-session. I also declared =cpuinfo= an alias of =lscpu= in order to keep
-consistent with =meminfo=. =pscpu= gives us information on what the CPU is
-running right now, and =pscpu10= limits that to the top 10 threads. Similarly,
-=psmem= gives us information on the memory usage of the current threads, and
-=psmem10= only the ten most important threads in terms of memory usage.
+Here I have some abbreviations which are quite useful when performing
+some system monitoring. With =df=, we can get an overview of our
+filesystem usage, while with =diskspace= we get some more precise
+information. =meminfo= is a call to =free= with sane defaults, and similar
+to =meminfo=, we also have =gpumeminfo= to get a quick look at the
+memory-related logs of our X session. I also declared =cpuinfo= an alias
+of =lscpu= in order to keep consistent with =meminfo=. =pscpu= gives us
+information on what the CPU is running right now, and =pscpu10= limits
+that to the top 10 threads. Similarly, =psmem= gives us information on
+the memory usage of the current threads, and =psmem10= only the ten most
+important threads in terms of memory usage.
 #+NAME: mgmt-abbr
 | abbreviation | command                                    |
 |--------------+--------------------------------------------|
@@ -327,7 +329,7 @@ comes to compilation or Docker.
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Development-CMake-f2951675
 :END:
-I have the following abbreviations so I can quickly run CMake and create a
+I have the following abbreviations to quickly run CMake and create a
 configuration for debug or release profiles.
 #+NAME: abbr-cmake
 | abbreviation | command                          |
@@ -374,7 +376,7 @@ I greatly prefer to use Emacsclient as my main text editor; Emacs has basically
 all I need. So, it's only normal I have an abbreviation to launch a new instance
 of it. If launched in the terminal, I’ll usually want Emacs to be displayed in
 CLI mode and not in GUI mode, otherwise I would invoke it with my WM’s shortcut.
-In case we want to launch Emacs in GUI mode anyways, ~egui~ is available too.
+In case we want to launch Emacs in GUI mode anyway, ~egui~ is available too.
 
 #+NAME: abbr-text-ed
 | abbreviation | command               |
@@ -428,7 +430,7 @@ Here is the corresponding fish configuration:
 :CUSTOM_ID: Abbreviations-LaTeX-76865eb9
 :END:
 Yes, although I use org-mode, I still have some use for LaTeX, especially when
-it comes to PDF exports of my org files. Hence why I use the LaTeX package
+it comes to PDF exports of my org files. Hence, why I use the LaTeX package
 manager. It is recommended to use ~tllocalmgr~ instead of ~tlmgr~, but I can
 never remember the command, and the latter is faster to type, so time for an
 abbreviation. Same goes for ~texhash~ which must be run as sudo.
@@ -447,14 +449,14 @@ Here is the corresponding fish configuration:
 :PROPERTIES:
 :CUSTOM_ID: Abbreviations-Some_security_measures-489cb521
 :END:
-Some commands can be quite dangerous when not used properly, which is why I
-added default flags and options so I can get warnings before things get ugly.
-The =-i= and =-I= add prompts in case we might not want to do what we asked the
-shell to do. Notice =lns= which creates symlinks, =rmd= which removes
-directories, =rmf= which forces deletion, and =rmdf= which forces the delition
-of a directory. Notice also the =--preserve-root= which will prevent me from
-accidentally removing the root folder. I added the same option to =chgrp=,
-=chmod=, and =chown=.
+Some commands can be quite dangerous when not used properly, which is
+why I added default flags and options in order to get warnings before
+things get ugly. The =-i= and =-I= add prompts in case we might not want
+to do what we asked the shell to do. Notice =lns= which creates
+symlinks, =rmd= which removes directories, =rmf= which forces deletion,
+and =rmdf= which forces the delition of a directory. Notice also the
+=--preserve-root= which will prevent me from accidentally removing the
+root folder. I added the same option to =chgrp=, =chmod=, and =chown=.
 #+NAME: sec-abbr
 | abbreviation | command                  |
 |--------------+--------------------------|
@@ -539,13 +541,13 @@ program.
 abbr nsxiv 'nsxiv -abfos f'
 #+END_SRC
 
-The following abbreviation is here so I can easily launch software
-with my Nvidia GPU.
+The following abbreviation is here to launch software with my Nvidia
+GPU.
 #+begin_src fish
 abbr nv 'env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
 #+end_src
 
-Finally, let's declare the following abbreviation that will launch an mpv
+Finally, let's declare the following abbreviation that will launch a MPV
 instance displaying my webcam:
 #+BEGIN_SRC fish
 abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0'
