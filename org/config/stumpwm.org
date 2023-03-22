@@ -604,7 +604,7 @@ is the list of groups I will be using:
 | [TERM]  |      2 |         | Tiling |
 | [WWW]   |      3 |         | Tiling |
 | [PRIV]  |      4 |         | Tiling |
-| [FILES] |      5 | Nemo    | Tiling |
+| [FILES] |      5 |         | Tiling |
 
 #+name: gen-groups
 #+header: :exports none
@@ -625,7 +625,7 @@ is the list of groups I will be using:
                "\n"))
 #+end_src
 
-#+RESULTS[7c58aa808149319f652155b05c9324b841324f23]: gen-groups
+#+RESULTS[4dad230a37c25af58c4f38eef1dd4f762b295f71]: gen-groups
 : (grename "[EMACS]")
 : (gnewbg "[TERM]")
 : (gnewbg "[WWW]")
@@ -648,9 +648,6 @@ this will avoid unexpected and hard-to-debug behavior.
 (clear-window-placement-rules)
 #+end_src
 
-As you can see in the table [[list-groups]] above, I also indicated my
-window placement preferences. For now, they all rely on the window’s
-class, so it will be pretty straightforward to the corresponding code.
 #+name: gen-rules
 #+header: :wrap src lisp
 #+begin_src emacs-lisp :var rules=list-groups
@@ -675,12 +672,6 @@ class, so it will be pretty straightforward to the corresponding code.
                                        output)))))
             rules)
     output))
-#+end_src
-
-This can be written this way:
-#+RESULTS[6121129a3a3aa07c6decc78cb46a1520dcae1156]: gen-rules
-#+begin_src lisp
-(define-frame-preference "[FILES]" (nil t t :class "Nemo"))
 #+end_src
 
 Dynamic groups, if any is created, should have a split ratio of half
