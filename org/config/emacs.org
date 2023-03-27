@@ -3622,7 +3622,7 @@ the git repository.
   (eshell-info-banner-warning-face ((t :foreround "#D08770")))
   (eshell-info-banner-critical-face ((t :foreground "#BF616A")))
   :custom
-  (eshell-info-banner-partition-prefixes ("/dev" "zroot" "tank")))
+  (eshell-info-banner-partition-prefixes (list "/dev" "zroot" "tank")))
 #+end_src
 
 Another feature I like is fish-like syntax highlight, which brings
