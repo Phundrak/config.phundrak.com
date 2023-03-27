@@ -187,22 +187,22 @@ mode "leader" {
   bindsym Ctrl+g mode "default"
 }
 
-bindsym $mod+$left        focus left
-bindsym $mod+$right       focus right
-bindsym $mod+$up          focus up
-bindsym $mod+$down        focus down
-bindgesture swipe:3:left  focus left
-bindgesture swipe:3:right focus right
-bindgesture swipe:3:up    focus up
-bindgesture swipe:3:down  focus down
-bindsym Shift+$mod+$left  move left
-bindsym Shift+$mod+$right move right
-bindsym Shift+$mod+$up    move up
-bindsym Shift+$mod+$down  move down
-bindgesture swipe:4:left  move left
-bindgesture swipe:4:right move right
-bindgesture swipe:4:up    move up
-bindgesture swipe:4:down  move down
+bindsym     $mod+$left        focus left
+bindsym     $mod+$right       focus right
+bindsym     $mod+$up          focus up
+bindsym     $mod+$down        focus down
+bindgesture swipe:3:left      focus left
+bindgesture swipe:3:right     focus right
+bindgesture swipe:3:up        focus up
+bindgesture swipe:3:down      focus down
+bindsym     Shift+$mod+$left  move left
+bindsym     Shift+$mod+$right move right
+bindsym     Shift+$mod+$up    move up
+bindsym     Shift+$mod+$down  move down
+bindgesture swipe:4:left      move left
+bindgesture swipe:4:right     move right
+bindgesture swipe:4:up        move up
+bindgesture swipe:4:down      move down
 
 mode "screenshot" {
   bindsym Print   exec "screenshot";      mode "default"
