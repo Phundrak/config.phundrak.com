@@ -6008,76 +6008,6 @@ interfaces, so let’s install the relevant packages.
         flycheck-posframe-error-prefix   "X "))
 #+end_src
 
-**** Langtool
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Langtool-sjr1oox0y9j0
-:END:
-LanguageTool is a great tool for catching typos and grammatical errors
-in quite a few languages.
-#+begin_src emacs-lisp
-(use-package langtool
-  :defer t
-  :straight (:build t)
-  :commands (langtool-check
-             langtool-check-done
-             langtool-show-message-at-point
-             langtool-correct-buffer)
-  :custom
-  (langtool-default-language "en-US")
-  (langtool-mother-tongue "fr")
-  :config
-  (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
-                                               "/usr/share/java/languagetool/*")
-                                             ":"))
-  :general
-  (phundrak/leader-key
-    :packages 'langtool
-    :infix "l"
-    ""  '(:ignore t :which-key "LangTool")
-    "B" #'langtool-correct-buffer
-    "b" #'langtool-check-buffer
-    "c" #'langtool-check
-    "d" #'langtool-check-done
-    "l" #'langtool-switch-default-language
-    "p" #'langtool-show-message-at-point))
-#+end_src
-
-An LSP version of LanguageTools is also available:
-#+begin_src emacs-lisp
-(use-package lsp-ltex
-  :defer t
-  :straight (:build t)
-  :after lsp-mode
-  :hook (text-mode . lsp-deferred)
-  :init
-  (setq lsp-ltex-java-force-try-system-wide t
-        lsp-ltex-server-store-path nil
-        lsp-ltex-version (gethash "ltex-ls"
-                                  (json-parse-string
-                                   (replace-regexp-in-string
-                                    (rx "Picked" (* any) "\n")
-                                    ""
-                                    (shell-command-to-string "ltex-ls -V"))))
-        lsp-ltex-check-frequency "save"
-        lsp-ltex-language "auto"
-        lsp-ltex-mother-tongue "fr"))
-#+end_src
-
-Finally, =writegood-mode= detects some simple general rules when writing
-in English and can also calculate the Flesh-Kincaid levels of a
-document.
-#+begin_src emacs-lisp
-(use-package writegood-mode
-  :defer t
-  :straight (:build t)
-  :hook org-mode latex-mode
-  :general
-  (phundrak/major-leader-key
-    :keymaps 'writegood-mode-map
-    "g" #'writegood-grade-level
-    "r" #'writegood-reading-ease))
-#+end_src
-
 **** Spellcheck
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Spellcheck-wos8d0y0y9j0
@@ -6326,6 +6256,76 @@ that currently, ~dap-firefox~ and ~dap-chrome~ don’t work correctly due to
            :gdbpath "rust-lldb"
            :target nil
            :cwd nil))))
+#+end_src
+
+**** Langtool
+:PROPERTIES:
+:CUSTOM_ID: Packages-Configuration-Programming-languages-Tools-Langtool-sjr1oox0y9j0
+:END:
+LanguageTool is a great tool for catching typos and grammatical errors
+in quite a few languages.
+#+begin_src emacs-lisp
+(use-package langtool
+  :defer t
+  :straight (:build t)
+  :commands (langtool-check
+             langtool-check-done
+             langtool-show-message-at-point
+             langtool-correct-buffer)
+  :custom
+  (langtool-default-language "en-US")
+  (langtool-mother-tongue "fr")
+  :config
+  (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
+                                               "/usr/share/java/languagetool/*")
+                                             ":"))
+  :general
+  (phundrak/leader-key
+    :packages 'langtool
+    :infix "l"
+    ""  '(:ignore t :which-key "LangTool")
+    "B" #'langtool-correct-buffer
+    "b" #'langtool-check-buffer
+    "c" #'langtool-check
+    "d" #'langtool-check-done
+    "l" #'langtool-switch-default-language
+    "p" #'langtool-show-message-at-point))
+#+end_src
+
+An LSP version of LanguageTools is also available:
+#+begin_src emacs-lisp
+(use-package lsp-ltex
+  :defer t
+  :straight (:build t)
+  :after lsp
+  :hook (text-mode . lsp-deferred)
+  :init
+  (setq lsp-ltex-java-force-try-system-wide t
+        lsp-ltex-server-store-path nil
+        lsp-ltex-version (gethash "ltex-ls"
+                                  (json-parse-string
+                                   (replace-regexp-in-string
+                                    (rx "Picked" (* any) "\n")
+                                    ""
+                                    (shell-command-to-string "ltex-ls -V"))))
+        lsp-ltex-check-frequency "save"
+        lsp-ltex-language "auto"
+        lsp-ltex-mother-tongue "fr"))
+#+end_src
+
+Finally, =writegood-mode= detects some simple general rules when writing
+in English and can also calculate the Flesh-Kincaid levels of a
+document.
+#+begin_src emacs-lisp
+(use-package writegood-mode
+  :defer t
+  :straight (:build t)
+  :hook org-mode latex-mode
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'writegood-mode-map
+    "g" #'writegood-grade-level
+    "r" #'writegood-reading-ease))
 #+end_src
 
 *** DSLs
