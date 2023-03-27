@@ -181,7 +181,6 @@ mode "leader" {
   bindsym l     exec "plock"; mode "default"
   bindsym q     mode "sway"
   bindsym w     mode "windows"
-  bindsym Print mode "screenshot"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
@@ -222,8 +221,8 @@ mode "screenshot" {
 bindsym $mod+Space  mode "leader"
 bindsym $mod+Return exec $term
 bindsym $mod+d      exec $menu
-bindsym Print       exec "screenshot -c"
-bindsym $mod+Print  mode "screenshot"
+bindsym Print       mode "screenshot"
+bindsym $mod+Print  exec "screenshot -c"
 
 bindsym $mod+quotedbl       workspace number 1
 bindsym $mod+guillemotleft  workspace number 2
