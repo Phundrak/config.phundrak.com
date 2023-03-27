@@ -129,19 +129,20 @@ mode "apps" {
 }
 
 mode "windows" {
-  bindsym period mode "resize"
-  bindsym $left        focus left
-  bindsym $right       focus right
-  bindsym $up          focus up
-  bindsym $down        focus down
-  bindsym Shift+$left  move left
-  bindsym Shift+$right move right
-  bindsym Shift+$up    move up
-  bindsym Shift+$down  move down
-  bindsym Ctrl+$left   move workspace to output left
-  bindsym Ctrl+$right  move workspace to output right
-  bindsym Ctrl+$up     move workspace to output up
-  bindsym Ctrl+$down   move workspace to output down
+  bindsym period       mode "resize"
+
+  bindsym $left        focus left;                     mode "default"
+  bindsym $right       focus right;                    mode "default"
+  bindsym $up          focus up;                       mode "default"
+  bindsym $down        focus down;                     mode "default"
+  bindsym Shift+$left  move left;                      mode "default"
+  bindsym Shift+$right move right;                     mode "default"
+  bindsym Shift+$up    move up;                        mode "default"
+  bindsym Shift+$down  move down;                      mode "default"
+  bindsym Ctrl+$left   move workspace to output left;  mode "default"
+  bindsym Ctrl+$right  move workspace to output right; mode "default"
+  bindsym Ctrl+$up     move workspace to output up;    mode "default"
+  bindsym Ctrl+$down   move workspace to output down;  mode "default"
 
   bindsym slash splith; mode "default"
   bindsym minus splitv; mode "default"
@@ -152,9 +153,9 @@ mode "windows" {
   bindsym Shift+f floating toggle;   mode "default"
   bindsym Space   focus mode_toggle; mode "default"
 
-  bindsym e       layout toggle split
-  bindsym i       layout tabbed
-  bindsym u       layout stacking
+  bindsym e       layout toggle split; mode "default"
+  bindsym i       layout tabbed;       mode "default"
+  bindsym u       layout stacking;     mode "default"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
