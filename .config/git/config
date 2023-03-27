@@ -126,3 +126,9 @@
 	process = git-lfs filter-process
 [safe]
 	directory = /opt/flutter
+
+[url "https://phundrak@github.com"]
+	insteadOf = https://github.com
+
+[url "https://phundrak@labs.phundrak.com"]
+	insteadOf = https://labs.phundrak.com
