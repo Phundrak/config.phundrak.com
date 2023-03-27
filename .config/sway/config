@@ -285,6 +285,7 @@ bar {
     # The default just shows the current date and time.
     status_command while date +'%Y-%m-%d %H:%M:%S'; do sleep 1; done
     height 20
+    font FantasqueSansMono Nerd Font Mono 10
 
     colors {
         statusline $nord5
