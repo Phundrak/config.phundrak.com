@@ -178,6 +178,7 @@ mode "leader" {
 
   bindsym a     mode "apps"
   bindsym b     mode "buffers"
+  bindsym l     exec "plock"; mode "default"
   bindsym q     mode "sway"
   bindsym w     mode "windows"
   bindsym Print mode "screenshot"
