@@ -283,8 +283,8 @@ bar {
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %H:%M:%S'; do sleep 1; done
     height 20
+    status_command while swaybar-cmd; do sleep 1; done
     font FantasqueSansMono Nerd Font Mono 10
 
     colors {

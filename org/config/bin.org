@@ -2194,10 +2194,10 @@ exec start-newm
 
 ** Sway
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/launch-sway
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/swaybar-cmd
 :CUSTOM_ID: WaylandSway-a8lge8m0arj0
 :END:
-#+begin_src sh
+#+begin_src sh :tangle ~/.local/bin/launch-sway
 export SDL_VIDEODRIVER=wayland
 # export XDG_SESSION_TYPE=wayland
 # export XDG_SESSION_DESKTOP=wlroots
@@ -2207,6 +2207,58 @@ export XDG_CURRENT_DESKTOP=sway
 . way-env-setup
 systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec sway --unsupported-gpu
+#+end_src
+
+Below is the script I use to display information in sway’s bar. It is
+divided by functions that are then called all together. First, getting
+the date is quite straightforward.
+#+begin_src sh
+sb_date() {
+    echo "$(date +'%Y-%m-%d %H:%M:%S') | "
+}
+#+end_src
+
+Then we can get what piece of audio is playing. Note however that
+something will be displayed only if something is playing.
+#+begin_src sh
+sb_playerctl() {
+    PLAYING=""
+    if [ "$(playerctl status)" = "Playing" ]; then
+        PLAYING_ARTIST="$(playerctl metadata xesam:artist)"
+        PLAYING_TITLE="$(playerctl metadata xesam:title)"
+        PLAYING=" $PLAYING_ARTIST - $PLAYING_TITLE | "
+    fi
+    echo "$PLAYING"
+}
+#+end_src
+
+The battery is relatively straightforward too. I should however find
+how to get estimates of battery time. I’m sure I can come up with
+something, but for now I’m just too lazy.
+#+begin_src sh
+sb_battery() {
+    CAPACITY="$(cat /sys/class/power_supply/BAT0/capacity)%"
+    STATE="$(cat /sys/class/power_supply/BAT0/status)"
+    echo "$CAPACITY ($STATE)"
+}
+#+end_src
+
+Now comes an indicator for Docker containers which will be displayed
+only if at least one is running.
+#+begin_src sh
+sb_docker() {
+    DOCKER_RUNNING="$(docker ps -q | wc -l)"
+    # echo "Docker: $DOCKER_RUNNING"
+    if [ "$DOCKER_RUNNING" = "0" ]
+    then echo ""
+    else echo "Docker: $DOCKER_RUNNING | "
+    fi
+}
+#+end_src
+
+Finally, let’s display everything.
+#+begin_src sh
+echo "$(sb_docker)$(sb_playerctl)$(sb_date)$(sb_battery) "
 #+end_src
 
 * Weather
