@@ -2714,6 +2714,7 @@ doing and what Git is doing! In short, I absolutely love it!
   :init
   (setq forge-add-default-bindings nil)
   :config
+  (add-hook 'magit-process-find-password-functions 'magit-process-password-auth-source)
   (csetq magit-clone-default-directory "~/fromGIT/"
          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (with-eval-after-load 'evil-collection
