@@ -519,7 +519,7 @@ misaligned, and picom becomes too taxing on my system. I ended up
 writing the following command each morning, but now a simple abbrev
 does the work for me.
 #+begin_src fish
-abbr work 'autorandr -l work && xwallpaper --zoom (cat $HOME/.cache/wallpaper) && pkill picom'
+abbr work 'autorandr -l work; xwallpaper --zoom (cat $HOME/.cache/wallpaper); pkill picom'
 #+end_src
 
 *** Media
