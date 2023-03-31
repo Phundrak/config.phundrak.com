@@ -8286,7 +8286,7 @@ and builds a heatmap out of it.
                       :repo "https://codeberg.org/rougier/mastodon.el"
                       :branch "alt-timeline")
   :config
-  (setq mastodon-instance-url "https://fosstodon.org"
+  (setq mastodon-instance-url "https://emacs.ch"
         mastodon-active-user  "phundrak")
   (require 'mastodon-alt-tl)
   (mastodon-alt-tl-activate))
