@@ -52,7 +52,5 @@ alias exti       exit
 alias exi        exit
 alias clean      clear
 
-alias vi         find-file
-alias vim        find-file
-alias ed         find-file
-alias nano       find-file
+alias less       view-file $1
+alias bat        view-file $1
