@@ -3201,7 +3201,10 @@ so on.
 #+begin_src emacs-lisp
 (use-package smartparens
   :defer t
-  :straight (:build t)
+  :straight (smartparens :build t
+                         :type git
+                         :host github
+                         :repo "Fuco1/smartparens")
   :hook (prog-mode . smartparens-mode))
 #+end_src
 
