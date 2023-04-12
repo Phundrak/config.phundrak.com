@@ -794,26 +794,19 @@ can still feel some influence from my Spacemacs years here.
 #+header: :tangle no :exports none :results value :cache yes
 #+begin_src emacs-lisp :var table=keybinds-windows prefix=""
 (mapconcat (lambda (line)
-             (let* ((key      (car line))
-                    (function (cadr line))
-                    (comment  (caddr line)))
+             (let* ((key      (nth 0 line))
+                    (function (nth 1 line))
+                    (comment  (or (nth 2 line) ""))
+                    (package  (or (nth 3 line) "")))
                (format "\"%s%s\" %s"
                        prefix
                        key
                        (if (string= "" comment)
-                           (if (or (string= "" function)
-                                   (string= "nil" function))
-                               "nil"
-                             (concat "#'" function))
-                         (format "'(%s :wk %s)"
-                                 (if (or (string= "" function)
-                                         (string= "nil" function))
-                                     ":ignore t"
-                                   function)
-                                 (if (or (string= "none" comment)
-                                         (string= "nil" comment))
-                                     "t"
-                                   (concat "\"" comment "\"")))))))
+                           (if (member function '("" "nil")) "nil" (concat "#'" function))
+                         (format "'(%s :wk %s%s)"
+                                 (if (member function '("" "nil")) ":ignore t" function)
+                                 (if (member function '("none" "nil")) "t" (concat "\"" comment "\""))
+                                 (if (string-blank-p package) "" (concat ":package " package)))))))
            table
            "\n")
 #+end_src
@@ -8285,13 +8278,80 @@ and builds a heatmap out of it.
   :defer t
   :ensure t
   :straight (mastodon :type git
-                      :host nil
-                      :repo "https://codeberg.org/rougier/mastodon.el"
-                      :branch "alt-timeline")
+                      :host codeberg
+                      :repo "martianh/mastodon.el")
   :config
   (setq mastodon-instance-url "https://emacs.ch"
         mastodon-active-user  "phundrak")
-  (require 'mastodon-alt-tl)
+  :general
+  (phundrak/evil
+    :packages '(mastodon mastodon-alt)
+    :keymaps 'mastodon-mode-map
+    "]]" '(mastodon-alt-tl--goto-next-toot :wk "Next status" :package 'mastodon-alt)
+    "[[" '(mastodon-alt-tl--goto-prev-toot :wk "Previous status" :package 'mastodon-alt)
+    "gt" '(mastodon-tl--next-tab-item :wk "Next tab item")
+    "gs" '(mastodon-tl--previous-tab-item :wk "Previous tab item"))
+  (phundrak/major-leader-key
+    :package 'mastodon
+    :keymaps 'mastodon-mode-map
+    "q" #'kill-current-buffer
+
+    "#" '(mastodon-tl--get-tag-timeline :wk "Tag timeline")
+    "f" '(mastodon-tl--get-federated-timeline :wk "Federated timeline")
+    "F" '(mastoton-tl--view-filters :wk "Filters")
+    "H" '(mastodon-tl--get-local-timeline :wk "Home timeline")
+    "L" '(mastodon-tl--get-local-timeline :wk "Local timeline")
+    "N" '(mastodon-notifications-get :wk "Notifications")
+    "U" '(mastodon-profile--show-user :wk "Show user")
+    "T" '(mastodon-tl--thread :wk "Thread")
+    "O" '(mastodon-profile--my-profile :wk "My profile")
+    "S" '(mastodon-tl--get-follow-suggestions :wk "Follow suggestions")
+    "a" '(mastodon-profile--get-toot-author :wk "Toot author")
+    "b" '(mastodon-profile--view-bookmarks :wk "Bookmarks")
+    "s" '(mastodon-search--search-query :wk "Search query")
+
+    "u" '(mastodon-alt-tl--update :wk "Update" :package 'mastodon-alt)
+
+    "t"  '(nil :wk "Toots")
+    "tt" '(mastodon-toot :wk "Toot")
+    "tb" '(mastodon-alt-toot--toggle-boost :wk "Boost" :package 'mastodon-alt)
+    "tB" '(mastodon-alt-toot--bookmark-toot-toggle :wk "Bookmark" :package 'mastodon-alt)
+    "td" '(mastodon-toot--delete-toot :wk "Delete")
+    "tD" '(mastodon-toot--delete-and-redraft-toot :wk "Redraft")
+    "tf" '(mastodon-alt-toot--toggle-favourite :wk "Favourite" :package 'mastodon-alt)
+    "tF" '(mastodon-profile--view-favourites :wk "View favourites")
+    "tr" '(mastodon-toot--reply :wk "Reply")
+    "tp" '(mastodon-toot--pin-toot-toggle :wk "Pin")
+    "ts" '(mastodon-alt-tl--toggle-spoiler-text-in-toot :wk "Spoiler" :package 'mastodon-alt)
+    "tu" '(mastodon-toot--copy-toot-url :wk "Copy url")
+    "tv" '(mastodon-tl--poll-vote :wk "Vote on poll")
+
+    "f"  '(nil :wk "Follow requests")
+    "fa" '(mastodon-notifications--follow-request-accept :wk "Accept")
+    "fr" '(mastodon-notifications--follow-request-reject :wk "Reject")
+    "fv" '(mastodon-profile--view-follow-requests :wk "View follow requests")
+
+    "u"  '(nil :wk "User")
+    "uf" '(mastodon-tl--follow-user :wk "Follow")
+    "uF" '(mastodon-tl--unfollow-user :wk "Unfollow")
+    "ub" '(mastodon-tl--block-user :wk "Block")
+    "uB" '(mastodon-tl--unblock-user :wk "Unblock")
+    "um" '(mastodon-tl--mute-user :wk "Mute")
+    "uM" '(mastodon-tl--unmute-user :wk "Unmute")
+    "un" '(mastodon-profile--update-user-profile-note :wk "Update user profile note")))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+(use-package mastodon-alt
+  :defer t
+  :after 'mastodon
+  :straight (mastodon-alt :type git
+                          :host github
+                          :repo "rougier/mastodon-alt")
+  :init
+  (require 'mastodon-alt)
   (mastodon-alt-tl-activate))
 #+end_src
 
@@ -8422,29 +8482,33 @@ Undefining some stuff to make keybind prefixes work correctly.
 :END:
 Here are my apps keybinds. Each one of them is prefixed by ~a~.
 #+name: keybinds-apps
-| Key | Function         | Description |
-|-----+------------------+-------------|
-|     |                  | apps        |
-| c   | calc             |             |
-| d   | docker           |             |
-| E   | elfeed           |             |
-| e   |                  | email       |
-| ec  | mu4e-compose-new |             |
-| em  | mu4e             |             |
-| k   | keycast-mode     |             |
-| K   | keycast-log-mode |             |
-| T   | tetris           |             |
-| w   | wttrin           |             |
-| C   | calendar         |             |
+| Key | Function                   | Description | Package  |
+|-----+----------------------------+-------------+----------|
+|     |                            | apps        |          |
+| c   | calc                       |             |          |
+| d   | docker                     |             |          |
+| E   | elfeed                     |             |          |
+| e   |                            | email       |          |
+| ec  | mu4e-compose-new           |             |          |
+| em  | mu4e                       |             |          |
+| k   | keycast-mode               |             |          |
+| K   | keycast-log-mode           |             |          |
+| m   |                            | mastodon    |          |
+| mm  | mastodon                   |             | mastodon |
+| mn  | mastodon-notifications-get |             | mastodon |
+| mt  | mastodon-toot              |             | mastodon |
+| T   | tetris                     |             |          |
+| w   | wttrin                     |             | wttrin   |
+| C   | calendar                   |             |          |
 
 I also have two main shell-related functions, prefixed with ~as~.
 #+name: keybinds-apps-shell
-| Key | Function    | Description |
-|-----+-------------+-------------|
-|     |             | shells      |
-| e   | eshell-new  |             |
-| v   | vterm       |             |
-| V   | multi-vterm |             |
+| Key | Function    | Description | Package     |
+|-----+-------------+-------------+-------------|
+|     |             | shells      |             |
+| e   | eshell-new  |             |             |
+| v   | vterm       |             | vterm       |
+| V   | multi-vterm |             | multi-vterm |
 
 ** Buffers
 :PROPERTIES:
@@ -8491,8 +8555,8 @@ My buffer-related keybinds are all prefixed by ~b~.
 "e"  '(:ignore t :which-key "errors")
 "e." '(hydra-flycheck/body :wk "hydra")
 "el" #'counsel-flycheck
-"ee" '(:keymap flycheck-command-map :wk "flycheck")
-"ef" '(:keymap flyspell-mode-map :wk "flyspell")
+"ee" '(:keymap flycheck-command-map :package 'flycheck :wk "flycheck")
+"ef" '(:keymap flyspell-mode-map :package 'flyspell :wk "flyspell")
 "eF" #'flyspell-hydra/body
 #+end_src
 
