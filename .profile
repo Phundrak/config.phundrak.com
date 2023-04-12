@@ -83,4 +83,5 @@ PATH="$GOPATH/bin:$PATH"
 PATH="${CARGO_HOME}/bin:$PATH"
 PATH="$HOME/Android/Sdk/tools/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
+PATH="$HOME/.local/share/containers/podman-desktop/extensions-storage/compose/bin/:$PATH"
 export PATH
