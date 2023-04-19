@@ -308,7 +308,51 @@ a program.
                             "kitty")))))
 #+end_src
 
-And done! Next!
+** At work
+:PROPERTIES:
+:CUSTOM_ID: CommandsAtwork-6u8lkt51vsj0
+:END:
+When I’m at work, I have a desktop layout I always use. No need to
+describe it here, but I want a quick command to save my layout in case
+I change it a bit as well as a command to load it. That way, I can
+automatically organize my screens. These command will save and load
+the dump where the variable ~*my/desktop-dump-file*~ points at.
+#+begin_src lisp
+(defvar *my/desktop-dump-file* "~/.cache/stump-at-work"
+  "Where my desktop dump should go and be loaded from.")
+#+end_src
+
+To save the current desktop, I can write a wrapper around
+~dump-desktop-to-file~.
+#+begin_src lisp
+(defcommand dump-work () ()
+  "Save desktop layout when at work."
+  (dump-desktop-to-file *my/desktop-dump-file*))
+#+end_src
+
+Basically the same goes for loading the desktop layout, but this time
+it’s ~restore-from-file~ that’s wrapped.
+#+begin_src lisp
+(defcommand at-work () ()
+  "Restore desktop layout when at work."
+  (restore-from-file *my/desktop-dump-file*))
+#+end_src
+
+If I want to quickly launch all programs I will need, I can also
+invoke the command ~launch-work~.
+#+begin_src lisp
+(defcommand launch-work () ()
+  "Launch programs I need at work."
+  (run-shell-command "autorandr -l work; xwallpaper --zoom (cat $HOME/.cache/wallpaper)" t)
+  (run-shell-command "pkill picom")
+  (run-shell-command "firefox")
+  (run-shell-command "remmina")
+  (run-shell-command "kitty btop")
+  (run-shell-command "kitty")
+  (run-shell-command "kitty ncmpcpp -qs clock")
+  (run-shell-command "teams")
+  (run-shell-command "discord"))
+#+end_src
 
 * Colors
 :PROPERTIES:
