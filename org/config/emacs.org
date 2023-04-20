@@ -8285,10 +8285,10 @@ and builds a heatmap out of it.
         mastodon-active-user  "phundrak")
   :general
   (phundrak/evil
-    :packages '(mastodon mastodon-alt)
+    :packages '(mastodon)
     :keymaps 'mastodon-mode-map
-    "]]" '(mastodon-alt-tl--goto-next-toot :wk "Next status" :package 'mastodon-alt)
-    "[[" '(mastodon-alt-tl--goto-prev-toot :wk "Previous status" :package 'mastodon-alt)
+    "]]" '(mastodon-tl--goto-next-toot :wk "Next status")
+    "[[" '(mastodon-tl--goto-prev-toot :wk "Previous status")
     "gt" '(mastodon-tl--next-tab-item :wk "Next tab item")
     "gs" '(mastodon-tl--previous-tab-item :wk "Previous tab item"))
   (phundrak/major-leader-key
@@ -8302,27 +8302,25 @@ and builds a heatmap out of it.
     "H" '(mastodon-tl--get-local-timeline :wk "Home timeline")
     "L" '(mastodon-tl--get-local-timeline :wk "Local timeline")
     "N" '(mastodon-notifications-get :wk "Notifications")
-    "U" '(mastodon-profile--show-user :wk "Show user")
     "T" '(mastodon-tl--thread :wk "Thread")
     "O" '(mastodon-profile--my-profile :wk "My profile")
     "S" '(mastodon-tl--get-follow-suggestions :wk "Follow suggestions")
     "a" '(mastodon-profile--get-toot-author :wk "Toot author")
     "b" '(mastodon-profile--view-bookmarks :wk "Bookmarks")
     "s" '(mastodon-search--search-query :wk "Search query")
-
-    "u" '(mastodon-alt-tl--update :wk "Update" :package 'mastodon-alt)
+    "U" '(mastodon-tl--update :wk "Update")
 
     "t"  '(nil :wk "Toots")
     "tt" '(mastodon-toot :wk "Toot")
-    "tb" '(mastodon-alt-toot--toggle-boost :wk "Boost" :package 'mastodon-alt)
-    "tB" '(mastodon-alt-toot--bookmark-toot-toggle :wk "Bookmark" :package 'mastodon-alt)
+    "tb" '(mastodon-toot--toggle-boost :wk "Boost")
+    "tB" '(mastodon-toot--bookmark-toot-toggle :wk "Bookmark")
     "td" '(mastodon-toot--delete-toot :wk "Delete")
     "tD" '(mastodon-toot--delete-and-redraft-toot :wk "Redraft")
-    "tf" '(mastodon-alt-toot--toggle-favourite :wk "Favourite" :package 'mastodon-alt)
+    "tf" '(mastodon-toot--toggle-favourite :wk "Favourite")
     "tF" '(mastodon-profile--view-favourites :wk "View favourites")
     "tr" '(mastodon-toot--reply :wk "Reply")
     "tp" '(mastodon-toot--pin-toot-toggle :wk "Pin")
-    "ts" '(mastodon-alt-tl--toggle-spoiler-text-in-toot :wk "Spoiler" :package 'mastodon-alt)
+    "ts" '(mastodon-tl--toggle-spoiler-text-in-toot :wk "Spoiler")
     "tu" '(mastodon-toot--copy-toot-url :wk "Copy url")
     "tv" '(mastodon-tl--poll-vote :wk "Vote on poll")
 
@@ -8338,21 +8336,8 @@ and builds a heatmap out of it.
     "uB" '(mastodon-tl--unblock-user :wk "Unblock")
     "um" '(mastodon-tl--mute-user :wk "Mute")
     "uM" '(mastodon-tl--unmute-user :wk "Unmute")
-    "un" '(mastodon-profile--update-user-profile-note :wk "Update user profile note")))
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-(use-package mastodon-alt
-  :defer t
-  :after 'mastodon
-  :straight (mastodon-alt :type git
-                          :host github
-                          :repo "rougier/mastodon-alt")
-  :init
-  (require 'mastodon-alt)
-  (mastodon-alt-tl-activate))
+    "un" '(mastodon-profile--update-user-profile-note :wk "Update user profile note")
+    "uu" '(mastodon-profile--show-user :wk "Show user")))
 #+end_src
 
 *** Mediawiki
