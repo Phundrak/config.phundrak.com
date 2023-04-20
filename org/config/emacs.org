@@ -1717,9 +1717,19 @@ configuration for the ~mu4e~ package itself.
 #+begin_src emacs-lisp
 (use-package mu4e
   :after all-the-icons
-  :straight (:build t :location site)
+  :straight (:build t)
   :commands mu4e mu4e-compose-new
   :init
+
+  (defun mu4e--main-action-str (name func)
+    "This seems to be needed until evil-collection supports the latest
+  version of mu4e."
+    "mu4e-main-action")
+
+  (require 'mu4e)
+
+  (remove-hook 'mu4e-main-mode-hook 'evil-collection-mu4e-update-main-view)
+
   (csetq mu4e-completing-read-function 'completing-read
          mu4e-use-fancy-chars          t
          message-kill-buffer-on-exit   t
