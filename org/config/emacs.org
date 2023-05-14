@@ -5050,6 +5050,10 @@ you can guess, exports org files to the [[https://www.w3.org/publishing/epub32/]
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Exporters-Gemini-4td3dk21kej0
 :END:
+Gemini is a lightweight protocol for creating lightweight websites
+that are basically text-only websites with maybe some images. I’m
+currently maintaining my own fork of Justin Abrahms’ =ox-gemini= which
+fixes two issues I had with the original package.
 #+begin_src emacs-lisp
 (use-package ox-gemini
   :defer t
