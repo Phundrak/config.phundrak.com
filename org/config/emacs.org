@@ -5451,13 +5451,10 @@ declaration of my projects, which will be detailed later:
 #+NAME: org-publish-projects
 #+BEGIN_SRC emacs-lisp :noweb yes :noweb-prefix no
 <<org-proj-config-setup>>
-<<org-proj-lang-setup>>
 (setq org-publish-project-alist
       `(<<org-proj-config-html>>
         <<org-proj-config-static>>
-        <<org-proj-config>>
-        <<org-proj-lang-md>>
-        <<org-proj-lang>>))
+        <<org-proj-config>>))
 #+END_SRC
 
 **** Configuration website
@@ -5527,58 +5524,6 @@ The project is then defined like so:
 ("config-website"
  :components ("config-website-org"
               "config-website-static"))
-#+END_SRC
-
-**** Conlanging website
-:PROPERTIES:
-:CUSTOM_ID: Packages-Configuration-Org-mode-Projects-Linguistics-websitey4k5fl6184j0
-:END:
-#+begin_info
-/Conlangs/, or /constructed languages/, are artificial languages created
-by individuals or by groups of individuals, unlike natural languages
-which evolve and appear naturally from other languages.
-#+end_info
-
-My conlanging website is made of only one project, exporting my org
-files to GitHub-flavored Markdown. As for the previous project, let’s
-declare a common value.
-#+NAME: org-proj-lang-setup
-#+BEGIN_SRC emacs-lisp
-(defvar phundrak--projects-conlanging-common-root
-  "~/org/conlanging/docs/"
-  "Points to the common root of my source and target for my
-conlang.phundrak.com org project.")
-#+END_SRC
-
-The only component is the one generating the Markdown files from the
-org files.
-#+NAME: org-proj-lang-md
-#+BEGIN_SRC emacs-lisp
-("conlang-phundrak-com-md"
- :base-directory ,phundrak--projects-conlanging-common-root
- :base-extension "org"
- :exclude ,(rx (* print)
-               (or "CONTRIB"
-                   "README"
-                   "site-map"
-                   "temp"
-                   "private"
-                   "svg-ink")
-               (* print))
- :publishing-directory ,phundrak--projects-conlanging-common-root
- :recursive t
- :language "en"
- :publishing-function org-gfm-publish-to-gfm
- :headline-levels 5
- :auto-sitemap nil
- :auto-preamble nil)
-#+END_SRC
-
-The project is then defined like so:
-#+NAME: org-proj-lang
-#+BEGIN_SRC emacs-lisp
-("conlang-phundrak-com"
- :components ("conlang-phundrak-com-md"))
 #+END_SRC
 
 *** Org-ref and Bibtex configuration
