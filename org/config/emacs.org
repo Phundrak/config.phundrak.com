@@ -1507,6 +1507,9 @@ in this code block all my keybinds for Elfeed here.
   :straight (:build t)
   :init
   (elfeed-goodies/setup)
+  :custom
+  (elfeed-goodies/feed-source-column-width 28)
+  (elfeed-goodies/tag-column-width 28)
   :general
   (phundrak/undefine
     :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
