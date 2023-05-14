@@ -8303,12 +8303,13 @@ and builds a heatmap out of it.
     "]]" '(mastodon-tl--goto-next-toot :wk "Next status")
     "[[" '(mastodon-tl--goto-prev-toot :wk "Previous status")
     "gt" '(mastodon-tl--next-tab-item :wk "Next tab item")
-    "gs" '(mastodon-tl--previous-tab-item :wk "Previous tab item"))
+    "gs" '(mastodon-tl--previous-tab-item :wk "Previous tab item")
+    "»" '(mastodon-tl--goto-next-toot :wk "Next status")
+    "«" '(mastodon-tl--goto-prev-toot :wk "Previous status")
+    "q" #'kill-current-buffer)
   (phundrak/major-leader-key
     :package 'mastodon
     :keymaps 'mastodon-mode-map
-    "q" #'kill-current-buffer
-
     "#" '(mastodon-tl--get-tag-timeline :wk "Tag timeline")
     "f" '(mastodon-tl--get-federated-timeline :wk "Federated timeline")
     "F" '(mastoton-tl--view-filters :wk "Filters")
