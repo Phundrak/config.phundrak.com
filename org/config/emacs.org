@@ -1534,7 +1534,7 @@ Last but not least, my Elfeed configuration is stored in an org file
 thanks to ~elfeed-org~.
 #+begin_src emacs-lisp
 (use-package elfeed-org
-  :defer t
+  :defer nil
   :after elfeed
   :straight (:build t)
   :init
