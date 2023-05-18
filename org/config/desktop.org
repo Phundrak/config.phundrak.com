@@ -520,7 +520,7 @@ gtk-application-prefer-dark-theme = true
 
 Next, the icon theme is the Flat Remix Dark icon theme:
 #+BEGIN_SRC conf-unix
-gtk-icon-theme-name = Flat-Remix-Dark
+gtk-icon-theme-name = Nordzy
 #+END_SRC
 
 Now, the general theme for GTK3 is Nordic.
