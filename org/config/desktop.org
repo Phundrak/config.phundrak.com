@@ -5,7 +5,7 @@
 #+html_head: <meta property="og:title" content="Phundrak’s Emacs Configuration" />
 #+html_head: <meta property="og:description" content="Phundrak’s Emacs Configuration Detailed" />
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :tangle ~/.emacs.d/desktop.el
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/desktop.el
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 #+property: header-args:lisp :mkdirp :tangle ~/.stumpwm.d/desktop.lisp :noweb yes
 
