@@ -1421,6 +1421,79 @@ in order to interact with Bitwarden in Emacs with the help of the
                        :repo "https://labs.phundrak.com/phundrak/bitwarden.el"))
 #+end_src
 
+*** Calendar
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationApplicationsCalendar-u7c4vcb07uj0
+:END:
+I am using the built-in calendar of Emacs, but as I use Evil and the
+bépo layout, many keybindings available by default or through
+=evil-collection= don’t fit my needs perfectly.
+#+begin_src emacs-lisp
+(use-package calendar
+  :straight (:type built-in)
+  :defer t
+  :general
+  (:keymaps 'calendar-mode-map
+   "»"     #'calendar-scroll-left
+   "«"     #'calendar-scroll-right
+   "M-»"   #'calendar-scroll-left-three-months
+   "M-«"   #'calendar-scroll-right-three-months
+   "M-r"   #'calendar-scroll-left
+   "M-c"   #'calendar-scroll-right
+   "M-S-r" #'calendar-scroll-left-three-months
+   "M-S-c" #'calendar-scroll-right-three-months
+   "q"     #'calendar-exit)
+  (phundrak/major-leader-key
+    :keymaps 'calendar-mode-map
+    "="   #'calendar-count-days-region
+    "^"   '(:ignore t :wk "beginning")
+    "^ w" #'calendar-beginning-of-week
+    "^ m" #'calendar-beginning-of-month
+    "^ y" #'calendar-beginning-of-year
+    "$"   '(:ignore t :wk "end")
+    "$w"  #'calendar-end-of-week
+    "$m"  #'calendar-end-of-month
+    "$y"  #'calendar-end-of-year
+    "a"   '(:ignore t :wk "appointment")
+    "aa"  #'appt-add
+    "ad"  #'appt-delete
+    "A"   #'org-calendar-goto-agenda
+    "b"   '(:ignore t :wk "go back")
+    "bd"  '(calendar-backward-day :wk "a day")
+    "bw"  '(calendar-backward-week :wk "a week")
+    "bm"  '(calendar-backward-month :wk "a month")
+    "by"  '(calendar-backward-year :wk "a year")
+    "d"   '(:ignore t :wk "diary")
+    "da"  '(diary-show-all-entries :wk "all entries")
+    "dd"  '(diary-view-entries :wk "entries")
+    "dm"  #'diary-mark-entries
+    "do"  #'diary-view-other-diary-entries
+    "di"  '(:ignore t :wk "insert")
+    "die" '(diary-insert-entry :wk "entry")
+    "die" '(diary-insert-block-entry :wk "block entry")
+    "diw" '(diary-insert-weekly-entry :wk "weekly")
+    "dim" '(diary-insert-monthly-entry :wk "monthly")
+    "diy" '(diary-insert-yearly-entry :wk "yearly")
+    "F"   '(:ignore t :wk "files")
+    "Fa"  #'org-calendar-goto-agenda
+    "f"   '(:ignore t :wk "go forward")
+    "fd"  '(calendar-forward-day :wk "a day")
+    "fw"  '(calendar-forward-week :wk "a week")
+    "fm"  '(calendar-forward-month :wk "a month")
+    "fy"  '(calendar-forward-year :wk "a year")
+    "g"   '(:ignore t :wk "goto")
+    "gd"  #'calendar-goto-date
+    "gm"  #'calendar-other-month
+    "gt"  #'calendar-goto-today
+    "h"   '(:ignore t :wk "holidays")
+    "hl"  #'calendar-list-holidays
+    "hm"  #'calendar-mark-holidays
+    "H"   '(:ignore t :wk "HTML export")
+    "Hm"  #'cal-html-cursor-month
+    "Hy"  #'cal-html-cursor-year
+    "M"   #'calendar-other-month))
+#+end_src
+
 *** Docker
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Applications-Docker5ul0fl6184j0
@@ -4624,6 +4697,20 @@ the usage of the ~:ignore:~ tag in org.
 (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package org-caldav
+  :straight (:build t)
+  :defer t
+  :config
+  (setq org-caldav-url "https://nextcloud.phundrak.com/remote.php/dav/calendars/phundrak"
+        org-icalendar-timezone "Europe/Paris"
+        org-caldav-calendars
+        `((:calendar-id "personal" :files ("~/org/agenda/private.org")
+           :inbox "~/org/agenda/private.org")
+          (:calendar-id "contact_birthdays" :files ("~/org/agenda/birthdays.org")
+           :inbox "~/org/agenda/birthdays.org"))))
+#+end_src
+
 *** Babel
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-Babel9585fl6184j0
@@ -7678,7 +7765,7 @@ First, here is its major mode.
     "A zig syntax checker using the zig-fmt interpreter."
     :command ("zig" "fmt" (eval (buffer-file-name)))
     :error-patterns
-    ((error line-start (file-name) ":" line ":" column ": error: " (mesage) line-end))
+    ((error line-start (file-name) ":" line ":" column ": error: " (message) line-end))
     :modes zig-mode)
   (add-to-list 'flycheck-checkers 'zig)
   :general
@@ -8431,24 +8518,27 @@ Undefining some stuff to make keybind prefixes work correctly.
 :END:
 Here are my apps keybinds. Each one of them is prefixed by ~a~.
 #+name: keybinds-apps
-| Key | Function                   | Description | Package  |
-|-----+----------------------------+-------------+----------|
-|     |                            | apps        |          |
-| c   | calc                       |             |          |
-| d   | docker                     |             |          |
-| E   | elfeed                     |             |          |
-| e   |                            | email       |          |
-| ec  | mu4e-compose-new           |             |          |
-| em  | mu4e                       |             |          |
-| k   | keycast-mode               |             |          |
-| K   | keycast-log-mode           |             |          |
-| m   |                            | mastodon    |          |
-| mm  | mastodon                   |             | mastodon |
-| mn  | mastodon-notifications-get |             | mastodon |
-| mt  | mastodon-toot              |             | mastodon |
-| T   | tetris                     |             |          |
-| w   | wttrin                     |             | wttrin   |
-| C   | calendar                   |             |          |
+| Key | Function                   | Description | Package    |
+|-----+----------------------------+-------------+------------|
+|     |                            | apps        |            |
+| c   | calc                       |             |            |
+| C   |                            | calendar    |            |
+| CC  | calendar                   |             |            |
+| Co  | org-agenda                 |             | org        |
+| Cs  | org-caldav-sync            |             | org-caldav |
+| d   | docker                     |             |            |
+| E   | elfeed                     |             |            |
+| e   |                            | email       |            |
+| ec  | mu4e-compose-new           |             |            |
+| em  | mu4e                       |             |            |
+| k   | keycast-mode               |             |            |
+| K   | keycast-log-mode           |             |            |
+| m   |                            | mastodon    |            |
+| mm  | mastodon                   |             | mastodon   |
+| mn  | mastodon-notifications-get |             | mastodon   |
+| mt  | mastodon-toot              |             | mastodon   |
+| T   | tetris                     |             |            |
+| w   | wttrin                     |             | wttrin     |
 
 I also have two main shell-related functions, prefixed with ~as~.
 #+name: keybinds-apps-shell
