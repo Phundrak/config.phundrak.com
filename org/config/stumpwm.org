@@ -331,11 +331,16 @@ To save the current desktop, I can write a wrapper around
 #+end_src
 
 Basically the same goes for loading the desktop layout, but this time
-it’s ~restore-from-file~ that’s wrapped.
+it’s ~restore-from-file~ that’s wrapped. I also want to launch Global
+Protect at the same time, because I always forget to before launching
+~launch-work~ described below, and automatically connect my bluetooth
+headset.
 #+begin_src lisp
 (defcommand at-work () ()
   "Restore desktop layout when at work."
-  (restore-from-file *my/desktop-dump-file*))
+  (restore-from-file *my/desktop-dump-file*)
+  (run-shell-command "gpclient")
+  (run-shell-command "bluetoothctl power on && bluetoothctl connect 14:3F:A6:6D:E3:D9"))
 #+end_src
 
 If I want to quickly launch all programs I will need, I can also
