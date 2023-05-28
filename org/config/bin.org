@@ -616,9 +616,21 @@ xinput map-to-output "$ID" "$SCREEN"
 :CUSTOM_ID: Emacs-stuff-Dired-2eeca9da
 :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/dired
 :END:
+This script allows me to open anything in dired from the command line.
 #+BEGIN_SRC bash
 emacsclient -c -a emacs -e "(dired \"$*\")"
 #+END_SRC
+
+** Ediff
+:PROPERTIES:
+:CUSTOM_ID: EmacsstuffEdiff-a6adcl503uj0
+:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/ediff
+:END:
+I want Ediff as my merge tool, not just with Git but with other
+programs too such as =pacdiff=.
+#+begin_src bash
+emacsclient -c -a emacs -e "(ediff-files \"$1\" \"$2\")"
+#+end_src
 
 ** Emacsmail
 :PROPERTIES:

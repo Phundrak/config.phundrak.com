@@ -52,6 +52,7 @@ export CHROME_EXECUTABLE=/usr/bin/chromium
 export DENO_DIR="$HOME/.config/deno"
 export DENO_INSTALL_ROOT="$HOME/.local/bin/deno"
 
+export DIFFPROG=ediff
 export SUDO_ASKPASS="$HOME/.local/bin/askpass"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
