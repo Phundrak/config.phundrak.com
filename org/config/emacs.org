@@ -6850,6 +6850,17 @@ When editing some scripts though, I need to use the built-in ~shell-mode~.
     "o" 'systemd-doc-open))
 #+end_src
 
+**** Tmux config
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationProgrammingDSLsTmuxconfig-yw3l9vb1huj0
+:END:
+#+begin_src emacs-lisp
+(use-package tmux-mode
+  :defer t
+  :straight (tmux-mode :type git :host github :repo "nverno/tmux-mode")
+  :mode (("tmux\\.conf\\'" . tmux-mode)))
+#+end_src
+
 **** Toml
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Programming-languages-DSLs-Toml-txu8xvk0k4j0
