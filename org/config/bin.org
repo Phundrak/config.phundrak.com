@@ -327,11 +327,6 @@ fi
 # wl-copy < "$OUTFILE"
 #+end_src
 
-** color-picker
-:PROPERTIES:
-:CUSTOM_ID: cliutilitiescolorpicker-jf6g8ul0crj0
-:END:
-
 ** sshbind
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
@@ -1275,7 +1270,7 @@ It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] 
 :PROPERTIES:
 :CUSTOM_ID: Rofi-utilities-Partition-mounting-and-unmounting-9492ff60
 :END:
-*** Rofi-mount
+*** rofi-mount
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
 :CUSTOM_ID: Rofi-mount-ebbebf68
@@ -1665,7 +1660,7 @@ rm -f $TMPDRIVES
 
 And with that, this is the end of our script!
 
-*** Rofi-umount
+*** rofi-umount
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
 :CUSTOM_ID: Rofi-umount-ddde1667
@@ -1896,7 +1891,7 @@ And finally, let’s delete our temporary file.
 rm -f $undrivefile
 #+END_SRC
 
-** Rofi-pass
+** rofi-pass
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
 :CUSTOM_ID: Rofi-pass-8335357f
