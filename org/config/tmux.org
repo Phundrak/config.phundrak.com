@@ -72,6 +72,7 @@ Here’s a list of the plugins that I use.
 | tmux-sensible         | Better defaults I can’t be bothered to change myself |
 | tmux-yank             | Better copy/pasting                                  |
 | tmux-prefix-highlight | Tell me which prefix I’m using                       |
+| tmux-resurrect        | Persist tmux sessions across system restarts         |
 | nordtheme/tmux        | Nord theme for Tmux!                                 |
 
 #+begin_src emacs-lisp :var plugins=plugins[,0] :exports code :wrap src tmux
@@ -90,12 +91,34 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'nordtheme/tmux'
 #+end_src
 
 Let’s run TPM right after that.
 #+begin_src tmux
 run '~/.config/tmux/tpm/tpm'
+#+end_src
+
+For restoring processes with =tmux-resurrect=, we must add additional
+programs in the =@resurrect-processes= variable. These are:
+#+name: resurrect-processes-list
+- ="~ncmpcpp -q"=
+- =btop=
+- =ssh=
+
+#+name: resurrect-processes
+#+begin_src emacs-lisp :var processes=resurrect-processes-list :exports none :cache yes
+(mapconcat (lambda (process) (string-replace "=" "" process))
+           processes
+           " ")
+#+end_src
+
+#+RESULTS[4f72312f2da98c81eff2b092779a59c993fa19e2]: resurrect-processes
+: "~ncmpcpp -q" btop ssh
+
+#+begin_src tmux :noweb yes
+set -g @resurrect-processes '<<resurrect-processes()>>'
 #+end_src
 
 * Keybindings
@@ -122,8 +145,13 @@ that”.
 |------------+------------------+-----------------|
 | =«=          | select-window -p |                 |
 | =»=          | select-window -n |                 |
-| =p=          |                  | pane            |
+| =Tab=        |                  | windows         |
+| =w=          |                  | pane            |
 | =y=          |                  | copy-mode       |
+
+Note I am using the key =w= to access the pane prefix because of how
+used to Emacs I am, and in Emacs terminology panes are windows while
+tmux windows would be tabs.
 
 #+name: gen-keybinds
 #+begin_src emacs-lisp :var keybinds=std-prefix :var prefix="prefix" :exports none
@@ -145,7 +173,8 @@ that”.
 #+RESULTS: gen-keybinds
 : bind-key -T prefix « select-window -p
 : bind-key -T prefix » select-window -n
-: bind-key -T prefix p switch-client -T pane
+: bind-key -T prefix Tab switch-client -T windows
+: bind-key -T prefix w switch-client -T pane
 : bind-key -T prefix y switch-client -T copy-mode
 
 #+begin_src tmux
@@ -168,10 +197,10 @@ open in the same directory as the directory I am currently in.
 |------------+-------------------------------------------+-----------------|
 | =/=          | split-window -h -c "#{pane-current_path}" |                 |
 | =-=          | split-window -v -c "#{pane-current_path}" |                 |
-| =c=          | select-panel -L                           |                 |
-| =t=          | select-panel -D                           |                 |
-| =s=          | select-panel -U                           |                 |
-| =r=          | select-panel -R                           |                 |
+| =c=          | select-pane -L                            |                 |
+| =t=          | select-pane -D                            |                 |
+| =s=          | select-pane -U                            |                 |
+| =r=          | select-pane -R                            |                 |
 | =.=          |                                           | pane-resize     |
 
 #+begin_src tmux
@@ -197,6 +226,51 @@ any key that is not part of the current prefix will get us out of it.
 
 #+begin_src tmux
 <<gen-keybinds(keybinds=pane-resize-prefix, prefix="pane-resize")>>
+#+end_src
+
+** Windows
+:PROPERTIES:
+:CUSTOM_ID: KeybindingsWindows-zg3fjes0luj0
+:END:
+Since windows are more akin to tabs in Emacs, and I am way more used
+to it than Tmux, all keybinds are prefixed with a =Tab=, itself prefixed
+with the main prefix.
+#+name: windows-prefix
+| Keybinding | Command         |
+|------------+-----------------|
+| c          | new-window      |
+| n          | next-window     |
+| p          | previous-window |
+
+#+begin_src tmux
+<<gen-keybinds(keybinds=windows-prefix, prefix="windows")>>
+#+end_src
+
+In order to access more easily the different windows, I want to be able to type =<prefix> TAB <window number>=. However, I’m using the bépo layout, numbers are available only when pressing shift. Otherwise, the characters typed are ="«»()@+-/*= (from 1 to 0).
+#+begin_src emacs-lisp :wrap src tmux :exports code
+(let ((keybinds "")
+      (keys '("\\\"" "«" "»" "(" ")" "@" "+" "-" "/" "*")))
+  (dotimes (i (length keys) keybinds)
+    (setq keybinds (string-trim
+                    (concat keybinds
+                            "\n"
+                            (format "bind-key -T windows %s select-window -t :=%d"
+                                    (nth i keys)
+                                    (1+ i)))))))
+#+end_src
+
+#+RESULTS:
+#+begin_src tmux
+bind-key -T windows \" select-window -t :=1
+bind-key -T windows « select-window -t :=2
+bind-key -T windows » select-window -t :=3
+bind-key -T windows ( select-window -t :=4
+bind-key -T windows ) select-window -t :=5
+bind-key -T windows @ select-window -t :=6
+bind-key -T windows + select-window -t :=7
+bind-key -T windows - select-window -t :=8
+bind-key -T windows / select-window -t :=9
+bind-key -T windows * select-window -t :=10
 #+end_src
 
 ** Copy in vi mode
