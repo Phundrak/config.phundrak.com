@@ -1796,15 +1796,16 @@ configuration for the ~mu4e~ package itself.
   :straight (:build t)
   :commands mu4e mu4e-compose-new
   :init
-
   (defun mu4e--main-action-str (name func)
     "This seems to be needed until evil-collection supports the latest
   version of mu4e."
     "mu4e-main-action")
 
   (require 'mu4e)
-
   (remove-hook 'mu4e-main-mode-hook 'evil-collection-mu4e-update-main-view)
+
+  <<mu4e-ical-setup>>
+  <<mu4e-ical-init-config>>
 
   (csetq mu4e-completing-read-function 'completing-read
          mu4e-use-fancy-chars          t
@@ -1830,6 +1831,7 @@ configuration for the ~mu4e~ package itself.
   (add-hook 'mu4e-view-mode-hook (lambda () (setq truncate-lines nil)))
   (add-hook 'mu4e-headers-mode-hook (lambda () (setq truncate-lines t)))
 
+  <<mu4e-ical-config>>
   <<mu4e-keybindings-undef>>
   <<mu4e-keybindings-view>>
   <<mu4e-keybindings-view-no-prefix>>
@@ -1909,6 +1911,34 @@ Terminal=false
 Categories=Network;Email;TextEditor
 StartupWMClass=Gnus
 Keywords=Text;Editor;
+#+end_src
+
+***** Interact with iCalendar events
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationApplicationsEmailMu4eInteractwithiCalendarevents-dmsenkt0xuj0
+:END:
+Something that has always bugged me was how to properly with iCalendar
+events shared with me on my personal mailbox. The answer is actually
+[[https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html][dead simple]].
+#+name: mu4e-ical-setup
+#+begin_src emacs-lisp
+(require 'mu4e-icalendar)
+(mu4e-icalendar-setup)
+#+end_src
+
+I’ll just configure a couple of things regarding these events, namely
+converting them to Orgmode and add them to my =~/org/notes.org= file,
+and delete the email once I answered to the event.
+#+name: mu4e-ical-config
+#+begin_src emacs-lisp
+(setq mu4e-icalendar-trash-after-reply t)
+#+end_src
+
+#+name: mu4e-ical-init-config
+#+begin_src emacs-lisp
+(setq gnus-icalendar-org-capture-file "~/org/notes.org"
+      gnus-icalendar-org-capture-headline '("Calendar"))
+(gnus-icalendar-org-setup)
 #+end_src
 
 ***** Basic configuration
@@ -5679,7 +5709,9 @@ The project is then defined like so:
   (phundrak/major-leader-key
    :keymaps 'org-mode-map
    :pakages 'org-ref
-   "ic" #'org-ref-insert-link))
+   "ic" #'org-ref-insert-link
+   "ir" #'org-ref-insert-link-hydra/body
+   "iB" #'org-ref-bibtex-hydra/body))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8348,6 +8380,11 @@ and builds a heatmap out of it.
   :config
   (setq mastodon-instance-url "https://emacs.ch"
         mastodon-active-user  "phundrak")
+
+  (defun me/mastodon-toot--send-language-if-none ()
+    (unless mastodon-toot--language
+      (mastodon-toot--set-toot-language)))
+  (advice-add #'me/mastodon-toot--send-language-if-none :before #'mastodon-toot--send)
   :general
   (phundrak/evil
     :packages '(mastodon)
