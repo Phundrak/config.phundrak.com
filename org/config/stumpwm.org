@@ -258,107 +258,6 @@ Finally, we can notify the user everything is ready.
 
 And it’s done! We can now move on to the creation of the other CLisp files.
 
-* Commands
-:PROPERTIES:
-:CUSTOM_ID: Commands-1wagy001v5j0
-:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/commands.lisp
-:END:
-The first command I declare in this file is a command that will avoid
-me invoking too many Firefox instances. Either Firefox is not already
-running and an instance is launched, or one already is and we are
-brought to it. This is done like so:
-#+begin_src lisp
-(defcommand firefox () ()
-  "Run or raise Firefox."
-  (sb-thread:make-thread (lambda () (run-or-raise "firefox" '(:class "Firefox") t nil))))
-#+end_src
-
-Next, this command will not only close the current window, but it will
-also close the current frame.
-#+begin_src lisp
-(defcommand delete-window-and-frame () ()
-  "Delete the current frame with its window."
-  (delete-window)
-  (remove-split))
-#+end_src
-
-The two following commands will create a new frame to the right and
-below the current frame respectively, then focus it.
-#+begin_src lisp
-(defcommand hsplit-and-focus () ()
-  "Create a new frame on the right and focus it."
-  (hsplit)
-  (move-focus :right))
-
-(defcommand vsplit-and-focus () ()
-  "Create a new frame below and move focus to it."
-  (vsplit)
-  (move-focus :down))
-#+end_src
-
-Now, let’s create a command for invoking the terminal, optionally with
-a program.
-#+begin_src lisp
-(defcommand term (&optional program) ()
-  "Invoke a terminal, possibly with a @arg{program}."
-  (sb-thread:make-thread
-   (lambda ()
-     (run-shell-command (if program
-                            (format nil "kitty ~A" program)
-                            "kitty")))))
-#+end_src
-
-** At work
-:PROPERTIES:
-:CUSTOM_ID: CommandsAtwork-6u8lkt51vsj0
-:END:
-When I’m at work, I have a desktop layout I always use. No need to
-describe it here, but I want a quick command to save my layout in case
-I change it a bit as well as a command to load it. That way, I can
-automatically organize my screens. These command will save and load
-the dump where the variable ~*my/desktop-dump-file*~ points at.
-#+begin_src lisp
-(defvar *my/desktop-dump-file* "~/.cache/stump-at-work"
-  "Where my desktop dump should go and be loaded from.")
-#+end_src
-
-To save the current desktop, I can write a wrapper around
-~dump-desktop-to-file~.
-#+begin_src lisp
-(defcommand dump-work () ()
-  "Save desktop layout when at work."
-  (dump-desktop-to-file *my/desktop-dump-file*))
-#+end_src
-
-Basically the same goes for loading the desktop layout, but this time
-it’s ~restore-from-file~ that’s wrapped. I also want to launch Global
-Protect at the same time, because I always forget to before launching
-~launch-work~ described below, and automatically connect my bluetooth
-headset.
-#+begin_src lisp
-(defcommand at-work () ()
-  "Restore desktop layout when at work."
-  (restore-from-file *my/desktop-dump-file*)
-  (run-shell-command "gpclient")
-  (run-shell-command "bluetoothctl power on && bluetoothctl connect 14:3F:A6:6D:E3:D9"))
-#+end_src
-
-If I want to quickly launch all programs I will need, I can also
-invoke the command ~launch-work~.
-#+begin_src lisp
-(defcommand launch-work () ()
-  "Launch programs I need at work."
-  (run-shell-command "autorandr -l work; xwallpaper --zoom (cat $HOME/.cache/wallpaper)" t)
-  (run-shell-command "pkill picom")
-  (run-shell-command "firefox")
-  (run-shell-command "remmina")
-  (run-shell-command "kitty btop")
-  (run-shell-command "kitty")
-  (run-shell-command "kitty ncmpcpp -qs clock")
-  (run-shell-command "teams")
-  (run-shell-command "discord"))
-#+end_src
-
 * Colors
 :PROPERTIES:
 :CUSTOM_ID: Colors-w5493d01v5j0
@@ -937,6 +836,109 @@ Finally, let’s enable our gaps:
 #+begin_src lisp
 (when *initializing*
   (swm-gaps:toggle-gaps))
+#+end_src
+
+* Commands
+:PROPERTIES:
+:CUSTOM_ID: Commands-1wagy001v5j0
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/commands.lisp
+:END:
+The first command I declare in this file is a command that will avoid
+me invoking too many Firefox instances. Either Firefox is not already
+running and an instance is launched, or one already is and we are
+brought to it. This is done like so:
+#+begin_src lisp
+(defcommand firefox () ()
+  "Run or raise Firefox."
+  (sb-thread:make-thread (lambda () (run-or-raise "firefox" '(:class "Firefox") t nil))))
+#+end_src
+
+Next, this command will not only close the current window, but it will
+also close the current frame.
+#+begin_src lisp
+(defcommand delete-window-and-frame () ()
+  "Delete the current frame with its window."
+  (delete-window)
+  (remove-split))
+#+end_src
+
+The two following commands will create a new frame to the right and
+below the current frame respectively, then focus it.
+#+begin_src lisp
+(defcommand hsplit-and-focus () ()
+  "Create a new frame on the right and focus it."
+  (hsplit)
+  (move-focus :right))
+
+(defcommand vsplit-and-focus () ()
+  "Create a new frame below and move focus to it."
+  (vsplit)
+  (move-focus :down))
+#+end_src
+
+Now, let’s create a command for invoking the terminal, optionally with
+a program.
+#+begin_src lisp
+(defcommand term (&optional program) ()
+  "Invoke a terminal, possibly with a @arg{program}."
+  (sb-thread:make-thread
+   (lambda ()
+     (run-shell-command (if program
+                            (format nil "kitty ~A" program)
+                            "kitty")))))
+#+end_src
+
+** At work
+:PROPERTIES:
+:CUSTOM_ID: CommandsAtwork-6u8lkt51vsj0
+:END:
+When I’m at work, I have a desktop layout I always use. No need to
+describe it here, but I want a quick command to save my layout in case
+I change it a bit as well as a command to load it. That way, I can
+automatically organize my screens. These command will save and load
+the dump where the variable ~*my/desktop-dump-file*~ points at.
+#+begin_src lisp
+(defvar *my/desktop-dump-file* "~/.cache/stump-at-work"
+  "Where my desktop dump should go and be loaded from.")
+#+end_src
+
+To save the current desktop, I can write a wrapper around
+~dump-desktop-to-file~.
+#+begin_src lisp
+(defcommand dump-work () ()
+  "Save desktop layout when at work."
+  (dump-desktop-to-file *my/desktop-dump-file*))
+#+end_src
+
+Basically the same goes for loading the desktop layout, but this time
+it’s ~restore-from-file~ that’s wrapped. I also want to launch Global
+Protect at the same time, because I always forget to before launching
+~launch-work~ described below, and automatically connect my bluetooth
+headset.
+#+begin_src lisp
+(load-module "swm-gaps")
+(defcommand at-work () ()
+  "Restore desktop layout when at work."
+  (swm-gaps:toggle-gaps-off)
+  (run-shell-command "pkill picom" t)
+  (run-shell-command "autorandr -l work" t)
+  (run-shell-command "xwallpaper --zoom $(cat $HOME/.cache/wallpaper)" t)
+  (run-shell-command "gpclient")
+  (run-shell-command "bluetoothctl power on && bluetoothctl connect 14:3F:A6:6D:E3:D9"))
+#+end_src
+
+If I want to quickly launch all programs I will need, I can also
+invoke the command ~launch-work~.
+#+begin_src lisp
+(defcommand launch-work () ()
+  "Launch programs I need at work."
+  (run-shell-command "firefox")
+  (run-shell-command "remmina")
+  (run-shell-command "kitty tmux")
+  (run-shell-command "teams")
+  (run-shell-command "discord")
+  (restore-from-file *my/desktop-dump-file*)
+  (restore-window-placement-rules "~/.cache/placement-rules"))
 #+end_src
 
 * Keybinds
