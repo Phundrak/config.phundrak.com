@@ -5643,6 +5643,40 @@ The project is then defined like so:
               "config-website-static"))
 #+END_SRC
 
+*** Org-roam
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationOrgmodeOrgroam-npv0lco01vj0
+:END:
+After hearing about it for so many years and thinking I really should
+install it one day, 2023 is finally the year I installed org-roam! For
+those unaware of it, org-roam is a Zettelkasten-style knowledge
+management system based on org-mode.
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :straight (:build t)
+  :defer t
+  :config
+  (setq org-roam-directory (expand-file-name "org/roam/" (getenv "HOME")))
+  :general
+  (phundrak/leader-key
+    :packages '(org org-roam)
+    :infix "o"
+    "r"   '(:ignore t :which-key "roam")
+    "rb"  '(org-mark-ring-goto :which-key "back")
+    "rn"  '(:ignore t :which-key "nodes")
+    "rnf" #'org-roam-node-find
+    "rni" #'org-roam-node-insert
+    "rno" #'org-roam-node-open
+    "rnr" #'org-roam-node-random
+    "rnv" #'org-roam-node-visit
+    "rs"  '(:ignore t :which-key "sync")
+    "rsa" #'org-roam-db-autosync-mode
+    "rsc" #'org-roam-db-clear-all
+    "rsd" #'org-roam-db-diagnose-node
+    "rss" #'org-roam-db-sync))
+#+end_src
+
 *** Org-ref and Bibtex configuration
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Org-mode-org-ref-1h586cd085j0
@@ -8866,7 +8900,8 @@ Why would I ever use any of these keybinds? They are prefixed with ~q~.
 Advise ~evil-insert~ to go to the end of the buffer while in
 ~eshell-mode~.
 
-** TODO Get started with org-roam
+** DONE Get started with org-roam
+CLOSED: [2023-06-17 Sat 13:38]
 :PROPERTIES:
 :CUSTOM_ID: TODOs-Get-started-with-org-roam-6w2jh671kij0
 :END:
