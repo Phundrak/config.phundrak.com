@@ -3,9 +3,8 @@ name: default
 
 steps:
 - name: build
-  image: silex/emacs:alpine
+  image: silex/emacs:master-alpine-ci
   commands:
-    - apk update && apk add git
     - emacs -Q --script export.el
   when:
     branch:
