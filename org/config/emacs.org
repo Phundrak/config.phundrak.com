@@ -5656,14 +5656,16 @@ management system based on org-mode.
 (use-package org-roam
   :straight (:build t)
   :defer t
-  :config
-  (setq org-roam-directory (expand-file-name "org/roam/" (getenv "HOME")))
+  :custom
+  (org-roam-directory (expand-file-name "org/roam/" (getenv "HOME")))
+  (org-roam-completion-everywhere t)
   :general
   (phundrak/leader-key
     :packages '(org org-roam)
     :infix "o"
     "r"   '(:ignore t :which-key "roam")
     "rb"  '(org-mark-ring-goto :which-key "back")
+    "rB"  #'org-roam-buffer-toggle
     "rn"  '(:ignore t :which-key "nodes")
     "rnf" #'org-roam-node-find
     "rni" #'org-roam-node-insert
@@ -5674,7 +5676,15 @@ management system based on org-mode.
     "rsa" #'org-roam-db-autosync-mode
     "rsc" #'org-roam-db-clear-all
     "rsd" #'org-roam-db-diagnose-node
-    "rss" #'org-roam-db-sync))
+    "rss" #'org-roam-db-sync)
+  (phundrak/major-leader-key
+    :keymaps 'org-mode-map
+    :packages '(org org-roam)
+    "h"   #'org-id-get-create
+    "r"   '(:ignore t :which-key "roam")
+    "ra"  '(:ignore t :which-key "alias")
+    "raa" #'org-roam-alias-add
+    "rar" #'org-roam-alias-remove))
 #+end_src
 
 *** Org-ref and Bibtex configuration
