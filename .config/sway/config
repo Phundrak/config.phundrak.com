@@ -24,7 +24,7 @@ set $down t
 set $up s
 set $right r
 set $term kitty
-set $menu "rofi -combi-modi drun,window -show combi"
+set $menu "rofi -combi-modi drun -show combi"
 
 output eDP-1 {
   mode 1920x1080@120Hz

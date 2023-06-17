@@ -3,6 +3,6 @@
 configuration {
         show-icons:   true;
         sidebar-mode: false;
-        modi:         "window,ssh,drun,combi";
+        modi:         "ssh,drun,combi";
 }
 @theme "nord"
