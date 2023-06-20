@@ -5659,6 +5659,8 @@ management system based on org-mode.
   :custom
   (org-roam-directory (expand-file-name "org/roam/" (getenv "HOME")))
   (org-roam-completion-everywhere t)
+  :config
+  (org-roam-db-autosync-mode 1)
   :general
   (phundrak/leader-key
     :packages '(org org-roam)
