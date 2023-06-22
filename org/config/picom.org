@@ -162,8 +162,8 @@ and out.
 | Min value     | ~0.01~                             |
 | Max value     | ~1.0~                              |
 #+BEGIN_SRC conf
-fade-in-step = 0.09;
-fade-out-step = 0.08;
+fade-in-step = 0.25;
+fade-out-step = 0.23;
 #+END_SRC
 
 This value represents the time between steps in fade steps, in milliseconds.
