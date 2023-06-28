@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Nextcloud Talk
+Version=0.7.0
+Type=Application
+Exec=/opt/nextcloud-talk/nextcloud-talk
+StartupNotify=true
+Terminal=false
+Categories=Network
+Keywords=Nextcloud

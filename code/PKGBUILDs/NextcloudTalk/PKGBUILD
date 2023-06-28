@@ -1,0 +1,32 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+_pkgname=nextcloud-talk
+pkgname="${_pkgname}-bin"
+pkgver=0.7.0
+_dirname="Nextcloud Talk-linux-x64"
+_archivename="${_dirname// /.}-${pkgver}"
+pkgrel=1
+pkgdesc="Nextcloud Talk Desktop Client Preview"
+arch=('x86_64')
+url="https://github.com/nextcloud/talk-desktop"
+makedepend=('unzip')
+license=('AGPL-3.0')
+provides=('nextcloud-talk')
+source=("https://github.com/nextcloud-releases/talk-desktop/releases/download/v${pkgver}/${_archivename}.zip"
+        nextcloud-talk.desktop )
+sha256sums=('3a46807c2bb60519d4fee02fdb459f44e77ba1231a846172daa769244a58fa56'
+            '2fba0d3e869145cbdfcd24c104d196ee8857a05950b7a59b47f025f39e9e5214')
+
+package() {
+  cd "$srcdir"
+  mkdir -p "${pkgdir}/usr/share/applications/"
+  install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/"
+  cd "$_dirname"
+  mkdir -p "${pkgdir}/usr/share-licenses/${_pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share-licenses/${_pkgname}"
+  install -Dm644 LICENSES.chromium.html "${pkgdir}/usr/share-licenses/${_pkgname}"
+  mkdir -p "${pkgdir}/opt/nextcloud-talk"
+  mv "Nextcloud Talk" nextcloud-talk
+  mv * "${pkgdir}/opt/nextcloud-talk/"
+}
+
+# vim:set ts=2 sw=2 et:
