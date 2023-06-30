@@ -4719,11 +4719,11 @@ the usage of the ~:ignore:~ tag in org.
 
 *** Agenda
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle no :exports code :results silent
+:header-args:emacs-lisp: :exports code :results silent
 :CUSTOM_ID: Packages-Configuration-Org-mode-Agenda8b55fl6184j0
 :END:
 #+name: org-agenda-files
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq org-agenda-files (list "~/org/agenda" "~/org/notes.org"))
 #+end_src
 
