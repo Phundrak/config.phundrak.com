@@ -13,46 +13,53 @@
 	ui = auto
 [alias]
 	a = add --all
+	aca = !git add --all && git commit --amend
+	acan = !git add --all && git commit --amend --no-edit
 	####
 	b = branch
+	bd = branch -d
+	bdd = branch -D
 	####
 	c = commit -S
-	ca = commit -a
-	cm = commit -m
-	cam = commit -am
+	ca = commit -Sa
+	can = commit -Sa --no-edit
+	cm = commit -Sm
+	cam = commit -Sam
 	####
 	co = checkout
 	cob = checkout -b
+	cod = checkout develop
 	####
 	cl = clone
 	cl1 = clone --depth=1
 	####
 	d = diff -w
 	####
+	f = fetch
+	fp = fetch --prune
+	####
 	l = log --oneline --graph --decorate
 	####
 	ps = push
-	psf = push -f
+	psf = push --force-with-lease
 	pso = push origin
-	psfo = push -f origin
-	psom = push origin master
-	psfom = push -f origin master
+	psfo = push --force-with-lease origin
 	####
 	pl = pull
 	pb = pull --rebase
 	####
-	re = reset
-	reh = reset --hard
-	rehh = reset --hard HEAD
-	####
-	r = remote
-	ra = remote add
-	rr = remote rm
+	r = rebase
+	ra = rebase --abort
+	rc = rebase --continue
+	rd = rebase develop
+	ri = rebase -i
 	###
 	rmf = rm -f
-	rmrf = rm -r -f
+	rmd = rm -r
+	rmdf = rm -rf
 	####
 	s = status
+	####
 	sm = submodule
 	sms = submodule status
 	sma = submodule add
@@ -62,9 +69,10 @@
 	####
 	staged = diff --cached
 	####
-	sc = stash clear
-	sp = stash pop
-	sw = stash show
+	st = stash
+	stc = stash clear
+	stp = stash pop
+	stw = stash show
 	####
 	pushall = !git remote | xargs -L1 git push
 	psl = !git remote | xargs -L1 git push
@@ -73,6 +81,8 @@
 	####
 	u = reset --
 	unstage = reset --
+	####
+	upstream = !git push -u origin HEAD
 [sendemail]
 	smtpserver = mail.phundrak.com
 	smtpuser = lucien@phundrak.com
@@ -118,14 +128,12 @@
 	file-decoration-style = none
 
 [credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
-	helper = "pass Email/lucien@phundrak.com | head -n1 | tr -d '\n'"
+	helper = "secret-tool lookup password email_lucien-phundrak-com"
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-[safe]
-	directory = /opt/flutter
 
 [url "https://phundrak@github.com"]
 	insteadOf = https://github.com
