@@ -1,0 +1,294 @@
+# -*- indent-tabs-mode: t; -*-
+#+title: Git configuration
+#+setupfile: headers
+#+PROPERTY: header-args :exports code :tangle no
+#+PROPERTY: header-args:conf-unix :mkdirp yes :tangle ~/.config/git/config :exports code :noweb yes
+
+* Basic configuration
+#+begin_src conf-unix
+# -*- indent-tabs-mode: t; -*-
+#+end_src
+
+#+begin_src conf-unix
+[user]
+	email = lucien@phundrak.com
+	name = Lucien Cartier-Tilet
+	signingkey = BD7789E705CB8DCA
+#+end_src
+
+#+begin_src conf-unix
+[core]
+	editor = emacsclient -c -a emacs
+	whitespace = fix,-indent-with-non-tab,trailing-space
+	excludesfile = /home/phundrak/.gitignore_global
+#+end_src
+
+#+begin_src conf-unix
+[pull]
+	rebase = true
+#+end_src
+
+#+begin_src conf-unix
+[init]
+	defaultBranch = main
+#+end_src
+
+#+begin_src conf-unix
+[color]
+	ui = auto
+#+end_src
+
+#+begin_src conf-unix
+[web]
+	browser = firefox
+#+end_src
+
+* Aliases
+#+name: git-add-abbrev
+| abbreviation | equivalent                                     |
+|--------------+------------------------------------------------|
+| =a=            | =add --all=                                      |
+| =aca=          | =!git add --all && git commit --amend=           |
+| =acan=         | =!git add --all && git commit --amend --no-edit= |
+
+#+name: abbrev-gen
+#+begin_src emacs-lisp :tangle no :exports none :var abbrevs=git-push-abbrev :wrap "src conf-unix :tangle no"
+(mapconcat (lambda (abbreviation)
+	     (replace-regexp-in-string
+	      (concat (regexp-quote "\\vert") (rx (? "{}")))
+	      "|"
+	      (concat "\t"
+		      (string-replace "=" "" (car abbreviation))
+		      " = "
+		      (string-replace "=" "" (cadr abbreviation)))))
+	   abbrevs
+	   "\n")
+#+end_src
+
+#+RESULTS: abbrev-gen
+#+begin_src conf-unix :tangle no
+	ps = push
+	psf = push --force-with-lease
+	pso = push origin
+	psfo = push --force-with-lease origin
+	pushall = !git remote | xargs -L1 git push
+	psl = !git remote | xargs -L1 git push
+	pullall = !git remote | xargs -L1 git pull
+	pll = !git remote | xargs -L1 git pull
+#+end_src
+
+#+name: git-branch-abbrev
+| abbreviation | equivalent |
+|--------------+------------|
+| =b=            | =branch=     |
+| =bd=           | =branch -d=  |
+| =bdd=          | =branch -D=  |
+
+#+name: git-commit-abbrev
+| abbreviation | equivalent           |
+|--------------+----------------------|
+| =c=            | =commit -S=            |
+| =ca=           | =commit -Sa=           |
+| =can=          | =commit -Sa --no-edit= |
+| =cm=           | =commit -Sm=           |
+| =cam=          | =commit -Sam=          |
+
+#+name: git-checkout-abbrev
+| abbreviation | equivalent       |
+|--------------+------------------|
+| =co=           | =checkout=         |
+| =cob=          | =checkout -b=      |
+| =cod=          | =checkout develop= |
+
+#+name: git-clone-abbrev
+| abbreviation | equivalent      |
+|--------------+-----------------|
+| =cl=           | =clone=           |
+| =cl1=          | =clone --depth=1= |
+
+#+name: git-fetch-abbrev
+| abbreviation | equivalent    |
+|--------------+---------------|
+| =f=            | =fetch=         |
+| =fp=           | =fetch --prune= |
+
+#+name: git-push-abbrev
+| abbreviation | equivalent                       |
+|--------------+----------------------------------|
+| =ps=           | =push=                             |
+| =psf=          | =push --force-with-lease=          |
+| =pso=          | =push origin=                      |
+| =psfo=         | =push --force-with-lease origin=   |
+| =pushall=      | =!git remote \vert{} xargs -L1 git push= |
+| =psl=          | =!git remote \vert{} xargs -L1 git push= |
+| =pullall=      | =!git remote \vert{} xargs -L1 git pull= |
+| =pll=          | =!git remote \vert{} xargs -L1 git pull= |
+
+#+name: git-pull-abbrev
+| abbreviation | equivalent    |
+|--------------+---------------|
+| =pl=           | =pull=          |
+| =pb=           | =pull --rebase= |
+
+#+name: git-rebase-abbrev
+| abbreviation | equivalent        |
+|--------------+-------------------|
+| =r=            | =rebase=            |
+| =ra=           | =rebase --abort=    |
+| =rc=           | =rebase --continue= |
+| =rd=           | =rebase develop=    |
+| =ri=           | =rebase -i=         |
+
+#+name: git-rm-abbrev
+| abbreviation | equivalent |
+|--------------+------------|
+| =rmf=          | =rm -f=      |
+| =rmd=          | =rm -r=      |
+| =rmdf=         | =rm -rf=     |
+
+#+name: git-submodule-abbrev
+| abbreviation | equivalent                          |
+|--------------+-------------------------------------|
+| =sm=           | =submodule=                           |
+| =sms=          | =submodule status=                    |
+| =sma=          | =submodule add=                       |
+| =smu=          | =submodule update=                    |
+| =smui=         | =submodule update --init=             |
+| =smuir=        | =submodule update --init --recursive= |
+
+#+name: git-stash-abbrev
+| abbreviation | equivalent  |
+|--------------+-------------|
+| =st=           | =stash=       |
+| =stc=          | =stash clear= |
+| =stp=          | =stash pop=   |
+| =stw=          | =stash show=  |
+
+#+name: git-unstage-abbrev
+| abbreviation | equivalent |
+|--------------+------------|
+| =u=            | =reset --=   |
+| =unstage=      | =reset --=   |
+
+#+name: git-single-abbrev
+| abbreviation | equivalent                       |
+|--------------+----------------------------------|
+| =d=            | =diff -w=                          |
+| =l=            | =log --oneline --graph --decorate= |
+| =s=            | =status=                           |
+| =staged=       | =diff --cached=                    |
+| =upstream=     | =!git push -u origin HEAD=         |
+
+#+RESULTS:
+:       a = add --all
+:       aca = !git add --all && git commit --amend
+:       acan = !git add --all && git commit --amend --no-edit
+
+#+begin_src conf-unix
+[alias]
+<<abbrev-gen(abbrevs=git-add-abbrev)>>
+<<abbrev-gen(abbrevs=git-branch-abbrev)>>
+<<abbrev-gen(abbrevs=git-commit-abbrev)>>
+<<abbrev-gen(abbrevs=git-checkout-abbrev)>>
+<<abbrev-gen(abbrevs=git-clone-abbrev)>>
+<<abbrev-gen(abbrevs=git-fetch-abbrev)>>
+<<abbrev-gen(abbrevs=git-push-abbrev)>>
+<<abbrev-gen(abbrevs=git-pull-abbrev)>>
+<<abbrev-gen(abbrevs=git-rebase-abbrev)>>
+<<abbrev-gen(abbrevs=git-rm-abbrev)>>
+<<abbrev-gen(abbrevs=git-submodule-abbrev)>>
+<<abbrev-gen(abbrevs=git-stash-abbrev)>>
+<<abbrev-gen(abbrevs=git-unstage-abbrev)>>
+<<abbrev-gen(abbrevs=git-single-abbrev)>>
+#+end_src
+
+* Tools
+** Sendemail
+#+begin_src conf-unix
+[sendemail]
+	smtpserver = mail.phundrak.com
+	smtpuser = lucien@phundrak.com
+	smtpencryption = tls
+	smtpserverport = 587
+#+end_src
+
+#+begin_src conf-unix
+[credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
+	helper = "secret-tool lookup password email_lucien-phundrak-com"
+#+end_src
+
+** Magit
+#+begin_src conf-unix
+[magithub]
+	online = true
+[magithub "status"]
+	includeStatusHeader = true
+	includePullRequestsSection = true
+	includeIssuesSection = true
+#+end_src
+
+** GPG
+#+begin_src conf-unix
+[gpg]
+	program = gpg2
+[commit]
+	gpgsign = true
+#+end_src
+
+** Merge
+#+begin_src conf-unix
+[merge]
+	tool = ediff
+#+end_src
+
+#+begin_src conf-unix
+[mergetool.ediff]
+	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
+#+end_src
+
+** Pager
+#+begin_src conf-unix
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+#+end_src
+
+** Delta
+#+begin_src conf-unix
+[delta]
+	features = side-by-side line-numbers decorations
+	whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
+
+[interactive]
+	diffFilter = delta --color-only
+#+end_src
+
+** Git forges
+#+begin_src conf-unix
+[github]
+	user = phundrak
+#+end_src
+
+#+begin_src conf-unix
+[url "https://phundrak@github.com"]
+	insteadOf = https://github.com
+
+[url "https://phundrak@labs.phundrak.com"]
+	insteadOf = https://labs.phundrak.com
+#+end_src
+
+** LFS
+#+begin_src conf-unix
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+#+end_src

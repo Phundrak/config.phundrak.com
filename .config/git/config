@@ -1,122 +1,114 @@
 # -*- indent-tabs-mode: t; -*-
+
 [user]
 	email = lucien@phundrak.com
 	name = Lucien Cartier-Tilet
 	signingkey = BD7789E705CB8DCA
+
 [core]
 	editor = emacsclient -c -a emacs
 	whitespace = fix,-indent-with-non-tab,trailing-space
-	excludesfile = /home/phundrak/dotfiles/.gitignore_global
-[web]
-	browser = firefox
+	excludesfile = /home/phundrak/.gitignore_global
+
+[pull]
+	rebase = true
+
+[init]
+	defaultBranch = main
+
 [color]
 	ui = auto
+
+[web]
+	browser = firefox
+
 [alias]
 	a = add --all
 	aca = !git add --all && git commit --amend
 	acan = !git add --all && git commit --amend --no-edit
-	####
 	b = branch
 	bd = branch -d
 	bdd = branch -D
-	####
 	c = commit -S
 	ca = commit -Sa
 	can = commit -Sa --no-edit
 	cm = commit -Sm
 	cam = commit -Sam
-	####
 	co = checkout
 	cob = checkout -b
 	cod = checkout develop
-	####
 	cl = clone
-	cl1 = clone --depth=1
-	####
-	d = diff -w
-	####
+	cl1 = clone --depth1
 	f = fetch
 	fp = fetch --prune
-	####
-	l = log --oneline --graph --decorate
-	####
 	ps = push
 	psf = push --force-with-lease
 	pso = push origin
 	psfo = push --force-with-lease origin
-	####
+	pushall = !git remote | xargs -L1 git push
+	psl = !git remote | xargs -L1 git push
+	pullall = !git remote | xargs -L1 git pull
+	pll = !git remote | xargs -L1 git pull
 	pl = pull
 	pb = pull --rebase
-	####
 	r = rebase
 	ra = rebase --abort
 	rc = rebase --continue
 	rd = rebase develop
 	ri = rebase -i
-	###
 	rmf = rm -f
 	rmd = rm -r
 	rmdf = rm -rf
-	####
-	s = status
-	####
 	sm = submodule
 	sms = submodule status
 	sma = submodule add
 	smu = submodule update
 	smui = submodule update --init
 	smuir = submodule update --init --recursive
-	####
-	staged = diff --cached
-	####
 	st = stash
 	stc = stash clear
 	stp = stash pop
 	stw = stash show
-	####
-	pushall = !git remote | xargs -L1 git push
-	psl = !git remote | xargs -L1 git push
-	pullall = !git remote | xargs -L1 git pull
-	pll = !git remote | xargs -L1 git pull
-	####
 	u = reset --
 	unstage = reset --
-	####
+	d = diff -w
+	l = log --oneline --graph --decorate
+	s = status
+	staged = diff --cached
 	upstream = !git push -u origin HEAD
+
 [sendemail]
 	smtpserver = mail.phundrak.com
 	smtpuser = lucien@phundrak.com
 	smtpencryption = tls
 	smtpserverport = 587
+
+[credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
+	helper = "secret-tool lookup password email_lucien-phundrak-com"
+
 [magithub]
 	online = true
 [magithub "status"]
 	includeStatusHeader = true
 	includePullRequestsSection = true
 	includeIssuesSection = true
+
 [gpg]
 	program = gpg2
-[mergetool.ediff]
-	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
-[merge]
-	tool = ediff
-[github]
-	user = phundrak
 [commit]
 	gpgsign = true
-[pull]
-	rebase = false
-[init]
-	defaultBranch = main
+
+[merge]
+	tool = ediff
+
+[mergetool.ediff]
+	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
 
 [pager]
 	diff = delta
 	log = delta
 	reflog = delta
 	show = delta
-
-[interactive]
-	diffFilter = delta --color-only
 
 [delta]
 	features = side-by-side line-numbers decorations
@@ -127,16 +119,20 @@
 	file-style = bold yellow ul
 	file-decoration-style = none
 
-[credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
-	helper = "secret-tool lookup password email_lucien-phundrak-com"
-[filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+[interactive]
+	diffFilter = delta --color-only
+
+[github]
+	user = phundrak
 
 [url "https://phundrak@github.com"]
 	insteadOf = https://github.com
 
 [url "https://phundrak@labs.phundrak.com"]
 	insteadOf = https://labs.phundrak.com
+
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
