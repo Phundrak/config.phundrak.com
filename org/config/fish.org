@@ -4,7 +4,7 @@
 #+HTML_HEAD_EXTRA: <meta name="description" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:title" content="Phundrak's fish config" />
 #+HTML_HEAD_EXTRA: <meta property="og:description" content="Description of the fish config file of Phundrak" />
-#+PROPERTY: header-args:fish :mkdirp :tangle ~/.config/fish/config.fish :exports code :noweb yes
+#+PROPERTY: header-args:fish :mkdirp yes :tangle ~/.config/fish/config.fish :exports code :noweb yes
 #+PROPERTY: header-args :exports code :tangle no
 
 * Presentation
