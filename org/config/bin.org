@@ -464,6 +464,15 @@ case "y"
     xclip -sel clip -t "$TYPE" -i "$FILE"
 #+end_src
 
+** Secure key generator
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/skg
+:CUSTOM_ID: cliutilitiesSecurekeygenerator-obfj0i20mvj0
+:END:
+#+begin_src bash
+tr -cd '[:alnum:]' < /dev/urandom | fold -w 64 | head -n 1 | tr -d '\n'
+#+end_src
+
 ** Starwars
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
