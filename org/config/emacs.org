@@ -4719,7 +4719,6 @@ the usage of the ~:ignore:~ tag in org.
 
 *** Agenda
 :PROPERTIES:
-:header-args:emacs-lisp: :exports code :results silent
 :CUSTOM_ID: Packages-Configuration-Org-mode-Agenda8b55fl6184j0
 :END:
 #+name: org-agenda-files
@@ -5687,6 +5686,18 @@ management system based on org-mode.
     "ra"  '(:ignore t :which-key "alias")
     "raa" #'org-roam-alias-add
     "rar" #'org-roam-alias-remove))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org-roam-ui
+  :straight (:build t)
+  :defer t
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 #+end_src
 
 *** Org-ref and Bibtex configuration
