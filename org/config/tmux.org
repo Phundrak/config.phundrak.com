@@ -201,6 +201,7 @@ open in the same directory as the directory I am currently in.
 | =t=          | select-pane -D                            |                 |
 | =s=          | select-pane -U                            |                 |
 | =r=          | select-pane -R                            |                 |
+| =f=          | resize-pane -Z                            |                 |
 | =.=          |                                           | pane-resize     |
 
 #+begin_src tmux
