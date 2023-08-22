@@ -65,7 +65,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-phundrak-git"
 fi
-pkgver=30.0.50.164787
+pkgver=29.0.92.165437
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch with Phundrak’s tweaks."
 arch=('x86_64')
@@ -77,7 +77,7 @@ makedepends=('git')
 provides=('emacs')
 replaces=('emacs')
 # source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git#commit=0214e9021b4dbbda1b6040e3b692f29d77a3b8cc")
+source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git#branch=emacs-29")
 b2sums=('SKIP')
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug)
 install=emacs-git.install
