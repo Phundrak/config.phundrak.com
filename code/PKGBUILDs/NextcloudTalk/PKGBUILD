@@ -1,7 +1,7 @@
 # Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
 _pkgname=nextcloud-talk
 pkgname="${_pkgname}-bin"
-pkgver=0.7.0
+pkgver=0.10.0
 _dirname="Nextcloud Talk-linux-x64"
 _archivename="${_dirname// /.}-${pkgver}"
 pkgrel=1
@@ -13,7 +13,7 @@ license=('AGPL-3.0')
 provides=('nextcloud-talk')
 source=("https://github.com/nextcloud-releases/talk-desktop/releases/download/v${pkgver}/${_archivename}.zip"
         nextcloud-talk.desktop )
-sha256sums=('3a46807c2bb60519d4fee02fdb459f44e77ba1231a846172daa769244a58fa56'
+sha256sums=('3b1c1620665078069491ff86395d87727c91da8153a9842e9206c4b2f7f020dd'
             '2fba0d3e869145cbdfcd24c104d196ee8857a05950b7a59b47f025f39e9e5214')
 
 package() {
