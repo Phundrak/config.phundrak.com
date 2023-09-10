@@ -1,6 +1,7 @@
 # pylint: disable=C0111
 from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
 from qutebrowser.config.config import ConfigContainer  # noqa: F401
+
 config: ConfigAPI = config  # noqa: F821 pylint: disable=E0602,C0103
 c: ConfigContainer = c  # noqa: F821 pylint: disable=E0602,C0103
 
@@ -19,19 +20,19 @@ c.content.autoplay = False
 # Type: List of Url
 c.content.blocking.adblock.lists = [
     # AdBlock sources
-    'https://easylist.to/easylist/easylist.txt',
-    'https://easylist.to/easylist/easyprivacy.txt'
+    "https://easylist.to/easylist/easylist.txt",
+    "https://easylist.to/easylist/easyprivacy.txt"
     # uBlock sources
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badlists.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/lan-block.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt',
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badlists.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/lan-block.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt",
 ]
 
 # Enable the ad/host blocker
@@ -55,7 +56,7 @@ c.content.blocking.hosts.block_subdomains = True
 # if it exists.
 # Type: List of Url
 c.content.blocking.hosts.lists = [
-    'https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts',
+    "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
 ]
 
 # Which method of blocking ads should be used.  Support for Adblock Plus
@@ -69,7 +70,7 @@ c.content.blocking.hosts.lists = [
 #   - adblock: Use Brave's ABP-style adblocker
 #   - hosts: Use hosts blocking
 #   - both: Use both hosts blocking and Brave's ABP-style adblocker
-c.content.blocking.method = 'auto'
+c.content.blocking.method = "auto"
 
 # A list of patterns that should always be loaded, despite being blocked
 # by the ad-/host-blocker. Local domains are always exempt from
@@ -133,7 +134,7 @@ c.content.canvas_reading = True
 #   - no-3rdparty: Accept cookies from the same origin only. This is known to break some sites, such as GMail.
 #   - no-unknown-3rdparty: Accept cookies from the same origin only, unless a cookie is already set for the domain. On QtWebEngine, this is the same as no-3rdparty.
 #   - never: Don't accept cookies at all.
-c.content.cookies.accept = 'all'
+c.content.cookies.accept = "all"
 
 # Store cookies.
 # Type: Bool
@@ -142,7 +143,7 @@ c.content.cookies.store = True
 # Default encoding to use for websites. The encoding must be a string
 # describing an encoding such as _utf-8_, _iso-8859-1_, etc.
 # Type: String
-c.content.default_encoding = 'utf-8'
+c.content.default_encoding = "utf-8"
 
 # Allow websites to share screen content.
 # Type: BoolAsk
@@ -150,7 +151,7 @@ c.content.default_encoding = 'utf-8'
 #   - true
 #   - false
 #   - ask
-c.content.desktop_capture = 'ask'
+c.content.desktop_capture = "ask"
 
 # Try to pre-fetch DNS entries to speed up browsing.
 # Type: Bool
@@ -177,7 +178,7 @@ c.content.fullscreen.window = True
 #   - true
 #   - false
 #   - ask
-c.content.geolocation = 'ask'
+c.content.geolocation = "ask"
 
 # Value to send in the `Accept-Language` header. Note that the value
 # read from JavaScript is always the global value.
@@ -206,7 +207,7 @@ c.content.headers.do_not_track = True
 #   - always: Always send the Referer.
 #   - never: Never send the Referer. This is not recommended, as some sites may break.
 #   - same-domain: Only send the Referer for the same domain. This will still protect your privacy, but shouldn't break any sites. With QtWebEngine, the referer will still be sent for other domains, but with stripped path information.
-c.content.headers.referer = 'same-domain'
+c.content.headers.referer = "same-domain"
 
 # User agent to send.  The following placeholders are defined:  *
 # `{os_info}`: Something like "X11; Linux x86_64". * `{webkit_version}`:
@@ -222,7 +223,7 @@ c.content.headers.referer = 'same-domain'
 # between 5.12 and 5.14 (inclusive), changing the value exposed to
 # JavaScript requires a restart.
 # Type: FormatString
-c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+c.content.headers.user_agent = "Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}"
 
 # Enable hyperlink auditing (`<a ping>`).
 # Type: Bool
@@ -235,12 +236,6 @@ c.content.images = True
 # Show javascript alerts.
 # Type: Bool
 c.content.javascript.alert = True
-
-# Allow JavaScript to read from or write to the clipboard. With
-# QtWebEngine, writing the clipboard as response to a user interaction
-# is always allowed.
-# Type: Bool
-c.content.javascript.can_access_clipboard = False
 
 # Allow JavaScript to close tabs.
 # Type: Bool
@@ -295,7 +290,7 @@ c.content.local_storage = True
 #   - true
 #   - false
 #   - ask
-c.content.media.audio_capture = 'ask'
+c.content.media.audio_capture = "ask"
 
 # Allow websites to record audio and video.
 # Type: BoolAsk
@@ -303,7 +298,7 @@ c.content.media.audio_capture = 'ask'
 #   - true
 #   - false
 #   - ask
-c.content.media.audio_video_capture = 'ask'
+c.content.media.audio_video_capture = "ask"
 
 # Allow websites to record video.
 # Type: BoolAsk
@@ -311,7 +306,7 @@ c.content.media.audio_video_capture = 'ask'
 #   - true
 #   - false
 #   - ask
-c.content.media.video_capture = 'ask'
+c.content.media.video_capture = "ask"
 
 # Allow websites to lock your mouse pointer.
 # Type: BoolAsk
@@ -319,7 +314,7 @@ c.content.media.video_capture = 'ask'
 #   - true
 #   - false
 #   - ask
-c.content.mouse_lock = 'ask'
+c.content.mouse_lock = "ask"
 
 # Automatically mute tabs. Note that if the `:tab-mute` command is used,
 # the mute status for the affected tab is now controlled manually, and
@@ -337,7 +332,7 @@ c.content.netrc_file = None
 #   - true
 #   - false
 #   - ask
-c.content.notifications.enabled = 'ask'
+c.content.notifications.enabled = "ask"
 
 # What notification presenter to use for web notifications. Note that
 # not all implementations support all features of notifications: - With
@@ -357,7 +352,7 @@ c.content.notifications.enabled = 'ask'
 #   - systray: Use a notification presenter based on a systray icon. Falls back to `libnotify` or `messages` if not systray is available. This is a reimplementation of the `qt` setting value, but with the possibility to switch to it at runtime.
 #   - messages: Show notifications as qutebrowser messages. Most notification features aren't available.
 #   - herbe: (experimental!) Show notifications using herbe (github.com/dudik/herbe). Most notification features aren't available.
-c.content.notifications.presenter = 'auto'
+c.content.notifications.presenter = "auto"
 
 # Whether to show the origin URL for notifications. Note that URL
 # patterns with this setting only get matched against the origin part of
@@ -379,7 +374,7 @@ c.content.pdfjs = True
 #   - true
 #   - false
 #   - ask
-c.content.persistent_storage = 'ask'
+c.content.persistent_storage = "ask"
 
 # Enable plugins in Web pages.
 # Type: Bool
@@ -411,7 +406,7 @@ c.content.private_browsing = False
 # Valid values:
 #   - system: Use the system wide proxy.
 #   - none: Don't use any proxy
-c.content.proxy = 'system'
+c.content.proxy = "system"
 
 # Send DNS requests over the configured proxy.
 # Type: Bool
@@ -424,7 +419,7 @@ c.content.proxy_dns_requests = True
 #   - true
 #   - false
 #   - ask
-c.content.register_protocol_handler = 'ask'
+c.content.register_protocol_handler = "ask"
 
 # Enable quirks (such as faked user agent headers) needed to get
 # specific sites to work properly.
@@ -448,7 +443,7 @@ c.content.site_specific_quirks.enabled = True
 #   - js-object-fromentries
 #   - misc-krunker
 #   - misc-mathml-darkmode
-c.content.site_specific_quirks.skip = ['js-string-replaceall']
+c.content.site_specific_quirks.skip = ["js-string-replaceall"]
 
 # How to proceed on TLS certificate errors.
 # Type: String
@@ -457,7 +452,7 @@ c.content.site_specific_quirks.skip = ['js-string-replaceall']
 #   - ask-block-thirdparty: Ask how to proceed for normal page loads, but silently block resource loads.
 #   - block: Automatically block loading on certificate errors.
 #   - load-insecurely: Force loading pages despite certificate errors. This is *insecure* and should be avoided. Instead of using this, consider fixing the underlying issue or importing a self-signed certificate via `certutil` (or Chromium) instead.
-c.content.tls.certificate_errors = 'ask'
+c.content.tls.certificate_errors = "ask"
 
 # How navigation requests to URLs with unknown schemes are handled.
 # Type: String
@@ -465,7 +460,7 @@ c.content.tls.certificate_errors = 'ask'
 #   - disallow: Disallows all navigation requests to URLs with unknown schemes.
 #   - allow-from-user-interaction: Allows navigation requests to URLs with unknown schemes that are issued from user-interaction (like a mouse-click), whereas other navigation requests (for example from JavaScript) are suppressed.
 #   - allow-all: Allows all navigation requests to URLs with unknown schemes.
-c.content.unknown_url_scheme_policy = 'allow-from-user-interaction'
+c.content.unknown_url_scheme_policy = "allow-from-user-interaction"
 
 # List of user stylesheet filenames to use.
 # Type: List of File, or File
@@ -482,7 +477,7 @@ c.content.webgl = True
 #   - default-public-and-private-interfaces: WebRTC should only use the default route used by http. This also exposes the associated default private address. Default route is the route chosen by the OS on a multi-homed endpoint.
 #   - default-public-interface-only: WebRTC should only use the default route used by http. This doesn't expose any local addresses.
 #   - disable-non-proxied-udp: WebRTC should only use TCP to contact peers or servers unless the proxy server supports UDP. This doesn't expose any local addresses either.
-c.content.webrtc_ip_handling_policy = 'all-interfaces'
+c.content.webrtc_ip_handling_policy = "all-interfaces"
 
 # Monitor load requests for cross-site scripting attempts. Suspicious
 # scripts will be blocked and reported in the devtools JavaScript
