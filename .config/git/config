@@ -38,7 +38,7 @@
 	cob = checkout -b
 	cod = checkout develop
 	cl = clone
-	cl1 = clone --depth1
+	cl1 = clone --depth 1
 	f = fetch
 	fp = fetch --prune
 	ps = push

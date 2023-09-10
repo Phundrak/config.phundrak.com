@@ -104,7 +104,7 @@
 | abbreviation | equivalent      |
 |--------------+-----------------|
 | =cl=           | =clone=           |
-| =cl1=          | =clone --depth=1= |
+| =cl1=          | =clone --depth 1= |
 
 #+name: git-fetch-abbrev
 | abbreviation | equivalent    |
