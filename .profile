@@ -58,7 +58,7 @@ export DENO_INSTALL_ROOT="$HOME/.local/bin/deno"
 
 export DIFFPROG=ediff
 export SUDO_ASKPASS="$HOME/.local/bin/askpass"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANPAGER='less'
 
 export BROWSER=firefox
 export XMODIFIERS=
