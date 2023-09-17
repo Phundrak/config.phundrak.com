@@ -5288,7 +5288,6 @@ A new backend that was introduced in org-mode for LaTeX source block
 coloring is ~engraved~.
 #+BEGIN_SRC emacs-lisp
 (use-package engrave-faces
-  :defer t
   :straight (:build t)
   :after org)
 #+END_SRC
@@ -5296,7 +5295,7 @@ coloring is ~engraved~.
 #+name: org-latex-src-block-backend
 #+begin_src emacs-lisp :tangle no
 (require 'engrave-faces)
-(csetq org-latex-src-block-backend 'engraved)
+(setq org-latex-src-block-backend 'engraved)
 #+end_src
 
 The default packages break my LaTeX exports: for some reasons, images
