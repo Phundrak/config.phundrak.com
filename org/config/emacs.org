@@ -5299,7 +5299,9 @@ packages:
                    (""     "grffile"  t)))
   (delete package org-latex-default-packages-alist))
 
-(dolist (package '(("capitalize" "cleveref")
+(dolist (package '(("AUTO" "babel" nil ("pdflatex"))
+                   ("AUTO" "polyglossia" nil ("xelatex" "lualatex"))
+                   ("capitalize" "cleveref")
                    (""           "booktabs")
                    (""           "tabularx")))
   (add-to-list 'org-latex-default-packages-alist package t))
