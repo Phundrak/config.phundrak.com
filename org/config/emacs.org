@@ -1275,6 +1275,12 @@ restricted in terms of features compared to =ivy=.
         ivy-use-selectable-prompt       t))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package counsel
+  :straight (:build t)
+  :defer t)
+#+end_src
+
 There is also [[https://github.com/raxod502/prescient.el][~prescient.el~]] that offers some nice features when
 coupled with ~ivy~, guess what was born out of it? ~ivy-prescient~, of
 course!
