@@ -3265,6 +3265,16 @@ compatibility package that adds states for iedit.
    "q" #'evil-iedit-state/quit-iedit-mode))
 #+end_src
 
+*** Smartparens
+:PROPERTIES:
+:CUSTOM_ID: PackagesConfigurationEditingSmartparens-v0a4djn0tvj0
+:END:
+#+begin_src emacs-lisp
+(use-package smartparens
+  :straight (:build t)
+  :defer t)
+#+end_src
+
 *** Parinfer
 :PROPERTIES:
 :CUSTOM_ID: Packages-Configuration-Editing-Parinfermxy1fl6184j0
