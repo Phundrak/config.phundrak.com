@@ -5260,11 +5260,12 @@ and copy its content over to my remote server.
 :CUSTOM_ID: Packages-Configuration-Org-mode-File-export-LaTeXg2b5fl6184j0
 :END:
 When it comes to exports, I want the LaTeX and PDF exports to be done
-with XeLaTeX only. This implies the modification of the following
-variable:
+with XeTeX only. I also want LaTeX exports to use my labels rather
+than org-generated labels.
 #+NAME: org-latex-compiler
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq org-latex-compiler "xelatex")
+(setq org-latex-compiler "xelatex"
+      org-latex-prefer-user-labels t)
 #+END_SRC
 
 A new backend that was introduced in org-mode for LaTeX source block
