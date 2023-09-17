@@ -6426,9 +6426,11 @@ in quite a few languages.
     "B" #'langtool-correct-buffer
     "b" #'langtool-check-buffer
     "c" #'langtool-check
+    "C" #'langtool-correct-at-point
     "d" #'langtool-check-done
     "l" #'langtool-switch-default-language
-    "p" #'langtool-show-message-at-point))
+    "p" #'langtool-show-message-at-point
+    "r" #'langtool-correct-region))
 #+end_src
 
 An LSP version of LanguageTools is also available:
