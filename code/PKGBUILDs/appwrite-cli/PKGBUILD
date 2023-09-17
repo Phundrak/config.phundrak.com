@@ -1,0 +1,28 @@
+# Maintainer: Lucien Cartier-Tilet <lucien@phundrak.com>
+
+_pkgname=appwrite-cli
+_orgname=appwrite
+_ghpkgname=sdk-for-cli
+pkgname="nodejs-${_pkgname}"
+pkgver=4.1.0
+pkgrel=1
+pkgdesc="Command-line tool for building and testing Emacs Lisp packages"
+url="https://github.com/${_orgname}/${_ghpkgname}"
+license=("BSD-3-Clause")
+arch=("any")
+depends=("nodejs")
+makedepends=("npm")
+source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
+sha256sums=('83f35fcc7c54fec519791e4bc28f2c6913971357a055eb9113cbaa7259f3edc4')
+noextract=("$_pkgname-$pkgver.tgz")
+
+prepare() {
+  tar xzf "$_pkgname-$pkgver.tgz"
+}
+
+package() {
+  npm i --location=global --cache "${srcdir}/npm-cache" --prefix "$pkgdir/usr" "$srcdir/$_pkgname-$pkgver.tgz"
+  install -Dm644 package/LICENSE.md "$pkgdir/usr/share/licenses/$_pkgname/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:
