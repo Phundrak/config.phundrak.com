@@ -5767,6 +5767,7 @@ management system based on org-mode.
    :keymaps 'org-mode-map
    :pakages 'org-ref
    "ic" #'org-ref-insert-link
+   "iL" #'org-ref-insert-ref-link
    "ir" #'org-ref-insert-link-hydra/body
    "iB" #'org-ref-bibtex-hydra/body))
 #+end_src
