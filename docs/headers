@@ -1,0 +1,21 @@
+# -*- mode: org -*-
+#+AUTHOR: Lucien Cartier-Tilet
+#+EMAIL: lucien@phundrak.com
+#+CREATOR: Lucien Cartier-Tilet
+#+LANGUAGE: en
+
+# ### ORG OPTIONS ##############################################################
+
+#+options: H:4 broken_links:mark email:t ^:{} tex:dvisvgm toc:nil
+#+KEYWORDS: dotfiles, linux, emacs, configuration, phundrak, drakpa
+#+startup: content align hideblocks
+#+property: header-args:emacs-lisp :noweb yes :exports none :eval yes :cache yes
+#+property: header-args:dot :dir img :exports results :eval yes :cache yes :class gentree
+
+# ### MACROS ###################################################################
+#+macro: phon @@html:/$1/@@
+#+macro: newline @@html:<br>@@
+#+macro: latex-html @@latex:$1@@@@html:$2@@
+#+macro: v @@html:<span class=vertical>$1</span>@@
+#+macro: begin-largetable @@html:<div class="largetable">@@
+#+macro: end-largetable @@html:</div>@@

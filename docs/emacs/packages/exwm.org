@@ -1,0 +1,401 @@
+#+title: Emacs — Packages — EXWM
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/exwm.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* EXWM
+So, I’m finally slowly getting back to EXWM. I tried it a couple of
+years ago, but that was with the SpacemacsOS layer on Spacemacs, on a
+laptop which got accidentaly formatted before I could save my config
+and all… So it got me some time to come back. I’m still a bit worried
+about Emacs being single threaded, so if I get one blocking function
+blocking Emacs, my whole desktop will hang, but for now I haven’t had
+this issue.
+
+All my EXWM config is enabled only if I launch Emacs with the argument
+~--with-exwm~, otherwise none of the related packages get installed, let
+alone activated and made available.
+
+First, I need to install the /X protocol Emacs Lisp Bindings/. It
+doesn’t seem to be available in any repo, so I’ll install it directly
+from Git.
+#+begin_src emacs-lisp
+(use-package xelb
+  :if (seq-contains-p command-line-args "--with-exwm")
+  :straight (xelb :build t
+                  :type git
+                  :host github
+                  :repo "emacs-straight/xelb"
+                  :fork "ch11ng/xelb"))
+#+end_src
+
+Next is a function I’ve +stolen+ copied from Daviwil’s [[https://config.daviwil.com/desktop][desktop
+configuration]]. This allows to launch software in the background
+easily.
+#+begin_src emacs-lisp
+(defun exwm/run-in-background (command &optional once)
+  (let ((command-parts (split-string command " +")))
+    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+#+end_src
+
+In order to launch Emacs with EXWM with ~startx~, I need a ~xinit~ file.
+This one is exported to ~$HOME/.xinitrc.emacs~.
+#+begin_src sh :tangle ~/.xinitrc.emacs :shebang "#!/bin/sh"
+xhost +SI:localuser:$USER
+
+# Set fallback cursor
+xsetroot -cursor_name left_ptr
+
+# If Emacs is started in server mode, `emacsclient` is a convenient
+# way to edit files in place (used by e.g. `git commit`)
+export VISUAL=emacsclient
+export EDITOR="$VISUAL"
+
+# in case Java applications display /nothing/
+# wmname LG3D
+# export _JAVA_AWT_WM_NONREPARENTING=1
+
+autorandr -l home
+
+exec emacs --with-exwm
+#+end_src
+
+** EXWM itself
+Now we come to the plat de résistance. Like with ~xelb~, I’m using its
+Git source to install it to make sure I get the right version --- the
+version available on the GNU ELPA is from the same source, true, but I
+don’t know at which rate it is updated. And more packages down the
+line will depend on this Git repository, so I might as well just clone
+it right now.
+
+As you can see, I added in the ~:config~ secion to two hooks functions
+that rename buffers accurately. While the average X window will simply
+get the name of the current X window, I want Firefox and Qutebrowser
+to be prefixed with the name of the browser. Actually, all these will
+be renamed this way:
+#+name: exwm-renamed-buffers-list
+- Kitty
+- Qutebrowser
+
+#+name: exwm-gen-buffers-rename
+#+header: :exports none :tangle no
+#+begin_src emacs-lisp :var buffers=exwm-renamed-buffers-list :cache yes
+(format "%s\n%S"
+        (mapconcat (lambda (buffer)
+                     (let ((buffer-name (if (stringp buffer)
+                                            buffer
+                                          (car buffer))))
+                       (format "(\"%s\" %S)"
+                               (downcase buffer-name)
+                               `(exwm-workspace-rename-buffer
+                                 (concat ,(concat "EXWM: " buffer-name " - ")
+                                         exwm-title)))))
+                   buffers
+                   "\n")
+        '(_otherwise (exwm-workspace-rename-buffer exwm-title)))
+#+end_src
+
+#+RESULTS[64fdbf1e8957b82aad801ec57f2155a0a8f5be54]: exwm-gen-buffers-rename
+: ("kitty" (exwm-workspace-rename-buffer (concat "EXWM: Kitty - " exwm-title)))
+: ("qutebrowser" (exwm-workspace-rename-buffer (concat "EXWM: Qutebrowser - " exwm-title)))
+: (_otherwise (exwm-workspace-rename-buffer exwm-title))
+
+#+name: exwm-buffers-name
+#+begin_src emacs-lisp :tangle no
+(add-hook 'exwm-update-class-hook
+          (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+
+(add-hook 'exwm-update-title-hook
+          (lambda ()
+            (pcase exwm-class-name
+              <<exwm-gen-buffers-rename()>>)))
+#+end_src
+
+As you can see below, in the ~:config~ section I added two advices and
+one hook in order to correctly integrate evil with EXWM. When I’m in
+an X window, I want to be in insert-mode in order to type however I
+want. However, when I exit one, I want to default back to normal-mode.
+#+name: exwm-advices-evil
+#+begin_src emacs-lisp :tangle no
+(add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
+(advice-add #'exwm-input-grab-keyboard :after (lambda (&optional id) (evil-normal-state)))
+(advice-add #'exwm-input-release-keyboard :after (lambda (&optional id) (evil-insert-state)))
+#+end_src
+
+Secondly, I add ~i~, ~C-SPC~, and ~M-m~ as exwm prefix keys so they aren’t
+sent directly to the X windows but caught by Emacs (and EXWM). I’ll
+use the ~i~ key in normal-mode to enter ~insert-mode~ and have Emacs
+release the keyboard so the X window can grab it. Initially, I had
+~s-<escape>~ as a keybind for grabbing back the keyboard from an X
+window, as if I were in insert mode and wanted to go back to normal
+mode, and I had ~s-I~ to toggle keyboard grabbing. But I found myself
+more than once trying to use ~s-<escape>~ to toggle this state, ~s-I~
+completely forgotten. So I removed ~s-I~ and made ~s-<escape>~ behave like
+~s-I~ once did.
+#+name: exwm-prefix-keys
+#+begin_src emacs-lisp :tangle no
+(general-define-key
+ :keymaps 'exwm-mode-map
+ :states 'normal
+ "i" #'exwm-input-release-keyboard)
+
+(exwm-input-set-key (kbd "s-<escape>") #'exwm-input-toggle-keyboard)
+
+(push ?\i exwm-input-prefix-keys)
+(push (kbd "C-SPC") exwm-input-prefix-keys)
+(push (kbd "M-m") exwm-input-prefix-keys)
+#+end_src
+
+As stated a couple of times in my different configuration files, I’m
+using the bépo layout, which means the default keys in the number row
+are laid as follows:
+#+name: exwm-bepo-number-row
+#+begin_src emacs-lisp :tangle no
+(defconst exwm-workspace-keys '("\"" "«" "»" "(" ")" "@" "+" "-" "/" "*"))
+#+end_src
+
+With this, we can create keybinds for going or sending X windows to
+workspaces 0 to 9.
+#+name: exwm-workspace-keybinds
+#+begin_src emacs-lisp :tangle no
+(setq exwm-input-global-keys
+      `(,@exwm-input-global-keys
+        ,@(mapcar (lambda (i)
+                    `(,(kbd (format "s-%s" (nth i exwm-workspace-keys))) .
+                      (lambda ()
+                        (interactive)
+                        (exwm-workspace-switch-create ,i))))
+                  (number-sequence 0 9))
+        ,@(mapcar (lambda (i)
+                    `(,(kbd (format "s-%d" i)) .
+                      (lambda ()
+                        (interactive)
+                        (exwm-workspace-move-window ,(let ((index (1- i)))
+                                                       (if (< index 0)
+                                                           (- 10 index)
+                                                         ;; FIXME: does not work with s-0
+                                                         index))))))
+                  (number-sequence 0 9))))
+#+end_src
+
+You can then see the list of the keybinds I have set for EXWM, which
+are all prefixed with ~SPC x~ in normal mode (and ~C-SPC x~ in insert
+mode), except for ~s-RET~ which opens an eshell terminal.
+#+name: exwm-keybinds
+#+begin_src emacs-lisp :tangle no
+(exwm-input-set-key (kbd "s-<return>") (lambda ()
+                                         (interactive)
+                                         (eshell)))
+
+(phundrak/leader-key
+  :infix "x"
+  ""   '(:ignore t :which-key "EXWM")
+  "d"  #'exwm-debug
+  "k"  #'exwm-input-send-next-key
+  "l"  '((lambda ()
+           (interactive)
+           (start-process "" nil "plock"))
+         :which-key "lock")
+  "r"  '(:ignore t :wk "rofi")
+  "rr" '((lambda () (interactive)
+           (shell-command "rofi -show drun" (current-buffer) (current-buffer)))
+         :wk "drun")
+  "rw" '((lambda () (interactive)
+           (shell-command "rofi -show window" (current-buffer) (current-buffer)))
+         :wk "windows")
+  "R"  '(:ignore t :wk "restart")
+  "Rr" #'exwm-reset
+  "RR" #'exwm-restart
+  "t"  '(:ignore t :which-key "toggle")
+  "tf" #'exwm-layout-toggle-fullscreen
+  "tF" #'exwm-floating-toggle-floating
+  "tm" #'exwm-layout-toggle-mode-line
+  "w"  '(:ignore t :which-key "workspaces")
+  "wa" #'exwm-workspace-add
+  "wd" #'exwm-workspace-delete
+  "ws" #'exwm-workspace-switch
+  "x"  '((lambda ()
+           (interactive)
+           (let ((command (string-trim (read-shell-command "RUN: "))))
+             (start-process command nil command)))
+         :which-key "run")
+  "RET" #'eshell-new)
+#+end_src
+
+A couple of commands are also automatically executed through my
+~autostart~ script written [[file:bin.org::#Autostart-a99e99e7][here]].
+#+name: exwm-autostart
+#+begin_src emacs-lisp :tangle no
+(exwm/run-in-background "autostart")
+#+end_src
+
+Finally, let’s only initialize and start EXWM once functions from
+exwm-randr ran, because otherwise having multiple monitors don’t work.
+#+name: exwm-init
+#+begin_src emacs-lisp :tangle no
+(with-eval-after-load 'exwm-randr
+  (exwm-init))
+#+end_src
+
+The complete configuration for the ~exwm~ package can be found below.
+#+begin_src emacs-lisp :noweb yes
+(use-package exwm
+  :if (seq-contains-p command-line-args "--with-exwm")
+  :straight (exwm :build t
+                  :type git
+                  :host github
+                  :repo "ch11ng/exwm")
+  :custom
+  (use-dialog-box nil "Disable dialog boxes since they are unusable in EXWM")
+  (exwm-input-line-mode-passthrough t "Pass all keypresses to emacs in line mode.")
+  :init
+  (require 'exwm-config)
+  (setq exwm-workspace-number 6)
+  :config
+  (set-frame-parameter (selected-frame) 'alpha-background 0.7)
+  <<exwm-randr>>
+
+  <<exwm-buffers-name>>
+
+  <<exwm-advices-evil>>
+  <<exwm-prefix-keys>>
+
+  <<exwm-bepo-number-row>>
+  <<exwm-workspace-keybinds>>
+
+  <<exwm-keybinds>>
+
+  <<exwm-autostart>>
+
+  <<exwm-init>>)
+#+end_src
+
+** EXWM-Evil integration
+#+begin_src emacs-lisp
+(use-package evil-exwm-state
+  :if (seq-contains-p command-line-args "--with-exwm")
+  :defer t
+  :after exwm
+  :straight (evil-exwm-state :build t
+                             :type git
+                             :host github
+                             :repo "domenzain/evil-exwm-state"))
+#+end_src
+
+** Multimonitor support
+#+name: exwm-randr
+#+begin_src emacs-lisp :tangle no
+(require 'exwm-randr)
+(exwm/run-in-background "xwallpaper --zoom \"${cat $HOME/.cache/wallpaper}\"")
+(start-process-shell-command
+ "xrandr" nil "xrandr --output eDP1 --mode 1920x1080 --pos 2560x0 --rotate normal --output HDMI1 --primary --mode 2560x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off --output DP-1-0 --off --output DP-1-1 --off")
+(exwm-randr-enable)
+(setq exwm-randr-workspace-monitor-plist '(3 "eDP1"))
+#+end_src
+
+** Keybinds for a desktop environment
+#+begin_src emacs-lisp
+(use-package desktop-environment
+  :defer t
+  :straight (desktop-environment :build t
+                                 :type git
+                                 :host github
+                                 :repo "DamienCassou/desktop-environment")
+  :after exwm
+  :diminish t
+  :config
+  (add-hook 'exwm-init-hook #'desktop-environment-mode)
+  (setq desktop-environment-update-exwm-global-keys :prefix
+        exwm-layout-show-al-buffers t)
+
+  (setq desktop-environment-bluetooth-command "bluetoothctl"
+
+        desktop-environment-brightness-get-command      "xbacklight -get"
+        desktop-environment-brightness-get-regexp       (rx line-start (group (+ digit)))
+        desktop-environment-brightness-set-command      "xbacklight %s"
+        desktop-environment-brightness-normal-increment "-inc 5"
+        desktop-environment-brightness-normal-decrement "-dec 5"
+        desktop-environment-brightness-small-increment  "-inc 2"
+        desktop-environment-brightness-small-decrement  "-dec 2"
+
+        desktop-environment-volume-normal-decrement "-d 5"
+        desktop-environment-volume-normal-increment "-i 5"
+        desktop-environment-volume-small-decrement  "-d 2"
+        desktop-environment-volume-small-increment  "-i 2"
+        desktop-environment-volume-set-command      "pamixer -u %s"
+
+        desktop-environment-screenshot-directory "~/Pictures/Screenshots"
+        desktop-environment-screenlock-command   "plock"
+
+        desktop-environment-music-toggle-command   "mpc toggle"
+        desktop-environment-music-previous-command "mpc prev"
+        desktop-environment-music-next-command     "mpc next"
+        desktop-environment-music-stop-command     "mpc stop")
+
+  (general-define-key
+   "<XF86AudioPause>" (lambda () (interactive)
+                        (with-temp-buffer
+                           (shell-command "mpc pause" (current-buffer) (current-buffer)))))
+
+  (desktop-environment-mode))
+#+end_src
+
+** Bluetooth
+#+begin_src emacs-lisp
+(defvar bluetooth-command "bluetoothctl")
+#+end_src
+
+#+begin_src emacs-lisp
+(defun bluetooth-turn-on ()
+  (interactive)
+  (let ((process-connection-type nil))
+    (start-process "" nil bluetooth-command "power" "on")))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun bluetooth-turn-off ()
+  (interactive)
+  (let ((process-connection-type nil))
+    (start-process "" nil bluetooth-command "power" "off")))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun create-bluetooth-device (raw-name)
+  "Create a bluetooth device cons from RAW NAME.
+The cons will hold first the MAC address of the device, then its
+human-friendly name."
+  (let ((split-name (split-string raw-name " " t)))
+    `(,(mapconcat #'identity (cddr split-name) " ") . ,(cadr split-name))))
+#+end_src
+
+#+begin_src emacs-lisp
+(require 'dbus)
+(defun bluetooth-get-devices ()
+  (let ((bus-list (dbus-introspect-get-node-names :system "org.bluez" "/org/bluez/hci0")))
+    (mapcar (lambda (device)
+              `(,(dbus-get-property :system
+                                    "org.bluez"
+                                    (concat "/org/bluez/hci0/" device)
+                                    "org.bluez.Device1"
+                                    "Alias")
+                . ,device))
+            bus-list)))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun bluetooth-connect-device ()
+  (interactive)
+  (progn
+    (bluetooth-turn-on)
+    (let* ((devices (bluetooth-get-devices))
+           (device  (alist-get (completing-read "Device: " devices)
+                               devices nil nil #'string=)))
+      (dbus-call-method-asynchronously
+       :system "org.bluez"
+       (concat "/org/bluez/hci0" device)
+       "org.bluez.Device1"
+       "Connect"
+       (lambda (&optional msg)
+         (when msg (message "%s" msg)))))))
+#+end_src

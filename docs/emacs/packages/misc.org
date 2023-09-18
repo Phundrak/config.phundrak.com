@@ -1,0 +1,276 @@
+#+title: Emacs — Packages — Misc
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/misc.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Misc
+** ArchWiki pages
+A small package I’ve written allows the user to view ArchLinux pages
+either in Emacs or in an external web browser. I prefer the defaults.
+#+begin_src emacs-lisp
+(use-package archwiki
+  :defer t
+  :straight (archwiki :build t
+                      :type git
+                      :repo "https://labs.phundrak.com/phundrak/archwiki.el"))
+#+end_src
+
+** ~avy~
+~avy~ is a really convenient way of jumping around and performing
+actions on these selections, but I’ll need some configuration to make
+it bépo-compatible.
+#+begin_src emacs-lisp
+(use-package avy
+  :defer t
+  :straight t
+  :config
+  (csetq avy-keys           '(?a ?u ?i ?e ?c ?t ?s ?r ?n)
+         avy-dispatch-alist '((?x . avy-action-kill-move)
+                              (?X . avy-action-kill-stay)
+                              (?T . avy-action-teleport)
+                              (?m . avy-action-mark)
+                              (?C . avy-action-copy)
+                              (?y . avy-action-yank)
+                              (?Y . avy-action-yank-line)
+                              (?I . avy-action-ispell)
+                              (?z . avy-action-zap-to-char)))
+  (defun my/avy-goto-url ()
+    "Jump to url with avy."
+    (interactive)
+    (avy-jump "https?://"))
+  (defun my/avy-open-url ()
+    "Open url selected with avy."
+    (interactive)
+    (my/avy-goto-url)
+    (browse-url-at-point))
+  :general
+  (phundrak/evil
+    :pakages 'avy
+    "gc" #'evil-avy-goto-char-timer
+    "gl" #'evil-avy-goto-line)
+  (phundrak/leader-key
+    :packages 'avy
+    :infix "j"
+    "b" #'avy-pop-mark
+    "c" #'evil-avy-goto-char-timer
+    "l" #'avy-goto-line)
+  (phundrak/leader-key
+    :packages 'avy
+    :infix "A"
+    "c"  '(:ignore t :which-key "copy")
+    "cl" #'avy-copy-line
+    "cr" #'avy-copy-region
+    "k"  '(:ignore t :which-key "kill")
+    "kl" #'avy-kill-whole-line
+    "kL" #'avy-kill-ring-save-whole-line
+    "kr" #'avy-kill-region
+    "kR" #'avy-kill-ring-save-region
+    "m"  '(:ignore t :which-key "move")
+    "ml" #'avy-move-line
+    "mr" #'avy-move-region
+    "mt" #'avy-transpose-lines-in-region
+    "n"  #'avy-next
+    "p"  #'avy-prev
+    "u"  #'my/avy-goto-url
+    "U"  #'my/avy-open-url)
+  (phundrak/major-leader-key
+    :packages '(avy org)
+    :keymaps 'org-mode-map
+    "A" '(:ignore t :which-key "avy")
+    "Ar" #'avy-org-refile-as-child
+    "Ah" #'avy-org-goto-heading-timer))
+#+end_src
+
+** Calc
+Let’s give ~calc-mode~ some better defaults.
+#+begin_src emacs-lisp
+(setq calc-angle-mode    'rad
+      calc-symbolic-mode t)
+#+end_src
+
+** Elcord
+What’s the point of using Emacs if you can’t tell everyone?
+#+begin_src emacs-lisp
+(use-package elcord
+  :straight (:built t)
+  :defer t
+  :config
+  (csetq elcord-use-major-mode-as-main-icon t
+         elcord-refresh-rate                5
+         elcord-boring-buffers-regexp-list  `("^ "
+                                              ,(rx "*" (+ any) "*")
+                                              ,(rx bol (or "Re: "
+                                                           "Fwd: ")))))
+#+end_src
+
+** ~ivy-quick-find-files.el~
+This package is a small utility package I’ve written in order to
+quickly find files across my filesystem.
+#+begin_src emacs-lisp
+(use-package ivy-quick-find-files
+  :defer t
+  :straight (ivy-quick-find-files :type git
+                                  :host github
+                                  :repo "phundrak/ivy-quick-find-files.el"
+                                  :build t)
+  :config
+  (setq ivy-quick-find-files-program 'fd
+        ivy-quick-find-files-dirs-and-exts '(("~/org"                  . "org")
+                                             ("~/Documents/university" . "org"))
+        ivy-quick-find-files-fd-additional-options "-L"))
+#+end_src
+
+** Keycast
+In case I am sharing my screen with people and I want to show which
+functions are called on my keystrokes since I don’t exactly use
+standard keybindings.
+#+begin_src emacs-lisp
+(use-package keycast
+  :defer t
+  :straight (:build t)
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (add-hook 'pre-command-hook 'keycast--update t)
+      (remove-hook 'pre-command-hook 'keycast--update)))
+  (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+#+end_src
+
+** Keyfreq
+Keyfreq is a package that records all the commands I call from Emacs
+and builds a heatmap out of it.
+#+begin_src emacs-lisp
+(use-package keyfreq
+  :straight (:build t)
+  :init
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  :config
+  (setq keyfreq-excluded-commands '(self-insert-command org-self-insert-command
+                                    evil-previous-visual-line evil-next-visual-line
+                                    ivy-next-line evil-backward-char evil-forward-char
+                                    evil-next-line evil-previous-line evil-normal-state
+                                    text-scale-pinch)))
+#+end_src
+
+** Mastodon
+#+begin_src emacs-lisp
+(use-package mastodon
+  :defer t
+  :ensure t
+  :straight (mastodon :type git
+                      :host codeberg
+                      :repo "martianh/mastodon.el")
+  :config
+  (setq mastodon-instance-url "https://emacs.ch"
+        mastodon-active-user  "phundrak")
+
+  (defun me/mastodon-toot--send-language-if-none ()
+    (unless mastodon-toot--language
+      (mastodon-toot--set-toot-language)))
+  (advice-add #'me/mastodon-toot--send-language-if-none :before #'mastodon-toot--send)
+  :general
+  (phundrak/evil
+    :packages '(mastodon)
+    :keymaps 'mastodon-mode-map
+    "]]" '(mastodon-tl--goto-next-toot :wk "Next status")
+    "[[" '(mastodon-tl--goto-prev-toot :wk "Previous status")
+    "gt" '(mastodon-tl--next-tab-item :wk "Next tab item")
+    "gs" '(mastodon-tl--previous-tab-item :wk "Previous tab item")
+    "»" '(mastodon-tl--goto-next-toot :wk "Next status")
+    "«" '(mastodon-tl--goto-prev-toot :wk "Previous status")
+    "q" #'kill-current-buffer)
+  (phundrak/major-leader-key
+    :package 'mastodon
+    :keymaps 'mastodon-mode-map
+    "#" '(mastodon-tl--get-tag-timeline :wk "Tag timeline")
+    "f" '(mastodon-tl--get-federated-timeline :wk "Federated timeline")
+    "F" '(mastoton-tl--view-filters :wk "Filters")
+    "H" '(mastodon-tl--get-local-timeline :wk "Home timeline")
+    "L" '(mastodon-tl--get-local-timeline :wk "Local timeline")
+    "N" '(mastodon-notifications-get :wk "Notifications")
+    "T" '(mastodon-tl--thread :wk "Thread")
+    "O" '(mastodon-profile--my-profile :wk "My profile")
+    "S" '(mastodon-tl--get-follow-suggestions :wk "Follow suggestions")
+    "a" '(mastodon-profile--get-toot-author :wk "Toot author")
+    "b" '(mastodon-profile--view-bookmarks :wk "Bookmarks")
+    "s" '(mastodon-search--search-query :wk "Search query")
+    "U" '(mastodon-tl--update :wk "Update")
+
+    "t"  '(nil :wk "Toots")
+    "tt" '(mastodon-toot :wk "Toot")
+    "tb" '(mastodon-toot--toggle-boost :wk "Boost")
+    "tB" '(mastodon-toot--bookmark-toot-toggle :wk "Bookmark")
+    "td" '(mastodon-toot--delete-toot :wk "Delete")
+    "tD" '(mastodon-toot--delete-and-redraft-toot :wk "Redraft")
+    "tf" '(mastodon-toot--toggle-favourite :wk "Favourite")
+    "tF" '(mastodon-profile--view-favourites :wk "View favourites")
+    "tr" '(mastodon-toot--reply :wk "Reply")
+    "tp" '(mastodon-toot--pin-toot-toggle :wk "Pin")
+    "ts" '(mastodon-tl--toggle-spoiler-text-in-toot :wk "Spoiler")
+    "tu" '(mastodon-toot--copy-toot-url :wk "Copy url")
+    "tv" '(mastodon-tl--poll-vote :wk "Vote on poll")
+
+    "f"  '(nil :wk "Follow requests")
+    "fa" '(mastodon-notifications--follow-request-accept :wk "Accept")
+    "fr" '(mastodon-notifications--follow-request-reject :wk "Reject")
+    "fv" '(mastodon-profile--view-follow-requests :wk "View follow requests")
+
+    "u"  '(nil :wk "User")
+    "uf" '(mastodon-tl--follow-user :wk "Follow")
+    "uF" '(mastodon-tl--unfollow-user :wk "Unfollow")
+    "ub" '(mastodon-tl--block-user :wk "Block")
+    "uB" '(mastodon-tl--unblock-user :wk "Unblock")
+    "um" '(mastodon-tl--mute-user :wk "Mute")
+    "uM" '(mastodon-tl--unmute-user :wk "Unmute")
+    "un" '(mastodon-profile--update-user-profile-note :wk "Update user profile note")
+    "uu" '(mastodon-profile--show-user :wk "Show user")))
+#+end_src
+
+** Mediawiki
+#+begin_src emacs-lisp
+(use-package mediawiki
+  :defer t
+  :straight (:build t)
+  :custom
+  (mediawiki-site-alist '(("PhundrakWiki" ; Title
+                           "https://wiki.phundrak.com/" ; URL
+                           "phundrak" ; username
+                           nil ; password
+                           nil ; LDAP
+                           "Main Page")))) ; Default page
+#+end_src
+
+** SICP
+Who would get interested in Emacs and not want to read the SICP?
+Moreover, inside Emacs?
+#+begin_src emacs-lisp
+(use-package sicp
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+** Winum
+Winum allows Emacs to associate windows with a specific number and
+navigate through these windows by directly refering to their
+associated number! This allows for faster window configuration than
+just going to the frame above, then left, left, and up.
+#+begin_src emacs-lisp
+(use-package winum
+  :straight (:build t)
+  :init (winum-mode))
+#+end_src
+
+** Ytplay
+~ytplay~ is a small package I’ve written with which you can choose at
+which resolution to play a YouTube video in an external video player.
+#+begin_src emacs-lisp
+(use-package ytplay
+  :defer t
+  :straight (ytplay :build t
+                    :type git
+                    :repo "https://labs.phundrak.com/phundrak/ytplay.el"))
+#+end_src

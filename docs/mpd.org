@@ -1,0 +1,88 @@
+#+title: MPD Configuration
+#+setupfile: headers
+#+property: header-args:emacs-lisp :lexical t :exports none :tangle no
+#+property: header-args:emacs-lisp+ :noweb yes :wrap src conf-space
+#+property: header-args:conf-space :tangle ~/.config/mpd/mpd.conf :noweb yes :exports code
+
+* MPD
+As its name indicates, the [[https://www.musicpd.org/][Music Player Daemon]] --- or MPD for short
+--- is a daemon that manages music files on a computer and plays them.
+It can be manipulated by various front-end applications, such as the
+command-line utility ~mpc~, TUI ~ncmpcpp~, or GUI ~cantata~. In my case, I
+use mainly ~ncmpcpp~ and Emacs’ EMMS.
+
+On my computer, MPD runs as a user daemon, as seen in [[file:bootstrap.org::#Execute_bootstrap-Enable_some_services-Mpd-f0f5b9b7][my bootstrap
+file here]].
+
+** Required Parameters
+MPD requires a few compulsory parameters that we will see below.
+#+name: mpd-required-parameters
+| Parameter name          | Value                     | Comment                                                                  |
+|-------------------------+---------------------------+--------------------------------------------------------------------------|
+| =follow_outside_symlinks= | =yes=                       | Whether to follow symlinks pointing outside the music directory          |
+| =follow_inside_symlinks=  | =yes=                       | Whether to follow symlinks pointing inside the music directory           |
+| =db_file=                 | =~/.config/mpd/database=    | Location of MPD’s database                                               |
+| =sticker_file=            | =~/.config/mpd/sticker.sql= | Location of the sticker database (dynamic information attached to songs) |
+| =log_file=                | =~/.config/mpd/log=         | Location of MPD’s log file                                               |
+
+#+name: mpd-gen-values
+#+begin_src emacs-lisp :var table=mpd-required-parameters :exports results
+(mapconcat (lambda (parameter)
+             (let* ((trim-name (lambda (parameter)
+                                 (replace-regexp-in-string (regexp-quote "=")
+                                                           ""
+                                                           parameter)))
+                    (name      (apply trim-name `(,(car parameter))))
+                    (value     (apply trim-name `(,(cadr parameter)))))
+               (format "%s \"%s\"" name value)))
+           table
+           "\n")
+#+end_src
+
+#+RESULTS: mpd-gen-values
+#+begin_src conf-space
+follow_outside_symlinks "yes"
+follow_inside_symlinks "yes"
+db_file "~/.config/mpd/database"
+sticker_file "~/.config/mpd/sticker.sql"
+log_file "~/.config/mpd/log"
+#+end_src
+
+** Optional Parameters
+While these values are not strictly necessary, some are still useful
+such as ~music_directory~: we don’t have to manually add our music to
+MPD each time we run it.
+#+name: mpd-optional-parameters
+| Parameter          | Value               | Comment                                                   |
+|--------------------+---------------------+-----------------------------------------------------------|
+| =music_directory=    | =~/Music=             | Location of the music directory                           |
+| =playlist_directory= | =~/Music/playlists=   | Location of MPD playlists                                 |
+| =pid_file=           | =~/.config/mpd/pid=   | Location of MPD’s PID                                     |
+| =state_file=         | =~/.config/mpd/state= | File where the state of MPD is saved when killed          |
+| =bind_to_address=    | =localhost=           | Limit MPD to the localhost address                        |
+| =auto_update=        | =yes=                 | No need to manually update MPD’s database with ~mpc update~ |
+
+#+begin_src conf-space
+<<mpd-gen-values(table=mpd-optional-parameters)>>
+#+end_src
+
+** Audio outputs
+Two audio outputs will be defined. The first one sets Pulseaudio up so
+I can actually hear my music. Its configuration is simple, really.
+#+begin_src conf-space
+audio_output {
+  type  "pulse"
+  name  "pulse audio"
+}
+#+end_src
+
+Another one sets up the visualizer of ~ncmpcpp~. It is not necessary to
+create this one if you don’t plan on using this feature.
+#+begin_src conf-space
+audio_output {
+  type "fifo"
+  name "my_fifo"
+  path "/tmp/mpd.fifo"
+  format "44100:16:2"
+}
+#+end_src

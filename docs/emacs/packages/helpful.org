@@ -1,0 +1,59 @@
+#+title: Emacs — Packages — Making My Life Easier
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/helpful.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Making my life easier
+** Bufler
+Bufler is a package that organises and lists buffers in a much better
+way than how they are usually sorted. You can easily and quickly find
+buffers by their group, not only by their name, and THIS is great
+news! Also, no ~helm~ please! And for some reasons the keybindings are
+borked by default, so let’s redefine them, and let’s also rebind ~SPC~
+to ~p~ since it would conflict with my main ~general~ prefix.
+#+begin_src emacs-lisp
+(use-package bufler
+  :straight (bufler :build t
+                    :files (:defaults (:exclude "helm-bufler.el")))
+  :defer t
+  :general
+  (phundrak/evil
+   :keymaps  'bufler-list-mode-map
+   :packages 'bufler
+   "?"   #'hydra:bufler/body
+   "g"   #'bufler
+   "f"   #'bufler-list-group-frame
+   "F"   #'bufler-list-group-make-frame
+   "N"   #'bufler-list-buffer-name-workspace
+   "k"   #'bufler-list-buffer-kill
+   "p"   #'bufler-list-buffer-peek
+   "s"   #'bufler-list-buffer-save
+   "RET" #'bufler-list-buffer-switch))
+#+end_src
+
+** Helpful
+As the name tells, ~helpful~ is a really helpful package which greatly
+enhances a couple of built-in functions from Emacs, namely:
+| Vanilla Emacs Function | Helpful Function | Comment                                       |
+|------------------------+------------------+-----------------------------------------------|
+| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
+| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
+| ~describe-function~      | ~helpful-macro~    |                                               |
+| ~describe-command~       | ~helpful-command~  |                                               |
+| ~describe-key~           | ~helpful-key~      |                                               |
+| ~describe-variable~      | ~helpful-variable~ |                                               |
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :straight (:build t)
+  :after (counsel ivy)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command]  . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key]      . helpful-key))
+#+end_src

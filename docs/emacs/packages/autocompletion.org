@@ -1,0 +1,310 @@
+#+title: Emacs — Packages — Autocompletion
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/autocompletion.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Autocompletion
+** Code Autocompletion
+Company is, in my opinion, the best autocompleting engine for Emacs,
+and it is one of the most popular if not /the/ most popular.
+#+begin_src emacs-lisp
+(use-package company
+  :straight (:build t)
+  :defer t
+  :hook (company-mode . evil-normalize-keymaps)
+  :init (global-company-mode)
+  :config
+  (setq company-minimum-prefix-length     2
+        company-toolsip-limit             14
+        company-tooltip-align-annotations t
+        company-require-match             'never
+        company-global-modes              '(not erc-mode message-mode help-mode gud-mode)
+        company-frontends
+        '(company-pseudo-tooltip-frontend ; always show candidates in overlay tooltip
+          company-echo-metadata-frontend) ; show selected candidate docs in echo area
+        company-backends '(company-capf)
+        company-auto-commit         nil
+        company-auto-complete-chars nil
+        company-dabbrev-other-buffers nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase    nil))
+#+end_src
+
+This package is a backend for company. It emulates
+~ac-source-dictionary~ by proposing text related to the current
+major-mode.
+#+begin_src emacs-lisp
+(use-package company-dict
+  :after company
+  :straight (:build t)
+  :config
+  (setq company-dict-dir (expand-file-name "dicts" user-emacs-directory)))
+#+end_src
+
+On the other hand, ~company-box~ is a Company front-end which offers
+colors, icons, documentation and so on. Very nice.
+
+Declaring all the icons for the variable
+~company-box-icons-all-the-icons~ is quite verbose in Elisp, so I do it
+with an org-table.
+#+name: company-box-icons
+| Type          | Icon                     | Color  |
+|---------------+--------------------------+--------|
+| Unknown       | find_in_page             | purple |
+| Text          | text_fields              | green  |
+| Method        | functions                | red    |
+| Function      | functions                | red    |
+| Constructor   | functions                | red    |
+| Field         | functions                | red    |
+| Variable      | adjust                   | blue   |
+| Class         | class                    | red    |
+| Interface     | settings_input_component | red    |
+| Module        | view_module              | red    |
+| Property      | settings                 | red    |
+| Unit          | straighten               | red    |
+| Value         | filter_1                 | red    |
+| Enum          | plus_one                 | red    |
+| Keyword       | filter_center_focus      | red    |
+| Snippet       | short_text               | red    |
+| Color         | color_lens               | red    |
+| File          | insert_drive_file        | red    |
+| Reference     | collections_bookmark     | red    |
+| Folder        | folder                   | red    |
+| EnumMember    | people                   | red    |
+| Constant      | pause_circle_filled      | red    |
+| Struct        | streetview               | red    |
+| Event         | event                    | red    |
+| Operator      | control_point            | red    |
+| TypeParameter | class                    | red    |
+| Template      | short_text               | green  |
+| ElispFunction | functions                | red    |
+| ElispVariable | check_circle             | blue   |
+| ElispFeature  | stars                    | orange |
+| ElispFace     | format_paint             | pink   |
+
+#+name: gen-company-box-icons
+#+headers: :tangle no :noweb yes :exports none :cache yes
+#+header: :wrap "src emacs-lisp :exports none :tangle no"
+#+begin_src emacs-lisp :var table=company-box-icons
+(mapconcat (lambda (row)
+             (format "(%s . ,(all-the-icons-material \"%s\" :face 'all-the-icons-%s))"
+                     (car row)
+                     (cadr row)
+                     (caddr row)))
+           table
+           "\n")
+#+end_src
+
+#+RESULTS[8ebf4bb3f7f354571a5d42cf58f8b9ba847ba028]: gen-company-box-icons
+#+begin_src emacs-lisp :exports none :tangle no
+(Unknown . ,(all-the-icons-material "find_in_page" :face 'all-the-icons-purple))
+(Text . ,(all-the-icons-material "text_fields" :face 'all-the-icons-green))
+(Method . ,(all-the-icons-material "functions" :face 'all-the-icons-red))
+(Function . ,(all-the-icons-material "functions" :face 'all-the-icons-red))
+(Constructor . ,(all-the-icons-material "functions" :face 'all-the-icons-red))
+(Field . ,(all-the-icons-material "functions" :face 'all-the-icons-red))
+(Variable . ,(all-the-icons-material "adjust" :face 'all-the-icons-blue))
+(Class . ,(all-the-icons-material "class" :face 'all-the-icons-red))
+(Interface . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
+(Module . ,(all-the-icons-material "view_module" :face 'all-the-icons-red))
+(Property . ,(all-the-icons-material "settings" :face 'all-the-icons-red))
+(Unit . ,(all-the-icons-material "straighten" :face 'all-the-icons-red))
+(Value . ,(all-the-icons-material "filter_1" :face 'all-the-icons-red))
+(Enum . ,(all-the-icons-material "plus_one" :face 'all-the-icons-red))
+(Keyword . ,(all-the-icons-material "filter_center_focus" :face 'all-the-icons-red))
+(Snippet . ,(all-the-icons-material "short_text" :face 'all-the-icons-red))
+(Color . ,(all-the-icons-material "color_lens" :face 'all-the-icons-red))
+(File . ,(all-the-icons-material "insert_drive_file" :face 'all-the-icons-red))
+(Reference . ,(all-the-icons-material "collections_bookmark" :face 'all-the-icons-red))
+(Folder . ,(all-the-icons-material "folder" :face 'all-the-icons-red))
+(EnumMember . ,(all-the-icons-material "people" :face 'all-the-icons-red))
+(Constant . ,(all-the-icons-material "pause_circle_filled" :face 'all-the-icons-red))
+(Struct . ,(all-the-icons-material "streetview" :face 'all-the-icons-red))
+(Event . ,(all-the-icons-material "event" :face 'all-the-icons-red))
+(Operator . ,(all-the-icons-material "control_point" :face 'all-the-icons-red))
+(TypeParameter . ,(all-the-icons-material "class" :face 'all-the-icons-red))
+(Template . ,(all-the-icons-material "short_text" :face 'all-the-icons-green))
+(ElispFunction . ,(all-the-icons-material "functions" :face 'all-the-icons-red))
+(ElispVariable . ,(all-the-icons-material "check_circle" :face 'all-the-icons-blue))
+(ElispFeature . ,(all-the-icons-material "stars" :face 'all-the-icons-orange))
+(ElispFace . ,(all-the-icons-material "format_paint" :face 'all-the-icons-pink))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package company-box
+  :straight (:build t)
+  :after (company all-the-icons)
+  :config
+  (setq company-box-show-single-candidate t
+        company-box-backends-colors       nil
+        company-box-max-candidates        50
+        company-box-icons-alist           'company-box-icons-all-the-icons
+        company-box-icons-all-the-icons
+        (let ((all-the-icons-scale-factor 0.8))
+          `(
+            <<gen-company-box-icons()>>))))
+#+end_src
+
+** Ivy
+My main menu package is =ivy= which I use as much as possible –I’ve
+noticed =helm= can be slow, very slow in comparison to =ivy=, so I’ll use
+the latter as much as possible. Actually, only =ivy= is installed for
+now. I could have used =ido= too, but I find it to be a bit too
+restricted in terms of features compared to =ivy=.
+#+begin_src emacs-lisp
+(use-package ivy
+  :straight t
+  :defer t
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-t" . ivy-next-line)
+         ("C-s" . ivy-previous-line)
+         ("C-u" . ivy-scroll-up-command)
+         ("C-d" . ivy-scroll-down-command)
+         :map ivy-switch-buffer-map
+         ("C-t" . ivy-next-line)
+         ("C-s" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-t" . ivy-next-line)
+         ("C-s" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1)
+  (setq ivy-wrap                        t
+        ivy-height                      17
+        ivy-sort-max-size               50000
+        ivy-fixed-height-minibuffer     t
+        ivy-read-action-functions       #'ivy-hydra-read-action
+        ivy-read-action-format-function #'ivy-read-action-format-columns
+        projectile-completion-system    'ivy
+        ivy-on-del-error-function       #'ignore
+        ivy-use-selectable-prompt       t))
+#+end_src
+
+There is also [[https://github.com/raxod502/prescient.el][~prescient.el~]] that offers some nice features when
+coupled with ~ivy~, guess what was born out of it? ~ivy-prescient~, of
+course!
+#+begin_src emacs-lisp
+(use-package ivy-prescient
+  :after ivy
+  :straight (:build t))
+#+end_src
+
+I warned you I’d use too much ~all-the-icons~, I did!
+#+begin_src emacs-lisp
+(use-package all-the-icons-ivy
+  :straight (:build t)
+  :after (ivy all-the-icons)
+  :init (all-the-icons-ivy-setup)
+  :hook (after-init . all-the-icons-ivy-setup))
+(all-the-icons-ivy-setup)
+#+end_src
+
+A buffer popping at the bottom of the screen is nice and all, but have
+you considered a floating buffer in the center of your frame?
+#+begin_src emacs-lisp
+(use-package ivy-posframe
+  :defer t
+  :after (:any ivy helpful)
+  :hook (ivy-mode . ivy-posframe-mode)
+  :straight (:build t)
+  :init
+  (ivy-posframe-mode 1)
+  :config
+  (setq ivy-fixed-height-minibuffer nil
+        ivy-posframe-border-width   10
+        ivy-posframe-parameters
+        `((min-width  . 90)
+          (min-height . ,ivy-height))))
+#+end_src
+
+Something that can be missing sometimes in Ivy is the ability to
+select multiple entries at once. For instance, when programming in
+Java, LPS can offer you to automatically generate the methods ~equals~
+and ~hashCode~ based on selected members, but with vanilla Ivy, you can
+only select one. Not really useful. ~ivy-hydra~ is a package that offers
+a Hydra interface when in Ivy which allows you to select multiple
+choices among other things.
+#+begin_src emacs-lisp
+(use-package ivy-hydra
+  :requires (ivy hydra)
+  :after ivy
+  :straight (:build t))
+#+end_src
+
+Finally, let’s make ~ivy~ richer:
+#+begin_src emacs-lisp
+(use-package ivy-rich
+  :straight (:build t)
+  :after ivy
+  :init
+  (ivy-rich-mode 1))
+#+end_src
+
+** Counsel
+I could almost merge this chapter with the previous one since counsel
+is a package that provides loads of completion functions for ivy. The
+ones I find most useful are ~counsel-M-x~ and ~counsel-find-file~.
+#+begin_src emacs-lisp
+(use-package counsel
+  :straight t
+  :after recentf
+  :after ivy
+  :bind (("M-x"     . counsel-M-x)
+         ("C-x b"   . counsel-ibuffer)
+         ("C-x C-f" . counsel-find-file)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history)))
+#+end_src
+
+** Yasnippet
+Yasnippet allows you to insert some pre-made code by just typing a few
+characters. It can even generate some string with Elisp expressions
+and ask the user for some input in some precise places.
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :defer t
+  :straight (:build t)
+  :init
+  (yas-global-mode)
+  :hook ((prog-mode . yas-minor-mode)
+         (text-mode . yas-minor-mode)))
+#+end_src
+
+Of course, yasnippet wouldn’t be as awesome as it is without pre-made
+snippets.
+#+begin_src emacs-lisp
+(use-package yasnippet-snippets
+  :defer t
+  :after yasnippet
+  :straight (:build t))
+#+end_src
+
+Similarly, yatemplate offers pre-made files rather than just strings.
+That’s still yasnippet by the way.
+#+begin_src emacs-lisp
+(use-package yatemplate
+  :defer t
+  :after yasnippet
+  :straight (:build t))
+#+end_src
+
+And finally, with ivy you can choose your snippets from a menu if
+you’re not sure or if you don’t remember what your snippet is.
+#+begin_src emacs-lisp
+(use-package ivy-yasnippet
+  :defer t
+  :after (ivy yasnippet)
+  :straight (:build t)
+  :general
+  (phundrak/leader-key
+    :infix "i"
+    :packages 'ivy-yasnippet
+    "y" #'ivy-yasnippet))
+#+end_src

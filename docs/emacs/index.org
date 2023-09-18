@@ -1,0 +1,125 @@
+#+title: Emacs Configuration
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/init.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Emacs Configuration
+
+[[file:./img/emacs.svg]]
+
+** Introduction
+After a couple of years using Spacemacs and a failed attempt at
+switching to DoomEmacs, I’m finally switching back to a vanilla
+configuration! Why? Because I got tired of the framework getting in my
+way when I wanted to do stuff. I’m sure this is more applicable to
+Spacemacs than DoomEmacs since the latter has nice macros written to
+easily add new packages and configure them, such as ~package!~, ~after!~,
+and others. But ultimately, I wanted to have a system I designed
+entirely, with the keybinds I want, the packages I want.
+
+Aso, why Emacs? You know this famous quote:
+#+begin_quote
+Emacs is a great operating system, it just lacks a good text editor.
+#+end_quote
+
+It’s actually pretty true in my opinion. Emacs is basically a Lisp
+machine with a default text editor, programmed with EmacsLisp, a
+general-purpose programming language. Therefore, if you want to do
+something in Emacs, with enough Elisp you can do it --- if it’s not in
+Emacs already, that is.
+
+#+attr_html: :alt Dammit Emacs… :loading lazy
+#+caption: [[https://xkcd.com/378/][XKCD n°378]]: Real Programmers
+[[file:./img/real_programmers.png]]
+
+** A Warning Before You Proceed
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no
+:END:
+This configuration makes heavy use of the [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] syntax. This means if
+you encounter some code that looks ~<<like-this>>~, org-mode will
+replace this snippet with another code snippet declared elsewhere in
+my configuration. If you see some code that looks ~<<like-this()>>~,
+some generating code will run and replace this piece of text with the
+text generated. A quick example:
+#+begin_src elisp
+(defun hello ()
+  <<generate-docstring()>>
+  <<print-hello>>)
+#+end_src
+
+Will instead appear as
+#+begin_src emacs-lisp :noweb yes
+(defun hello ()
+  <<generate-docstring()>>
+  <<print-hello>>)
+#+end_src
+
+This is because I have the block of code below named
+~generate-docstring~ which generates an output, which replaces its noweb
+tag. You can recognize noweb snippets generating code with the
+parenthesis. Often, such blocks aren’t visible in my HTML exports, but
+you can still see them if you open the actual org source file.
+#+name: generate-docstring
+#+begin_src emacs-lisp
+(concat "\""
+        "Print \\\"Hello World!\\\" in the minibuffer."
+        "\"")
+#+end_src
+
+On the other hand, noweb snippets without parenthesis simply replace
+the snippet with the equivalent named code block. For instance the one
+below is named ~print-hello~ and is placed as-is in the target source
+block.
+#+name: print-hello
+#+begin_src emacs-lisp
+(message "Hello World!")
+#+end_src
+
+** Loading All Configuration Modules
+
+#+name: emacs-modules
+| Module Name              | Config Page                      |
+|--------------------------+----------------------------------|
+| =basic-config.el=          | [[file:./basic-config.org][Basic Configuration]]              |
+| =custom-elisp.el=          | [[file:./custom-elisp.org][Custom Elisp]]                     |
+| =package-manager.el=       | [[file:./package-manager.org][Package Manager]]                  |
+| =keybinding-managemers.el= | [[file:./keybinding-managemers.org][Keybinding Managers]]              |
+| =applications.el=          | [[file:./packages/applications.org][Packages — Applications]]          |
+| =autocompletion.el=        | [[file:./packages/autocompletion.org][Packages — Autocompletion]]        |
+| =editing.el=               | [[file:./packages/editing.org][Packages — Editing]]               |
+| =emacs-builtin.el=         | [[file:./packages/emacs-builtin.org][Packages — Emacs Built-ins]]       |
+| =exwm.el=                  | [[file:./packages/exwm.org][Packages — EXWM]]                  |
+| =helpful.el=               | [[file:./packages/helpful.org][Packages — Making My Life Easier]] |
+| =latex.el=                 | [[file:./packages/latex.org][Packages — LaTeX]]                 |
+| =misc.el=                  | [[file:./packages/misc.org][Packages — Misc]]                  |
+| =org.el=                   | [[file:./packages/org.org][Packages — Org Mode]]              |
+| =programming.el=           | [[file:./packages/programming.org][Packages — Programming]]           |
+| =visual-config.el=         | [[file:./packages/visual-config.org][Packages — Visual Configuration]]  |
+| =keybindings.el=           | [[file:./keybindings.org][Keybindings]]                      |
+
+#+name: generate-modules
+#+begin_src emacs-lisp :tangle no :cache yes :var modules=emacs-modules :exports none
+(mapconcat (lambda (line)
+             (concat "\"" (string-trim (car line) "=" "=") "\""))
+           modules
+           " ")
+#+end_src
+
+#+RESULTS[f76449860408293997e174ff94c743d46951835b]: generate-modules
+: "basic-config.el" "custom-elisp.el" "package-manager.el" "keybinding-managemers.el" "applications.el" "autocompletion.el" "editing.el" "emacs-builtin.el" "exwm.el" "helpful.el" "latex.el" "misc.el" "org.el" "programming.el" "visual-config.el" "keybindings.el"
+
+#+begin_src emacs-lisp :noweb yes
+(dolist (module '(<<generate-modules()>>))
+  (load (expand-file-name module
+                          (expand-file-name "lisp" user-emacs-directory))))
+#+end_src
+
+* TODOs                                                            :noexport:
+** TODO advise ~evil-insert~ in eshell
+Advise ~evil-insert~ to go to the end of the buffer while in
+~eshell-mode~.
+
+** DONE Get started with org-roam
+CLOSED: [2023-06-17 Sat 13:38]

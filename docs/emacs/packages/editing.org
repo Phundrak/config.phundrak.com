@@ -1,0 +1,174 @@
+#+title: Emacs — Packages — Editing
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/editing.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+
+* Editing
+First, I’ll define some keybindings for easily inserting pairs when
+editing text.
+#+begin_src emacs-lisp
+(general-define-key
+ :states 'visual
+ "M-["  #'insert-pair
+ "M-{"  #'insert-pair
+ "M-<"  #'insert-pair
+ "M-'"  #'insert-pair
+ "M-`"  #'insert-pair
+ "M-\"" #'insert-pair)
+#+end_src
+
+** Atomic Chrome
+Why write in your browser when you could write with Emacs? Despite its
+name, this package isn’t only geared towards Chrome/Chromium-based
+browsers but also towards Firefox since its 2.0 version. I find it a
+bit unfortunate Chrome’s name stuck in the package’s name though.
+#+begin_src emacs-lisp
+(use-package atomic-chrome
+  :straight (:build t)
+  :init
+  (atomic-chrome-start-server)
+  :config
+  (setq atomic-chrome-default-major-mode 'markdown-mode
+        atomic-chrome-url-major-mode-alist `(("github\\.com"          . gfm-mode)
+                                             ("gitlab\\.com"          . gfm-mode)
+                                             ("labs\\.phundrak\\.com" . markdown-mode)
+                                             ("reddit\\.com"          . markdown-mode))))
+#+end_src
+
+** Editorconfig
+Editorconfig is a unified way of passing to your text editor settings
+everyone working in a repo need to follow. ~.editorconfig~ files work
+for VSCode users, vim users, Atom users, Sublime users, and of course
+Emacs users.
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :defer t
+  :straight (:build t)
+  :diminish editorconfig-mode
+  :init
+  (editorconfig-mode t))
+#+end_src
+
+** Evil Nerd Commenter
+Emacs’ default commenting system is nice, but I don’t find it smart
+enough for me.
+#+begin_src emacs-lisp
+(use-package evil-nerd-commenter
+  :after evil
+  :straight (:build t))
+#+end_src
+
+** Iedit
+Iedit is a powerful text editing tool that can be used to refactor
+code through the edition of multiple regions at once, be it in a
+region or in a whole buffer. Since I’m using evil, I’ll also use a
+compatibility package that adds states for iedit.
+#+begin_src emacs-lisp
+(use-package evil-iedit-state
+  :defer t
+  :straight (:build t)
+  :commands (evil-iedit-state evil-iedit-state/iedit-mode)
+  :init
+  (setq iedit-curent-symbol-default     t
+        iedit-only-at-symbol-boundaries t
+        iedit-toggle-key-default        nil)
+  :general
+  (phundrak/leader-key
+    :infix "r"
+    :packages '(iedit evil-iedit-state)
+    "" '(:ignore t :which-key "refactor")
+    "i" #'evil-iedit-state/iedit-mode)
+  (general-define-key
+   :keymaps 'evil-iedit-state-map
+   "c" nil
+   "s" nil
+   "J" nil
+   "S" #'iedit-expand-down-a-line
+   "T" #'iedit-expand-up-a-line
+   "h" #'evil-iedit-state/evil-change
+   "k" #'evil-iedit-state/evil-substitute
+   "K" #'evil-iedit-state/substitute
+   "q" #'evil-iedit-state/quit-iedit-mode))
+#+end_src
+
+** Smartparens
+#+begin_src emacs-lisp
+(use-package smartparens
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+** Parinfer
+Don’t let the name of the package fool you! ~parinfer-rust-mode~ is not
+a ~parinfer~ mode for ~rust-mode~, but a mode for ~parinfer-rust~. ~parinfer~
+was a project for handling parenthesis and other double markers in a
+much more intuitive way when writing Lisp code. However, it is now out
+of date (last commit was on January 2nd, 2019) and the repository has
+since been archived. New implementations then appeared, one of them is
+[[https://github.com/eraserhd/parinfer-rust][~parinfer-rust~]], obviously written in Rust, around which
+~parinfer-rust-mode~ is built. Enabling ~parinfer-rust-mode~ should also
+automatically disable ~smartparens-mode~ in order to avoid conflicting
+behavior.
+#+begin_src emacs-lisp
+(use-package parinfer-rust-mode
+  :defer t
+  :straight (:build t)
+  :diminish parinfer-rust-mode
+  :hook emacs-lisp-mode common-lisp-mode scheme-mode
+  :init
+  (setq parinfer-rust-auto-download     t
+        parinfer-rust-library-directory (concat user-emacs-directory
+                                                "parinfer-rust/"))
+  (add-hook 'parinfer-rust-mode-hook
+            (lambda () (smartparens-mode -1)))
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'parinfer-rust-mode-map
+    "m" #'parinfer-rust-switch-mode
+    "M" #'parinfer-rust-toggle-disable))
+#+end_src
+
+** Smartparens
+~smartparens~ is a package similar to ~parinfer~, but while the latter is
+more specialized for Lisp dialects, ~smartparens~ works better with
+other programming languages that still uses parenthesis, but not as
+much as Lisp dialects; think for example C, C++, Rust, Javascript, and
+so on.
+#+begin_src emacs-lisp
+(use-package smartparens
+  :defer t
+  :straight (smartparens :build t
+                         :type git
+                         :host github
+                         :repo "Fuco1/smartparens")
+  :hook (prog-mode . smartparens-mode))
+#+end_src
+
+** ~string-edit~
+~string-edit~ is a cool package that allows the user to write naturally
+a string and get it automatically escaped for you. No more manually
+escaping your strings!
+#+begin_src emacs-lisp
+(use-package string-edit-at-point
+  :defer t
+  :straight (:build t))
+#+end_src
+
+** Writeroom
+On the other hand, ~writeroom~ allows the user to enter a
+distraction-free mode of Emacs, and I like that! But the default width
+is a bit too small for me, and I prefer not to go fullscren.
+#+begin_src emacs-lisp
+(use-package writeroom-mode
+  :defer t
+  :straight (:build t)
+  :init (global-writeroom-mode 1)
+  :config
+  (setq writeroom-width             100
+        writeroom-fullscreen-effect nil
+        writeroom-maximize-window   nil
+        writeroom-mode-line         t
+        writeroom-major-modes       '(text-mode org-mode markdown-mode nov-mode Info-mode)))
+#+end_src

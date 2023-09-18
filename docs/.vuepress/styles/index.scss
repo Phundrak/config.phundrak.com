@@ -1,0 +1,174 @@
+/*
+ * Nord Theme:
+ *   - Copyright (c) 2016-present Arctic Ice Studio <development@arcticicestudio.com>
+ *   - Copyright (c) 2016-present Sven Greb <development@svengreb.de>
+ */
+
+:root {
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+
+  scroll-behavior: smooth;
+
+  // brand colors
+  --c-brand: var(--nord9);
+  --c-brand-light: var(--nord14);
+
+  // background colors
+  --c-bg: var(--nord6);
+  --c-bg-light: var(--nord6);
+  --c-bg-lighter: var(--nord5);
+  --c-bg-dark: var(--nord5);
+  --c-bg-darker: var(--nord4);
+  --c-bg-navbar: var(--c-bg);
+  --c-bg-sidebar: var(--c-bg);
+  --c-bg-arrow: var(--nord4);
+
+  // text colors
+  --c-text: var(--nord1);
+  --c-text-accent: var(--c-brand);
+  --c-text-light: var(--nord2);
+  --c-text-lighter: var(--nord3);
+  --c-text-lightest: var(--nord4);
+  --c-text-quote: var(--nord2);
+
+  // border colors
+  --c-border: var(--nord4);
+  --c-border-dark: var(--nord4);
+
+  // custom container colors
+  --c-tip: var(--nord14);
+  --c-tip-bg: rgba(163, 190, 140, 0.2);
+  --c-tip-title: var(--c-text);
+  --c-tip-text: var(--c-text);
+  --c-tip-text-accent: var(--c-text-accent);
+  --c-warning: var(--nord13);
+  --c-warning-bg: rgba(235, 203, 139, 0.3);
+  --c-warning-bg-light: rgba(235, 203, 139, 0.2);
+  --c-warning-bg-lighter: rgba(235, 203, 139, 0.1);
+  --c-warning-border-dark: var(--nord3);
+  --c-warning-details-bg: var(--c-bg);
+  --c-warning-title: var(--nord12);
+  --c-warning-text: var(--nord12);
+  --c-warning-text-accent: var(--nord12);
+  --c-warning-text-light: var(--nord12);
+  --c-warning-text-quote: var(--nord12);
+
+  --c-danger: var(--nord11);
+  --c-danger-bg: rgba(191, 97, 106, 0.2);
+  --c-danger-bg-light: rgba(191, 97, 106, 0.2);
+  --c-danger-bg-lighter: rgba(191, 97, 106, 0.1);
+  --c-danger-border-dark: var(--nord11);
+  --c-danger-details-bg: var(--nord2);
+  --c-danger-title: var(--nord11);
+  --c-danger-text: var(--nord11);
+  --c-danger-text-accent: var(--nord11);
+  --c-danger-text-light: var(--nord11);
+  --c-danger-text-quote: var(--nord11);
+
+  --c-details-bg: var(--c-bg-lighter);
+
+  // badge component colors
+  --c-badge-tip: var(--c-tip);
+  --c-badge-warning: var(--c-warning);
+  --c-badge-warning-text: var(--c-bg);
+  --c-badge-danger: var(--c-danger);
+  --c-badge-danger-text: var(--c-bg);
+
+  // transition vars
+  --t-color: 0.3s ease;
+  --t-transform: 0.3s ease;
+
+  // code blocks vars
+  --code-bg-color: var(--nord0);
+  --code-hl-bg-color: var(--nord1);
+  --code-ln-color: #9e9e9e;
+  --code-ln-wrapper-width: 3.5rem;
+
+  // font vars
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-code: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+
+  // layout vars
+  --navbar-height: 3.6rem;
+  --navbar-padding-v: 0.7rem;
+  --navbar-padding-h: 1.5rem;
+  --sidebar-width: 20rem;
+  --sidebar-width-mobile: calc(var(--sidebar-width) * 0.82);
+  --content-width: 740px;
+  --homepage-width: 960px;
+}
+
+html.dark {
+  // brand colors
+  --c-brand: var(--nord14);
+  --c-brand-light: var(--nord14);
+
+  // background colors
+  --c-bg: var(--nord1);
+  --c-bg-light: var(--nord2);
+  --c-bg-lighter: var(--nord2);
+  --c-bg-dark: var(--nord3);
+  --c-bg-darker: var(--nord3);
+
+  // text colors
+  --c-text: var(--nord4);
+  --c-text-light: var(--nord5);
+  --c-text-lighter: var(--nord5);
+  --c-text-lightest: var(--nord6);
+  --c-text-quote: var(--c-text);
+
+  // border colors
+  --c-border: var(--nord3);
+  --c-border-dark: var(--nord3);
+
+  // custom container colors
+  --c-tip: var(--nord14);
+  --c-warning: var(--nord13);
+  --c-warning-bg: rgba(235, 203, 139, 0.2);
+  --c-warning-bg-light: rgba(235, 203, 139, 0.2);
+  --c-warning-bg-lighter: rgba(235, 203, 139, 0.1);
+  --c-warning-border-dark: var(--nord3);
+  --c-warning-details-bg: var(--c-bg);
+  --c-warning-title: var(--nord13);
+  --c-warning-text: var(--nord13);
+  --c-warning-text-accent: var(--nord13);
+  --c-warning-text-light: var(--nord13);
+  --c-warning-text-quote: var(--nord13);
+
+  --c-danger: var(--nord11);
+  --c-danger-bg: rgba(191, 97, 106, 0.2);
+  --c-danger-bg-light: rgba(191, 97, 106, 0.2);
+  --c-danger-bg-lighter: rgba(191, 97, 106, 0.1);
+  --c-danger-border-dark: var(--nord11);
+  --c-danger-details-bg: var(--nord2);
+  --c-danger-title: hsl(354 43% 75.7%);
+  --c-danger-text: hsl(354 43% 80.7%);
+  --c-danger-text-accent: var(--nord11);
+  --c-danger-text-light: var(--nord11);
+  --c-danger-text-quote: var(--nord11);
+
+  --c-details-bg: var(--c-bg-light);
+
+  // badge component colors
+  --c-badge-warning-text: var(--nord0);
+  --c-badge-danger-text: var(--nord0);
+
+  // code blocks vars
+  --code-hl-bg-color: var(--nord2);
+}

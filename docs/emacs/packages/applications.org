@@ -1,0 +1,1703 @@
+#+title: Emacs — Packages — Applications
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/applications.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Applications
+
+#+name: general-keybindings-gen
+#+header: :tangle no :exports none :results value :cache yes
+#+begin_src emacs-lisp :var table=elfeed-keybinds-show-mode prefix=""
+(mapconcat (lambda (line)
+             (let* ((key      (nth 0 line))
+                    (function (nth 1 line))
+                    (comment  (or (nth 2 line) ""))
+                    (package  (or (nth 3 line) "")))
+               (format "\"%s%s\" %s"
+                       prefix
+                       key
+                       (if (string= "" comment)
+                           (if (member function '("" "nil")) "nil" (concat "#'" function))
+                         (format "'(%s :wk %s%s)"
+                                 (if (member function '("" "nil")) ":ignore t" function)
+                                 (if (member function '("none" "nil")) "t" (concat "\"" comment "\""))
+                                 (if (string-blank-p package) "" (concat ":package " package)))))))
+           table
+           "\n")
+#+end_src
+
+** Bitwarden
+This package is still a very much work in progress one I’m developing
+in order to interact with Bitwarden in Emacs with the help of the
+[[https://github.com/bitwarden/cli][Bitwarden CLI]]. Use at your own risks.
+#+begin_src emacs-lisp
+(use-package bitwarden
+  :defer t
+  :straight (bitwarden :build t
+                       :type git
+                       :host nil
+                       :repo "https://labs.phundrak.com/phundrak/bitwarden.el"))
+#+end_src
+
+** Calendar
+I am using the built-in calendar of Emacs, but as I use Evil and the
+bépo layout, many keybindings available by default or through
+=evil-collection= don’t fit my needs perfectly.
+#+begin_src emacs-lisp
+(use-package calendar
+  :straight (:type built-in)
+  :defer t
+  :general
+  (:keymaps 'calendar-mode-map
+   "»"     #'calendar-scroll-left
+   "«"     #'calendar-scroll-right
+   "M-»"   #'calendar-scroll-left-three-months
+   "M-«"   #'calendar-scroll-right-three-months
+   "M-r"   #'calendar-scroll-left
+   "M-c"   #'calendar-scroll-right
+   "M-S-r" #'calendar-scroll-left-three-months
+   "M-S-c" #'calendar-scroll-right-three-months
+   "q"     #'calendar-exit)
+  (phundrak/major-leader-key
+    :keymaps 'calendar-mode-map
+    "="   #'calendar-count-days-region
+    "^"   '(:ignore t :wk "beginning")
+    "^ w" #'calendar-beginning-of-week
+    "^ m" #'calendar-beginning-of-month
+    "^ y" #'calendar-beginning-of-year
+    "$"   '(:ignore t :wk "end")
+    "$w"  #'calendar-end-of-week
+    "$m"  #'calendar-end-of-month
+    "$y"  #'calendar-end-of-year
+    "a"   '(:ignore t :wk "appointment")
+    "aa"  #'appt-add
+    "ad"  #'appt-delete
+    "A"   #'org-calendar-goto-agenda
+    "b"   '(:ignore t :wk "go back")
+    "bd"  '(calendar-backward-day :wk "a day")
+    "bw"  '(calendar-backward-week :wk "a week")
+    "bm"  '(calendar-backward-month :wk "a month")
+    "by"  '(calendar-backward-year :wk "a year")
+    "d"   '(:ignore t :wk "diary")
+    "da"  '(diary-show-all-entries :wk "all entries")
+    "dd"  '(diary-view-entries :wk "entries")
+    "dm"  #'diary-mark-entries
+    "do"  #'diary-view-other-diary-entries
+    "di"  '(:ignore t :wk "insert")
+    "die" '(diary-insert-entry :wk "entry")
+    "die" '(diary-insert-block-entry :wk "block entry")
+    "diw" '(diary-insert-weekly-entry :wk "weekly")
+    "dim" '(diary-insert-monthly-entry :wk "monthly")
+    "diy" '(diary-insert-yearly-entry :wk "yearly")
+    "F"   '(:ignore t :wk "files")
+    "Fa"  #'org-calendar-goto-agenda
+    "f"   '(:ignore t :wk "go forward")
+    "fd"  '(calendar-forward-day :wk "a day")
+    "fw"  '(calendar-forward-week :wk "a week")
+    "fm"  '(calendar-forward-month :wk "a month")
+    "fy"  '(calendar-forward-year :wk "a year")
+    "g"   '(:ignore t :wk "goto")
+    "gd"  #'calendar-goto-date
+    "gm"  #'calendar-other-month
+    "gt"  #'calendar-goto-today
+    "h"   '(:ignore t :wk "holidays")
+    "hl"  #'calendar-list-holidays
+    "hm"  #'calendar-mark-holidays
+    "H"   '(:ignore t :wk "HTML export")
+    "Hm"  #'cal-html-cursor-month
+    "Hy"  #'cal-html-cursor-year
+    "M"   #'calendar-other-month))
+#+end_src
+
+** Docker
+Docker is an awesome tool for reproducible development environments.
+Due to this, I absolutely need a mode for editing Dockerfiles.
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :defer t
+  :straight (:build t)
+  :hook (dockerfile-mode . lsp-deferred)
+  :init
+  (put 'docker-image-name 'safe-local-variable #'stringp)
+  :mode "Dockerfile\\'"
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'general-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+The ~docker~ package also provides interactivity with Docker and
+docker-compose from Emacs.
+#+begin_src emacs-lisp
+(use-package docker
+  :defer t
+  :straight (:build t))
+#+end_src
+
+** Elfeed
+Elfeed is a nice Atom and RSS reader for Emacs. The only thing I want
+to change for now is the default search filter: I want to see not only
+unread news but read news as well, a bit like my emails; and where the
+database is to be stored.
+#+begin_src emacs-lisp
+(use-package elfeed
+  :defer t
+  :straight (:build t)
+  :config
+  <<elfeed-open-youtube-with-mpv>>
+  :custom
+  ((elfeed-search-filter "@6-months-ago")
+   (elfeed-db-directory  (expand-file-name ".elfeed-db"
+                                           user-emacs-directory))))
+#+end_src
+
+I don’t want YouTube videos to be open with my web browser when I
+invoke ~elfeed-show-visit~, so I’ll advise this function to make it
+possible to modify the behavior of said function. Oh, and I already
+made [[file:../../scripts.md#ytplay][a neat package]] for playing YouTube videos and friends through
+[[https://ytdl-org.github.io/youtube-dl/][youtube-dl]] or its superior fork [[https://github.com/yt-dlp/yt-dlp][yt-dlp]] in mpv.
+
+#+name: elfeed-open-youtube-with-mpv
+#+begin_src emacs-lisp
+(defun my/elfeed-filter-youtube-videos (orig-fun &rest args)
+  "Open with mpv the video leading to PATH"
+  (let ((link (elfeed-entry-link elfeed-show-entry)))
+    (when link
+      (if (string-match-p ".*youtube\.com.*watch.*" link)
+          ;; This is a YouTube video, open it with mpv
+          (progn
+            (require 'ytplay)
+            (ytplay link))
+        (apply orig-fun args)))))
+
+(advice-add 'elfeed-show-visit :around #'my/elfeed-filter-youtube-videos)
+#+end_src
+
+A future improvement to be made is to let the user chose the
+resolution of the video before it is launched. I may not always have
+the best internet connection, and viewing 4K videos on a 1080p display
+is not something very useful.
+
+Elfeed-goodies is a package which enhances the Elfeed experience.
+Aside from running its setup command as soon as possible, I also set
+in this code block all my keybinds for Elfeed here.
+#+begin_src emacs-lisp
+(use-package elfeed-goodies
+  :defer t
+  :after elfeed
+  :commands elfeed-goodies/setup
+  :straight (:build t)
+  :init
+  (elfeed-goodies/setup)
+  :custom
+  (elfeed-goodies/feed-source-column-width 28)
+  (elfeed-goodies/tag-column-width 28)
+  :general
+  (phundrak/undefine
+    :keymaps '(elfeed-show-mode-map elfeed-search-mode-map)
+    :packages 'elfeed
+    "DEL" nil
+    "s"   nil)
+  (phundrak/evil
+    :keymaps 'elfeed-show-mode-map
+    :packages 'elfeed
+    <<general-keybindings-gen(table=elfeed-keybinds-show-mode)>>)
+  (phundrak/evil
+    :keymaps 'elfeed-search-mode-map
+    :packages 'elfeed
+    <<general-keybindings-gen(table=elfeed-keybinds-search-mode)>>)
+  (phundrak/major-leader-key
+    :keymaps 'elfeed-search-mode-map
+    :packages 'elfeed
+    <<general-keybindings-gen(table=elfeed-keybinds-search-mode-prefixed)>>))
+#+end_src
+
+Last but not least, my Elfeed configuration is stored in an org file
+thanks to ~elfeed-org~.
+#+begin_src emacs-lisp
+(use-package elfeed-org
+  :defer nil
+  :after elfeed
+  :straight (:build t)
+  :init
+  (elfeed-org)
+  :config
+  (setq rmh-elfeed-org-files '("~/org/elfeed.org")))
+#+end_src
+
+*** Keybinds
+First, here are the keybinds for Elfeed’s ~elfeed-show-mode~. They
+aren’t prefixed by ~SPC~ like most of my keybinds, a direct keypress
+will directly launch the function.
+#+name: elfeed-keybinds-show-mode
+| Key | Function                      | Comment |
+|-----+-------------------------------+---------|
+| +   | elfeed-show-tag               |         |
+| -   | elfeed-show-untag             |         |
+| «   | elfeed-show-prev              |         |
+| »   | elfeed-show-next              |         |
+| b   | elfeed-show-visit             |         |
+| C   | elfeed-kill-link-url-at-point |         |
+| d   | elfeed-show-save-enclosure    |         |
+| l   | elfeed-show-next-link         |         |
+| o   | elfeed-goodies/show-ace-link  |         |
+| q   | elfeed-kill-buffer            |         |
+| S   | elfeed-show-new-live-search   |         |
+| u   | elfeed-show-tag--unread       |         |
+| y   | elfeed-show-yank              |         |
+
+Same thing, different mode, here are my keybinds for
+~elfeed-search-mode~.
+#+name: elfeed-keybinds-search-mode
+| Key | Function                    | Comment |
+|-----+-----------------------------+---------|
+| «   | elfeed-search-first-entry   |         |
+| »   | elfeed-search-last-entry    |         |
+| b   | elfeed-search-browse-url    |         |
+| f   |                             | filter  |
+| fc  | elfeed-search-clear-filter  |         |
+| fl  | elfeed-search-live-filter   |         |
+| fs  | elfeed-search-set-filter    |         |
+| u   |                             | update  |
+| us  | elfeed-search-fetch         |         |
+| uS  | elfeed-search-update        |         |
+| uu  | elfeed-update               |         |
+| uU  | elfeed-search-update--force |         |
+| y   | elfeed-search-yank          |         |
+
+I have some additional keybinds for ~elfeed-search-mode~, but these one
+are prefixed with ~,~ (and ~M-m~).
+#+name: elfeed-keybinds-search-mode-prefixed
+| Key | Function                       | Comment |
+|-----+--------------------------------+---------|
+| c   | elfeed-db-compact              |         |
+| t   |                                | tag     |
+| tt  | elfeed-search-tag-all-unread   |         |
+| tu  | elfeed-search-untag-all-unread |         |
+| tT  | elfeed-search-tag-all          |         |
+| tU  | elfeed-search-untag-all        |         |
+
+** Email
+*** Basic configuration
+As seen below, I use ~org-msg~ to compose my emails, which includes by
+default my signature. Therefore, there is no need for Emacs itself to
+know about it since I don’t want it to include it a second time after
+~org-msg~ already did.
+#+begin_src emacs-lisp
+(setq message-signature nil
+      mail-signature    nil)
+#+end_src
+*** Gnus
+#+begin_src emacs-lisp
+(use-package gnus
+  :straight (:type built-in)
+  :defer t
+  :config
+  (require 'gnus-topic)
+  (setq gnus-select-method '(nnnil))
+  (setq gnus-secondary-select-methods '((nntp "news.gwene.org")))
+
+  (setq gnus-asynchronous t ;; async
+        gnus-use-article-prefetch 15
+        ;; article
+        gnus-visible-headers (mapcar (lambda (str) (concat "^" str ":"))
+                                     '("From" "To" "Cc" "Subject" "Newsgroup"
+                                       "Date" "Followup-To" "Reply-To"
+                                       "Organization" "X-Newsreader" "X-Mailer"))
+        gnus-sorted-header-list gnus-visible-headers
+        gnus-thread-sort-functions '(gnus-thread-sort-by-number
+                                     gnus-thread-sort-by-subject
+                                     (not gnus-thread-sort-by-date))
+        ;; group
+        gnus-level-subscribed 6
+        gnus-level-unsubscribed 7
+        gnus-level-zombie 8
+        gnus-group-sort-function '((gnus-group-sort-by-unread)
+                                   (gnus-group-sort-by-alphabet)
+                                   (gnus-group-sort-by-rank))
+        gnus-group-line-format "%M%p%P%5y:%B%(%g%)\n"
+        gnus-group-mode-line-format "%%b"
+        gnus-topic-display-empty-topics nil
+        ;; summary
+        gnus-auto-select-first nil
+        gnus-summary-ignore-duplicates t
+        gnus-suppress-duplicates t
+        gnus-summary-to-prefix "To:"
+        gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n"
+        gnus-summary-mode-line-format "[%U] %p"
+        gnus-sum-thread-tree-false-root ""
+        gnus-sum-thread-tree-indent " "
+        gnus-sum-thread-tree-single-indent ""
+        gnus-sum-thread-tree-leaf-with-other "+->"
+        gnus-sum-thread-tree-root ""
+        gnus-sum-thread-tree-single-leaf "\\->"
+        gnus-sum-thread-tree-vertical "|")
+
+  (add-hook 'dired-mode-hook #'gnus-dired-mode)
+  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
+  (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
+
+  (dolist (mode '(gnus-group-mode-hook gnus-summary-mode-hook gnus-browse-mode-hook))
+    (add-hook mode #'hl-line-mode))
+
+  :general
+  (phundrak/evil
+    :keymaps 'gnus-summary-mode-map
+    :packages 'gnus
+    "«" #'gnus-summary-prev-article
+    "»" #'gnus-summary-next-article)
+  (phundrak/major-leader-key
+    :keymaps 'gnus-summary-mode-map
+    :packages 'gnus
+    "d"  #'gnus-summary-delete-article
+    "f"  #'gnus-summary-mail-forward
+    "r"  '(:ignore t :wk "reply")
+    "rr" #'gnus-summary-reply-with-original
+    "rl" #'gnus-summary-reply-to-list-with-original
+    "rw" #'gnus-summary-wide-reply-with-original
+    "rW" #'gnus-summary-very-wide-reply-with-original)
+  (phundrak/evil
+    :keymaps 'gnus-group-mode-map
+    :packages 'gnus
+    "«" #'gnus-group-prev-group
+    "»" #'gnus-group-next-group)
+  (phundrak/major-leader-key
+    :keymaps '(gnus-group-mode-map)
+    :packages 'gnus
+    "SPC" #'gnus-topic-read-group
+    "c"  '(gnus-topic-catchup-articles :which-key "catchup")
+    "f"  '(gnus-fetch-group :which-key "fetch")
+    "j"  '(:ignore t :which-key "jump")
+    "jg" #'gnus-group-jump-to-group
+    "jt" #'gnus-topic-jump-to-topic
+    "L"  #'gnus-group-list-all-groups
+    "n"  #'gnus-group-news
+    "t"  '(gnus-group-topic-map :which-key "topics")
+    "u"  #'gnus-group-unsubscribe))
+#+end_src
+
+*** Mu4e
+Mu4e is a very eye-pleasing email client for Emacs, built around ~mu~
+and which works well with ~mbsync~ (found in Arch’s ~isync~ package). For
+me, the main advantage of mu4e is it has a modern interface for
+emailing, and quite straightforward. I tried a couple of other email
+clients for Emacs, and I even was for some time a Gnus user, but in
+the end, mu4e really works best for me. Below you’ll find my
+configuration for the ~mu4e~ package itself.
+#+begin_src emacs-lisp
+(use-package mu4e
+  :after all-the-icons
+  :straight (:build t)
+  :commands mu4e mu4e-compose-new
+  :init
+  (defun mu4e--main-action-str (name func)
+    "This seems to be needed until evil-collection supports the latest
+  version of mu4e."
+    "mu4e-main-action")
+
+  (require 'mu4e)
+  (remove-hook 'mu4e-main-mode-hook 'evil-collection-mu4e-update-main-view)
+
+  <<mu4e-ical-setup>>
+  <<mu4e-ical-init-config>>
+
+  (csetq mu4e-completing-read-function 'completing-read
+         mu4e-use-fancy-chars          t
+         message-kill-buffer-on-exit   t
+         mu4e-org-support              nil)
+  (let ((dir (concat (getenv "HOME") "/Downloads/mu4e")))
+    (when (file-directory-p dir)
+      (csetq mu4e-attachment-dir dir)))
+  (defmacro mu4e-view-mode--prepare ()
+    `(lambda () (visual-line-mode 1)))
+  :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
+  :general
+  (phundrak/evil
+    :keymaps 'mu4e-main-mode-map
+    :packages 'mu4e
+    "U" #'mu4e-update-index)
+  :config
+  (require 'mu4e-view)
+  (with-eval-after-load 'mm-decode
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text-richtext"))
+
+  (add-hook 'mu4e-view-mode-hook (lambda () (setq truncate-lines nil)))
+  (add-hook 'mu4e-headers-mode-hook (lambda () (setq truncate-lines t)))
+
+  <<mu4e-ical-config>>
+  <<mu4e-keybindings-undef>>
+  <<mu4e-keybindings-view>>
+  <<mu4e-keybindings-view-no-prefix>>
+  <<mu4e-keybindings-header>>
+  <<mu4e-keybindings-header-no-leader>>
+  <<mu4e-keybindings-message>>
+
+  <<mu4e-mail-service>>
+  <<mu4e-mail-on-machine>>
+  <<mu4e-no-signature>>
+  <<mu4e-bookmarks>>
+  <<mu4e-maildirs>>
+
+  (when (fboundp 'imagemagick-register-types)
+    (imagemagick-register-types))
+
+  (require 'gnus-dired)
+  (setq gnus-dired-mail-mode 'mu4e-user-agent)
+
+  (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines t 'guess)))
+  (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
+
+  (setq mu4e-change-filenames-when-moving t
+        mu4e-update-interval              60
+        mu4e-compose-format-flowed        t
+        mu4e-view-show-addresses          t
+        mu4e-sent-messages-behaviour      'sent
+        mu4e-hide-index-messages          t
+        mu4e-view-show-images             t                     ; try to show images
+        mu4e-view-image-max-width         600
+        message-send-mail-function        #'smtpmail-send-it    ; how to send an email
+        smtpmail-stream-type              'starttls
+        message-kill-buffer-on-exit       t                     ; close after sending
+        mu4e-context-policy               'pick-first           ; start with first (default) context
+        mu4e-compose-context-policy       'ask-if-none          ; compose with current context, or ask
+        mu4e-completing-read-function     #'ivy-completing-read ; use ivy
+        mu4e-confirm-quit                 t                     ; no need to ask
+        mu4e-header-fields                '((:account    . 12)
+                                            (:human-date . 12)
+                                            (:flags      . 4)
+                                            (:from       . 25)
+                                            (:subject)))
+
+  ;; set mail user agent
+  (setq mail-user-agent 'mu4e-user-agent)
+
+  <<mu4e-fancy-marks>>
+  <<mu4e-vertical-split>>
+  <<mu4e-headers-mode>>
+
+  (defun mu4e-action-open-as-pdf (msg)
+    "Export and open MSG as pdf."
+    (let* ((date    (mu4e-message-field msg :date))
+           (infile  (mu4e~write-body-to-html msg))
+           (outfile (format-time-string "/tmp/%Y-%m-%d-%H-%M-%S.pdf" date)))
+      (with-temp-buffer
+        (shell-command
+         (format "wkhtmltopdf %s %s" infile outfile) t))
+      (find-file outfile))))
+#+end_src
+
+Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
+~mu-git~ from the AUR in order to use mu4e. I also have a ~.desktop~ file
+to make it possible to open mu4e directly from my program picker. It
+uses the shell script ~emacsmail~ I’ve written [[file:bin.org::#Emacsmail-afffb7cd][here]].
+#+header: :mkdirp yes
+#+begin_src conf-desktop :tangle ~/.local/share/applications/mu4e.desktop
+[Desktop Entry]
+Name=Mu4e
+GenericName=Mu4e
+Comment=Maildir Utils for Emacs
+MimeType=x-scheme-handler/mailto;
+Exec=/home/phundrak/.local/bin/emacsmail %U
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Network;Email;TextEditor
+StartupWMClass=Gnus
+Keywords=Text;Editor;
+#+end_src
+
+**** Interact with iCalendar events
+Something that has always bugged me was how to properly with iCalendar
+events shared with me on my personal mailbox. The answer is actually
+[[https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html][dead simple]].
+#+name: mu4e-ical-setup
+#+begin_src emacs-lisp
+(require 'mu4e-icalendar)
+(mu4e-icalendar-setup)
+#+end_src
+
+I’ll just configure a couple of things regarding these events, namely
+converting them to Orgmode and add them to my =~/org/notes.org= file,
+and delete the email once I answered to the event.
+#+name: mu4e-ical-config
+#+begin_src emacs-lisp
+(setq mu4e-icalendar-trash-after-reply t)
+#+end_src
+
+#+name: mu4e-ical-init-config
+#+begin_src emacs-lisp
+(setq gnus-icalendar-org-capture-file "~/org/notes.org"
+      gnus-icalendar-org-capture-headline '("Calendar"))
+(gnus-icalendar-org-setup)
+#+end_src
+
+**** Basic configuration
+First, let’s inform Emacs how it can send emails, using which service
+and how. In my case, I use my own mail server.
+#+name: mu4e-mail-service
+#+begin_src emacs-lisp :tangle no
+(setq smtpmail-smtp-server       "mail.phundrak.com"
+      smtpmail-smtp-service      587
+      smtpmail-stream-type       'starttls
+      message-send-mail-function 'smtpmail-send-it)
+#+end_src
+
+We also need to inform it on where my emails are stored on my machine,
+and how to retrieve them.
+#+name: mu4e-mail-on-machine
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-get-mail-command "mbsync -a"
+      mu4e-root-maildir     "~/Mail"
+      mu4e-trash-folder     "/Trash"
+      mu4e-refile-folder    "/Archive"
+      mu4e-sent-folder      "/Sent"
+      mu4e-drafts-folder    "/Drafts")
+#+end_src
+
+In the same vein of [[*Basic configuration][this bit of configuration]], I do not want mu4e to
+insert my mail signature, ~org-msg~ already does that.
+#+name: mu4e-no-signature
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-compose-signature nil)
+#+end_src
+
+**** Bookmarks
+In mu4e, the main focus isn’t really mail directories such as your
+inbox, your sent messages and such, but instead you manipulate
+bookmarks which will show you emails depending on tags. This mean you
+can create some pretty customized bookmarks that go way beyound your
+simple inbox, outbox and all. Actually, four of my bookmarks have a
+couple of filtering:
+- anything in my inbox linked to my university
+- the [[https://emacs-doctor.com/lists/listinfo][emacs-doctor mailing list]] (French Emacs mailing list)
+- emails related to my internship
+- and my inbox for any mail not caught by any of these filters
+And all of them will have the requirement not to display any trashed
+email. Actually, all of my bookmarks will have this requirement,
+except for the bookmark dedicated to them as well as my sent emails.
+I’ll add these latter requirements later.
+
+Here are the requirements for my university bookmark. The regex
+matches any email address which contains either ~up8.edu~ or
+~univ-paris8~, which can be found in email addresses from the University
+Paris 8 (my university).
+
+#+name: mu4e-bookmarks-from-copy-to-gen
+#+begin_src emacs-lisp :tangle no :exports none :var regex="test"
+(mapconcat (lambda (x) (concat x ":" regex))
+           '("f" "c" "t")
+           " OR ")
+#+end_src
+
+#+name: mu4e-bookmarks-mailing-lists
+#+header: :tangle no :exports none
+#+begin_src emacs-lisp :var lists=mu4e-emacs-mailing-lists
+(mapconcat (lambda (list)
+             (let ((address (string-replace (regexp-quote "~")
+                                            ""
+                                            (if (stringp list) list (car list)))))
+               (mapconcat (lambda (flag)
+                            (concat flag ":" address))
+                          '("list" "t" "f" "contact")
+                          " OR ")))
+           lists
+           " OR ")
+#+end_src
+
+#+name: mu4e-bookmarks-filter-uni
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+(let ((regex "/.*up8\\.edu|.*univ-paris8.*/"))
+  (concat
+   <<mu4e-bookmarks-from-copy-to-gen>>
+   " OR maildir:/Univ/Inbox OR maildir:/Univ/Junk"))
+#+end_src
+
+#+RESULTS[083992a66ea6339d3a55773108e520a6024102c5]: mu4e-bookmarks-filter-uni
+: f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk
+
+Next I need an inbox dedicated to the association I’m part of.
+#+name: mu4e-bookmarks-filter-asso
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+(let ((regex "/.*supran\\.fr/"))
+  <<mu4e-bookmarks-from-copy-to-gen>>)
+#+end_src
+
+#+RESULTS[e04566a9d56624e063b3dd4e2c639e87cf9683aa]: mu4e-bookmarks-filter-asso
+: f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/
+
+As for the Emacs-doctor list, I need to match both the current, modern
+mailing list address but also its old address. The same applies for
+the emacs-devel mailing list as well as GitHub emails related to my
+package ~eshell-info-banner.el~ (*see here*). Here are the addresses to
+match:
+
+# Insert #Packages-Configuration-Emacs-built-ins-Eshell-Visual-configuratione7c2fl6184j0 equivalent in *see here*
+
+#+name: mu4e-emacs-mailing-lists
+- ~/ateliers.*emacs.*/~
+- ~/emacs-.*@gnu.org/~
+- ~/.*eshell-info-banner.*/~
+- ~/.*emacsfr.*/~
+
+#+name: mu4e-bookmarks-filter-emacs-list
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+"<<mu4e-bookmarks-mailing-lists(lists=mu4e-emacs-mailing-lists)>>"
+#+end_src
+
+#+RESULTS[88c964fba64459a050055bc5614bbd65f8740bfb]: mu4e-bookmarks-filter-emacs-list
+: list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/
+
+Another bookmark I wish to have is one dedicated to emails related to
+more general development topics, including issues and PRs from GitHub.
+#+name: mu4e-github-mailing-lists
+- ~/.*\\.github\\.com/~
+- ~/.*\\.gitlab\\.com/~
+- ~stumpwm-devel@nongnu.org~
+- ~/.*sr\\.ht/~
+
+#+name: mu4e-bookmarks-filter-github-list
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+;; "<<mu4e-bookmarks-mailing-lists(lists=mu4e-github-mailing-lists)>> AND NOT ()"
+(string-join '("<<mu4e-bookmarks-mailing-lists(lists=mu4e-github-mailing-lists)>>"
+               "AND NOT ("
+               <<mu4e-bookmarks-filter-emacs-list>>
+               ")")
+             " ")
+#+end_src
+
+#+RESULTS[673f76e7a682ed64f98dbe6d4a06810436ba6799]: mu4e-bookmarks-filter-github-list
+: list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )
+
+When it comes to my internship, all emails will contain an address containing ~aubay.com~ (that’s where my internship takes place).
+- ~/.*aubay.com/~
+
+#+name: mu4e-bookmarks-filter-aubay
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+(let ((regex "/.*aubay\\.com/"))
+  <<mu4e-bookmarks-from-copy-to-gen>>)
+#+end_src
+
+#+RESULTS[06105e10cf2addb8e11360ff2629023fad946ddf]: mu4e-bookmarks-filter-aubay
+: f:/.*aubay\.com/ OR c:/.*aubay\.com/ OR t:/.*aubay\.com/
+
+As I said earlier, something that will often come back in my bookmarks
+is the emails must not be trashed to appear. I want also to display
+junk emails, so I end up with the following rule:
+#+name: mu4e-bookmarks-default-filter
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+(mapconcat #'identity
+           `("NOT flag:trashed"
+             ,(format "(%s)" (mapconcat (lambda (maildir) (concat "maildir:" maildir))
+                                        '("/Inbox" "/Junk")
+                                        " OR ")))
+            " AND ")
+#+end_src
+
+#+RESULTS[f3f96c07b8341c1b7b3d02688aa6faa2ceeca16f]: mu4e-bookmarks-default-filter
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk)
+
+And for the last string-generating code, let’s describe my main inbox:
+#+name: mu4e-bookmarks-inbox-filters
+#+header: :tangle no :cache yes
+#+begin_src emacs-lisp
+(mapconcat #'identity
+           (cons "<<mu4e-bookmarks-default-filter()>>"
+                 `(,(format "(%s)"
+                            <<mu4e-bookmarks-filter-aubay>>)
+                   ,(format "(%s)" "<<mu4e-bookmarks-filter-asso()>>")
+                   ,(format "(%s)"
+                            <<mu4e-bookmarks-filter-emacs-list>>)
+                   ,(format "(%s)"
+                            <<mu4e-bookmarks-filter-github-list>>)
+                   ,(format "(%s)"
+                            <<mu4e-bookmarks-filter-uni>>)))
+           " AND NOT ")
+#+end_src
+
+#+RESULTS[94290b02a0da24cffeba43e1d47395e801bc0158]: mu4e-bookmarks-inbox-filters
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:/.*aubay\.com/ OR c:/.*aubay\.com/ OR t:/.*aubay\.com/) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/) AND NOT (list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk)
+
+We can finally define our bookmarks! The code reads as follows:
+#+name: mu4e-bookmarks
+#+begin_src emacs-lisp :tangle no :cache yes :results none
+(setq mu4e-bookmarks
+      `((:name "Inbox"
+         :key ?i
+         :query ,(format "%s"
+                         <<mu4e-bookmarks-inbox-filters>>))
+        (:name "Internship"
+         :key ?a
+         :query ,(format "(%s) AND (%s)"
+                     "<<mu4e-bookmarks-default-filter()>>"
+                     <<mu4e-bookmarks-filter-aubay>>))
+        (:name "University"
+         :key ?u
+         :query ,(format "%s AND %s"
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-uni()>>"))
+        (:name "Dev"
+         :key ?d
+         :query ,(format "%s AND (%s)"
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-github-list()>>"))
+        (:name "Emacs"
+         :key ?e
+         :query ,(format "%s AND %s"
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         <<mu4e-bookmarks-filter-emacs-list>>))
+        (:name "Supran"
+         :key ?s
+         :query ,(format "%s AND %s"
+                         "<<mu4e-bookmarks-default-filter()>>"
+                         "<<mu4e-bookmarks-filter-asso()>>"))
+        (:name "Sent"       :key ?S :query "maildir:/Sent OR maildir:/Univ/Sent")
+        (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
+        (:name "Today"      :key ?t :query "date:today..now AND NOT flag:trashed")
+        (:name "This Week"  :key ?w :query "date:7d..now    AND NOT flag:trashed")
+        (:name "This Month" :key ?m :query "date:1m..now    AND NOT flag:trashed")
+        (:name "This Year"  :key ?y :query "date:1y..now    AND NOT flag:trashed")))
+#+end_src
+
+**** Maildirs
+Sometimes, bookmarks are a bit too restrictive when I want to search
+for stuff. Simply jumping to a mail directory, or maildir, is more
+than enough. In mu4e, with my current setup, I can jump to any maildir
+with the shortcut ~Jo~ in normal-mode, and I just need to chose in a
+list the maildir I want to jump to. But it can be faster.
+
+With this piece of code, I can simply jump to my inbox maildir with
+~Ji~, to my sent messages with ~Js~, and so on.
+#+name: mu4e-maildirs
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-maildir-shortcuts
+      '((:maildir "/Inbox" :key ?i)
+        (:maildir "/Sent" :key ?s)
+        (:maildir "/Junk" :key ?j)
+        (:maildir "/Trash" :key ?t)))
+#+end_src
+
+**** Dealing with spammers
+I’m sure you have received at least one email recently from a sketchy
+email address asking you something that might be completely unrelated
+to what you do, or at least somewhat related. Fortunately, [[https://twitter.com/Boris/status/1360208504544444417][we have a
+hero]]! Now, let me write a function that will insert their
+pre-written text at point to avoid me going back to their Twitter
+thread each time I want to shut spammers up.
+#+begin_src emacs-lisp
+(defun reply-to-bill ()
+  (interactive)
+  (insert "Please forward this email to bill@noprocurement.com,
+and delete my email, as I’ll be changing jobs soon, and this
+email address will no longer be active.
+
+Bill Whiskoney is a senior partner at Nordic Procurement
+Services, and he handles our budget and will help you further or
+introduce you to someone who can."))
+#+end_src
+
+If you want the full story, make sure to read the whole thread, I
+guarantee it, it’s worth your time! And in case the Twitter thread
+disappear in the future, [[https://threader.app/thread/1360208504544444417][here is a backup]].
+
+**** Getting Fancy
+I’m not a huge fan of mu4e’s default icons marking my emails, so I’ll
+redefine them as follows. Be aware the name of these icons are from
+/faicon/ in the package ~all-the-icons~.
+#+name: mu4e-fancy-marks-tbl
+| Mark      | Flag | Icon        |
+|-----------+------+-------------|
+| draft     | D    | pencil      |
+| flagged   | F    | flag        |
+| new       | N    | rss         |
+| passed    | P    | check       |
+| replied   | R    | reply       |
+| seen      | S    | eye         |
+| unread    | u    | eye-slash   |
+| trashed   | T    | trash       |
+| attach    | a    | paperclip   |
+| encrypted | x    | lock        |
+| signed    | s    | certificate |
+
+#+name: mu4e-fancy-marks-gen
+#+header: :tangle no :exports none :results value :cache yes
+#+begin_src emacs-lisp :var table=mu4e-fancy-marks-tbl
+(mapconcat (lambda (line)
+             (let ((mark (car line))
+                   (flag (cadr line))
+                   (icon (caddr line)))
+               (format "mu4e-headers-%s-mark `(\"%s\" . ,(all-the-icons-faicon \"%s\" :height 0.8))"
+                       mark
+                       flag
+                       icon)))
+           table
+           "\n")
+#+end_src
+
+#+RESULTS[c6ed5d4bec4c10339a7de52a70822af74d782e62]: mu4e-fancy-marks-gen
+#+begin_example
+mu4e-headers-draft-mark `("D" . ,(all-the-icons-faicon "pencil" :height 0.8))
+mu4e-headers-flagged-mark `("F" . ,(all-the-icons-faicon "flag" :height 0.8))
+mu4e-headers-new-mark `("N" . ,(all-the-icons-faicon "rss" :height 0.8))
+mu4e-headers-passed-mark `("P" . ,(all-the-icons-faicon "check" :height 0.8))
+mu4e-headers-replied-mark `("R" . ,(all-the-icons-faicon "reply" :height 0.8))
+mu4e-headers-seen-mark `("S" . ,(all-the-icons-faicon "eye" :height 0.8))
+mu4e-headers-unread-mark `("u" . ,(all-the-icons-faicon "eye-slash" :height 0.8))
+mu4e-headers-trashed-mark `("T" . ,(all-the-icons-faicon "trash" :height 0.8))
+mu4e-headers-attach-mark `("a" . ,(all-the-icons-faicon "paperclip" :height 0.8))
+mu4e-headers-encrypted-mark `("x" . ,(all-the-icons-faicon "lock" :height 0.8))
+mu4e-headers-signed-mark `("s" . ,(all-the-icons-faicon "certificate" :height 0.8))
+#+end_example
+
+Let’s enable them and set them:
+#+name: mu4e-fancy-marks
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-use-fancy-chars t
+      <<mu4e-fancy-marks-gen()>>)
+#+end_src
+
+#+name: mu4e-vertical-split
+#+begin_src emacs-lisp :tangle no
+(defun my/set-mu4e-headers-width ()
+  (let ((width    (window-body-width))
+        (threshold (+ 120 80)))
+    (setq mu4e-split-view (if (> width threshold)
+                              'vertical
+                            'horizontal))))
+
+(setq mu4e-headers-visible-columns 120
+      mu4e-headers-visible-lines   15)
+(add-hook 'mu4e-headers-mode-hook #'my/set-mu4e-headers-width)
+#+end_src
+
+**** Headers mode
+#+name: mu4e-headers-mode
+#+begin_src emacs-lisp :tangle no
+(add-hook 'mu4e-headers-mode-hook (lambda () (visual-line-mode -1)))
+(add-hook 'mu4e-headers-mode-hook (lambda () (toggle-truncate-lines -1)))
+#+end_src
+
+**** Keybindings
+By default, Evil has some pretty annoying keybindings for users of the
+bépo layout: ~hjkl~ becomes ~ctsr~ for us. Let’s undefine some of these:
+#+name: mu4e-keybindings-undef
+#+begin_src emacs-lisp :tangle no
+(phundrak/undefine
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  "S"   nil
+  "r"   nil
+  "c"   nil
+  "gu"  nil)
+
+(phundrak/undefine
+  :keymaps '(mu4e-view-mode-map mu4e-headers-mode-map)
+  :packages 'mu4e
+  "s"   nil)
+#+end_src
+
+Now, let’s define some keybindings for mu4e’s view mode, that is when
+we are viewing an email. All these keybindings will reside between the
+major-mode specific leader key ~,~ and most of these keybindings can be
+described with a simple function:
+#+name: mu4e-keybindings-view-tbl
+| Keybinding | Function                             | Description        |
+|------------+--------------------------------------+--------------------|
+| &          | mu4e-view-pipe                       |                    |
+| .          | mu4e-headers-split-adjust-width/body | mu4e-headers width |
+| a          | nil                                  | attachments        |
+| a&         | mu4e-view-pipe-attachment            |                    |
+| aa         | mu4e-view-attachment-action          |                    |
+| ao         | mu4e-view-open-attachment            |                    |
+| aO         | mu4e-view-open-attachment-with       |                    |
+| c          | nil                                  | compose            |
+| cc         | mu4e-compose-new                     |                    |
+| ce         | mu4e-compose-edit                    |                    |
+| cf         | mu4e-compose-forward                 |                    |
+| cr         | mu4e-compose-reply                   |                    |
+| cR         | mu4e-compose-resend                  |                    |
+| l          | mu4e-show-log                        |                    |
+| m          | nil                                  | mark               |
+| md         | mu4e-view-mark-for-trash             |                    |
+| mD         | mu4e-view-mark-for-delete            |                    |
+| mm         | mu4e-view-mark-for-move              |                    |
+| mr         | mu4e-view-mark-for-refile            |                    |
+| mR         | mu4e-view-mark-for-read              |                    |
+| mu         | mu4e-view-mark-for-unread            |                    |
+| mU         | mu4e-view-mark-for-unmark            |                    |
+| t          | mu4e-view-mark-thread                | mark thread        |
+| T          | nil                                  | toggle             |
+| Tc         | mu4e-view-toggle-hide-cited          |                    |
+| Th         | mu4e-view-toggle-html                |                    |
+| n          | mu4e-view-headers-next               |                    |
+| N          | mu4e-view-headers-next-unread        |                    |
+| p          | mu4e-view-headers-prev               |                    |
+| P          | mu4e-view-headers-prev-unread        |                    |
+| u          | nil                                  | url                |
+| uf         | mu4e-view-go-to-url                  |                    |
+| uF         | mu4e-view-fetch-url                  |                    |
+
+#+name: mu4e-keybindings-view
+#+begin_src emacs-lisp :tangle no
+(phundrak/major-leader-key
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  <<general-keybindings-gen(table=mu4e-keybindings-view-tbl)>>)
+#+end_src
+
+Two other keybinds are added without a prefix, just for the sake of
+convenience.
+#+name: mu4e-keybindings-view-no-prefix
+#+begin_src emacs-lisp
+(phundrak/evil
+  :keymaps 'mu4e-view-mode-map
+  :packages 'mu4e
+  "«" #'mu4e-view-headers-prev
+  "»" #'mu4e-view-headers-next)
+#+end_src
+
+I’ll also declare two keybinds for mu4e’s headers mode.
+#+name: mu4e-keybindings-header
+#+begin_src emacs-lisp :tangle no
+(phundrak/major-leader-key
+  :keymaps 'mu4e-headers-mode-map
+  :packages 'mu4e
+  "t" '(mu4e-view-mark-thread :which-key "mark thread")
+  "s" 'swiper)
+#+end_src
+
+I will also redefine without a leader key ~ctsr~ in order to be able to
+move freely (remember, bépo layout for me).
+#+name: mu4e-keybindings-header-no-leader-table
+| Key | Function                  | Comment |
+|-----+---------------------------+---------|
+| c   | evil-backward-char        |         |
+| t   | evil-next-visual-line     |         |
+| s   | evil-previous-visual-line |         |
+| r   | evil-forward-char         |         |
+
+#+name: mu4e-keybindings-header-no-leader
+#+begin_src emacs-lisp :tangle no
+(phundrak/evil
+  :keymaps 'mu4e-headers-mode-map
+  :packages 'mu4e
+  <<general-keybindings-gen(table=mu4e-keybindings-header-no-leader-table)>>)
+#+end_src
+
+Finally, let’s declare a couple of keybindings for when we are
+composing a message. This time, all my keybindings are prefixed with
+the major-mode leader and call a simple function.
+#+name: mu4e-keybindings-message-tbl
+| Key | Function              | Description |
+|-----+-----------------------+-------------|
+| ,   | message-send-and-exit |             |
+| c   | message-send-and-exit |             |
+| a   | message-kill-buffer   |             |
+| k   | message-kill-buffer   |             |
+| s   | message-dont-send     |             |
+| f   | mml-attach-file       |             |
+
+#+name: mu4e-keybindings-message
+#+begin_src emacs-lisp :tangle no
+(phundrak/major-leader-key
+  :keymaps 'message-mode-map
+  :packages 'mu4e
+  <<general-keybindings-gen(table=mu4e-keybindings-message-tbl)>>)
+#+end_src
+
+*** Composing messages
+Org mime is cool and all, you can write some org-mode and then export
+it to either a plain-text or an HTML email. BUT, have you considered
+skipping the export part and write your emails directly in org-mode?
+#+begin_src emacs-lisp
+(use-package org-msg
+  :after (mu4e)
+  :straight (:build t)
+  :hook ((mu4e-compose-pre . org-msg-mode))
+  :custom-face
+  (mu4e-replied-face ((t (:weight normal :foreground "#b48ead"))))
+  :config
+  (defun my/org-msg-signature-convert (orig-fun &rest args)
+    "Tweak my signature when replying as plain/text only."
+    (let ((res (apply orig-fun args)))
+      (when (equal (cadr args) '(text))
+        (setf (alist-get 'signature res)
+              (replace-regexp-in-string "\n+" "\n" org-msg-signature)))
+      res))
+  (advice-add 'org-msg-composition-parameters
+              :around 'my/org-msg-signature-convert)
+  (add-hook 'mu4e-headers-mode (lambda () (toggle-truncate-lines -1)))
+  (setq org-msg-startup              "inlineimages"
+        org-msg-default-alternatives '((new           . (text))
+                                       (reply-to-html . (text))
+                                       (reply-to-text . (text)))
+        org-msg-greeting-name-limit  3
+        org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
+                                             (with-temp-buffer
+                                               (insert-file-contents mail-signature-file)
+                                               (while (re-search-forward "\n" nil t)
+                                                 (replace-match "\n\n"))
+                                               (buffer-string))))
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'org-msg-edit-mode-map
+    :packages 'org-msg
+    <<general-keybindings-gen(table=org-msg-edit-mode-keybinds)>>))
+#+end_src
+
+The keybinds are relatively simple ~org-msg-edit-mode~:
+#+name: org-msg-edit-mode-keybinds
+| Key | Function              | Description |
+|-----+-----------------------+-------------|
+| ,   | message-send-and-exit |             |
+| c   | message-send-and-exit |             |
+| a   | message-kill-buffer   |             |
+| k   | message-kill-buffer   |             |
+| s   | message-dont-send     |             |
+| f   | org-msg-attach        |             |
+
+*** Email alerts
+There is also a package for mu4e which generates desktop notifications
+when new emails are received. By default, I want to be notified by all
+messages in my inbox and junk folder. Also, I’ll use Emacs’ default
+notification system, and I’ll activate the modeline notification.
+#+begin_src emacs-lisp
+(use-package mu4e-alert
+  :straight (:build t)
+  :after mu4e
+  :defer t
+  :init
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+  (mu4e-alert-set-default-style 'notifications)
+  :config
+  (setq mu4e-alert-interesting-mail-query "flag:unread"))
+#+end_src
+
+** EMMS and Media
+EMMS, also known as the /Emacs MultiMedia System/, allows the user to
+interact through Emacs with multimedia elements such as music and
+videos. My main use for it will be for music with MPD (see its
+configuration [[file:mpd.org][here]]).
+#+begin_src emacs-lisp
+(use-package emms
+  :defer t
+  :after all-the-icons
+  :straight (:build t)
+  :init
+  (require 'emms-setup)
+  (require 'emms-mark)
+  (emms-all)
+  (add-to-list 'emms-info-functions 'emms-info-mpd)
+  (add-to-list 'emms-player-list    'emms-player-mpd)
+  (emms-player-mpd-sync-from-mpd)
+  (emms-player-mpd-connect)
+
+  <<emms-fd-name>>
+  <<emms-fd-function>>
+  <<emms-search-set-variable>>
+
+  <<emms-media-hydra>>
+  (defun emms-player-toggle-pause ()
+    (interactive)
+    (shell-command-and-echo "mpc toggle"))
+  :custom
+  ((emms-source-file-default-directory (expand-file-name "~/Music"))
+   (emms-player-mpd-server-name "localhost")
+   (emms-player-mpd-server-port "6600")
+   (emms-player-mpd-music-directory (expand-file-name "~/Music"))
+   (emms-browser-thumbnail-small-size 64)
+   (emms-browser-thumbnail-medium-size 128)
+   (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+   (emms-playlist-default-major-mode 'emms-mark-mode))
+  :general
+  (phundrak/undefine
+    :keymaps 'emms-browser-mode-map
+    :packages 'emms
+    "s"   nil
+    "r"   nil)
+  (phundrak/evil
+    :keymaps 'emms-browser-mode-map
+    :packages 'emms
+    "a"  #'emms-browser-add-tracks
+    "A"  #'emms-browser-add-tracks-and-play
+    "b"  '(:ignore t :which-key "browse by")
+    "bA" #'emms-browse-by-album
+    "ba" #'emms-browse-by-artist
+    "bg" #'emms-browse-by-genre
+    "bs" #'emms-smart-browse
+    "by" #'emms-browse-by-year
+    "c"  #'emms-browser-clear-playlist
+    "S"  '(:ignore t :which-key "search")
+    "SA" '(emms-browser-search-by-album  :which-key "by album")
+    "Sa" '(emms-browser-search-by-artist :which-key "by artist")
+    "Ss" '(emms-browser-search-by-names  :which-key "by name")
+    "St" '(emms-browser-search-by-names  :which-key "by title")
+    "q"  #'kill-this-buffer)
+  (phundrak/evil
+    :keymaps 'emms-playlist-mode-map
+    :packages 'emms
+    "d" #'emms-playlist-mode-kill-track
+    "p" #'emms-playlist-mode-play-smart
+    "q" #'kill-this-buffer)
+  (phundrak/leader-key
+    :infix "m"
+    :packages 'emms
+    ""   '(:ignore t :which-key "media")
+    "."  #'hydra-media/body
+    "«"  #'emms-player-mpd-previous
+    "»"  #'emms-player-mpd-next
+    "c"  #'emms-player-mpd-clear
+    "e"  '(:ignore t :which-key "emms")
+    "eb" #'emms-browser
+    "ep" #'emms-playlist-mode-go
+    "es" #'emms-player-mpd-show
+    "p"  '((lambda ()
+             (interactive)
+             (shell-command-and-echo "mpc toggle"))
+           :which-key "mpc toggle")
+    "s"  #'emms-stop
+    "u"  '(:ignore t :which-key "update")
+    "um" #'emms-player-mpd-update-all
+    "uc" #'emms-cache-set-from-mpd-all))
+#+end_src
+
+*** Finding files from EMMS
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no
+:END:
+EMMS has two default ways of finding files: either a built-in function
+relatively slow but portable, or with ~find~ which is arguably faster
+but less portable. Honestly, I don’t care about portability, I’ll
+always use this Emacs config on Linux, but I don’t want to use ~find~
+either since there is something even faster: ~fd~.
+
+First we’ll declare a variable that can hold the path to the ~fd~
+executable:
+#+name: emms-fd-name
+#+begin_src emacs-lisp
+(defvar emms-source-file-fd (executable-find "fd"))
+#+end_src
+
+Then, we need to declare a new function that will use ~fd~ to find
+files. The function, as specified by the documentation of
+~emms-source-file-directory-tree-function~, receives two arguments ~dir~
+and ~regex~. We can work with that!
+#+name: emms-fd-function
+#+begin_src emacs-lisp
+(defun emms-source-file-directory-tree-fd (dir regex)
+  "Return a list of all files under DIR that match REGEX.
+This function uses the external fd utility. The name for fd may
+be supplied using `emms-source-file-fd'."
+  (with-temp-buffer
+    (call-process emms-source-file-fd
+                  nil t nil
+                  "-L" ; follow symlinks
+                  regex
+                  "-t f"
+                  (expand-file-name dir))
+    (delete ""
+            (split-string (buffer-substring (point-min)
+                                          (point-max))
+                          "\n"))))
+#+end_src
+
+We can finally set this function as our search function.
+#+name: emms-search-set-variable
+#+begin_src emacs-lisp
+(setq emms-source-file-directory-tree-function #'emms-source-file-directory-tree-fd)
+#+end_src
+
+*** Keybinds
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no
+:END:
+I also want to create a small hydra for manipulating MPD:
+#+name: emms-media-hydra
+#+begin_src emacs-lisp
+(defun shell-command-and-echo (command &optional echo prefix)
+  "Run COMMAND and display the result of ECHO prefixed by PREFIX.
+
+Run COMMAND as a shell command.
+
+If ECHO is non nil, display the result of its execution as a
+shell command to the minibuffer through `MESSAGE'.
+
+If PREFIX is non nil, it will prefix the output of ECHO in the
+minibuffer, both separated by a single space."
+  (progn
+    (with-temp-buffer
+      (shell-command command
+                     (current-buffer)
+                     (current-buffer))
+      (when echo
+        (message "%s%s"
+                 (if prefix
+                     (concat prefix " ")
+                   "")
+                 (string-trim
+                  (shell-command-to-string "mpc volume")))))))
+
+(defhydra hydra-media (:hint nil)
+  "
+     %s(all-the-icons-material \"volume_up\" :height 1.0 :v-adjust -0.2)
+     [_s_]
+« [_c_] _p_ [_r_] » [_S_] %s(all-the-icons-material \"stop\")
+     [_t_]
+     %s(all-the-icons-material \"volume_down\" :height 1.0 :v-adjust -0.2)
+"
+  ("c" emms-player-mpd-previous)
+  ("r" emms-player-mpd-next)
+  ("t" (shell-command-and-echo "mpc volume -2" "mpc volume" "mpc"))
+  ("s" (shell-command-and-echo "mpc volume +2" "mpc volume" "mpc"))
+  ("p" (shell-command-and-echo "mpc toggle"))
+  ("S" emms-player-mpd-stop)
+  ("q" nil :exit t))
+#+end_src
+
+** Nov
+Nov is a major-mode for reading EPUB files within Emacs. Since I have
+it, I don’t need any other Epub reader on my computer! Plus this one
+is customizable and programmable, why would I use any other EPUB
+reader?
+#+begin_src emacs-lisp
+(use-package nov
+  :straight (:build t)
+  :defer t
+  :mode ("\\.epub\\'" . nov-mode)
+  :general
+  (phundrak/evil
+    :keymaps 'nov-mode-map
+    :packages 'nov
+    "c"   #'nov-previous-document
+    "t"   #'nov-scroll-up
+    "C-d" #'nov-scroll-up
+    "s"   #'nov-scroll-down
+    "C-u" #'nov-scroll-down
+    "r"   #'nov-next-document
+    "gm"  #'nov-display-metadata
+    "gn"  #'nov-next-document
+    "gp"  #'nov-previous-document
+    "gr"  #'nov-render-document
+    "gt"  #'nov-goto-toc
+    "gv"  #'nov-view-source
+    "gV"  #'nov-view-content-source)
+  :config
+  (setq nov-text-width 95))
+#+end_src
+
+** PDF Tools
+~pdf-tools~ enables PDF support for Emacs, much better than its built-in
+support with DocView. Aside from the classical settings such as
+keybinds, I also enable the midnight colors by default; think of it as
+an equivalent of Zathura’s recolor feature which kind of enables a
+dark mode for PDFs.
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :defer t
+  :magic ("%PDF" . pdf-view-mode)
+  :straight (:build t)
+  :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
+  :general
+  (phundrak/evil
+    :keymaps 'pdf-view-mode-map
+    :packages 'pdf-tools
+    "y"   #'pdf-view-kill-ring-save
+    "t"   #'evil-collection-pdf-view-next-line-or-next-page
+    "s"   #'evil-collection-pdf-view-previous-line-or-previous-page)
+  (phundrak/major-leader-key
+    :keymaps 'pdf-view-mode-map
+    :packages 'pdf-tools
+    "a"  '(:ignore t :which-key "annotations")
+    "aD" #'pdf-annot-delete
+    "at" #'pdf-annot-attachment-dired
+    "ah" #'pdf-annot-add-highlight-markup-annotation
+    "al" #'pdf-annot-list-annotations
+    "am" #'pdf-annot-markup-annotation
+    "ao" #'pdf-annot-add-strikeout-markup-annotation
+    "as" #'pdf-annot-add-squiggly-markup-annotation
+    "at" #'pdf-annot-add-text-annotation
+    "au" #'pdf-annot-add-underline-markup-annotation
+
+    "f"  '(:ignore t :which-key "fit")
+    "fw" #'pdf-view-fit-width-to-window
+    "fh" #'pdf-view-fit-height-to-window
+    "fp" #'pdf-view-fit-page-to-window
+
+    "s"  '(:ignore t :which-key "slice/search")
+    "sb" #'pdf-view-set-slice-from-bounding-box
+    "sm" #'pdf-view-set-slice-using-mouse
+    "sr" #'pdf-view-reset-slice
+    "ss" #'pdf-occur
+
+    "o"  'pdf-outline
+    "m"  'pdf-view-midnight-minor-mode)
+  :config
+  (with-eval-after-load 'pdf-view
+    (csetq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
+#+end_src
+
+One thing ~pdf-tools~ doesn’t handle is restoring the PDF to the last
+point it was visited --- in other words, open the PDF where I last
+left it.
+#+begin_src emacs-lisp
+(use-package pdf-view-restore
+  :after pdf-tools
+  :defer t
+  :straight (:build t)
+  :hook (pdf-view-mode . pdf-view-restore-mode)
+  :config
+  (setq pdf-view-restore-filename (expand-file-name ".tmp/pdf-view-restore"
+                                                    user-emacs-directory)))
+#+end_src
+
+** Project Management
+*** Magit
+Magit is an awesome wrapper around Git for Emacs! Very often, I go
+from disliking to really hating Git GUI clients because they often
+obfuscate which Git commands are used to make things happen. Such a
+thing doesn’t happen with Magit, it’s pretty transparent, but it still
+provides some awesome features and visualizations of what you are
+doing and what Git is doing! In short, I absolutely love it!
+#+begin_src emacs-lisp
+(use-package magit
+  :straight (:build t)
+  :defer t
+  :init
+  (setq forge-add-default-bindings nil)
+  :config
+  (add-hook 'magit-process-find-password-functions 'magit-process-password-auth-source)
+  (csetq magit-clone-default-directory "~/fromGIT/"
+         magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (with-eval-after-load 'evil-collection
+    (phundrak/evil
+      :packages '(evil-collection magit)
+      :keymaps '(magit-mode-map magit-log-mode-map magit-status-mode-map)
+      :states 'normal
+      "t" #'magit-tag
+      "s" #'magit-stage))
+  :general
+  (:keymaps '(git-rebase-mode-map)
+   :packages 'magit
+   "C-t" #'evil-next-line
+   "C-s" #'evil-previous-line)
+  (phundrak/major-leader-key
+    :keymaps 'git-rebase-mode-map
+    :packages 'magit
+    "," #'with-editor-finish
+    "k" #'with-editor-cancel
+    "a" #'with-editor-cancel)
+  (phundrak/leader-key
+    :infix   "g"
+    :packages 'magit
+    ""   '(:ignore t :wk "git")
+    "b"  #'magit-blame
+    "c"  #'magit-clone
+    "d"  #'magit-dispatch
+    "i"  #'magit-init
+    "s"  #'magit-status
+    "l"  #'magit-log
+    "y"  #'my/yadm
+    "S"  #'magit-stage-file
+    "U"  #'magit-unstage-file
+    "f"  '(:ignore t :wk "file")
+    "fd" #'magit-diff
+    "fc" #'magit-file-checkout
+    "fl" #'magit-file-dispatch
+    "fF" #'magit-find-file))
+#+end_src
+
+There is currently a bug in Emacs TRAMP as described in issue [[https://github.com/magit/magit/issues/4720][#4720]] of
+Magit and bug [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=62093][62093]] of Emacs. A workaround is to redefine the old
+=tramp-send-command= function through an advice.
+#+begin_src emacs-lisp
+(defun my--tramp-send-command--workaround-stty-icanon-bug (conn-vec orig-command &rest args)
+  "See: https://github.com/magit/magit/issues/4720"
+  (let ((command
+         (if (string= "stty -icrnl -icanon min 1 time 0" orig-command)
+             "stty -icrnl"
+           orig-command)))
+    (append (list conn-vec command) args)))
+
+(defun my--tramp-send-command--workaround-stty-icanon-bug--filter-args (args)
+  (apply #'my--tramp-send-command--workaround-stty-icanon-bug args))
+
+(advice-add 'tramp-send-command :filter-args
+            #'my--tramp-send-command--workaround-stty-icanon-bug--filter-args)
+#+end_src
+
+[[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
+display in the Magit buffer a list of TODOs found in the current
+project to remind you of what to do next.
+
+First, let’s se tup our todo keywords with ~hl-todo~. A good few todo
+keywords are already defined in the ~hl-todo-keyword-faces~ variable.
+Why not use them? ~hl-todo-mode~ enables fontlock highlight of these
+keywords in a buffer. Let’s enable this mode globally.
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :defer t
+  :straight (:build t)
+  :init (global-hl-todo-mode 1)
+  :general
+  (phundrak/leader-key
+    :packages '(hl-todo)
+    :infix "c"
+    ""  '(:ignore t :which-key "todos")
+    "n" #'hl-todo-next
+    "p" #'hl-todo-previous))
+#+end_src
+
+We can now configure properly ~magit-todos~. Notice my custom function
+hooked to ~magit-mode-hook~. This is because this package tries to find
+TODOs in all files in the current project, and my yadm repository’s
+root is my ~$HOME~. So, yeah, no ~magit-todos~ in yadm.
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :straight (:build t)
+  :after (magit hl-todo)
+  :init
+  (with-eval-after-load 'magit
+   (defun my/magit-todos-if-not-yadm ()
+     "Deactivate magit-todos if in yadm Tramp connection.
+If `magit--default-directory' points to a yadm Tramp directory,
+deactivate `magit-todos-mode', otherwise enable it."
+     (if (string-prefix-p "/yadm:" magit--default-directory)
+         (magit-todos-mode -1)
+       (magit-todos-mode +1)))
+   (add-hook 'magit-mode-hook #'my/magit-todos-if-not-yadm))
+  :config
+  (csetq magit-todos-ignore-case t))
+#+end_src
+
+Finally, it is also possible to use Gitflow’s framework with Magit
+with ~magit-gitflow~:
+#+begin_src emacs-lisp
+(use-package magit-gitflow
+  :defer t
+  :after magit
+  :straight (magit-gitflow :build t
+                           :type git
+                           :host github
+                           :repo "jtatarik/magit-gitflow")
+  :hook (magit-mode . turn-on-magit-gitflow))
+#+end_src
+
+*** Forge
+Forge acts as an interface for GitHub, Gitlab, and Bitbucket inside
+Magit. A lot of possibilities are present, you can read issues and
+pull requests, create them, and fork projects among other things.
+
+*NOTE*: Make sure to configure a GitHub token before using this
+ package!
+- [[https://magit.vc/manual/forge/Token-Creation.html#Token-Creation][Token Creation]]
+- [[https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started][Getting started]]
+#+begin_src emacs-lisp
+(use-package forge
+  :after magit
+  :straight (:build t)
+  :init
+  (evil-collection-forge-setup)
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'forge-topic-mode-map
+    "c"  #'forge-create-post
+    "e"  '(:ignore t :which-key "edit")
+    "ea" #'forge-edit-topic-assignees
+    "ed" #'forge-edit-topic-draft
+    "ek" #'forge-delete-comment
+    "el" #'forge-edit-topic-labels
+    "em" #'forge-edit-topic-marks
+    "eM" #'forge-merge
+    "en" #'forge-edit-topic-note
+    "ep" #'forge-edit-post
+    "er" #'forge-edit-topic-review-requests
+    "es" #'forge-edit-topic-state
+    "et" #'forge-edit-topic-title))
+#+end_src
+
+*** Projectile
+First, I need to install ~ripgrep~, a faster reimplementation of ~grep~,
+which will be very useful when managing projects.
+#+begin_src emacs-lisp
+(use-package ripgrep
+  :if (executable-find "rg")
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+Now, I can use projectile, which is sort of the /de facto/ standard
+project manager in Emacs. I know there’s ~project.el~, but… Eh… I’m used
+to projectile.
+#+begin_src emacs-lisp
+(use-package projectile
+  :straight (:build t)
+  :diminish projectile-mode
+  :custom ((projectile-completion-system 'ivy))
+  :init
+  (setq projectile-switch-project-action #'projectile-dired)
+  :config
+  (projectile-mode)
+  (add-to-list 'projectile-ignored-projects "~/")
+  (add-to-list 'projectile-globally-ignored-directories "^node_modules$")
+  :general
+  (phundrak/leader-key
+    "p" '(:keymap projectile-command-map :which-key "projectile")))
+#+end_src
+
+And of course, there is a counsel package dedicated to projectile.
+#+begin_src emacs-lisp
+(use-package counsel-projectile
+  :straight (:build t)
+  :after (counsel projectile)
+  :config (counsel-projectile-mode))
+#+end_src
+
+*** Recentf
+The built-in package ~recentf~ keeps track of recently opened files. But
+by default, it only follows the twenty most recent files, that not
+nearly enough for me, so I raise it to two hundred. I also don’t want
+recentf to follow the Elfeed database, so I add it to the list of
+excluded files.
+#+begin_src emacs-lisp
+(use-package recentf
+  :straight (:build t :type built-in)
+  :custom ((recentf-max-saved-items 2000))
+  :config
+  (add-all-to-list 'recentf-exclude
+                   `(,(rx (* any)
+                          (or "elfeed-db"
+                              "eln-cache"
+                              "conlanging/content"
+                              "org/config"
+                              "/Mail/Sent"
+                              ".cache/")
+                          (* any)
+                          (? (or "html" "pdf" "tex" "epub")))
+                     ,(rx (* any)
+                          ".elc"
+                          eol)
+                     ,(rx "/"
+                          (or "rsync" "ssh" "tmp" "yadm" "sudoedit" "sudo")
+                          (* any)))))
+#+end_src
+
+** Screenshot
+~screenshot.el~ is a nice utility package made by TEC. It allows the
+user to take a screenshot of a specific area of a buffer and make it
+look nice.
+#+begin_src emacs-lisp
+(use-package screenshot
+  :defer t
+  :straight (screenshot :build t
+                        :type git
+                        :host github
+                        :repo "tecosaur/screenshot")
+  :config (load-file (locate-library "screenshot.el"))
+  :general
+  (phundrak/leader-key
+    :infix "a"
+    :packages '(screenshot)
+    "S" #'screenshot))
+#+end_src
+
+** Shells
+*** Shell-pop
+Shell-pop allows the user to easily call for a new shell in a pop-up
+buffer.
+#+begin_src emacs-lisp
+(use-package shell-pop
+  :defer t
+  :straight (:build t)
+  :custom
+  (shell-pop-default-directory "/home/phundrak")
+  (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda () (eshell shell-pop-term-shell)))))
+  (shell-pop-window-size 30)
+  (shell-pop-full-span nil)
+  (shell-pop-window-position "bottom")
+  (shell-pop-autocd-to-working-dir t)
+  (shell-pop-restore-window-configuration t)
+  (shell-pop-cleanup-buffer-at-process-exit t))
+#+end_src
+
+*** VTerm
+VTerm gives Emacs access to regular shells with an almost regular
+emulator. Be aware you will most likely need to hit ~C-c~ twice to send
+an interrupt signal.
+#+begin_src emacs-lisp
+(use-package vterm
+  :defer t
+  :straight t
+  :config
+  (setq vterm-shell "/usr/bin/fish"))
+#+end_src
+
+One annoying think with vterm is it only can create one buffer, you
+can’t have multiple vterm buffers by default. ~multi-vterm~ fixes this
+issue.
+#+begin_src emacs-lisp
+(use-package multi-vterm
+  :after vterm
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :packages '(vterm multi-vterm)
+    :keymap 'vterm-mode-map
+    "c" #'multi-vterm
+    "n" #'multi-vterm-next
+    "p" #'multi-vterm-prev))
+#+end_src
+
+** XWidgets Webkit Browser
+I used to use the xwidgets webkit browser in order to view or preview
+HTML files from Emacs, but it seems the Cairo background transparency
+patch breaks it. So while this isn’t patched, I will disable Xwidgets
+in my Emacs build, and these keybinds *will not* be tangled.
+#+begin_src emacs-lisp :tangle no
+(phundrak/evil
+ :keymaps 'xwidget-webkit-mode-map
+ "<mouse-4>" #'xwidget-webkit-scroll-down-line
+ "<mouse-5>" #'xwidget-webkit-scroll-up-line
+ "c"         #'xwidget-webkit-scroll-backward
+ "t"         #'xwidget-webkit-scroll-up-line
+ "s"         #'xwidget-webkit-scroll-down-line
+ "r"         #'xwidget-webkit-scroll-forward
+ "h"         #'xwidget-webkit-goto-history
+ "C"         #'xwidget-webkit-back
+ "R"         #'xwidget-webkit-forward
+ "C-r"       #'xwidget-webkit-reload
+ "j"         nil
+ "k"         nil
+ "l"         nil
+ "H"         nil
+ "L"         nil
+ "C-d"       #'xwidget-webkit-scroll-up
+ "C-u"       #'xwidget-webkit-scroll-down)
+#+end_src
+
+** Wttr.in
+#+begin_src emacs-lisp
+(use-package wttrin
+  :defer t
+  :straight (wttrin :build t
+                    :local-repo "~/fromGIT/emacs-packages/emacs-wttrin"
+                    :type git)
+                    ;; :host github
+                    ;; :repo "Phundrak/emacs-wttrin"
+  :config
+  (setq wttrin-default-cities '("Aubervilliers" "Paris" "Lyon" "Nonières" "Saint Agrève")
+        wttrin-use-metric t))
+#+end_src
+
+*** TODO Derive a major mode for wttrin                            :noexport:
+To handle keybindings correctly, a major mode for wttrin could be
+derived from ~fundamental-mode~ and get an associated keymap.

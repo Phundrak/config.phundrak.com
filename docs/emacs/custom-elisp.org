@@ -1,0 +1,121 @@
+#+title: Emacs — Custom Elisp
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/custom-elisp.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Custom Elisp
+** Dired functions
+*** ~phundrak/open-marked-files~
+This function allows the user to open all marked files from a dired
+buffer in new Emacs buffers.
+#+begin_src emacs-lisp
+(defun phundrak/open-marked-files (&optional files)
+  "Open all marked FILES in Dired buffer as new Emacs buffers."
+  (interactive)
+  (let* ((file-list (if files
+                        (list files)
+                      (if (equal major-mode "dired-mode")
+                          (dired-get-marked-files)
+                        (list (buffer-file-name))))))
+   (mapc (lambda (file-path)
+           (find-file file-path))
+         (file-list))))
+#+end_src
+
+** Switch between buffers
+Two default shortcuts I really like from Spacemacs are ~SPC b m~ and ~SPC
+b s~, which bring the user directly to the ~*Messages*~ buffer and the
+~*scratch*~ buffer respectively. These functions do exactly this.
+#+begin_src emacs-lisp
+(defun switch-to-messages-buffer ()
+  "Switch to Messages buffer."
+  (interactive)
+  (switch-to-buffer (messages-buffer)))
+
+(defun switch-to-scratch-buffer ()
+  "Switch to Messages buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+#+end_src
+
+** Screenshots
+Since Emacs27, it is possible for Emacs to take screenshots of itself
+in various formats. I’m mainly interested in the SVG and PNG format,
+so I’ll only write functions for these. It isn’t really redundant with
+the ~screenshot.el~ package used [[file:./packages/applications.md#screenshot][here]] since these functions take a
+screenshot of Emacs as a whole rather than of a code snippet.
+
+First, we have a general function which is a slight modification of
+the function shared by Alphapapa in [[https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/g2c2c6y/][this Reddit comment]]. I modified it
+to make it possible to pass as an argument the format the screenshot
+will be taken as or ask the user which format they would like to save
+it as.
+#+begin_src emacs-lisp
+(defun self-screenshot (&optional type)
+  "Save a screenshot of type TYPE of the current Emacs frame.
+As shown by the function `', type can weild the value `svg',
+`png', `pdf'.
+
+This function will output in /tmp a file beginning with \"Emacs\"
+and ending with the extension of the requested TYPE."
+  (interactive (list
+                (intern (completing-read "Screenshot type: "
+                                         '(png svg pdf postscript)))))
+  (let* ((extension (pcase type
+                      ('png        ".png")
+                      ('svg        ".svg")
+                      ('pdf        ".pdf")
+                      ('postscript ".ps")
+                      (otherwise (error "Cannot export screenshot of type %s" otherwise))))
+         (filename (make-temp-file "Emacs-" nil extension))
+         (data     (x-export-frames nil type)))
+    (with-temp-file filename
+      (insert data))
+    (kill-new filename)
+    (message filename)))
+#+end_src
+
+I used this function to take the screenshots you can see in this
+document.
+
+** Handle new windows
+The two functions below allow the user to not only create a new window
+to the right or below the current window (respectively), but also to
+focus the new window immediately.
+#+begin_src emacs-lisp
+(defun split-window-right-and-focus ()
+  "Spawn a new window right of the current one and focus it."
+  (interactive)
+  (split-window-right)
+  (windmove-right))
+
+(defun split-window-below-and-focus ()
+  "Spawn a new window below the current one and focus it."
+  (interactive)
+  (split-window-below)
+  (windmove-down))
+
+(defun kill-buffer-and-delete-window ()
+  "Kill the current buffer and delete its window."
+  (interactive)
+  (progn
+    (kill-this-buffer)
+    (delete-window)))
+#+end_src
+
+** Extend ~add-to-list~
+One function I find missing regarding ~add-to-list~ is ~add-all-to-list~
+which enables the user to add multiple elements to a list at once.
+Instead, with vanilla Emacs, I have to repeatedly call ~add-to-list~.
+That’s not very clean. Let’s declare this missing function:
+#+begin_src emacs-lisp
+(defun add-all-to-list (list-var elements &optional append compare-fn)
+  "Add ELEMENTS to the value of LIST-VAR if it isn’t there yet.
+
+ELEMENTS is a list of values. For documentation on the variables
+APPEND and COMPARE-FN, see `add-to-list'."
+  (let (return)
+    (dolist (elt elements return)
+      (setq return (add-to-list list-var elt append compare-fn)))))
+#+end_src

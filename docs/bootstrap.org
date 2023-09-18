@@ -1,0 +1,935 @@
+#+TITLE: Arch Linux, Phundrak-flavored
+#+setupfile: headers
+#+PROPERTY: header-args :tangle no :exports none
+#+PROPERTY: header-args:sh :tangle no :exports code
+#+PROPERTY: header-args:fish :exports code :noweb yes
+#+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
+
+* Bootstrap Script
+Here will be presented what I do to get my system up and running on a fresh Arch
+Linux install. These installation instructions were written in order to get an
+Arch Linux distribution up and running with the same configuration as my main
+computer’s and my travelling laptop’s configuration.
+
+** Install Arch Linux
+I usually install Arch from the [[https://www.archlinux.org/download/][vanilla ISO]], however I began using [[https://github.com/MatMoul/archfi][archfi]] to
+install easily the distro (I’ve done it so many times, I know how it works now).
+Usually, my distros will be installed on two partitions: ~/home~ and ~/~ (root).
+
+If the computer supports EFI bootloaders, the EFI partition will be mounted on
+~/boot/efi~. I generally use ~systemd-boot~ as my boot manager, but if you are
+more comfortable with another one, just install what you want. Be aware that if
+you format your ~/boot~ partition, you will delete all boot managers that
+already exist; so, if you are dual-booting, *DO NOT FORMAT IT*. Yes, I made the
+mistake of wiping the Windows boot manager when I used to dual-boot.
+
+In order to use the ~suspend-then-hibernate~ systemd command, it is necessary to
+have a swap partition at least twice the size of your installed RAM. That is
+because when this command will be run, the system will try to save the current
+state of your machine, stored in your RAM, to the swap filesystem. If there is
+not enough space, the command will fail, and you won’t be able to use this
+command. For instance, my current computer has 32 GB of RAM, hence my SWAP
+partition is 16 GB large.
+
+*** Get the latest, fastest mirrors
+When you boot into the live ISO, execute the following command:
+#+BEGIN_SRC sh
+pacman -Sy reflector
+reflector -c FR,DE -l 20 -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
+#+END_SRC
+
+This will update the packages from your live ISO, and you will get the best
+mirrors for your installation. Of course, change the countries accordingly to
+your location. In my case, I am only interested in French, German, and Belgian
+mirrors.
+
+*** Install the system
+Then you can use a custom script to ease your installation of Arch if you do not
+wish to do it manually. Personally, I’ve done it several times already, I know
+how the distro works, I just want to be able to install my distro quickly now.
+I’ll need to download the script with ~wget~, but apparently it isn’t installed
+by default on Arch ISOs anymore, so I’ll need to install it.
+#+BEGIN_SRC sh
+pacman -S wget
+#+END_SRC
+
+Now, let’s grab the script. You can check it on [[https://github.com/matmoul/archfi][GitHub]].
+#+BEGIN_SRC sh
+wget archfi.sf.net/archfi
+# Or from matmoul.github.io/archfi if SourceForge is down
+sh archfi
+#+END_SRC
+
+Then, follow the instructions and install Arch Linux. Take the opportunity to
+install as many packages as you need, mainly ~paru~ which I use as my package
+manager (it is just a wrapper for ~pacman~) and AUR helper, and ~pacman-contrib~
+which will help us to install some packages later.
+
+Once your system is installed, reboot and remove your installation media from
+your computer.
+
+** Execute bootstrap
+:PROPERTIES:
+:HEADER-ARGS:fish: :tangle ~/.config/yadm/bootstrap :shebang "#!/usr/bin/fish" :exports code :mkdirp yes
+:END:
+The first thing I will do is add the [[https://aur.chaotic.cx/][Chaotic AUR]] repository to get
+access to ~paru~ as well as some AUR packages without the need of an AUR
+helper (ironic considering ~paru~ is one). We can then install ~fish~,
+~git~, and ~paru~:
+#+BEGIN_SRC sh
+sudo pacman -S fish git paru
+#+END_SRC
+
+And now that ~paru~ is available, we can install ~yadm~:
+#+BEGIN_SRC sh
+paru -S yadm
+#+END_SRC
+
+~yadm~ comes with a very handy feature: its bootstrap script. It can be executed
+automatically once the dotfiles are cloned with yadm:
+#+BEGIN_SRC sh
+yadm clone https://labs.phundrak.com/phundrak/dotfiles
+# or if labs.phundrak.com is down or too slow for you
+#yadm clone https://github.com/phundrak/dotfiles
+#+END_SRC
+
+Let’s take a look at what it does.
+
+*** Decrypt private yadm files
+Some private files are stored encrypted in the repository of my yadm dotfiles. I
+will need them later on during the bootstrap execution.
+#+BEGIN_SRC fish
+if test "$USER" = 'phundrak'
+    yadm decrypt
+else
+    whiptail --yesno "Decrypt private files?" 8 40 && yadm decrypt
+end
+#+END_SRC
+
+*** Get a correct keyboard layout
+I use mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout, a French keyboard layout inspired by Dvorak
+layouts, however I sometimes need to switch back to the standard French AZERTY
+or the American QWERTY layout, so I make it so the Menu key switches for me my
+layout between these three. This makes it so my xorg configuration of my
+keyboard looks like this:
+#+BEGIN_SRC fish
+set keyboardconf \
+'Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "fr"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "bepo_afnor"
+        Option "XkbOptions" "caps:ctrl_modifier"
+EndSection'
+#+END_SRC
+
+So, let’s ask the user if they want to set it as their keyboard configuration.
+#+BEGIN_SRC fish
+printf "\n# Set keyboard layout #########################################################\n\n"
+whiptail --yesno "Would you like to set your keyboard layout to the bépo layout?" 8 55
+if test $status -eq 0
+    echo $keyboardconf | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf
+end
+#+END_SRC
+
+*** Set our locale
+I use two main locales, the French and US UTF-8 locales, and I like to keep the
+Japanese locale activated just in case.
+#+BEGIN_SRC fish
+set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
+#+END_SRC
+
+I’ll let the user accept them one by one.
+#+BEGIN_SRC fish
+printf "\n# Set locale ##################################################################\n\n"
+for item in $mylocales
+    whiptail --yesno "Set the \"$item\" locale?" 8 40
+    if test $status -eq 0 -a (grep -e "#$item" /etc/locale.gen)
+        sudo sed -i "/$item/s/^#//g" /etc/locale.gen
+    end
+end
+#+END_SRC
+
+This is my configuration I usually use when it comes to my locale.
+#+BEGIN_SRC fish
+set localeconf "LANG=en_DK.UTF-8
+LC_COLLATE=C
+LC_NAME=fr_FR.UTF-8
+LC_IDENTIFICATION=fr_FR.UTF-8
+LC_TELEPHONE=fr_FR.UTF-8
+LC_MONETARY=fr_FR.UTF-8
+LC_PAPER=fr_FR.UTF-8
+LC_ADDRESS=fr_FR.UTF-8
+LC_MEASUREMENT=fr_FR.UTF-8"
+#+END_SRC
+
+Let’s set it as our system’s locale if the user whishes to.
+#+BEGIN_SRC fish
+whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
+if test $status -eq 0
+    echo $localeconf | sudo tee /etc/locale.conf
+end
+#+END_SRC
+
+Now we can generate our locale!
+#+BEGIN_SRC fish
+printf "\n# Generate locale #############################################################\n\n"
+sudo locale-gen
+#+END_SRC
+
+*** Create some folders
+Let’s create some folders we might need for mounting our drives, Android devices
+and CDs.
+#+BEGIN_SRC fish
+printf "\n# Create directories for mounting #############################################\n\n"
+sudo mkdir -p /mnt/{USB,CD,Android}
+sudo chown $USER:(id -g $USER) /mnt/{USB,CD,Android}
+#+END_SRC
+
+*** Set user’s shell to fish
+First, the bootstrap shell will set the user’s shell to fish.
+#+BEGIN_SRC fish
+printf "\n# Set fish as the default shell ###############################################\n\n"
+whiptail --yesno "Set the current user’s default shell to fish?" 8 50
+if test $status -eq 0 -a ! "$SHELL" = '/usr/bin/fish'
+    chsh -s /usr/bin/fish
+end
+#+END_SRC
+
+*** Install basic packages
+Ok, let’s list all the packages that I need. First, let’s begin with
+system packages.
+#+name: packages-system
+| Package name                | Why I need it                                                |
+|-----------------------------+--------------------------------------------------------------|
+| acpi                        | Battery, power, and thermal readings                         |
+| acpilight                   | To modify the monitors’ brightness                           |
+| bluez-firmware              | Firmware for my bluetooth device                             |
+| bluez-utils                 | To interact with bluez through custom tools                  |
+| bzip2                       | A compression algorithm and program                          |
+| cpupower                    | Examine and tune power saving related features of the CPU    |
+| exfat-utils                 | Utilities for exFAT filesystems                              |
+| ffmpegthumbnailer           | Create thumbnails with ffmpeg                                |
+| freeglut                    | A small OpenGL library                                       |
+| gcc-libs                    | Runtime libraries for GCC                                    |
+| gdb                         | The GCC debugger                                             |
+| gnome-disk-utility          | To manage easily my disks and partitions                     |
+| gnome-epub-thumbnailer      | Thumbnailer for Epub files                                   |
+| i3lock-color                | My screen locker                                             |
+| corrupter-git               | A script for my script using also i3lock-color               |
+| inetutils                   | Common network programs                                      |
+| jfsutils                    | JFS utilities to interact with Android                       |
+| jmtpfs                      | FUSE filesystem for the MTP protocol                         |
+| kitty                       | My current terminal emulator, works with Xorg and Wayland    |
+| logrotate                   | Rotate system logs automatically                             |
+| man-pages                   | Linux's man pages                                            |
+| man-db                      | Read the Linux man pages                                     |
+| netctl                      | Profile based systemd network management                     |
+| network-manager-applet      | System tray applet for NetworkManager                        |
+| networkmanager-openvpn      | Connect to OpenVPN servers with NetworkManager               |
+| nm-connection-editor        | Manager NetworkManager connections                           |
+| ntfs-3g                     | Utilities to access NTFS filesystems                         |
+| openssh                     | SSH. Do I need to say anything more than that?               |
+| pavucontrol                 | Graphical interface to PulseAudio settings                   |
+| wireplumber                 | Session manager for PipeWire                                 |
+| pipewire-pulse              | PipeWire replacement for ~pulseaudio~ and ~pulseaudio-bluetooth~ |
+| gst-plugin-pipewire         | PipeWire plugin for GStreamer                                |
+| noise-suppression-for-voice | Realtime noise suppression plugin for voice                  |
+| raw-thumbnailer             | thumbnailer for RAW images                                   |
+| reflector                   | Sort pacman mirrors                                          |
+| shadow                      | Password & account management tools                          |
+| sshfs                       | Mount remote filesystems through SSH                         |
+| usbutils                    | USB utilities                                                |
+| xdg-user-dirs-gtk           | Creates user dirs and asks to relocalize them                |
+| xfce-polkit                 | XFCE’s policy kit                                            |
+| xidlehook                   | xautolock with extra features                                |
+| xfsprogs                    | Access XFS filesystems                                       |
+| xorg-xinit                  | xorg init program                                            |
+| xss-lock                    | Use an external program as X lock screen                     |
+| xwallpaper                  | Set my Xorg session’s wallpaper                              |
+
+For development purposes, I need the following packages:
+#+name: packages-devel
+| Package name                     | Why I need it                                             |
+|----------------------------------+-----------------------------------------------------------|
+| asar                             | Package needed by some Electron programs                  |
+| base-devel                       | Metapackage providing lots of basic tools for development |
+| clang                            | LLVM’s C/C++ compiler                                     |
+| cppcheck                         | Static code analysis for C/C++                            |
+| cppreference                     | The cppreference wiki offline                             |
+| cppreference-devhelp             | Access cppreference through devhelp                       |
+| docker                           | VMs are too heavy, get a better virtualization engine!    |
+| docker-compose                   | Docker from the CLI? I prefer through a Yaml file.        |
+| dockerfile-language-server-bin   | Dockerfile LSP server                                     |
+| doxygen                          | A great tool for writing code documentation for C/C++     |
+| emacs                            | The best +text editor+ OS, hands down                       |
+| farbfeld                         | Lossless image format                                     |
+| flake8                           | Code checker for python                                   |
+| gnuplot                          | An awesome plotting tool                                  |
+| go                               | The Go programming language                               |
+| go-tools                         | Go’s tooling                                              |
+| graphviz                         | Graph visualization                                       |
+| hugo                             | Static website generator                                  |
+| javascript-typescript-langserver | LSP server for Javascript                                 |
+| js-beautify                      | Formatter for Javascript                                  |
+| linux-headers                    | Development with the Linux kernel                         |
+| lldb                             | The LLVM debugger                                         |
+| meson                            | Meson build system                                        |
+| mupdf-tools                      | Tools for PDF and XPS viewers                             |
+| npm                              | Javascript package manager                                |
+| pacman-contrib                   | Create and install custom ArchLinux packages              |
+| pandoc-bin                       | Convert documents of various formats into other formats   |
+| prettier                         | Format various web files formats                          |
+| python-autoflake                 | Remove unused imports and variables in Python             |
+| python-epc                       | EPC (RPC stack for Emacs Lisp) for Python                 |
+| python-importmagic               | Automatically manage imports in Python                    |
+| pyright                          | Python LSP server                                         |
+| python-nose                      | A discovery-based test extension for Python               |
+| python-pip                       | The Python package manager                                |
+| python-poetry                    | Python dependency management and packaging made easy      |
+| python-ptvsd                     | Python debugger                                           |
+| python-pytest                    | Python testing suite                                      |
+| qemu                             | Machine emulator and virtualizer                          |
+| r                                | The R programming langugae                                |
+| rustup                           | The Rust toolchain installer                              |
+| sbcl                             | My favorite CommonLisp implementation                     |
+| typescript                       | Better Javascript                                         |
+| typescript-language-server-bin   | LSP server for Typescript                                 |
+| valgrind                         | Our lord and saviour when writing C code                  |
+| vscode-css-languageserver-bin    | LSP server for CSS                                        |
+| vscode-html-languageserver-bin   | LSP server for HTML                                       |
+| yaml-language-server-bin         | LSP server for Yaml                                       |
+| zeal                             | Offline documentation browser                             |
+
+A couple of packages need to be installed to make LaTeX usable.
+#+name: packages-latex
+| Package name         | Why I need it                                                        |
+|----------------------+----------------------------------------------------------------------|
+| biber                | A BibTex replacement, for citations in papers                        |
+| minted               | Syntax highlight for LaTeX                                           |
+| texlive-bibtexextra  | Additional BibTeX styles and bibliography databases                  |
+| texlive-fontsextra   | All sorts of extra fonts                                             |
+| texlive-formatsextra | Collection of extra TeX 'formats'                                    |
+| texlive-humanities   | LaTeX packages for law, linguistics, social sciences, and humanities |
+| texlive-langjapanese | Fonts and macro packages to typeset Japanese texts                   |
+| texlive-pictures     | Packages for drawings graphics                                       |
+| texlive-pstricks     | Additional PSTricks packages                                         |
+| texlive-publishers   | LaTeX classes and packages for specific publishers                   |
+| texlive-science      | Typesetting for mathematics, natural and computer sciences           |
+
+Some visual packages:
+#+name: packages-font
+| Package name                   | Why I need it                       |
+|--------------------------------+-------------------------------------|
+| adobe-source-han-sans-jp-fonts | Japanese fonts                      |
+| inter-font                     | I’m not sure why I have these fonts |
+| nordic-theme-git               | Nord theme for GTK                  |
+| noto-fonts-emoji               | Font with emojis                    |
+| otf-ipafont                    | Japanese font                       |
+| picom                          | See [[file:picom.org]]                  |
+| powerline-fonts                | Powerline fonts                     |
+| siji-git                       | Siji font                           |
+| ttf-arphic-uming               | CJK font Ming style                 |
+| ttf-baekmuk                    | Korean font                         |
+| ttf-charis-sil                 | API font                            |
+| ttf-dejavu                     | DejaVu font                         |
+| ttf-hanazono                   | Japanese kanji font                 |
+| ttf-joypixels                  | Emoji font                          |
+| ttf-koruri                     | Japanese Truetype font              |
+| ttf-liberation                 | Liberation font                     |
+| ttf-monapo                     | Japanese font                       |
+| ttf-sazanami                   | Japanese fonts                      |
+| ttf-unifont                    | The font I use in StumpWM           |
+| ttf-tibetan-machine            | Tibetan font                        |
+| unicode-emoji                  | Unicode emoji data files            |
+
+Terminal utilities
+#+name: packages-terminal
+| Package name    | Why I need it                                                   |
+|-----------------+-----------------------------------------------------------------|
+| ascii           | Work with ASCII                                                 |
+| aspell-en       | Aspell’s dictionary for English                                 |
+| aspell-fr       | Aspell’s dictionary for French                                  |
+| bat             | A better cat with syntax highlighting                           |
+| bitwarden-cli   | CLI application for my password manager                         |
+| bpytop          | A very beautiful htop alternative                               |
+| exa             | A great ~ls~ replacement                                          |
+| fd              | ~find~, but better                                                |
+| findutils       | ~find~ files on the system                                        |
+| fzf             | Command-line fuzzy finder                                       |
+| htop            | ~top~, but better                                                 |
+| isync           | Gives access to ~mbsync~ so I can check my mails                  |
+| mpc             | Dead simple MPD client                                          |
+| mpd             | Music Player Daemon                                             |
+| mpv             | The best video player in existance                              |
+| nano            | Simple text editor                                              |
+| ncdu            | Graphical representation of disk usage                          |
+| ncmpcpp         | TUI for MPD                                                     |
+| neofetch        | System info in the terminal                                     |
+| nordvpn-bin     | Connect to NordVPN on Linux                                     |
+| numlockx        | Turn on the numpad in Xorg                                      |
+| p7zip           | 7zip on Linux                                                   |
+| pass            | The standard UNIX password manager                              |
+| pdfpc           | PDF presentation tool in the console with multi-monitor support |
+| ripgrep         | ~grep~ but better                                                 |
+| rsync           | ~scp~ is dead, long live ~rsync~!                                   |
+| flameshot       | To take screenshots                                             |
+| tealdeer        | ~tldr~ but faster, great cheatsheets in the terminal              |
+| tmux            | Terminal multiplexer                                            |
+| tree            | See files and directories as a tree                             |
+| unrar           | Support for rar file format                                     |
+| w3m             | Terminal web browser                                            |
+| wget            | Retrieve files from the web                                     |
+| x11-ssh-askpass | Passphrase dialog over SSH                                      |
+| xclip           | Interact with the X11 clipboard                                 |
+| yt-dlp-drop-in  | ~yt-dlp~ but it also replaces ~youtube-dl~                          |
+
+Let’s install some desktop applications too, shall we?
+#+name: packages-apps
+| Package name    | Why I need it                                           |
+|-----------------+---------------------------------------------------------|
+| bitwarden       | Desktop application for my password manager             |
+| discord         | For messaging friends                                   |
+| firefox         | Because I need a good browser                           |
+| gimp            | GIMP Is Mbetter than Photoshop                          |
+| helvum          | Pipewire patchbay                                       |
+| nemo            | One of the best graphical file managers                 |
+| nemo-fileroller | Add compression options to Nemo                         |
+| nemo-preview    | Quick file previewer for Nemo                           |
+| obs-studio      | Simply the best screen recording and streaming software |
+| rofi            | A beautiful ~dmenu~ replacement                           |
+
+All these packages will be installed with the command ~paru -S
+--skipreview --needed~ to prevent it from nagging me about the PKGBUILD
+when I want to install something from the AUR, and if something is
+already installed it paru won’t try to reinstall it.
+
+#+name: gen-package-list
+#+header: :wrap "src fish :exports none :tangle no"
+#+header: :exports none
+#+begin_src emacs-lisp :var packages=packages-apps[,0] varname="APPS"
+(format "set %s %s"
+        varname
+        (mapconcat #'identity packages " \\\n"))
+#+end_src
+
+#+RESULTS[53aa8b22c675edad2d6d21c0095ff233bb5e26c4]: gen-package-list
+#+begin_src fish :exports none :tangle no
+set APPS bitwarden \
+discord \
+firefox \
+gimp \
+helvum \
+nemo \
+nemo-fileroller \
+nemo-preview \
+obs-studio \
+rofi
+#+end_src
+
+#+name: gen-package-install
+#+header: :wrap "src fish :exports none :tangle no"
+#+header: :exports none
+#+begin_src emacs-lisp :var varname="APPS"
+(concat
+ (format "%s %s %s"
+         "printf \"\\n# Installing"
+         varname
+         "##################################################\\n\\n\"")
+ "\n"
+ (format "for pkg in $%s\n    paru -S --skipreview --needed $pkg\nend" varname))
+#+end_src
+
+#+RESULTS[8fc00f530b704dc6900087d5b91082e9fa1bb429]: gen-package-install
+#+begin_src fish :exports none :tangle no
+printf "\n# Installing APPS ##################################################\n\n"
+for pkg in $APPS
+    paru -S --skipreview --needed $pkg
+end
+#+end_src
+
+#+begin_src fish :noweb yes
+<<gen-package-list(packages=packages-system[,0],varname="SYSTEMPKG")>>
+
+<<gen-package-install(varname="SYSTEMPKG")>>
+
+
+<<gen-package-list(packages=packages-devel[,0],varname="DEVELPKG")>>
+
+<<gen-package-install(varname="DEVELPKG")>>
+
+
+<<gen-package-list(packages=packages-latex[,0],varname="LATEXPKG")>>
+
+<<gen-package-install(varname="LATEXPKG")>>
+
+
+<<gen-package-list(packages=packages-terminal[,0],varname="TERMINALPKG")>>
+
+<<gen-package-install(varname="TERMINALPKG")>>
+
+
+<<gen-package-list(packages=packages-apps[,0],varname="APPSPKG")>>
+
+<<gen-package-install(varname="APPSPKG")>>
+#+end_src
+
+Finally, I wish to install some custom packages for which I’ve written
+a ~PKGBUILD~ file myself. I store all of them in a dedicated directory
+located in ~$HOME/Documents/code/PKGBUILDs~. I want to install some of
+them immediately.
+#+name: packages-pkgbuild
+| Package Name | What it is                                                       |
+|--------------+------------------------------------------------------------------|
+| emacs        | My custom Emacs build, it will replace the one already installed |
+| nsxiv        | The best image viewer after Emacs                                |
+| pumopm-git   | My very simple battery manager                                   |
+| sent         | A very simple presentation tool                                  |
+
+#+name: gen-package-pkgbuild
+#+header: :wrap "src fish :exports none"
+#+header: :exports none
+#+begin_src emacs-lisp :var packages=packages-pkgbuild[,0]
+(let ((base-dir "~/Documents/code/PKGBUILDs"))
+ (mapconcat (lambda (dir)
+              (format "cd %s && makepkg -si && cd"
+                      (expand-file-name dir base-dir)))
+            packages
+            "\n"))
+#+end_src
+
+#+RESULTS[82db1c3f1b9c80b3c24075d1a20933be59baac47]: gen-package-pkgbuild
+#+begin_src fish :exports none
+cd /home/phundrak/Documents/code/PKGBUILDs/emacs && makepkg -si && cd
+cd /home/phundrak/Documents/code/PKGBUILDs/nsxiv && makepkg -si && cd
+cd /home/phundrak/Documents/code/PKGBUILDs/pumopm-git && makepkg -si && cd
+cd /home/phundrak/Documents/code/PKGBUILDs/sent && makepkg -si && cd
+#+end_src
+
+*** Tangle configuration files from Org files
+Before tangling our configuration files, we need to create some
+directories first to make sure our files can be properly tangled.
+Here’s the list of directories we need to create:
+#+NAME: dirs-tangled-files
+| $HOME/.config/fish     |
+| $HOME/.config/gtk-2.0  |
+| $HOME/.config/gtk-3.0  |
+| $HOME/.config/ncmpcpp  |
+| $HOME/.config/neofetch |
+| $HOME/.config/picom    |
+| $HOME/.config/yadm     |
+| $HOME/.local/bin       |
+| $HOME/.stumpwm.d       |
+| $HOME/org/capture      |
+
+#+NAME: gen-dirs-tangle
+#+BEGIN_SRC emacs-lisp :var dirs=dirs-tangled-files
+(mapconcat (lambda (x) (format "mkdir -p %s" (car x)))
+           dirs
+           "\n")
+#+END_SRC
+
+#+RESULTS[250efd14cab8a0f03e5520e0d0bd96aa311aa45f]: gen-dirs-tangle
+#+begin_example
+mkdir -p $HOME/.config/fish
+mkdir -p $HOME/.config/gtk-2.0
+mkdir -p $HOME/.config/gtk-3.0
+mkdir -p $HOME/.config/ncmpcpp
+mkdir -p $HOME/.config/neofetch
+mkdir -p $HOME/.config/picom
+mkdir -p $HOME/.config/yadm
+mkdir -p $HOME/.local/bin
+mkdir -p $HOME/.stumpwm.d
+mkdir -p $HOME/org/capture
+#+end_example
+
+Our code to generate such directories looks like this:
+#+BEGIN_SRC fish :noweb yes
+<<gen-dirs-tangle()>>
+#+END_SRC
+
+The next step is to tangle all the Org files. Here is the list of files that are
+to be tangled:
+#+NAME: tangled-files
+| filename     |
+|--------------|
+| bin.org      |
+| emacs.org    |
+| fish.org     |
+| index.org    |
+| mpd.org      |
+| neofetch.org |
+| picom.org    |
+| rustfmt.org  |
+| stumpwm.org  |
+| tmux.org     |
+
+#+NAME: generate-tangle
+#+BEGIN_SRC emacs-lisp :var files=tangled-files[,0]
+(mapconcat (lambda (x) (concat
+                        (format "printf '\\n\\n==== Tangling %s\\n\\n' && \\\n" x)
+                        (concat "emacs -q --batch --eval '(require \\'ob-tangle)' \\\n"
+                                "--eval '(setq org-confirm-babel-evaluate nil)' \\\n"
+                                (format "--eval '(org-babel-tangle-file \"~/org/config/%s\")'\n" x))))
+           files
+           "\n")
+#+END_SRC
+
+#+RESULTS[127dafd79461dab55296163e57fadb7b355a205a]: generate-tangle
+#+begin_example
+printf '\n\n==== Tangling bin.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/bin.org")'
+
+printf '\n\n==== Tangling emacs.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/emacs.org")'
+
+printf '\n\n==== Tangling fish.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/fish.org")'
+
+printf '\n\n==== Tangling index.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/index.org")'
+
+printf '\n\n==== Tangling mpd.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/mpd.org")'
+
+printf '\n\n==== Tangling neofetch.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/neofetch.org")'
+
+printf '\n\n==== Tangling picom.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/picom.org")'
+
+printf '\n\n==== Tangling rustfmt.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
+
+printf '\n\n==== Tangling stumpwm.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/stumpwm.org")'
+
+printf '\n\n==== Tangling tmux.org\n\n' && \
+emacs -q --batch --eval '(require \'ob-tangle)' \
+--eval '(setq org-confirm-babel-evaluate nil)' \
+--eval '(org-babel-tangle-file "~/org/config/tmux.org")'
+#+end_example
+
+#+BEGIN_SRC fish :noweb yes
+printf "\n# Tangling org files ##########################################################\n\n"
+<<generate-tangle()>>
+#+END_SRC
+
+*** Set up dotfiles’ git repository
+**** Update our dotfiles’ remotes
+This line in the bootstrap script will test if the current user is using my
+username. If yes, it’s probably me.
+#+BEGIN_SRC fish
+if test "$USER" = 'phundrak'
+#+END_SRC
+
+If it is me installing and using these dotfiles, I want the remotes of my
+dotfiles to be set to ssh remotes using my ssh keys.
+#+BEGIN_SRC fish
+printf "\n# Update yadm’s remotes #######################################################\n\n"
+yadm remote set-url origin git@labs.phundrak.com:phundrak/dotfiles.git
+#+END_SRC
+
+I will also want to decrypt my encrypted files, such as said ssh keys.
+#+BEGIN_SRC fish
+printf "\n# Decrypt encrypted dotfiles ##################################################\n\n"
+yadm decrypt
+#+END_SRC
+
+Finally, let’s close this ~if~ statement.
+#+BEGIN_SRC fish
+end
+#+END_SRC
+
+**** Update our submodules
+Now we can download the various dependencies of our dotfiles. To do so, let’s
+run the following command:
+#+BEGIN_SRC fish
+printf "\n# Getting yadm susbmodules ####################################################\n\n"
+yadm submodule update --init --recursive
+#+END_SRC
+
+*** Enable some services
+We have installed some packages which require some services to run. Let’s enable
+them.
+
+**** Systemd-timesyncd
+This service enables time syncing with the NTP protocol, so I can be sure my
+computer’s time is correct. The service first needs to be enabled:
+#+BEGIN_SRC fish
+printf "\n# Enabling timesync ###########################################################\n\n"
+sudo systemctl enable --now systemd-timesyncd
+#+END_SRC
+
+Now, let systemd know I want to use the NTP protocol to keep my computer’s time
+synced.
+#+BEGIN_SRC fish
+sudo timedatectl set-ntp true
+#+END_SRC
+
+**** Acpilight
+~acpilight~ is our utility managing the brightness of our screen. There
+is actually no service to enable here, but we must ensure the user is
+part of the ~video~ group to enable the user modifying the brightness of
+our screen without using ~sudo~.
+#+BEGIN_SRC fish
+sudo usermod -aG video $USER
+#+END_SRC
+
+**** Docker
+First, let’s activate Docker on startup.
+#+BEGIN_SRC fish
+printf "\n# Enabling and starting Docker ################################################\n\n"
+sudo systemctl enable --now docker
+#+END_SRC
+
+Now, if we wish it, we can add ourselves to the =docker= group to avoid
+typing =sudo= each time we call Docker or Docker Compose.
+#+BEGIN_SRC fish
+read --prompt "echo 'Do you wish to be added to the `docker` group? (Y/n): ' " -l adddockergroup
+if test $adddockergroup = 'y' || test $adddockergroup = "Y" || test $adddockergroup = ''
+    sudo usermod -aG docker $USER
+end
+#+END_SRC
+
+**** Emacs
+Emacs will run as a user service, which means it won’t be launched until we log
+in. However, the service won’t be started immediately, I personally prefer to
+start a standalone instance in which installing and compiling the Emacs packages
+will happen, and then once that is done I will start the service.
+#+BEGIN_SRC fish
+printf "\n# Enabling Emacs as user service ##############################################\n\n"
+systemctl --user enable emacs
+#+END_SRC
+
+I don’t want to activate it immediately however, since the first
+startup might require some interactivity with the main Emacs frame,
+not with emacsclient. When Emacs will be ready, its service can be
+started like so (command not tangled in the bootstrap):
+#+begin_src fish :tangle no
+systemctl --user start emacs
+#+end_src
+
+**** Mpd
+Mpd will also use as a user service in order to get rid of some lines of code in
+my configuration.
+#+BEGIN_SRC fish
+printf "\n# Enabling Mpd as a user service ##############################################\n\n"
+mkdir -p ~/.config/mpd/playlists
+systemctl --user enable --now mpd
+#+END_SRC
+
+**** NordVPN
+Thanks to the AUR package ~nordvpn-bin~, I no longer have to manually maintain
+my VPN connections with OpenVPN. However, it requires a service that we should
+activate:
+#+BEGIN_SRC fish
+sudo systemctl enable --now nordvpnd
+#+END_SRC
+
+Let’s also set its default protocol to UDP. This will allow me to use
+any port while connected to any Wi-Fi as long as the 443 port is
+available. Because yes, I do connect to a Wi-Fi that blocks some
+important ports, such as the IMAP and SMTP ports. Thanks University of
+Paris 8 for being SO paranoid.
+#+BEGIN_SRC fish
+nordvpn s protocol tcp
+#+END_SRC
+
+Note that this change in protocol is only valid when using the OpenVPN
+technology. If we want to use the Wireguard technology through [[https://nordvpn.com/blog/nordlynx-protocol-wireguard/][Project
+NordLynx]], this option will no longer be available. To set NordVPN to
+use WireGuard, we can run this command (not tangled in the bootstrap).
+#+begin_src fish :tangle no
+nordvpn set technology NordLynx
+#+end_src
+
+Why WireGuard? Well, it can achieve better performances than OpenVPN
+with physically nearby servers, and according to [[https://restoreprivacy.com/vpn/wireguard-vs-openvpn/][this article]] the
+former can be more than half as fast as the latter. It is also much
+more auditable than OpenVPN (only a few thousands lines of code
+against some hundred of thousands). Oh, and WireGuard is part of the
+Linux kernel since its version 5.6. And Windows’ since August 2021,
+but I don’t really care about Windows.
+
+*But*, WireGuard is less privacy-oriented than OpenVPN. So, if I ever
+need to use my VPN for privacy reasons, I can simply revert to the
+OpenVPN technology like shown with this command (not tangled in the
+bootstrap):
+#+begin_src fish :tangle no
+nordvpn set technology OpenVPN
+#+end_src
+
+Finally, I want to be notified of NordVPN’s actions, and I want to be
+able to use IPv6.
+#+begin_src fish
+nordvpn set notify enabled
+nordvpn set ipv6 enabled
+#+end_src
+
+**** PipeWire
+PipeWire is a replacement for PulseAudio, ALSA and the likes, and it
+is /*much*/ better in terms of security and performance. However, unlike
+PulseAudio, Pipewire is a user service that needs to be enabled per
+user.
+#+begin_src fish
+systemctl --user enable --now pipewire-pulse.service
+#+end_src
+
+I also installed ~noise-suppression-for-voice~ which is a plugin usable
+by PipeWire to remove all noise the microphone might record save for
+the voice. It is damn effective, and it can be activated as a user
+service! In fact, I have in my dotfiles the service saved, so let’s
+activate it right away:
+#+begin_src fish
+systemctl --user enable --now pipewire-input-filter-chain.service
+#+end_src
+
+Just make sure afterwards the microphone is redirected to the
+noise-canceling source. The same source should be your input device
+where you want to use your microphone. The only downside is this is
+ony a mono input, but it shouldn’t matter for most people.
+
+**** SSH server
+Maybe we want to activate an SSH server on our machine. If so, we can enable it.
+Let’s ask the question.
+#+BEGIN_SRC fish
+whiptail --yesno 'Do you want to activate the ssh server?' 8 50
+if test $status -eq 0
+    printf "\n# Enabling ssh server #########################################################\n\n"
+    sudo systemctl enable --now sshd
+end
+#+END_SRC
+
+*** Symlink some system config files
+Let’s symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source here]]) to ~/usr/bin~ so ~xss-lock~
+can find it.
+#+BEGIN_SRC fish
+sudo ln -s ~/.local/bin/plock /usr/bin/plock
+#+END_SRC
+
+*** Install packages from git
+Now, let’s install some packages from git directly.
+#+BEGIN_SRC fish
+mkdir -p ~/fromGIT
+#+END_SRC
+
+**** Reveal.JS
+I sometimes use Reveal.JS to make presentations, and I set its
+location in my [[file:emacs.org][Emacs config]] to be in =~/fromGIT=, so let’s clone it
+there.
+#+BEGIN_SRC fish
+printf "\n# Install Reveal.JS ###########################################################\n\n"
+cd ~/fromGIT
+git clone https://github.com/hakimel/reveal.js.git
+#+END_SRC
+
+*** Install Rust
+**** Install the toolchains
+When using Rust, I bounce between two toolchains, the ~stable~ toolchain and the
+~nightly~ toolchain, although I try to stick with Rust Stable. To install them,
+I will use ~rustup~ which has already been installed previously.
+#+BEGIN_SRC fish
+printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
+rustup default stable
+#+END_SRC
+
+This will both download the stable toolchain and set it as the default one. Now
+to install the nightly toolchain, let’s run this:
+#+BEGIN_SRC fish
+rustup toolchain install nightly
+#+END_SRC
+
+**** Install some utilities
+We’ll need some utilities when developing Rust from Emacs, namely ~rustfmt~ and
+~racer~. Let’s install them with ~cargo~.
+#+BEGIN_SRC fish
+printf "\n# Add rust utilities ##########################################################\n\n"
+cargo install rustfmt
+#+END_SRC
+
+We will also need some components for development purposes.
+#+NAME: rust-components-table
+| Component | Why                                       |
+|-----------+-------------------------------------------|
+| rust-src  | Rust documentation in Emacs               |
+| clippy    | A better version of cargo’s ~check~ command |
+
+#+NAME: rust-components-gen
+#+BEGIN_SRC emacs-lisp :var components=rust-components-table[,0]
+(mapconcat (lambda (x) (format "rustup component add %s" x))
+           components
+           "\n")
+#+END_SRC
+
+#+RESULTS[b3935b1c09d86fe506b43670f52960306a1e9809]: rust-components-gen
+: rustup component add rust-src
+: rustup component add clippy
+
+Here is the code to do so:
+#+BEGIN_SRC fish :noweb yes
+<<rust-components-gen()>>
+#+END_SRC
+
+*** Set up our fish shell
+The last thing we want to do is to set up our fish shell with some extensions in
+order to improve the user experience.
+
+**** Install ~fisher~
+We will be using ~fisher~ as our extension manager for Fish. Let’s install it.
+#+BEGIN_SRC fish
+printf "\n# Installing fisher ###########################################################\n\n"
+curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+#+END_SRC
+
+**** Install our extensions
+I generally use the following extensions in my Fish shell.
+#+NAME: fish-extensions-table
+#+CAPTION: Fish extensions managed by Fisher
+| Package name              | Description                                                      |
+|---------------------------+------------------------------------------------------------------|
+| decors/fish-colored-man   | Color man pages to make them more readable                       |
+| franciscolourenco/done    | Automatically receive notifications when a long process finishes |
+| jethrokuan/fzf            | Improved key bindings for [[https://github.com/junegunn/fzf][junegunn/fzf]]                           |
+| jorgebucaran/fish-bax     | Run bash scripts, replaying environment changes in fish          |
+| jorgebucaran/fish-getopts | CLI options parser; alternative to the [[https://fishshell.com/docs/current/commands.html#argparse][argparse]] fish builtin     |
+| laughedelic/pisces        | Autoclose parentheses, braces, quotes and other paired symbols   |
+
+#+NAME: fish-extensions-gen
+#+BEGIN_SRC emacs-lisp :var extensions=fish-extensions-table[,0]
+(mapconcat (lambda (x) (format "fisher install %s" x))
+           extensions
+           "\n")
+#+END_SRC
+
+#+RESULTS[d424f363a3c11c8598a20da525de5ba9dcfbe7e7]: fish-extensions-gen
+: fisher install decors/fish-colored-man
+: fisher install franciscolourenco/done
+: fisher install jethrokuan/fzf
+: fisher install jorgebucaran/fish-bax
+: fisher install jorgebucaran/fish-getopts
+: fisher install laughedelic/pisces
+
+#+BEGIN_SRC fish :noweb yes
+printf "\n# Installing Fisher Extensions ################################################\n\n"
+<<fish-extensions-gen()>>
+#+END_SRC

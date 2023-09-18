@@ -1,17 +1,73 @@
+---
 kind: pipeline
-name: default
+type: docker
+name: CD
 
 steps:
-- name: build
-  image: silex/emacs:master-alpine-ci
+- name: restore cache node
+  image: drillster/drone-volume-cache
+  volumes:
+    - name: config-node
+      path: /cache/config/node
+  settings:
+    restore: true
+    mount:
+      - /drone/src/node_modules
+
+- name: restore cache emacs
+  image: drillster/drone-volume-cache
+  volumes:
+    - name: config-emacs
+      path: /cache/config/emacs
+  settings:
+    restore: true
+    mount:
+      - /root/.emacs.d
+
+- name: generate emacs
+  image: silex/emacs:master-alpine
   commands:
+    - apk update && apk add git
     - emacs -Q --script export.el
-  when:
-    branch:
-    - master
-    event:
-      exclude:
-      - pull_request
+    - pwd && ls -ahl
+    - find / -name '*.org'
+    - find / -name '*.md'
+  depends_on:
+    - "restore cache emacs"
+
+- name: generate node
+  image: node:19-alpine
+  commands:
+    - yarn --frozen-lockfile
+    - yarn docs:build
+    - pwd && ls -ahl
+  depends_on:
+    - "restore cache node"
+    - "generate emacs"
+
+- name: rebuild cache emacs
+  image: drillster/drone-volume-cache
+  volumes:
+    - name: config-emacs
+      path: /cache/config/emacs
+  settings:
+    rebuild: true
+    mount:
+      - /root/.emacs.d
+  depends_on:
+    - "generate emacs"
+
+- name: rebuild cache node
+  image: drillster/drone-volume-cache
+  volumes:
+    - name: config-node
+      path: /cache/config/node
+  settings:
+    rebuild: true
+    mount:
+      - /drone/src/node_modules
+  depends_on:
+    - "generate node"
 
 - name: deploy
   image: appleboy/drone-scp
@@ -20,18 +76,38 @@ steps:
       from_secret: ssh_host
     target:
       from_secret: ssh_target
-    source:
-      - org/config/*
-    strip_components: 2
+    source: docs/.vuepress/dist/*
+    strip_components: 3
     username:
       from_secret: ssh_username
     password:
       from_secret: ssh_password
     port:
       from_secret: ssh_port
+  depends_on:
+    - "generate node"
   when:
     branch:
-    - master
+    - main
+    event:
+      exclude:
+      - pull_request
+
+- name: purge cache
+  image: jetrails/drone-cloudflare-caching
+  settings:
+    api_token:
+      from_secret: cloudflare_cache_api
+    zone_identifier:
+      from_secret: phundrak_com_zone_id
+    action: purge_files
+    list:
+    - https://config.phundrak.com
+  depends_on:
+    - "deploy"
+  when:
+    branch:
+    - devel
     event:
       exclude:
       - pull_request

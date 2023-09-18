@@ -1,0 +1,496 @@
+#+title: Emacs — Packages — Emacs Built-ins
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/emacs-builtin.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+
+* Emacs built-ins
+** Dired
+Dired is Emacs’ built-in file manager. It’s really great, and replaces
+any graphical file manager for me most of the time because:
+- I am not limited to /x/ tabs or panes
+- All actions can be done with keybindings
+- I get a consistent behavior between Dired and Emacs, since it’s the
+  same thing.
+I used to have an extensive configuration for Dired with a couple of
+additional packages to make it more usable. Dirvish rendered that
+obsolete!
+#+begin_src emacs-lisp
+(use-package dirvish
+  :straight (:build t)
+  :defer t
+  :init (dirvish-override-dired-mode)
+  :custom
+  (dirvish-quick-access-entries
+   '(("h" "~/" "Home")
+     ("d" "~/Downloads/" "Downloads")
+     ("c" "~/org/config" "Config")
+     ("C" "~/Documents/conlanging/content" "Conlanging")))
+  (dirvish-mode-line-format
+   '(:left (sort file-time "" file-size symlink) :right (omit yank index)))
+  (dirvish-attributes '(all-the-icons file-size collapse subtree-state vc-state git-msg))
+  :config
+  (dirvish-peek-mode)
+  <<dired-drag-and-drop>>
+  <<dired-listing-flags>>
+  <<dired-files-and-dirs>>
+  <<dirvish-exa-offload>>
+  (setq dired-dwim-target         t
+        dired-recursive-copies    'always
+        dired-recursive-deletes   'top
+        delete-by-moving-to-trash t
+        dirvish-preview-dispatchers (cl-substitute 'pdf-preface 'pdf dirvish-preview-dispatchers))
+  :general
+  (phundrak/evil
+    :keymaps 'dirvish-mode-map
+    :packages '(dired dirvish)
+    "q" #'dirvish-quit
+    "TAB" #'dirvish-subtree-toggle)
+  (phundrak/major-leader-key
+    :keymaps 'dirvish-mode-map
+    :packages '(dired dirvish)
+    "A"   #'gnus-dired-attach
+    "a"   #'dirvish-quick-access
+    "d"   #'dirvish-dispatch
+    "e"   #'dirvish-emerge-menu
+    "f"   #'dirvish-fd-jump
+    "F"   #'dirvish-file-info-menu
+    "h"   '(:ignore t :which-key "history")
+    "hp"  #'dirvish-history-go-backward
+    "hn"  #'dirvish-history-go-forward
+    "hj"  #'dirvish-history-jump
+    "hl"  #'dirvish-history-last
+    "l"   '(:ignore t :which-key "layout")
+    "ls"  #'dirvish-layout-switch
+    "lt"  #'dirvish-layout-toggle
+    "m"   #'dirvish-mark-menu
+    "s"   #'dirvish-quicksort
+    "S"   #'dirvish-setup-menu
+    "y"   #'dirvish-yank-menu
+    "n"   #'dirvish-narrow))
+#+end_src
+
+It requires some programs which can be installed like so:
+#+begin_src sh :dir /sudo::~/ :exports code :tangle no :results verbatim
+pacman -S --needed --noprogressbar --noconfirm --color=never \
+       fd poppler ffmpegthumbnailer mediainfo imagemagick tar unzip
+#+end_src
+
+Since Emacs 29, it is possible to enable drag-and-drop between Emacs
+and other applications.
+#+name: dired-drag-and-drop
+#+begin_src emacs-lisp :tangle no
+(csetq dired-mouse-drag-files                   t
+       mouse-drag-and-drop-region-cross-program t)
+#+end_src
+
+In Dirvish, it’s best to use the long name of flags whenever possible,
+otherwise some commands won’t work.
+#+name: dired-listing-flags
+#+begin_src emacs-lisp :tangle no
+(csetq dired-listing-switches (string-join '("--all"
+                                             "--human-readable"
+                                             "--time-style=long-iso"
+                                             "--group-directories-first"
+                                             "-lv1")
+                                           " "))
+#+end_src
+
+However, it is possible to instead use ~exa~ when it is available.
+Instead of making Emacs’ main thread to the file listing in a
+directory, we offload it to an external thread.
+#+name: dirvish-exa-offload
+#+begin_src emacs-lisp :tangle no
+(dirvish-define-preview exa (file)
+  "Use `exa' to generate directory preview."
+  :require ("exa")
+  (when (file-directory-p file)
+    `(shell . ("exa" "--color=always" "-al" ,file))))
+
+(add-to-list 'dirvish-preview-dispatchers 'exa)
+#+end_src
+
+Finally, some directories need to be set for Dired to store various
+files and images.
+#+name: dired-files-and-dirs
+#+begin_src emacs-lisp :tangle no
+(let ((my/file (lambda (path &optional dir)
+                 (expand-file-name path (or dir user-emacs-directory))))
+      (my/dir (lambda (path &optional dir)
+                (expand-file-name (file-name-as-directory path)
+                                  (or dir user-emacs-directory)))))
+  (csetq image-dired-thumb-size             150
+         image-dired-dir                    (funcall my/dir "dired-img")
+         image-dired-db-file                (funcall my/file "dired-db.el")
+         image-dired-gallery-dir            (funcall my/dir "gallery")
+         image-dired-temp-image-file        (funcall my/file "temp-image" image-dired-dir)
+         image-dired-temp-rotate-image-file (funcall my/file "temp-rotate-image" image-dired-dir)))
+#+end_src
+
+Copying files with Dired is a blocking process. It’s usually fine when
+there’s not a lot to copy, but it becomes annoying when moving larger
+files. The package ~dired-rsync~ allows copying files with ~rsync~ in the
+background; we can then carry on with our tasks while the copy is
+happening.
+#+begin_src emacs-lisp
+(use-package dired-rsync
+  :if (executable-find "rsync")
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/evil
+    :keymaps 'dired-mode-map
+    :packages 'dired-rsync
+    "C-r" #'dired-rsync))
+#+end_src
+
+** Compilation mode
+After reading about a blog article, I found out it is possible to run
+quite a few things through ~compilation-mode~, so why not? First, let’s
+redefine some keybinds for this mode. I’ll also define a general
+keybind in order to re-run my programs from other buffers than the
+~compilation-mode~ buffer. I also want to follow the output of the
+compilation buffer, as well as enable some syntax highlighting.
+#+begin_src emacs-lisp
+(use-package compile
+  :defer t
+  :straight (compile :type built-in)
+  :hook (compilation-filter . colorize-compilation-buffer)
+  :init
+  (require 'ansi-color)
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  :general
+  (phundrak/evil
+    :keymaps 'compilation-mode-map
+    "g" nil
+    "r" nil
+    "R" #'recompile
+    "h" nil)
+  (phundrak/leader-key
+    "R" #'recompile)
+  :config
+  (setq compilation-scroll-output t))
+#+end_src
+
+** Eshell
+[[file:../img/emacs-eshell.svg]]
+
+Eshell is a built-in shell available from Emacs which I use almost as
+often as fish. Some adjustments are necessary to make it fit my taste
+though.
+#+begin_src emacs-lisp
+(use-package eshell
+  :defer t
+  :straight (:type built-in :build t)
+  :config
+  (setq eshell-prompt-function
+        (lambda ()
+          (concat (abbreviate-file-name (eshell/pwd))
+                  (if (= (user-uid) 0) " # " " λ ")))
+        eshell-prompt-regexp "^[^#λ\n]* [#λ] ")
+  <<eshell-alias-file>>
+  <<eshell-concat-shell-command>>
+  <<eshell-alias-open>>
+  <<eshell-alias-clear>>
+  <<eshell-alias-buffers>>
+  <<eshell-alias-emacs>>
+  <<eshell-alias-mkcd>>
+  :general
+  (phundrak/evil
+    :keymaps 'eshell-mode-map
+    [remap evil-collection-eshell-evil-change] #'evil-backward-char
+    "c" #'evil-backward-char
+    "t" #'evil-next-visual-line
+    "s" #'evil-previous-visual-line
+    "r" #'evil-forward-char
+    "h" #'evil-collection-eshell-evil-change)
+  (general-define-key
+   :keymaps 'eshell-mode-map
+   :states 'insert
+   "C-a" #'eshell-bol
+   "C-e" #'end-of-line))
+#+end_src
+
+*** Aliases
+First, let’s declare our list of “dumb” aliases we’ll use in
+Eshell. You can find them here.
+#+name: eshell-alias-file
+#+begin_src emacs-lisp :tangle no
+(setq eshell-aliases-file (expand-file-name "eshell-alias" user-emacs-directory))
+#+end_src
+
+A couple of other aliases will be defined through custom Elisp
+functions, but first I’ll need a function for concatenating a shell
+command into a single string:
+#+name: eshell-concat-shell-command
+#+begin_src emacs-lisp :tangle no
+(defun phundrak/concatenate-shell-command (&rest command)
+  "Concatenate an eshell COMMAND into a single string.
+All elements of COMMAND will be joined in a single
+space-separated string."
+  (mapconcat #'identity command " "))
+#+end_src
+
+I’ll also declare some aliases here, such as ~open~ and ~openo~ that
+respectively allow me to open a file in Emacs, and same but in another
+window.
+#+name: eshell-alias-open
+#+begin_src emacs-lisp :tangle no
+(defalias 'open #'find-file)
+(defalias 'openo #'find-file-other-window)
+#+end_src
+
+The default behavior of ~eshell/clear~ is not great at all, although it
+clears the screen it also scrolls all the way down. Therefore, let’s
+alias it to ~eshell/clear-scrollback~ which has the correct behavior.
+#+name: eshell-alias-clear
+#+begin_src emacs-lisp :tangle no
+(defalias 'eshell/clear #'eshell/clear-scrollback)
+#+end_src
+
+As you see, these were not declared in my dedicated aliases file but
+rather were declared programmatically. This is because I like to keep
+my aliases file for stuff that could work too with other shells were
+the syntax a bit different, and aliases related to Elisp are kept
+programmatically. I’ll also declare ~list-buffers~ an alias of ~ibuffer~
+because naming it that way kind of makes more sense to me.
+#+name: eshell-alias-buffers
+#+begin_src emacs-lisp :tangle no
+(defalias 'list-buffers 'ibuffer)
+#+end_src
+
+I still have some stupid muscle memory telling me to open ~emacs~, ~vim~
+or ~nano~ in Eshell, which is stupid: I’m already inside Emacs and I
+have all its power available instantly. So, let’s open each file
+passed to these commands.
+#+name: eshell-alias-emacs
+#+begin_src emacs-lisp :tangle no
+(defun eshell/emacs (&rest file)
+  "Open each FILE and kill eshell.
+Old habits die hard."
+  (when file
+    (dolist (f (reverse file))
+      (find-file f t))))
+#+end_src
+
+Finally, I’ll declare ~mkcd~ which allows the simultaneous creation of a
+directory and moving into this newly created directory. And of course,
+it will also work if the directory also exists or if parent
+directories don’t, similarly to the ~-p~ option passed to ~mkdir~.
+#+name: eshell-alias-mkcd
+#+begin_src emacs-lisp :tangle no
+(defun eshell/mkcd (dir)
+  "Create the directory DIR and move there.
+If the directory DIR doesn’t exist, create it and its parents
+if needed, then move there."
+  (mkdir dir t)
+  (cd dir))
+#+end_src
+
+*** Commands
+When I’m in Eshell, sometimes I wish to open multiple files at once in
+Emacs. For this, when I have several arguments for ~find-file~, I want
+to be able to open them all at once. Let’s modify ~find-file~ like so:
+#+BEGIN_SRC emacs-lisp
+(defadvice find-file (around find-files activate)
+  "Also find all files within a list of files. This even works recursively."
+  (if (listp filename)
+      (cl-loop for f in filename do (find-file f wildcards))
+    ad-do-it))
+#+END_SRC
+
+I also want to be able to have multiple instances of Eshell opened at
+once. For that, I declared the function ~eshell-new~ that does exactly
+that.
+#+begin_src emacs-lisp
+(defun eshell-new ()
+  "Open a new instance of eshell."
+  (interactive)
+  (eshell 'N))
+#+end_src
+
+A very useful command I often use in fish is ~z~, a port from bash’s and
+zsh’s command that allows to jump around directories based on how
+often we go in various directories.
+#+begin_src emacs-lisp
+(use-package eshell-z
+  :defer t
+  :after eshell
+  :straight (:build t)
+  :hook (eshell-mode . (lambda () (require 'eshell-z))))
+#+end_src
+
+*** Environment Variables
+Some environment variables need to be correctly set so Eshell can
+correctly work. I would like to set two environment variables related
+to Dart development: the ~DART_SDK~ and ~ANDROID_HOME~ variables.
+#+BEGIN_SRC emacs-lisp
+(setenv "DART_SDK" "/opt/dart-sdk/bin")
+(setenv "ANDROID_HOME" (concat (getenv "HOME") "/Android/Sdk/"))
+#+END_SRC
+
+The ~EDITOR~ variable also needs to be set for git commands, especially the
+~yadm~ commands.
+#+BEGIN_SRC emacs-lisp
+(setenv "EDITOR" "emacsclient -c -a emacs")
+#+END_SRC
+
+Finally, for some specific situations I need ~SHELL~ to be set to
+something more standard than fish:
+#+begin_src emacs-lisp
+(setenv "SHELL" "/bin/sh")
+#+end_src
+
+*** Visual configuration
+I like to have at quick glance some information about my machine when
+I fire up a terminal. I haven’t found anything that does that the way
+I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]! It’s actually available on
+MELPA, but since I’m the main dev of this package, I’ll keep track of
+the git repository.
+#+begin_src emacs-lisp
+(use-package eshell-info-banner
+  :after (eshell)
+  :defer t
+  :straight (eshell-info-banner :build t
+                                :type git
+                                :host github
+                                :protocol ssh
+                                :repo "phundrak/eshell-info-banner.el")
+  :hook (eshell-banner-load . eshell-info-banner-update-banner)
+  :custom-face
+  (eshell-info-banner-normal-face ((t :foreground "#A3BE8C")))
+  (eshell-info-banner-background-face ((t :foreground "#E5E9F0")))
+  (eshell-info-banner-warning-face ((t :foreround "#D08770")))
+  (eshell-info-banner-critical-face ((t :foreground "#BF616A")))
+  :custom
+  (eshell-info-banner-partition-prefixes (list "/dev" "zroot" "tank")))
+#+end_src
+
+Another feature I like is fish-like syntax highlight, which brings
+some more colors to Eshell.
+#+begin_src emacs-lisp
+(use-package eshell-syntax-highlighting
+  :after (esh-mode eshell)
+  :defer t
+  :straight (:build t)
+  :config
+  (eshell-syntax-highlighting-global-mode +1))
+#+end_src
+
+Powerline prompts are nice, git-aware prompts are even better!
+~eshell-git-prompt~ is nice, but I prefer to write my own package for
+that.
+#+begin_src emacs-lisp
+(use-package powerline-eshell
+  :if (string= (string-trim (shell-command-to-string "uname -n")) "leon")
+  :load-path "~/fromGIT/emacs-packages/powerline-eshell.el/"
+  :after eshell)
+#+end_src
+
+** Eww
+Since Emacs 29, it is possible to automatically rename ~eww~ buffers to
+a more human-readable name, see [[https://protesilaos.com/codelog/2021-10-15-emacs-29-eww-rename-buffers/][Prot’s blog]] post on the matter.
+#+begin_src emacs-lisp
+(use-package eww
+  :defer t
+  :straight (:type built-in)
+  :config
+  (setq eww-auto-rename-buffer 'title))
+#+end_src
+
+** Image-mode
+I won’t modify much for ~image-mode~ (the mode used to display images)
+aside from Emacs’ ability to use external converters to display some
+images it wouldn’t be able to handle otherwise.
+#+begin_src emacs-lisp
+(setq image-use-external-converter t)
+#+end_src
+
+** Info
+Let’s define some more intuitive keybinds for ~info-mode~.
+#+begin_src emacs-lisp
+(use-package info
+  :defer t
+  :straight (info :type built-in :build t)
+  :general
+  (phundrak/evil
+    :keymaps 'Info-mode-map
+    "c" #'Info-prev
+    "t" #'evil-scroll-down
+    "s" #'evil-scroll-up
+    "r" #'Info-next)
+  (phundrak/major-leader-key
+    :keymaps 'Info-mode-map
+    "?" #'Info-toc
+    "b" #'Info-history-back
+    "f" #'Info-history-forward
+    "m" #'Info-menu
+    "t" #'Info-top-node
+    "u" #'Info-up))
+#+end_src
+
+** Tab Bar
+#+begin_src emacs-lisp
+(use-package tab-bar
+  :defer t
+  :straight (:type built-in)
+  :custom
+  (tab-bar-close-button-show nil)
+  (tab-bar-new-button-show nil)
+  (tab-bar-new-tab-choice "*dashboard*")
+  :custom-face
+  (tab-bar ((t (:background "#272C36"
+                :foreground "#272C36"
+                :box (:line-width (8 . 5) :style flat-button)))))
+  :init
+  (advice-add #'tab-new
+              :after
+              (lambda (&rest _) (when (y-or-n-p "Rename tab? ")
+                                  (call-interactively #'tab-rename)))))
+#+end_src
+
+** Tramp
+Tramp is an Emacs built-in package that allows the user to connect to
+various hosts using various protocols, such as ~ssh~ and
+~rsync~. However, I have some use-case for Tramp which are not
+supported natively. I will describe them here.
+#+begin_src emacs-lisp
+(use-package tramp
+  :straight (tramp :type built-in :build t)
+  :config
+  <<tramp-add-yadm>>
+  (csetq tramp-ssh-controlmaster-options nil
+         tramp-verbose 0
+         tramp-auto-save-directory (locate-user-emacs-file "tramp/")
+         tramp-chunksize 2000)
+  (add-to-list 'backup-directory-alist ; deactivate auto-save with TRAMP
+               (cons tramp-file-name-regexp nil)))
+#+end_src
+
+*** Yadm
+[[https://yadm.io/][~yadm~]] is a git wrapper made to easily manage your dotfiles. It has
+loads of features I don’t use (the main one I like but don’t use is
+its [[https://yadm.io/docs/templates][Jinja-like host and OS-aware syntax]]), but unfortunately Magit
+doesn’t play nice with it. Tramp to the rescue, and this page explains
+how! Let’s just insert in my config this code snippet:
+#+name: tramp-add-yadm
+#+begin_src emacs-lisp :tangle no
+(add-to-list 'tramp-methods
+                   '("yadm"
+                     (tramp-login-program "yadm")
+                     (tramp-login-args (("enter")))
+                     (tramp-login-env (("SHELL") ("/bin/sh")))
+                     (tramp-remote-shell "/bin/sh")
+                     (tramp-remote-shell-args ("-c"))))
+#+end_src
+
+I’ll also create a fuction for connecting to this new Tramp protocol:
+#+begin_src emacs-lisp
+(defun my/yadm ()
+  "Manage my dotfiles through TRAMP."
+  (interactive)
+  (magit-status "/yadm::"))
+#+end_src

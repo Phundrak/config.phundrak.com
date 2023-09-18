@@ -1,53 +1,70 @@
-#+TITLE: Phundrak’s dotfiles
-#+AUTHOR: Lucien Cartier-Tilet
-#+EMAIL: lucien@phundrak.com
-#+CREATOR: Lucien Cartier-Tilet
-#+LANGUAGE: en
-#+OPTIONS: auto-id:t H:4 broken_links:mark email:t ^:{}
-#+KEYWORDS: dotfiles linux emacs configuration phundrak drakpa
+#+title: P’undrak’s dotfiles
 
-#+html: <a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/badge/Emacs-30.0.50-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white" /></a>
-#+html: <a href="https://orgmode.org/"><img src="https://img.shields.io/badge/Org%20mode-litterate%20config-success?logo=Org&logoColor=white&style=flat-square"/></a>
-#+html: <a href="https://archlinux.org/"><img src="https://img.shields.io/badge/OS-Arch%20Linux-10A0CC?logo=Arch%20Linux&logoColor=white&style=flat-square"/></a>
-#+html: <a href="https://config.phundrak.com"><img src="https://img.shields.io/badge/dynamic/json?label=Online%20documentation&query=%24%5B%3A1%5D.status&url=https%3A%2F%2Fdrone.phundrak.com%2Fapi%2Frepos%2Fphundrak%2Fdotfiles%2Fbuilds&style=flat-square&logo=buffer" /></a>
+#+html: <a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/badge/Emacs-29.1-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white" /></a>
+#+html: <a href="https://orgmode.org/"><img src="https://img.shields.io/badge/Written%20with-Org%20mode-success?logo=Org&logoColor=white&style=flat-square"/></a>
+#+html: <a href="https://v2.vuepress.vuejs.org/"><img src="https://img.shields.io/badge/Framework-Vuepress-42D392?logo=Vue.js&logoColor=white&style=flat-square"/></a>
+#+html: <a href="https://beta.config.phundrak.com"><img src="https://img.shields.io/badge/dynamic/json?label=Website&query=%24%5B%3A1%5D.status&url=https%3A%2F%2Fdrone.phundrak.com%2Fapi%2Frepos%2Fphundrak%2beta.config.phundrak.com%2Fbuilds&style=flat-square&logo=buffer" /></a>
 
-* Presentation
-  :PROPERTIES:
-  :CUSTOM_ID: Presentation-e5605995
-  :END:
-  This repository is where  I keep most of my configuration  files. With what is
-  stored here, anyone can recreate a working desktop configuration similar to my
-  daily one.
 
-  My dotfiles are managed by [[https://yadm.io/][yadm]], and  although I don’t use its alternate files
-  features (which  is pretty  neat btw),  it allows me  to painlessly  manage my
-  dotfiles right where  they are and not in a  separate Git repository somewhere
-  with everything symlinked. Another advantage  of yadm is it will automatically
-  execute (with  your authorization,  of course) my  homemade bootstrap  when my
-  dotfiles are cloned through yadm.
+* About the Project
+This repository holds my Linux dotfiles and other configuration files.
+The files I’m using are written in [[https://orgmode.org/][org-mode]] and exported in Markdown
+through [[https://www.gnu.org/software/emacs/][Emacs]].
 
-* Where’s the config file for X?
-  :PROPERTIES:
-  :CUSTOM_ID: Where’s_the_config_file_for_X?-7b214c4a
-  :END:
-  As you  may have  noticed, I am  striving for a  100% amount  of configuration
-  files exported from Org files, that  is, through literary programming. This is
-  still very much a work in progress though.  Most of what you need can be found
-  in my [[file:org/config/index.org][index.org]] file and in its folder.
+These Markdown files are then compiled by [[https://v2.vuepress.vuejs.org/][Vuepress]] into a beautiful
+website available at [[https://beta.config.phundrak.com][config.phundrak.com]].
 
-* Some more info please?
-  :PROPERTIES:
-  :CUSTOM_ID: Some_more_info_please?-f54ae73a
-  :END:
-  Everything you need to know is in my [[file:org/config/]] folder, and my Org files
-  are also available in web format on my website [[https://config.phundrak.com/][config.phundrak.com]].
+* Running the project
+In order to run the project, you need to export all =.org= files in the
+Markdown format. To do that easily, you can use an org project setup
+in Emacs, mine looks like this:
+#+begin_src emacs-lisp
+(require 'ox-gfm)
+(defvar phundrak--projects-config-common-root
+  "~/org/config/docs/"
+  "Points to the common root of my source and target for my
+config.phundrak.com org project.")
+(setq org-publish-project-alist
+        `(("config-phundrak-com-md"
+           :base-directory ,phundrak--projects-config-common-root
+           :base-extension "org"
+           :exclude ,(rx (* print
+                            (or "CONTRIB"
+                                   "README"
+                                   "site-map"
+                                   "temp"
+                                   "private"
+                                   "svg-ink")
+                            (* print)))
+           :publishing-directory ,phundrak--projects-config-common-root
+           :recursive t
+           :language "en"
+           :publishing-function org-gfm-publish-to-gfm
+           :headline-levels 5
+           :auto-sitemap nil
+           :auto-preamble nil)
+          ("config-phundrak-com"
+           :components ("config-phundrak-com-md"))))
+#+end_src
 
-* Neat, what’s the license?
-  :PROPERTIES:
-  :CUSTOM_ID: Neat,_what’s_the_license?-399aa236
-  :END:
-  All of my  dotfiles (and my dotfiles  only) are available under  the GNU GPLv3
-  Licence. Please  consult [[file:LICENCE.md]] for  more information. In  short: you
-  are free to  access, edit and redistribute  all of my dotfiles  under the same
-  licence and as allowed by the licence, and if you fuck up something, it’s your
-  own responsibility.
+Once you have all the Markdown files generated correctly, you can
+install the dependencies of the project.
+#+begin_src shell
+yarn
+# or
+npm install # delete the yarn.lock file first
+#+end_src
+
+Once this is done, you can launch a preview of the project.
+#+begin_src shell
+yarn docs:dev
+# or
+npm run docs:dev
+#+end_src
+
+You can also compile the project to a static website.
+#+begin_src shell
+yarn docs:build
+# or
+npm run docs:build
+#+end_src

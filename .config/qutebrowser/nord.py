@@ -1,1 +1,0 @@
-../../fromGIT/qutebrowser-nord/nord-qutebrowser.py

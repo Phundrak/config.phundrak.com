@@ -1,0 +1,207 @@
+#+title: Emacs — Packages — LaTeX
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/latex.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* LaTeX
+#+begin_src emacs-lisp :noweb yes
+(use-package auctex
+  :defer t
+  :straight (:build t)
+  :hook (tex-mode . lsp-deferred)
+  :hook (latex-mode . lsp-deferred)
+  :init
+  (setq TeX-command-default   (if (executable-find "latexmk") "LatexMk" "LaTeX")
+        TeX-engine            (if (executable-find "xetex")   'xetex    'default)
+        TeX-auto-save                     t
+        TeX-parse-self                    t
+        TeX-syntactic-comment             t
+        TeX-auto-local                    ".auctex-auto"
+        TeX-style-local                   ".auctex-style"
+        TeX-source-correlate-mode         t
+        TeX-source-correlate-method       'synctex
+        TeX-source-correlate-start-server nil
+        TeX-electric-sub-and-superscript  t
+        TeX-fill-break-at-separators      nil
+        TeX-save-query                    t)
+  :config
+  <<latex-fontification>>
+  (setq TeX-master t)
+  (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 -H %s")
+  (add-hook 'TeX-mode-hook (lambda ()
+                             (setq ispell-parser          'tex
+                                   fill-nobreak-predicate (cons #'texmathp fill-nobreak-predicate))))
+  (add-hook 'TeX-mode-hook #'visual-line-mode)
+  (add-hook 'TeX-update-style-hook #'rainbow-delimiters-mode)
+  :general
+  (phundrak/major-leader-key
+    :packages 'lsp-mode
+    :keymaps  '(latex-mode-map LaTeX-mode-map)
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+    :packages 'auctex
+    :keymaps  '(latex-mode-map LaTeX-mode-map)
+    "v" '(TeX-view            :which-key "View")
+    "c" '(TeX-command-run-all :which-key "Compile")
+    "m" '(TeX-command-master  :which-key "Run a command")))
+#+end_src
+
+From Doom Emacs’ configuration:
+#+name: latex-fontification
+#+begin_src emacs-lisp :tangle no
+(setq font-latex-match-reference-keywords
+      '(;; BibLaTeX.
+        ("printbibliography" "[{") ("addbibresource" "[{")
+        ;; Standard commands.
+        ("cite" "[{")       ("citep" "[{")
+        ("citet" "[{")      ("Cite" "[{")
+        ("parencite" "[{")  ("Parencite" "[{")
+        ("footcite" "[{")   ("footcitetext" "[{")
+        ;; Style-specific commands.
+        ("textcite" "[{")   ("Textcite" "[{")
+        ("smartcite" "[{")  ("Smartcite" "[{")
+        ("cite*" "[{")      ("parencite*" "[{")
+        ("supercite" "[{")
+        ;; Qualified citation lists.
+        ("cites" "[{")      ("Cites" "[{")
+        ("parencites" "[{") ("Parencites" "[{")
+        ("footcites" "[{")  ("footcitetexts" "[{")
+        ("smartcites" "[{") ("Smartcites" "[{")
+        ("textcites" "[{")  ("Textcites" "[{")
+        ("supercites" "[{")
+        ;; Style-independent commands.
+        ("autocite" "[{")   ("Autocite" "[{")
+        ("autocite*" "[{")  ("Autocite*" "[{")
+        ("autocites" "[{")  ("Autocites" "[{")
+        ;; Text commands.
+        ("citeauthor" "[{") ("Citeauthor" "[{")
+        ("citetitle" "[{")  ("citetitle*" "[{")
+        ("citeyear" "[{")   ("citedate" "[{")
+        ("citeurl" "[{")
+        ;; Special commands.
+        ("fullcite" "[{")
+        ;; Cleveref.
+        ("cref" "{")          ("Cref" "{")
+        ("cpageref" "{")      ("Cpageref" "{")
+        ("cpagerefrange" "{") ("Cpagerefrange" "{")
+        ("crefrange" "{")     ("Crefrange" "{")
+        ("labelcref" "{")))
+
+(setq font-latex-match-textual-keywords
+      '(;; BibLaTeX brackets.
+        ("parentext" "{") ("brackettext" "{")
+        ("hybridblockquote" "[{")
+        ;; Auxiliary commands.
+        ("textelp" "{")   ("textelp*" "{")
+        ("textins" "{")   ("textins*" "{")
+        ;; Subcaption.
+        ("subcaption" "[{")))
+
+(setq font-latex-match-variable-keywords
+      '(;; Amsmath.
+        ("numberwithin" "{")
+        ;; Enumitem.
+        ("setlist" "[{")     ("setlist*" "[{")
+        ("newlist" "{")      ("renewlist" "{")
+        ("setlistdepth" "{") ("restartlist" "{")
+        ("crefname" "{")))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package tex-mode
+  :defer t
+  :straight (:type built-in)
+  :config
+  (setq LaTeX-section-hook '(LaTeX-section-heading
+                             LaTeX-section-title
+                             LaTeX-section-toc
+                             LaTeX-section-section
+                             LaTeX-section-label)
+        LaTeX-fill-break-at-separators nil
+        LaTeX-item-indent              0))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package preview
+  :defer t
+  :straight (:type built-in)
+  :config
+  (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
+  (setq-default preview-scale 1.4
+                preview-scale-function
+                (lambda () (* (/ 10.0 (preview-document-pt)) preview-scale)))
+  (setq preview-auto-cache-preamble nil)
+  (phundrak/major-leader-key
+    :packages 'auctex
+    :keymaps '(latex-mode-map LaTeX-mode-map)
+    "p" #'preview-at-point
+    "P" #'preview-clearout-at-point))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package cdlatex
+  :defer t
+  :after auctex
+  :straight (:build t)
+  :hook (LaTeX-mode . cdlatex-mode)
+  :hook (org-mode   . org-cdlatex-mode)
+  :config
+  (setq cdlatex-use-dollar-to-ensure-math nil)
+  :general
+  (phundrak/major-leader-key
+    :packages 'cdlatex
+    :keymaps 'cdlatex-mode-map
+    "$" nil
+    "(" nil
+    "{" nil
+    "[" nil
+    "|" nil
+    "<" nil
+    "^" nil
+    "_" nil
+    [(control return)] nil))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package adaptive-wrap
+  :defer t
+  :after auctex
+  :straight (:build t)
+  :hook (LaTeX-mode . adaptative-wrap-prefix-mode)
+  :init (setq-default adaptative-wrap-extra-indent 0))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package auctex-latexmk
+  :after auctex
+  :defer t
+  :straight (:build t)
+  :init
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t)
+  (add-hook 'LaTeX-mode (lambda () (setq TeX-command-default "LatexMk")))
+  :config
+  (auctex-latexmk-setup))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package company-auctex
+  :defer t
+  :after (company auctex)
+  :straight (:build t)
+  :config
+  (company-auctex-init))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package company-math
+  :defer t
+  :straight (:build t)
+  :after (company auctex)
+  :config
+  (defun my-latex-mode-setup ()
+    (setq-local company-backends
+                (append '((company-math-symbols-latex company-latex-commands))
+                        company-backends)))
+  (add-hook 'TeX-mode-hook #'my-latex-mode-setup))
+#+end_src

@@ -1,0 +1,1782 @@
+#+title: Emacs — Packages — Programming
+#+setupfile: ../../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/programming.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Programming
+** Tools
+*** Treesitter
+Treesit is a native Emacs [[https://tree-sitter.github.io/tree-sitter/][tree-sitter]] implementation which provides a
+very fast and flexible way of performing code-highlighting in Emacs.
+It is built-in in Emacs 29 and newer, and I just need to tweak a couple of
+variables to install grammars for different languages.
+#+begin_src emacs-lisp
+(use-package treesit
+  :defer t
+  :straight (:type built-in)
+  :hook ((bash-ts-mode c-ts-mode c++-ts-mode
+          html-ts-mode js-ts-mode typescript-ts-mode
+          json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
+          css-ts-mode yaml-ts-mode) . lsp-deferred)
+  :init
+  (setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (lua "https://github.com/Azganoth/tree-sitter-lua")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (r "https://github.com/r-lib/tree-sitter-r")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml"))))
+#+end_src
+
+*** Appwrite
+[[https://appwrite.io][Appwrite]] is an open-source and self-hostable alternative to Firebase.
+I am currently working on a server SDK for Appwrite in Emacs, so here
+it is.
+#+begin_src emacs-lisp
+(use-package appwrite
+  :defer t
+  :straight (appwrite :build t
+                      :type git
+                      :host github
+                      :repo "Phundrak/appwrite.el")
+  :config
+  (csetq appwrite-endpoint "https://appwrite.phundrak.com"
+         appwrite-devel t))
+#+end_src
+
+*** Databases
+A really cool tool in Emacs for manipulating databases is ~emacsql~.
+It’s able to manipulate Sqlite databases by default, but it’s also
+possible to manipulate MariaDB and PostgreSQL databases by installing
+additional packages. For now, I just need Sqlite and PostgreSQL
+interfaces, so let’s install the relevant packages.
+#+begin_src emacs-lisp
+(use-package emacsql-psql
+  :defer t
+  :after (emacsql)
+  :straight (:build t))
+
+(with-eval-after-load 'emacsql
+  (phundrak/major-leader-key
+    :keymaps 'emacs-lisp-mode-map
+    :packages '(emacsql)
+    "E" #'emacsql-fix-vector-indentation))
+#+end_src
+
+*** Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :straight (:build t)
+  :defer t
+  :init
+  (global-flycheck-mode)
+  :config
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  ;; Rerunning checks on every newline is a mote excessive.
+  (delq 'new-line flycheck-check-syntax-automatically)
+  ;; And don’t recheck on idle as often
+  (setq flycheck-idle-change-delay 2.0)
+
+  ;; For the above functionality, check syntax in a buffer that you
+  ;; switched to on briefly. This allows “refreshing” the syntax check
+  ;; state for several buffers quickly after e.g. changing a config
+  ;; file.
+  (setq flycheck-buffer-switch-check-intermediate-buffers t)
+
+  ;; Display errors a little quicker (default is 0.9s)
+  (setq flycheck-display-errors-delay 0.2))
+
+(use-package flycheck-popup-tip
+  :straight (:build t)
+  :after (flycheck evil)
+  :hook (flycheck-mode . flycheck-popup-tip-mode)
+  :config
+  (setq flycheck-popup-tip-error-prefix "X ")
+  (with-eval-after-load 'evil
+    (add-hook 'evil-insert-state-entry-hook
+              #'flycheck-popup-tip-delete-popup)
+    (add-hook 'evil-replace-state-entry-hook
+              #'flycheck-popup-tip-delete-popup)))
+
+(use-package flycheck-posframe
+  :straight (:build t)
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (setq flycheck-posframe-warning-prefix "! "
+        flycheck-posframe-info-prefix    "··· "
+        flycheck-posframe-error-prefix   "X "))
+#+end_src
+
+*** Spellcheck
+#+begin_src emacs-lisp
+(use-package ispell
+  :if (executable-find "aspell")
+  :defer t
+  :straight (:type built-in)
+  :config
+  (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
+  (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
+  (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
+  (setq ispell-program-name "aspell"
+        ispell-extra-args   '("--sug-mode=ultra" "--run-together")
+        ispell-aspell-dict-dir (ispell-get-aspell-config-value "dict-dir")
+        ispell-aspell-data-dir (ispell-get-aspell-config-value "data-dir")
+        ispell-personal-dictionary (expand-file-name (concat "ispell/" ispell-dictionary ".pws")
+                                                     user-emacs-directory)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :defer t
+  :straight (:type built-in)
+  :ghook 'org-mode 'markdown-mode 'TeX-mode
+  :init
+  (defhydra flyspell-hydra ()
+    "
+Spell Commands^^           Add To Dictionary^^              Other
+--------------^^---------- -----------------^^------------- -----^^---------------------------
+[_b_] check whole buffer   [_B_] add word to dict (buffer)  [_t_] toggle spell check
+[_r_] check region         [_G_] add word to dict (global)  [_q_] exit
+[_d_] change dictionary    [_S_] add word to dict (session) [_Q_] exit and disable spell check
+[_n_] next error
+[_c_] correct before point
+[_s_] correct at point
+"
+    ("B" nil)
+    ("b" flyspell-buffer)
+    ("r" flyspell-region)
+    ("d" ispell-change-dictionary)
+    ("G" nil)
+    ("n" flyspell-goto-next-error)
+    ("c" flyspell-correct-wrapper)
+    ("Q" flyspell-mode :exit t)
+    ("q" nil :exit t)
+    ("S" nil)
+    ("s" flyspell-correct-at-point)
+    ("t" nil))
+  :config
+  (provide 'ispell) ;; force loading ispell
+  (setq flyspell-issue-welcome-flag nil
+        flyspell-issue-message-flag nil))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell-correct
+  :defer t
+  :straight (:build t)
+  :general ([remap ispell-word] #'flyspell-correct-at-point)
+  :config
+  (require 'flyspell-correct-ivy nil t))
+
+(use-package flyspell-correct-ivy
+  :defer t
+  :straight (:build t)
+  :after flyspell-correct)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell-lazy
+  :defer t
+  :straight (:build t)
+  :after flyspell
+  :config
+  (setq flyspell-lazy-idle-seconds 1
+        flyspell-lazy-window-idle-seconds 3)
+  (flyspell-lazy-mode +1))
+#+end_src
+
+*** LSP-Mode
+[[https://emacs-lsp.github.io/lsp-mode/][~lsp-mode~]] is a mode for Emacs which implements the [[https://github.com/Microsoft/language-server-protocol/][Language Server
+Protocol]] and offers Emacs an IDE-like experience. In short, it’s
+awesome!
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :defer t
+  :straight (:build t)
+  :init
+  (setq lsp-keymap-prefix "C-c l"
+        read-process-output-max (* 3 1024 1024))
+  :hook ((c-mode          . lsp-deferred)
+         (c++-mode        . lsp-deferred)
+         (html-mode       . lsp-deferred)
+         (sh-mode         . lsp-deferred)
+         (lsp-mode        . lsp-enable-which-key-integration)
+         (lsp-mode        . lsp-ui-mode))
+  :commands (lsp lsp-deferred)
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-use-plist t)
+  :config
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-tramp-connection "shellcheck")
+                    :major-modes '(sh-mode)
+                    :remote? t
+                    :server-id 'shellcheck-remote)))
+#+end_src
+
+I also want all the visual enhancements LSP can provide.
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :after lsp
+  :defer t
+  :straight (:build t)
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'lsp-ui-peek-mode-map
+    :packages 'lsp-ui
+    "c" #'lsp-ui-pook--select-prev-file
+    "t" #'lsp-ui-pook--select-next
+    "s" #'lsp-ui-pook--select-prev
+    "r" #'lsp-ui-pook--select-next-file))
+#+end_src
+
+And let’s enable some intergration with ~ivy~.
+#+begin_src emacs-lisp
+(use-package lsp-ivy
+  :straight (:build t)
+  :defer t
+  :after lsp
+  :commands lsp-ivy-workspace-symbol)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package lsp-treemacs
+  :defer t
+  :straight (:build t))
+#+end_src
+
+You can find the keybinds of Treemacs here.
+
+#+begin_src emacs-lisp
+(use-package exec-path-from-shell
+  :defer t
+  :straight (:build t)
+  :init (exec-path-from-shell-initialize))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package consult-lsp
+  :defer t
+  :after lsp
+  :straight (:build t)
+  :general
+  (phundrak/evil
+    :keymaps 'lsp-mode-map
+    [remap xref-find-apropos] #'consult-lsp-symbols))
+#+end_src
+
+~dap-mode~ is an advanced debugging mode that works through LSP. Note
+that currently, ~dap-firefox~ and ~dap-chrome~ don’t work correctly due to
+[[https://github.com/emacs-lsp/dap-mode/issues/547][this issue]]. A workaround can be found in [[https://github.com/emacs-lsp/dap-mode/issues/554#issuecomment-1171256089][this comment]] though.
+#+begin_src emacs-lisp
+(use-package dap-mode
+  :after lsp
+  :defer t
+  :straight (:build t)
+  :config
+  (dap-ui-mode)
+  (dap-ui-controls-mode 1)
+  (add-hook 'dap-stopped-hook
+            (lambda (arg) (call-interactively #'dap-hydra)))
+  :init
+  ;; JS/TS
+  (with-eval-after-load 'web-mode
+    (require 'dap-firefox)
+    (require 'dap-chrome)
+    (require 'dap-node))
+
+  ;; Rust
+  (with-eval-after-load 'rustic-mode
+    (require 'dap-lldb)
+    (require 'dap-gdb-lldb)
+    (dap-register-debug-template
+     "Rust::LLDB Run Configuration"
+     (list :type "lldb"
+           :request "launch"
+           :name "LLDB::Run"
+           :gdbpath "rust-lldb"
+           :target nil
+           :cwd nil))))
+#+end_src
+
+*** Langtool
+LanguageTool is a great tool for catching typos and grammatical errors
+in quite a few languages.
+#+begin_src emacs-lisp
+(use-package langtool
+  :defer t
+  :straight (:build t)
+  :commands (langtool-check
+             langtool-check-done
+             langtool-show-message-at-point
+             langtool-correct-buffer)
+  :custom
+  (langtool-default-language "en-US")
+  (langtool-mother-tongue "fr")
+  :config
+  (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
+                                               "/usr/share/java/languagetool/*")
+                                             ":"))
+  :general
+  (phundrak/leader-key
+    :packages 'langtool
+    :infix "l"
+    ""  '(:ignore t :which-key "LangTool")
+    "B" #'langtool-correct-buffer
+    "b" #'langtool-check-buffer
+    "c" #'langtool-check
+    "C" #'langtool-correct-at-point
+    "d" #'langtool-check-done
+    "l" #'langtool-switch-default-language
+    "p" #'langtool-show-message-at-point
+    "r" #'langtool-correct-region))
+#+end_src
+
+Finally, =writegood-mode= detects some simple general rules when writing
+in English and can also calculate the Flesh-Kincaid levels of a
+document.
+#+begin_src emacs-lisp
+(use-package writegood-mode
+  :defer t
+  :straight (:build t)
+  :hook org-mode latex-mode
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'writegood-mode-map
+    "g" #'writegood-grade-level
+    "r" #'writegood-reading-ease))
+#+end_src
+
+** DSLs
+DSLs, or /Domain Specific Languages/, are languages dedicated to some
+very tasks, such as configuration languages or non-general programming
+such as SQL.
+
+*** Makefiles
+#+begin_src emacs-lisp
+(defun my/local-tab-indent ()
+  (setq-local indent-tabs-mode 1))
+
+(add-hook 'makefile-mode-hook #'my/local-tab-indent)
+#+end_src
+
+*** Caddy
+[[https://caddyserver.com/][Caddy]] (or /Caddyserver/) is a web server akin to Nginx or Apache which I
+find much easier to configure that the latter two, plus it has
+built-in support for automatically generating SSL certificates with
+Letsencrypt! Automatic HTTPS, what more do you want?
+
+All that is nice and all, but Emacs doesn’t support the syntax of
+Caddy files natively, so let’s install ~caddyfile-mode~:
+#+begin_src emacs-lisp
+(use-package caddyfile-mode
+  :defer t
+  :straight (:build t)
+  :mode (("Caddyfile\\'" . caddyfile-mode)
+         ("caddy\\.conf\\'" . caddyfile-mode)))
+#+end_src
+
+*** CMake
+CMake is one of the standard tools for indicating how a project should
+be built. It is not as standard as some other tools such as automake,
+autoconfig, and the likes, but still pretty standard. CMake however
+doesn’t have a major mode available by default, so let’s provide one.
+#+begin_src emacs-lisp
+(use-package cmake-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
+Let’s enable first some autocompletion for it.
+#+begin_src emacs-lisp
+(use-package company-cmake
+  :straight (company-cmake :build t
+                           :type git
+                           :host github
+                           :repo "purcell/company-cmake")
+  :after cmake-mode
+  :defer t)
+#+end_src
+
+And let’s also enable a more advanced CMake fontlock.
+#+begin_src emacs-lisp
+(use-package cmake-font-lock
+  :defer t
+  :after cmake-mode
+  :straight (:build t))
+#+end_src
+
+And finally, let’s enable some Eldoc integration for CMake.
+#+begin_src emacs-lisp
+(use-package eldoc-cmake
+  :straight (:build t)
+  :defer t
+  :after cmake-mode)
+#+end_src
+
+*** CSV
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :straight (:build t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'csv-mode-map
+    "a"  #'csv-align-fields
+    "d"  #'csv-kill-fields
+    "h"  #'csv-header-line
+    "i"  #'csv-toggle-invisibility
+    "n"  #'csv-forward-field
+    "p"  #'csv-backward-field
+    "r"  #'csv-reverse-region
+    "s"  '(:ignore t :wk "sort")
+    "sf" #'csv-sort-fields
+    "sn" #'csv-sort-numeric-fields
+    "so" #'csv-toggle-descending
+    "t"  #'csv-transpose
+    "u"  #'csv-unalign-fields
+    "y"  '(:ignore t :wk yank)
+    "yf" #'csv-yank-fields
+    "yt" #'csv-yank-as-new-table))
+#+end_src
+
+*** Dotenv
+It is not rare to encounter a dotenv file, that is, a file with either
+the ~.env~ extension or simply called ~.env~. They contain environment
+variables for projects which might rely on values you do not want to
+upload to a public git repository and such. While their syntax is
+similar to shell files, they’re not exactly shell files either since
+there’s rarely any script inside running. So, let’s install a simple
+package which will dumb down a lot ~sh-mode~ for these dotenv files.
+#+begin_src emacs-lisp
+(use-package dotenv-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
+*** Gnuplot
+This package is a front-end and major mode for the programming
+language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful graphs, shall we?
+#+begin_src emacs-lisp
+(use-package gnuplot
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+*** Graphviz
+[[https://graphviz.org/][Graphviz]], often known with ~dot~, allows to programatically create
+visual graphs and networks.
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode
+  :defer t
+  :straight (:build t)
+  :after org
+  :mode (("\\.diag\\'"      . graphviz-dot-mode)
+         ("\\.blockdiag\\'" . graphviz-dot-mode)
+         ("\\.nwdiag\\'"    . graphviz-dot-mode)
+         ("\\.rackdiag\\'"  . graphviz-dot-mode)
+         ("\\.dot\\'"       . graphviz-dot-mode)
+         ("\\.gv\\'"        . graphviz-dot-mode))
+  :init
+  (setq graphviz-dot-indent-width tab-width)
+  (with-eval-after-load 'org
+      (defalias 'org-babel-execute:graphviz-dot #'org-babel-execute:dot)
+      (add-to-list 'org-babel-load-languages '(dot . t))
+      (require 'ob-dot)
+      (setq org-src-lang-modes
+            (append '(("dot" . graphviz-dot))
+                    (delete '("dot" . fundamental) org-src-lang-modes))))
+
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'graphviz-dot-mode-map
+    "=" #'graphviz-dot-indent-graph
+    "c" #'compile)
+  :config
+  (setq graphviz-dot-indent-width 4))
+#+end_src
+
+*** Markdown
+Yes, I love org-mode and I largely prefer to use it instead of
+Markdown due to its far superior power and abilities. But still,
+sometimes I need to use Markdown because not everyone uses org-mode,
+unfortunately.
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :defer t
+  :straight t
+  :mode
+  (("\\.mkd\\'" . markdown-mode)
+   ("\\.mdk\\'" . markdown-mode)
+   ("\\.mdx\\'" . markdown-mode))
+  :hook (markdown-mode . orgtbl-mode)
+  :hook (markdown-mode . visual-line-mode)
+  :general
+  (phundrak/evil
+    :keymaps 'markdown-mode-map
+    :packages '(markdown-mode evil)
+    "M-RET" #'markdown-insert-list-item
+    "M-c"   #'markdown-promote
+    "M-t"   #'markdown-move-down
+    "M-s"   #'markdown-move-up
+    "M-r"   #'markdown-demote
+    "t"     #'evil-next-visual-line
+    "s"     #'evil-previous-visual-line)
+  (phundrak/major-leader-key
+    :keymaps 'markdown-mode-map
+    :packages 'markdown-mode
+    "{"   #'markdown-backward-paragraph
+    "}"   #'markdown-forward-paragraph
+    "]"   #'markdown-complete
+    ">"   #'markdown-indent-region
+    "»"   #'markdown-indent-region
+    "<"   #'markdown-outdent-region
+    "«"   #'markdown-outdent-region
+    "n"   #'markdown-next-link
+    "p"   #'markdown-previous-link
+    "f"   #'markdown-follow-thing-at-point
+    "k"   #'markdown-kill-thing-at-point
+    "c"   '(:ignore t :which-key "command")
+    "c]"  #'markdown-complete-buffer
+    "cc"  #'markdown-check-refs
+    "ce"  #'markdown-export
+    "cm"  #'markdown-other-window
+    "cn"  #'markdown-cleanup-list-numbers
+    "co"  #'markdown-open
+    "cp"  #'markdown-preview
+    "cv"  #'markdown-export-and-preview
+    "cw"  #'markdown-kill-ring-save
+    "h"   '(:ignore t :which-key "headings")
+    "hi"  #'markdown-insert-header-dwim
+    "hI"  #'markdown-insert-header-setext-dwim
+    "h1"  #'markdown-insert-header-atx-1
+    "h2"  #'markdown-insert-header-atx-2
+    "h3"  #'markdown-insert-header-atx-3
+    "h4"  #'markdown-insert-header-atx-4
+    "h5"  #'markdown-insert-header-atx-5
+    "h6"  #'markdown-insert-header-atx-6
+    "h!"  #'markdown-insert-header-setext-1
+    "h@"  #'markdown-insert-header-setext-2
+    "i"   '(:ignore t :which-key "insert")
+    "i-"  #'markdown-insert-hr
+    "if"  #'markdown-insert-footnote
+    "ii"  #'markdown-insert-image
+    "il"  #'markdown-insert-link
+    "it"  #'markdown-insert-table
+    "iw"  #'markdown-insert-wiki-link
+    "l"   '(:ignore t :which-key "lists")
+    "li"  #'markdown-insert-list-item
+    "T"   '(:ignore t :which-key "toggle")
+    "Ti"  #'markdown-toggle-inline-images
+    "Tu"  #'markdown-toggle-url-hiding
+    "Tm"  #'markdown-toggle-markup-hiding
+    "Tt"  #'markdown-toggle-gfm-checkbox
+    "Tw"  #'markdown-toggle-wiki-links
+    "t"   '(:ignore t :which-key "table")
+    "tc"  #'markdown-table-move-column-left
+    "tt"  #'markdown-table-move-row-down
+    "ts"  #'markdown-table-move-row-up
+    "tr"  #'markdown-table-move-column-right
+    "ts"  #'markdown-table-sort-lines
+    "tC"  #'markdown-table-convert-region
+    "tt"  #'markdown-table-transpose
+    "td"  '(:ignore t :which-key "delete")
+    "tdc" #'markdown-table-delete-column
+    "tdr" #'markdown-table-delete-row
+    "ti"  '(:ignore t :which-key "insert")
+    "tic" #'markdown-table-insert-column
+    "tir" #'markdown-table-insert-row
+    "x"   '(:ignore t :which-key "text")
+    "xb"  #'markdown-insert-bold
+    "xB"  #'markdown-insert-gfm-checkbox
+    "xc"  #'markdown-insert-code
+    "xC"  #'markdown-insert-gfm-code-block
+    "xi"  #'markdown-insert-italic
+    "xk"  #'markdown-insert-kbd
+    "xp"  #'markdown-insert-pre
+    "xP"  #'markdown-pre-region
+    "xs"  #'markdown-insert-strike-through
+    "xq"  #'markdown-blockquote-region)
+  :config
+  (setq markdown-fontify-code-blocks-natively t))
+#+end_src
+
+Since most of my Markdown files are related to GitHub, I’d like to be
+able to render Markdown through its API.
+#+begin_src emacs-lisp
+(use-package gh-md
+  :defer t
+  :after markdown-mode
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :packages 'gh-md
+    :keymaps 'markdown-mode-map
+    "cr" #'gh-md-render-buffer))
+#+end_src
+
+Sometimes, I have to work with GitHub’s markdown flavour, but I’m not
+really a huge fan of writing it by hand. So instead, I’ll write it in
+org-mode and then export it with ~ox-gfm~.
+#+begin_src emacs-lisp
+(use-package ox-gfm
+  :straight (:build t)
+  :defer t
+  :after (org ox))
+#+end_src
+
+Nuxt has its own flavour of Markdown, called [[https://content.nuxtjs.org/guide/writing/mdc/][MDC]] (/MarkDown Components/)
+which is a godsend to write content for Nuxt websites! However, no
+~mdc-mode~ existed when I began working with it, so I’m working on one.
+#+begin_src emacs-lisp
+(use-package mdc-mode
+  :defer t
+  :after markdown-mode
+  :straight (mdc-mode :type git
+                      :host github
+                      :repo "Phundrak/mdc-mode"
+                      :build t))
+#+end_src
+
+Tables of content are always nice to have for large files, just like
+with the ~toc-org~ package for org-mode.
+#+begin_src emacs-lisp
+(use-package markdown-toc
+  :defer t
+  :after markdown-mode
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :packages 'markdown-toc
+    :keymaps 'markdown-mode-map
+    "iT" #'markdown-toc-generate-toc))
+#+end_src
+
+Lastly, ~edit-indirect~ is a package that allows to edit code blocks as
+in org-mode but with other major modes, such as code blocks in
+Markdown.
+#+begin_src emacs-lisp
+(use-package edit-indirect
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+*** Nginx
+Nginx is another webserver, older and more mature than Caddy. A couple
+of packages are required in order to be able to properly work with
+Nginx configuration files. First, we need the correct mode for editing
+Nginx configuration files.
+#+begin_src emacs-lisp
+(use-package nginx-mode
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+We then also have an autocompletion package that adds to ~company~ the
+Nginx syntax.
+#+begin_src emacs-lisp
+(use-package company-nginx
+  :straight (company-nginx :build t
+                           :type git
+                           :host github
+                           :repo "emacsmirror/company-nginx")
+  :defer t
+  :config
+  (add-hook 'nginx-mode-hook (lambda ()
+                               (add-to-list 'company-backends #'company-nginx))))
+#+end_src
+
+*** PKGBUILD
+As I am an ArchLinux user, I sometimes have to interact with PKGBUILD
+files, both from the AUR when I want to install something from there
+or some I write myself.
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :straight (:build t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'pkgbuild-mode-map
+    "c"  #'pkgbuild-syntax-check
+    "i"  #'pkgbuild-initialize
+    "I"  #'pkgbuild-increase-release-tag
+    "m"  #'pkgbuild-makepkg
+    "u"  '(:ignore :wk "update")
+    "us" #'pkgbuild-update-sums-line
+    "uS" #'pkgbuild-update-srcinfo))
+#+end_src
+
+*** PlantUML
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :defer t
+  :straight (:build t)
+  :mode ("\\.\\(pum\\|puml\\)\\'" . plantuml-mode)
+  :after ob
+  :init
+  (add-to-list 'org-babel-load-languages '(plantuml . t))
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'plantuml-mode-map
+   :packages 'plantuml-mode
+   "c"  '(:ignore t :which-key "compile")
+   "cc" #'plantuml-preview
+   "co" #'plantuml-set-output-type)
+  :config
+  (setq plantuml-default-exec-mode 'jar
+        plantuml-jar-path "~/.local/bin/plantuml.jar"
+        org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
+#+end_src
+
+*** SDLang
+I don’t actually use [[https://sdlang.org/][SDLang]] but [[https://kdl.dev/][KDL]] in order to configure [[https://zellij.dev/][Zellij]], but
+KDL doesn’t have a major mode for Emacs yet. Maybe I should work on
+that?
+#+begin_src emacs-lisp
+(use-package sdlang-mode
+  :straight (:build t)
+  :defer t
+  :mode "\\.kdl\\'")
+#+end_src
+
+*** Shells
+Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
+config]]), therefore I need a mode for it.
+#+begin_src emacs-lisp
+(use-package fish-mode
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+When editing some scripts though, I need to use the built-in ~shell-mode~.
+#+begin_src emacs-lisp
+(use-package shell
+  :defer t
+  :straight (:type built-in)
+  :hook (shell-mode . tree-sitter-hl-mode))
+#+end_src
+
+*** SSH Config files
+#+begin_src emacs-lisp
+(use-package ssh-config-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
+*** Systemd
+#+begin_src emacs-lisp
+(use-package systemd
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps '(systemd-mode-map)
+    "d" '(systemd-doc-directives :which-key "directives manpage")
+    "o" 'systemd-doc-open))
+#+end_src
+
+*** Tmux config
+#+begin_src emacs-lisp
+(use-package tmux-mode
+  :defer t
+  :straight (tmux-mode :type git :host github :repo "nverno/tmux-mode")
+  :mode (("tmux\\.conf\\'" . tmux-mode)))
+#+end_src
+
+*** Toml
+#+begin_src emacs-lisp
+(use-package toml-mode
+  :straight (:build t)
+  :defer t
+  :mode "/\\(Cargo.lock\\|\\.cargo/config\\)\\'")
+#+end_src
+
+*** Yaml
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.yml\\'"
+  :mode "\\.yaml\\'")
+#+end_src
+
+** General Programming Languages
+*** C/C++
+I know, I know, C and C++ no longer are closely related languages,
+each one of them went their own way and learning C won’t make you a
+good C++ programmer, neither will the other way around. But, They are
+still somewhat related, and Emacs thinks so too.
+#+begin_src emacs-lisp
+(use-package cc-mode
+  :straight (:type built-in)
+  :defer t
+  :init
+  (put 'c-c++-backend 'safe-local-variable 'symbolp)
+  (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
+  (add-hook 'c++-mode-hook #'tree-sitter-hl-mode)
+  :config
+  (require 'compile)
+  :general
+  (phundrak/undefine
+    :keymaps '(c-mode-map c++-mode-map)
+    ";" nil)
+  (phundrak/major-leader-key
+   :keymaps '(c-mode-map c++-mode-map)
+   "l"  '(:keymap lsp-command-map :which-key "lsp" :package lsp-mode))
+  (phundrak/evil
+   :keymaps '(c-mode-map c++-mode-map)
+   "ga" #'projectile-find-other-file
+   "gA" #'projectile-find-other-file-other-window))
+#+end_src
+
+Something that is also important when working with these languages is
+respecting the ~.clang-format~ file that may be provided by a project.
+#+begin_src emacs-lisp
+(use-package clang-format+
+  :straight (:build t)
+  :defer t
+  :init
+  (add-hook 'c-mode-common-hook #'clang-format+-mode))
+#+end_src
+
+However, Emacs’ notion of C++ is somewhat outdated, so we need to
+update its fontlock.
+#+begin_src emacs-lisp
+(use-package modern-cpp-font-lock
+  :straight (:build t)
+  :defer t
+  :hook (c++-mode . modern-c++-font-lock-mode))
+#+end_src
+
+*** CommonLisp
+:END:
+In Lisp buffers, let’s enable ~parinfer-rust-mode~.
+#+begin_src emacs-lisp
+(use-package lisp-mode
+  :straight (:type built-in)
+  :defer t
+  :after parinfer-rust-mode
+  :hook (lisp-mode . parinfer-rust-mode)
+  :config
+  (put 'defcommand 'lisp-indent-function 'defun)
+  (setq inferior-lisp-program "/usr/bin/sbcl --noinform"))
+#+end_src
+
+My current window manager is StumpWM, inspired by Emacs and written in
+CommonLisp. ~stumpwm-mode~ offers some integration between Emacs and
+StumpWM that makes the user able to evaluate CommonLisp code and see
+its effects in StumpWM immediately. Since my only use for CommonLisp
+is for my StumpWM configuration, it should be automatically enabled
+when entering ~lisp-mode~.
+#+begin_src emacs-lisp
+(use-package stumpwm-mode
+  :straight (:build t)
+  :defer t
+  :hook lisp-mode
+  :config
+  (phundrak/major-leader-key
+   :keymaps 'stumpwm-mode-map
+   :packages 'stumpwm-mode
+   "e"  '(:ignore t :which-key "eval")
+   "ee" #'stumpwm-eval-last-sexp
+   "ed" #'stumpwm-eval-defun
+   "er" #'stumpwm-eval-region))
+#+end_src
+
+Sly enables some deep interactivity between Emacs and a CommonLisp
+application running the Slynk backend. For an example, see [[file:stumpwm.org::#Utilities-Sly-kkok6oi0yaj0][my Sly
+configuration for StumpWM]].
+#+begin_src emacs-lisp
+(use-package sly
+  :defer t
+  :straight (:build t))
+#+end_src
+
+*** Dart
+#+begin_src emacs-lisp
+(use-package dart-mode
+  :straight (:build t)
+  :defer t
+  :hook (dart-mode . lsp-deferred)
+  :mode "\\.dart\\'")
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package lsp-dart
+  :straight (:build t)
+  :defer t
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'dart-mode-map
+   :packages '(lsp-mode lsp-dart)
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+*** EmacsLisp
+:END:
+This package displays the function’s arglist or variable’s docstring
+in the echo area at the bottom of the frame. Quite useful indeed.
+#+begin_src emacs-lisp
+(use-package eldoc
+  :defer t
+  :after company
+  :init
+  (eldoc-add-command 'company-complete-selection
+                     'company-complete-common
+                     'company-capf
+                     'company-abort))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package elisp-mode
+  :straight (:type built-in)
+  :requires smartparens
+  :config
+  (add-hook 'emacs-lisp-mode-hook (lambda () (smartparens-mode -1))))
+#+end_src
+
+Still on the topic of documentation, I sometimes find it lacks
+examples on how to use Elisp functions. ~elisp-demos~ got you covered!
+#+begin_src emacs-lisp
+(use-package elisp-demos
+  :defer t
+  :straight (:build t)
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package epdh
+  :straight (epdh :type git
+                  :host github
+                  :repo "alphapapa/emacs-package-dev-handbook"
+                  :build t)
+  :defer t)
+#+end_src
+
+Let’s also declare some Elisp-dedicated keybindings, prefixed by a
+comma.
+#+begin_src emacs-lisp
+(phundrak/major-leader-key
+ :keymaps 'emacs-lisp-mode-map
+ "'"   #'ielm
+ "c"   '(emacs-lisp-byte-compile :which-key "Byte compile")
+ "C"   '(:ignore t :which-key "checkdoc")
+ "Cc"  #'checkdoc
+ "Cs"  #'checkdoc-start
+ "e"   '(:ignore t :which-key "eval")
+ "eb"  #'eval-buffer
+ "ed"  #'eval-defun
+ "ee"  #'eval-last-sexp
+ "er"  #'eval-region
+
+ "h"   '(:ignore t :which-key "help")
+ "hh"  #'helpful-at-point
+
+ "t"   '(:ignore t :wk "toggle")
+ "tP"  '(:ignore t :wk "parinfer")
+ "tPs" #'parinfer-rust-switch-mode
+ "tPd" #'parinfer-rust-mode-disable
+ "tPp" #'parinfer-rust-toggle-paren-mode)
+#+end_src
+
+Package linting is important when you want to publish your packages to
+the world.
+#+begin_src emacs-lisp
+(use-package package-lint
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'emacs-lisp-mode-map
+    :packages 'package-lint
+    "l" #'package-lint-current-buffer))
+#+end_src
+
+If I need to run CI on a package, [[https://github.com/cask/cask][Cask]] manages its dependencies.
+#+begin_src emacs-lisp
+(use-package cask-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
+However, I recently began using [[https://github.com/emacs-eask/eask][Eask]] more and more, I find it nicer to
+work with, and it has a lot more features than Cask.
+#+begin_src emacs-lisp
+;; (use-package eask-api
+;;  :defer t
+;;  :straight (eask-api :type git
+;;                      :host github
+;;                      :repo "emacs-eask/eask-api"))
+;;
+;;(use-package eask-mode
+;;  :defer t
+;;  :straight (eask-mode :type git
+;;                       :host github
+;;                       :repo "emacs-eask/eask-mode"))
+#+end_src
+
+*** Java
+Emacs has built-in support for Java, but it still lacks some features.
+The main one is being able to replace an IDE, so let’s install its LSP
+package.
+#+begin_src emacs-lisp
+(use-package lsp-java
+  :requires lsp
+  :straight (:build t)
+  :after lsp
+  :hook (java-mode . lsp-deferred))
+#+end_src
+
+*** Python
+:END:
+First, we need to set up the main Python mode. With this, we’ll also
+add Python to the list of LSP languages and to the list of languages
+org-babel supports.
+#+begin_src emacs-lisp
+(use-package python
+  :defer t
+  :straight (:build t)
+  :after ob
+  :mode (("SConstruct\\'" . python-mode)
+         ("SConscript\\'" . python-mode)
+         ("[./]flake8\\'" . conf-mode)
+         ("/Pipfile\\'"   . conf-mode))
+  :init
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (add-hook 'python-mode-local-vars-hook #'lsp)
+  :config
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (when (and (executable-find "python3")
+           (string= python-shell-interpreter "python"))
+    (setq python-shell-interpreter "python3"))
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+Now let’s add a package for [[https://docs.pytest.org/en/latest/][pytest]].
+#+begin_src emacs-lisp
+(use-package pytest
+  :defer t
+  :straight (:build t)
+  :commands (pytest-one
+             pytest-pdb-one
+             pytest-all
+             pytest-pdb-all
+             pytest-last-failed
+             pytest-pdb-last-failed
+             pytest-module
+             pytest-pdb-module)
+  :config
+  (add-to-list 'pytest-project-root-files "setup.cfg")
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :infix "t"
+   :packages 'pytest
+   ""  '(:ignore t :which-key "test")
+   "a" #'python-pytest
+   "f" #'python-pytest-file-dwim
+   "F" #'python-pytest-file
+   "t" #'python-pytest-function-dwim
+   "T" #'python-pytest-function
+   "r" #'python-pytest-repeat
+   "p" #'python-pytest-dispatch))
+#+end_src
+
+Poetry is a nice tool with which we can manage our Python runtime
+version as well as our dependencies.
+#+begin_src emacs-lisp
+(use-package poetry
+  :defer t
+  :straight (:build t)
+  :commands (poetry-venv-toggle
+             poetry-tracking-mode)
+  :config
+  (setq poetry-tracking-strategy 'switch-buffer)
+  (add-hook 'python-mode-hook #'poetry-tracking-mode))
+#+end_src
+
+This package will bring a new major mode for editing pip requirements.
+#+begin_src emacs-lisp
+(use-package pip-requirements
+  :defer t
+  :straight (:build t))
+#+end_src
+
+Why use the command line to interact with pip when we can do it with
+an Emacs frontend?
+#+begin_src emacs-lisp
+(use-package pippel
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'pippel
+   "P" #'pippel-list-packages))
+#+end_src
+
+This is a [[https://github.com/pypa/pipenv][pipenv]] porcelain
+#+begin_src emacs-lisp
+(use-package pipenv
+  :defer t
+  :straight (:build t)
+  :commands (pipenv-activate
+             pipenv-deactivate
+             pipenv-shell
+             pipenv-open
+             pipenv-install
+             pipenv-uninstall)
+  :hook (python-mode . pipenv-mode)
+  :init (setq pipenv-with-projectile nil)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'pipenv
+   :infix "e"
+   ""  '(:ignore t :which-key "pipenv")
+   "a" #'pipenv-activate
+   "d" #'pipenv-deactivate
+   "i" #'pipenv-install
+   "l" #'pipenv-lock
+   "o" #'pipenv-open
+   "r" #'pipenv-run
+   "s" #'pipenv-shell
+   "u" #'pipenv-uninstall))
+#+end_src
+
+This integrates ~pyenv~ into ~python-mode~.
+#+begin_src emacs-lisp
+(use-package pyenv
+  :defer t
+  :straight (:build t)
+  :config
+  (add-hook 'python-mode-hook #'pyenv-track-virtualenv)
+  (add-to-list 'global-mode-string
+               '(pyenv-virtual-env-name (" venv:" pyenv-virtual-env-name " "))
+               'append))
+#+end_src
+
+Let’s also add a mode for ~pyenv~:
+#+begin_src emacs-lisp
+(use-package pyenv-mode
+  :defer t
+  :after python
+  :straight (:build t)
+  :if (executable-find "pyenv")
+  :commands (pyenv-mode-versions)
+  :general
+  (phundrak/major-leader-key
+    :packages 'pyenv-mode
+    :keymaps 'python-mode-map
+    :infix "v"
+    "u" #'pyenv-mode-unset
+    "s" #'pyenv-mode-set))
+#+end_src
+
+This package automatically imports packages we forgot to import.
+#+begin_src emacs-lisp
+(use-package pyimport
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+    :packages 'pyimport
+    :keymaps 'python-mode-map
+    :infix "i"
+    ""  '(:ignore t :which-key "imports")
+    "i" #'pyimport-insert-missing
+    "r" #'pyimport-remove-unused))
+#+end_src
+
+On the other hand, this one sorts our imports to make them more readable.
+#+begin_src emacs-lisp
+(use-package py-isort
+  :defer t
+  :straight (:build t)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'py-isort
+   :infix "i"
+   ""  '(:ignore t :which-key "imports")
+   "s" #'py-isort-buffer
+   "R" #'py-isort-region))
+#+end_src
+
+Access pydoc through counsel.
+#+begin_src emacs-lisp
+(use-package counsel-pydoc
+  :defer t
+  :straight (:build t))
+#+end_src
+
+This generates Python documentation that is meant to be compatible
+with Sphinx, a documentation generaton for Python.
+#+begin_src emacs-lisp
+(use-package sphinx-doc
+  :defer t
+  :straight (:build t)
+  :init
+  (add-hook 'python-mode-hook #'sphinx-doc-mode)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'python-mode-map
+   :packages 'sphinx-doc
+   :infix "S"
+   ""  '(:ignore t :which-key "sphinx-doc")
+   "e" #'sphinx-doc-mode
+   "d" #'sphinx-doc))
+#+end_src
+
+Cython is a Python to C compiler. It also introduces the extended
+Cython programming language which makes writing C for Python easier.
+This package is a major mode for the Cython programming language.
+#+begin_src emacs-lisp
+(use-package cython-mode
+  :defer t
+  :straight (:build t)
+  :mode "\\.p\\(yx\\|x[di]\\)\\'"
+  :config
+  (setq cython-default-compile-format "cython -a %s")
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'cython-mode-map
+   :packages 'cython-mode
+   :infix "c"
+   ""  '(:ignore t :which-key "cython")
+   "c" #'cython-compile))
+#+end_src
+
+Flycheck can also be enabled for Cython:
+#+begin_src emacs-lisp
+(use-package flycheck-cython
+  :defer t
+  :straight (:build t)
+  :after cython-mode)
+#+end_src
+
+Blacken uses the ~black~ formatter backend to format Python buffers.
+#+begin_src emacs-lisp
+(use-package blacken
+  :defer t
+  :straight (:build t)
+  :init
+  (add-hook 'python-mode-hook #'blacken-mode))
+#+end_src
+
+Finally, I’m using [[https://github.com/microsoft/pyright][Pyright]] as my LSP backend for Python.
+#+begin_src emacs-lisp
+(use-package lsp-pyright
+  :after lsp-mode
+  :defer t
+  :straight (:buidl t))
+#+end_src
+
+*** Rust
+Rust is a general programming language, akin to C++ in some ways, but
+much more oriented towards safe code, and much better suited for web
+development. First, let’s install the most important package,
+~rustic~.
+#+begin_src emacs-lisp
+(use-package rustic
+  :defer t
+  :straight (:build t)
+  :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode-local-vars . rustic-setup-lsp)
+  :hook (rustic-mode . lsp-deferred)
+  :init
+  (with-eval-after-load 'org
+    (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
+    (add-to-list 'org-src-lang-modes '("rust" . rustic)))
+  (setq rustic-lsp-client 'lsp-mode)
+  (add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
+  :general
+  (general-define-key
+   :keymaps 'rustic-mode-map
+   :packages 'lsp
+   "M-t" #'lsp-ui-imenu
+   "M-?" #'lsp-find-references)
+  (phundrak/major-leader-key
+   :keymaps 'rustic-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+   :keymaps 'rustic-mode-map
+   :packages 'rustic
+   "b"  '(:ignore t :which-key "build")
+   "bb" #'rustic-cargo-build
+   "bB" #'rustic-cargo-bench
+   "bc" #'rustic-cargo-check
+   "bC" #'rustic-cargo-clippy
+   "bd" #'rustic-cargo-doc
+   "bf" #'rustic-cargo-fmt
+   "bn" #'rustic-cargo-new
+   "bo" #'rustic-cargo-outdated
+   "br" #'rustic-cargo-run
+   "t"  '(:ignore t :which-key "cargo test")
+   "ta" #'rustic-cargo-test
+   "tt" #'rustic-cargo-current-test)
+  :config
+  (setq rustic-indent-method-chain    t
+        rustic-babel-format-src-block nil
+        rustic-format-trigger         nil)
+  (remove-hook 'rustic-mode-hook #'flycheck-mode)
+  (remove-hook 'rustic-mode-hook #'flymake-mode-off)
+  (remove-hook 'rustic-mode-hook #'rustic-setup-lsp))
+#+end_src
+
+*** Web programming
+:END:
+[[https://emmet.io/][Emmet]] is a powerful templating engine that can generate through simple
+CSS-like expression some HTML to avoid the user writing everything by
+hand.
+#+begin_src emacs-lisp
+(use-package emmet-mode
+  :straight (:build t)
+  :defer t
+  :hook ((css-mode  . emmet-mode)
+         (html-mode . emmet-mode)
+         (web-mode  . emmet-mode)
+         (sass-mode . emmet-mode)
+         (scss-mode . emmet-mode)
+         (web-mode  . emmet-mode))
+  :config
+  (general-define-key
+   :keymaps 'emmet-mode-keymap
+   "M-RET" #'emmet-expand-yas)
+  (phundrak/major-leader-key
+    :keymaps 'web-mode-map
+    :packages '(web-mode emmet-mode)
+    "e" '(:ignore t :which-key "emmet")
+    "ee" #'emmet-expand-line
+    "ep" #'emmet-preview
+    "eP" #'emmet-preview-mode
+    "ew" #'emmet-wrap-with-markup))
+#+end_src
+
+Impatient mode serves web buffers live over HTTP, including your live
+modifications.
+#+begin_src emacs-lisp
+(use-package impatient-mode
+  :straight (:build t)
+  :defer t)
+#+end_src
+
+Web mode is a sort of hybrid major mode that allows editing several
+languages in the same buffer, mainly HTML, CSS, and Javascript.
+#+begin_src emacs-lisp
+(use-package web-mode
+  :defer t
+  :straight (:build t)
+  :hook html-mode
+  :hook (web-mode . prettier-js-mode)
+  :hook (web-mode . lsp-deferred)
+  :mode (("\\.phtml\\'"      . web-mode)
+         ("\\.tpl\\.php\\'"  . web-mode)
+         ("\\.twig\\'"       . web-mode)
+         ("\\.xml\\'"        . web-mode)
+         ("\\.html\\'"       . web-mode)
+         ("\\.htm\\'"        . web-mode)
+         ("\\.[gj]sp\\'"     . web-mode)
+         ("\\.as[cp]x?\\'"   . web-mode)
+         ("\\.eex\\'"        . web-mode)
+         ("\\.erb\\'"        . web-mode)
+         ("\\.mustache\\'"   . web-mode)
+         ("\\.handlebars\\'" . web-mode)
+         ("\\.hbs\\'"        . web-mode)
+         ("\\.eco\\'"        . web-mode)
+         ("\\.ejs\\'"        . web-mode)
+         ("\\.svelte\\'"     . web-mode)
+         ("\\.ctp\\'"        . web-mode)
+         ("\\.djhtml\\'"     . web-mode)
+         ("\\.vue\\'"        . web-mode))
+  :config
+  (csetq web-mode-markup-indent-offset 2
+         web-mode-code-indent-offset   2
+         web-mode-css-indent-offset    2
+         web-mode-style-padding        0
+         web-mode-script-padding       0)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'web-mode-map
+   :packages 'web-mode
+   "="  '(:ignore t :which-key "format")
+   "E"  '(:ignore t :which-key "errors")
+   "El" #'web-mode-dom-errors-show
+   "gb" #'web-mode-element-beginning
+   "g"  '(:ignore t :which-key "goto")
+   "gc" #'web-mode-element-child
+   "gp" #'web-mode-element-parent
+   "gs" #'web-mode-element-sibling-next
+   "h"  '(:ignore t :which-key "dom")
+   "hp" #'web-mode-dom-xpath
+   "r"  '(:ignore t :which-key "refactor")
+   "rc" #'web-mode-element-clone
+   "rd" #'web-mode-element-vanish
+   "rk" #'web-mode-element-kill
+   "rr" #'web-mode-element-rename
+   "rw" #'web-mode-element-wrap
+   "z"  #'web-mode-fold-or-unfold)
+  (phundrak/major-leader-key
+    :keymaps 'web-mode-map
+    :packages '(lsp-mode web-mode)
+    "l" '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
+#+begin_src emacs-lisp
+(use-package company-web
+  :defer t
+  :straight (:build t)
+  :after (emmet-mode web-mode))
+#+end_src
+
+**** CSS
+:END:
+Let’s customize a bit the built-in CSS mode.
+#+begin_src emacs-lisp
+(use-package css-mode
+  :defer t
+  :straight (:type built-in)
+  :hook (css-mode . smartparens-mode)
+  :hook (css-mode . lsp-deferred)
+  :hook (scss-mode . prettier-js-mode)
+  :init
+  (put 'css-indent-offset 'safe-local-variable #'integerp)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'css-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+    :keymaps 'css-mode-map
+    :packages 'css-mode
+    "=" '(:ignore :wk "format")
+    "g" '(:ignore :wk "goto")))
+#+end_src
+
+SCSS is much nicer to use than pure CSS in my opinion, so let’s add a
+mode for that.
+#+begin_src emacs-lisp
+(use-package scss-mode
+  :straight (:build t)
+  :hook (scss-mode . smartparens-mode)
+  :hook (scss-mode . lsp-deferred)
+  :hook (scss-mode . prettier-js-mode)
+  :defer t
+  :mode "\\.scss\\'")
+#+end_src
+
+And let’s add some autocompletion for CSS.
+#+begin_src emacs-lisp
+(use-package counsel-css
+  :straight (:build t)
+  :defer t
+  :init
+  (cl-loop for (mode-map . mode-hook) in '((css-mode-map  . css-mode-hook)
+                                           (scss-mode-map . scss-mode-hook))
+           do (add-hook mode-hook #'counsel-css-imenu-setup)
+           (phundrak/major-leader-key
+            :keymaps mode-map
+            "gh" #'counsel-css)))
+#+end_src
+
+For some reason, although it is built-in, ~less-css-mode~ does not
+activate when I open ~.less~ files by default. Let’s fix that.
+#+begin_src emacs-lisp
+(use-package less-css-mode
+  :straight  (:type built-in)
+  :defer t
+  :mode "\\.less\\'"
+  :hook (less-css-mode . smartparens-mode)
+  :hook (less-css-mode . lsp-deferred)
+  :hook (less-css-mode . prettier-js-mode)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'less-css-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+**** Javascript
+:END:
+~javascript-mode~ is meh at best, while ~rjsx-mode~ (Real JSX) is much
+better: it supports both Javascript and ~.jsx~ files for React and
+Next.JS.
+#+begin_src emacs-lisp
+(use-package rjsx-mode
+  :defer t
+  :straight (:build t)
+  :after compile
+  :mode "\\.[mc]?jsx?\\'"
+  :mode "\\.es6\\'"
+  :mode "\\.pac\\'"
+  :interpreter "node"
+  :hook (rjsx-mode . rainbow-delimiters-mode)
+  :hook (rjsx-mode . lsp-deferred)
+  :init
+  (add-to-list 'compilation-error-regexp-alist 'node)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(node "^[[:blank:]]*at \\(.*(\\|\\)\\(.+?\\):\\([[:digit:]]+\\):\\([[:digit:]]+\\)"
+                      2 3 4))
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'rjsx-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  :config
+  (setq js-chain-indent                  t
+        js2-basic-offset                 2
+        ;; ignore shebangs
+        js2-skip-preprocessor-directives t
+        ;; Flycheck handles this already
+        js2-mode-show-parse-errors       nil
+        js2-mode-show-strict-warnings    nil
+        ;; conflicting with eslint, Flycheck already handles this
+        js2-strict-missing-semi-warning  nil
+        js2-highlight-level              3
+        js2-idle-timer-delay             0.15))
+#+end_src
+
+~js2-refactor~ is an amazing tool for refactoring Javascript code. I
+mean, [[https://www.youtube.com/watch?v=-7yMWD1wUu4][look at this]]! And the video is only from 2013, and it still
+receives some commits!
+#+begin_src emacs-lisp
+(use-package js2-refactor
+  :defer t
+  :straight (:build t)
+  :after (js2-mode rjsx-mode)
+  :hook (js2-mode . js2-refactor-mode)
+  :hook (rjsx-mode . js2-refactor-mode))
+#+end_src
+
+Which Emacser prefers the command line over Emacs itself? I don’t.
+Let’s interact with NPM through Emacs then.
+#+begin_src emacs-lisp
+(use-package npm-transient
+  :defer t
+  :straight (npm-transient :build t
+                           :type git
+                           :host github
+                           :repo "Phundrak/npm-transient"))
+  ;; :general
+  ;; (phundrak/major-leader-key
+  ;;   :packages '(npm-transient rjsx-mode web-mode)
+  ;;   :keymaps '(rjsx-mode-map web-mode-map)
+  ;;   "n" #'npm-transient))
+#+end_src
+
+And finally, here is a formatter for Javascript.
+#+begin_src emacs-lisp
+(use-package prettier-js
+  :defer t
+  :straight (:build t)
+  :after (rjsx-mode web-mode typescript-mode)
+  :hook ((rjsx-mode typescript-mode) . prettier-js-mode)
+  :config
+  (setq prettier-js-args '("--single-quote" "--jsx-single-quote")))
+#+end_src
+
+**** Typescript
+:END:
+Typescript is a safer alternative to Javascript. Let’s install its major mode then.
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :defer t
+  :straight (:build t)
+  :hook (typescript-mode     . rainbow-delimiters-mode)
+  :hook (typescript-tsx-mode . rainbow-delimiters-mode)
+  :hook (typescript-mode     . lsp-deferred)
+  :hook (typescript-tsx-mode . lsp-deferred)
+  :hook (typescript-mode     . prettier-js-mode)
+  :hook (typescript-tsx-mode . prettier-js-mode)
+  :commands typescript-tsx-mode
+  :after flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  :general
+  (phundrak/major-leader-key
+   :keymaps '(typescript-mode-map typescript-tsx-mode-map)
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+    :packages 'typescript-mode
+    :keymaps '(typescript-mode-map typescript-tsx-mode-map)
+    "n" '(:keymap npm-mode-command-keymap :which-key "npm"))
+  :config
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'javascript-eslint 'web-mode)
+    (flycheck-add-mode 'javascript-eslint 'typescript-mode)
+    (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)
+    (flycheck-add-mode 'typescript-tslint 'typescript-tsx-mode))
+  (when (fboundp 'web-mode)
+    (define-derived-mode typescript-tsx-mode web-mode "TypeScript-TSX"))
+  (autoload 'js2-line-break "js2-mode" nil t))
+#+end_src
+
+Tide enabled interactivity with Typescript.
+#+begin_src emacs-lisp
+(use-package tide
+  :defer t
+  :straight (:build t)
+  :hook (tide-mode . tide-hl-identifier-mode)
+  :config
+  (setq tide-completion-detailed              t
+        tide-always-show-documentation        t
+        tide-server-may-response-length       524288
+        tide-completion-setup-company-backend nil)
+
+  (advice-add #'tide-setup :after #'eldoc-mode)
+
+  :general
+  (phundrak/major-leader-key
+    :keymaps 'tide-mode-map
+    "R"   #'tide-restart-server
+    "f"   #'tide-format
+    "rrs" #'tide-rename-symbol
+    "roi" #'tide-organize-imports))
+#+end_src
+
+*** Zig
+[[https://ziglang.org/][Zig]] is to C kind of what Rust is to C++: a modern replacement without
+sacrificing performance. It is much safer than C while providing
+interop with it. Plus, its [[https://ziglang.org/documentation/master/std/][standard library]] is pretty complete.
+
+First, here is its major mode.
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :defer t
+  :straight (:build t)
+  :after flycheck
+  :hook (zig-mode . lsp-deferred)
+  :config
+  ;; This is from DoomEmacs
+  (flycheck-define-checker zig
+    "A zig syntax checker using the zig-fmt interpreter."
+    :command ("zig" "fmt" (eval (buffer-file-name)))
+    :error-patterns
+    ((error line-start (file-name) ":" line ":" column ": error: " (message) line-end))
+    :modes zig-mode)
+  (add-to-list 'flycheck-checkers 'zig)
+  :general
+  (phundrak/major-leader-key
+   :keymaps 'zip-mode-map
+   :packages 'lsp-mode
+   "l"  '(:keymap lsp-command-map :which-key "lsp"))
+  (phundrak/major-leader-key
+    :packages 'zig-mode
+    :keymaps 'zig-mode-map
+    "c" #'zig-compile
+    "f" #'zig-format-buffer
+    "r" #'zig-run
+    "t" #'zig-test-buffer))
+#+end_src
+
+For LSP to work, we need ~zls~ to be installed. In my case, as I am on
+ArchLinux, I can install it from the AUR, and my AUR helper is ~paru~.
+#+begin_src fish :results raw :wrap "src text" :exports code
+paru --skipreview --noconfirm -S zls-bin 2>&1
+#+end_src
+
+#+RESULTS:
+#+begin_src text
+:: Resolving dependencies...
+:: Calculating conflicts...
+:: Calculating inner conflicts...
+
+Aur (1)      Old Version  New Version  Make Only
+aur/zls-bin               0.10.0-1     No
+
+:: Proceed with installation? [Y/n]:
+
+:: Downloading PKGBUILDs...
+ PKGBUILDs up to date
+fetching devel info...
+==> Making package: zls-bin 0.10.0-1 (ven. 19 mai 2023 11:23:59)
+==> Retrieving sources...
+  -> Downloading zls-LICENSE.txt...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1091  100  1091    0     0   3596      0 --:--:-- --:--:-- --:--:--  3600
+  -> Downloading zls-bin-0.10.0.tar.gz...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+ 56 1477k   56  827k    0     0  1164k      0  0:00:01 --:--:--  0:00:01 1164k100 1477k  100 1477k    0     0  2012k      0 --:--:-- --:--:-- --:--:-- 27.5M
+==> Validating source files with sha256sums...
+    zls-LICENSE.txt ... Passed
+==> Validating source_x86_64 files with sha256sums...
+    zls-bin-0.10.0.tar.gz ... Passed
+==> Making package: zls-bin 0.10.0-1 (ven. 19 mai 2023 11:24:02)
+==> Checking runtime dependencies...
+==> Checking buildtime dependencies...
+==> Retrieving sources...
+  -> Found zls-LICENSE.txt
+  -> Found zls-bin-0.10.0.tar.gz
+==> Validating source files with sha256sums...
+    zls-LICENSE.txt ... Passed
+==> Validating source_x86_64 files with sha256sums...
+    zls-bin-0.10.0.tar.gz ... Passed
+==> Removing existing $srcdir/ directory...
+==> Extracting sources...
+  -> Extracting zls-bin-0.10.0.tar.gz with bsdtar
+==> Sources are ready.
+zls-bin-0.10.0-1: parsing pkg list...
+:: zls-bin-0.10.0-1 is up to date -- skipping build
+loading packages...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (1)  New Version  Net Change
+
+zls-bin      0.10.0-1       1,36 MiB
+
+Total Installed Size:  1,36 MiB
+
+:: Proceed with installation? [Y/n]
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+checking available disk space...
+:: Processing package changes...
+installing zls-bin...
+Consider runing 'zls --config' to setup initial configuration
+
+This is not required, but it is highly recommended
+:: Running post-transaction hooks...
+(1/2) Arming ConditionNeedsUpdate...
+(2/2) Refreshing PackageKit...
+#+end_src

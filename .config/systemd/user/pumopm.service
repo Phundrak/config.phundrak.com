@@ -1,9 +1,0 @@
-[Unit]
-Description=Lightweight and dead simple power manager
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/pumopm
-
-[Install]
-WantedBy=default.target

@@ -1,0 +1,30 @@
+#+title: P’undrak’s Dotfiles
+#+setupfile: headers
+
+* Index
+Hi, I’m P’undrak (pronounced /PUN-DRAK/, or more exactly {{{phon(pʰynɖak̚)}}}),
+also known as Lucien Cartier-Tilet. If you want to know more about me,
+you can head to my [[https://phundrak.com/en][main website]].
+
+This website is my collection of dotfiles for my daily GNU/Linux
+environment, tweaked to my liking. The sidebar will act as an index of
+the various tools I use and their configuration.
+
+Additionaly, you can find my configuration for my ErgodoxEZ keyboard
+[[https://configure.ergodox-ez.com/ergodox-ez/layouts/5WrVw/latest/0][here]]. It is optimized for usage with the Bépo layout set as a software
+layout. It has also a layer set to emulate a Qwerty layout when using
+the Bépo software layout due to some games that do not offer to remap
+keys or whose remap feature is kind of buggy with some keys, such as
+the «é» placed where the «w» is on a Qwerty layout (I’m looking at
+you, HoloCure).
+
+** Installation
+If you wish to install my dotfiles and you are on ArchLinux, you can
+follow the [[file:bootstrap.org][bootstrap]] page where you can find a walkthrough of how I
+configure my environment and what I install. If you have [[https://github.com/TheLocehiliosan/yadm][YADM]]
+installed, you can even execute =yadm bootstrap= to execute it after
+cloning my repo with =yadm clone
+https://labs.phundrak.com/phundrak/dotfiles.git=.
+
+** License
+See [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/LICENSE.org][the repository’s license file]].

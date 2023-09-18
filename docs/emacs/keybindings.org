@@ -1,0 +1,391 @@
+#+title: Emacs — Keybindings
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/keybindings.el
+#+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
+
+* Keybindings
+Undefining some stuff to make keybind prefixes work correctly.
+
+#+name: general-keybindings-gen
+#+header: :tangle no :exports none :results value :cache yes
+#+begin_src emacs-lisp :var table=keybinds-windows prefix=""
+(mapconcat (lambda (line)
+             (let* ((key      (nth 0 line))
+                    (function (nth 1 line))
+                    (comment  (or (nth 2 line) ""))
+                    (package  (or (nth 3 line) "")))
+               (format "\"%s%s\" %s"
+                       prefix
+                       key
+                       (if (string= "" comment)
+                           (if (member function '("" "nil")) "nil" (concat "#'" function))
+                         (format "'(%s :wk %s%s)"
+                                 (if (member function '("" "nil")) ":ignore t" function)
+                                 (if (member function '("none" "nil")) "t" (concat "\"" comment "\""))
+                                 (if (string-blank-p package) "" (concat ":package " package)))))))
+           table
+           "\n")
+#+end_src
+
+#+begin_src emacs-lisp
+(general-define-key
+ :keymaps 'global-map
+ "<mouse-2>" nil
+ "<mouse-3>" nil)
+
+(phundrak/evil
+  :packages '(counsel)
+  "U"   #'evil-redo
+  "C-a" #'beginning-of-line
+  "C-e" #'end-of-line
+  "C-y" #'yank
+  "M-y" #'counsel-yank-pop)
+#+end_src
+
+#+begin_src emacs-lisp
+(general-define-key
+ "<f5>" #'compile
+ "<f6>" #'recompile)
+
+(phundrak/leader-key
+  "SPC" '(counsel-M-x :wk "M-x")
+  "'"   #'shell-pop
+
+  <<general-keybindings-gen(table=keybinds-tabs, prefix="TAB ")>>
+
+  <<general-keybindings-gen(table=keybinds-apps, prefix="a")>>
+  <<general-keybindings-gen(table=keybinds-apps-shell, prefix="as")>>
+  <<general-keybindings-gen(table=treemacs-keybinds, prefix="at")>>
+
+  <<general-keybindings-gen(table=keybinds-buffers, prefix="b")>>
+
+  "c"   '(:ignore t :wk "code")
+  "cl"  #'evilnc-comment-or-uncomment-lines
+
+  <<keybindings-flycheck>>
+
+  <<general-keybindings-gen(table=keybinds-files, prefix="f")>>
+  <<keybinds-specific-files>>
+
+  <<general-keybindings-gen(table=keybinds-help, prefix="h")>>
+
+  "i"   '(:ignore t :wk "insert")
+  "iu"  #'counsel-unicode-char
+
+  <<general-keybindings-gen(table=keybinds-jump, prefix="j")>>
+
+  <<general-keybindings-gen(table=keybinds-toggle, prefix="t ")>>
+
+  <<general-keybindings-gen(table=keybinds-text, prefix="T")>>
+
+  <<general-keybindings-gen(table=keybinds-windows, prefix="w")>>
+
+  <<general-keybindings-gen(table=keybinds-quit, prefix="q")>>
+
+  "u"   #'universal-argument
+  "U"   #'undo-tree-visualize)
+#+end_src
+
+** Apps
+Here are my apps keybinds. Each one of them is prefixed by ~a~.
+#+name: keybinds-apps
+| Key | Function                   | Description | Package    |
+|-----+----------------------------+-------------+------------|
+|     |                            | apps        |            |
+| c   | calc                       |             |            |
+| C   |                            | calendar    |            |
+| CC  | calendar                   |             |            |
+| Co  | org-agenda                 |             | org        |
+| Cs  | org-caldav-sync            |             | org-caldav |
+| d   | docker                     |             |            |
+| E   | elfeed                     |             |            |
+| e   |                            | email       |            |
+| ec  | mu4e-compose-new           |             |            |
+| em  | mu4e                       |             |            |
+| k   | keycast-mode               |             |            |
+| K   | keycast-log-mode           |             |            |
+| m   |                            | mastodon    |            |
+| mm  | mastodon                   |             | mastodon   |
+| mn  | mastodon-notifications-get |             | mastodon   |
+| mt  | mastodon-toot              |             | mastodon   |
+| T   | tetris                     |             |            |
+| w   | wttrin                     |             | wttrin     |
+
+I also have two main shell-related functions, prefixed with ~as~.
+#+name: keybinds-apps-shell
+| Key | Function    | Description | Package     |
+|-----+-------------+-------------+-------------|
+|     |             | shells      |             |
+| e   | eshell-new  |             |             |
+| v   | vterm       |             | vterm       |
+| V   | multi-vterm |             | multi-vterm |
+
+** Buffers
+My buffer-related keybinds are all prefixed by ~b~.
+#+name: keybinds-buffers
+| Key | Function                           | Description |
+|-----+------------------------------------+-------------|
+|     |                                    | buffers     |
+| b   | bufler-switch-buffer               |             |
+| B   | bury-buffer                        |             |
+| c   | clone-indirect-buffer              |             |
+| C   | clone-indirect-buffer-other-window |             |
+| l   | bufler                             |             |
+| d   | kill-this-buffer                   |             |
+| D   | kill-buffer                        |             |
+| h   | dashboard-refresh-buffer           |             |
+| m   | switch-to-messages-buffer          |             |
+| n   | next-buffer                        |             |
+| p   | previous-buffer                    |             |
+| r   | counsel-buffer-or-recentf          |             |
+| s   | switch-to-scratch-buffer           |             |
+
+** Errors
+#+begin_src emacs-lisp
+(defhydra hydra-flycheck
+  (:pre (flycheck-list-errors)
+   :post (quit-windows-on "*Flycheck errors*")
+   :hint nil)
+  ("f" flycheck-error-list-set-filter "Filter")
+  ("t" flycheck-next-error "Next")
+  ("s" flycheck-previous-error "Previous")
+  ("gg" flycheck-first-error "First")
+  ("G" (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+  ("q" nil))
+#+end_src
+
+#+name: keybindings-flycheck
+#+begin_src emacs-lisp :tangle no
+"e"  '(:ignore t :which-key "errors")
+"e." '(hydra-flycheck/body :wk "hydra")
+"el" #'counsel-flycheck
+"ee" '(:keymap flycheck-command-map :package 'flycheck :wk "flycheck")
+"ef" '(:keymap flyspell-mode-map :package 'flyspell :wk "flyspell")
+"eF" #'flyspell-hydra/body
+#+end_src
+
+** Files
+My keybinds for file manipulation are prefixed by ~f~.
+#+name: keybinds-files
+| Key | Function             | Description |
+|-----+----------------------+-------------|
+|     |                      | files       |
+| f   | counsel-find-file    |             |
+| F   | ivy-quick-find-files |             |
+| h   | hexl-find-file       |             |
+| r   | counsel-recentf      |             |
+| s   | save-buffer          |             |
+
+I also have some keybinds dedicated to opening specific files.
+#+name: keybinds-specific-files
+#+begin_src emacs-lisp :tangle no
+"fc"  '((lambda ()
+          (interactive)
+          (find-file "~/org/config/emacs.org"))
+        :wk "emacs.org")
+"fi"  '((lambda ()
+          (interactive)
+          (find-file (concat user-emacs-directory "init.el")))
+        :which-key "init.el")
+"fR"  '((lambda ()
+          (interactive)
+          (counsel-find-file ""
+                             (concat user-emacs-directory
+                                    (file-name-as-directory "straight")
+                                    (file-name-as-directory "repos"))))
+        :which-key "straight package")
+"fS"  '((lambda ()
+          (interactive)
+          (find-file "~/org/config/stumpwm.org"))
+        :which-key "stumpwm.org")
+#+end_src
+
+** Help
+My keybinds for help are prefixed by ~h~.
+#+name: keybinds-help
+| Key | Function                 | Description |
+|-----+--------------------------+-------------|
+|     |                          | help        |
+| k   | which-key-show-top-level |             |
+| i   | info                     |             |
+| I   | info-display-manual      |             |
+| d   |                          | describe    |
+| dc  | describe-char            |             |
+| dC  | helpful-command          |             |
+| df  | helpful-callable         |             |
+| di  | describe-input-method    |             |
+| dk  | helpful-key              |             |
+| dm  | helpful-macro            |             |
+| dM  | helpful-mode             |             |
+| dp  | describe-package         |             |
+| ds  | helpful-symbol           |             |
+| dv  | helpful-variable         |             |
+
+** Jump
+My keybinds for jumping around are prefixed by ~j~.
+#+name: keybinds-jump
+| Key | Function                | Description |
+|-----+-------------------------+-------------|
+|     |                         | jump        |
+| f   | counsel-file-jump       |             |
+| d   | dirvish-dwim            |             |
+| D   | dired-jump-other-window |             |
+
+** Project
+My keybinds for my projects are prefixed by ~p~.
+#+name: keybinds-project
+| Key | Function                                   | Description |
+|-----+--------------------------------------------+-------------|
+|     |                                            | project     |
+| !   | projectile-run-shell-command-in-root       |             |
+| &   | projectile-run-async-shell-command-in-root |             |
+| b   | counsel-projectile-switch-to-buffer        |             |
+| c   | counsel-projectile                         |             |
+| d   | counsel-projectile-find-dir                |             |
+| e   | projectile-edit-dir-locals                 |             |
+| f   | counsel-projectile-find-file               |             |
+| g   | projectile-find-tag                        |             |
+| k   | project-kill-buffers                       |             |
+| p   | counsel-projectile-switch-project          |             |
+| t   | ivy-magit-todos                            |             |
+| v   | projectile-vc                              |             |
+
+*** Treemacs
+
+#+name: treemacs-keybinds
+| Key | Function                               | Description |
+|-----+----------------------------------------+-------------|
+|     |                                        | treemacs    |
+| c   |                                        | create      |
+| cd  | treemacs-create-dir                    |             |
+| cf  | treemacs-create-file                   |             |
+| ci  | treemacs-create-icon                   |             |
+| ct  | treemacs-create-theme                  |             |
+| cw  | treemacs-create-workspace              |             |
+| d   | treemacs-delete-file                   |             |
+| f   |                                        | files       |
+| ff  | treemacs-find-file                     |             |
+| ft  | treemacs-find-tag                      |             |
+| l   |                                        | lsp         |
+| ls  | treemacs-expand-lsp-symbol             |             |
+| ld  | treemacs-expand-lsp-treemacs-deps      |             |
+| lD  | treemacs-collapse-lsp-treemacs-deps    |             |
+| lS  | treemacs-collapse-lsp-symbol           |             |
+| p   |                                        | projects    |
+| pa  | treemacs-add-project-to-workspace      |             |
+| pf  | treemacs-project-follow-mode           |             |
+| pn  | treemacs-project-of-node               |             |
+| pp  | treemacs-project-at-point              |             |
+| pr  | treemacs-remove-project-from-workspace |             |
+| pt  | treemacs-move-project-down             |             |
+| ps  | treemacs-move-project-up               |             |
+| r   |                                        | rename      |
+| rf  | treemacs-rename-file                   |             |
+| rp  | treemacs-rename-project                |             |
+| rr  | treemacs-rename                        |             |
+| rw  | treemacs-rename-workspace              |             |
+| t   | treemacs                               |             |
+| T   |                                        | toggles     |
+| Td  | treemacs-toggle-show-dotfiles          |             |
+| Tn  | treemacs-toggle-node                   |             |
+| v   |                                        | visit node  |
+| va  | treemacs-visit-node-ace                |             |
+| vc  | treemacs-visit-node-close-treemacs     |             |
+| vn  | treemacs-visit-node-default            |             |
+| y   |                                        | yank        |
+| ya  | treemacs-copy-absolute-path-at-point   |             |
+| yp  | treemacs-copy-project-path-at-point    |             |
+| yr  | treemacs-copy-relative-path-at-point   |             |
+| yf  | treemacs-copy-file                     |             |
+
+** Tabs
+Emacs has native tabs available, which can be interesting when working
+on multiple projects at once between which we may want to switch. Tabs
+allow the user not to have multiple frames while keeping the
+advantages of having multiple frames.
+
+My keybinds are prefixed by ~SPC TAB~.
+#+name: keybinds-tabs
+| Key | Function     | Description |
+|-----+--------------+-------------|
+|     |              | tabs        |
+| TAB | tab-switch   |             |
+| »   | tab-next     |             |
+| «   | tab-previous |             |
+| c   | tab-new      |             |
+| C   | tab-new-to   |             |
+| d   | tab-close    |             |
+| n   | tab-next     |             |
+| p   | tab-previous |             |
+| r   | tab-rename   |             |
+
+** Text
+The prefix here is ~T~.
+#+name: keybinds-text
+| Key | Function             | Description |
+|-----+----------------------+-------------|
+|     |                      | text        |
+| e   | string-edit-at-point |             |
+| u   | downcase-region      |             |
+| U   | upcase-region        |             |
+| z   | hydra-zoom/body      |             |
+
+** Toggles
+My toggle keybinds are prefixed by ~t~.
+#+name: keybinds-toggle
+| Key | Function                              | Description  |
+|-----+---------------------------------------+--------------|
+|     |                                       | toggles      |
+| TAB | tab-bar-mode                          |              |
+| t   | my/modify-frame-alpha-background/body |              |
+| T   | counsel-load-theme                    |              |
+| d   |                                       | debug        |
+| de  | toggle-debug-on-error                 |              |
+| dq  | toggle-debug-on-quit                  |              |
+| i   |                                       | input method |
+| it  | toggle-input-method                   |              |
+| is  | set-input-method                      |              |
+
+** Windows
+A couple of keybinds are hidden from which-key, otherwise there’s not
+much to say. The prefix here is ~w~.
+#+name: keybinds-windows
+| Key | Function                      | Description |
+|-----+-------------------------------+-------------|
+|     |                               | windows     |
+| c   | evil-window-left              |             |
+| t   | evil-window-down              |             |
+| s   | evil-window-up                |             |
+| r   | evil-window-right             |             |
+| .   | windows-adjust-size/body      |             |
+| -   | split-window-below-and-focus  |             |
+| /   | split-window-right-and-focus  |             |
+| $   | winum-select-window-by-number |             |
+| 0   | winum-select-window-0-or-10   | none        |
+| 1   | winum-select-window-1         | none        |
+| 2   | winum-select-window-2         | none        |
+| 3   | winum-select-window-3         | none        |
+| 4   | winum-select-window-4         | none        |
+| 5   | winum-select-window-5         | none        |
+| 6   | winum-select-window-6         | none        |
+| 7   | winum-select-window-7         | none        |
+| 8   | winum-select-window-8         | none        |
+| 9   | winum-select-window-9         | none        |
+| b   | kill-buffer-and-delete-window |             |
+| d   | delete-window                 |             |
+| o   | other-window                  |             |
+| D   | delete-other-windows          |             |
+| w   |                               | writeroom   |
+| w.  | writeroom-buffer-width/body   |             |
+| ww  | writeroom-mode                |             |
+
+** Quit
+Why would I ever use any of these keybinds? They are prefixed with ~q~.
+#+name: keybinds-quit
+| Key | Function                   | Description |
+|-----+----------------------------+-------------|
+|     |                            | quit        |
+| f   | delete-frame               |             |
+| q   | save-buffers-kill-terminal |             |
+| Q   | kill-emacs                 |             |
