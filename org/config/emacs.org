@@ -2872,6 +2872,25 @@ doing and what Git is doing! In short, I absolutely love it!
     "fF" #'magit-find-file))
 #+end_src
 
+There is currently a bug in Emacs TRAMP as described in issue [[https://github.com/magit/magit/issues/4720][#4720]] of
+Magit and bug [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=62093][62093]] of Emacs. A workaround is to redefine the old
+=tramp-send-command= function through an advice.
+#+begin_src emacs-lisp
+(defun my--tramp-send-command--workaround-stty-icanon-bug (conn-vec orig-command &rest args)
+  "See: https://github.com/magit/magit/issues/4720"
+  (let ((command
+         (if (string= "stty -icrnl -icanon min 1 time 0" orig-command)
+             "stty -icrnl"
+           orig-command)))
+    (append (list conn-vec command) args)))
+
+(defun my--tramp-send-command--workaround-stty-icanon-bug--filter-args (args)
+  (apply #'my--tramp-send-command--workaround-stty-icanon-bug args))
+
+(advice-add 'tramp-send-command :filter-args
+            #'my--tramp-send-command--workaround-stty-icanon-bug--filter-args)
+#+end_src
+
 [[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
 display in the Magit buffer a list of TODOs found in the current
 project to remind you of what to do next.
