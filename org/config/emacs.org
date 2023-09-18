@@ -4610,6 +4610,7 @@ extended however we like!
 (use-package org
   :straight t
   :defer t
+  :after engrave-faces
   :commands (orgtbl-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-num-mode))
@@ -5290,8 +5291,7 @@ A new backend that was introduced in org-mode for LaTeX source block
 coloring is ~engraved~.
 #+BEGIN_SRC emacs-lisp
 (use-package engrave-faces
-  :straight (:build t)
-  :after org)
+  :straight (:build t))
 #+END_SRC
 
 #+name: org-latex-src-block-backend
