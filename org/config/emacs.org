@@ -1295,7 +1295,9 @@ I warned you I’d use too much ~all-the-icons~, I did!
 (use-package all-the-icons-ivy
   :straight (:build t)
   :after (ivy all-the-icons)
+  :init (all-the-icons-ivy-setup)
   :hook (after-init . all-the-icons-ivy-setup))
+(all-the-icons-ivy-setup)
 #+end_src
 
 A buffer popping at the bottom of the screen is nice and all, but have
