@@ -5695,7 +5695,10 @@ management system based on org-mode.
     "rsa" #'org-roam-db-autosync-mode
     "rsc" #'org-roam-db-clear-all
     "rsd" #'org-roam-db-diagnose-node
-    "rss" #'org-roam-db-sync)
+    "rss" #'org-roam-db-sync
+    "ru"  '(:ignore t :which-key "ui")
+    "rua" #'org-roam-ui-add-to-local-graph
+    "ruo" #'org-roam-ui-open)
   (phundrak/major-leader-key
     :keymaps 'org-mode-map
     :packages '(org org-roam)
