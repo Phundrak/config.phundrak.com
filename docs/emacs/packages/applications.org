@@ -1438,9 +1438,9 @@ Magit and bug [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=62093][62093]] of 
 display in the Magit buffer a list of TODOs found in the current
 project to remind you of what to do next.
 
-First, let’s se tup our todo keywords with ~hl-todo~. A good few todo
-keywords are already defined in the ~hl-todo-keyword-faces~ variable.
-Why not use them? ~hl-todo-mode~ enables fontlock highlight of these
+First, let’s se tup our todo keywords with =hl-todo=. A good few todo
+keywords are already defined in the =hl-todo-keyword-faces= variable.
+Why not use them? =hl-todo-mode= enables fontlock highlight of these
 keywords in a buffer. Let’s enable this mode globally.
 #+begin_src emacs-lisp
 (use-package hl-todo
@@ -1456,10 +1456,10 @@ keywords in a buffer. Let’s enable this mode globally.
     "p" #'hl-todo-previous))
 #+end_src
 
-We can now configure properly ~magit-todos~. Notice my custom function
-hooked to ~magit-mode-hook~. This is because this package tries to find
+We can now configure properly =magit-todos=. Notice my custom function
+hooked to =magit-mode-hook=. This is because this package tries to find
 TODOs in all files in the current project, and my yadm repository’s
-root is my ~$HOME~. So, yeah, no ~magit-todos~ in yadm.
+root is my =$HOME=. So, yeah, no =magit-todos= in yadm.
 #+begin_src emacs-lisp
 (use-package magit-todos
   :straight (:build t)
@@ -1478,17 +1478,16 @@ deactivate `magit-todos-mode', otherwise enable it."
   (csetq magit-todos-ignore-case t))
 #+end_src
 
-Finally, it is also possible to use Gitflow’s framework with Magit
-with ~magit-gitflow~:
+Finally, =git-cliff= generates changelogs within Magit itself using [[https://github.com/orhun/git-cliff][=git-cliff=]].
 #+begin_src emacs-lisp
-(use-package magit-gitflow
-  :defer t
-  :after magit
-  :straight (magit-gitflow :build t
-                           :type git
-                           :host github
-                           :repo "jtatarik/magit-gitflow")
-  :hook (magit-mode . turn-on-magit-gitflow))
+(use-package git-cliff
+  :straight (:build t :type git :host github :repo "liuyinz/git-cliff.el")
+  :after (magit)
+  :config
+  (with-eval-after-load 'magit-tag
+   (transient-append-suffix 'magit-tag
+     '(1 0 -1)
+     '("c" "changelog" git-cliff-menu))))
 #+end_src
 
 *** Forge
