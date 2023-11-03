@@ -1381,6 +1381,7 @@ doing and what Git is doing! In short, I absolutely love it!
   (setq forge-add-default-bindings nil)
   :config
   (add-hook 'magit-process-find-password-functions 'magit-process-password-auth-source)
+  <<magit-angular-keywords-highlight>>
   (csetq magit-clone-default-directory "~/fromGIT/"
          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (with-eval-after-load 'evil-collection
@@ -1438,6 +1439,28 @@ Magit and bug [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=62093][62093]] of 
 
 (advice-add 'tramp-send-command :filter-args
             #'my--tramp-send-command--workaround-stty-icanon-bug--filter-args)
+#+end_src
+
+I also want to highlight these angular-style keywords in commit messages.
+#+name: magit-angular-keywords-highlight
+#+begin_src emacs-lisp :tangle no
+(defun my/magit-log-highlight-angular-keywords (_rev msg)
+  "Highlight angular-style keywords in commit messages."
+  (let ((boundary 0))
+    (when (string-match (rx (seq (or "feat" "fix" "docs" "style" "refactor"
+                                     "perf" "test" "chore")
+                                 (* "(" (* (not ")")) ")")
+                                 ":"))
+                        msg
+                        boundary)
+        (setq boundary (match-end 0))
+        (magit--put-face (match-beginning 0) boundary
+                         'magit-keyword msg)))
+  msg)
+
+(advice-add #'magit-log-propertize-keywords
+            :after
+            #'my/magit-log-highlight-angular-keywords)
 #+end_src
 
 [[https://github.com/alphapapa][Alphapapa]] also created an awesome package for Magit: magit-todos which
