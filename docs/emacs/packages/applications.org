@@ -27,6 +27,12 @@
            "\n")
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package transient
+  :straight (:build t)
+  :defer t)
+#+end_src
+
 ** Bitwarden
 This package is still a very much work in progress one I’m developing
 in order to interact with Bitwarden in Emacs with the help of the
@@ -1476,18 +1482,6 @@ deactivate `magit-todos-mode', otherwise enable it."
    (add-hook 'magit-mode-hook #'my/magit-todos-if-not-yadm))
   :config
   (csetq magit-todos-ignore-case t))
-#+end_src
-
-Finally, =git-cliff= generates changelogs within Magit itself using [[https://github.com/orhun/git-cliff][=git-cliff=]].
-#+begin_src emacs-lisp
-(use-package git-cliff
-  :straight (:build t :type git :host github :repo "liuyinz/git-cliff.el")
-  :after (magit)
-  :config
-  (with-eval-after-load 'magit-tag
-   (transient-append-suffix 'magit-tag
-     '(1 0 -1)
-     '("c" "changelog" git-cliff-menu))))
 #+end_src
 
 *** Forge
