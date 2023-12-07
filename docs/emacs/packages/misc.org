@@ -117,7 +117,6 @@ quickly find files across my filesystem.
   :config
   (setq quick-find-files-program 'fd
         quick-find-files-dirs-and-exts '(("~/org"                  . "org")
-                                         ("~/org/config/docs"      . "org")
                                          ("~/Documents/university" . "org"))
         quick-find-files-fd-additional-options "-L"))
 #+end_src
