@@ -210,7 +210,7 @@ fi
 
 # If the current session is Wayland, copy with wl-copy, otherwise copy with xclipboard
 if [ "$XDG_SESSION_TYPE" = "wayland" ]
-then printf '%s' "$choice" | wc-copy # Wayland
+then printf '%s' "$choice" | wl-copy # Wayland
 else printf '%s' "$choice" | xclip -sel clip # X11
 fi
 
