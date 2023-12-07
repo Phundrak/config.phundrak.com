@@ -1357,6 +1357,13 @@ development. First, let’s install the most important package,
   (remove-hook 'rustic-mode-hook #'rustic-setup-lsp))
 #+end_src
 
+*** Uiua
+#+begin_src emacs-lisp
+(use-package uiua-ts-mode
+  :mode "\\.ua\\'"
+  :straight (:build t))
+#+end_src
+
 *** Web programming
 :END:
 [[https://emmet.io/][Emmet]] is a powerful templating engine that can generate through simple
