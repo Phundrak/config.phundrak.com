@@ -1,0 +1,35 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: purcell/setup-emacs@master
+        with:
+          version: 29.1
+      - name: "Export org to md"
+        run: emacs -Q --script export.el
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - uses: borales/actions-yarn@v4.2.0
+        with:
+          cmd: install --frozen-lockfile
+      - uses: borales/actions-yarn@v4.2.0
+        with:
+          cmd: docs:build
+      - name: "Deploy to remote server"
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          source: docs/.vuepress/dist/*
+          target: ${{ secrets.DESTPATH }}
+          strip_components: 3
