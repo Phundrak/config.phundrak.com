@@ -32,7 +32,7 @@ set-window-option -g mode-keys vi
 ** Windows and panes configuration
 Although I agree in computer science most things should begin with
 zero, I find it quite weird to see my first window and my first pane
-to be labeled with it rather than one. So, let’s pull a Lua on Tmux
+to be labelled with it rather than one. So, let’s pull a Lua on Tmux
 and force it to begin with 1 instead of 0.
 #+begin_src tmux
 set -g base-index 1
@@ -106,9 +106,9 @@ set -g @resurrect-processes '<<resurrect-processes()>>'
 #+end_src
 
 ** Keybindings
-First of all, I don’t like prefixing all of my keybindings with ~C-b~,
-that’s what I use in ~insert-mode~ in Emacs to make the cursor go back.
-So instead, let’s set meta with space as my prefix.
+Firstly, I don’t like prefixing all of my keybindings with ~C-b~, that’s
+what I use in ~insert-mode~ in Emacs to make the cursor go back. So
+instead, let’s set meta with space as my prefix.
 #+begin_src tmux
 unbind C-b
 set -g prefix M-Space
@@ -222,7 +222,10 @@ with the main prefix.
 <<gen-keybinds(keybinds=windows-prefix, prefix="windows")>>
 #+end_src
 
-In order to access more easily the different windows, I want to be able to type =<prefix> TAB <window number>=. However, I’m using the bépo layout, numbers are available only when pressing shift. Otherwise, the characters typed are ="«»()@+-/*= (from 1 to 0).
+In order to access more easily the different windows, I want to be
+able to type =<prefix> TAB <window number>=. However, I’m using the bépo
+layout, numbers are available only when pressing shift. Otherwise, the
+characters typed are ="«»()@+-/*= (from 1 to 0).
 #+begin_src emacs-lisp :wrap src tmux :exports code
 (let ((keybinds "")
       (keys '("\\\"" "«" "»" "(" ")" "@" "+" "-" "/" "*")))
@@ -251,7 +254,7 @@ bind-key -T windows * select-window -t :=10
 
 *** Copy in vi mode
 Tmux has a nice mode for vim keybindings users: =copy-mode-vi= which
-allows to move the cursor around in the pane, select some stuff, and
+allows moving the cursor around in the pane, select some stuff, and
 copy it. But first, I need to unbind some keys:
 #+begin_src tmux
 unbind -T copy-mode-vi H

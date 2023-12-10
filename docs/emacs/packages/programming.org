@@ -64,9 +64,9 @@ it is.
 
 *** Databases
 A really cool tool in Emacs for manipulating databases is ~emacsql~.
-It’s able to manipulate Sqlite databases by default, but it’s also
+It’s able to manipulate SQLite databases by default, but it’s also
 possible to manipulate MariaDB and PostgreSQL databases by installing
-additional packages. For now, I just need Sqlite and PostgreSQL
+additional packages. For now, I just need SQLite and PostgreSQL
 interfaces, so let’s install the relevant packages.
 #+begin_src emacs-lisp
 (use-package emacsql-psql
@@ -257,7 +257,7 @@ I also want all the visual enhancements LSP can provide.
     "r" #'lsp-ui-pook--select-next-file))
 #+end_src
 
-And let’s enable some intergration with ~ivy~.
+And let’s enable some integration with ~ivy~.
 #+begin_src emacs-lisp
 (use-package lsp-ivy
   :straight (:build t)
@@ -491,7 +491,7 @@ language [[http://www.gnuplot.info/][Gnuplot]]. Let’s make some beautiful grap
 #+end_src
 
 *** Graphviz
-[[https://graphviz.org/][Graphviz]], often known with ~dot~, allows to programatically create
+[[https://graphviz.org/][Graphviz]], often known with ~dot~, allows to programmatically create
 visual graphs and networks.
 #+begin_src emacs-lisp
 (use-package graphviz-dot-mode
@@ -1243,7 +1243,7 @@ Access pydoc through counsel.
 #+end_src
 
 This generates Python documentation that is meant to be compatible
-with Sphinx, a documentation generaton for Python.
+with Sphinx, a documentation generation for Python.
 #+begin_src emacs-lisp
 (use-package sphinx-doc
   :defer t
@@ -1402,7 +1402,7 @@ modifications.
 #+end_src
 
 Web mode is a sort of hybrid major mode that allows editing several
-languages in the same buffer, mainly HTML, CSS, and Javascript.
+languages in the same buffer, mainly HTML, CSS, and JavaScript.
 #+begin_src emacs-lisp
 (use-package web-mode
   :defer t
@@ -1540,7 +1540,7 @@ activate when I open ~.less~ files by default. Let’s fix that.
 **** Javascript
 :END:
 ~javascript-mode~ is meh at best, while ~rjsx-mode~ (Real JSX) is much
-better: it supports both Javascript and ~.jsx~ files for React and
+better: it supports both JavaScript and ~.jsx~ files for React and
 Next.JS.
 #+begin_src emacs-lisp
 (use-package rjsx-mode
@@ -1577,7 +1577,7 @@ Next.JS.
         js2-idle-timer-delay             0.15))
 #+end_src
 
-~js2-refactor~ is an amazing tool for refactoring Javascript code. I
+~js2-refactor~ is an amazing tool for refactoring JavaScript code. I
 mean, [[https://www.youtube.com/watch?v=-7yMWD1wUu4][look at this]]! And the video is only from 2013, and it still
 receives some commits!
 #+begin_src emacs-lisp
@@ -1589,8 +1589,8 @@ receives some commits!
   :hook (rjsx-mode . js2-refactor-mode))
 #+end_src
 
-Which Emacser prefers the command line over Emacs itself? I don’t.
-Let’s interact with NPM through Emacs then.
+Is there any Emacser who prefers the command line over Emacs itself? I
+don’t. Let’s interact with NPM through Emacs then.
 #+begin_src emacs-lisp
 (use-package npm-transient
   :defer t
@@ -1605,7 +1605,7 @@ Let’s interact with NPM through Emacs then.
   ;;   "n" #'npm-transient))
 #+end_src
 
-And finally, here is a formatter for Javascript.
+And finally, here is a formatter for JavaScript.
 #+begin_src emacs-lisp
 (use-package prettier-js
   :defer t
@@ -1618,7 +1618,7 @@ And finally, here is a formatter for Javascript.
 
 **** Typescript
 :END:
-Typescript is a safer alternative to Javascript. Let’s install its major mode then.
+Typescript is a safer alternative to JavaScript. Let’s install its major mode then.
 #+begin_src emacs-lisp
 (use-package typescript-mode
   :defer t
@@ -1712,78 +1712,7 @@ First, here is its major mode.
 #+end_src
 
 For LSP to work, we need ~zls~ to be installed. In my case, as I am on
-ArchLinux, I can install it from the AUR, and my AUR helper is ~paru~.
+Arch Linux, I can install it from the AUR, and my AUR helper is ~paru~.
 #+begin_src fish :results raw :wrap "src text" :exports code
 paru --skipreview --noconfirm -S zls-bin 2>&1
-#+end_src
-
-#+RESULTS:
-#+begin_src text
-:: Resolving dependencies...
-:: Calculating conflicts...
-:: Calculating inner conflicts...
-
-Aur (1)      Old Version  New Version  Make Only
-aur/zls-bin               0.10.0-1     No
-
-:: Proceed with installation? [Y/n]:
-
-:: Downloading PKGBUILDs...
- PKGBUILDs up to date
-fetching devel info...
-==> Making package: zls-bin 0.10.0-1 (ven. 19 mai 2023 11:23:59)
-==> Retrieving sources...
-  -> Downloading zls-LICENSE.txt...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1091  100  1091    0     0   3596      0 --:--:-- --:--:-- --:--:--  3600
-  -> Downloading zls-bin-0.10.0.tar.gz...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 56 1477k   56  827k    0     0  1164k      0  0:00:01 --:--:--  0:00:01 1164k100 1477k  100 1477k    0     0  2012k      0 --:--:-- --:--:-- --:--:-- 27.5M
-==> Validating source files with sha256sums...
-    zls-LICENSE.txt ... Passed
-==> Validating source_x86_64 files with sha256sums...
-    zls-bin-0.10.0.tar.gz ... Passed
-==> Making package: zls-bin 0.10.0-1 (ven. 19 mai 2023 11:24:02)
-==> Checking runtime dependencies...
-==> Checking buildtime dependencies...
-==> Retrieving sources...
-  -> Found zls-LICENSE.txt
-  -> Found zls-bin-0.10.0.tar.gz
-==> Validating source files with sha256sums...
-    zls-LICENSE.txt ... Passed
-==> Validating source_x86_64 files with sha256sums...
-    zls-bin-0.10.0.tar.gz ... Passed
-==> Removing existing $srcdir/ directory...
-==> Extracting sources...
-  -> Extracting zls-bin-0.10.0.tar.gz with bsdtar
-==> Sources are ready.
-zls-bin-0.10.0-1: parsing pkg list...
-:: zls-bin-0.10.0-1 is up to date -- skipping build
-loading packages...
-resolving dependencies...
-looking for conflicting packages...
-
-Package (1)  New Version  Net Change
-
-zls-bin      0.10.0-1       1,36 MiB
-
-Total Installed Size:  1,36 MiB
-
-:: Proceed with installation? [Y/n]
-checking keyring...
-checking package integrity...
-loading package files...
-checking for file conflicts...
-checking available disk space...
-:: Processing package changes...
-installing zls-bin...
-Consider runing 'zls --config' to setup initial configuration
-
-This is not required, but it is highly recommended
-:: Running post-transaction hooks...
-(1/2) Arming ConditionNeedsUpdate...
-(2/2) Refreshing PackageKit...
 #+end_src

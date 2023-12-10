@@ -134,7 +134,7 @@ behavior.
 ~smartparens~ is a package similar to ~parinfer~, but while the latter is
 more specialized for Lisp dialects, ~smartparens~ works better with
 other programming languages that still uses parenthesis, but not as
-much as Lisp dialects; think for example C, C++, Rust, Javascript, and
+much as Lisp dialects; think for example C, C++, Rust, JavaScript, and
 so on.
 #+begin_src emacs-lisp
 (use-package smartparens
@@ -159,7 +159,7 @@ escaping your strings!
 ** Writeroom
 On the other hand, ~writeroom~ allows the user to enter a
 distraction-free mode of Emacs, and I like that! But the default width
-is a bit too small for me, and I prefer not to go fullscren.
+is a bit too small for me, and I prefer not to go full-screen.
 #+begin_src emacs-lisp
 (use-package writeroom-mode
   :defer t

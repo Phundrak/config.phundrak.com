@@ -122,10 +122,8 @@ of our symbols when the cursor is on it.
 #+end_src
 
 ** Ligatures
-The font I’m using (see *here*) supports ligatures, but Emacs in GUI
-mode does not. And of course, there’s a package for that.
-
-# Insert equivalent of #Basic-configuration-Visual-Configuration-Fontsxfkjel6184j0 in *here*
+The font I’m using supports ligatures, but Emacs in GUI mode does not.
+And of course, there’s a package for that.
 
 #+begin_src emacs-lisp
 (use-package ligature
@@ -175,9 +173,8 @@ The DoomEmacs modeline looks nice in my opinion, let’s use it.
 #+end_src
 
 ** Pixel-perfect alignment of Markdown and org-mode tables
-:END:
 Usually, I have no issue with the alignment of the tables I write in
-org-mode and (more rarely) Markdown. However, there are occurences
+org-mode and (more rarely) Markdown. However, there are occurrences
 where I’ll use a character that does not exactly respect my monospace
 font, which messes with the alignment of the table (often when I do
 linguistics stuff). A solution to this is the package ~valign~. A little
@@ -215,7 +212,7 @@ sometimes there’s just too much. Is the first window source code? Is
 the other one just an open email? Oh, let’s not forget the ~*Messages*~
 buffer open next to another source buffer.
 
-Solaire-mode applies a subtle but useful tweak to your current color
+Solaire-mode applies a subtle but useful tweak to your current colour
 scheme: the background of programming buffers is slightly lighter than
 the background of other buffers. (Or is it other buffers that have a
 slightly darker background? I’m not sure.)
@@ -229,7 +226,7 @@ slightly darker background? I’m not sure.)
 ** Theme
 You may have noticed I use the Nord theme pretty much everywhere on my
 computer, why not Emacs? In my opinion, its aurora variant is nicer
-than the default Nord theme since it is richer in colors --- just a
+than the default Nord theme since it is richer in colours --- just a
 personal preference.
 #+begin_src emacs-lisp
 (use-package doom-themes
@@ -248,9 +245,9 @@ for any language that has delimiters like brackets too.
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
-** Y’all want some more /COLORS/?
-It is possible to make info buffers much more colorful (and imo easier
-to read) with this simple package:
+** Y’all want some more /COLOURS/?
+It is possible to make info buffers much more colourful (and, in my
+opinion, easier to read) with this simple package:
 #+begin_src emacs-lisp
 (use-package info-colors
   :straight (:build t)

@@ -1,4 +1,4 @@
-#+TITLE: Arch Linux, Phundrak-flavored
+#+TITLE: Arch Linux, Phundrak-flavoured
 #+setupfile: headers
 #+PROPERTY: header-args :tangle no :exports none
 #+PROPERTY: header-args:sh :tangle no :exports code
@@ -6,29 +6,33 @@
 #+PROPERTY: header-args:emacs-lisp :exports none :noweb yes :tangle no :cache yes
 
 * Bootstrap Script
-Here will be presented what I do to get my system up and running on a fresh Arch
-Linux install. These installation instructions were written in order to get an
-Arch Linux distribution up and running with the same configuration as my main
-computer’s and my travelling laptop’s configuration.
+Here will be presented what I do to get my system up and running on a
+fresh Arch Linux install. These installation instructions were written
+in order to get an Arch Linux distribution up and running with the
+same configuration as my main computer’s and my travelling laptop’s
+configuration.
 
 ** Install Arch Linux
-I usually install Arch from the [[https://www.archlinux.org/download/][vanilla ISO]], however I began using [[https://github.com/MatMoul/archfi][archfi]] to
-install easily the distro (I’ve done it so many times, I know how it works now).
-Usually, my distros will be installed on two partitions: ~/home~ and ~/~ (root).
+I usually install Arch from the [[https://www.archlinux.org/download/][vanilla ISO]], however I began using
+[[https://github.com/MatMoul/archfi][archfi]] to install easily the distro (I’ve done it so many times, I
+know how it works now). Usually, my distros will be installed on two
+partitions: ~/home~ and ~/~ (root).
 
-If the computer supports EFI bootloaders, the EFI partition will be mounted on
-~/boot/efi~. I generally use ~systemd-boot~ as my boot manager, but if you are
-more comfortable with another one, just install what you want. Be aware that if
-you format your ~/boot~ partition, you will delete all boot managers that
-already exist; so, if you are dual-booting, *DO NOT FORMAT IT*. Yes, I made the
-mistake of wiping the Windows boot manager when I used to dual-boot.
+If the computer supports EFI bootloaders, the EFI partition will be
+mounted on ~/boot/efi~. I generally use ~systemd-boot~ as my boot manager,
+but if you are more comfortable with another one, just install what
+you want. Be aware that if you format your ~/boot~ partition, you will
+delete all boot managers that already exist; so, if you are
+dual-booting, *DO NOT FORMAT IT*. Yes, I made the mistake of wiping the
+Windows boot manager when I used to dual-boot.
 
-In order to use the ~suspend-then-hibernate~ systemd command, it is necessary to
-have a swap partition at least twice the size of your installed RAM. That is
-because when this command will be run, the system will try to save the current
-state of your machine, stored in your RAM, to the swap filesystem. If there is
-not enough space, the command will fail, and you won’t be able to use this
-command. For instance, my current computer has 32 GB of RAM, hence my SWAP
+In order to use the ~suspend-then-hibernate~ systemd command, it is
+necessary to have a swap partition at least twice the size of your
+installed RAM. That is because when this command will be run, the
+system will try to save the current state of your machine, stored in
+your RAM, to the swap filesystem. If there is not enough space, the
+command will fail, and you won’t be able to use this command. For
+instance, my current computer has 32 GB of RAM, hence my SWAP
 partition is 16 GB large.
 
 *** Get the latest, fastest mirrors
@@ -38,17 +42,18 @@ pacman -Sy reflector
 reflector -c FR,DE -l 20 -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
 #+END_SRC
 
-This will update the packages from your live ISO, and you will get the best
-mirrors for your installation. Of course, change the countries accordingly to
-your location. In my case, I am only interested in French, German, and Belgian
-mirrors.
+This will update the packages from your live ISO, and you will get the
+best mirrors for your installation. Of course, change the countries
+accordingly to your location. In my case, I am only interested in
+French, German, and Belgian mirrors.
 
 *** Install the system
-Then you can use a custom script to ease your installation of Arch if you do not
-wish to do it manually. Personally, I’ve done it several times already, I know
-how the distro works, I just want to be able to install my distro quickly now.
-I’ll need to download the script with ~wget~, but apparently it isn’t installed
-by default on Arch ISOs anymore, so I’ll need to install it.
+Then you can use a custom script to ease your installation of Arch if
+you do not wish to do it manually. Personally, I’ve done it several
+times already, I know how the distro works, I just want to be able to
+install my distro quickly now. I’ll need to download the script with
+~wget~, but apparently it isn’t installed by default on Arch ISOs any
+more, so I’ll need to install it.
 #+BEGIN_SRC sh
 pacman -S wget
 #+END_SRC
@@ -60,13 +65,14 @@ wget archfi.sf.net/archfi
 sh archfi
 #+END_SRC
 
-Then, follow the instructions and install Arch Linux. Take the opportunity to
-install as many packages as you need, mainly ~paru~ which I use as my package
-manager (it is just a wrapper for ~pacman~) and AUR helper, and ~pacman-contrib~
-which will help us to install some packages later.
+Then, follow the instructions and install Arch Linux. Take the
+opportunity to install as many packages as you need, mainly ~paru~ which
+I use as my package manager (it is just a wrapper for ~pacman~) and AUR
+helper, and ~pacman-contrib~ which will help us to install some packages
+later.
 
-Once your system is installed, reboot and remove your installation media from
-your computer.
+Once your system is installed, reboot and remove your installation
+media from your computer.
 
 ** Execute bootstrap
 :PROPERTIES:
@@ -85,8 +91,8 @@ And now that ~paru~ is available, we can install ~yadm~:
 paru -S yadm
 #+END_SRC
 
-~yadm~ comes with a very handy feature: its bootstrap script. It can be executed
-automatically once the dotfiles are cloned with yadm:
+~yadm~ comes with a very handy feature: its bootstrap script. It can be
+executed automatically once the dotfiles are cloned with yadm:
 #+BEGIN_SRC sh
 yadm clone https://labs.phundrak.com/phundrak/dotfiles
 # or if labs.phundrak.com is down or too slow for you
@@ -107,11 +113,11 @@ end
 #+END_SRC
 
 *** Get a correct keyboard layout
-I use mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout, a French keyboard layout inspired by Dvorak
-layouts, however I sometimes need to switch back to the standard French AZERTY
-or the American QWERTY layout, so I make it so the Menu key switches for me my
-layout between these three. This makes it so my xorg configuration of my
-keyboard looks like this:
+I use mainly the [[https://bepo.fr/wiki/Accueil][bépo]] layout, a French keyboard layout inspired by
+Dvorak layouts, however I sometimes need to switch back to the
+standard French AZERTY or the American QWERTY layout, so I make it so
+the Menu key switches for me my layout between these three. This makes
+it so my Xorg configuration of my keyboard looks like this:
 #+BEGIN_SRC fish
 set keyboardconf \
 'Section "InputClass"
@@ -124,7 +130,8 @@ set keyboardconf \
 EndSection'
 #+END_SRC
 
-So, let’s ask the user if they want to set it as their keyboard configuration.
+So, let’s ask the user if they want to set it as their keyboard
+configuration.
 #+BEGIN_SRC fish
 printf "\n# Set keyboard layout #########################################################\n\n"
 whiptail --yesno "Would you like to set your keyboard layout to the bépo layout?" 8 55
@@ -134,8 +141,8 @@ end
 #+END_SRC
 
 *** Set our locale
-I use two main locales, the French and US UTF-8 locales, and I like to keep the
-Japanese locale activated just in case.
+I use two main locales, the French and US UTF-8 locales, and I like to
+keep the Japanese locale activated just in case.
 #+BEGIN_SRC fish
 set mylocales "en_US.UTF-8 UTF-8" "fr_FR.UTF-8 UTF-8" "ja_JP.UTF-8 UTF-8"
 #+END_SRC
@@ -164,7 +171,7 @@ LC_ADDRESS=fr_FR.UTF-8
 LC_MEASUREMENT=fr_FR.UTF-8"
 #+END_SRC
 
-Let’s set it as our system’s locale if the user whishes to.
+Let’s set it as our system’s locale if the user wishes to.
 #+BEGIN_SRC fish
 whiptail --yesno "Do you agree to have the following locale set?\n\n     $localeconf"  20 43
 if test $status -eq 0
@@ -179,8 +186,8 @@ sudo locale-gen
 #+END_SRC
 
 *** Create some folders
-Let’s create some folders we might need for mounting our drives, Android devices
-and CDs.
+Let’s create some folders we might need for mounting our drives,
+Android devices and CDs.
 #+BEGIN_SRC fish
 printf "\n# Create directories for mounting #############################################\n\n"
 sudo mkdir -p /mnt/{USB,CD,Android}
@@ -198,7 +205,7 @@ end
 #+END_SRC
 
 *** Install basic packages
-Ok, let’s list all the packages that I need. First, let’s begin with
+OK, let’s list all the packages that I need. First, let’s begin with
 system packages.
 #+name: packages-system
 | Package name                | Why I need it                                                |
@@ -381,7 +388,7 @@ Terminal utilities
 | unrar           | Support for rar file format                                     |
 | w3m             | Terminal web browser                                            |
 | wget            | Retrieve files from the web                                     |
-| x11-ssh-askpass | Passphrase dialog over SSH                                      |
+| x11-ssh-askpass | Passphrase dialogue over SSH                                    |
 | xclip           | Interact with the X11 clipboard                                 |
 | yt-dlp-drop-in  | ~yt-dlp~ but it also replaces ~youtube-dl~                          |
 
@@ -549,8 +556,8 @@ Our code to generate such directories looks like this:
 <<gen-dirs-tangle()>>
 #+END_SRC
 
-The next step is to tangle all the Org files. Here is the list of files that are
-to be tangled:
+The next step is to tangle all the Org files. Here is the list of
+files that are to be tangled:
 #+NAME: tangled-files
 | filename     |
 |--------------|
@@ -636,8 +643,8 @@ printf "\n# Tangling org files #################################################
 
 *** Set up dotfiles’ git repository
 **** Update our dotfiles’ remotes
-This line in the bootstrap script will test if the current user is using my
-username. If yes, it’s probably me.
+This line in the bootstrap script will test if the current user is
+using my username. If yes, it’s probably me.
 #+BEGIN_SRC fish
 if test "$USER" = 'phundrak'
 #+END_SRC
@@ -661,20 +668,21 @@ end
 #+END_SRC
 
 **** Update our submodules
-Now we can download the various dependencies of our dotfiles. To do so, let’s
-run the following command:
+Now we can download the various dependencies of our dotfiles. To do
+so, let’s run the following command:
 #+BEGIN_SRC fish
 printf "\n# Getting yadm susbmodules ####################################################\n\n"
 yadm submodule update --init --recursive
 #+END_SRC
 
 *** Enable some services
-We have installed some packages which require some services to run. Let’s enable
-them.
+We have installed some packages which require some services to run.
+Let’s enable them.
 
 **** Systemd-timesyncd
-This service enables time syncing with the NTP protocol, so I can be sure my
-computer’s time is correct. The service first needs to be enabled:
+This service enables time syncing with the NTP protocol, so I can be
+sure my computer’s time is correct. The service first needs to be
+enabled:
 #+BEGIN_SRC fish
 printf "\n# Enabling timesync ###########################################################\n\n"
 sudo systemctl enable --now systemd-timesyncd
@@ -712,10 +720,11 @@ end
 #+END_SRC
 
 **** Emacs
-Emacs will run as a user service, which means it won’t be launched until we log
-in. However, the service won’t be started immediately, I personally prefer to
-start a standalone instance in which installing and compiling the Emacs packages
-will happen, and then once that is done I will start the service.
+Emacs will run as a user service, which means it won’t be launched
+until we log in. However, the service won’t be started immediately, I
+personally prefer to start a standalone instance in which installing
+and compiling the Emacs packages will happen, and then once that is
+done I will start the service.
 #+BEGIN_SRC fish
 printf "\n# Enabling Emacs as user service ##############################################\n\n"
 systemctl --user enable emacs
@@ -730,8 +739,8 @@ systemctl --user start emacs
 #+end_src
 
 **** Mpd
-Mpd will also use as a user service in order to get rid of some lines of code in
-my configuration.
+Mpd will also use as a user service in order to get rid of some lines
+of code in my configuration.
 #+BEGIN_SRC fish
 printf "\n# Enabling Mpd as a user service ##############################################\n\n"
 mkdir -p ~/.config/mpd/playlists
@@ -739,9 +748,9 @@ systemctl --user enable --now mpd
 #+END_SRC
 
 **** NordVPN
-Thanks to the AUR package ~nordvpn-bin~, I no longer have to manually maintain
-my VPN connections with OpenVPN. However, it requires a service that we should
-activate:
+Thanks to the AUR package ~nordvpn-bin~, I no longer have to manually
+maintain my VPN connections with OpenVPN. However, it requires a
+service that we should activate:
 #+BEGIN_SRC fish
 sudo systemctl enable --now nordvpnd
 #+END_SRC
@@ -807,11 +816,11 @@ systemctl --user enable --now pipewire-input-filter-chain.service
 Just make sure afterwards the microphone is redirected to the
 noise-canceling source. The same source should be your input device
 where you want to use your microphone. The only downside is this is
-ony a mono input, but it shouldn’t matter for most people.
+only a mono input, but it shouldn’t matter for most people.
 
 **** SSH server
-Maybe we want to activate an SSH server on our machine. If so, we can enable it.
-Let’s ask the question.
+Maybe we want to activate an SSH server on our machine. If so, we can
+enable it. Let’s ask the question.
 #+BEGIN_SRC fish
 whiptail --yesno 'Do you want to activate the ssh server?' 8 50
 if test $status -eq 0
@@ -845,23 +854,24 @@ git clone https://github.com/hakimel/reveal.js.git
 
 *** Install Rust
 **** Install the toolchains
-When using Rust, I bounce between two toolchains, the ~stable~ toolchain and the
-~nightly~ toolchain, although I try to stick with Rust Stable. To install them,
-I will use ~rustup~ which has already been installed previously.
+When using Rust, I bounce between two toolchains, the ~stable~ toolchain
+and the ~nightly~ toolchain, although I try to stick with Rust Stable.
+To install them, I will use ~rustup~ which has already been installed
+previously.
 #+BEGIN_SRC fish
 printf "\n# Install the rust toolchains, nightly is the default one #####################\n\n"
 rustup default stable
 #+END_SRC
 
-This will both download the stable toolchain and set it as the default one. Now
-to install the nightly toolchain, let’s run this:
+This will both download the stable toolchain and set it as the default
+one. Now to install the nightly toolchain, let’s run this:
 #+BEGIN_SRC fish
 rustup toolchain install nightly
 #+END_SRC
 
 **** Install some utilities
-We’ll need some utilities when developing Rust from Emacs, namely ~rustfmt~ and
-~racer~. Let’s install them with ~cargo~.
+We’ll need some utilities when developing Rust from Emacs, namely
+~rustfmt~. Let’s install it with ~cargo~.
 #+BEGIN_SRC fish
 printf "\n# Add rust utilities ##########################################################\n\n"
 cargo install rustfmt
@@ -881,7 +891,7 @@ We will also need some components for development purposes.
            "\n")
 #+END_SRC
 
-#+RESULTS[b3935b1c09d86fe506b43670f52960306a1e9809]: rust-components-gen
+#+RESULTS[2499c179aa97dc038832188f53dd855a23eba70c]: rust-components-gen
 : rustup component add rust-src
 : rustup component add clippy
 
@@ -891,11 +901,12 @@ Here is the code to do so:
 #+END_SRC
 
 *** Set up our fish shell
-The last thing we want to do is to set up our fish shell with some extensions in
-order to improve the user experience.
+The last thing we want to do is to set up our fish shell with some
+extensions in order to improve the user experience.
 
 **** Install ~fisher~
-We will be using ~fisher~ as our extension manager for Fish. Let’s install it.
+We will be using ~fisher~ as our extension manager for Fish. Let’s
+install it.
 #+BEGIN_SRC fish
 printf "\n# Installing fisher ###########################################################\n\n"
 curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher

@@ -9,7 +9,7 @@
 Bufler is a package that organises and lists buffers in a much better
 way than how they are usually sorted. You can easily and quickly find
 buffers by their group, not only by their name, and THIS is great
-news! Also, no ~helm~ please! And for some reasons the keybindings are
+news! Also, no ~helm~ please! And for some reason, the keybindings are
 borked by default, so let’s redefine them, and let’s also rebind ~SPC~
 to ~p~ since it would conflict with my main ~general~ prefix.
 #+begin_src emacs-lisp

@@ -67,8 +67,8 @@ MPD each time we run it.
 #+end_src
 
 ** Audio outputs
-Two audio outputs will be defined. The first one sets Pulseaudio up so
-I can actually hear my music. Its configuration is simple, really.
+Two audio outputs will be defined. The first one sets Pulseaudio up,
+so I can actually hear my music. Its configuration is simple, really.
 #+begin_src conf-space
 audio_output {
   type  "pulse"

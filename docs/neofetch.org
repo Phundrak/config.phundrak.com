@@ -5,30 +5,32 @@
 #+PROPERTY: header-args:sh+ :noweb yes :padline no :mkdirp yes
 
 * Neofetch
-[[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was written in
-Bash, and thus its configuration file is written as a Bash script too. This
-document was written with org-mode, and my configuration file is tangled from
-the source blocks you will see below to ~~/.config/neofetch/config.conf~. This
-configuration will only contain what I need. For any further information, please
-refer to the [[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
+[[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was
+written in Bash, and thus its configuration file is written as a Bash
+script too. This document was written with org-mode, and my
+configuration file is tangled from the source blocks you will see
+below to ~~/.config/neofetch/config.conf~. This configuration will only
+contain what I need. For any further information, please refer to the
+[[https://github.com/dylanaraps/neofetch][original repository]] and [[https://github.com/dylanaraps/neofetch/wiki/Customizing-Info][its documentation]].
 
 ** The ~print_info~ functions
-The ~print_info~ function is the function called by Neofetch in order to print
-the system information it could fetch. In this function, we’ll choose what to
-display, and how. This function looks like this:
+The ~print_info~ function is the function called by Neofetch in order to
+print the system information it could fetch. In this function, we’ll
+choose what to display, and how. This function looks like this:
 #+BEGIN_SRC sh :tangle no
 print_info() {
     # Print information here…
 }
 #+END_SRC
 
-Generally, what we will display will be shown through the ~info~ function,
-redefined inside Neofetch (this is not ~info(1)~). This ~info~ function accepts
-one or two arguments. With one argument, such as with ~info memory~, we can get
-a result that looks like ~5136MiB / 15873MiB~, while calling it with two
-arguments will treat the first one as a prefix and the second one as the
-interesting information; ~info "Memory" memory~ will look like
-~Memory: 5136MiB / 15873MiB~. Here is what we want to display:
+Generally, what we will display will be shown through the ~info~
+function, redefined inside Neofetch (this is not ~info(1)~). This ~info~
+function accepts one or two arguments. With one argument, such as with
+~info memory~, we can get a result that looks like ~5136MiB / 15873MiB~,
+while calling it with two arguments will treat the first one as a
+prefix and the second one as the interesting information;
+~info "Memory" memory~ will look like ~Memory: 5136MiB / 15873MiB~. Here
+is what we want to display:
 #+NAME: info-elements-table
 | Prefix   | Information | What it does                 |
 |----------+-------------+------------------------------|
@@ -90,10 +92,11 @@ Each of these modules can be tuned with the variables presented below.
 
 ** Information settings
 Each of the following variable tunes a function that can be called in
-~print_info~ described above. It is possible to tune them by modifying this
-document or the configuration file itself, and they can be overridden by the
-command line with flags passed to ~neofetch~. I will divide these variables in
-two main categories: hardware and software-related properties.
+~print_info~ described above. It is possible to tune them by modifying
+this document or the configuration file itself, and they can be
+overridden by the command line with flags passed to ~neofetch~. I will
+divide these variables in two main categories: hardware and
+software-related properties.
 
 *** Software
 **** OS
@@ -112,15 +115,16 @@ This variable can shorten the output of the ~distro~ function.
 distro_shorthand="off"
 #+end_src
 
-It is possible to display when the distro has been installed on the computer.
+It is possible to display when the distro has been installed on the
+computer.
 
 ****** Distro art or image
-By default, Neofetch will display ascii art next to our system information
-representing our distro’s logo. We’ll customize it a bit. First, let’s change
-the ~backend~ value. Note that most of them (except ~off~ of course) support
-shorthands such as ~--kitty~ when passed as arguments from the command line. In
-my case, I will use the Kitty backend since it is the native backend of the
-terminal emulator I use.
+By default, Neofetch will display ASCII art next to our system
+information representing our distro’s logo. We’ll customize it a bit.
+First, let’s change the ~backend~ value. Note that most of them (except
+~off~ of course) support shorthands such as ~--kitty~ when passed as
+arguments from the command line. In my case, I will use the Kitty
+backend since it is the native backend of the terminal emulator I use.
 - Default value :: ~"ascii"~
 - Values ::
   - ~ascii~
@@ -143,10 +147,10 @@ terminal emulator I use.
 image_backend="kitty"
 #+END_SRC
 
-Now, since I indicated I wanted an image engine, I’ll indicate neofetch which
-image to find. Note that ~auto~ will pick the best image source for whatever
-image backend is used. In ascii mode, distro ascii art will be used and in an
-image mode, your wallpaper will be used.
+Now, since I indicated I wanted an image engine, I’ll indicate
+Neofetch which image to find. Note that ~auto~ will pick the best image
+source for whatever image backend is used. In ASCII mode, distro ASCII
+art will be used and in an image mode, your wallpaper will be used.
 - Default value :: ~auto~
 - Values ::
   - ~auto~
@@ -271,18 +275,6 @@ It is possible to display the machine’s public IP address with the function
 #+begin_src sh
 public_ip_host="http://ident.me"
 #+end_src
-
-# - Default value :: ~""~
-# - Values ::
-#   - ~""~
-#   - ~""~
-# - Flag :: ~""~
-# - Supports ::
-# - Examples ::
-#   - on :: ~~
-#   - off :: ~~
-# #+begin_src sh
-# #+end_src
 
 **** Theming
 This section will allow the user to modify what Neofetch can and cannot display
@@ -413,10 +405,10 @@ cpu_cores="off"
 #+end_src
 
 ***** CPU temperature
-This variable allows the user to hide or show the CPU’s temperature, and if
-shown, the user can display it in Celcius or Farenheit degrees. For FreeBSD and
-NetBSD-based systems, you’ll need to enable the ~coretemp~ kernel module. This
-only supports newer Intel processors.
+This variable allows the user to hide or show the CPU’s temperature,
+and if shown, the user can display it in Celsius or Fahrenheit
+degrees. For FreeBSD and NetBSD-based systems, you’ll need to enable
+the ~coretemp~ kernel module. This only supports newer Intel processors.
 - Default value :: ~"off"~
 - Values ::
   - ~"C"~

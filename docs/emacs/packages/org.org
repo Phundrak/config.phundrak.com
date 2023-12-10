@@ -35,7 +35,7 @@ the ~citeproc~ package, a citation processor.
   :straight (:build t))
 #+end_src
 
-Org is the main reason I am using Emacs. It is an extremely powerfu
+Org is the main reason I am using Emacs. It is an extremely powerful
 tool when you want to write anything that is not necessarily primarily
 programming-related, though it absolutely can be! Org can be a
 replacement for anything similar to LibreOffice Writer, LibreOffice
@@ -488,7 +488,7 @@ The capture templates are set like so:
 ** Custom functions
 *** Emphasize text
 Sometimes, I want to emphasize some text in my org-mode documents.
-It’s very possible to just go to the begining of the chosen text, add
+It’s very possible to just go to the beginning of the chosen text, add
 the marker, then go to the end of the text than needs emphasis and add
 another marker, and I’m sure most people are fine with that. But I
 also like being able to select a region and hit a keybind to emphasize
@@ -574,7 +574,7 @@ the value `split-window-right', then it will be changed to
 #+end_src
 
 ** Exporters
-I want to disable by default behavior of ~^~ and ~_~ for only one
+I want to disable by default behaviour of ~^~ and ~_~ for only one
 character, making it compulsory to use instead ~^{}~ and ~_{}~
 respectively. This is due to my frequent usage of the underscore in my
 org files as a regular character and not a markup one, especially when
@@ -613,12 +613,6 @@ exported HTML. Let’s disable that since I never use it.
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-html-validation-link nil)
 #+END_SRC
-
-#+begin_src emacs-lisp
-;; (use-package htmlize
-;;   :defer t
-;;   :straight (:build t))
-#+end_src
 
 This package allows for live-previewing the HTML export of an org
 buffer in an XWidget Webkit browser window. But when testing it, it’s
@@ -700,11 +694,11 @@ coloring is ~engraved~.
 (setq org-latex-src-block-backend 'engraved)
 #+end_src
 
-The default packages break my LaTeX exports: for some reasons, images
-are not loaded and exported in PDFs, so I needed to redifine the
+The default packages break my LaTeX exports: for some reason, images
+are not loaded and exported in PDFs, so I needed to redefine the
 default packages excluding the one that broke my exports; namely, I
-need to remove ~inputenc~, ~fontenc~ and ~grffile~. I also added some default
-packages:
+need to remove ~inputenc~, ~fontenc~ and ~grffile~. I also added some
+default packages:
 - ~cleveref~ for better references to various elements.
 - ~svg~ for inserting SVG files in PDF outputs
 - ~booktabs~ for nicer tables
@@ -927,9 +921,9 @@ Finally, let’s make enabling and disabling stuff accessible:
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :exports code :results silent
 :END:
-I currently have two custom formats for my Org-mode exports: one for general use
-(initialy for my conlanging files, hence its ~conlang~ name), and one for beamer
-exports.
+I currently have two custom formats for my Org-mode exports: one for
+general use (initially for my conlanging files, hence its ~conlang~
+name), and one for beamer exports.
 
 Below is the declaration of the ~conlang~ LaTeX class:
 #+NAME: org-latex-class-conlang

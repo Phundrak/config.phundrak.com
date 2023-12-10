@@ -69,7 +69,7 @@ host. This username is retrieved through the following variable:
 The huge advantage of straight is it clones through git the packages
 it installs. This means development can be done directly on the
 downloaded package. However, Forge (a Magit extension for interacting
-with websites such as GitHub, Gitlab, and such) interacts by default
+with websites such as GitHub, GitLab, and such) interacts by default
 with the forge described by the =origin= remote, which isn’t necessarily
 the one I want Forge to interact with by default. Therefore,
 =straight.el= will name all default remotes =straight= to avoid any name

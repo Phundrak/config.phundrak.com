@@ -6,7 +6,7 @@
 
 * Misc
 ** ArchWiki pages
-A small package I’ve written allows the user to view ArchLinux pages
+A small package I’ve written allows the user to view Arch Linux pages
 either in Emacs or in an external web browser. I prefer the defaults.
 #+begin_src emacs-lisp
 (use-package archwiki
@@ -114,11 +114,11 @@ quickly find files across my filesystem.
                                   :host github
                                   :repo "phundrak/quick-find-files.el"
                                   :build t)
-  :config
-  (setq quick-find-files-program 'fd
-        quick-find-files-dirs-and-exts '(("~/org"                  . "org")
-                                         ("~/Documents/university" . "org"))
-        quick-find-files-fd-additional-options "-L"))
+  :custom
+  (quick-find-files-program 'fd)
+  (quick-find-files-dirs-and-exts '(("~/org"                  . "org")
+                                    ("~/Documents/university" . "org")))
+  (quick-find-files-fd-additional-options "-L"))
 #+end_src
 
 ** Keycast
@@ -255,7 +255,7 @@ Moreover, inside Emacs?
 
 ** Winum
 Winum allows Emacs to associate windows with a specific number and
-navigate through these windows by directly refering to their
+navigate through these windows by directly referring to their
 associated number! This allows for faster window configuration than
 just going to the frame above, then left, left, and up.
 #+begin_src emacs-lisp

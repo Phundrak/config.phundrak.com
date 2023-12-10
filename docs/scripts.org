@@ -128,9 +128,9 @@ fi
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
 :END:
-~backup~ is a very simple, oneliner script that will create a local copy of a
-file and add the date at which it was copied in the filename. You can see its
-source code here:
+~backup~ is a very simple, one-liner script that will create a local
+copy of a file and add the date at which it was copied in the
+filename. You can see its source code here:
 #+BEGIN_SRC fish
 cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
 #+END_SRC
@@ -143,7 +143,7 @@ As I am using a laptop, maximum performance isn’t always what I want.
 Sometimes, it’s just better to have not so great but less
 battery-demanding performance. It is possible to achieve this by
 modifying the CPU governor with ~cpupower~. The [[https://wiki.archlinux.org/title/CPU_frequency_scaling#Scaling_governors][Arch Wiki]] has, as usual,
-some really good documentation on this.
+some superb documentation on this.
 
 The following script asks the user through ~rofi~ which governor to
 apply, and it relies on [[file:./scripts.md#askpass][askpass]] to retrieve the user’s password.
@@ -172,13 +172,13 @@ printf "^f3^f0 %d" $NB_CONTAINERS
 :END:
 This script comes straight from [[https://charm.sh/blog/kamoji-generator/][this blog post]] and generates kamoji. I
 modified it a bit in order to work with either =xclipboard= or =wl-copy=
-depending on whether I am in a X.org session or a Wayland session.
+depending on whether I am in an X.org session or a Wayland session.
 
 Note that it requires the =OPENAI_API_KEY= environment variable to be
 set with a valid OpenAI key.
 #+begin_src bash
-# If the user passes '-h', '--help', or 'help' print out a little bit of help.
-# text.
+# If the user passes '-h', '--help', or 'help' print out a little bit
+# of help. text.
 case "$1" in
     "-h" | "--help" | "help")
         printf 'Generate kaomojis on request.\n\n'
@@ -187,28 +187,29 @@ case "$1" in
         ;;
 esac
 
-# The user can pass an argument like "bear" or "angry" to specify the general
-# kind of Kaomoji produced.
+# The user can pass an argument like "bear" or "angry" to specify the
+# general kind of Kaomoji produced.
 sentiment=""
 if [[ $1 != "" ]]; then
     sentiment=" $1"
 fi
 
 # Ask mods to generate Kaomojis. Save the output in a variable.
-kaomoji="$(mods "generate 10${sentiment} kaomojis. number them and put each one on its own line.")"
+kaomoji="$(mods "generate 10${sentiment} kaomojis. Number them and put each one on its own line.")"
 if [[ $kaomoji == "" ]]; then
     exit 1
 fi
 
-# Pipe mods output to gum so the user can choose the perfect kaomoji. Save that
-# choice in a variable. Also note that we're using cut to drop the item number
-# in front of the Kaomoji.
+# Pipe mods output to gum, so the user can choose the perfect kaomoji.
+# Save that choice in a variable. Also note that we're using cut to
+# drop the item number in front of the Kaomoji.
 choice="$(echo "$kaomoji" | gum choose | cut -d ' ' -f 2)"
 if [[ $choice == "" ]]; then
     exit 1
 fi
 
-# If the current session is Wayland, copy with wl-copy, otherwise copy with xclipboard
+# If the current session is Wayland, copy with wl-copy, otherwise copy
+# with xclipboard
 if [ "$XDG_SESSION_TYPE" = "wayland" ]
 then printf '%s' "$choice" | wl-copy # Wayland
 else printf '%s' "$choice" | xclip -sel clip # X11
@@ -226,7 +227,7 @@ printf 'Copied %s to the clipboard\n' "$choice"
 unread emails I have through the use of ~mu~.
 
 As you can see, the output string contains two font switchers for
-StumpWM so I can switch from the main font to Siji for the caracter
+StumpWM so I can switch from the main font to Siji for the character
 contained between them: U+E072 (an email icon).
 #+begin_src sh
 UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
@@ -254,7 +255,7 @@ nsxiv -abfs f "$HOME/Pictures/Screenshots/$*"
 This is a utility only useful with Wayland for now, using =grim=, =slurp=
 (in order to select which area of the screen I wish to capture) and
 =wl-copy= (from =wl-clipboard=). It saves the screenshot in my
-=$HOME/Pictures/Screenshots= directory with a name formated as
+=$HOME/Pictures/Screenshots= directory with a name formatted as
 =Screenshot_20230425_134550.png= if the screenshot was taken on the 25th
 of April 2023 at 1:45:50PM. If the file already exists, the script
 will suffix the name with an underscore followed by an incremental
@@ -326,15 +327,15 @@ ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
 :PROPERTIES:
 :HEADER-ARGS: :mkdirp yes :tangle no :noweb yes
 :END:
-One thing I like with ~nsxiv~ is you can trigger different behaviors
-based on keypresses. For instance, with my current nsxiv configuration,
-if I press the space key followed by a character, it can delete to the
-trashcan, delete definitively, or open the current image in GIMP. All
-of that is done through one script file stored in
-~$HOME/.config/nsxiv/exec/key-handler~. The fact it reacts to first the
-spacebar instead of /Ctrl-x/ is because I use a custom version of nsxiv I
-first modified to fit the bépo layout, and then I decided to change
-the prefix to fit how I use Emacs and StumpWM. You can read the
+One thing I like with ~nsxiv~ is you can trigger different behaviours
+based on keypresses. For instance, with my current nsxiv
+configuration, if I press the space key followed by a character, it
+can delete to the trashcan, delete definitively, or open the current
+image in GIMP. All of that is done through one script file stored in
+~$HOME/.config/nsxiv/exec/key-handler~. The fact it reacts to first
+thespace bar instead of /Ctrl-x/ is because I use a custom version of
+nsxiv I first modified to fit the bépo layout, and then I decided to
+change the prefix to fit how I use Emacs and StumpWM. You can read the
 PKGBUILD and my nsxiv patch [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/Documents/code/PKGBUILDs/sxiv][in my dotfiles repo]].
 
 #+header: :shebang "#!/usr/bin/env fish" :tangle ~/.config/nsxiv/exec/key-handler
@@ -466,12 +467,13 @@ telnet towel.blinkenlights.nl
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
 :END:
-For some reasons, my firmware does not recognize the function key for toggling
-the touchpad. I’m not going to really complain about it since it lets me program
-it like I want. Since I often don’t need to completely deactivate the touchpad,
-I’ll instead toggle whether tapping is enabled or not when pressing
-~XF86TouchpadToggle~. And for that, I need this small script that will actually
-toggle it, and it will be used in my window manager configuration.
+For some reason, my firmware does not recognize the function key for
+toggling the touchpad. I’m not going to really complain about it since
+it lets me program it like I want. Since I often don’t need to
+completely deactivate the touchpad, I’ll instead toggle whether
+tapping is enabled or not when pressing ~XF86TouchpadToggle~. And for
+that, I need this small script that will actually toggle it, and it
+will be used in my window manager configuration.
 
 First let’s declare some variables to make this script more personal. With my
 current computer (a Gazelle by System76), the name of my touchpad is the
@@ -533,7 +535,7 @@ emacsclient -c -a emacs -e "(dired \"$*\")"
 :HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/ediff
 :END:
 I want Ediff as my merge tool, not just with Git but with other
-programs too such as =pacdiff=.
+programs tooa, such as =pacdiff=.
 #+begin_src bash
 emacsclient -c -a emacs -e "(ediff-files \"$1\" \"$2\")"
 #+end_src
@@ -564,9 +566,9 @@ ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytplay
 :END:
-~ytplay~ is a simple script I’ve written that allows me to play in mpv any
-YouTube video at the desired resolution. The script relies on ~dmenu~ (or ~rofi~
-in dmenu-mode), ~youtube-dl~ and of course ~mpv~ itself.
+~ytplay~ is a simple script I’ve written that allows me to play in MPV
+any YouTube video at the desired resolution. The script relies on
+~dmenu~ (or ~rofi~ in dmenu-mode), ~youtube-dl~ and of course ~mpv~ itself.
 #+BEGIN_SRC fish
 set URL (rofi -dmenu -i -p "Video URL")
 if test -n "$URL"
@@ -899,14 +901,15 @@ end
 #+END_SRC
 
 ***** Download a Single Video
-In order to download a single video, a simple function has been written for this
-that will display when downloaded how far it is down the list of videos to be
-downloaded and it will add its ID to the file listing all videos downloaded. The
-script will also try to download the video according to the ~PREFFERED_FORMAT~
-variable, but if the download fails it will download the default format selected
-by ~youtube-dl~. If both downloads fail, the ID of the video will be added to
-the list of failed videos. If one of the downloads succeeds, it will remove the
-ID from the list of failed downloads.
+In order to download a single video, a simple function has been
+written for this that will display when downloaded how far it is down
+the list of videos to be downloaded, and it will add its ID to the
+file listing all videos downloaded. The script will also try to
+download the video according to the ~PREFFERED_FORMAT~ variable, but if
+the download fails it will download the default format selected by
+~youtube-dl~. If both downloads fail, the ID of the video will be added
+to the list of failed videos. If one of the downloads succeeds, it
+will remove the ID from the list of failed downloads.
 
 The first argument of the function is the video ID from YouTube, the second
 argument is the position of the video in the queue, and the third argument is
@@ -969,16 +972,17 @@ by ~#~, ~;~ and ~]~ (just like ~youtube-dl~) and will download them, assuming
 these are channel URLs or playlist URLs, however it should also work with direct
 video URLs.
 
-What this function does is for each line, it will fetch the entierty of the
-video IDs found in a playlist or channel. Then, it will look each ID up the list
-of already downloaded videos and will add all new IDs to a queue of videos to be
-downloaded. It will then pass each new video ID to ~_ytdl_download_video~
-directly. Beware that if you pass directly the URL of the channel, such as
-~https://www.youtube.com/user/enyay~ if you want to download Tom Scott’s videos,
-it will download everything on the main page of their channel, which means it
-will even download videos from playlists they decided to put on their channel’s
-front page, even if it is not theirs. So in that case, we need to append
-~/videos~ to any channel URL.
+What this function does is for each line, it will fetch the entirety
+of the video IDs found in a playlist or channel. Then, it will look
+each ID up the list of already downloaded videos and will add all new
+IDs to a queue of videos to be downloaded. It will then pass each new
+video ID to ~_ytdl_download_video~ directly. Beware that if you pass
+directly the URL of the channel, such as
+~https://www.youtube.com/user/enyay~ if you want to download Tom Scott’s
+videos, it will download everything on the main page of their channel,
+which means it will even download videos from playlists they decided
+to put on their channel’s front page, even if it is not theirs. So in
+that case, we need to append ~/videos~ to any channel URL.
 #+BEGIN_SRC fish
 function _ytdl_download_batch
     set -q $FILE
@@ -1212,7 +1216,7 @@ begin
 #+END_SRC
 
 What the script does first is detect everything that can be mounted. Between a
-=begin= and =end=, let’s set =LFS= as a local variable. This si in order to get
+=begin= and =end=, let’s set =LFS= as a local variable. This is in order to get
 sane variables in the current block.
 #+BEGIN_SRC fish
 set -l LFS
@@ -1243,10 +1247,10 @@ And that’s the end of our first block!
 end
 #+END_SRC
 
-Alright, we’ll save what kind on drives we can mount in a temporary file called
-=/tmp/drives=. We’ll make sure it’s blank by erasing it then creating it again
-with =touch=, like so. The =-f= flag on =rm= is here so we get no error if we
-try to delete a file that doesn’t exist (yet).
+Alright, we’ll save what kind on drives we can mount in a temporary
+file called =/tmp/drives=. We’ll make sure it’s blank by erasing it then
+creating it again with =touch=, like so. The =-f= flag on =rm= is here, so
+we get no error if we try to delete a file that doesn’t exist (yet).
 #+BEGIN_SRC fish
 set -g TMPDRIVES /tmp/drives
 rm -f $TMPDRIVES
@@ -1267,16 +1271,16 @@ set -g basemount /media
 #+END_SRC
 
 ***** Get the mount point
-Now, let’s declare a function that will allow us to chose the drive we want to
-mount.
+Now, let’s declare a function that will allow us to choose the drive
+we want to mount.
 #+BEGIN_SRC fish
 function getmount
 #+END_SRC
 
-First, we want to get our mount point. We’ll run a =find= command on each of the
-directories listed in =$basemount= to look for folders on which our drive could
-be mounted. This list will be passed to rofi from which we will chose our mount
-point.
+First, we want to get our mount point. We’ll run a =find= command on
+each of the directories listed in =$basemount= to look for folders on
+which our drive could be mounted. This list will be passed to rofi
+from which we will choose our mount point.
 #+BEGIN_SRC fish
 set -g mp (for d in $basemount
     find $d -maxdepth 5 -type d
@@ -1319,9 +1323,10 @@ care of it for us.
 function mountusb
 #+END_SRC
 
-Now, the first thing we want to do is select the partition we want to mount.
-Remember, we stored those in =$usbdrives= earlier, so let’s pipe them into rofi
-so we can chose from it. Also, =awk= will get their path in =/dev=.
+Now, the first thing we want to do is select the partition we want to
+mount. Remember, we stored those in =$usbdrives= earlier, so let’s pipe
+them into rofi, so we can choose from it. Also, =awk= will get their
+path in =/dev=.
 #+BEGIN_SRC fish
 set -g chosen (echo $usbdrives | \
 rofi -dmenu -i -p "Mount which drive?" | \
@@ -1346,8 +1351,8 @@ the script.
 test -z $mp && return 1
 #+END_SRC
 
-Now, let’s mount it! We’ll use a switch which will detect the filesystem used so
-we know how to mount the partition.
+Now, let’s mount it! We’ll use a switch which will detect the
+filesystem used, so we know how to mount the partition.
 #+BEGIN_SRC fish
 switch (lsblk -no "fstype" $chosen)
 #+END_SRC
@@ -1371,8 +1376,8 @@ case '*'
     sudo -A mount $chosen $mp
 #+END_SRC
 
-We’ll also run a =chown= on this newly mounted filesystem so the user can access
-it without any issues.
+We’ll also run a =chown= on this newly mounted filesystem, so the user
+can access it without any issues.
 #+BEGIN_SRC fish
 sudo -A chown -R $USER:(id -g $USER) $mp
 #+END_SRC
@@ -1412,13 +1417,14 @@ Let’s temporarily mount our device.
 jmtpfs -device=$chosen $mp
 #+END_SRC
 
-Now, we need to allow our computer to mount our Android device. Depending on the
-Android version it is running on, we either need to specify our device is USB
-connected in order to exchange files, or Android will explicitely ask us if it
-is OK for our computer to access it. Let’s inform the user of that.
+Now, we need to allow our computer to mount our Android device.
+Depending on the Android version it is running on, we either need to
+specify our device is USB connected in order to exchange files, or
+Android will explicitly ask us if it is OK for our computer to access
+it. Let’s inform the user of that.
 #+BEGIN_SRC fish
 echo "OK" | \
-rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfert"
+rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfer"
 #+END_SRC
 
 Now, let’s get the actual path of our Android filesystem we wish to mount, and
@@ -1428,7 +1434,7 @@ set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
 sudo -A umount $mp
 #+END_SRC
 
-Now we cam mount the new filesystem and send a notification if everything went
+Now we can mount the new filesystem and send a notification if everything went
 well.
 #+BEGIN_SRC fish
 jmtpfs -device=$newchosen $mp && \
@@ -1471,15 +1477,15 @@ end
 #+END_SRC
 
 ***** Ask what type of drive we want to mount
-The first thing we will be asked if different types of drives are detected is
-which of these types the user wishes to mount. This is done with the function
-=asktype= which is declared below.
+The first thing we will be asked if different types of drives are
+detected is which of these types the user wishes to mount. This is
+done with the function =asktype= which is declared below.
 #+BEGIN_SRC fish
 function asktype
 #+END_SRC
 
-We will use a switch statement which will use our anwser to rofi about what we
-wish to mount.
+We will use a switch statement which will use our answer to rofi about
+what we wish to mount.
 #+BEGIN_SRC fish
 switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
 #+END_SRC
@@ -1823,8 +1829,8 @@ if test -z $password
 end
 #+END_SRC
 
-Depending on the arguments passed earlier, we might want some different
-behavior.
+Depending on the arguments passed earlier, we might want some
+different behaviour.
 #+BEGIN_SRC fish :noweb yes
 if test $TYPE = "yes"
     <<rofi-pass-type>>
@@ -1833,8 +1839,8 @@ else
 end
 #+END_SRC
 
-The default behavior is to copy the password to the clipboard for 45 seconds, so
-let’s do that.
+The default behaviour is to copy the password to the clipboard for 45
+seconds, so let’s do that.
 #+NAME: rofi-pass-copy
 #+BEGIN_SRC fish :noweb yes :tangle no
 pass show -c $password 2> /dev/null

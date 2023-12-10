@@ -11,7 +11,7 @@ Dired is Emacs’ built-in file manager. It’s really great, and replaces
 any graphical file manager for me most of the time because:
 - I am not limited to /x/ tabs or panes
 - All actions can be done with keybindings
-- I get a consistent behavior between Dired and Emacs, since it’s the
+- I get a consistent behaviour between Dired and Emacs, since it’s the
   same thing.
 I used to have an extensive configuration for Dired with a couple of
 additional packages to make it more usable. Dirvish rendered that
@@ -97,18 +97,19 @@ otherwise some commands won’t work.
                                            " "))
 #+end_src
 
-However, it is possible to instead use ~exa~ when it is available.
-Instead of making Emacs’ main thread to the file listing in a
-directory, we offload it to an external thread.
+However, it is possible to instead use =eza= when it is available (it’s
+a replacement to the unmaintained =exa=). Instead of making Emacs’ main
+thread to the file listing in a directory, we offload it to an
+external thread.
 #+name: dirvish-exa-offload
 #+begin_src emacs-lisp :tangle no
-(dirvish-define-preview exa (file)
-  "Use `exa' to generate directory preview."
-  :require ("exa")
+(dirvish-define-preview eza (file)
+  "Use `eza' to generate directory preview."
+  :require ("eza")
   (when (file-directory-p file)
-    `(shell . ("exa" "--color=always" "-al" ,file))))
+    `(shell . ("eza" "--color=always" "-al" ,file))))
 
-(add-to-list 'dirvish-preview-dispatchers 'exa)
+(add-to-list 'dirvish-preview-dispatchers 'eza)
 #+end_src
 
 Finally, some directories need to be set for Dired to store various
@@ -243,9 +244,9 @@ window.
 (defalias 'openo #'find-file-other-window)
 #+end_src
 
-The default behavior of ~eshell/clear~ is not great at all, although it
+The default behaviour of ~eshell/clear~ is not great at all, although it
 clears the screen it also scrolls all the way down. Therefore, let’s
-alias it to ~eshell/clear-scrollback~ which has the correct behavior.
+alias it to ~eshell/clear-scrollback~ which has the correct behaviour.
 #+name: eshell-alias-clear
 #+begin_src emacs-lisp :tangle no
 (defalias 'eshell/clear #'eshell/clear-scrollback)
@@ -348,7 +349,7 @@ something more standard than fish:
 I like to have at quick glance some information about my machine when
 I fire up a terminal. I haven’t found anything that does that the way
 I like it, so [[https://github.com/Phundrak/eshell-info-banner.el][I’ve written a package]]! It’s actually available on
-MELPA, but since I’m the main dev of this package, I’ll keep track of
+Melpa, but since I’m the main dev of this package, I’ll keep track of
 the git repository.
 #+begin_src emacs-lisp
 (use-package eshell-info-banner
@@ -370,7 +371,7 @@ the git repository.
 #+end_src
 
 Another feature I like is fish-like syntax highlight, which brings
-some more colors to Eshell.
+some more colours to Eshell.
 #+begin_src emacs-lisp
 (use-package eshell-syntax-highlighting
   :after (esh-mode eshell)

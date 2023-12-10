@@ -54,7 +54,7 @@ it as.
 #+begin_src emacs-lisp
 (defun self-screenshot (&optional type)
   "Save a screenshot of type TYPE of the current Emacs frame.
-As shown by the function `', type can weild the value `svg',
+As shown by the function `', type can wield the value `svg',
 `png', `pdf'.
 
 This function will output in /tmp a file beginning with \"Emacs\"

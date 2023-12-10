@@ -42,7 +42,7 @@ I sure don’t. Let’s tell Emacs.
 (setq-default sentence-end-double-space nil)
 #+end_src
 
-There is a minor mode in Emacs which allows to have a finer way of
+There is a minor mode in Emacs which allows having a finer way of
 jumping from word to word: ~global-subword-mode~. It detects if what
 Emacs usually considers a word can be understood as several words, as
 in camelCase words, and allows us to jump words on this finer level.
@@ -82,7 +82,7 @@ spaces tabs, some deranged people prefer 8 spaces tabs, and some
 monsters prefer 3!
 
 But the thing is, once you indented your code, and then you need
-alignment, tabs don’t work anymore! Or they may on *your* text editor
+alignment, tabs don’t work any more! Or they may on *your* text editor
 but not on your coworker’s! (He’s the one using 3 spaces tabs by the
 way).
 
@@ -144,7 +144,7 @@ of indentation (Python, why…?). The minor-mode that enables that is
 *** Stay Clean, Emacs!
 As nice as Emacs is, it isn’t very polite or clean by default: open a
 file, and it will create backup files in the same directory. But then,
-when you open your directory with your favorite file manager and see
+when you open your directory with your favourite file manager and see
 almost all of your files duplicated with a =~= appended to the filename,
 it looks really uncomfortable! This is why I prefer to tell Emacs to
 keep its backup files to itself in a directory it only will access.
@@ -168,7 +168,7 @@ If we delete a file, we want it moved to the trash, not simply deleted.
 (setq delete-by-moving-to-trash t)
 #+end_src
 
-Finally, the scatch buffer always has some message at its beginning, I
+Finally, the scratch buffer always has some message at its beginning, I
 don’t want it!
 #+begin_src emacs-lisp
 (setq-default initial-scratch-message nil)
@@ -186,7 +186,8 @@ This will make Emacs ask us for either hitting the ~y~ key for “yes”, or
 the ~n~ key for “no”. Much more polite!
 
 It is also very impolite to keep a certain version of a file in its
-buffer when said file has changed on disk. Let’s change this behavior:
+buffer when said file has changed on disk. Let’s change this
+behaviour:
 #+begin_src emacs-lisp
 (global-auto-revert-mode 1)
 #+end_src
@@ -222,7 +223,7 @@ set it up correctly.
 ** Visual Configuration
 The first visual setting in this section will activate the visible
 bell. What it does is I get a visual feedback each time I do something
-Emacs doesn’t agree with, like tring to go up a line when I’m already
+Emacs doesn’t agree with, like trying to go up a line when I’m already
 at the top of the buffer.
 #+begin_src emacs-lisp
 (setq visible-bell t)
@@ -346,9 +347,9 @@ to the one ~setq~ uses?
   "Bind each custom variable FORM to the value of its VAL.
 
 FORMS is a list of pairs of values [FORM VAL].
-`customize-set-variable' is called sequentially on each pairs
+`customize-set-variable' is called sequentially on each pair
 contained in FORMS. This means `csetq' has a similar behaviour as
-`setq': each VAL expression are evaluated sequentially, i.e. the
+`setq': each VAL expression is evaluated sequentially, i.e. the
 first VAL is evaluated before the second, and so on. This means
 the value of the first FORM can be used to set the second FORM.
 

@@ -7,7 +7,7 @@
 * EXWM
 So, I’m finally slowly getting back to EXWM. I tried it a couple of
 years ago, but that was with the SpacemacsOS layer on Spacemacs, on a
-laptop which got accidentaly formatted before I could save my config
+laptop which got accidentally formatted before I could save my config
 and all… So it got me some time to come back. I’m still a bit worried
 about Emacs being single threaded, so if I get one blocking function
 blocking Emacs, my whole desktop will hang, but for now I haven’t had
@@ -62,14 +62,14 @@ exec emacs --with-exwm
 #+end_src
 
 ** EXWM itself
-Now we come to the plat de résistance. Like with ~xelb~, I’m using its
+Now we come to the plat de resistance. Like with ~xelb~, I’m using its
 Git source to install it to make sure I get the right version --- the
 version available on the GNU ELPA is from the same source, true, but I
 don’t know at which rate it is updated. And more packages down the
 line will depend on this Git repository, so I might as well just clone
 it right now.
 
-As you can see, I added in the ~:config~ secion to two hooks functions
+As you can see, I added in the ~:config~ section to two hooks functions
 that rename buffers accurately. While the average X window will simply
 get the name of the current X window, I want Firefox and Qutebrowser
 to be prefixed with the name of the browser. Actually, all these will
@@ -123,7 +123,7 @@ want. However, when I exit one, I want to default back to normal-mode.
 (advice-add #'exwm-input-release-keyboard :after (lambda (&optional id) (evil-insert-state)))
 #+end_src
 
-Secondly, I add ~i~, ~C-SPC~, and ~M-m~ as exwm prefix keys so they aren’t
+Secondly, I add ~i~, ~C-SPC~, and ~M-m~ as exwm prefix keys, so they aren’t
 sent directly to the X windows but caught by Emacs (and EXWM). I’ll
 use the ~i~ key in normal-mode to enter ~insert-mode~ and have Emacs
 release the keyboard so the X window can grab it. Initially, I had
@@ -362,7 +362,7 @@ The complete configuration for the ~exwm~ package can be found below.
 
 #+begin_src emacs-lisp
 (defun create-bluetooth-device (raw-name)
-  "Create a bluetooth device cons from RAW NAME.
+  "Create a Bluetooth device cons from RAW NAME.
 The cons will hold first the MAC address of the device, then its
 human-friendly name."
   (let ((split-name (split-string raw-name " " t)))

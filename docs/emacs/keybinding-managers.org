@@ -160,7 +160,7 @@ additional code compared to most people due to the bépo layout.
 reason is it doesn’t create a linear undo/redo history, but rather a
 complete tree you can navigate to see your complete editing history.
 One of the two obvious things to do are to tell Emacs to save all its
-undo history fies in a dedicated directory, otherwise we’d risk
+undo history files in a dedicated directory, otherwise we’d risk
 littering all of our directories. The second thing is to simply
 globally enable its mode.
 #+begin_src emacs-lisp
@@ -185,7 +185,7 @@ globally enable its mode.
         undo-outer-limit  (* 128 1024 1024)))
 #+end_src
 
-An interesting behavior from DoomEmacs is to compress the history
+An interesting behaviour from DoomEmacs is to compress the history
 files with ~zstd~ when it is present on the system. Not only do we enjoy
 much smaller files (according to DoomEmacs, we get something like 80%
 file savings), Emacs can load them much faster than the regular files.

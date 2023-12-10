@@ -37,10 +37,10 @@ shadow-offset-x = -16;
 shadow-offset-y = -16;
 #+END_SRC
 
-It is possible to set the color of the shadow with the string contained in
-~shadow-color~ with a hexadecimal value. I haven’t included these values in my
-config, but this value will override any value in ~shadow-red~, ~shadow-green~,
-or ~shadow-blue~.
+It is possible to set the colour of the shadow with the string
+contained in ~shadow-color~ with a hexadecimal value. I haven’t included
+these values in my config, but this value will override any value in
+~shadow-red~, ~shadow-green~, or ~shadow-blue~.
 #+BEGIN_SRC conf
 shadow-color = "#171A20"
 #+END_SRC
@@ -130,10 +130,10 @@ rounded-corners-exclude = [
 #+END_SRC
 
 ** Fading
-Picom has the ability to create some fading effects on windows when opening or
-closing or when the opacity changes. The following parameter toggles this
-feature on or off. However, its behavior can be changed with
-~no-fading-openclose~.
+Picom has the ability to create some fading effects on windows when
+opening or closing or when the opacity changes. The following
+parameter toggles this feature on or off. However, its behaviour can
+be changed with ~no-fading-openclose~.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 fading = true
@@ -204,7 +204,8 @@ This however describes the opacity of window titlebars and borders.
 frame-opacity = 1.0;
 #+END_SRC
 
-~menu-opacity~ describes the opacity for dropdown menus and popup menus.
+~menu-opacity~ describes the opacity for dropdown menus and pop-up
+menus.
 | Default value | ~1.0~ |
 | Min value     | ~0.1~ |
 | Max value     | ~1.0~ |
@@ -270,9 +271,10 @@ blur: {
 }
 #+END_SRC
 
-This value enables or disables the blur for the background of semi-transparent
-or ARGB windows. It has bad performances though, with driver-dependent behavior.
-The name of the switch may change without prior notifications.
+This value enables or disables the blur for the background of
+semi-transparent or ARGB windows. It has bad performances though, with
+driver-dependent behaviour. The name of the switch may change without
+prior notifications.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 blur-background = true;
@@ -338,8 +340,8 @@ details.
 dbus = false;
 #+END_SRC
 
-Try to detect WM windows (a non-override-redirect window with no child that has
-~WM_STATE~) and markz them as active.
+Try to detect WM windows (a non-override-redirect window with no child
+that has ~WM_STATE~) and marks them as active.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 mark-wmwin-focused = true;
@@ -434,17 +436,17 @@ you use ~--resize-damage 2~, and so on). May or may not work with
 resize-damage = 1;
 #+END_SRC
 
-Specify a list of conditions of windows that should be painted with inverted
-color. Resource-hogging, and is not well tested.
+Specify a list of conditions of windows that should be painted with
+inverted colour. Resource-hogging, and is not well tested.
 | Default value | ~[]~ |
 #+BEGIN_SRC conf
 invert-color-include = [];
 #+END_SRC
 
-Disable the use of damage information. This cause the whole screen to be redrawn
-everytime, instead of the part of the screen has actually changed. Potentially
-degrades the performance, but might fix some artifacts. The opposing option is
-use-damage
+Disable the use of damage information. This cause the whole screen to
+be redrawn every time, instead of the part of the screen has actually
+changed. Potentially degrades the performance, but might fix some
+artefacts. The opposing option is use-damage
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 use-damage = false;
@@ -465,8 +467,8 @@ glx-fshader-win that could turn opaque pixels transparent.
 force-win-blend = false;
 #+END_SRC
 
-Do not use EWMH to detect fullscreen windows. Reverts to checking if a window is
-fullscreen based only on its size and coordinates.
+Do not use EWMH to detect full-screen windows. Reverts to checking if a window is
+full-screen based only on its size and coordinates.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 no-ewmh-fullscreen = false;
@@ -524,8 +526,8 @@ Write process ID to a file.
 # write-pid-path = '/path/to/your/log/file';
 #+END_SRC
 
-Window type settings. ~WINDOW_TYPE~ is one of the 15 window types defined in
-EWMH standard:
+Window type settings. ~WINDOW_TYPE~ is one of the 15 window types
+defined in EWMH standard:
 - ~"unknown"~
 - ~"desktop"~
 - ~"dock"~
@@ -542,16 +544,18 @@ EWMH standard:
 - ~"combo"~
 - ~"dnd"~
 Following per window-type options are available:
-- fade, shadow :: Controls window-type-specific shadow and fade settings.
+- fade, shadow :: Controls window-type-specific shadow and fade
+  settings.
 - opacity :: Controls default opacity of the window type.
-- focus :: Controls whether the window of this type is to be always considered
-  focused. (By default, all window types except "normal" and "dialog" has this
-  on.)
-- full-shadow :: Controls whether shadow is drawn under the parts of the window
-  that you normally won't be able to see. Useful when the window has parts of it
-  transparent, and you want shadows in those areas.
+- focus :: Controls whether the window of this type is to be always
+  considered focused. (By default, all window types except =normal= and
+  =dialog= has this on.)
+- full-shadow :: Controls whether shadow is drawn under the parts of
+  the window that you normally won't be able to see. Useful when the
+  window has parts of it transparent, and you want shadows in those
+  areas.
 - redir-ignore :: Controls whether this type of windows should cause
-  screen to become redirected again after being unredirected. If you
+  screen to become redirected again after being not redirected. If you
   have =unredir-if-possible= set, and doesn't want certain window to
   cause unnecessary screen redirection, you can set this to =true=.
 #+BEGIN_SRC conf
@@ -566,18 +570,19 @@ wintypes:
 #+END_SRC
 
 *** GLX backend-specific options
-Avoid using stencil buffer, useful if you don't have a stencil buffer. Might
-cause incorrect opacity when rendering transparent content (but never
-practically happened) and may not work with blur-background. Tests show a 15%
-performance boost. Recommended.
+Avoid using stencil buffer, useful if you don't have a stencil buffer.
+Might cause incorrect opacity when rendering transparent content (but
+never practically happened) and may not work with blur-background.
+Tests show a 15% performance boost. Recommended.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 glx-no-stencil = true;
 #+END_SRC
 
-Avoid rebinding pixmap on window damage. Probably could improve performance on
-rapid window content changes, but is known to break things on some drivers
-(LLVMpipe, xf86-video-intel, etc.). Recommended if it works.
+Avoid rebinding pixmap on window damage. Probably could improve
+performance on rapid window content changes, but is known to break
+things on some drivers (LLVMpipe, xf86-video-intel, etc.). Recommended
+if it works.
 | Default value | ~false~ |
 #+BEGIN_SRC conf
 glx-no-rebind-pixmap = false;
@@ -585,7 +590,8 @@ glx-no-rebind-pixmap = false;
 
 Use specified GLSL fragment shader for rendering window contents. See
 ~compton-default-fshader-win.glsl~ and
-~compton-fake-transparency-fshader-win.glsl~ in the source tree for examples.
+~compton-fake-transparency-fshader-win.glsl~ in the source tree for
+examples.
 | Default value | ~''~ |
 #+BEGIN_SRC conf :tangle no
 glx-fshader-win = '';

@@ -43,7 +43,7 @@ major-mode.
 #+end_src
 
 On the other hand, ~company-box~ is a Company front-end which offers
-colors, icons, documentation and so on. Very nice.
+colours, icons, documentation and so on. Very nice.
 
 Declaring all the icons for the variable
 ~company-box-icons-all-the-icons~ is quite verbose in Elisp, so I do it
@@ -207,7 +207,7 @@ I warned you I’d use too much ~all-the-icons~, I did!
 #+end_src
 
 A buffer popping at the bottom of the screen is nice and all, but have
-you considered a floating buffer in the center of your frame?
+you considered a floating buffer in the centre of your frame?
 #+begin_src emacs-lisp
 (use-package ivy-posframe
   :defer t

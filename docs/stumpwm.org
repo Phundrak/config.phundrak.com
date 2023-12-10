@@ -8,7 +8,7 @@
 ** Introduction
 *** What is StumpWM?
 [[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written
-entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not an
+entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not a
 dynamic tiling window manager like [[file:Deprecated/awesome.org][Awesome]] is, its ability of managing
 windows in frames and using keychords with keymaps like Emacs does is
 a huge plus for me, not to mention the fact its configuration file is
@@ -28,12 +28,12 @@ This file has two main goals:
   configuration, thanks to Emacs’ org-mode, and thanks to org-mode’s
   literate config capabilities.
 
-  Almost all of the visible source blocks if not all will be included
-  in my configuration files through tangling, which can be done in
-  Emacs when this file is opened through ~M-x org-babel-tangle~, which
-  will write my configuration files based on the source blocks present
-  in this document. This file is not only my config’s documentation,
-  it /*is*/ my configuration.
+  Almost all the visible source blocks if not all will be included in
+  my configuration files through tangling, which can be done in Emacs
+  when this file is opened through ~M-x org-babel-tangle~, which will
+  write my configuration files based on the source blocks present in
+  this document. This file is not only my config’s documentation, it
+  /*is*/ my configuration.
 - Be my documentation on my StumpWM configuration. That way, I’ll
   never forget which block of code does what.
 
@@ -50,7 +50,7 @@ follows this architecture:
 - ~init.el~ :: My main configuration file, glues everything together. It
   loads all of my configuration files as well as some modules I find
   useful;
-- ~colors.lisp~ :: This file defines colors that will be used in my
+- ~colors.lisp~ :: This file defines colours that will be used in my
   ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code DRY, or as I
   prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
 - ~commands.lisp~ :: Lisp commands, in case I want to bind some
@@ -66,7 +66,7 @@ follows this architecture:
 - ~utilities.lisp~ :: Here you can find my StumpWM configuration that
   isn’t really related to the rest of the config, for instance utility
   code for connecting by SSH to some host.
-- ~theme.lisp~ :: manages the color theme of StumpWM, the default
+- ~theme.lisp~ :: manages the colour theme of StumpWM, the default
   placement of some windows and StumpWM’s gaps.
 
 You will also find below my ~xinit~ file for StumpWM, exported to
@@ -239,13 +239,13 @@ Finally, we can notify the user everything is ready.
 
 And it’s done! We can now move on to the creation of the other CLisp files.
 
-** Colors
+** Colours
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/colors.lisp
 :END:
-If you’ve taken a look at the rest of my dotfiles, you may have
-noticed I really like the [[https://www.nordtheme.com/][Nord theme]]. No wonder we can find it here
-again! Here is a small table listing the Nord colors:
+If you’ve had a look at the rest of my dotfiles, you may have noticed
+I really like the [[https://www.nordtheme.com/][Nord theme]]. No wonder we can find it here again!
+Here is a small table listing the Nord colours:
 #+name: nord-colors
 | Name   | Value   |
 |--------+---------|
@@ -299,7 +299,7 @@ code looks like so:
 #+end_src
 
 Finally, let’s also modify the default colors StumpWM has. I’ll try to
-respect the original colors while converting them to Nord. We also
+respect the original colours while converting them to Nord. We also
 need to reload them now that we modified them.
 #+begin_src lisp
 (setq *colors*
@@ -352,7 +352,7 @@ The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just 
 (load "~/.stumpwm.d/colors.lisp")
 #+end_src
 
-Next, we can set some colors for the modeline. Let’s set the
+Next, we can set some colours for the modeline. Let’s set the
 background of the modeline to Nord1 and the foreground to Nord5, I
 think this is a pretty good combination.
 #+begin_src lisp
@@ -361,7 +361,7 @@ think this is a pretty good combination.
 #+end_src
 
 We /could/ also use some borders in the modeline. But we won’t. Let’s
-still set its color to Nord1, just in case.
+still set its colour to Nord1, just in case.
 #+begin_src lisp
 (setf *mode-line-border-color* phundrak-nord1
       ,*mode-line-border-width* 0)
@@ -394,7 +394,7 @@ Here are some modules that we will load for the modeline:
 (load-module "mem")
 #+end_src
 
-We need to set some variables so modules can be displayed correctly.
+We need to set some variables, so modules can be displayed correctly.
 Note that the character between the font switchers in the second CPU
 formatter is U+E082, which symbolizes the CPU.
 #+begin_src lisp
@@ -474,7 +474,7 @@ when the `car' is a formatter and t when it is a shell command."
 #+end_src
 
 It is then easy to define a command that can call this function and
-set this variable so we can sort of reload the mode-line.
+set this variable, so we can sort of reload the mode-line.
 #+begin_src lisp
 (defcommand reload-modeline () ()
   "Reload modeline."
@@ -554,7 +554,7 @@ are manual tiling groups. Otherwise, as you can see above, they can
 also be dynamic tiling groups or floating groups.
 
 Next, let’s make sure no previous window placement rule is in place,
-this will avoid unexpected and hard-to-debug behavior.
+this will avoid unexpected and hard-to-debug behaviour.
 #+begin_src lisp
 (clear-window-placement-rules)
 #+end_src
@@ -595,7 +595,8 @@ of the available space.
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/theme.lisp :noweb yes
 :END:
-As in the modeline file, the first thing we’ll do is to load our colors.
+As in the modeline file, the first thing we’ll do is to load our
+colours.
 #+begin_src lisp
 (load "~/.stumpwm.d/colors.lisp")
 #+end_src
@@ -627,7 +628,7 @@ src_lisp[:exports code]{(ql:add-to-init-file)} so it is loaded each
 time you start your Lisp interpreter. ~SBCL~ should be your CommonLisp
 interpreter of choice since StumpWM is generally compiled with it. The
 main advantage is also that SBCL supports multithreading, unlike
-clisp. In case StumpWM doesn’t find your font, spin up SBCL and
+CLisp. In case StumpWM doesn’t find your font, spin up SBCL and
 execute the following lines:
 #+begin_src lisp :tangle no
 (ql:quickload :clx-truetype)
@@ -728,7 +729,7 @@ want to get them back, they’ll be nice to have.
 (set-float-unfocus-color phundrak-nord3)
 #+end_src
 
-Let’s also set the colors of the message and input windows:
+Let’s also set the colours of the message and input windows:
 #+begin_src lisp
 (set-fg-color phundrak-nord4)
 (set-bg-color phundrak-nord1)
@@ -794,7 +795,7 @@ Finally, let’s enable our gaps:
 :END:
 The first command I declare in this file is a command that will avoid
 me invoking too many Firefox instances. Either Firefox is not already
-running and an instance is launched, or one already is and we are
+running and an instance is launched, or one already is, and we are
 brought to it. This is done like so:
 #+begin_src lisp
 (defcommand firefox () ()
@@ -837,56 +838,6 @@ a program.
                             "kitty")))))
 #+end_src
 
-*** At work
-When I’m at work, I have a desktop layout I always use. No need to
-describe it here, but I want a quick command to save my layout in case
-I change it a bit as well as a command to load it. That way, I can
-automatically organize my screens. These command will save and load
-the dump where the variable ~*my/desktop-dump-file*~ points at.
-#+begin_src lisp
-(defvar *my/desktop-dump-file* "~/.cache/stump-at-work"
-  "Where my desktop dump should go and be loaded from.")
-#+end_src
-
-To save the current desktop, I can write a wrapper around
-~dump-desktop-to-file~.
-#+begin_src lisp
-(defcommand dump-work () ()
-  "Save desktop layout when at work."
-  (dump-desktop-to-file *my/desktop-dump-file*))
-#+end_src
-
-Basically the same goes for loading the desktop layout, but this time
-it’s ~restore-from-file~ that’s wrapped. I also want to launch Global
-Protect at the same time, because I always forget to before launching
-~launch-work~ described below, and automatically connect my bluetooth
-headset.
-#+begin_src lisp
-(load-module "swm-gaps")
-(defcommand at-work () ()
-  "Restore desktop layout when at work."
-  (swm-gaps:toggle-gaps-off)
-  (run-shell-command "pkill picom" t)
-  (run-shell-command "autorandr -l work" t)
-  (run-shell-command "xwallpaper --zoom $(cat $HOME/.cache/wallpaper)" t)
-  (run-shell-command "gpclient")
-  (run-shell-command "bluetoothctl power on && bluetoothctl connect 14:3F:A6:6D:E3:D9"))
-#+end_src
-
-If I want to quickly launch all programs I will need, I can also
-invoke the command ~launch-work~.
-#+begin_src lisp
-(defcommand launch-work () ()
-  "Launch programs I need at work."
-  (run-shell-command "firefox")
-  (run-shell-command "remmina")
-  (run-shell-command "kitty tmux")
-  (run-shell-command "teams")
-  (run-shell-command "discord")
-  (restore-from-file *my/desktop-dump-file*)
-  (restore-window-placement-rules "~/.cache/placement-rules"))
-#+end_src
-
 ** Keybinds
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes
@@ -911,7 +862,7 @@ a couple of keybinds to other keymaps. I hope this will get improved
 soon.
 
 There are also two keymaps you need to be aware of:
-- ~*top-map*~ :: This is the keymap available litteraly everywhere. With
+- ~*top-map*~ :: This is the keymap available literally everywhere. With
   this keymap, you can emulate most of your keybinds you have in other
   window managers. For instance, I cannot live without ~s-RET~ for
   creating new shells, so I’ll bind it to ~*top-map*~. But it’s good
@@ -928,7 +879,7 @@ which would be displayed instead of the actual function or keymap
 called by keybind. It would be nicer to see ~frames~ rather than
 ~*my-frames-management-keymap*~.
 
-Anyways, as mentionned above, ~*root-map*~ is already pre-populated with
+Anyway, as mentioned above, ~*root-map*~ is already pre-populated with
 some cool stuff for you, and you can access it with a prefix which is
 by default ~C-t~. But if this doesn’t suit you, you can always redefine
 it with ~set-prefix-key~. I personally like to have my space key as a
@@ -1020,7 +971,7 @@ such as « or » and have them replaced with their actual name when
 
 *** Applications
 When I speak about applications, I speak about programs and scripts in
-general. With these keymaps, I can launch programs I often have use
+general. With these keymaps, I can launch programs I have often use
 for, but I can also launch some scripts as well as take screenshots.
 
 First, let’s create my ~rofi~ scripts keymap.
@@ -1107,7 +1058,7 @@ and the ~XF86Mail~ key opens mu4e in Emacs.
 The module ~end-session~ provides functions for gracefully ending the
 user session, powering off, restarting, and suspending the computer.
 It also provides a function that interactively asks what the user
-whishes to do.
+wishes to do.
 #+name: end-session-keymap
 | Keychord | Function          |
 |----------+-------------------|
@@ -1539,7 +1490,7 @@ anywhere else:
 #+end_src
 
 From time to time, I need to switch between different keyboard
-layouts, especially to the US Qwerty layout when I’m playing some
+layouts, especially to the US QWERTY layout when I’m playing some
 games and the bépo layout most of the time. I’ll use the command
 ~switch-layout~ defined above.
 #+name: keyboard-layout-map
@@ -1562,7 +1513,7 @@ games and the bépo layout most of the time. I’ll use the command
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/utilities.lisp :noweb yes
 :END:
 Part of my configuration is not really related to StumpWM itself, or
-rather it adds new behavior StumpWM doesn’t have. ~utilities.lisp~
+rather it adds new behaviour StumpWM doesn’t have. ~utilities.lisp~
 stores all this code in one place.
 
 *** Binwarp
@@ -1593,12 +1544,12 @@ Binwarp mode is now available from the keybind ~s-m~ at top level.
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/bluetooth.lisp :noweb yes
 :END:
-Although there is a bluetooth module for the modeline, this is about
-the extent to which StumpWM can interact with the system’s bluetooth.
-However, I wish for some more interecactivity, like powering on and
-off bluetooth, connecting to devices and so on.
+Although there is a Bluetooth module for the modeline, this is about
+the extent to which StumpWM can interact with the system’s Bluetooth.
+However, I wish for some more interactivity, like powering on and
+off Bluetooth, connecting to devices and so on.
 
-First, out code relies on ~cl-ppcre~, so let’s quickload it.
+Firstly, our code relies on ~cl-ppcre~, so let’s quickload it.
 #+begin_src lisp
 (ql:quickload :cl-ppcre)
 #+end_src
@@ -1610,7 +1561,7 @@ Let’s indicate which command we’ll be using.
 #+end_src
 
 **** Utilities
-We’ll need a couple of functions that will take care of stuff for us
+We’ll need a couple of functions that will take care of stuff for us,
 so we don’t have to repeat ourselves. The first one is a way for us to
 share a message. The function ~bluetooth-message~ will first display
 ~Bluetooth:~ in green, then it will display the message we want it to
@@ -1637,7 +1588,7 @@ with a space as their separator.
 
 Now we can put ~bluetooth-make-command~ to use with ~bluetooth-command~
 which will actually run the result of the former. As you can see, it
-also collects the output so we can display it later in another
+also collects the output, so we can display it later in another
 function.
 #+begin_src lisp
 (defmacro bluetooth-command (&rest args)
@@ -1656,8 +1607,8 @@ call src_lisp[:exports code]{(bluetooth-message-command "power"
 #+end_src
 
 **** Toggle Bluetooth On and Off
-This part is easy. Now that we can call our bluetooth commands easily,
-we can easily define how to turn on bluetooth.
+This part is easy. Now that we can call our Bluetooth commands easily,
+we can easily define how to turn on Bluetooth.
 #+begin_src lisp
 (defcommand bluetooth-turn-on () ()
   "Turn on bluetooth."
@@ -1672,7 +1623,7 @@ And how to power it off.
 #+end_src
 
 **** Bluetooth Devices
-In order to manipulate bluetooth device, which we can represent as a
+In order to manipulate Bluetooth device, which we can represent as a
 MAC address and a name, we can create a structure that will make use
 of a constructor for simpler use. The constructor
 ~make-bluetooth-device-from-command~ expects an entry such as ~Device
@@ -1704,10 +1655,10 @@ We can now collect our devices easily.
 #+end_src
 
 **** Connect to a device
-When we want to connect to a bluetooth device, we always need
-bluetooth turned on, so ~bluetooth-turn-on~ will always be called. Then
+When we want to connect to a Bluetooth device, we always need
+Bluetooth turned on, so ~bluetooth-turn-on~ will always be called. Then
 the function will attempt to connect to the device specified by the
-~device~ argument, whether the argument is a bluetooth structure as
+~device~ argument, whether the argument is a Bluetooth structure as
 defined above or a plain MAC address.
 #+begin_src lisp
 (defun bluetooth-connect-device (device)
@@ -1722,7 +1673,7 @@ defined above or a plain MAC address.
 #+end_src
 
 The command to connect to a device displays a choice between the
-collected bluetooth device and the user only has to select it. It will
+collected Bluetooth device and the user only has to select it. It will
 then attempt to connect to it.
 #+begin_src lisp
 (defcommand bluetooth-connect () ()
@@ -1739,7 +1690,7 @@ then attempt to connect to it.
 
 **** Keybinds
 It’s all nice and all, but typing manually the commands with ~s-SPC ;~
-is a bit tiring, so let’s define our bluetooth keymap which we will
+is a bit tiring, so let’s define our Bluetooth keymap which we will
 bind to ~s-SPC B~.
 #+name: bluetooth-keymap
 | Keychord | Command            |
@@ -1843,8 +1794,8 @@ I’m currently in the process of writing functions to interact with
 Systemd directly through StumpWM. For now, not much work is done, but
 it’s a start.
 
-First of all, I have the following function that lists all the system
-or user services.
+Firstly, I have the following function that lists all the system or
+user services.
 #+begin_src lisp
 (defun systemd-get-services (&key user-p)
   "Collect all systemd services running.

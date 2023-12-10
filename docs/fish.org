@@ -17,8 +17,8 @@ end
 #+END_SRC
 
 ** Fish from within Emacs
-I sometimes call fish from within emacs, with =M-x ansi-term=. In this case, the
-variable =TERM= needs to have the value =eterm-color=.
+I sometimes call fish from within Emacs, with =M-x ansi-term=. In this
+case, the variable =TERM= needs to have the value =eterm-color=.
 #+BEGIN_SRC fish
 if test -n "$EMACS"
     set -x TERM eterm-color
@@ -33,8 +33,8 @@ fenv source ~/.profile
 #+end_src
 
 *** Development
-Finally, some development packages require the =PKG_CONFIG_PATH= to be set, so
-let’s do so.
+Finally, some development packages require the =PKG_CONFIG_PATH= to be
+set, so let’s do so.
 #+BEGIN_SRC fish
 set -gx PKG_CONFIG_PATH /usr/local/lib/pkgconfig/ $PKG_CONFIG_PATH
 #+END_SRC
@@ -64,7 +64,8 @@ function. I just want it empty.
 function fish_greeting; end
 #+END_SRC
 
-For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic prompt. Let’s load it:
+For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic prompt. Let’s
+load it:
 #+begin_src fish
 starship init fish | source
 #+end_src
@@ -74,9 +75,13 @@ starship init fish | source
 :PROPERTIES:
 :header-args:toml: :tangle ~/.config/starship.toml
 :END:
-As mentioned above, starship is a shell-agnostic prompt, written in Rust and which can be configured separately from the shell. I decided to configure it here though, since fish is the only shell I use which is compatible with starship.
+As mentioned above, starship is a shell-agnostic prompt, written in
+Rust and which can be configured separately from the shell. I decided
+to configure it here though, since fish is the only shell I use which
+is compatible with starship.
 
-First I’ll modify the default format variable, removing the modules I don’t need.
+First I’ll modify the default format variable, removing the modules I
+don’t need.
 #+begin_src toml
 format = """
 $username\
@@ -117,7 +122,9 @@ $shell\
 $character"""
 #+end_src
 
-I want starship to be able to detect Lisp files, be it CommonLisp or EmacsLisp. Unfortunately, it seems nerd-font doesn’t have any symbol for either language, so I’m just using a lambda character.
+I want starship to be able to detect Lisp files, be it CommonLisp or
+EmacsLisp. Unfortunately, it seems nerd-font doesn’t have any symbol
+for either language, so I’m just using a lambda character.
 #+begin_src toml
 [custom.lisp]
 extensions = ["lisp", "el"]
@@ -186,7 +193,8 @@ disable = true
 #+end_src
 
 *** Loading ~zoxide~
-~zoxide~ is a smarter ~cd~ command, accessible through ~z~. It can be loaded like so:
+~zoxide~ is a smarter ~cd~ command, accessible through ~z~. It can be loaded
+like so:
 #+begin_src fish
 zoxide init fish | source
 #+end_src
@@ -202,13 +210,14 @@ zoxide init fish | source
                           t t)
 #+END_SRC
 
-Abbreviations are a great way to keep correctly track of which commands are run
-in the shell without polluting the history of the shell with obscure commands.
-When typing an abbreviation, fish will replace it with replace it with its
-expanded equivalent. Below are some of the abbreviations I use. Be aware some of
-them that invoke GUI programs can be invoked through ~devour~ which will make
-the terminal disappear while the program runs, and once the GUI program exists
-the terminal window will come back.
+Abbreviations are a great way to keep correctly track of which
+commands are run in the shell without polluting the history of the
+shell with obscure commands. When typing an abbreviation, fish will
+replace it with replace it with its expanded equivalent. Below are
+some of the abbreviations I use. Be aware some of them that invoke GUI
+programs can be invoked through ~devour~ which will make the terminal
+disappear while the program runs, and once the GUI program exists the
+terminal window will come back.
 
 *** System monitoring
 Here I have some abbreviations which are quite useful when performing
@@ -241,14 +250,15 @@ important threads in terms of memory usage.
 #+END_SRC
 
 *** System management (packages and services)
-I added some of these abbreviations due to how often I have to write the whole
-thing.
+I added some of these abbreviations due to how often I have to write
+the whole thing.
 
 **** Package management
-The first command is =remove= which removes a package from my system, as well as
-its dependencies no longer needed. =p=. =pacman='s or =paru='s. This is why I
-simply type =purge=. And if I want to simply seach among the =pacman= repos, I
-can type =search=. Otherwise, if I want to include AUR results, I’ll use =paru=.
+The first command is =remove= which removes a package from my system, as
+well as its dependencies no longer needed. =p=. =pacman='s or =paru='s. This
+is why I simply type =purge=. And if I want to simply search among the
+=pacman= repos, I can type =search=. Otherwise, if I want to include AUR
+results, I’ll use =paru=.
 
 #+NAME: pm-abbr
 | abbreviation | command          |
@@ -261,9 +271,9 @@ can type =search=. Otherwise, if I want to include AUR results, I’ll use =paru
 #+END_SRC
 
 **** Service management
-I don’t have the muscle memory of =systemctl=. So instead, I simply type =c=
-when I want to do something user service related. And if I want to manipulate
-system services, I can instead type a simple capital =S=.
+I don’t have the muscle memory of =systemctl=. So instead, I simply type
+=c= when I want to do something user service related. And if I want to
+manipulate system services, I can instead type a simple capital =S=.
 #+NAME: service-abbr
 | abbreviation | command          |
 |--------------+------------------|
@@ -275,8 +285,8 @@ system services, I can instead type a simple capital =S=.
 #+END_SRC
 
 *** Development
-A good amount of these commands are development related, especially when it
-comes to compilation or Docker.
+A good amount of these commands are development related, especially
+when it comes to compilation or Docker.
 
 **** CMake
 I have the following abbreviations to quickly run CMake and create a
@@ -411,12 +421,13 @@ Here is the corresponding fish configuration:
 #+END_SRC
 
 *** Typos
-Let's admit it, we all make typos from time to time in the shell, and some are
-recurrent enough we make abbreviations or aliases of the correct command. Well,
-I have some of my abbreviations which were make exactly because of this.
-Sometimes for some reasons, my brain makes me write ~clean~ instead of ~clear~.
-So, let's just replace the former by the latter. I'm also very bad at typing
-~exit~. And sometimes I suck at typing ~htop~.
+Let's admit it, we all make typos from time to time in the shell, and
+some are recurrent enough we make abbreviations or aliases of the
+correct command. Well, I have some of my abbreviations which were make
+exactly because of this. Sometimes for some reason, my brain makes me
+write ~clean~ instead of ~clear~. So, let's just replace the former by the
+latter. I'm also very bad at typing ~exit~. And sometimes I suck at
+typing ~htop~.
 #+NAME: typo-abbr
 | abbreviation | command |
 |--------------+---------|
@@ -434,17 +445,6 @@ Here is the corresponding fish configuration:
 Finally, some miscellaneous abbreviations that don't really fit into any of the
 above categories.
 
-**** Screens setup
-I have an automatic screen setup for when I am at home, but it
-unfortunately doesn’t match my setup at work. =autorandr horizontal=
-does not work because my third screen is vertical, the wallpaper is
-misaligned, and picom becomes too taxing on my system. I ended up
-writing the following command each morning, but now a simple abbrev
-does the work for me.
-#+begin_src fish
-abbr work 'autorandr -l work; xwallpaper --zoom (cat $HOME/.cache/wallpaper); pkill picom'
-#+end_src
-
 **** Media
 Here you will find various commands related to media in general. The
 first one is a command to play some chillhop from the [[https://www.youtube.com/@LofiGirl][Lofi Girl
@@ -453,7 +453,7 @@ YouTube channel]]'s livestream.
 abbr chill 'mpv --force-window=no --no-video "https://www.youtube.com/watch?v=jfKfPfyJRdk" &'
 #+END_SRC
 
-When it comes to mpv, I do not want to force it to open a graphical window if
+When it comes to MPV, I do not want to force it to open a graphical window if
 for example I want to listen to an audio file. I also do not want any border on
 that window. So, I declared this abbreviation.
 #+BEGIN_SRC fish
@@ -467,7 +467,7 @@ abbr flac 'youtube-dl -x --audio-format flac --audio-quality 0 -o "~/Music/%(upl
 #+END_SRC
 
 Some sane default options for [[https://github.com/nsxiv/nsxiv][~nsxiv~]]. This includes playing GIFs and
-not displaying the filename below. Nsxiv will also open in fullscreen
+not displaying the filename below. Nsxiv will also open in full-screen
 and will fit the displayed image to the frame. It will also output to
 stdout the selected files in case I want to pipe them to another
 program.
@@ -481,8 +481,8 @@ GPU.
 abbr nv 'env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
 #+end_src
 
-Finally, let's declare the following abbreviation that will launch a MPV
-instance displaying my webcam:
+Finally, let's declare the following abbreviation that will launch an
+MPV instance displaying my webcam:
 #+BEGIN_SRC fish
 abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0 --profile=low-latency --untimed'
 #+END_SRC
@@ -519,29 +519,29 @@ abbreviation of ~remove~ (see [[file:./fish.md#package-management][Package manag
 #+END_SRC
 
 **** exa
-#+NAME: exa-abbr
+#+NAME: eza-abbr
 | abbreviation | command                                    |
 |--------------+--------------------------------------------|
-| exa          | exa -halg@ --group-directories-first --git |
-| lsl          | exa -halg@ --group-directories-first --git |
+| eza          | eza -halg@ --group-directories-first --git |
+| lsl          | eza -halg@ --group-directories-first --git |
 
 #+BEGIN_SRC fish
-<<generate-abbr(table=exa-abbr)>>
+<<generate-abbr(table=eza-abbr)>>
 #+END_SRC
 
 **** Network Management
-First, we have just =nmcli= with sane default options, that is a pretty output
-with colors.
+First, we have just =nmcli= with sane default options, that is a pretty
+output with colours.
 #+BEGIN_SRC fish
 abbr nmcli 'nmcli -p -c auto'
 #+END_SRC
 
 **** NordVPN
-Next, we have some NordVPN-related shortcuts. The first one is a simple
-abbreviation to =nordvpn=. The second one is a shortcut to connect to a server,
-and to disconnect from the current server. I also have a couple of shortcuts to
-quickly connect to some preselected countries, mainly France, Germany, Japan and
-the US.
+Next, we have some NordVPN-related shortcuts. The first one is a
+simple abbreviation to =nordvpn=. The second one is a shortcut to
+connect to a server, and to disconnect from the current server. I also
+have a couple of shortcuts to quickly connect to some preselected
+countries, mainly France, Germany, Japan and the US.
 #+NAME: nordvpn-abbr
 | abbreviation | command                 |
 |--------------+-------------------------|
@@ -558,7 +558,7 @@ the US.
 #+END_SRC
 
 **** Wget
-By default, continue a download that was interupted.
+By default, continue a download that was interrupted.
 #+BEGIN_SRC fish
 abbr wget 'wget --hsts-file="$XDG_DATA_HOME/wget-hsts" -c'
 #+END_SRC
@@ -581,7 +581,7 @@ function fish_command_not_found
 end
 #+END_SRC
 
-Tadah! No more package suggestions from fish!
+Ta-dah! No more package suggestions from fish!
 
 I also have some private abbreviations I don’t want people to know
 about that I store in a separate configuration file.

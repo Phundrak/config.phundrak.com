@@ -161,7 +161,7 @@ database is to be stored.
 
 I don’t want YouTube videos to be open with my web browser when I
 invoke ~elfeed-show-visit~, so I’ll advise this function to make it
-possible to modify the behavior of said function. Oh, and I already
+possible to modify the behaviour of said function. Oh, and I already
 made [[file:../../scripts.md#ytplay][a neat package]] for playing YouTube videos and friends through
 [[https://ytdl-org.github.io/youtube-dl/][youtube-dl]] or its superior fork [[https://github.com/yt-dlp/yt-dlp][yt-dlp]] in mpv.
 
@@ -495,7 +495,7 @@ configuration for the ~mu4e~ package itself.
       (find-file outfile))))
 #+end_src
 
-Quick sidenote: on ArchLinux, you’ll need to install either ~mu~ or
+Quick sidenote: on Arch Linux, you’ll need to install either ~mu~ or
 ~mu-git~ from the AUR in order to use mu4e. I also have a ~.desktop~ file
 to make it possible to open mu4e directly from my program picker. It
 uses the shell script ~emacsmail~ I’ve written [[file:bin.org::#Emacsmail-afffb7cd][here]].
@@ -526,7 +526,7 @@ events shared with me on my personal mailbox. The answer is actually
 #+end_src
 
 I’ll just configure a couple of things regarding these events, namely
-converting them to Orgmode and add them to my =~/org/notes.org= file,
+converting them to org-mode and add them to my =~/org/notes.org= file,
 and delete the email once I answered to the event.
 #+name: mu4e-ical-config
 #+begin_src emacs-lisp
@@ -639,7 +639,7 @@ Next I need an inbox dedicated to the association I’m part of.
 As for the Emacs-doctor list, I need to match both the current, modern
 mailing list address but also its old address. The same applies for
 the emacs-devel mailing list as well as GitHub emails related to my
-package ~eshell-info-banner.el~ (*see here*). Here are the addresses to
+package ~eshell-info-banner.el~. Here are the addresses to
 match:
 
 # Insert #Packages-Configuration-Emacs-built-ins-Eshell-Visual-configuratione7c2fl6184j0 equivalent in *see here*
@@ -777,7 +777,7 @@ We can finally define our bookmarks! The code reads as follows:
 Sometimes, bookmarks are a bit too restrictive when I want to search
 for stuff. Simply jumping to a mail directory, or maildir, is more
 than enough. In mu4e, with my current setup, I can jump to any maildir
-with the shortcut ~Jo~ in normal-mode, and I just need to chose in a
+with the shortcut ~Jo~ in normal-mode, and I just need to choose in a
 list the maildir I want to jump to. But it can be faster.
 
 With this piece of code, I can simply jump to my inbox maildir with
@@ -1303,8 +1303,8 @@ reader?
 ** PDF Tools
 ~pdf-tools~ enables PDF support for Emacs, much better than its built-in
 support with DocView. Aside from the classical settings such as
-keybinds, I also enable the midnight colors by default; think of it as
-an equivalent of Zathura’s recolor feature which kind of enables a
+keybinds, I also enable the midnight colours by default; think of it
+as an equivalent of Zathura’s recolour feature which kind of enables a
 dark mode for PDFs.
 #+begin_src emacs-lisp
 (use-package pdf-tools
@@ -1467,7 +1467,7 @@ I also want to highlight these angular-style keywords in commit messages.
 display in the Magit buffer a list of TODOs found in the current
 project to remind you of what to do next.
 
-First, let’s se tup our todo keywords with =hl-todo=. A good few todo
+First, let’s setup our todo keywords with =hl-todo=. A good few todo
 keywords are already defined in the =hl-todo-keyword-faces= variable.
 Why not use them? =hl-todo-mode= enables fontlock highlight of these
 keywords in a buffer. Let’s enable this mode globally.
@@ -1508,7 +1508,7 @@ deactivate `magit-todos-mode', otherwise enable it."
 #+end_src
 
 *** Forge
-Forge acts as an interface for GitHub, Gitlab, and Bitbucket inside
+Forge acts as an interface for GitHub, GitLab, and Bitbucket inside
 Magit. A lot of possibilities are present, you can read issues and
 pull requests, create them, and fork projects among other things.
 
