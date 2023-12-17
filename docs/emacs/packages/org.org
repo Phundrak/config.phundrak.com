@@ -1302,6 +1302,7 @@ tables, source blocks, and tags, and it applies settings similar to
   :straight (:build t)
   :after org
   :defer t
+  :custom (org-modern-table nil)
   :hook (org-mode . org-modern-mode)
   :hook (org-agenda-finalize . org-modern-agenda))
 #+end_src
