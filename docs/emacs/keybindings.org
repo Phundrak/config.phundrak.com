@@ -168,26 +168,36 @@ My buffer-related keybinds are all prefixed by ~b~.
 ** Files
 My keybinds for file manipulation are prefixed by ~f~.
 #+name: keybinds-files
-| Key | Function             | Description |
-|-----+----------------------+-------------|
-|     |                      | files       |
-| f   | counsel-find-file    |             |
-| F   | ivy-quick-find-files |             |
-| h   | hexl-find-file       |             |
-| r   | counsel-recentf      |             |
-| s   | save-buffer          |             |
+| Key | Function          | Description |
+|-----+-------------------+-------------|
+|     |                   | files       |
+| f   | counsel-find-file |             |
+| F   | quick-find-files  |             |
+| h   | hexl-find-file    |             |
+| r   | counsel-recentf   |             |
+| s   | save-buffer       |             |
 
 I also have some keybinds dedicated to opening specific files.
 #+name: keybinds-specific-files
 #+begin_src emacs-lisp :tangle no
 "fc"  '((lambda ()
           (interactive)
-          (find-file "~/org/config/emacs.org"))
-        :wk "emacs.org")
+          (quick-find-files nil "~/org/config/docs/emacs" "org"))
+        :wk "emacs config")
+"fC"  '((lambda ()
+          (interactive)
+          (quick-find-files nil "~/org/config/docs" "org"))
+        :wk "general config")
 "fi"  '((lambda ()
           (interactive)
           (find-file (concat user-emacs-directory "init.el")))
         :which-key "init.el")
+"fI"  '((lambda ()
+          (interactive)
+          (quick-find-files nil
+                            (expand-file-name "lisp" user-emacs-directory)
+                            "el"))
+        :which-key "elisp config")
 "fR"  '((lambda ()
           (interactive)
           (counsel-find-file ""
