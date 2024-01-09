@@ -104,6 +104,13 @@ I haven’t found a way to automate that in Emacs yet aside from
 formatters’ config file, and tabs look bat in EmacsLisp anyway, so
 I’ll stick with spaces by default and change it where needed.
 
+*** GPG pinentry
+I’d like Emacs to be responsible for decrypting my GPG encrypted files
+when in Emacs. This can be done with the following line.
+#+begin_src emacs-lisp
+(setq epg-pinentry-mode 'loopback)
+#+end_src
+
 *** Programming Modes
 First off, my definition of what makes a “programming mode” doesn’t exactly
 fit mine, so on top of ~prog-mode~, let’s add a few other modes.
