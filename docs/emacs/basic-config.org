@@ -177,9 +177,11 @@ don’t want it!
 *** Stay Polite, Emacs!
 When asking for our opinion on something, Emacs loves asking us to
 answer by “yes” or “no”, but *in full*! That’s very rude! Fortunately,
-we can fix this.
+we can fix this. Note that the configuration changed in Emacs 29.
 #+begin_src emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+(if (version<= emacs-version "28")
+    (defalias 'yes-or-no-p 'y-or-n-p)
+  (setopt use-short-answers t))
 #+end_src
 
 This will make Emacs ask us for either hitting the ~y~ key for “yes”, or
