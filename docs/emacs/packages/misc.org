@@ -104,23 +104,6 @@ What’s the point of using Emacs if you can’t tell everyone?
                                                            "Fwd: ")))))
 #+end_src
 
-** ~quick-find-files.el~
-This package is a small utility package I’ve written in order to
-quickly find files across my filesystem.
-#+begin_src emacs-lisp
-(use-package quick-find-files
-  :defer t
-  :straight (ivy-quick-find-files :type git
-                                  :host github
-                                  :repo "phundrak/quick-find-files.el"
-                                  :build t)
-  :custom
-  (quick-find-files-program 'fd)
-  (quick-find-files-dirs-and-exts '(("~/org"                  . "org")
-                                    ("~/Documents/university" . "org")))
-  (quick-find-files-fd-additional-options "-L"))
-#+end_src
-
 ** Keycast
 In case I am sharing my screen with people and I want to show which
 functions are called on my keystrokes since I don’t exactly use
@@ -257,6 +240,23 @@ Moreover, inside Emacs?
 (use-package sicp
   :straight (:build t)
   :defer t)
+#+end_src
+
+** quick-find-files
+This package is a small utility package I’ve written in order to
+quickly find files across my filesystem.
+#+begin_src emacs-lisp
+(use-package quick-find-files
+  :defer t
+  :straight (quick-find-files :type git
+                              :host github
+                              :repo "phundrak/quick-find-files.el"
+                              :build t)
+  :custom
+  (quick-find-files-program 'fd)
+  (quick-find-files-dirs '((:dir "~/org" :ext "org" :ignored ("config"))
+                           (:dir "~/org/notes" :ext "md")))
+  (quick-find-files-fd-additional-options "-L"))
 #+end_src
 
 ** Winum
