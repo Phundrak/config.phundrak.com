@@ -721,6 +721,9 @@ or some I write myself.
 (use-package pkgbuild-mode
   :straight (:build t)
   :defer t
+  :custom
+  (pkgbuild-update-sums-on-save nil)
+  (pkgbuild-ask-about-save nil)
   :general
   (phundrak/major-leader-key
     :keymaps 'pkgbuild-mode-map
