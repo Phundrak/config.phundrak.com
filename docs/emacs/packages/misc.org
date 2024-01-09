@@ -148,12 +148,18 @@ and builds a heatmap out of it.
   :init
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1)
-  :config
-  (setq keyfreq-excluded-commands '(self-insert-command org-self-insert-command
-                                    evil-previous-visual-line evil-next-visual-line
-                                    ivy-next-line evil-backward-char evil-forward-char
-                                    evil-next-line evil-previous-line evil-normal-state
-                                    text-scale-pinch)))
+  :custom
+  (keyfreq-file (expand-file-name "keyfreq.el" user-emacs-directory))
+  (keyfreq-file-lock (expand-file-name "keyfreq.lock" user-emacs-directory))
+  (keyfreq-excluded-commands '(self-insert-command org-self-insert-command
+                               evil-previous-visual-line evil-next-visual-line
+                               ivy-next-line evil-backward-char evil-forward-char
+                               evil-next-line evil-previous-line evil-normal-state
+                               text-scale-pinch lsp-ui-doc--handle-mouse-movement
+                               vterm--self-insert evil-mouse-drag-region
+                               mouse-set-point mouse-drag-region mwheel-scroll
+                               pdf-util-image-map-mouse-event-proxy
+                               mouse-set-region)))
 #+end_src
 
 ** Mastodon
