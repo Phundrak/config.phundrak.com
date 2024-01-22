@@ -104,6 +104,21 @@ focus the new window immediately.
     (delete-window)))
 #+end_src
 
+** Resize windows
+#+begin_src emacs-lisp
+(with-eval-after-load 'hydra
+  (defhydra windows-adjust-size ()
+    "
+             _s_: enlarge
+_c_: enlarge              _r_: right
+             _t_: shrink
+"
+    ("c" enlarge-window-horizontally)
+    ("t" shrink-window)
+    ("s" enlarge-window)
+    ("r" shrink-window-horizontally)))
+#+end_src
+
 ** Extend ~add-to-list~
 One function I find missing regarding ~add-to-list~ is ~add-all-to-list~
 which enables the user to add multiple elements to a list at once.
