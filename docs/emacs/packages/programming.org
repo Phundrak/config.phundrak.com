@@ -235,10 +235,13 @@ I also want all the visual enhancements LSP can provide.
   :defer t
   :straight (:build t)
   :commands lsp-ui-mode
-  :custom
-  (lsp-ui-peek-always-show t)
-  (lsp-ui-sideline-show-hover t)
-  (lsp-ui-doc-enable t)
+  :config
+  (require 'lsp-ui-flycheck)
+  (require 'lsp-ui-sideline)
+  (setq lsp-ui-peek-always-show t
+        lsp-ui-doc-enable t
+        lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-show-code-action t)
   :general
   (phundrak/major-leader-key
     :keymaps 'lsp-ui-peek-mode-map
