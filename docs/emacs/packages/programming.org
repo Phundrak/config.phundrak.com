@@ -116,14 +116,6 @@ interfaces, so let’s install the relevant packages.
               #'flycheck-popup-tip-delete-popup)
     (add-hook 'evil-replace-state-entry-hook
               #'flycheck-popup-tip-delete-popup)))
-
-(use-package flycheck-posframe
-  :straight (:build t)
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
-  (setq flycheck-posframe-warning-prefix "! "
-        flycheck-posframe-info-prefix    "··· "
-        flycheck-posframe-error-prefix   "X "))
 #+end_src
 
 *** Spellcheck
@@ -652,19 +644,6 @@ org-mode and then export it with ~ox-gfm~.
   :after (org ox))
 #+end_src
 
-Nuxt has its own flavour of Markdown, called [[https://content.nuxtjs.org/guide/writing/mdc/][MDC]] (/MarkDown Components/)
-which is a godsend to write content for Nuxt websites! However, no
-~mdc-mode~ existed when I began working with it, so I’m working on one.
-#+begin_src emacs-lisp
-(use-package mdc-mode
-  :defer t
-  :after markdown-mode
-  :straight (mdc-mode :type git
-                      :host github
-                      :repo "Phundrak/mdc-mode"
-                      :build t))
-#+end_src
-
 Tables of content are always nice to have for large files, just like
 with the ~toc-org~ package for org-mode.
 #+begin_src emacs-lisp
@@ -756,17 +735,6 @@ or some I write myself.
   (setq plantuml-default-exec-mode 'jar
         plantuml-jar-path "~/.local/bin/plantuml.jar"
         org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
-#+end_src
-
-*** SDLang
-I don’t actually use [[https://sdlang.org/][SDLang]] but [[https://kdl.dev/][KDL]] in order to configure [[https://zellij.dev/][Zellij]], but
-KDL doesn’t have a major mode for Emacs yet. Maybe I should work on
-that?
-#+begin_src emacs-lisp
-(use-package sdlang-mode
-  :straight (:build t)
-  :defer t
-  :mode "\\.kdl\\'")
 #+end_src
 
 *** Shells
