@@ -33,16 +33,16 @@ to ~p~ since it would conflict with my main ~general~ prefix.
 #+end_src
 
 ** Helpful
-As the name tells, ~helpful~ is a really helpful package which greatly
+As the name tells, =helpful= is a really helpful package which greatly
 enhances a couple of built-in functions from Emacs, namely:
 | Vanilla Emacs Function | Helpful Function | Comment                                       |
 |------------------------+------------------+-----------------------------------------------|
-| ~describe-function~      | ~helpful-callable~ | Only interactive functions                    |
-| ~describe-function~      | ~helpful-function~ | Only actual functions (including interactive) |
-| ~describe-function~      | ~helpful-macro~    |                                               |
-| ~describe-command~       | ~helpful-command~  |                                               |
-| ~describe-key~           | ~helpful-key~      |                                               |
-| ~describe-variable~      | ~helpful-variable~ |                                               |
+| =describe-function=      | =helpful-callable= | Only interactive functions                    |
+| =describe-function=      | =helpful-function= | Only actual functions (including interactive) |
+| =describe-function=      | =helpful-macro=    |                                               |
+| =describe-command=       | =helpful-command=  |                                               |
+| =describe-key=           | =helpful-key=      |                                               |
+| =describe-variable=      | =helpful-variable= |                                               |
 
 #+begin_src emacs-lisp
 (use-package helpful
