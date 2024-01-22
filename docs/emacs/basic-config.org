@@ -160,6 +160,16 @@ keep its backup files to itself in a directory it only will access.
                                                          user-emacs-directory))))
 #+end_src
 
+When using LSP with Typescript projects, my =tsconfig.json= or its
+equivalent would constantly get polluted with symlinks going through
+my home directory, creating some horror imports. This is because the
+server tries to import some files through the symlink of the backup of
+the file I want to import. By forbidding Emacs to create symlinks for
+backups, we should avoid this problem.
+#+begin_src emacs-lisp
+(setq backup-by-copying t)
+#+end_src
+
 It also loves to litter its ~init.el~ with custom variables here and
 there, but the thing is: I regenerate my ~init.el~ each time I tangle
 this file! How can I keep Emacs from adding stuff that will be almost
