@@ -602,7 +602,9 @@ fixes two issues I had with the original package.
 (use-package ox-gemini
   :defer t
   :straight (ox-gemini :build t
-                       :fork (:repo "https://labs.phundrak.com/phundrak/ox-gemini"))
+                       :fork (:type git
+                              :host nil
+                              :repo "https://labs.phundrak.com/phundrak/ox-gemini"))
   :after (ox org))
 #+end_src
 
