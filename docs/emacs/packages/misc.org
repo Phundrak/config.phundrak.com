@@ -233,6 +233,17 @@ and builds a heatmap out of it.
                            "Main Page")))) ; Default page
 #+end_src
 
+** Pinentry
+I like to use Emacs as my pinentry program. Mainly because it’s the
+easiest way for me to type then when I’m SSHing into my machine, but
+also because it just works the same regardless whether I’m using
+Wayland or X11.
+#+begin_src emacs-lisp
+(use-package pinentry
+  :straight (:build t)
+  :defer nil)
+#+end_src
+
 ** SICP
 Who would get interested in Emacs and not want to read the SICP?
 Moreover, inside Emacs?
