@@ -104,6 +104,17 @@ What’s the point of using Emacs if you can’t tell everyone?
                                                            "Fwd: ")))))
 #+end_src
 
+** Elpher
+Elpher is a gopher and gemini client for Emacs. You an check out its
+homepage either [[https://thelambdalab.xyz/elpher/][on the web]] or [[gopher://thelambdalab.xyz/1/projects/elpher/][on gopher]].
+#+begin_src emacs-lisp
+(use-package elpher
+  :straight (:build t)
+  :defer t
+  :custom
+  (elpher-default-url-type "gemini"))
+#+end_src
+
 ** Keycast
 In case I am sharing my screen with people and I want to show which
 functions are called on my keystrokes since I don’t exactly use
