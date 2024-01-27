@@ -1,1 +1,2 @@
-*.org linguist-detectable=true
+*.org linguist-detectable
+docs/* -linguist-documentation
