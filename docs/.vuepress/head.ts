@@ -3,18 +3,18 @@ interface SimplifiedHeader {
   content: [any];
 }
 
-const matomoTrackingCode = `var _paq = window._paq = window._paq || [];
-_paq.push(['trackPageView']);
-_paq.push(['enableLinkTracking']);
-(function() {
-  var u="https://matomo.phundrak.com/";
-  _paq.push(['setTrackerUrl', u+'matomo.php']);
-  _paq.push(['setSiteId', '2']);
-  var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-  g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-})();`;
-
 const simplifiedHead = [
+  {
+    tag: "script",
+    content: [
+      {
+        async: true,
+        src: "https://umami.phundrak.com/script.js",
+        "data-website-id": "67166941-8c83-4a19-bc8c-139e44b7f7aa",
+        "data-do-not-track": "true",
+      },
+    ],
+  },
   {
     tag: "meta",
     content: [
@@ -135,11 +135,6 @@ simplifiedHead.forEach((tag: SimplifiedHeader) => {
     head.push([tagName, element]);
   });
 });
-head.push([
-  "a",
-  { rel: "me", href: "https://mastodon.phundrak.com/@phundrak" },
-  "Mastodon",
-]);
-head.push(["script", {}, matomoTrackingCode]);
+head.push(["a", { rel: "me", href: "https://emacs.ch/@phundrak" }, "Mastodon"]);
 
 export default head;
