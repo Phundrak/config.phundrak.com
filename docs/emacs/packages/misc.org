@@ -106,7 +106,7 @@ What’s the point of using Emacs if you can’t tell everyone?
 
 ** Elpher
 Elpher is a gopher and gemini client for Emacs. You an check out its
-homepage either [[https://thelambdalab.xyz/elpher/][on the web]] or [[gopher://thelambdalab.xyz/1/projects/elpher/][on gopher]].
+homepage [[https://thelambdalab.xyz/elpher/][here]].
 #+begin_src emacs-lisp
 (use-package elpher
   :straight (:build t)
