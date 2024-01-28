@@ -252,7 +252,8 @@ Wayland or X11.
 #+begin_src emacs-lisp
 (use-package pinentry
   :straight (:build t)
-  :defer nil)
+  :defer nil
+  :init (pinentry-start))
 #+end_src
 
 ** SICP
