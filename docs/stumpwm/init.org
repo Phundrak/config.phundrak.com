@@ -1,0 +1,153 @@
+#+title: StumpWM — Basic Configuration
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Basic Configuration
+** Init File
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/init.lisp
+:END:
+As mentioned in [[https://stumpwm.github.io/git/stumpwm-git_1.html#Init-File][the documentation]], the configuration files can be in
+different locations, but I chose an Emacs-like configuration: put
+everything in ~~/.stumpwm.d/~. We begin by indicating quicklisp how to
+properly initialize:
+#+begin_src lisp
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+#+end_src
+
+Then, our first StumpWM-related code is declaring we are using the
+~stumpwm~ package, and this is also our default package. This will allow
+us to avoid using the prefix ~stumpwm:~ each time we are using a
+function or a variable from this package.
+#+begin_src lisp
+(in-package :stumpwm)
+(setf *default-package* :stumpwm)
+#+end_src
+
+Since I install StumpWM with my package manager (I use the AUR’s
+~stumpwm-git~ package), StumpWM’s modules are installed to
+~/usr/share/stupmwm/contrib/utils/~, let’s indicate that to StumpWM.
+#+begin_src lisp
+(set-module-dir "/usr/share/stupmwm/contrib/")
+#+end_src
+
+A startup message can be used when initializing StumpWM. For now,
+let’s set it to ~nil~.
+#+begin_src lisp
+(setf *startup-message* nil)
+#+end_src
+
+The first thing I want to do after that is to set some decent cursor
+pointer as well as get a bunch of stuff started. To see what’s in the
+~autostart~ script, [[file:../scripts.md#autostart][seen here]],
+
+#+begin_src lisp
+(run-shell-command "autostart")
+#+end_src
+
+Next I need to register the AltGr key so it works correctly when used.
+On my system, the value of ~*altgr-offset*~ is 4, but on yours it might
+be 6, so be careful and refer to the manual on that matter.
+#+begin_src lisp
+(setf *altgr-offset* 4)
+(register-altgr-as-modifier)
+#+end_src
+
+Now, we’ll load a couple of my custom files that will be described below:
+#+name: first-loaded-files
+| File to be loaded |
+|-------------------|
+| bluetooth.lisp    |
+| commands.lisp     |
+| placement.lisp    |
+| keybindings.lisp  |
+| theme.lisp        |
+| utilities.lisp    |
+| modeline.lisp     |
+| systemd.lisp      |
+
+#+name: gen-load-files
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var files=first-loaded-files
+(mapconcat (lambda (file)
+             (format "(load \"~/.stumpwm.d/%s\")" (car file)))
+           files
+           "\n")
+#+end_src
+
+This is equivalent to the Common Lisp code:
+#+RESULTS[ed4f3fe4f7f82b11cd3cd262578abc7146f5807d]: gen-load-files
+#+begin_src lisp
+(load "~/.stumpwm.d/bluetooth.lisp")
+(load "~/.stumpwm.d/commands.lisp")
+(load "~/.stumpwm.d/placement.lisp")
+(load "~/.stumpwm.d/keybindings.lisp")
+(load "~/.stumpwm.d/theme.lisp")
+(load "~/.stumpwm.d/utilities.lisp")
+(load "~/.stumpwm.d/modeline.lisp")
+(load "~/.stumpwm.d/systemd.lisp")
+#+end_src
+
+Once the modeline file is loaded, let’s indicate StumpWM to activate
+it:
+#+begin_src lisp
+(when *initializing*
+  (mode-line))
+#+end_src
+
+Another thing I want to set is to use the super key to move floating
+windows and window focus to transfer from one window to another only
+on click.
+#+begin_src lisp
+(setf *mouse-focus-policy*    :click
+      ,*float-window-modifier* :SUPER)
+#+end_src
+
+Next, some modules will be loaded from the ~stumpwm-contrib~ package
+(which is included in ~stumpwm-git~ in the AUR). Here is a short list
+including a short description of what they are for:
+#+name: loaded-modules
+| Module Name     | Why It Is Loaded                                 |
+|-----------------+--------------------------------------------------|
+| beckon          | Bring the mouse cursor to the current window     |
+| end-session     | Gracefully end programs when ending user session |
+| globalwindows   | Navigate between windows from all workspaces     |
+| mpd             | Interact with MPD                                |
+| stump-backlight | Native management of backlight in StumpWM        |
+| urgentwindows   | Get urgent windows                               |
+
+#+name: gen-load-modules
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var modules=loaded-modules
+(mapconcat (lambda (module)
+             (format "(load-module \"%s\")" (car module)))
+           modules
+           "\n")
+#+end_src
+
+#+RESULTS[0cbba236372280cb2eb6a1e277cda84938e15d46]: gen-load-modules
+#+begin_src lisp
+(load-module "beckon")
+(load-module "end-session")
+(load-module "globalwindows")
+(load-module "mpd")
+(load-module "stump-backlight")
+(load-module "urgentwindows")
+#+end_src
+
+In order to be able to use MPD from StumpWM itself, we’ll need to
+connect to it.
+#+begin_src lisp
+(mpd:mpd-connect)
+#+end_src
+
+Finally, we can notify the user everything is ready.
+#+begin_src lisp
+(setf *startup-message* "StumpWM is ready!")
+#+end_src
+
+And it’s done! We can now move on to the creation of the other CLisp files.

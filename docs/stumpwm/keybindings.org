@@ -1,0 +1,776 @@
+#+title: StumpWM — Keybindings
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Keybindings
+** Keybinds
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes
+:END:
+Buckle up, this chapter is going to be *long*, because me loves LOTS of keybinds.
+
+First, let’s declare again we are using the default package ~stumpwm~:
+#+begin_src lisp
+(in-package :stumpwm)
+#+end_src
+
+This will avoid us always repeating ~stumpwm:define-key~ or ~stumpwm:kbd~
+instead of simply ~define-key~ and ~kbd~.
+
+StumpWM behaves a bit like Emacs in terms of keybinds. You have
+keymaps, which are a collection of keybinds, which in turn call CLisp
+functions. However, unlike Emacs, you have to declare a lot of
+keymaps, because StumpWM cannot (/yet/) understand keybinds such as
+src_lisp[:exports code]{(kbd "C-x c l")}, so you end up creating a
+keybind to a keymap which contains other keybinds, which might contain
+a couple of keybinds to other keymaps. I hope this will get improved
+soon.
+
+There are also two keymaps you need to be aware of:
+- ~*top-map*~ :: This is the keymap available literally everywhere. With
+  this keymap, you can emulate most of your keybinds you have in other
+  window managers. For instance, I cannot live without ~s-RET~ for
+  creating new shells, so I’ll bind it to ~*top-map*~. But it’s good
+  practice to avoid polluting ~*top-map*~ with too many keybinds.
+- ~*root-map*~ :: This keymap is the default keymap that is already
+  somewhat populated. It is available after hitting the prefix key set
+  with ~set-prefix-key~ which we will see just below.
+
+It is interesting to note that once you entered any keymap, except
+~*top-map*~, if you hit ~?~ you will see the list of available keybinds.
+I’d like it if something similar to ~general~ in Emacs too could be
+implemented: give any arbitrary name to the keybind you just declared
+which would be displayed instead of the actual function or keymap
+called by keybind. It would be nicer to see ~frames~ rather than
+~*my-frames-management-keymap*~.
+
+Anyway, as mentioned above, ~*root-map*~ is already pre-populated with
+some cool stuff for you, and you can access it with a prefix which is
+by default ~C-t~. But if this doesn’t suit you, you can always redefine
+it with ~set-prefix-key~. I personally like to have my space key as a
+leader key, but in order to not have it conflict with Emacs, I also
+need to press the super key too.
+#+begin_src lisp
+(set-prefix-key (my/kbd "s-SPC"))
+#+end_src
+
+Also, let’s enable ~which-key~:
+#+begin_src lisp
+(which-key-mode)
+#+end_src
+
+Lastly, before we get more into details, keep in mind that I use the
+[[https://bepo.fr][bépo]] layout, as I often say in my different documents. This means the
+characters found in the numbers’ row when pressing shift are actually
+the numbers themselves. Also, some characters are not recognized as is
+by ~kbd~, so we need to use a special name (not fun…). Below are the
+following characters:
+
+#+name: number-to-char-table
+#+caption: Characters equivalent to the 1 to 0 keys in the bépo layout
+| Number | Character |
+|--------+-----------|
+|      1 | ~"~         |
+|      2 | ~«~         |
+|      3 | ~»~         |
+|      4 | ~(~         |
+|      5 | ~)~         |
+|      6 | ~@~         |
+|      7 | ~+~         |
+|      8 | ~-~         |
+|      9 | ~/~         |
+|      0 | ~*~         |
+
+So if you see any weird keybind involving these characters, this is
+because of my layout.
+
+Something a bit annoying though is Lisp doesn’t know some characters
+by their actual name, rather by another one that I find too long and
+too bothersome to remember. So here’s a list, if you see any of the
+characters on the left column in my config, with the function
+described below, my actual config will use their name as specified in
+the right column.
+
+#+name: tbl-char-to-name
+#+caption: Internal name of some characters
+| Character | Name           |
+|-----------+----------------|
+| ~«~         | ~guillemotleft~  |
+| ~»~         | ~guillemotright~ |
+
+#+name: chars-table-to-list
+#+header: :exports none :noweb yes :results verbatim
+#+begin_src emacs-lisp :var chars=tbl-char-to-name
+;; chars
+(let ((filter (lambda (str)
+                (replace-regexp-in-string "^~\\|~$" "" str))))
+  (mapcar (lambda (row)
+            `(,(apply filter `(,(car row))) . ,(apply filter `(,(cadr row)))))
+          chars))
+#+end_src
+
+#+RESULTS[8ceb9b882276931ad0dba7dcf38d163f7674f547]: chars-table-to-list
+: (("«" . "guillemotleft") ("»" . "guillemotright"))
+
+To convert these characters, I have my own macro which is a wrapper
+around the function ~kbd~.
+
+#+name: my-kbd-defun
+#+begin_src lisp :noweb yes
+(defun my/kbd (keys)
+  "Prepares KEYS for function `stumpwm:kbd'.
+If a character declared in the car of a member of the variable char,
+it is replaced with its cdr. This allows the user to input characters
+such as « or » and have them replaced with their actual name when
+`stumpwm:kbd' is called."
+  (kbd (let ((chars '<<chars-table-to-list()>>))
+           (dolist (row chars keys)
+             (setf keys (cl-ppcre:regex-replace-all (car row) keys (cdr row)))))))
+#+end_src
+
+#+header: :exports none
+#+begin_src lisp :noweb yes :tangle ~/.stumpwm.d/bluetooth.lisp
+<<my-kbd-defun>>
+#+end_src
+
+#+header: :exports none
+#+begin_src lisp :noweb yes :tangle ~/.stumpwm.d/utilities.lisp
+<<my-kbd-defun>>
+#+end_src
+
+*** Applications
+When I speak about applications, I speak about programs and scripts in
+general. With these keymaps, I can launch programs I have often use
+for, but I can also launch some scripts as well as take screenshots.
+
+First, let’s create my ~rofi~ scripts keymap.
+
+#+name: rofi-scripts
+#+caption: ~*my-rofi-keymap*~
+| Keychord | Function                                      |
+|----------+-----------------------------------------------|
+| ~a~        | ~exec awiki~                                    |
+| ~r~        | ~exec rofi -combi-modi drun,window -show combi~ |
+| ~s~        | ~exec rofi -show ssh~                           |
+| ~p~        | ~exec rofi-pass -t~                             |
+| ~P~        | ~exec rofi-pass~                                |
+| ~e~        | ~exec rofi-emoji~                               |
+| ~m~        | ~exec rofi-mount~                               |
+| ~u~        | ~exec rofi-umount~                              |
+| ~w~        | ~exec wacom-setup~                              |
+| ~y~        | ~exec ytplay~                                   |
+| ~Y~        | ~exec rofi-ytdl~                                |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+(defvar *my-rofi-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=rofi-scripts)>>
+    m))
+#+end_src
+
+Let’s also create a keymap for screenshots.
+
+#+name: screenshot-keymap
+#+caption: ~*my-screenshot-keymap*~
+| Keychord | Function                   |
+|----------+----------------------------|
+| ~d~        | ~exec flameshot gui -d 3000~ |
+| ~s~        | ~exec flameshot full~        |
+| ~S~        | ~exec flameshot gui~         |
+
+Here’s the equivalent in Common Lisp.
+#+begin_src lisp
+(defvar *my-screenshot-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=screenshot-keymap)>>
+    m))
+#+end_src
+
+We can now define our applications keymap which will reference both
+the above keymaps.
+
+#+name: application-keymap
+#+caption: ~*my-applications-keymap*~
+| Keychord | Function                |
+|----------+-------------------------|
+| ~b~        | ~firefox~                 |
+| ~B~        | ~exec qutebrowser~        |
+| ~d~        | ~exec discord~            |
+| ~e~        | ~exec emacsclient -c~     |
+| ~g~        | ~exec gimp~               |
+| ~n~        | ~exec nemo~               |
+| ~r~        | ~'*my-rofi-keymap*~       |
+| ~s~        | ~'*my-screenshot-keymap*~ |
+| ~w~        | ~exec select-pape~        |
+
+This translates to:
+#+begin_src lisp
+(defvar *my-applications-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=application-keymap)>>
+    m))
+#+end_src
+
+The application keymap can now be bound to the root map like so:
+#+begin_src lisp
+(define-key *root-map* (my/kbd "a") '*my-applications-keymap*)
+#+end_src
+
+I will also bind to the top map ~s-RET~ in order to open a new terminal
+window. The screenshot keymap is also bound to the ScreenPrint key,
+and the ~XF86Mail~ key opens mu4e in Emacs.
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-RET") "term")
+(define-key *top-map* (my/kbd "Print") '*my-screenshot-keymap*)
+(define-key *top-map* (my/kbd "XF86Mail") "exec emacsclient -c -e \"(mu4e)\"")
+#+end_src
+
+*** End of Session, Powering Off, and the Likes
+The module ~end-session~ provides functions for gracefully ending the
+user session, powering off, restarting, and suspending the computer.
+It also provides a function that interactively asks what the user
+wishes to do.
+
+#+name: end-session-keymap
+#+caption: ~*my-end-session-keymap*~
+| Keychord | Function          |
+|----------+-------------------|
+| ~q~        | ~end-session~       |
+| ~l~        | ~logout~            |
+| ~s~        | ~suspend-computer~  |
+| ~S~        | ~shutdown-computer~ |
+| ~r~        | ~loadrc~            |
+| ~R~        | ~restart-hard~      |
+| ~C-r~      | ~restart-computer~  |
+
+This translates to:
+#+begin_src lisp
+(defvar *my-end-session-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=end-session-keymap)>>
+    m))
+#+end_src
+
+Which is bound in the root map to ~q~:
+#+begin_src lisp
+(define-key *root-map* (my/kbd "q") '*my-end-session-keymap*)
+#+end_src
+
+*** Groups
+A basic keybind I need for groups is to be able to switch from one
+another. I’m very used to the ability of being able to jump between
+them with the keybind Super + /number of the group/, so let’s define
+this:
+
+#+name: group-keybind-gen
+#+header: :noweb no :results verbatim :exports none :var convert="no"
+#+begin_src emacs-lisp :var groups=list-groups mod="s" action="gselect" map="*top-map*" convert="yes"
+(mapconcat (lambda (group)
+             (let ((group-nbr (nth 1 group)))
+               (format "%S" `(define-key
+                               ,(make-symbol map)
+                               (my/kbd ,(format "%s-%s"
+                                             mod
+                                             (if (string= "yes" convert)
+                                                 (format "<<num-to-char(num=%s)>>" group-nbr)
+                                               (number-to-string group-nbr))))
+                               ,(format "%s %d" action group-nbr)))))
+           groups
+           "\n")
+#+end_src
+
+#+RESULTS[282113d17ea21f02dc7c87059d787e62b5886b16]: group-keybind-gen
+: "(define-key *top-map* (my/kbd \"s-1\") \"gselect 1\")
+: (define-key *top-map* (my/kbd \"s-2\") \"gselect 2\")
+: (define-key *top-map* (my/kbd \"s-3\") \"gselect 3\")
+: (define-key *top-map* (my/kbd \"s-4\") \"gselect 4\")
+: (define-key *top-map* (my/kbd \"s-5\") \"gselect 5\")"
+
+#+header: :cache yes :noweb yes :wrap src lisp
+#+begin_src emacs-lisp
+<<group-keybind-gen(mod="s", action="gselect", convert="yes")>>
+#+end_src
+
+#+RESULTS[35268fd11d1fe4fa4065c98a0b7bc723a56c09a7]:
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=1)>>") "gselect 1")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=2)>>") "gselect 2")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=3)>>") "gselect 3")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=4)>>") "gselect 4")
+(define-key *top-map* (my/kbd "s-<<num-to-char(num=5)>>") "gselect 5")
+#+end_src
+
+Another batch of keybinds I use a lot is keybinds to send the
+currently active window to another group, using Super + Shift + /number
+of the group/. As mentioned before, due to my keyboard layout Shift +
+/number/ is actually just /number/ for me (e.g. Shift + ~"~ results in ~1~),
+so there’s no need to convert the group number to another character.
+#+begin_src emacs-lisp :wrap src lisp
+<<group-keybind-gen(mod="s", action="gmove-and-follow", convert="no")>>
+#+end_src
+
+#+RESULTS[bd9b499dfad0fdf1f54db146ded1a60c6674f8ea]:
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-1") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-2") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-3") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-5") "gmove-and-follow 5")
+#+end_src
+
+If I want to send a window to another group without following it, I’ll
+use ~s-S-C-<group number>~, which gives us the following:
+#+begin_src emacs-lisp :wrap src lisp
+<<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="no")>>
+#+end_src
+
+#+RESULTS[68f918c24a6cc0efa1503ed57841c40f4ec2ec4a]:
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-C-1") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-C-2") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-C-3") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-C-4") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-5") "gmove-and-follow 5")
+#+end_src
+
+And if I want to bring the windows of another group into the current
+group, I’ll use ~s-C-<group number>~:
+#+begin_src emacs-lisp :wrap src lisp :exports results
+<<group-keybind-gen(mod="s-C", action="gmove-and-follow", convert="yes")>>
+#+end_src
+
+#+RESULTS[36b3ded631cd0bad400c4847f6937cde4f11b4b7]:
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=1)>>") "gmove-and-follow 1")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=2)>>") "gmove-and-follow 2")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=3)>>") "gmove-and-follow 3")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=4)>>") "gmove-and-follow 4")
+(define-key *top-map* (my/kbd "s-C-<<num-to-char(num=5)>>") "gmove-and-follow 5")
+#+end_src
+
+StumpWM also has already a nice keymap for managing groups called
+~*groups-map*~, so let’s bind it to ~*root-map*~ too! (It’s actually
+already bound, but since I plan on erasing ~*root-map*~ in the near
+future before binding stuff to it, I prefer to bind it already)
+#+begin_src lisp
+(define-key *root-map* (my/kbd "g") '*groups-map*)
+#+end_src
+
+And a binding to ~vgroups~ is done on ~*groups-map*~ in order to regroup
+similar keybinds.
+#+begin_src lisp
+(define-key *groups-map* (my/kbd "G") "vgroups")
+#+end_src
+
+I grew accustomed to ~s-ESC~ bringing me to the previous group when
+using AwesomeWM, so let’s define that:
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-ESC") "gother")
+#+end_src
+
+*** Frames and Windows management
+As you’ll see, I have loads of keybinds related to frames and windows
+management. They are all categorized in a specific keymap, called
+~*my-frames-management-keymap*~. But before that, let’s define the
+keymap ~*my-frames-float-keymap*~, with keybinds dedicated to actions
+related with floating windows and frames.
+
+#+name: frames-float
+#+caption: ~*my-frames-float-keymap*~
+| Keychord | Function       |
+|----------+----------------|
+| ~f~        | ~float-this~     |
+| ~F~        | ~unfloat-this~   |
+| ~u~        | ~unfloat-this~   |
+| ~C-f~      | ~flatten-floats~ |
+
+We can now pass onto ~*my-frames-management-keymap*~. My keybinds are organized this way:
+
+#+name: frames-and-window-management
+#+caption: ~*my-frames-management-keymap*~
+| Keychord | Function                  |
+|----------+---------------------------|
+| ~c~        | ~move-focus left~           |
+| ~t~        | ~move-focus down~           |
+| ~s~        | ~move-focus up~             |
+| ~r~        | ~move-focus right~          |
+| ~C~        | ~move-window left~          |
+| ~T~        | ~move-window down~          |
+| ~S~        | ~move-window up~            |
+| ~R~        | ~move-window right~         |
+| ~C-c~      | ~exchange-direction left~   |
+| ~C-t~      | ~exchange-direction down~   |
+| ~C-s~      | ~exchange-direction up~     |
+| ~C-r~      | ~exchange-direction right~  |
+| ~/~        | ~hsplit-and-focus~          |
+| ~-~        | ~vsplit-and-focus~          |
+| ~h~        | ~hsplit~                    |
+| ~v~        | ~vsplit~                    |
+| ~H~        | ~hsplit-equally~            |
+| ~V~        | ~vsplit-equally~            |
+| ~.~        | ~iresize~                   |
+| ~+~        | ~balance-frames~            |
+| ~d~        | ~remove-split~              |
+| ~D~        | ~only~                      |
+| ~e~        | ~expose~                    |
+| ~f~        | ~fullscreen~                |
+| ~F~        | ~'*my-frames-float-keymap*~ |
+| ~i~        | ~info~                      |
+| ~I~        | ~show-window-properties~    |
+| ~m~        | ~meta~                      |
+| ~s~        | ~sibling~                   |
+| ~u~        | ~next-urgent~               |
+| ~U~        | ~unmaximize~                |
+
+As you can see, with the binding to ~F~, we make use of the
+~*my-frames-float-keymap*~ keymap declared above, which means if we find
+ourselves in ~*my-frames-management-keymap*~, pressing ~F~ will bring us
+in ~*my-frames-float-keymap*~.
+
+#+begin_src lisp
+(defvar *my-frames-float-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=frames-float)>>
+    m))
+
+(defvar *my-frames-management-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=frames-and-window-management)>>
+    m))
+#+end_src
+
+Let’s bind ~*my-frames-management-keymap*~ in ~*root-keymap*~:
+#+begin_src lisp
+(define-key *root-map* (my/kbd "w") '*my-frames-management-keymap*)
+#+end_src
+
+That way, if we want for instance to split our current frame
+vertically, we’ll be able to type ~s-SPC w -~ and ~vsplit~ will be called.
+
+I also bound a couple of these functions to the top keymap for easier access:
+
+#+name: top-window-map
+#+caption: ~*top-map*~
+| Keychord | Function                 |
+|----------+--------------------------|
+| ~s-c~      | ~move-focus left~          |
+| ~s-t~      | ~move-focus down~          |
+| ~s-s~      | ~move-focus up~            |
+| ~s-r~      | ~move-focus right~         |
+| ~s-C~      | ~move-window left~         |
+| ~s-T~      | ~move-window down~         |
+| ~s-S~      | ~move-window up~           |
+| ~s-R~      | ~move-window right~        |
+| ~s-M-c~    | ~exchange-direction left~  |
+| ~s-M-t~    | ~exchange-direction down~  |
+| ~s-M-s~    | ~exchange-direction up~    |
+| ~s-M-r~    | ~exchange-direction right~ |
+
+This translates to:
+#+begin_src lisp
+<<keybinds-gen(map="*top-map*", keybinds=top-window-map)>>
+#+end_src
+
+Being a [[https://bepo.fr/wiki/Accueil][bépo layout]] user, the ~hjkl~ keys don’t exactly fit me, as you
+might have noticed with my use of ~ctsr~ which is its equivalent. Due to
+this, the interactive keymap for ~iresize~ is not ideal for me, let me
+redefine it:
+#+begin_src lisp
+(define-interactive-keymap (iresize tile-group) (:on-enter #'setup-iresize
+                                                 :on-exit  #'resize-unhide
+                                                 :abort-if #'abort-resize-p
+                                                 :exit-on  ((kbd "RET") (kbd "ESC")
+                                                            (kbd "C-g") (kbd "q")))
+  ((my/kbd "c") "resize-direction left")
+  ((my/kbd "t") "resize-direction down")
+  ((my/kbd "s") "resize-direction up")
+  ((my/kbd "r") "resize-direction right"))
+#+end_src
+
+As with groups management, I grew used to ~s-TAB~ in AwesomeWM bringing
+me back to the previously focused window, and I also grew used to ~s-o~
+doing the same thing.
+#+begin_src lisp
+(define-key *top-map* (my/kbd "s-TAB") "other-window")
+(define-key *top-map* (my/kbd "s-o") "other-window")
+#+end_src
+
+*** Windows management
+When it comes to windows management, I will treat them a bit like I do
+with Emacs’ buffers.
+
+#+name: window-management
+#+caption: ~*my-buffers-management-keymap*~
+| Keychord | Function                |
+|----------+-------------------------|
+| ~b~        | ~windowlist~              |
+| ~d~        | ~delete-window~           |
+| ~D~        | ~delete-window-and-frame~ |
+| ~k~        | ~kill-window~             |
+| ~n~        | ~next~                    |
+| ~o~        | ~other-window~            |
+| ~p~        | ~prev~                    |
+
+#+begin_src lisp
+(defvar *my-buffers-management-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=window-management)>>
+    m))
+
+(define-key *root-map* (my/kbd "b") '*my-buffers-management-keymap*)
+#+end_src
+
+*** Media and Media Control
+My music is managed through MPD, and I often use ~playerctl~ commands in
+order to interact with it without any GUI application. So, we’ll see a
+lot of its usage here, and numerous commands used here come from the
+~mpd~ minor mode loaded [[file:./stumpwm.md#init-file][above]].
+
+First, let’s declare an interactive keymap in order to easily change
+several times in a row either the current song playing or the volume
+of MPD.
+
+#+name: inter-mpc
+#+caption: Interactive keybinds for ~mpc~
+| Keychord | Function        |
+|----------+-----------------|
+| ~c~        | ~mpd-prev~        |
+| ~t~        | ~mpd-volume-down~ |
+| ~s~        | ~mpd-volume-up~   |
+| ~r~        | ~mpd-next~        |
+
+This can be translated in CommonLisp as:
+#+begin_src lisp
+<<interactive-gen(name="mpc-interactive", keys=inter-mpc)>>
+#+end_src
+
+We need to indicate also how much the volume is affected by
+~mpd-volume-down~ and ~mpd-volume-up~.
+#+begin_src lisp
+(setf *mpd-volume-step* 2)
+#+end_src
+
+Another one will be defined for the general audio of my computer. And
+I know it isn’t technically media keybinds, but I’ll add in keybinds
+for my screen’s backlight.
+
+#+name: inter-media
+#+caption: Interactive keybinds for general media interaction
+| Keys | Function                             |
+|------+--------------------------------------|
+| ~c~    | ~exec xbacklight -perceived -dec 2~    |
+| ~t~    | ~exec amixer -q set Master 2%- unmute~ |
+| ~s~    | ~exec amixer -q set Master 2%+ unmute~ |
+| ~r~    | ~exec xbacklight -perceived -inc 2~    |
+| ~m~    | ~exec amixer -q set Master 1+ toggle~  |
+
+#+begin_src lisp
+<<interactive-gen(name="media-interactive", keys=inter-media)>>
+#+end_src
+
+Then, let’s declare a keymap for our media controls.
+
+#+name: mpd-add-map
+#+caption: ~*my-mpd-add-map*~
+| Keychord | Function                  |
+|----------+---------------------------|
+| ~a~        | ~mpd-search-and-add-artist~ |
+| ~A~        | ~mpd-search-and-add-album~  |
+| ~f~        | ~mpd-search-and-add-file~   |
+| ~F~        | ~mpd-add-file~              |
+| ~g~        | ~mpd-search-and-add-genre~  |
+| ~t~        | ~mpd-search-and-add-title~  |
+
+#+name: mpd-browse-map
+#+caption: ~*my-mpd-browse-map*~
+| Keychord | Function            |
+|----------+---------------------|
+| ~a~        | ~mpd-browse-artists~  |
+| ~A~        | ~mpd-browse-albums~   |
+| ~g~        | ~mpd-browse-genres~   |
+| ~p~        | ~mpd-browse-playlist~ |
+| ~t~        | ~mpd-browse-tracks~   |
+
+#+name: media-management
+#+caption: ~*my-media-keymap*~
+| Keychord | Function                          |
+|----------+-----------------------------------|
+| ~.~        | ~media-interactive~                 |
+| ~«~        | ~exec playerctl previous~           |
+| ~»~        | ~exec playerctl next~               |
+| ~a~        | ~'*my-mpd-add-map*~                 |
+| ~b~        | ~'*my-mpd-browse-map*~              |
+| ~c~        | ~mpd-clear~                         |
+| ~m~        | ~mpc-interactive~                   |
+| ~p~        | ~exec playerctl play-pause~         |
+| ~s~        | ~exec playerctl stop~               |
+| ~u~        | ~mpd-update~                        |
+| ~n~        | ~exec kitty ncmpcpp -q~             |
+| ~v~        | ~exec kitty ncmpcpp -qs visualizer~ |
+
+Let’s translate this table in CommonLisp:
+#+begin_src lisp
+(defvar *my-mpd-add-map*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=mpd-add-map)>>
+    m))
+
+(defvar *my-mpd-browse-map*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=mpd-browse-map)>>
+    m))
+
+(defvar *my-media-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=media-management)>>
+    m))
+
+(define-key *root-map* (my/kbd "m") '*my-media-keymap*)
+#+end_src
+
+I will also define on ~*top-map*~ some basic volume management keybinds
+so that they are immediately accessible. Again, this isn’t technically
+media-related, but I’ll add keybinds for my screen’s backlight.
+
+#+name: media-top-level
+#+caption: Top-level media keys
+| Keychord              | Function                          |
+|-----------------------+-----------------------------------|
+| ~XF86AudioPlay~         | ~exec playerctl play-pause~         |
+| ~XF86AudioPause~        | ~exec playerctl pause~              |
+| ~XF86AudioStop~         | ~exec playerctl stop~               |
+| ~XF86AudioPrev~         | ~exec playerctl previous~           |
+| ~XF86AudioNext~         | ~exec playerctl next~               |
+| ~XF86AudioRewind~       | ~exec playerctl position -1~        |
+| ~XF86AudioForward~      | ~exec playerctl position +1~        |
+| ~XF86AudioRaiseVolume~  | ~exec pamixer -i 2~                 |
+| ~XF86AudioLowerVolume~  | ~exec pamixer -d 2~                 |
+| ~XF86AudioMute~         | ~exec pamixer -t~                   |
+| ~XF86MonBrightnessDown~ | ~exec xbacklight -perceived -dec 2~ |
+| ~XF86MonBrightnessUp~   | ~exec xbacklight -perceived -inc 2~ |
+
+#+begin_src lisp
+<<keybinds-gen(map="*top-map*", keybinds=media-top-level)>>
+#+end_src
+
+*** Misc
+Finally, some misc keybinds on the root map which don’t really fit
+anywhere else:
+
+#+name: misc-root-map
+#+caption: ~*root-map*~
+| Keychord | Function   |
+|----------+------------|
+| ~SPC~      | ~colon~      |
+| ~B~        | ~beckon~     |
+| ~C-b~      | ~banish~     |
+| ~l~        | ~exec plock~ |
+| ~r~        | ~reload~     |
+
+#+begin_src lisp
+<<keybinds-gen(map="*root-map*", keybinds=misc-root-map)>>
+#+end_src
+
+From time to time, I need to switch between different keyboard
+layouts, especially to the US QWERTY layout when I’m playing some
+games and the bépo layout most of the time. I’ll use the command
+~switch-layout~ defined above.
+
+#+name: keyboard-layout-map
+#+caption: ~*my-keyboard-layout-keymap*~
+| Keychord | Function                     |
+|----------+------------------------------|
+| ~b~        | ~exec setxkbmap fr bepo_afnor~ |
+| ~u~        | ~exec setxkbmap us~            |
+
+#+begin_src lisp
+(defvar *my-keyboard-layout-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=keyboard-layout-map)>>
+    m))
+
+(define-key *root-map* (my/kbd "k") '*my-keyboard-layout-keymap*)
+#+end_src
+
+* PRIVATE org functions                                            :noexport:
+#+name: keybinds-gen
+#+header: :wrap "src lisp :exports none" :exports none :noweb yes
+#+begin_src emacs-lisp :var map="m" keybinds=media-management
+(mapconcat (lambda (keybind)
+             (format "%s" (let* ((filter   (lambda (str)
+                                             (replace-regexp-in-string "^~\\|~$" "" str)))
+                                 (key      (funcall filter (car keybind)))
+                                 (function (funcall filter (cadr keybind))))
+                            `(define-key ,map
+                               (my/kbd ,(format "\"%s\"" key))
+                               ,(if (string-prefix-p "'" function t)
+                                    function
+                                  (format "\"%s\"" function))))))
+           keybinds
+           "\n")
+#+end_src
+
+#+name: num-to-char
+#+begin_src emacs-lisp :var table=number-to-char-table num=2
+(let* ((filter (lambda (str)
+                 (replace-regexp-in-string "^~\\|~$" "" str)))
+       (char (funcall filter (cadr (assoc num table)))))
+  (if (string= char "\"")
+      "\\\""
+    char))
+#+end_src
+
+#+RESULTS[f66a1c4f98f4e8def9867862da252249b6a65749]: num-to-char
+: «
+
+#+name: interactive-gen
+#+begin_src emacs-lisp :var name="inter" keys=inter-mpc
+(format "%s"
+        `(define-interactive-keymap ,name
+           "\n                           (:exit-on ((kbd \"RET\") (kbd \"ESC\")"
+           "\n                                      (kbd \"C-g\") (kbd \"q\")))"
+           "\n "
+           ,(mapconcat (lambda (keybind)
+                         (format "%s"
+                                 (let* ((filter  (lambda (str)
+                                                   (replace-regexp-in-string "^~\\|~$" "" str)))
+                                        (key     (funcall filter (car keybind)))
+                                        (command (funcall filter (cadr keybind))))
+                                   `((my/kbd ,(format "\"%s\"" key))
+                                     ,(format "\"%s\"" command)))))
+                       keys
+                       "\n  ")))
+#+end_src
+
+#+RESULTS[b7d91bafe659a77aef5059ae17859a7fc715255e]: interactive-gen
+#+begin_src lisp
+(define-interactive-keymap inter
+                           (:exit-on ((kbd "RET") (kbd "ESC")
+                                       (kbd "C-g") (kbd "q")))
+  ((my/kbd "c") "mpd-prev")
+  ((my/kbd "t") "mpd-volume-down")
+  ((my/kbd "s") "mpd-volume-up")
+  ((my/kbd "r") "mpd-next"))
+#+end_src
+
+#+RESULTS[b7d91bafe659a77aef5059ae17859a7fc715255e]: interactive-gen
+#+begin_src lisp
+(define-interactive-keymap inter
+                           (:exit-on ((kbd "RET") (kbd "ESC")
+                                       (kbd "C-g") (kbd "q")))
+  ((my/kbd "c") "mpd-prev")
+  ((my/kbd "t") "mpd-volume-down")
+  ((my/kbd "s") "mpd-volume-up")
+  ((my/kbd "r") "mpd-next"))
+#+end_src
+
+#+name: list-groups
+#+caption: Five default groups for my StumpWM setup
+| Groups  | Number | Type   |
+|---------+--------+--------|
+| [EMACS] |      1 | Tiling |
+| [TERM]  |      2 | Tiling |
+| [WWW]   |      3 | Tiling |
+| [PRIV]  |      4 | Tiling |
+| [FILES] |      5 | Tiling |

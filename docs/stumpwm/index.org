@@ -1,0 +1,92 @@
+#+title: StumpWM
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+[[file:../img/stumpwm.png]]
+
+* StumpWM
+** Introduction
+*** What is StumpWM?
+[[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written
+entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not a
+dynamic tiling window manager like [[file:Deprecated/awesome.org][Awesome]] is, its ability of managing
+windows in frames and using keychords with keymaps like Emacs does is
+a huge plus for me, not to mention the fact its configuration file is
+written in Common Lisp, a general programming language, a bit like
+Awesome. This makes it an [[file:Deprecated/i3.org][i3]] on steroids, sort of. It also uses a lot
+of Emacs’ concepts, which is great for an Emacs user such as myself.
+
+*** Why not EXWM then?
+Sometimes, some actions within Emacs are blocking actions, making the
+computer not usable while the command runs. It also does not play nice
+with video games (pun intended), which is also a negative point for
+me. And I also find EXWM more confusing overall than StumpWM.
+
+*** What this file is for
+This file has two main goals:
+- This will be the actual source code of my StumpWM configuration,
+  thanks to Emacs’ org-mode, and thanks to org-mode’s literate config
+  capabilities.
+
+  Almost all the visible source blocks if not all will be included in
+  my configuration files through tangling, which can be done in Emacs
+  when this file is opened through ~M-x org-babel-tangle~, which will
+  write my configuration files based on the source blocks present in
+  this document. This file is not only my config’s documentation, it
+  /*is*/ my configuration.
+- Be my documentation on my StumpWM configuration. That way, I’ll
+  never forget which block of code does what.
+
+  And maybe, hopefully, someone could learn a thing or two if they
+  want to get into StumpWM but don’t know where to begin. You should
+  be able to read this document as a book, with each chapter dedicated
+  to a different aspect of StumpWM.
+
+*** Organization of my files
+While I could make this file write everything to the same file (the
+actual source will be in a single file after all), I find it easier to
+debug StumpWM if everything’s split up. For now, my configuration
+follows this architecture:
+- ~init.el~ :: My main configuration file, glues everything together. It
+  loads all of my configuration files as well as some modules I find
+  useful;
+- ~colors.lisp~ :: This file defines colours that will be used in my
+  ~theme.lisp~ and ~modeline.lisp~ files. Let’s make my code DRY, or as I
+  prefer to say, DRYD (/Don’t Repeat Yourself Dummy/).
+- ~commands.lisp~ :: Lisp commands, in case I want to bind some
+  complicated actions to a keybind that is not just a simple shell
+  command;
+- ~keybindings.lisp~ :: My list of keymaps and keybinds which make
+  StumpWM actually usable;
+- ~modeline.lisp~ :: This defines the modeline, a concept taken from
+  Emacs which can display various information such as a list of
+  workspaces, including the current one;
+- ~placement.lisp~ :: This file manages my workspaces and the default
+  placement of various windows;
+- ~utilities.lisp~ :: Here you can find my StumpWM configuration that
+  isn’t really related to the rest of the config, for instance utility
+  code for connecting by SSH to some host.
+- ~theme.lisp~ :: manages the colour theme of StumpWM, the default
+  placement of some windows and StumpWM’s gaps.
+
+You will also find below my ~xinit~ file for StumpWM, exported to
+~$HOME/.xinitrc.stumpwm~, which I use to start Stump through ~startx
+~/.xinitrc.stumpwm~.
+#+begin_src sh :tangle ~/.xinitrc.stumpwm :shebang "#!/bin/sh"
+# this makes it work in Ubuntu
+xhost +SI:localuser:$USER
+
+# Set fallback pointer
+xsetroot -cursor_name left_ptr
+
+# Fix scrolling on some GTK3 applications
+export GDK_CORE_DEVICE_EVENTS=1
+
+# in case Java applications display /nothing/
+# wmname LG3D
+# export _JAVA_AWT_WM_NONREPARENTING=1
+
+autorandr -l home
+
+exec stumpwm
+#+end_src

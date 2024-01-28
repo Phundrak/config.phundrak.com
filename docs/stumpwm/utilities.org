@@ -1,0 +1,372 @@
+#+title: StumpWM — Utilities
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Utilities
+** Utilities
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/utilities.lisp :noweb yes
+:END:
+Part of my configuration is not really related to StumpWM itself, or
+rather it adds new behaviour StumpWM doesn’t have. ~utilities.lisp~
+stores all this code in one place.
+
+*** Binwarp
+Binwarp allows the user to control their mouse from the keyboard,
+basically eliminating the need for a physical mouse in daily usage of
+the workstation (though a physical mouse stays useful for games and
+such).
+#+begin_src lisp
+(load-module "binwarp")
+#+end_src
+
+Next, I’ll define my keybinds for when using Binwarp for emulating
+mouse clicks as well as bépo-compatible mouse movements. This new
+Binwarp mode is now available from the keybind ~s-m~ at top level.
+#+begin_src lisp
+(binwarp:define-binwarp-mode my-binwarp-mode "s-m" (:map *top-map*)
+    ((my/kbd "SPC") "ratclick 1")
+    ((my/kbd "RET") "ratclick 3")
+    ((my/kbd "c")   "binwarp left")
+    ((my/kbd "t")   "binwarp down")
+    ((my/kbd "s")   "binwarp up")
+    ((my/kbd "r")   "binwarp right")
+    ((my/kbd "i")   "init-binwarp")
+    ((my/kbd "q")   "exit-binwarp"))
+#+end_src
+
+*** Bluetooth
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/bluetooth.lisp :noweb yes
+:END:
+Although there is a Bluetooth module for the modeline, this is about
+the extent to which StumpWM can interact with the system’s Bluetooth.
+However, I wish for some more interactivity, like powering on and
+off Bluetooth, connecting to devices and so on.
+
+Firstly, our code relies on ~cl-ppcre~, so let’s quickload it.
+#+begin_src lisp
+(ql:quickload :cl-ppcre)
+#+end_src
+
+Let’s indicate which command we’ll be using.
+#+begin_src lisp
+(defvar *bluetooth-command* "bluetoothctl"
+  "Base command for interacting with bluetooth.")
+#+end_src
+
+**** Utilities
+We’ll need a couple of functions that will take care of stuff for us,
+so we don’t have to repeat ourselves. The first one is a way for us to
+share a message. The function ~bluetooth-message~ will first display
+~Bluetooth:~ in green, then it will display the message we want it to
+display.
+#+begin_src lisp
+(defun bluetooth-message (&rest message)
+  (message (format nil
+                   "^2Bluetooth:^7 ~{~A~^ ~}"
+                   message)))
+#+end_src
+
+This function is a builder function which will create our commands.
+For instance, src_lisp[:exports code]{(bluetooth-make-command "power"
+"on")} will return ~"bluetoothctl power on"~ with ~*bluetooth-ctl*~ set as
+~"bluetoothctl"~ --- simply put, it joins ~*bluetooth-command*~ with ~args~
+with a space as their separator.
+#+begin_src lisp
+(defun bluetooth-make-command (&rest args)
+  (format nil
+          "~a ~{~A~^ ~}"
+          ,*bluetooth-command*
+          args))
+#+end_src
+
+Now we can put ~bluetooth-make-command~ to use with ~bluetooth-command~
+which will actually run the result of the former. As you can see, it
+also collects the output, so we can display it later in another
+function.
+#+begin_src lisp
+(defmacro bluetooth-command (&rest args)
+  `(run-shell-command (bluetooth-make-command ,@args) t))
+#+end_src
+
+Finally, ~bluetooth-message-command~ is the function that both executes
+and also displays the result of the bluetooth command we wanted to see
+executed. Each argument of the command is a separate string. For
+instance, if we want to power on the bluetooth on our device, we can
+call src_lisp[:exports code]{(bluetooth-message-command "power"
+"on")}.
+#+begin_src lisp
+(defmacro bluetooth-message-command (&rest args)
+  `(bluetooth-message (bluetooth-command ,@args)))
+#+end_src
+
+**** Toggle Bluetooth On and Off
+This part is easy. Now that we can call our Bluetooth commands easily,
+we can easily define how to turn on Bluetooth.
+#+begin_src lisp
+(defcommand bluetooth-turn-on () ()
+  "Turn on bluetooth."
+  (bluetooth-message-command "power" "on"))
+#+end_src
+
+And how to power it off.
+#+begin_src lisp
+(defcommand bluetooth-turn-off () ()
+  "Turn off bluetooth."
+  (bluetooth-message-command "power" "off"))
+#+end_src
+
+**** Bluetooth Devices
+In order to manipulate Bluetooth device, which we can represent as a
+MAC address and a name, we can create a structure that will make use
+of a constructor for simpler use. The constructor
+~make-bluetooth-device-from-command~ expects an entry such as ~Device
+00:00:00:00:00:00 Home Speaker~. The constructor discards the term
+~Device~ and stores the MAC address separately from the rest of the
+string which is assumed to be the full name of the device.
+#+begin_src lisp
+(defstruct (bluetooth-device
+             (:constructor
+              make-bluetooth-device (&key (address "")
+                                          (name nil)))
+             (:constructor
+              make-bluetooth-device-from-command
+              (&key (raw-name "")
+               &aux (address (cadr (cl-ppcre:split " " raw-name)))
+                    (full-name (format nil "~{~A~^ ~}" (cddr (cl-ppcre:split " " raw-name)))))))
+  address
+  (full-name (progn
+                 (format nil "~{~A~^ ~}" name))))
+#+end_src
+
+We can now collect our devices easily.
+#+begin_src lisp
+(defun bluetooth-get-devices ()
+  (let ((literal-devices (bluetooth-command "devices")))
+    (mapcar (lambda (device)
+              (make-bluetooth-device-from-command :raw-name device))
+     (cl-ppcre:split "\\n" literal-devices))))
+#+end_src
+
+**** Connect to a device
+When we want to connect to a Bluetooth device, we always need
+Bluetooth turned on, so ~bluetooth-turn-on~ will always be called. Then
+the function will attempt to connect to the device specified by the
+~device~ argument, whether the argument is a Bluetooth structure as
+defined above or a plain MAC address.
+#+begin_src lisp
+(defun bluetooth-connect-device (device)
+  (progn
+    (bluetooth-turn-on)
+    (cond ((bluetooth-device-p device) ;; it is a bluetooth-device structure
+           (bluetooth-message-command "connect"
+                                      (bluetooth-device-address device)))
+          ((stringp device)            ;; assume it is a MAC address
+           (bluetooth-message-command "connect" device))
+          (t (message (format nil "Cannot work with device ~a" device))))))
+#+end_src
+
+The command to connect to a device displays a choice between the
+collected Bluetooth device and the user only has to select it. It will
+then attempt to connect to it.
+#+begin_src lisp
+(defcommand bluetooth-connect () ()
+  (sb-thread:make-thread
+   (lambda ()
+    (let* ((devices (bluetooth-get-devices))
+           (choice  (cadr (stumpwm:select-from-menu
+                           (stumpwm:current-screen)
+                           (mapcar (lambda (device)
+                                     `(,(bluetooth-device-full-name device) ,device))
+                                   devices)))))
+      (bluetooth-connect-device choice)))))
+#+end_src
+
+**** Keybinds
+It’s all nice and all, but typing manually the commands with ~s-SPC ;~
+is a bit tiring, so let’s define our Bluetooth keymap which we will
+bind to ~s-SPC B~.
+#+name: bluetooth-keymap
+| Keychord | Command            |
+|----------+--------------------|
+| ~c~        | ~bluetooth-connect~  |
+| ~o~        | ~bluetooth-turn-on~  |
+| ~O~        | ~bluetooth-turn-off~ |
+
+#+begin_src lisp
+(defvar *my-bluetooth-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=bluetooth-keymap)>>
+    m))
+
+(define-key *root-map* (my/kbd "B") '*my-bluetooth-keymap*)
+#+end_src
+
+*** NetworkManager integration
+It is possible to have some kind of integration between StumpWM and
+NetworkManager. To do so, we have to load the related module, then
+create the two keybinds described in [[nm-keybinds]].
+#+name: nm-keybinds
+#+caption: ~*my-nm-keybinds*~
+| Keychord | Command                   |
+|----------+---------------------------|
+| ~W~        | ~nm-list-wireless-networks~ |
+
+A call to src_lisp[:exports code]{(ql:quickload :dbus)} is necessary
+for this module. Installing the ~dbus~ module in turn requires the
+library ~libfixposix~ installed on the user’s machine. On Arch, you can
+install it like so using ~paru~:
+#+begin_src fish
+paru -S libfixposix --noconfirm
+#+end_src
+
+#+begin_src lisp
+(ql:quickload :dbus)
+
+(load-module "stump-nm")
+
+<<keybinds-gen(map="*root-map*", keybinds=nm-keybinds)>>
+#+end_src
+
+*** Pinentry
+Out with GTK2’s pinentry program! Let’s use StumpWM’s! At least that’s
+what I’d like to say, but unfortunately there is a bug in the text
+reading devices of StumpWM that prevent the user from using modifiers
+when entering a password such as AltGr, so I can’t use it : /
+#+begin_src lisp
+;; (load-module "pinentry")
+#+end_src
+
+*** Sly
+[[https://github.com/joaotavora/sly][Sly]] is a fork of SLIME with which I can connect StumpWM and Emacs
+together. Technically this is already done to some level with
+~stumpwm-mode~, but the latter doesn’t provide auto-completion or stuff
+like that.
+
+The first thing to do is load ~slynk~, SLY’s server:
+#+begin_src lisp
+(ql:quickload :slynk)
+#+end_src
+
+Now we can define a command to launch the server. I don’t want it to
+run all the time, just when I need it.
+#+begin_src lisp
+(stumpwm:defcommand sly-start-server () ()
+  "Start a slynk server for sly."
+  (sb-thread:make-thread (lambda () (slynk:create-server :dont-close t))))
+
+(stumpwm:defcommand sly-stop-server () ()
+  "Stop current slynk server for sly."
+  (sb-thread:make-thread (lambda () (slynk:stop-server 4005))))
+#+end_src
+
+*** ~swm-ssh~
+This module from the contrib repository scans the user’s ssh
+configuration file and offers them a quick way of connecting to their
+remote hosts.
+#+begin_src lisp
+(load-module "swm-ssh")
+#+end_src
+
+The default terminal needs to be set, otherwise the module will try to
+call ~urxvtc~ which is not installed on my system.
+#+begin_src lisp
+(setq swm-ssh:*swm-ssh-default-term* "kitty")
+#+end_src
+
+Now, to call the main command of this module we can define the
+following keybind.
+#+begin_src lisp
+(define-key *root-map* (my/kbd "s") "swm-ssh-menu")
+#+end_src
+
+*** Systemd
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/systemd.lisp :noweb yes
+:END:
+I’m currently in the process of writing functions to interact with
+Systemd directly through StumpWM. For now, not much work is done, but
+it’s a start.
+
+Firstly, I have the following function that lists all the system or
+user services.
+#+begin_src lisp
+(defun systemd-get-services (&key user-p)
+  "Collect all systemd services running.
+
+If USER-P is t, collect user services, otherwise collect system
+services.
+
+The value returned is a list of lists. The first element is the
+service’s name, the second is its load state, the third the high-level
+activation state of the service, and the fourth its low-level
+activation state."
+  (mapcar (lambda (elt)
+            (multiple-value-bind (_ result)
+                (ppcre:scan-to-strings "(.*\\.service) *([^ ]+) *([^ ]+) *([^ ]+).*"
+                                       elt)
+              result))
+          (ppcre:split
+           " *\\n●? *"
+           (ppcre:regex-replace
+            "^ *"
+            (run-shell-command (concat "systemctl list-units --type service --all -q"
+                                       (if user-p " --user" ""))
+                               t)
+            ""))))
+#+end_src
+
+The only command I have right now is for listing the system or user
+services with ~message~. Unfortunately, if there are too many services,
+the list will overflow the screen. I do not know how to fix that yet.
+I set the timeout to 600 seconds in order to have all the time in the
+world to read the services list. It goes away as soon as something
+else appears, such as a ~s-SPC C-g~ since I have ~which-key-mode~ enabled.
+#+begin_src lisp
+(defcommand systemd-list-services (user-p) ((:y-or-n "User services? "))
+  (let ((stumpwm::*timeout-wait* 600))
+   (message (format nil "~{~a~^~&~}"
+                    (mapcar (lambda (service)
+                              (let ((name (aref service 0))
+                                    (load (aref service 1))
+                                    (active (aref service 2))
+                                    (sub (aref service 3)))
+                                (cond ((member load '("not-found" "bad-setting"
+                                                      "error" "masked")
+                                               :test #'string=)
+                                       (format nil
+                                               "^~A~A^0 ^>  Load: ~12@A"
+                                               (if (string= "masked" load) 4 1)
+                                               name load))
+                                      ((member active '("failed" "reloading" "activating"
+                                                        "deactivating" "inactive")
+                                               :test #'string=)
+                                       (format nil "^~A~A^0 ^>Active: ~12@A"
+                                               (case active
+                                                 ("failed" 1)
+                                                 ("inactive" 0)
+                                                 (t 3))
+                                               name
+                                               active))
+                                      (t (format nil "^2~A^0 ^>   Sub: ~12@A" name sub)))))
+                            (systemd-get-services :user-p user-p))))))
+#+end_src
+
+* PRIVATE org functions                                            :noexport:
+#+name: keybinds-gen
+#+header: :wrap "src lisp :exports none" :exports none :noweb yes
+#+begin_src emacs-lisp :var map="m" keybinds=bluetooth-keymap
+(mapconcat (lambda (keybind)
+             (format "%s" (let* ((filter   (lambda (str)
+                                             (replace-regexp-in-string "^~\\|~$" "" str)))
+                                 (key      (funcall filter (car keybind)))
+                                 (function (funcall filter (cadr keybind))))
+                            `(define-key ,map
+                               (my/kbd ,(format "\"%s\"" key))
+                               ,(if (string-prefix-p "'" function t)
+                                    function
+                                  (format "\"%s\"" function))))))
+           keybinds
+           "\n")
+#+end_src

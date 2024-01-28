@@ -1,0 +1,85 @@
+#+title: StumpWM — Colours
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Colours
+** Colours
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/colors.lisp
+:END:
+If you’ve had a look at the rest of my dotfiles, you may have noticed
+I really like the [[https://www.nordtheme.com/][Nord theme]]. No wonder we can find it here again!
+Here is a small table listing the Nord colours:
+
+#+name: nord-colours
+#+caption: Nord Theme
+| Name   | Value   |
+|--------+---------|
+| nord0  | #2e3440 |
+| nord1  | #3b4252 |
+| nord2  | #434c5e |
+| nord3  | #4c566a |
+| nord4  | #d8dee9 |
+| nord5  | #e5e9f0 |
+| nord6  | #eceff4 |
+| nord7  | #8fbcbb |
+| nord8  | #88c0d0 |
+| nord9  | #81a1c1 |
+| nord10 | #5e81ac |
+| nord11 | #bf616a |
+| nord12 | #d08770 |
+| nord13 | #ebcb8b |
+| nord14 | #a3be8c |
+| nord15 | #b48ead |
+
+I’ll prefix the variables’ name with ~phundrak-~ just in case it might
+conflict with another package I might use in the future, so the CLisp
+code looks like so:
+#+name: gen-colors
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var colors=nord-colours
+(mapconcat (lambda (color)
+             (format "(defvar phundrak-%s \"%s\")" (car color) (cadr color)))
+           colors
+           "\n")
+#+end_src
+
+#+RESULTS[08b3db7a2b4f31d641bcd096ff265eae06879244]: gen-colors
+#+begin_src lisp
+(defvar phundrak-nord0 "#2e3440")
+(defvar phundrak-nord1 "#3b4252")
+(defvar phundrak-nord2 "#434c5e")
+(defvar phundrak-nord3 "#4c566a")
+(defvar phundrak-nord4 "#d8dee9")
+(defvar phundrak-nord5 "#e5e9f0")
+(defvar phundrak-nord6 "#eceff4")
+(defvar phundrak-nord7 "#8fbcbb")
+(defvar phundrak-nord8 "#88c0d0")
+(defvar phundrak-nord9 "#81a1c1")
+(defvar phundrak-nord10 "#5e81ac")
+(defvar phundrak-nord11 "#bf616a")
+(defvar phundrak-nord12 "#d08770")
+(defvar phundrak-nord13 "#ebcb8b")
+(defvar phundrak-nord14 "#a3be8c")
+(defvar phundrak-nord15 "#b48ead")
+#+end_src
+
+Finally, let’s also modify the default colors StumpWM has. I’ll try to
+respect the original colours while converting them to Nord. We also
+need to reload them now that we modified them.
+#+begin_src lisp
+(setq *colors*
+      `(,phundrak-nord1   ;; 0 black
+        ,phundrak-nord11  ;; 1 red
+        ,phundrak-nord14  ;; 2 green
+        ,phundrak-nord13  ;; 3 yellow
+        ,phundrak-nord10  ;; 4 blue
+        ,phundrak-nord14  ;; 5 magenta
+        ,phundrak-nord8   ;; 6 cyan
+        ,phundrak-nord5)) ;; 7 white
+
+(when *initializing*
+  (update-color-map (current-screen)))
+#+end_src
+
+And with that we’re done!

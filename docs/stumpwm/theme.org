@@ -1,0 +1,202 @@
+#+title: StumpWM — Theme
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Theme
+** Theme
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/theme.lisp :noweb yes
+:END:
+As in the modeline file, the first thing we’ll do is to load our
+colours.
+#+begin_src lisp
+(load "~/.stumpwm.d/colors.lisp")
+#+end_src
+
+We can now go onto more serious business.
+
+*** Fonts
+This gave me quite the headache when I tried to set this up: in order
+to use TTF fonts (note: it is not possible to use OTF fonts, see
+below), we need to use the ~ttf-fonts~ module which relies on the
+~clx-truetype~ library. A few years back, it should have been possible
+to get it installed with a call to src_lisp[:exports
+code]{(ql:quickload :clx-truetype)}, but it is no longer available!
+There’s a quickfix available while we wait for ~clx-truetype~ to be once
+again available: clone it in quicklisp’s local projects. You will
+obviously need to have quicklisp installed (for that, follow the
+[[https://www.quicklisp.org/beta/#installation][official instructions]]), then execute the following shell commands:
+#+begin_src sh :dir ~/quicklisp/local-projects
+cd ~/quicklisp/local-projects/
+git clone https://github.com/lihebi/clx-truetype.git
+#+end_src
+
+This will make ~clx-truetype~ available to quicklisp, and you can run
+again src_lisp[:exports code]{(ql:quickload :clx-truetype)} without an
+issue (running it again is necessary to install its dependencies).
+
+In order for it to work, install [[https://www.quicklisp.org/beta/][quicklisp]] and don’t forget to run
+src_lisp[:exports code]{(ql:add-to-init-file)} so it is loaded each
+time you start your Lisp interpreter. ~SBCL~ should be your CommonLisp
+interpreter of choice since StumpWM is generally compiled with it. The
+main advantage is also that SBCL supports multithreading, unlike
+CLisp. In case StumpWM doesn’t find your font, spin up SBCL and
+execute the following lines:
+#+begin_src lisp :tangle no
+(ql:quickload :clx-truetype)
+(xft:cache-fonts)
+#+end_src
+
+If you want a list of font families available, you can execute the
+following:
+#+begin_src lisp :tangle no
+(clx-truetype:get-font-families)
+#+end_src
+
+If you want to know the subfamilies of a certain family, you can
+execute this:
+#+begin_src lisp :tangle no
+(clx-truetype:get-font-subfamilies "Family Name")
+#+end_src
+
+Now that this is out of the way, let’s add two lines so we can use TTF
+fonts:
+#+begin_src lisp
+(ql:quickload :clx-truetype)
+(load-module "ttf-fonts")
+#+end_src
+
+The documentation says we should be able to also use OTF fonts, but so
+far I’ve had no luck loading one.
+
+Loading more than one font to use
+some fallback fonts also doesn’t seem to work, unlike specified in the
+documentation (I wanted to use a CJK font, but it doesn’t appear to
+work), we need to manually change the font used which isn’t very
+user-friendly, especially if you might have CJK characters appear in
+otherwise regular text.
+
+Something that didn’t click immediately for me (and I think StumpWM’s
+documentation on this could be improved) is that ~set-font~ can be used
+to set either one main font for StumpWM, as one might guess reading
+the documentation --- or you can set a list of them! And this is
+great, since my main font does not support some characters I regularly
+have in my windows’ title, such as CJK characters! However, be aware
+*the second font and further aren’t fallback fonts*. They are additional
+fonts you can switch to manually through the use of ~^f<n>~ (~<n>~ being
+the desired’s font index in the 0-indexed font list). But if a font
+cannot render a character, it will simply display an empty rectangle
+instead of falling back to another font. That’s annoying… Here is my
+list of fonts I want loaded:
+#+name: list-fonts
+| Family                           | Subfamily | Size |
+|----------------------------------+-----------+------|
+| Unifont-JP                       | Regular   |   10 |
+| DejaVu Sans Mono for Powerline   | Book      |  8.5 |
+| siji                             | Medium    |   10 |
+| FantasqueSansMono Nerd Font Mono | Regular   |  9.5 |
+
+#+name: gen-fonts
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var fonts=list-fonts
+(format "(set-font `(%s))"
+        (mapconcat (lambda (font)
+                    (let ((family    (nth 0 font))
+                          (subfamily (nth 1 font))
+                          (size      (nth 2 font)))
+                      (format ",%s" `(make-instance 'xft:font
+                                                    :family ,(format "\"%s\"" family)
+                                                    :subfamily ,(format "\"%s\"" subfamily)
+                                                    :size ,size
+                                                    :antialias t))))
+                  fonts
+                  "\n            "))
+#+end_src
+
+The code equivalent of this table can be seen below:
+#+RESULTS[1693001a9a9c0e274a9b7097665e9795783ae8a2]: gen-fonts
+#+begin_src lisp
+(set-font `(,(make-instance 'xft:font :family "Unifont-JP" :subfamily "Regular" :size 10 :antialias t)
+            ,(make-instance 'xft:font :family "DejaVu Sans Mono for Powerline" :subfamily "Book" :size 8.5 :antialias t)
+            ,(make-instance 'xft:font :family "siji" :subfamily "Medium" :size 10 :antialias t)
+            ,(make-instance 'xft:font :family "FantasqueSansMono Nerd Font Mono" :subfamily "Regular" :size 9.5 :antialias t)))
+#+end_src
+
+As far as I know, Unifont is the only font I’ve tested that displays
+monospaced Japanese characters in StumpWM. I tried DejaVu, IBM Plex,
+and a couple of others but only this one works correctly. DejaVu is
+here for the Powerline separator. If you know of another monospaced
+font that displays Japanese characters, or even better CJK characters,
+please tell me! My email address is at the bottom of this webpage.
+
+*** Colors
+We can now set a couple of colors for StumpWM. Not that we will see
+them often since I don’t like borders on my windows, but in case I
+want to get them back, they’ll be nice to have.
+#+begin_src lisp
+(set-border-color        phundrak-nord1)
+(set-focus-color         phundrak-nord1)
+(set-unfocus-color       phundrak-nord3)
+(set-float-focus-color   phundrak-nord1)
+(set-float-unfocus-color phundrak-nord3)
+#+end_src
+
+Let’s also set the colours of the message and input windows:
+#+begin_src lisp
+(set-fg-color phundrak-nord4)
+(set-bg-color phundrak-nord1)
+#+end_src
+
+As I said, I don’t like borders, so I’ll remove them. I’ll still keep
+the window’s title bar available when it’s floating, and this is also
+where I can set the format of its title: its number as well as its
+name, limited to thirty characters.
+#+begin_src lisp
+(setf *normal-border-width*       0
+      ,*float-window-border*       0
+      ,*float-window-title-height* 15
+      ,*window-border-style*       :none
+      ,*window-format*             "%n:%t")
+#+end_src
+
+I also have a [[https://github.com/Phundrak/stumpwm/tree/feature/no-hardcoded-which-key-format][StumpWM fork]] that introduces two new variables for
+customizing which-key keybindings. I submitted a [[https://github.com/stumpwm/stumpwm/pull/931][pull request]], so it
+might come one day to StumpWM.
+#+begin_src lisp
+(setf *key-seq-color* "^2")
+(setf *which-key-format* (concat *key-seq-color* "*~5a^n ~a"))
+#+end_src
+
+*** Message and Input Windows
+The Input windows as well as the message windows should both be at the
+top of my screen. And I believe a padding of five pixels for the
+message windows is good.
+#+begin_src lisp
+(setf *input-window-gravity*     :top
+      ,*message-window-padding*   10
+      ,*message-window-y-padding* 10
+      ,*message-window-gravity*   :top)
+#+end_src
+
+*** Gaps Between Frames
+I love gaps. When I was using i3, I used the ~i3-gaps~ package, not just
+plain ~i3~. In Awesome, I still have gaps. And in StumpWM, I shall still
+use gaps. In order to use them, let’s load a module dedicated to gaps
+in StumpWM:
+#+begin_src lisp
+(load-module "swm-gaps")
+#+end_src
+
+Now that this is done, I can now set some variables bound to this
+package.
+#+begin_src lisp
+(setf swm-gaps:*head-gaps-size*  0
+      swm-gaps:*inner-gaps-size* 5
+      swm-gaps:*outer-gaps-size* 40)
+#+end_src
+
+Finally, let’s enable our gaps:
+#+begin_src lisp
+(when *initializing*
+  (swm-gaps:toggle-gaps))
+#+end_src

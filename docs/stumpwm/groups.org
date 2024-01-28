@@ -1,0 +1,95 @@
+#+title: StumpWM — Groups and Placement
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Groups and Placement
+** Groups and Placement
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/placement.lisp :noweb yes
+:END:
+I don’t need many groups, rarely more than five. Hence, here are my
+five default groups.
+
+#+name: list-groups
+#+caption: Five default groups for my StumpWM setup
+| Groups  | Number | Type   |
+|---------+--------+--------|
+| [EMACS] |      1 | Tiling |
+| [TERM]  |      2 | Tiling |
+| [WWW]   |      3 | Tiling |
+| [PRIV]  |      4 | Tiling |
+| [FILES] |      5 | Tiling |
+
+#+name: gen-groups
+#+header: :exports none
+#+begin_src emacs-lisp :var groups=list-groups
+(let ((make-group (lambda (group &optional first-p)
+                    (let ((group-name (car group))
+                          (group-type (nth 2 group)))
+                      (format "%S" `(,(if first-p 'grename
+                                        (pcase group-type
+                                          ("Dynamic" 'gnewbg-dynamic)
+                                          ("Floating" 'gnewbg-float)
+                                          (otherwise 'gnewbg)))
+                                     ,group-name))))))
+  (string-join `(,(funcall make-group (car groups) t)
+                 ,@(mapcar (lambda (group)
+                             (funcall make-group group))
+                           (cdr groups)))
+               "\n"))
+#+end_src
+
+#+RESULTS[4dad230a37c25af58c4f38eef1dd4f762b295f71]: gen-groups
+: (grename "[EMACS]")
+: (gnewbg "[TERM]")
+: (gnewbg "[WWW]")
+: (gnewbg "[PRIV]")
+: (gnewbg "[FILES]")
+
+Groups are specified this way:
+#+begin_src lisp
+(when *initializing*
+  <<gen-groups()>>)
+#+end_src
+
+By default, if nothing is specified as per the group type, my groups
+are manual tiling groups. Otherwise, as you can see above, they can
+also be dynamic tiling groups or floating groups.
+
+Next, let’s make sure no previous window placement rule is in place,
+this will avoid unexpected and hard-to-debug behaviour.
+#+begin_src lisp
+(clear-window-placement-rules)
+#+end_src
+
+#+name: gen-rules
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var rules=list-groups
+(require 'seq)
+(let ((output "")
+      (rules (seq-filter (lambda (rule) rule)
+                         (mapcar (lambda (line)
+                                   (let ((classes (caddr line)))
+                                     (unless (string= "" classes)
+                                       (cons
+                                        (split-string classes "," t "[[:space:]]*")
+                                        (car line)))))
+                                 rules))))
+  (progn
+    (seq-do (lambda (rule)
+              (let ((classes (car rule))
+                    (group   (cdr rule)))
+                (dolist (class classes)
+                  (setf output (format "%s\n%s"
+                                       `(define-frame-preference ,(format "\"%s\"" group)
+                                          (nil t t :class ,(format "\"%s\"" class)))
+                                       output)))))
+            rules)
+    output))
+#+end_src
+
+Dynamic groups, if any is created, should have a split ratio of half
+of the available space.
+#+begin_src lisp
+(setf *dynamic-group-master-split-ratio* 1/2)
+#+end_src

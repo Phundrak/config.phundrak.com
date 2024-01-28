@@ -1,0 +1,191 @@
+#+title: StumpWM — Mode-Line
+#+setupfile: ../headers
+#+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
+
+* StumpWM — Mode-Line
+** Mode-Line
+:PROPERTIES:
+:header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/modeline.lisp
+:END:
+The timeout of the modeline indicates how often it refreshes in
+seconds. I think two seconds is good.
+#+begin_src lisp
+(setf *mode-line-timeout* 2)
+#+end_src
+
+*** Formatting Options
+Next we get to the content of the modeline. This format follows the
+format indicated in the manpage of ~date~.
+#+begin_src lisp
+(setf *time-modeline-string* "%F %H:%M")
+#+end_src
+
+Let’s also indicate how the groupname is displayed.
+#+begin_src lisp
+(setf *group-format* "%t")
+#+end_src
+
+The window format should display first its window number, then its
+titled, limited to 30 characters.
+#+begin_src lisp
+(setf *window-format* "%n: %30t")
+#+end_src
+
+*** Mode-Line Theme
+The modeline is pretty easy. First, let’s load the ~colors.lisp~ file we just created:
+#+begin_src lisp
+(load "~/.stumpwm.d/colors.lisp")
+#+end_src
+
+Next, we can set some colours for the modeline. Let’s set the
+background of the modeline to Nord1 and the foreground to Nord5, I
+think this is a pretty good combination.
+#+begin_src lisp
+(setf *mode-line-background-color* phundrak-nord1
+      ,*mode-line-foreground-color* phundrak-nord5)
+#+end_src
+
+We /could/ also use some borders in the modeline. But we won’t. Let’s
+still set its colour to Nord1, just in case.
+#+begin_src lisp
+(setf *mode-line-border-color* phundrak-nord1
+      ,*mode-line-border-width* 0)
+#+end_src
+
+*** Mode-Line Modules
+Here are some modules that we will load for the modeline:
+
+#+name: modeline-modules
+#+caption: Modules used by the modeline
+| Module Name      | Why Do I Need It?                                |
+|------------------+--------------------------------------------------|
+| battery-portable | Get information on the battery level of a laptop |
+| cpu              | Get the CPU usage                                |
+| mpd              | Display MPD’s status                             |
+| mem              | Get the memory usage                             |
+
+#+name: gen-load-modeline-modules
+#+header: :wrap src lisp
+#+begin_src emacs-lisp :var modules=modeline-modules
+(mapconcat (lambda (module)
+             (format "(load-module \"%s\")" (car module)))
+           modules
+           "\n")
+#+end_src
+
+#+RESULTS[20a1d5d9c6e0136d6a130b1c1b4bd4d742aead8a]: gen-load-modeline-modules
+#+begin_src lisp
+(load-module "battery-portable")
+(load-module "cpu")
+(load-module "mpd")
+(load-module "mem")
+#+end_src
+
+We need to set some variables, so modules can be displayed correctly.
+Note that the character between the font switchers in the second CPU
+formatter is U+E082, which symbolizes the CPU.
+#+begin_src lisp
+(setf cpu::*cpu-modeline-fmt*        "%c"
+      cpu::*cpu-usage-modeline-fmt*  "^f2^f0^[~A~2D%^]"
+      mem::*mem-modeline-fmt*        "%a%p"
+      mpd:*mpd-modeline-fmt*         "%a - %t"
+      mpd:*mpd-status-fmt*           "%a - %t"
+      ,*hidden-window-color*          "^**"
+      ,*mode-line-highlight-template* "«~A»")
+#+end_src
+
+*** Generating the Mode-Line
+We can indicate what to display in our modeline. Each formatter will
+be separated by a Powerline separator with the code point ~0xE0B0~ in
+the font I am using (see [[file:./stumpwm.md#fonts][Fonts]]).
+
+#+name: modeline-format
+#+caption: Formatters for the modeline
+| Formatter      | What it does                                          | Command? |
+|----------------+-------------------------------------------------------+----------|
+| ~%g~             | Display list of groups                                |          |
+| ~%W~             | Display list of windows in the current group and head |          |
+| ~^>~             | Rest of the modeline align to the right               |          |
+| ~docker-running~ | Display number of docker containers currently running | yes      |
+| ~mu-unread~      | Display number of unread emails                       | yes      |
+| ~%m~             | Display current MPD song                              |          |
+| ~%C~             | Display CPU usage                                     |          |
+| ~%M~             | Display RAM usage                                     |          |
+| ~%B~             | Display battery status                                |          |
+| ~%d~             | Display date                                          |          |
+
+#+name: modeline-format-gen
+#+begin_src emacs-lisp :var elements=modeline-format :exports none
+(mapcar (lambda (element)
+          (cons (format "\"%s\""
+                        (string-replace (regexp-quote "~")
+                                 ""
+                                 (car element)))
+                (string= "yes" (caddr element))))
+        elements)
+#+end_src
+
+#+RESULTS[4246baab1293d54bcd2223590f274152f24934c3]: modeline-format-gen
+: (("%g") ("%W") ("^>") ("docker-running" . t) ("mu-unread" . t) ("%m") ("%C") ("%M") ("%B") ("%d"))
+
+#+begin_src lisp :noweb yes
+(defvar *mode-line-formatter-list*
+  '<<modeline-format-gen()>>
+  "List of formatters for the modeline.")
+#+end_src
+
+As you can see, ~generate-modeline~ generates the string defining
+~*screen-mode-line-format*~ from the list of formatters we gave it with
+the table [[modeline-format]].
+#+begin_src lisp
+(defun generate-modeline (elements &optional not-invertedp rightp)
+  "Generate a modeline for StumpWM.
+ELEMENTS should be a list of `cons'es which `car' is the modeline
+formatter or the shell command to run, and their `cdr' is either nil
+when the `car' is a formatter and t when it is a shell command."
+  (when elements
+    (cons (format nil
+                  " ^[~A^]^(:bg \"~A\") "
+                  (format nil "^(:fg \"~A\")^(:bg \"~A\")^f1~A^f0"
+                          (if (xor not-invertedp rightp) phundrak-nord1 phundrak-nord3)
+                          (if (xor not-invertedp rightp) phundrak-nord3 phundrak-nord1)
+                          (if rightp "" ""))
+                  (if not-invertedp phundrak-nord3 phundrak-nord1))
+          (let* ((current-element (car elements))
+                 (formatter       (car current-element))
+                 (commandp        (cdr current-element)))
+            (cons (if commandp
+                      `(:eval (run-shell-command ,formatter t))
+                    (format nil "~A" formatter))
+                  (generate-modeline (cdr elements)
+                                     (not not-invertedp)
+                                     (if (string= "^>" (caar elements)) t rightp)))))))
+#+end_src
+
+It is then easy to define a command that can call this function and
+set this variable, so we can sort of reload the mode-line.
+#+begin_src lisp
+(defcommand reload-modeline () ()
+  "Reload modeline."
+  (sb-thread:make-thread
+   (lambda ()
+     (setf *screen-mode-line-format*
+           (cdr (generate-modeline *mode-line-formatter-list*))))))
+#+end_src
+
+And actually, let’s reload the modeline immediately.
+#+begin_src lisp
+(reload-modeline)
+#+end_src
+
+*** TODO Investigate why ~stumptray~ acts up                         :noexport:
+Systray overlaps with the far-right part of the modeline.
+
+# Also, let’s enable a system tray.
+# #+begin_src lisp
+#   (load-module "stumptray")
+#   (stumptray::stumptray)
+# #+end_src
+
+# Don’t forget to run src_lisp[:exports code]{(ql:quickload :xembed)} in
+# ~sbcl~ at least once to install its dependencies.
