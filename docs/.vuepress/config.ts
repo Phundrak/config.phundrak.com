@@ -1,5 +1,7 @@
-import { defineUserConfig, defaultTheme } from 'vuepress';
-import { removeHtmlExtensionPlugin } from 'vuepress-plugin-remove-html-extension';
+import { defaultTheme } from '@vuepress/theme-default';
+import { viteBundler } from '@vuepress/bundler-vite';
+import { defineUserConfig } from 'vuepress';
+
 import head from './head';
 
 interface ChildPage {
@@ -109,6 +111,7 @@ export default defineUserConfig({
   title: "Phundrak's Dotfiles",
   head: head,
   description: "Documentation of the GNU/Linux configuration of P'undrak",
+  bundler: viteBundler({}),
   markdown: {
     html: false,
     linkify: true,
@@ -117,7 +120,6 @@ export default defineUserConfig({
       level: [1, 2, 3, 4, 5],
     },
   },
-  plugins: [removeHtmlExtensionPlugin()],
   theme: defaultTheme({
     sidebarDepth: 5,
     repo: 'https://labs.phundrak.com/phundrak/config.phundrak.com',
