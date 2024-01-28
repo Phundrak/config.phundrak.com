@@ -1,6 +1,7 @@
 import { defaultTheme } from '@vuepress/theme-default';
 import { viteBundler } from '@vuepress/bundler-vite';
 import { defineUserConfig } from 'vuepress';
+import { searchProPlugin } from 'vuepress-plugin-search-pro';
 
 import head from './head';
 
@@ -120,6 +121,11 @@ export default defineUserConfig({
       level: [1, 2, 3, 4, 5],
     },
   },
+  plugins: [
+    searchProPlugin({
+      indexContent: true,
+    }),
+  ],
   theme: defaultTheme({
     sidebarDepth: 5,
     repo: 'https://labs.phundrak.com/phundrak/config.phundrak.com',
