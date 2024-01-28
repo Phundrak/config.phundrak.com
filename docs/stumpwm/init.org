@@ -1,8 +1,8 @@
-#+title: StumpWM — Basic Configuration
+#+title: Basic Configuration
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Basic Configuration
+* Basic Configuration
 ** Init File
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/init.lisp

@@ -1,8 +1,8 @@
-#+title: StumpWM — Groups and Placement
+#+title: Groups and Placement
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Groups and Placement
+* Groups and Placement
 ** Groups and Placement
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/placement.lisp :noweb yes

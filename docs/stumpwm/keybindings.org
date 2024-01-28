@@ -1,8 +1,8 @@
-#+title: StumpWM — Keybindings
+#+title: Keybindings
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Keybindings
+* Keybindings
 ** Keybinds
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/keybindings.lisp :noweb yes

@@ -10,103 +10,6 @@ interface ChildPage {
   link: string;
 }
 
-const emacsChildPages: ChildPage[] = [
-  {
-    text: 'Basic Configuration',
-    link: '/emacs/basic-config',
-  },
-  {
-    text: 'Custom Elisp',
-    link: '/emacs/custom-elisp',
-  },
-  {
-    text: 'Package Manager',
-    link: '/emacs/package-manager',
-  },
-  {
-    text: 'Keybindings Managers',
-    link: '/emacs/keybinding-managers',
-  },
-  {
-    text: 'Packages - Autocompletion',
-    link: '/emacs/packages/autocompletion',
-  },
-  {
-    text: 'Packages - Applications',
-    link: '/emacs/packages/applications',
-  },
-  {
-    text: 'Packages - Editing',
-    link: '/emacs/packages/editing',
-  },
-  {
-    text: 'Packages - Emacs Built-ins',
-    link: '/emacs/packages/emacs-builtin',
-  },
-  {
-    text: 'Packages - Making My Life Easier',
-    link: '/emacs/packages/helpful',
-  },
-  {
-    text: 'Packages - LaTeX',
-    link: '/emacs/packages/latex',
-  },
-  {
-    text: 'Packages - Org Mode',
-    link: '/emacs/packages/org',
-  },
-  {
-    text: 'Packages - Programming',
-    link: '/emacs/packages/programming',
-  },
-  {
-    text: 'Packages - Visual Configuration',
-    link: '/emacs/packages/visual-config',
-  },
-  {
-    text: 'Packages - Misc',
-    link: '/emacs/packages/misc',
-  },
-  {
-    text: 'Keybindings',
-    link: '/emacs/keybindings',
-  },
-];
-const stumpwmChildPages: ChildPage[] = [
-  {
-    text: 'Basic Configuration',
-    link: '/stumpwm/init',
-  },
-  {
-    text: 'Colours',
-    link: '/stumpwm/colours',
-  },
-  {
-    text: 'Mode-Line',
-    link: '/stumpwm/mode-line',
-  },
-  {
-    text: 'Groups and Placement',
-    link: '/stumpwm/groups',
-  },
-  {
-    text: 'Theme',
-    link: '/stumpwm/theme',
-  },
-  {
-    text: 'Commands',
-    link: '/stumpwm/commands',
-  },
-  {
-    text: 'Keybindings',
-    link: '/stumpwm/keybindings',
-  },
-  {
-    text: 'Utilities',
-    link: '/stumpwm/utilities',
-  },
-];
-
 export default defineUserConfig({
   lang: 'en-US',
   title: "Phundrak's Dotfiles",
@@ -136,7 +39,23 @@ export default defineUserConfig({
         text: 'Emacs',
         link: '/emacs/',
         collapsible: true,
-        children: emacsChildPages,
+        children: [
+          '/emacs/basic-config',
+          '/emacs/custom-elisp',
+          '/emacs/package-manager',
+          '/emacs/keybinding-managers',
+          '/emacs/packages/autocompletion',
+          '/emacs/packages/applications',
+          '/emacs/packages/editing',
+          '/emacs/packages/emacs-builtin',
+          '/emacs/packages/helpful',
+          '/emacs/packages/latex',
+          '/emacs/packages/org',
+          '/emacs/packages/programming',
+          '/emacs/packages/visual-config',
+          '/emacs/packages/misc',
+          '/emacs/keybindings',
+        ],
       },
       '/scripts',
       '/desktop',
@@ -150,7 +69,16 @@ export default defineUserConfig({
         text: 'StumpWM',
         link: '/stumpwm/',
         collapsible: true,
-        children: stumpwmChildPages,
+        children: [
+          '/stumpwm/init',
+          '/stumpwm/colours',
+          '/stumpwm/mode-line',
+          '/stumpwm/groups',
+          '/stumpwm/theme',
+          '/stumpwm/commands',
+          '/stumpwm/keybindings',
+          '/stumpwm/utilities',
+        ],
       },
       '/tmux',
       '/bootstrap',
@@ -159,26 +87,11 @@ export default defineUserConfig({
         link: '/deprecated/',
         collapsible: true,
         children: [
-          {
-            text: 'AwesomeWM',
-            link: '/deprecated/awesome',
-          },
-          {
-            text: 'i3',
-            link: '/deprecated/i3',
-          },
-          {
-            text: 'Nano',
-            link: '/deprecated/nano',
-          },
-          {
-            text: 'Polybar',
-            link: '/deprecated/polybar',
-          },
-          {
-            text: 'Spacemacs',
-            link: '/deprecated/spacemacs',
-          },
+          '/deprecated/awesome',
+          '/deprecated/i3',
+          '/deprecated/nano',
+          '/deprecated/polybar',
+          '/deprecated/spacemacs',
         ],
       },
     ],

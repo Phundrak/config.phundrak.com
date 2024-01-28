@@ -1,8 +1,8 @@
-#+title: StumpWM — Commands
+#+title: Commands
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Commands
+* Commands
 ** Commands
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/commands.lisp

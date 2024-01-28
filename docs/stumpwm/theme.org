@@ -1,8 +1,8 @@
-#+title: StumpWM — Theme
+#+title: Theme
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Theme
+* Theme
 ** Theme
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/theme.lisp :noweb yes

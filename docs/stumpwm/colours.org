@@ -1,8 +1,8 @@
-#+title: StumpWM — Colours
+#+title: Colours
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Colours
+* Colours
 ** Colours
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/colors.lisp

@@ -1,8 +1,8 @@
-#+title: StumpWM — Utilities
+#+title: Utilities
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-* StumpWM — Utilities
+* Utilities
 ** Utilities
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/utilities.lisp :noweb yes
