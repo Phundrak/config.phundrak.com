@@ -47,10 +47,22 @@ Google).
 *** What about other methods of tracking users?
 There are other more subtle methods of tracking someone on the
 internet, or even via emails or any web content rendered on the
-screen, such as web beacons (minuscule images). It is also possible to
-store Flash cookies or local shared objects.
+screen, such as web beacons (extremely small images). It is also
+possible to store Flash cookies or local shared objects.
 
 This site does not use them at all.
+
+** Is there any analytics on this website?
+Yes, but here’s the catch: I use a self-hosted [[https://umami.is/][umami]] instance to track
+what happens on this website. This service uses no cookies, is fully
+GDPR and CCPA compliant, and completely anonymises you. I just know
+that someone went on such or such web page, but I have no way of
+knowing that the same person went on this then that page. Your privacy
+is completely respected.
+
+If you still want to block tracking, you can add =umami.phundrak.com= to
+the list of domains blocked by uBlock Origin (the only adblocker I’ll
+ever trust).
 
 ** Is there targeted advertisement on this website?
 There’s no advertisement to begin with. If you see any, check your
@@ -58,10 +70,7 @@ computer and browser for virus, that is not normal.
 
 ** How often is this page updated?
 It is updated from time to time to reflect any changes in how my
-website behaves, or if I notice errors on this page (such as typos). I
-might add some user tracking, however don’t worry, Matomo (the service
-I would use) would only track you on this website and this website
-only. Matomo respects the privacy of a website’s users.
+website behaves, or if I notice errors on this page (such as typos).
 
 You can see the last update of this page by looking at the last
 modification of the file =about.org= on [[https://labs.phundrak.com/phundrak/config.phundrak.com/src/branch/main/docs][this page]].
