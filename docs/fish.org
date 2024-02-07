@@ -317,23 +317,39 @@ Here is the corresponding fish configuration:
 <<generate-abbr(table=abbr-cmake)>>
 #+END_SRC
 
-**** Docker
-And of course, when it comes to Docker Compose, I don't have time to write the
-full command, so I use these instead.
+**** Docker and Podman
+# And of course, when it comes to Docker Compose, I don't have time to write the
+# full command, so I use these instead. Actually, let me rephrase that: I used to use
+I used to use Docker on my machine, but I switched to Podman. Still,
+my muscle memory is really strong and I keep trying to type my old
+Docker abbreviations. So, I keep them, but I also have a slight
+variation for each one of them for Podman.
+
 #+NAME: abbr-docker
 | abbreviation | command                      |
 |--------------+------------------------------|
-| dc           | docker-compose               |
-| dcb          | docker-compose build         |
-| dcd          | docker-compose down          |
-| dcl          | docker-compose logs          |
-| dclf         | docker-compose logs -f       |
-| dcp          | docker-compose pull          |
-| dcr          | docker-compose run --rm      |
-| dcu          | docker-compose up            |
-| dcub         | docker-compose up --build    |
-| dcud         | docker-compose up -d         |
-| dcudb        | docker-compose up -d --build |
+| dc           | podman-compose               |
+| dcb          | podman-compose build         |
+| dcd          | podman-compose down          |
+| dcl          | podman-compose logs          |
+| dclf         | podman-compose logs -f       |
+| dcp          | podman-compose pull          |
+| dcr          | podman-compose run --rm      |
+| dcu          | podman-compose up            |
+| dcub         | podman-compose up --build    |
+| dcud         | podman-compose up -d         |
+| dcudb        | podman-compose up -d --build |
+| pc           | podman-compose               |
+| pcb          | podman-compose build         |
+| pcd          | podman-compose down          |
+| pcl          | podman-compose logs          |
+| pclf         | podman-compose logs -f       |
+| pcp          | podman-compose pull          |
+| pcr          | podman-compose run --rm      |
+| pcu          | podman-compose up            |
+| pcub         | podman-compose up --build    |
+| pcud         | podman-compose up -d         |
+| pcudb        | podman-compose up -d --build |
 
 Here is the corresponding fish configuration:
 #+BEGIN_SRC fish
