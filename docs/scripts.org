@@ -550,6 +550,24 @@ in order to send to Emacs any ~mailto:~ requests made in my system.
 emacsclient -c -n -a emacs -e "(browse-url-mail \"$*\")"
 #+END_SRC
 
+*** Restart Emacs
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/bin/bash" :mkdirp yes :tangle ~/.local/bin/restart-emacs
+:END:
+Believe me or not, it happens I restart Emacs. I generally start Emacs
+manually with =emacs --daemon= because of an issue rendering =lsp-mode=
+useless when started by the user systemd service.
+#+begin_src bash
+PID_EMACS=$(pidof emacs)
+killall emacs
+echo "Waiting for Emacs to be killed... (pid: $PID_EMACS)"
+if timeout 30 tail --pid=$PID_EMACS -f /dev/null ; then
+    emacs --daemon
+else
+    echo "Failed to kill Emacs after 30s"
+fi
+#+end_src
+
 ** Media
 *** mp42webm
 :PROPERTIES:
