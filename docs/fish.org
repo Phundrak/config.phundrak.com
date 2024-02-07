@@ -32,6 +32,21 @@ file (which you can find [[https://labs.phundrak.com/phundrak/dotfiles/src/branc
 fenv source ~/.profile
 #+end_src
 
+[[https://direnv.net/][Direnv]] is a really neat tool that allows you to load the content of a
+dotenv file as environment variables. Its installation is quite simple
+for fish.
+#+begin_src fish
+direnv hook fish | source
+#+end_src
+
+Since I don’t really have a better place on this website to put it,
+here is my direnv configuration located at
+=$HOME/.config/direnv/direnv.toml=.
+#+begin_src toml :tangle ~/.config/direnv/direnv.toml :mkdirp yes :exports code
+[global]
+load_dotenv = true
+#+end_src
+
 *** Development
 Finally, some development packages require the =PKG_CONFIG_PATH= to be
 set, so let’s do so.
