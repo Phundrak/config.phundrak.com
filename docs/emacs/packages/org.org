@@ -1245,6 +1245,18 @@ which is really nice! However, most of my configuration will be stolen
          (org-present-mode-quit . my/org-present-quit)))
 #+end_src
 
+** Tangle config org files on save
+Something really, really useful is tangling all my configuration files
+on save. For this, a dedicated function will do the trick.
+#+begin_src emacs-lisp
+(defun my/tangle-config-file ()
+  (when (and (eq major-mode 'org-mode)
+             (f-ancestor-of-p (f-full "~/.nosync/org/config") default-directory))
+    (org-babel-tangle)))
+
+(add-hook 'after-save-hook #'my/tangle-config-file)
+#+end_src
+
 ** Visual Configuration
 While most modes of Emacs are dedicated to development, and therefore
 are much more comfortable with a fixed-pitch font, more literary modes
