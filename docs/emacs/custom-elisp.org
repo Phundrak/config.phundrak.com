@@ -40,34 +40,8 @@ APPEND and COMPARE-FN, see `add-to-list'."
 #+end_src
 
 ** Generate and insert random passwords
-#+begin_src emacs-lisp
-(defun my/generate-password (nb-chars)
-  "Generate an alphanumeric password of NB-CHARS."
-  (shell-command-to-string
-   (concat "tr -dc 'A-Za-z0-9!@#$%^&*' < /dev/urandom | head -c "
-           (number-to-string nb-chars))))
-#+end_src
-
-#+begin_src emacs-lisp
-(defun my/copy-generated-password (&optional prefix)
-  (interactive "P")
-  (kill-new
-   (my/generate-password (if prefix
-                             (string-to-number
-                              (completing-read "Amount of characters: " nil))
-                           32))))
-#+end_src
-
-#+begin_src emacs-lisp
-(defun my/insert-generated-password (&optional prefix)
-  (interactive "P")
-  (insert
-   (my/generate-password (if prefix
-                             (string-to-number
-                              (completing-read "Amount of characters: "
-                                               nil))
-                           32))))
-#+end_src
+These functions got replaced by my custom package, see [[file:./misc.md#password-generator][Password
+generator]].
 
 ** Handle new windows
 The two functions below allow the user to not only create a new window

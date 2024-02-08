@@ -244,6 +244,20 @@ and builds a heatmap out of it.
                            "Main Page")))) ; Default page
 #+end_src
 
+** Password generator
+I used to have some simple Elisp functions in my config that would
+generate passwords on the fly, but they were a bit too limited in my
+opinion. So instead, I went on to create a full package that would
+help me create one from a transient menu with enough options for my
+liking.
+#+begin_src emacs-lisp
+(use-package password-gen
+  :straight (password-gen :build t
+                          :type git
+                          :repo "https://labs.phundrak.com/phundrak/password-gen.el.git")
+  :defer t)
+#+end_src
+
 ** Pinentry
 I like to use Emacs as my pinentry program. Mainly because it’s the
 easiest way for me to type then when I’m SSHing into my machine, but
