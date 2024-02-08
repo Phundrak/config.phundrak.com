@@ -63,7 +63,8 @@ when it loses focus since I’m looking away.
 
 Garbage collection is only triggered thirty seconds after losing
 focus, and only once."
-  (if (frame-focus-state
+  (if (frame-focus-state)
+      (when (timerp my/gc-timer)
        (cancel-timer my/gc-timer))
     (setq my/gc-timer (run-with-idle-timer 30 nil #'my/garbage-collect))))
 
