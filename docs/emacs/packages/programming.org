@@ -850,7 +850,6 @@ update its fontlock.
 #+end_src
 
 *** CommonLisp
-:END:
 In Lisp buffers, let’s enable ~parinfer-rust-mode~.
 #+begin_src emacs-lisp
 (use-package lisp-mode
@@ -914,7 +913,6 @@ configuration for StumpWM]].
 #+end_src
 
 *** EmacsLisp
-:END:
 This package displays the function’s arglist or variable’s docstring
 in the echo area at the bottom of the frame. Quite useful indeed.
 #+begin_src emacs-lisp
@@ -1030,7 +1028,6 @@ package.
 #+end_src
 
 *** Python
-:END:
 First, we need to set up the main Python mode. With this, we’ll also
 add Python to the list of LSP languages and to the list of languages
 org-babel supports.
@@ -1339,7 +1336,6 @@ development. First, let’s install the most important package,
 #+end_src
 
 *** Web programming
-:END:
 [[https://emmet.io/][Emmet]] is a powerful templating engine that can generate through simple
 CSS-like expression some HTML to avoid the user writing everything by
 hand.
@@ -1445,7 +1441,6 @@ Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
 #+end_src
 
 **** CSS
-:END:
 Let’s customize a bit the built-in CSS mode.
 #+begin_src emacs-lisp
 (use-package css-mode
@@ -1512,7 +1507,6 @@ activate when I open ~.less~ files by default. Let’s fix that.
 #+end_src
 
 **** Javascript
-:END:
 ~javascript-mode~ is meh at best, while ~rjsx-mode~ (Real JSX) is much
 better: it supports both JavaScript and ~.jsx~ files for React and
 Next.JS.
@@ -1591,7 +1585,6 @@ And finally, here is a formatter for JavaScript.
 #+end_src
 
 **** Typescript
-:END:
 Typescript is a safer alternative to JavaScript. Let’s install its major mode then.
 #+begin_src emacs-lisp
 (use-package typescript-mode
