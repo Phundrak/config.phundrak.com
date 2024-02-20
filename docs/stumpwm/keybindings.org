@@ -693,6 +693,76 @@ games and the bépo layout most of the time. I’ll use the command
 (define-key *root-map* (my/kbd "k") '*my-keyboard-layout-keymap*)
 #+end_src
 
+**** NetworkManager integration
+It is possible to have some kind of integration between StumpWM and
+NetworkManager. To do so, we have to load the related module, then
+create the two keybinds described in [[nm-keybinds]].
+#+name: nm-keybinds
+#+caption: ~*my-nm-keybinds*~
+| Keychord | Command                   |
+|----------+---------------------------|
+| ~W~        | ~nm-list-wireless-networks~ |
+
+A call to src_lisp[:exports code]{(ql:quickload :dbus)} is necessary
+for this module. Installing the ~dbus~ module in turn requires the
+library ~libfixposix~ installed on the user’s machine. On Arch, you can
+install it like so using ~paru~:
+#+begin_src fish
+paru -S libfixposix --noconfirm
+#+end_src
+
+#+begin_src lisp
+(ql:quickload :dbus)
+
+(load-module "stump-nm")
+
+<<keybinds-gen(map="*root-map*", keybinds=nm-keybinds)>>
+#+end_src
+
+**** Binwarp
+Binwarp allows the user to control their mouse from the keyboard,
+basically eliminating the need for a physical mouse in daily usage of
+the workstation (though a physical mouse stays useful for games and
+such).
+#+begin_src lisp
+(load-module "binwarp")
+#+end_src
+
+Next, I’ll define my keybinds for when using Binwarp for emulating
+mouse clicks as well as bépo-compatible mouse movements. This new
+Binwarp mode is now available from the keybind ~s-m~ at top level.
+#+begin_src lisp
+(binwarp:define-binwarp-mode my-binwarp-mode "s-m" (:map *top-map*)
+    ((my/kbd "SPC") "ratclick 1")
+    ((my/kbd "RET") "ratclick 3")
+    ((my/kbd "c")   "binwarp left")
+    ((my/kbd "t")   "binwarp down")
+    ((my/kbd "s")   "binwarp up")
+    ((my/kbd "r")   "binwarp right")
+    ((my/kbd "i")   "init-binwarp")
+    ((my/kbd "q")   "exit-binwarp"))
+#+end_src
+
+**** Bluetooth
+It’s all nice and all, but typing manually the commands with ~s-SPC ;~
+is a bit tiring, so let’s define our Bluetooth keymap which we will
+bind to ~s-SPC B~.
+#+name: bluetooth-keymap
+| Keychord | Command            |
+|----------+--------------------|
+| ~c~        | ~bluetooth-connect~  |
+| ~o~        | ~bluetooth-turn-on~  |
+| ~O~        | ~bluetooth-turn-off~ |
+
+#+begin_src lisp
+(defvar *my-bluetooth-keymap*
+  (let ((m (make-sparse-keymap)))
+    <<keybinds-gen(map="m", keybinds=bluetooth-keymap)>>
+    m))
+
+(define-key *root-map* (my/kbd "B") '*my-bluetooth-keymap*)
+#+end_src
+
 * PRIVATE org functions                                            :noexport:
 #+name: keybinds-gen
 #+header: :wrap "src lisp :exports none" :exports none :noweb yes

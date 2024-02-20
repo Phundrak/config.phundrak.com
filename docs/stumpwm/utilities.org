@@ -11,30 +11,6 @@ Part of my configuration is not really related to StumpWM itself, or
 rather it adds new behaviour StumpWM doesn’t have. ~utilities.lisp~
 stores all this code in one place.
 
-*** Binwarp
-Binwarp allows the user to control their mouse from the keyboard,
-basically eliminating the need for a physical mouse in daily usage of
-the workstation (though a physical mouse stays useful for games and
-such).
-#+begin_src lisp
-(load-module "binwarp")
-#+end_src
-
-Next, I’ll define my keybinds for when using Binwarp for emulating
-mouse clicks as well as bépo-compatible mouse movements. This new
-Binwarp mode is now available from the keybind ~s-m~ at top level.
-#+begin_src lisp
-(binwarp:define-binwarp-mode my-binwarp-mode "s-m" (:map *top-map*)
-    ((my/kbd "SPC") "ratclick 1")
-    ((my/kbd "RET") "ratclick 3")
-    ((my/kbd "c")   "binwarp left")
-    ((my/kbd "t")   "binwarp down")
-    ((my/kbd "s")   "binwarp up")
-    ((my/kbd "r")   "binwarp right")
-    ((my/kbd "i")   "init-binwarp")
-    ((my/kbd "q")   "exit-binwarp"))
-#+end_src
-
 *** Bluetooth
 :PROPERTIES:
 :header-args:lisp: :mkdirp yes :tangle ~/.stumpwm.d/bluetooth.lisp :noweb yes
@@ -183,52 +159,6 @@ then attempt to connect to it.
       (bluetooth-connect-device choice)))))
 #+end_src
 
-**** Keybinds
-It’s all nice and all, but typing manually the commands with ~s-SPC ;~
-is a bit tiring, so let’s define our Bluetooth keymap which we will
-bind to ~s-SPC B~.
-#+name: bluetooth-keymap
-| Keychord | Command            |
-|----------+--------------------|
-| ~c~        | ~bluetooth-connect~  |
-| ~o~        | ~bluetooth-turn-on~  |
-| ~O~        | ~bluetooth-turn-off~ |
-
-#+begin_src lisp
-(defvar *my-bluetooth-keymap*
-  (let ((m (make-sparse-keymap)))
-    <<keybinds-gen(map="m", keybinds=bluetooth-keymap)>>
-    m))
-
-(define-key *root-map* (my/kbd "B") '*my-bluetooth-keymap*)
-#+end_src
-
-*** NetworkManager integration
-It is possible to have some kind of integration between StumpWM and
-NetworkManager. To do so, we have to load the related module, then
-create the two keybinds described in [[nm-keybinds]].
-#+name: nm-keybinds
-#+caption: ~*my-nm-keybinds*~
-| Keychord | Command                   |
-|----------+---------------------------|
-| ~W~        | ~nm-list-wireless-networks~ |
-
-A call to src_lisp[:exports code]{(ql:quickload :dbus)} is necessary
-for this module. Installing the ~dbus~ module in turn requires the
-library ~libfixposix~ installed on the user’s machine. On Arch, you can
-install it like so using ~paru~:
-#+begin_src fish
-paru -S libfixposix --noconfirm
-#+end_src
-
-#+begin_src lisp
-(ql:quickload :dbus)
-
-(load-module "stump-nm")
-
-<<keybinds-gen(map="*root-map*", keybinds=nm-keybinds)>>
-#+end_src
-
 *** Pinentry
 Out with GTK2’s pinentry program! Let’s use StumpWM’s! At least that’s
 what I’d like to say, but unfortunately there is a bug in the text
@@ -259,26 +189,6 @@ run all the time, just when I need it.
 (stumpwm:defcommand sly-stop-server () ()
   "Stop current slynk server for sly."
   (sb-thread:make-thread (lambda () (slynk:stop-server 4005))))
-#+end_src
-
-*** ~swm-ssh~
-This module from the contrib repository scans the user’s ssh
-configuration file and offers them a quick way of connecting to their
-remote hosts.
-#+begin_src lisp
-(load-module "swm-ssh")
-#+end_src
-
-The default terminal needs to be set, otherwise the module will try to
-call ~urxvtc~ which is not installed on my system.
-#+begin_src lisp
-(setq swm-ssh:*swm-ssh-default-term* "kitty")
-#+end_src
-
-Now, to call the main command of this module we can define the
-following keybind.
-#+begin_src lisp
-(define-key *root-map* (my/kbd "s") "swm-ssh-menu")
 #+end_src
 
 *** Systemd

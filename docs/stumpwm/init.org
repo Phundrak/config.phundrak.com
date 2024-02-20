@@ -64,9 +64,9 @@ Now, we’ll load a couple of my custom files that will be described below:
 | bluetooth.lisp    |
 | commands.lisp     |
 | placement.lisp    |
+| utilities.lisp    |
 | keybindings.lisp  |
 | theme.lisp        |
-| utilities.lisp    |
 | modeline.lisp     |
 | systemd.lisp      |
 
@@ -80,14 +80,14 @@ Now, we’ll load a couple of my custom files that will be described below:
 #+end_src
 
 This is equivalent to the Common Lisp code:
-#+RESULTS[ed4f3fe4f7f82b11cd3cd262578abc7146f5807d]: gen-load-files
+#+RESULTS[fe73024bcc6bca0f1baa974035b7af2c5d6b3b25]: gen-load-files
 #+begin_src lisp
 (load "~/.stumpwm.d/bluetooth.lisp")
 (load "~/.stumpwm.d/commands.lisp")
 (load "~/.stumpwm.d/placement.lisp")
+(load "~/.stumpwm.d/utilities.lisp")
 (load "~/.stumpwm.d/keybindings.lisp")
 (load "~/.stumpwm.d/theme.lisp")
-(load "~/.stumpwm.d/utilities.lisp")
 (load "~/.stumpwm.d/modeline.lisp")
 (load "~/.stumpwm.d/systemd.lisp")
 #+end_src
