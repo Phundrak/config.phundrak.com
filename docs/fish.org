@@ -32,6 +32,7 @@ file (which you can find [[https://labs.phundrak.com/phundrak/dotfiles/src/branc
 fenv source ~/.profile
 #+end_src
 
+
 [[https://direnv.net/][Direnv]] is a really neat tool that allows you to load the content of a
 dotenv file as environment variables. Its installation is quite simple
 for fish.
@@ -207,11 +208,10 @@ disable = true
 disable = true
 #+end_src
 
-*** Loading ~zoxide~
-~zoxide~ is a smarter ~cd~ command, accessible through ~z~. It can be loaded
-like so:
+*** Loading =zoxide=
+=zoxide= is a smarter =cd= command. I actually have it replace =cd= entirely through the =--cmd= flag you see below..
 #+begin_src fish
-zoxide init fish | source
+zoxide init --cmd cd fish | source
 #+end_src
 
 ** Abbreviations
