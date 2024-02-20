@@ -1504,7 +1504,7 @@ deactivate `magit-todos-mode', otherwise enable it."
        (magit-todos-mode +1)))
    (add-hook 'magit-mode-hook #'my/magit-todos-if-not-yadm))
   :config
-  (csetq magit-todos-ignore-case t))
+  (setq magit-todos-ignore-case nil))
 #+end_src
 
 *** Forge
