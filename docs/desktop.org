@@ -330,6 +330,18 @@ Type=Application
 Categories=Graphics
 #+end_src
 
+*** Plover
+#+begin_src conf-desktop :tangle ~/.local/share/applications/plover.desktop
+[Desktop Entry]
+Version=4.0.0-rc2
+Name=Plover
+Comment=Free, opensource stenography engine by the Open Steno Project
+Exec=/home/phundrak/.local/bin/plover
+Path=/home/phundrak/.local/bin/plover
+Terminal=false
+Type=Application
+#+end_src
+
 *** YouTube ~.desktop~ files
 The first ~.desktop~ file related to YouTube is ~ytdl.desktop~ which runs
 ~ytdl~ defined in [[file:bin.org::#ytdl-a-youtube-dl-wrapper-03bd63e0][this document]].
