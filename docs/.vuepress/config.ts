@@ -59,6 +59,7 @@ export default defineUserConfig({
       },
       '/scripts',
       '/desktop',
+      '/shell',
       '/fish',
       '/git',
       '/mpd',

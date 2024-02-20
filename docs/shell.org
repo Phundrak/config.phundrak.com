@@ -1,0 +1,315 @@
+#+title: General Shell Configuration
+#+setupfile: headers
+#+PROPERTY: header-args:sh :mkdirp yes :tangle ~/.profile :exports code :noweb yes :shebang #!/bin/sh
+#+PROPERTY: header-args :exports code :tangle no
+
+* General Shell Configuration
+As you may have noticed with my [[file:./fish.md][Fish configuration]], my main shell is
+Fish, not Bash or Zsh. But sometimes, I do need to use these instead
+of Fish. In order to share some common configuration, I have a rather
+rich =$HOME/.profile= file which mainly exports environment variables.
+Despite the fact Fish is not a POSIX shell and should not be able to
+read it, the plugin =foreign-env= comes in handy to load this =.profile=
+from fish, as you can see [[file:./fish.md#global-variables][in my fish config]].
+
+The correctness and POSIX compatibility of this file is verified using
+[[https://www.shellcheck.net/][shellcheck]].
+
+Before we go into the meaty stuff, let me first load some private
+configuration I cannot share online.
+
+#+begin_src sh
+# shellcheck source=/dev/null
+. "$HOME"/.profile.private
+#+end_src
+
+** Personal Information
+First of all, here I set some information in order to make some stufff
+work.
+#+name: personal-info
+| Variable | Value                  |
+|----------+------------------------|
+| =EMAIL=    | =lucien@phundrak.com=    |
+| =NAME=     | ="Lucien Cartier-Tilet"= |
+
+#+begin_src sh
+<<export-variables(personal-info)>>
+#+end_src
+
+** XDG variables
+Then, let me set some XDG variables that may not be set by default,
+but are still quite useful.
+
+#+name: xdg-variables
+| Variable        | Value                |
+|-----------------+----------------------|
+| =XDG_CACHE_HOME=  | ="$HOME"/.cache=       |
+| =XDG_CONFIG_HOME= | ="$HOME"/.config=      |
+| =XDG_DATA_HOME=   | ="$HOME"/.local/share= |
+| =XDG_STATE_HOME=  | ="$HOME"/.local/state= |
+
+#+begin_src sh
+<<export-variables(xdg-variables)>>
+#+end_src
+
+** Dev
+Here are some variables that are quite useful.
+#+name: dev-variables
+| Variable        | Value                                | Value is a command? |
+|-----------------+--------------------------------------+---------------------|
+| =SSH_AUTH_SOCK=   | =gpgconf --list-dirs agent-ssh-socket= | yes                 |
+| =LD_LIBRARY_PATH= | ="$LD_LIBRARY_PATH":/usr/local/lib=    |                     |
+| =LSP_USE_PLISTS=  | =true=                                 |                     |
+| =DIFFPROG=        | =ediff=                                |                     |
+| =SUDO_ASKPASS=    | ="$HOME"/.local/bin/askpass=           |                     |
+| =MANPAGER=        | =less=                                 |                     |
+
+- =SSH_AUTH_SOCK= :: allows me to use my local GPG keys when SSHing into a
+  remote host that may not have a gpg agent. It tells SSH which sock
+  to use, sock which allows SSH to interact with other software, here
+  GPG.
+- =LD_LIBRARY_PATH= :: path of libraries that may be included by
+  compilers such as GCC.
+- =LSP_USE_PLISTS= :: optimisation for LSP servers with Emacs.
+- =DIFFPROG= :: program used by software that wants to diff two files,
+  such as git. It uses my script [[file:./scripts.md#ediff][ediff]].
+- =SUDO_ASKPASS= :: which script to call when calling =sudo -A=. It uses
+  my script [[file:./scripts.md#askpass][askpass]].
+
+#+begin_src sh
+<<export-variables(dev-variables)>>
+#+end_src
+
+*** Android development
+I’m not sure why I keep these, honestly.
+
+#+name: android
+| Variable          | Value               |
+|-------------------+---------------------|
+| =DART_SDK=          | =/opt/dart-sdk/bin=   |
+| =ANDROID_HOME=      | ="$HOME"/Android/Sdk= |
+| =CHROME_EXECUTABLE= | =/usr/bin/chromium=   |
+
+#+begin_src sh
+<<export-variables(android)>>
+#+end_src
+
+*** Compatibility issues with =MANPAGER=
+Due to compatibility issues with using =less= as the pager for man, some
+variables must be redefined.
+
+#+name: less-termcap
+| Variable        | Value               | Value is a command? |
+|-----------------+---------------------+---------------------|
+| =LESS_TERMCAP_mb= | =printf '\e[1;32m'=   | yes                 |
+| =LESS_TERMCAP_md= | =printf '\e[1;32m'=   | yes                 |
+| =LESS_TERMCAP_me= | =printf '\e[0m'=      | yes                 |
+| =LESS_TERMCAP_se= | =printf '\e[0m'=      | yes                 |
+| =LESS_TERMCAP_so= | =printf '\e[01;33m'=  | yes                 |
+| =LESS_TERMCAP_ue= | =printf '\e[0m'=      | yes                 |
+| =LESS_TERMCAP_us= | =printf '\e[1;4;31m'= | yes                 |
+
+#+begin_src sh
+<<export-variables(less-termcap)>>
+#+end_src
+
+** Preferences
+*** Browser
+It’s always nice to have the =BROWSER= variable available in case you
+want to do stuff with scripts and your default browser.
+
+#+name: browser
+| Variable | Value   |
+|----------+---------|
+| =BROWSER=  | =firefox= |
+
+#+begin_src sh
+<<export-variables(browser)>>
+#+end_src
+
+*** Editor variables
+My favourite text editor is [[https://www.gnu.org/software/emacs/][Emacs]], in case [[file:emacs/index.md][you haven’t guessed
+already]]. It makes sense that both my =EDITOR= and =VISUAL= variables
+should be set to Emacs.
+
+#+name: editor
+| Variable | Value            |
+|----------+------------------|
+| =EDITOR=   | ="emacsclient -c"= |
+| =VISUAL=   | ="emacsclient -c"= |
+
+#+begin_src sh
+<<export-variables(editor)>>
+#+end_src
+
+*** GTK Theme
+These are some important variables regarding the GTK theme I use.
+
+#+name: gtk
+| Variable       | Value             |
+|----------------+-------------------|
+| =GTK_THEME=      | =Nordic=            |
+| =GTK_ICON_THEME= | ="Flat-Remix-Dark"= |
+
+#+begin_src sh
+<<export-variables(gtk)>>
+#+end_src
+
+** Cleaning up my home directory
+Home directories tend to become cluttered over time, especially when
+developers tend to not care about the XDG standard and throw their
+app’s files into =$HOME= rather than in =XDG_CACHE_HOME=, =XDG_CONFIG_HOME=,
+and so on. Fortunately, some software allow us to move their data
+elsewhere, so let’s teach them some manners.
+
+#+name: cleanup-variables
+| Variable                    | Value                                                |
+|-----------------------------+------------------------------------------------------|
+| =__GL_SHADER_DISK_CACHE_PATH= | ="$XDG_CACHE_HOME"/nv=                                 |
+| =_JAVA_OPTIONS=               | ="-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java"= |
+| =_Z_DATA=                     | ="$XDG_DATA_HOME"/z=                                   |
+| =BUNDLE_USER_CACHE=           | ="$XDG_CACHE_HOME"/bundle=                             |
+| =BUNDLE_USER_CONFIG=          | ="$XDG_CONFIG_HOME"/bundle=                            |
+| =BUNDLE_USER_PLUGIN=          | ="$XDG_DATA_HOME"/bundle=                              |
+| =CARGO_HOME=                  | ="$XDG_DATA_HOME"/cargo=                               |
+| =CUDA_CACHE_PATH=             | ="$XDG_CACHE_HOME"/nv=                                 |
+| =DENO_DIR=                    | ="$HOME"/.config/deno=                                 |
+| =DENO_INSTALL_ROOT=           | ="$HOME"/.local/bin/deno=                              |
+| =DOCKER_CONFIG=               | ="$XDG_CONFIG_HOME"/docker=                            |
+| =GEM_HOME=                    | ="$XDG_DATA_HOME"/gem=                                 |
+| =GEM_SPEC_CACHE=              | ="$XDG_CACHE_HOME"/gem=                                |
+| =GNUPGHOME=                   | ="$XDG_DATA_HOME"/gnupg=                               |
+| =GOPATH=                      | ="$XDG_DATA_HOME"/go=                                  |
+| =GTK2_RC_FILES=               | ="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc=                     |
+| =HISTFILE=                    | ="$XDG_STATE_HOME/bash/history"=                       |
+| =ICEAUTHORITY=                | ="$XDG_CACHE_HOME"/ICEauthority=                       |
+| =LESSHISTFILE=                | ="$XDG_CACHE_HOME"/less/history=                       |
+| =MPLAYER_HOME=                | ="$XDG_CONFIG_HOME"/mplayer=                           |
+| =NPM_CONFIG_USERCONFIG=       | ="$XDG_CONFIG_HOME"/npm/npmrc=                         |
+| =NUGET_PACKAGES=              | ="$XDG_CACHE_HOME"/NuGetPackages=                      |
+| =NVM_DIR=                     | ="$XDG_DATA_HOME"/nvm=                                 |
+| =PARALLEL_HOME=               | ="$XDG_CONFIG_HOME"/parallel=                          |
+| =PASSWORD_STORE_DIR=          | ="$XDG_DATA_HOME"/pass=                                |
+| =PYENV_ROOT=                  | ="$XDG_DATA_HOME"/pyenv=                               |
+| =PYLINTHOME=                  | ="$XDG_CACHE_HOME"/pylint=                             |
+| =RUSTUP_HOME=                 | ="$XDG_DATA_HOME"/rustup=                              |
+| =TERMINFO=                    | ="$XDG_DATA_HOME"/terminfo=                            |
+| =TERMINFO_DIRS=               | ="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo=        |
+| =TEXMFVAR=                    | ="$XDG_CACHE_HOME"/texlive/texmf-var=                  |
+| =WINEPREFIX=                  | ="$XDG_DATA_HOME"/wine=                                |
+| =XAUTHORITY=                | ="$XDG_RUNTIME_DIR"/Xauthority=                        |
+| =XCOMPOSEFILE=              | ="$XDG_CONFIG_HOME"/X11/xcompose=                    |
+
+I also need to export this alias, because =wget= feels like it’s
+special.
+#+name: cleanup-aliases
+| Alias name | Expands to                                     |
+|------------+------------------------------------------------|
+| =wget=       | =wget --hsts-file=$XDG_DATA_HOME/wget-hsts=      |
+| =yarn=       | =yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config= |
+
+If you’re wondering how I got most of these variables, [[https://github.com/b3nj5m1n/xdg-ninja][xdg-ninja]] can
+help you with that.
+
+#+begin_src sh
+<<export-variables(cleanup-variables)>>
+
+<<aliases(cleanup-aliases)>>
+#+end_src
+
+** PATH variable
+#+name: path-values
+| Additional =PATH= values                 | Comment                                  |
+|----------------------------------------+------------------------------------------|
+| =/usr/lib/xfce-polkit/=                  | Lets me access more easily XFCE’s polkit |
+| =$HOME/.cabal/bin=                       | Haskell binaries                         |
+| =$GEM_HOME/ruby/2.6.0/bin=               | Ruby 2.6.0 binaries                      |
+| =$GEM_HOME/ruby/3.0.0/bin=               | Ruby 3 binaries                          |
+| =$GOPATH/bin=                            | Go binaries                              |
+| =${CARGO_HOME}/bin=                      | Cargo and Rust binaries                  |
+| =$HOME/Android/Sdk/tools/bin=            | Android tools and binaries               |
+| =$HOME/.local/bin=                       | Custom scripts                           |
+| =$HOME/.config/plover/plugins/linux/bin= | Plover binaries                          |
+| =$HOME/.nix-profile/bin=                 | Nix binaries                             |
+
+#+begin_src sh
+<<path-concat()>>
+#+end_src
+
+* Functions                                                        :noexport:
+:PROPERTIES:
+:HEADER-ARGS:sh: :tangle no
+:END:
+#+name: trim-org
+#+begin_src emacs-lisp
+(lambda (str) (replace-regexp-in-string "=$" "" (replace-regexp-in-string "^=" "" str)))
+#+end_src
+
+#+name: export-variables
+#+begin_src emacs-lisp :var table=dev-variables :wrap "src sh :exports none"
+(let ((trim-org <<trim-org>>))
+ (mapconcat (lambda (line)
+              (let ((var (apply trim-org (list (car line))))
+                    (value (apply trim-org (list (cadr line))))
+                    (expressionp (and (not (null (nth 2 line)))
+                                      (not (string= "" (nth 2 line))))))
+                (if expressionp
+                    (format "%s=$(%s)\nexport %s" var value var)
+                  (format "export %s=%s" var value))))
+            table
+            "\n"))
+#+end_src
+
+#+RESULTS[1f66ed32a7001ef22dfa536e4747307767875fdb]: export-variables
+#+begin_src sh :exports none
+SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+export SSH_AUTH_SOCK
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":/usr/local/lib
+export LSP_USE_PLISTS=true
+export DIFFPROG=ediff
+export SUDO_ASKPASS="$HOME"/.local/bin/askpass
+export MANPAGER=less
+#+end_src
+
+#+name: aliases
+#+begin_src emacs-lisp :var table=cleanup-aliases :wrap "src sh :exports none"
+(let ((trim-org <<trim-org>>))
+ (mapconcat (lambda (line)
+              (let ((alias (apply trim-org (list (car line))))
+                    (command (apply trim-org (list (cadr line)))))
+                (format "alias %s='%s'" alias command)))
+            table
+            "\n"))
+#+end_src
+
+#+RESULTS[a7565ff6f7d8df1fe5854ceefb918aadc6a6a431]: aliases
+#+begin_src sh :exports none
+alias wget='wget --hsts-file=$XDG_DATA_HOME/wget-hsts'
+#+end_src
+
+#+name: path-concat
+#+begin_src emacs-lisp :var table=path-values :wrap "src sh :exports none"
+(let ((trim-org <<trim-org>>))
+  (concat
+   (mapconcat (lambda (line)
+                (let ((new-path (apply trim-org (list (car line)))))
+                  (format "PATH=\"%s:$PATH\"" new-path)))
+              table
+              "\n")
+   "\nexport PATH"))
+#+end_src
+
+#+RESULTS[cd8e62f27d5ef288dde8814e3a6f8b36b02f7a61]: path-concat
+#+begin_src sh :exports none
+PATH="/usr/lib/xfce-polkit/:$PATH:$PATH"
+PATH="$HOME/.cabal/bin:$PATH:$PATH"
+PATH="$GEM_HOME/ruby/2.6.0/bin:$PATH:$PATH"
+PATH="$GEM_HOME/ruby/3.0.0/bin:$PATH:$PATH"
+PATH="$GOPATH/bin:$PATH:$PATH"
+PATH="${CARGO_HOME}/bin:$PATH:$PATH"
+PATH="$HOME/Android/Sdk/tools/bin:$PATH:$PATH"
+PATH="$HOME/.local/bin:$PATH:$PATH"
+PATH="$HOME/.config/plover/plugins/linux/bin:$PATH:$PATH"
+PATH="$HOME/.nix-profile/bin:$PATH:$PATH"
+export PATH
+#+end_src
