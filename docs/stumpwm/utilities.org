@@ -262,21 +262,3 @@ else appears, such as a ~s-SPC C-g~ since I have ~which-key-mode~ enabled.
                                       (t (format nil "^2~A^0 ^>   Sub: ~12@A" name sub)))))
                             (systemd-get-services :user-p user-p))))))
 #+end_src
-
-* PRIVATE org functions                                            :noexport:
-#+name: keybinds-gen
-#+header: :wrap "src lisp :exports none" :exports none :noweb yes
-#+begin_src emacs-lisp :var map="m" keybinds=bluetooth-keymap
-(mapconcat (lambda (keybind)
-             (format "%s" (let* ((filter   (lambda (str)
-                                             (replace-regexp-in-string "^~\\|~$" "" str)))
-                                 (key      (funcall filter (car keybind)))
-                                 (function (funcall filter (cadr keybind))))
-                            `(define-key ,map
-                               (my/kbd ,(format "\"%s\"" key))
-                               ,(if (string-prefix-p "'" function t)
-                                    function
-                                  (format "\"%s\"" function))))))
-           keybinds
-           "\n")
-#+end_src
