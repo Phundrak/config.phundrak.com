@@ -143,7 +143,10 @@ tmux windows would be tabs.
                      (let* ((command (nth 1 keybind))
                             (command (if (string= "" command) nil command))
                             (goto-prefix (nth 2 keybind))
-                            (goto-prefix (if (string= "" goto-prefix) nil (concat "switch-client -T " goto-prefix))))
+                            (goto-prefix (if (or (null goto-prefix)
+                                                 (string= "" goto-prefix))
+                                             nil
+                                           (concat "switch-client -T " goto-prefix))))
                        (if (and command goto-prefix)
                            (concat command "\\; " goto-prefix)
                          (or command goto-prefix)))))
@@ -151,7 +154,7 @@ tmux windows would be tabs.
            "\n")
 #+end_src
 
-#+RESULTS: gen-keybinds
+#+RESULTS[3e58a076aacba87d1cca87db849460e4c2414e94]: gen-keybinds
 : bind-key -T prefix « select-window -p
 : bind-key -T prefix » select-window -n
 : bind-key -T prefix Tab switch-client -T windows
