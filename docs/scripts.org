@@ -1910,8 +1910,6 @@ if [ -n "$URL" ]; then
 fi
 #+END_SRC
 
-
-
 ** Wallpaper utilities
 *** pape-update
 :PROPERTIES:
@@ -2123,17 +2121,17 @@ In order to avoid clutter in my =$HOME= directory, I have some wrappers
 around some commands that simply add some options by default.
 
 #+begin_src sh :tangle ~/.local/bin/adb
-HOME="$XDG_DATA_HOME"/android adb
+HOME="$XDG_DATA_HOME"/android /usr/bin/adb "$@"
 #+end_src
 
 #+begin_src sh :tangle ~/.local/bin/mbsync
-mbsync -c "$XDG_CONFIG_HOME"/isync/mbsyncrc
+/usr/bin/mbsync -c "$XDG_CONFIG_HOME"/isync/mbsyncrc "$@"
 #+end_src
 
 #+begin_src sh :tangle ~/.local/bin/wget
-wget --hsts-file="$XDG_DATA_HOME"/wget-hsts
+/usr/bin/wget --hsts-file="$XDG_DATA_HOME"/wget-hsts "$@"
 #+end_src
 
 #+begin_src sh :tangle ~/.local/bin/yarn
-yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config
+/usr/bin/yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config "$@"
 #+end_src
