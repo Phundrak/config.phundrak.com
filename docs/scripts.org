@@ -1044,6 +1044,28 @@ _ytdl_download_batch
 And that’s all! If you’re interested with a very simple interface for
 downloading one video once, I wrote a small [[file:./scripts.md#rofi-ytdl][=rofi-ytdl=]] script that
 calls the ~rofi~ utility to specify a single link and download it.
+
+** Misc
+*** Broadway
+:PROPERTIES:
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/broadway
+:END:
+This simple script launches broadwayd, a utility that renders GTK
+applications as web apps, and a program displayed to broadway
+directly.
+#+begin_src sh
+export display_screen=:5
+broadwayd $display_screen &
+GDK_BACKEND=broadway BROADWAY_DISPLAY=$display_screen "$@"
+#+end_src
+
+But let’s cut the middleman for most of my uses of Broadway.
+#+begin_src sh :tangle ~/.local/bin/emacs-web
+export display_screen=:5
+broadwayd $display_screen &
+GDK_BACKEND=broadway BROADWAY_DISPLAY=$display_screen emacs
+#+end_src
+
 ** Plock
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/plock
