@@ -62,6 +62,7 @@ export default defineUserConfig({
       '/shell',
       '/fish',
       '/git',
+      '/hyprland',
       '/mpd',
       '/neofetch',
       '/picom',

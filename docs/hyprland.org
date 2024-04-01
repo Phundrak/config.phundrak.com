@@ -1,0 +1,478 @@
+#+title: Hyprland
+#+setupfile: headers
+#+PROPERTY: header-args:conf :mkdirp yes :tangle ~/.config/hypr/hyprland.conf :export code :noweb yes
+#+PROPERTY: header-args :exports code :tangle no
+
+* Hyprland
+[[https://hyprland.org/][Hyprland]] is a dynamic wayland compositor which provides autotiling and
+beautiful animations out of the box.
+
+** Environment variables
+This part will be very short, but I first need to set some environment variables.
+#+begin_src conf
+env = XCURSOR_SIZE,24
+env = SDL_VIDEODRIVER,wayland
+#+end_src
+
+** Hardware configuration
+The first configuration I want to set is my keyboard and touchpad
+configuration. My keyboard uses the AFNOR standard for the [[https://bépo.fr][bépo]]
+layout, and I do not use the caps lock key which is replaced by the
+control key.
+#+begin_src conf
+input {
+    kb_layout = fr
+    kb_variant = bepo_afnor
+    kb_model =
+    kb_options = caps:ctrl_modifier
+    kb_rules =
+
+    follow_mouse = 1
+
+    touchpad {
+        natural_scroll = false
+    }
+
+    sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
+}
+#+end_src
+
+We can then set the monitors used. If =HDMI-A-1= is not found when
+Hyprland launches, it will simply ignore it. And at worst, I can use
+[[https://github.com/artizirk/wdisplays][wdisplays]] to manually set the position of my screens.
+#+begin_src conf
+monitor  = HDMI-A-1, 2560x1080,  0x0,      1
+monitor  = eDP-1,    1920x1080,  2560x0,   1
+#+end_src
+
+** Visual configuration
+Now, onto the visual configuration. I like my gaps, and I feel keeping
+my windows relatively tight together but with a greater gap around
+them looks nice. I also like the Nord palette which I use here for my
+window border colours. Active windows get a gradient from nord9 to
+nord14, while inactive windows get a nord3 border. Lastly, I use the
+dwindle layout as I find it nicer to use than the master layout.
+#+begin_src conf
+general {
+    gaps_in = 5
+    gaps_out = 20
+    border_size = 2
+    col.active_border = rgb(81a1c1) rgb(a3be8c) 45deg
+    col.inactive_border = rgb(4c566a)
+    layout = dwindle
+}
+#+end_src
+
+I may one day use the [[https://github.com/hyprland-community/pyprland][=layout_center=]] layout from [[https://github.com/hyprland-community/pyprland][pyprland]], but I
+haven’t got around to do that yet.
+
+This section is specific to touchpads, but I like to use it to switch
+between workspaces quickly. Note that I only want to swipe between
+existing workspaces, not to create new ones.
+#+begin_src conf
+gestures {
+    workspace_swipe = true
+    workspace_swipe_numbered = true
+}
+#+end_src
+
+Decorations are just a nice thing to make things look pretty. I like
+some slight rounding on my windows with a nice though light shadow.
+Again, the colour comes from the Nord palette with nord0.
+#+begin_src conf
+decoration {
+    rounding = 5
+    blur {
+        enabled = true
+        size = 9
+        passes = 1
+    }
+    drop_shadow = true
+    shadow_range = 4
+    shadow_render_power = 3
+    col.shadow = rgba(2e3440aa)
+}
+#+end_src
+
+Animations are fun! I mostly kept the default animations from the
+example config of Hyprland.
+#+begin_src conf
+animations {
+    enabled = true
+    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+    animation = windows, 1, 7, myBezier
+    animation = windowsOut, 1, 7, default, popin 80%
+    animation = border, 1, 10, default
+    animation = borderangle, 1, 8, default
+    animation = fade, 1, 7, default
+    animation = workspaces, 1, 6, default
+}
+#+end_src
+
+Now, we can take care of the configuration of the layouts. The only
+notable thing here is that I prefer to have no gaps when there is only
+one window in the dwindle layout. Not much is done with the master
+layout, as I don’t use it.
+#+begin_src conf
+dwindle {
+    pseudotile = true
+    preserve_split = true
+    no_gaps_when_only = 1
+}
+
+master {
+    new_is_master = true
+}
+#+end_src
+
+** Autolaunch of programs
+The =exec-once= directive of Hyprland allows the user to launch the
+associated command only when Hyprland starts in order to avoid
+launching multiple instances of some programs.
+
+First, I’ll import some environment variables into Hyprland. These may
+be necessary for some programs.
+#+begin_src conf
+exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland
+#+end_src
+
+Next, I’ll launch some programs that will give Hyprland a nice
+appearance: [[https://github.com/Alexays/Waybar][waybar]] and [[https://github.com/danyspin97/wpaperd][wpaperd]].
+#+begin_src conf
+exec-once = wpaperd
+exec-once = waybar
+#+end_src
+
+Let’s also take care of some sound stuff. If any new input or output
+is detected, switch to it. And stop the music, just in case.
+#+begin_src conf
+exec-once = pactl load-module module-switch-on-connect
+exec-once = mpc stop
+#+end_src
+
+Having a working policy kit is generally a good idea.
+#+begin_src conf
+exec-once = xfce-polkit
+#+end_src
+
+Now, let’s launch the notification daemon [[https://dunst-project.org/][dunst]].
+#+begin_src conf
+exec-once = dunst
+#+end_src
+
+Let’s launch some apps and their applet. Here, we’re launching the
+applets for NetworkManager, KDE Connect, and blueman (the bluetooth
+manager).
+#+begin_src conf
+exec-once = nm-applet
+exec-once = /usr/lib/kdeconnectd
+exec-once = kdeconnect-indicator
+exec-once = blueman-applet
+#+end_src
+
+Finally, let’s launch [[https://github.com/swaywm/swayidle][swayidle]] which lets us lock our session. It’ll automatically pause any media playing.
+#+begin_src conf
+exec-once = swayidle -w timeout 600 'plock' before-sleep 'playerctl pause; plock' lock 'plock'
+#+end_src
+
+** Keybindings
+First, let me make a couple of variables for reusability. Mind you,
+=hjkl= becomes =ctsr= in the bépo keyboard layout.
+#+begin_src conf
+$left = c
+$right = r
+$up = s
+$down = t
+$menu = rofi -combi-modi drun -show combi
+#+end_src
+
+Now, I’d like to introduce a concept which I really enjoy: submaps.
+They allow the Hyprland user to make keychords similar to Emacs, which
+allows us to unlock the full potential of keybindings in a window
+manager. In Hyprland, something to be wary of is that there is no
+automatic submap switching. If there is no explicit indication to exit
+the current submap or to switch to another submap, Hyprland will just
+stay on the current submap. So, using something like =bind = CTRL, g,
+submap, reset= is necessary to exit the current submap on =C-g= (or
+=Control + g=, I like the Emacs notation).
+
+In the submap tables below, the submap column may indicate =reset=, a
+submap’s name, or nothing. If nothing is indicated, the key will not
+act on the current submap or switch to another one. A submap’s name
+will make the key switch to said submap, while the value =reset= will
+make us go back to the root submap. Note that all submaps will also
+have the escape and =C-g= keys mapped to exiting the current submap.
+
+Note also that I sometimes use [[https://wiki.hyprland.org/Configuring/Binds/#bind-flags][bind flags]]. I’ll only set the flag in
+the appropriate column when necessary.
+
+These are the keybindings that are present on the top-level keybinding
+map.
+#+name: top-submap
+| Modifiers | Key    | Action | Argument | Submap     |
+|-----------+--------+--------+----------+------------|
+| SUPER     | Return | exec   | kitty    |            |
+| SUPER     | Space  |        |          | leader     |
+|           | Print  |        |          | screenshot |
+
+#+begin_src conf
+<<gen-submap(table=top-submap, submap="", reset-submap="no")>>
+
+<<gen-submap(table=leader-submap, submap="leader", reset-submap="yes")>>
+<<gen-submap(table=apps-submap, submap="apps", reset-submap="yes")>>
+<<gen-submap(table=buffers-submap, submap="buffers", reset-submap="yes")>>
+<<gen-submap(table=resize-submap, submap="resize", reset-submap="yes")>>
+<<gen-submap(table=rofi-submap, submap="rofi", reset-submap="yes")>>
+<<gen-submap(table=screenshot-submap, submap="screenshot", reset-submap="yes")>>
+<<gen-submap(table=windows-submap, submap="windows", reset-submap="yes")>>
+
+submap = reset
+<<gen-submap(table=top-media, submap="", reset-submap="no")>>
+<<gen-submap(table=top-windows-movements, submap="", reset-submap="no")>>
+<<gen-submap(table=top-workspace-movements, submap="", reset-submap="no")>>
+#+end_src
+
+*** Top keybindings
+**** Media keys
+#+name: top-media
+| Modifiers | Key                   | Action | Argument                     | Submap | Bind flag |
+|-----------+-----------------------+--------+------------------------------+--------+-----------|
+|           | XF86AudioPlay         | exec   | playerctl play-pause         |        | =l=         |
+|           | XF86AudioPause        | exec   | playerctl pause              |        | =l=         |
+|           | XF86AudioStop         | exec   | playerctl stop               |        | =l=         |
+|           | XF86AudioPrev         | exec   | playerctl previous           |        | =l=         |
+|           | XF86AudioNext         | exec   | playerctl next               |        | =l=         |
+|           | XF86AudioForward      | exec   | playerctl position +1        |        | =l=         |
+|           | XF86AudioRewind       | exec   | playerctl position -1        |        | =l=         |
+|           | XF86AudioRaiseVolume  | exec   | pamixer -i 2                 |        | =l=         |
+|           | XF86AudioLowerVolume  | exec   | pamixer -d 2                 |        | =l=         |
+|           | XF86MonBrightnessUp   | exec   | xbacklight -perceived -inc 2 |        | =l=         |
+|           | XF86MonBrightnessDown | exec   | xbacklight -perceived -dec 2 |        | =l=         |
+|           | XF86KbdBrightnessUp   | exec   | xbacklight -perceived -inc 2 |        | =l=         |
+|           | XF86KbdBrightnessDown | exec   | xbacklight -perceived -dec 2 |        | =l=         |
+
+**** Quick window movements and actions
+These are basically a rehash of what you can find in the [[file:./hyprland.md#windows][windows submap]] but with a few missing keybindings and other extras.
+#+name: top-windows-movements
+| Modifiers        | Key    | Action                 | Argument | Submap |
+|------------------+--------+------------------------+----------+--------|
+| SUPER            | =$left=  | movefocus              | l        |        |
+| SUPER            | =$right= | movefocus              | r        |        |
+| SUPER            | =$up=    | movefocus              | u        |        |
+| SUPER            | =$down=  | movefocus              | d        |        |
+| SUPER_SHIFT      | =$left=  | movewindow             | l        | reset  |
+| SUPER_SHIFT      | =$right= | movewindow             | r        | reset  |
+| SUPER_SHIFT      | =$up=    | movewindow             | u        | reset  |
+| SUPER_SHIFT      | =$down=  | movewindow             | d        | reset  |
+| SUPER_CTRL_SHIFT | =$left=  | moveworkspacetomonitor | e+0 +1   | reset  |
+| SUPER_CTRL_SHIFT | =$right= | moveworkspacetomonitor | e+0 -1   | reset  |
+| SUPER            | Tab    | cyclenext              |          |        |
+| SUPER_SHIFT      | Tab    | cyclenext              | prev     |        |
+
+Something I really appreciate with window managers in Linux is the able to really easily move and resize windows. The keybinds below allow the user to press down the super key and perform an action on the window:
+- with a left click, move the window around
+- with a right click, resize the window
+#+name: top-windows-actions
+| Modifiers | Key       | Action       |
+|-----------+-----------+--------------|
+| SUPER     | mouse:272 | movewindow   |
+| SUPER     | mouse:273 | resizewindow |
+
+**** Workspace movements
+Due to the bépo layout, the number row does not give immediate access to numbers, but to punctuation symbols. You can find below a table of equivalence of the characters’ name and the actual character, as well as the number that sits on the same key when pressing shift.
+| /              |           | <l>    |
+| Character name | Character | Number |
+|----------------+-----------+--------|
+| quotedbl       | ="=         | 1      |
+| guillemotleft  | =«=         | 2      |
+| guillemotright | =»=         | 3      |
+| parenleft      | =(=         | 4      |
+| parenright     | =)=         | 5      |
+| at             | =@=         | 6      |
+| plus           | =+=         | 7      |
+| minus          | =-=         | 8      |
+| slash          | =/=         | 9      |
+| asterisk       | =*=         | 0      |
+
+#+name: top-workspace-movements
+| Modifiers   | Key            | Action          | Argument |
+|-------------+----------------+-----------------+----------|
+| SUPER       | quotedbl       | workspace       |        1 |
+| SUPER       | guillemotleft  | workspace       |        2 |
+| SUPER       | guillemotright | workspace       |        3 |
+| SUPER       | parenleft      | workspace       |        4 |
+| SUPER       | parenright     | workspace       |        5 |
+| SUPER       | at             | workspace       |        6 |
+| SUPER       | plus           | workspace       |        7 |
+| SUPER       | minus          | workspace       |        8 |
+| SUPER       | slash          | workspace       |        9 |
+| SUPER       | asterisk       | workspace       |       10 |
+| SUPER       | mouse_down     | workspace       |      e+1 |
+| SUPER       | mouse_up       | workspace       |      e-1 |
+| SUPER_SHIFT | quotedbl       | movetoworkspace |        1 |
+| SUPER_SHIFT | guillemotleft  | movetoworkspace |        2 |
+| SUPER_SHIFT | guillemotright | movetoworkspace |        3 |
+| SUPER_SHIFT | parenleft      | movetoworkspace |        4 |
+| SUPER_SHIFT | parenright     | movetoworkspace |        5 |
+| SUPER_SHIFT | at             | movetoworkspace |        6 |
+| SUPER_SHIFT | plus           | movetoworkspace |        7 |
+| SUPER_SHIFT | minus          | movetoworkspace |        8 |
+| SUPER_SHIFT | slash          | movetoworkspace |        9 |
+| SUPER_SHIFT | asterisk       | movetoworkspace |       10 |
+
+*** Leader
+The leader submap is accessible by pressing =s-SPC= (Super and space).
+It is sort of the general menu for my keybindings.
+#+name: leader-submap
+| Modifiers | Key | Action | Argument | Submap  |
+|-----------+-----+--------+----------+---------|
+|           | l   | exec   | =plock=    | reset   |
+|           | a   |        |          | apps    |
+|           | b   |        |          | buffers |
+|           | w   |        |          | windows |
+
+*** Apps
+#+name: apps-submap
+| Modifiers | Key | Action | Argument          | Submap |
+|-----------+-----+--------+-------------------+--------|
+|           | b   | exec   | =firefox=           | reset  |
+| SHIFT     | b   | exec   | =qutebrowser=       | reset  |
+|           | d   | exec   | =discord=           | reset  |
+|           | e   | exec   | =emacsclient -c -n= | reset  |
+|           | g   | exec   | =gimp=              | reset  |
+|           | n   | exec   | =nemo=              | reset  |
+|           | r   |        |                   | rofi   |
+|           | u   | exec   | =$menu=             | reset  |
+
+*** Buffers
+I call this the buffer window, but it’s mostly due to my habit of
+handling Emacs buffers. Some of my muscle memory may never fade away.
+Consider this as an addition to the [[file:./hyprland.md#windows][windows]] submap.
+#+name: buffers-submap
+| Modifiers | Key | Action     | Argument | Submap |
+|-----------+-----+------------+----------+--------|
+|           | d   | killactive |          | reset  |
+
+*** Resize
+This is an example of a submap where I may not want to immediately
+exit it. We enter it with the keychord =s-SPC w .= and exit it with
+either the usual =C-g=, escape key, but also with the =q= key.
+#+name: resize-submap
+| Modifiers | Key    | Action       | Argument | Submap | Bind flag |
+|-----------+--------+--------------+----------+--------+-----------|
+|           | =$left=  | resizeactive | -10 0    |        | =e=         |
+|           | =$right= | resizeactive | 10 0     |        | =e=         |
+|           | =$up=    | resizeactive | 0 -10    |        | =e=         |
+|           | =$down=  | resizeactive | 0 10     |        | =e=         |
+|           | q      |              |          | reset  |           |
+
+*** Rofi
+This submap hosts quite a few menus handled with [[https://github.com/davatorium/rofi][rofi]] (I use [[https://github.com/lbonn/rofi][this
+wayland fork]]). You may want to take a look at [[file:./scripts.md][custom scripts]] to know
+what most of these do.
+#+name: rofi-submap
+| Modifiers | Key | Action | Argument          | Submap |
+|-----------+-----+--------+-------------------+--------|
+|           | a   | exec   | =awiki=             | reset  |
+|           | b   | exec   | =bluetooth-connect= | reset  |
+|           | e   | exec   | =rofi-emoji=        | reset  |
+|           | r   | exec   | =$menu=             | reset  |
+|           | s   | exec   | =rofi -show ssh=    | reset  |
+|           | y   | exec   | =ytplay=            | reset  |
+| SHIFT     | y   | exec   | =rofi-ytdl=         | reset  |
+
+*** Screenshots
+Here are the keybinding for the screenshot submap
+#+name: screenshot-submap
+| Modifiers | Key   | Action | Argument        | Submap |
+|-----------+-------+--------+-----------------+--------|
+|           | Print | exec   | =screenshot=      | reset  |
+|           | c     | exec   | =screenshot -c=   | reset  |
+|           | s     | exec   | =screenshot -s=   | reset  |
+|           | g     | exec   | =screenshot -g=   | reset  |
+|           | d     | exec   | =screenshot -d 3= | reset  |
+| Shift     | s     | exec   | =screenshot -sc=  | reset  |
+
+*** Windows
+#+name: windows-submap
+| Modifiers  | Key    | Action                 | Argument | Submap |
+|------------+--------+------------------------+----------+--------|
+|            | period |                        |          | resize |
+|            | =$left=  | movefocus              | l        | reset  |
+|            | =$right= | movefocus              | r        | reset  |
+|            | =$up=    | movefocus              | u        | reset  |
+|            | =$down=  | movefocus              | d        | reset  |
+| SHIFT      | =$left=  | movewindow             | l        | reset  |
+| SHIFT      | =$right= | movewindow             | r        | reset  |
+| SHIFT      | =$up=    | movewindow             | u        | reset  |
+| SHIFT      | =$down=  | movewindow             | d        | reset  |
+| CTRL_SHIFT | =$left=  | moveworkspacetomonitor | e+0 +1   | reset  |
+| CTRL_SHIFT | =$right= | moveworkspacetomonitor | e+0 -1   | reset  |
+|            | d      | killactive             |          | reset  |
+|            | f      | fullscreen             |          | reset  |
+| SHIFT      | f      | togglefloating         |          | reset  |
+
+** Window rules
+For now, I don’t have a lot of window rules. One, actually. It makes
+the XFCE polkit a floating window.
+#+begin_src conf
+windowrulev2 = float,class:^(xfce-polkit)$
+#+end_src
+
+* Private data                                                     :noexport:
+#+name: gen-submap
+#+begin_src emacs-lisp :var table=leader-submap submap="leader" reset-submap="yes" :exports none :tangle no :wrap "src conf :exports none :tangle no"
+(let ((str-or-null (lambda (value)
+                     (cond ((numberp value) (number-to-string value))
+                           ((or (null value) (string= "" value)) nil)
+                           (t value))))
+      (plain-str (lambda (value)
+                   (cond ((numberp value) (number-to-string value))
+                         ((or (null value) (string= "" value)) nil)
+                         (t (string-replace "=" "" value))))))
+  (concat (if (not (string= "" submap))
+              (concat "submap = " submap "\n")
+            "")
+          (mapconcat (lambda (line)
+                      (let* ((modifiers (or (funcall str-or-null (nth 0 line)) ""))
+                             (key           (funcall plain-str   (nth 1 line)))
+                             (action        (funcall str-or-null (nth 2 line)))
+                             (argument  (or (funcall plain-str   (nth 3 line)) ""))
+                             (submap        (funcall str-or-null (nth 4 line)))
+                             (bind-flag (or (funcall plain-str   (nth 5 line)) ""))
+                             (action-bind (when action
+                                            (format "bind%s = %s, %s, %s, %s"
+                                                    bind-flag
+                                                    modifiers
+                                                    key
+                                                    action
+                                                    argument)))
+                             (submap-bind (when submap
+                                            (format "bind = %s, %s, submap, %s"
+                                                    modifiers
+                                                    key
+                                                    submap))))
+                        (mapconcat #'identity
+                                   (seq-filter (lambda (val) (not (null val)))
+                                               (list action-bind submap-bind))
+                                   "\n")))
+                    table
+                    "\n")
+          (if (string= "yes" reset-submap)
+              "\nbind = , escape, submap, reset
+bind = CTRL, g, submap, reset"
+            "")))
+#+end_src
+
+#+RESULTS[16dc2aed068a6e71847eaf331d36c2092f5b0379]: gen-submap
+#+begin_src conf :exports none :tangle no
+submap = leader
+bind = , l, exec, plock
+bind = , l, submap, reset
+bind = , a, submap, apps
+bind = , b, submap, buffers
+bind = , w, submap, windows
+bind = , escape, submap, reset
+bind = CTRL, g, submap, reset
+#+end_src
