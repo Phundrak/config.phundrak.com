@@ -57,14 +57,20 @@ npm install # delete the yarn.lock file first
 
 Once this is done, you can launch a preview of the project.
 #+begin_src shell
-yarn docs:dev
+yarn dev
 # or
-npm run docs:dev
+npm run dev
 #+end_src
 
 You can also compile the project to a static website.
 #+begin_src shell
-yarn docs:build
+yarn build
 # or
-npm run docs:build
+npm run build
 #+end_src
+
+** With Nix shell
+A Nix shell is available for running the project without the Emacs
+part. Simply run =nix-shell= in the project root. You’ll get the latest
+version of =yarn= installed and should be able to run the commands
+above.
