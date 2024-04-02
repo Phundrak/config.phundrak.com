@@ -230,6 +230,7 @@ map.
 submap = reset
 <<gen-submap(table=top-media, submap="", reset-submap="no")>>
 <<gen-submap(table=top-windows-movements, submap="", reset-submap="no")>>
+<<gen-mouse(table=top-windows-actions)>>
 <<gen-submap(table=top-workspace-movements, submap="", reset-submap="no")>>
 #+end_src
 
@@ -476,3 +477,18 @@ bind = , w, submap, windows
 bind = , escape, submap, reset
 bind = CTRL, g, submap, reset
 #+end_src
+
+#+name: gen-mouse
+#+begin_src emacs-lisp :var table=top-windows-actions
+(mapconcat (lambda (line)
+             (let ((modifiers (or (nth 0 line) ""))
+                   (mouse-btn (nth 1 line))
+                   (command   (or (nth 2 line) "")))
+               (format "bindm = %s, %s, %s" modifiers mouse-btn command)))
+           table
+           "\n")
+#+end_src
+
+#+RESULTS[bab4997f43c513c6557a8f039ae1e20cc96e7794]: gen-mouse
+: bindm = SUPER, mouse:272, movewindow
+: bindm = SUPER, mouse:273, resizewindow
