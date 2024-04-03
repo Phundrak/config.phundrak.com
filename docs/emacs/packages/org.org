@@ -327,17 +327,6 @@ specified org files which are described below.
 (defvar org-worldbuilding-file "~/org/worldbuilding.org")
 #+end_src
 
-Let me describe a keybind to invoke org-capture from anywhere within
-Emacs.
-#+name: org-capture-keybinds
-#+begin_src emacs-lisp :tangle no
-(phundrak/leader-key
-  :packages 'org
-  :infix "o"
-  ""  '(:ignore t :which-key "org")
-  "c" #'org-capture)
-#+end_src
-
 When ~org-capture~ is invoked, it will ask which template we wish to
 use. In the table [[org-capture-shortcuts-table]], the /key/ column
 represents which keychord we need to hit, titled with /name/, we need to
@@ -1060,26 +1049,6 @@ management system based on org-mode.
   :config
   (org-roam-db-autosync-mode 1)
   :general
-  (phundrak/leader-key
-    :packages '(org org-roam)
-    :infix "o"
-    "r"   '(:ignore t :which-key "roam")
-    "rb"  '(org-mark-ring-goto :which-key "back")
-    "rB"  #'org-roam-buffer-toggle
-    "rn"  '(:ignore t :which-key "nodes")
-    "rnf" #'org-roam-node-find
-    "rni" #'org-roam-node-insert
-    "rno" #'org-roam-node-open
-    "rnr" #'org-roam-node-random
-    "rnv" #'org-roam-node-visit
-    "rs"  '(:ignore t :which-key "sync")
-    "rsa" #'org-roam-db-autosync-mode
-    "rsc" #'org-roam-db-clear-all
-    "rsd" #'org-roam-db-diagnose-node
-    "rss" #'org-roam-db-sync
-    "ru"  '(:ignore t :which-key "ui")
-    "rua" #'org-roam-ui-add-to-local-graph
-    "ruo" #'org-roam-ui-open)
   (phundrak/major-leader-key
     :keymaps 'org-mode-map
     :packages '(org org-roam)

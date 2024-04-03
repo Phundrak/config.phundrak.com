@@ -301,10 +301,5 @@ you’re not sure or if you don’t remember what your snippet is.
 (use-package ivy-yasnippet
   :defer t
   :after (ivy yasnippet)
-  :straight (:build t)
-  :general
-  (phundrak/leader-key
-    :infix "i"
-    :packages 'ivy-yasnippet
-    "y" #'ivy-yasnippet))
+  :straight (:build t))
 #+end_src

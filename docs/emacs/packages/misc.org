@@ -49,31 +49,6 @@ it bépo-compatible.
     :pakages 'avy
     "gc" #'evil-avy-goto-char-timer
     "gl" #'evil-avy-goto-line)
-  (phundrak/leader-key
-    :packages 'avy
-    :infix "j"
-    "b" #'avy-pop-mark
-    "c" #'evil-avy-goto-char-timer
-    "l" #'avy-goto-line)
-  (phundrak/leader-key
-    :packages 'avy
-    :infix "A"
-    "c"  '(:ignore t :which-key "copy")
-    "cl" #'avy-copy-line
-    "cr" #'avy-copy-region
-    "k"  '(:ignore t :which-key "kill")
-    "kl" #'avy-kill-whole-line
-    "kL" #'avy-kill-ring-save-whole-line
-    "kr" #'avy-kill-region
-    "kR" #'avy-kill-ring-save-region
-    "m"  '(:ignore t :which-key "move")
-    "ml" #'avy-move-line
-    "mr" #'avy-move-region
-    "mt" #'avy-transpose-lines-in-region
-    "n"  #'avy-next
-    "p"  #'avy-prev
-    "u"  #'my/avy-goto-url
-    "U"  #'my/avy-open-url)
   (phundrak/major-leader-key
     :packages '(avy org)
     :keymaps 'org-mode-map

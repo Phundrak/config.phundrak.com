@@ -75,11 +75,6 @@ compatibility package that adds states for iedit.
         iedit-only-at-symbol-boundaries t
         iedit-toggle-key-default        nil)
   :general
-  (phundrak/leader-key
-    :infix "r"
-    :packages '(iedit evil-iedit-state)
-    "" '(:ignore t :which-key "refactor")
-    "i" #'evil-iedit-state/iedit-mode)
   (general-define-key
    :keymaps 'evil-iedit-state-map
    "c" nil

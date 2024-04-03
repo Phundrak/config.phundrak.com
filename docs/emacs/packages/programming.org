@@ -338,20 +338,7 @@ in quite a few languages.
   :config
   (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
                                                "/usr/share/java/languagetool/*")
-                                             ":"))
-  :general
-  (phundrak/leader-key
-    :packages 'langtool
-    :infix "l"
-    ""  '(:ignore t :which-key "LangTool")
-    "B" #'langtool-correct-buffer
-    "b" #'langtool-check-buffer
-    "c" #'langtool-check
-    "C" #'langtool-correct-at-point
-    "d" #'langtool-check-done
-    "l" #'langtool-switch-default-language
-    "p" #'langtool-show-message-at-point
-    "r" #'langtool-correct-region))
+                                             ":")))
 #+end_src
 
 Finally, =writegood-mode= detects some simple general rules when writing

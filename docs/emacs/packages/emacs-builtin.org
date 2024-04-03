@@ -170,8 +170,6 @@ compilation buffer, as well as enable some syntax highlighting.
     "r" nil
     "R" #'recompile
     "h" nil)
-  (phundrak/leader-key
-    "R" #'recompile)
   :config
   (setq compilation-scroll-output t))
 #+end_src

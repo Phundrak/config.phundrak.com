@@ -1112,6 +1112,9 @@ configuration [[file:mpd.org][here]]).
   <<emms-search-set-variable>>
 
   <<emms-media-hydra>>
+  (defun my/mpc-toggle ()
+    (interactive)
+    (shell-command-and-echo "mpc toggle"))
   (defun emms-player-toggle-pause ()
     (interactive)
     (shell-command-and-echo "mpc toggle"))
@@ -1153,27 +1156,7 @@ configuration [[file:mpd.org][here]]).
     :packages 'emms
     "d" #'emms-playlist-mode-kill-track
     "p" #'emms-playlist-mode-play-smart
-    "q" #'kill-this-buffer)
-  (phundrak/leader-key
-    :infix "m"
-    :packages 'emms
-    ""   '(:ignore t :which-key "media")
-    "."  #'hydra-media/body
-    "«"  #'emms-player-mpd-previous
-    "»"  #'emms-player-mpd-next
-    "c"  #'emms-player-mpd-clear
-    "e"  '(:ignore t :which-key "emms")
-    "eb" #'emms-browser
-    "ep" #'emms-playlist-mode-go
-    "es" #'emms-player-mpd-show
-    "p"  '((lambda ()
-             (interactive)
-             (shell-command-and-echo "mpc toggle"))
-           :which-key "mpc toggle")
-    "s"  #'emms-stop
-    "u"  '(:ignore t :which-key "update")
-    "um" #'emms-player-mpd-update-all
-    "uc" #'emms-cache-set-from-mpd-all))
+    "q" #'kill-this-buffer))
 #+end_src
 
 *** Finding files from EMMS
@@ -1401,25 +1384,7 @@ doing and what Git is doing! In short, I absolutely love it!
     :packages 'magit
     "," #'with-editor-finish
     "k" #'with-editor-cancel
-    "a" #'with-editor-cancel)
-  (phundrak/leader-key
-    :infix   "g"
-    :packages 'magit
-    ""   '(:ignore t :wk "git")
-    "b"  #'magit-blame
-    "c"  #'magit-clone
-    "d"  #'magit-dispatch
-    "i"  #'magit-init
-    "s"  #'magit-status
-    "l"  #'magit-log
-    "y"  #'my/yadm
-    "S"  #'magit-stage-file
-    "U"  #'magit-unstage-file
-    "f"  '(:ignore t :wk "file")
-    "fd" #'magit-diff
-    "fc" #'magit-file-checkout
-    "fl" #'magit-file-dispatch
-    "fF" #'magit-find-file))
+    "a" #'with-editor-cancel))
 #+end_src
 
 There is currently a bug in Emacs TRAMP as described in issue [[https://github.com/magit/magit/issues/4720][#4720]] of
@@ -1475,14 +1440,7 @@ keywords in a buffer. Let’s enable this mode globally.
 (use-package hl-todo
   :defer t
   :straight (:build t)
-  :init (global-hl-todo-mode 1)
-  :general
-  (phundrak/leader-key
-    :packages '(hl-todo)
-    :infix "c"
-    ""  '(:ignore t :which-key "todos")
-    "n" #'hl-todo-next
-    "p" #'hl-todo-previous))
+  :init (global-hl-todo-mode 1))
 #+end_src
 
 We can now configure properly =magit-todos=. Notice my custom function
@@ -1617,12 +1575,7 @@ look nice.
                         :type git
                         :host github
                         :repo "tecosaur/screenshot")
-  :config (load-file (locate-library "screenshot.el"))
-  :general
-  (phundrak/leader-key
-    :infix "a"
-    :packages '(screenshot)
-    "S" #'screenshot))
+  :config (load-file (locate-library "screenshot.el")))
 #+end_src
 
 ** Shells
