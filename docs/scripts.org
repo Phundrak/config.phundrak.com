@@ -234,20 +234,6 @@ UNREAD=$(mu find "flag:unread AND (maildir:/Inbox OR maildir:/Junk)" | wc -l)
 printf "^f2^f0%s" "$UNREAD"
 #+end_src
 
-*** Post scrot script
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :tangle ~/.local/bin/post-scrot
-:END:
-It is possible to call a script on the resulting image of a ~scrot~
-command. Not only do I want to move them to a specific directory, I
-also want to be able to see them in ~nsxiv~ (a replacement for ~sxiv~) in
-case I want to edit the image, copy it or simply delete it (sometimes
-I take screenshots by accident).
-#+begin_src sh
-mv "$@" ~/Pictures/Screenshots/
-nsxiv -abfs f "$HOME/Pictures/Screenshots/$*"
-#+end_src
-
 *** screenshot
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/screenshot
@@ -269,13 +255,16 @@ OUTFILE_BASE="$HOME/Pictures/Screenshots/Screenshot_$(date +%Y%m%d)_$(date +%H%M
 OUTFILE="$OUTFILE_BASE.png"
 SUFFIX=0
 
-while getopts ':cd:gs' OPTION; do
+while getopts ':cd:egs' OPTION; do
     case "$OPTION" in
         c )
             COPY="yes"
             ;;
         d )
             DELAY="$OPTARG"
+            ;;
+        e )
+            EDIT="yes"
             ;;
         g )
             GIMP="yes"
@@ -284,19 +273,27 @@ while getopts ':cd:gs' OPTION; do
             SELECT="yes"
             ;;
         ? )
-            echo "Usage: $(basename "$0") [-c] [-d DELAY] [-g] [-s]"
+            echo "Usage: $(basename "$0") [-c] [-d DELAY] [-e] [-g] [-s]"
             exit 1
             ;;
     esac
 done
+
+if [ "$SELECT" = "yes" ]
+then AREA="$(slurp)"
+fi
 
 if [ -n "$DELAY" ]
 then sleep "$DELAY"
 fi
 
 if [ "$SELECT" = "yes" ]
-then grim -g "$(slurp)" "$OUTFILE"
+then grim -g "$AREA" "$OUTFILE"
 else grim "$OUTFILE"
+fi
+
+if [ "$EDIT" = "yes" ]
+then swappy -f "$OUTFILE" -o "$OUTFILE"
 fi
 
 if [ "$GIMP" = "yes" ]

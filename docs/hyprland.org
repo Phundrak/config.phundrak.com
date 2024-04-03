@@ -420,14 +420,14 @@ what most of these do.
 *** Screenshots
 Here are the keybinding for the screenshot submap
 #+name: screenshot-submap
-| Modifiers | Key   | Action | Argument        | Submap |
-|-----------+-------+--------+-----------------+--------|
-|           | Print | exec   | =screenshot=      | reset  |
-|           | c     | exec   | =screenshot -c=   | reset  |
-|           | s     | exec   | =screenshot -s=   | reset  |
-|           | g     | exec   | =screenshot -g=   | reset  |
-|           | d     | exec   | =screenshot -d 3= | reset  |
-| Shift     | s     | exec   | =screenshot -sc=  | reset  |
+| Modifiers | Key   | Action | Argument           | Submap |
+|-----------+-------+--------+--------------------+--------|
+|           | Print | exec   | =screenshot=         | reset  |
+|           | d     | exec   | =screenshot -d 3=    | reset  |
+| Shift     | d     | exec   | =screenshot -sced 3= | reset  |
+|           | e     | exec   | =screenshot -sec=    | reset  |
+|           | s     | exec   | =screenshot -s=      | reset  |
+| Shift     | s     | exec   | =screenshot -sc=     | reset  |
 
 *** Windows
 #+name: windows-submap
