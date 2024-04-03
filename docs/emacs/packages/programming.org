@@ -808,6 +808,17 @@ When editing some scripts though, I need to use the built-in ~shell-mode~.
   :mode "\\.yaml\\'")
 #+end_src
 
+*** yuck
+This is one of the two file formats used by [[https://github.com/elkowar/eww/][eww]]’s configuration, a
+Lisp-like language. Therefore, it will also use [[file:./editing.md#parinfer][parinfer]] to manage its
+parenthesis.
+#+begin_src emacs-lisp
+(use-package yuck-mode
+  :straight (:build t)
+  :defer t
+  :hook ((yuck-mode . parinfer-rust-mode)))
+#+end_src
+
 ** General Programming Languages
 *** C/C++
 I know, I know, C and C++ no longer are closely related languages,
