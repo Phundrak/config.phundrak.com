@@ -40,9 +40,43 @@ input {
 We can then set the monitors used. If =HDMI-A-1= is not found when
 Hyprland launches, it will simply ignore it. And at worst, I can use
 [[https://github.com/artizirk/wdisplays][wdisplays]] to manually set the position of my screens.
+#+name: monitors-table
+| Monitor name | Resolution | Refresh rate (Hz) | Position |
+|--------------+------------+-------------------+----------|
+| HDMI-A-1     |  2560x1080 |                   |      0x0 |
+| eDP-1        |  1920x1080 |               120 |   2560x0 |
+
+#+name: gen-monitors
+#+begin_src emacs-lisp :var table=monitors-table :exports results :tangle no :wrap "src conf" :cache yes
+(let ((normalize-value (lambda (value)
+                         (or (if (numberp value)
+                                 (number-to-string value)
+                               value)
+                             ""))))
+  (mapconcat (lambda (line)
+               (let* ((monitor      (funcall normalize-value (nth 0 line)))
+                      (resolution   (funcall normalize-value (nth 1 line)))
+                      (refresh-rate (funcall normalize-value (nth 2 line)))
+                      (refresh-rate (if (string= "" refresh-rate) "" (concat "@" refresh-rate)))
+                      (position     (funcall normalize-value (nth 3 line)))
+                      (scale        (funcall normalize-value (nth 4 line)))
+                      (scale        (if (string= "" scale) "1" scale)))
+                 (format "monitor = %s, %s%s, %s, %s"
+                         monitor
+                         resolution
+                         refresh-rate
+                         position
+                         scale)))
+             table
+             "\n"))
+#+end_src
+
+This translates into the following configuration:
+
+#+RESULTS[7a1e8ae4a77d335ec873de9ef0536bb45c84f2a0]: gen-monitors
 #+begin_src conf
-monitor  = HDMI-A-1, 2560x1080,  0x0,      1
-monitor  = eDP-1,    1920x1080,  2560x0,   1
+monitor = HDMI-A-1, 2560x1080, 0x0, 1
+monitor = eDP-1, 1920x1080@120, 2560x0, 1
 #+end_src
 
 ** Visual configuration
