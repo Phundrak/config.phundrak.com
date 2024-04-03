@@ -73,9 +73,9 @@ focus the new window immediately.
 (with-eval-after-load 'hydra
   (defhydra windows-adjust-size ()
     "
-             _s_: enlarge
-_c_: enlarge              _r_: right
              _t_: shrink
+_c_: enlarge              _r_: right
+             _s_: enlarge
 "
     ("c" enlarge-window-horizontally)
     ("t" shrink-window)
