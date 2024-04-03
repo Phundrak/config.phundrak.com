@@ -138,3 +138,21 @@ b s~, which bring the user directly to the ~*Messages*~ buffer and the
   (interactive)
   (switch-to-buffer "*scratch*"))
 #+end_src
+
+** Tangle all Emacs config files
+#+begin_src emacs-lisp :results none
+(defvar my/emacs-org-config-directory
+  (expand-file-name "org/config/docs/emacs" (getenv "HOME"))
+  "Location of my config as org files.")
+
+(defun my/tangle-emacs-config ()
+  "Tangle all my Emacs config files from org files."
+  (interactive)
+  (let ((files (f-files my/emacs-org-config-directory
+                (lambda (file) (f-ext-p file "org"))
+                t))
+        (org-confirm-babel-evaluate nil))
+    (dolist (file files)
+      (message "Tangling %s" file)
+      (org-babel-tangle-file file))))
+#+end_src
