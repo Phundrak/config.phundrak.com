@@ -1626,6 +1626,17 @@ issue.
     "p" #'multi-vterm-prev))
 #+end_src
 
+Another really neat package is =eshell-vterm= which allows to use vterm
+to run visual commands when in Eshell.
+#+begin_src emacs-lisp
+(use-package eshell-vterm
+  :after eshell
+  :straight (:build t)
+  :config
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
+#+end_src
+
 ** XWidgets Webkit Browser
 I used to use the xwidgets webkit browser in order to view or preview
 HTML files from Emacs, but it seems the Cairo background transparency
