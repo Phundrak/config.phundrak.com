@@ -190,9 +190,15 @@ Having a working policy kit is generally a good idea.
 exec-once = xfce-polkit
 #+end_src
 
-Now, let’s launch the notification daemon [[https://dunst-project.org/][dunst]].
+Now, let’s launch the notification daemon [[https://github.com/ErikReider/SwayNotificationCenter][swaync]].
 #+begin_src conf
-exec-once = dunst
+exec-once = swaync
+#+end_src
+
+Let’s also launch [[https://sr.ht/~kennylevinsen/wlsunset/][wlsunset]]. I’ll very vagely aim at Paris with the
+longitude and latitude.
+#+begin_src conf
+exec-once = wlsunset -l 48.5 -L 2.2 -d 1500
 #+end_src
 
 Let’s launch some apps and their applet. Here, we’re launching the
