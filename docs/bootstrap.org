@@ -568,7 +568,6 @@ files that are to be tangled:
 | mpd.org      |
 | neofetch.org |
 | picom.org    |
-| rustfmt.org  |
 | stumpwm.org  |
 | tmux.org     |
 
@@ -583,7 +582,7 @@ files that are to be tangled:
            "\n")
 #+END_SRC
 
-#+RESULTS[127dafd79461dab55296163e57fadb7b355a205a]: generate-tangle
+#+RESULTS[8b74ad716447b62ace4eeddbd3dae7a1b1bdcdd7]: generate-tangle
 #+begin_example
 printf '\n\n==== Tangling bin.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
@@ -619,11 +618,6 @@ printf '\n\n==== Tangling picom.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \
 --eval '(setq org-confirm-babel-evaluate nil)' \
 --eval '(org-babel-tangle-file "~/org/config/picom.org")'
-
-printf '\n\n==== Tangling rustfmt.org\n\n' && \
-emacs -q --batch --eval '(require \'ob-tangle)' \
---eval '(setq org-confirm-babel-evaluate nil)' \
---eval '(org-babel-tangle-file "~/org/config/rustfmt.org")'
 
 printf '\n\n==== Tangling stumpwm.org\n\n' && \
 emacs -q --batch --eval '(require \'ob-tangle)' \

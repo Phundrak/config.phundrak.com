@@ -66,7 +66,6 @@ export default defineUserConfig({
       '/mpd',
       '/neofetch',
       '/picom',
-      '/rustfmt',
       {
         text: 'StumpWM',
         link: '/stumpwm/',
