@@ -62,7 +62,6 @@ Undefining some stuff to make keybind prefixes work correctly.
   "'"   '(shell-pop :package shell-pop)
   "R"   #'recompile
   "u"   #'universal-argument
-  "U"   '(undo-tree-visualize :package undo-tree)
 
   <<general-keybindings-gen(table=keybindings-tabs, prefix="TAB ")>>
   <<general-keybindings-gen(table=keybindings-apps, prefix="a")>>
