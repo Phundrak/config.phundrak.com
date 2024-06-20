@@ -88,7 +88,9 @@ Now, there is only one function I modify when it comes to the
 appearance of fish when I’m the one using it: the ~fish_greeting~
 function. I just want it empty.
 #+BEGIN_SRC fish
-function fish_greeting; end
+function fish_greeting
+    pumo-system-info
+end
 #+END_SRC
 
 For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic prompt. Let’s
