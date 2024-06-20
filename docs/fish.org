@@ -94,7 +94,11 @@ function fish_greeting; end
 For my fish prompt, I use [[https://starship.rs][starship]], a shell-agnostic prompt. Let’s
 load it:
 #+begin_src fish
+function starship_transient_prompt_func
+    starship module character
+end
 starship init fish | source
+enable_transience
 #+end_src
 
 ** Setting up external tools
