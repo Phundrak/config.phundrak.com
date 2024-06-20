@@ -1604,9 +1604,10 @@ an interrupt signal.
 #+begin_src emacs-lisp
 (use-package vterm
   :defer t
-  :straight t
+  :straight (:build t)
   :config
-  (setq vterm-shell "/usr/bin/fish"))
+  (setq vterm-shell "/usr/bin/fish"
+        vterm-always-compile-module t))
 #+end_src
 
 One annoying think with vterm is it only can create one buffer, you
