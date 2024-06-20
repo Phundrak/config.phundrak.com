@@ -100,16 +100,6 @@ general {
 I may one day use the [[https://github.com/hyprland-community/pyprland][=layout_center=]] layout from [[https://github.com/hyprland-community/pyprland][pyprland]], but I
 haven’t got around to do that yet.
 
-This section is specific to touchpads, but I like to use it to switch
-between workspaces quickly. Note that I only want to swipe between
-existing workspaces, not to create new ones.
-#+begin_src conf
-gestures {
-    workspace_swipe = true
-    workspace_swipe_numbered = true
-}
-#+end_src
-
 Decorations are just a nice thing to make things look pretty. I like
 some slight rounding on my windows with a nice though light shadow.
 Again, the colour comes from the Nord palette with nord0.
