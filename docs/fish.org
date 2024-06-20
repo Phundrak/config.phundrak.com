@@ -140,6 +140,8 @@ $rlang\
 $rust\
 $scala\
 $zig\
+$nix_shell\
+$direnv\
 $memory_usage\
 $env_var\
 $custom\
@@ -161,6 +163,23 @@ for either language, so I’m just using a lambda character.
 extensions = ["lisp", "el"]
 symbol = "λ "
 style = "bold green"
+#+end_src
+
+Some module configurations don’t exactly sit right with me, so let’s
+tweak them a bit.
+#+begin_src toml
+[nix_shell]
+format = '[$symbol$state( \($name\))]($style)'
+symbol = '❄️ '
+
+[shlvl]
+disabled = false
+threshold = 3
+
+[direnv]
+disabled = false
+detect_files = ['.envrc', '.env']
+symbol = ' '
 #+end_src
 
 Finally, let’s disable all modules I don’t need.
@@ -208,8 +227,6 @@ disable = true
 [vlang]
 disable = true
 [vagrant]
-disable = true
-[nix_shell]
 disable = true
 [conda]
 disable = true
