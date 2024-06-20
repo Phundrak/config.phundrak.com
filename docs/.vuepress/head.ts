@@ -10,7 +10,7 @@ const simplifiedHead = [
       {
         async: true,
         src: 'https://umami.phundrak.com/script.js',
-        'data-website-id': '67166941-8c83-4a19-bc8c-139e44b7f7aa',
+        'data-website-id': '9574ed51-3939-4d4e-979f-6b2908fbe1af',
         'data-do-not-track': 'true',
       },
     ],
