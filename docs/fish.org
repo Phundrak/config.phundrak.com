@@ -45,6 +45,12 @@ I also use [[https://github.com/elkowar/eww/][eww]] for some widgets, let’s lo
 eww shell-completions --shell fish | source
 #+end_src
 
+The [[https://crates.io/crates/sqlx][sqlx]] CLI is a requirement for my Rust projects using this crate.
+The code below integrates its completions in Fish.
+#+begin_src fish
+sqlx completions fish | source
+#+end_src
+
 Since I don’t really have a better place on this website to put it,
 here is my direnv configuration located at
 =$HOME/.config/direnv/direnv.toml=.
