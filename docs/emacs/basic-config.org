@@ -27,53 +27,6 @@ loaded, speeding Emacs up a bit.
 (blink-cursor-mode 0)              ; disable blinking cursor
 #+end_src
 
-*** Better garbage collection
-Emacs sometimes freezes up a bit when doing some garbage collection,
-which is not super. So, in order to fix that, I do two things:
-1. Set up a really high threshold (I have a lot of RAM to spare, so I
-   don’t really care),
-2. Hook garbage collection thirty seconds after Emacs loses focus and
-   every thirty seconds after that,
-3. Cancel garbage collection if Emacs gains focus back within this
-   thirty seconds window.
-
-With a garbage collection threshold, Emacs should never garbage
-collect on its own, and Emacs is free to freeze up for a few seconds
-when it loses focus since I’m looking away.
-#+begin_src emacs-lisp
-(setq garbage-collection-messages t            ;; tell me when garbage collecting
-      gc-cons-threshold (* 16 1024 1024 1024)) ;; 16GiB of RAM
-
-(defmacro my/time (&rest body)
-  `(let ((time (current-time)))
-     ,@body
-     (float-time (time-since time))))
-
-(defun my/garbage-collect ()
-  "Garbage collect and tell the user how much time it took."
-  (message "Garbage collector ran for %.06fs"
-           (my/time (garbage-collect))))
-
-(defvar my/gc-timer nil
-  "Timer for garbage collection. See
-`my/garbage-collect-on-focus-lost'.")
-
-(defun my/garbage-collect-on-focus-lost ()
-  "Garbage collect when Emacs loses focus.
-
-Garbage collection is only triggered thirty seconds after losing
-focus, and only once."
-  (if (frame-focus-state)
-      (when (timerp my/gc-timer)
-       (cancel-timer my/gc-timer))
-    (setq my/gc-timer (run-with-idle-timer 30 nil #'my/garbage-collect))))
-
-(add-function :after after-focus-change-function #'my/garbage-collect-on-focus-lost)
-#+end_src
-
-To write this, I mostly based myself on [[https://news.ycombinator.com/item?id=39190110][this HackerNews thread]] and [[https://akrl.sdf.org/#orgc15a10d][its
-related article]].
-
 ** Emacs Behavior
 *** Editing Text in Emacs
 I *never* want to keep trailing spaces in my files, which is why I’m
