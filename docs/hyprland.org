@@ -135,17 +135,12 @@ animations {
 
 Now, we can take care of the configuration of the layouts. The only
 notable thing here is that I prefer to have no gaps when there is only
-one window in the dwindle layout. Not much is done with the master
-layout, as I don’t use it.
+one window in the dwindle layout.
 #+begin_src conf
 dwindle {
     pseudotile = true
     preserve_split = true
     no_gaps_when_only = 1
-}
-
-master {
-    new_is_master = true
 }
 #+end_src
 
