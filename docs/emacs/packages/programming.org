@@ -735,6 +735,16 @@ or some I write myself.
         org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
 #+end_src
 
+*** Ron files
+Rusty Object Notation, or RON for short, is to Rust what Json is to
+Javascript. Sometimes, I have to work with such files, which is why I
+installed this major mode.
+#+begin_src emacs-lisp
+(use-package ron-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
 *** Shells
 Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
 config]]), therefore I need a mode for it.
