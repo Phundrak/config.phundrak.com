@@ -832,32 +832,34 @@ can schedule a todo header for some dates, or set a deadline.
 
 Let’s now define some keybinds for inserting stuff in our org buffer:
 #+name: org-keybinds-insert
-| Key chord | Function                                          | Description | Package    |
-|-----------+---------------------------------------------------+-------------+------------|
-| i         | nil                                               | insert      |            |
-| ib        | org-insert-structure-template                     |             |            |
-| ic        |                                                   | conlanging  |            |
-| ica       | conlanging-eittlandic-insert-adjective-declension | adjective   | conlanging |
-| icn       | conlanging-eittlandic-insert-noun-declensions     | noun        | conlanging |
-| icv       | conlanging-eittlandic-insert-verb-declension      | verb        | conlanging |
-| id        | org-insert-drawer                                 |             |            |
-| ie        | nil                                               | emphasis    |            |
-| ieb       | org-emphasize-bold                                |             |            |
-| iec       | org-emphasize-code                                |             |            |
-| iei       | org-emphasize-italic                              |             |            |
-| ies       | org-emphasize-strike-through                      |             |            |
-| ieu       | org-emphasize-underline                           |             |            |
-| iev       | org-emphasize-verbatim                            |             |            |
-| iE        | org-set-effort                                    |             |            |
-| if        | org-footnote-new                                  |             |            |
-| ih        | org-insert-heading                                |             |            |
-| iH        | counsel-org-link                                  |             |            |
-| ii        | org-insert-item                                   |             |            |
-| il        | org-insert-link                                   |             |            |
-| in        | org-add-note                                      |             |            |
-| ip        | org-set-property                                  |             |            |
-| is        | org-insert-subheading                             |             |            |
-| it        | org-set-tags-command                              |             |            |
+| Key chord | Function                                          | Description         | Package    |
+|-----------+---------------------------------------------------+---------------------+------------|
+| i         | nil                                               | insert              |            |
+| ib        | org-insert-structure-template                     |                     |            |
+| ic        |                                                   | conlanging          |            |
+| ica       | conlanging-eittlandic-insert-adjective-declension | adjective           | conlanging |
+| icn       | conlanging-eittlandic-insert-noun-declensions     | noun                | conlanging |
+| icv       | conlanging-eittlandic-insert-verb-declension      | verb                | conlanging |
+| id        | org-insert-drawer                                 |                     |            |
+| ie        | nil                                               | emphasis            |            |
+| ieb       | org-emphasize-bold                                |                     |            |
+| iec       | org-emphasize-code                                |                     |            |
+| iei       | org-emphasize-italic                              |                     |            |
+| ies       | org-emphasize-strike-through                      |                     |            |
+| ieu       | org-emphasize-underline                           |                     |            |
+| iev       | org-emphasize-verbatim                            |                     |            |
+| iE        | org-set-effort                                    |                     |            |
+| if        | org-footnote-new                                  |                     |            |
+| ih        | org-insert-heading                                |                     |            |
+| iH        | counsel-org-link                                  |                     |            |
+| ii        | org-insert-item                                   |                     |            |
+| il        | org-insert-link                                   |                     |            |
+| in        | org-add-note                                      |                     |            |
+| ip        | org-set-property                                  |                     |            |
+| is        | org-insert-subheading                             |                     |            |
+| it        | org-set-tags-command                              |                     |            |
+| iV        | conlang-store-heading-vuepress                    | store Vuepress link | conlanging |
+| iv        | conlanging-insert-heading-vuepress                | vuepress link       | conlanging |
 
 There isn’t a lot of stuff I can jump to yet, but there’s still some:
 #+name: org-keybinds-jump
@@ -1138,7 +1140,7 @@ management system based on org-mode.
   (phundrak/major-leader-key
    :keymaps 'org-mode-map
    :pakages 'org-ref
-   "ic" #'org-ref-insert-link
+   "iC" #'org-ref-insert-link
    "iL" #'org-ref-insert-ref-link
    "ir" #'org-ref-insert-link-hydra/body
    "iB" #'org-ref-bibtex-hydra/body))
