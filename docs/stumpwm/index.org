@@ -9,11 +9,11 @@
 *** What is StumpWM?
 [[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written
 entirely in [[https://common-lisp.net/][Common Lisp]] and compiled with [[http://www.sbcl.org/][SBCL]]. While it is not a
-dynamic tiling window manager like [[file:Deprecated/awesome.org][Awesome]] is, its ability of managing
+dynamic tiling window manager like [[file:/deprecated/awesome.md][Awesome]] is, its ability of managing
 windows in frames and using keychords with keymaps like Emacs does is
 a huge plus for me, not to mention the fact its configuration file is
 written in Common Lisp, a general programming language, a bit like
-Awesome. This makes it an [[file:Deprecated/i3.org][i3]] on steroids, sort of. It also uses a lot
+Awesome. This makes it an [[file:/deprecated/i3.md][i3]] on steroids, sort of. It also uses a lot
 of Emacs’ concepts, which is great for an Emacs user such as myself.
 
 *** Why not EXWM then?

@@ -224,7 +224,7 @@ mode), except for ~s-RET~ which opens an eshell terminal.
 #+end_src
 
 A couple of commands are also automatically executed through my
-~autostart~ script written [[file:bin.org::#Autostart-a99e99e7][here]].
+~autostart~ script written [[file:/scripts.md#autostart][here]].
 #+name: exwm-autostart
 #+begin_src emacs-lisp :tangle no
 (exwm/run-in-background "autostart")

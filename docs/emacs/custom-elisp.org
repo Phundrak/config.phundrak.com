@@ -40,7 +40,7 @@ APPEND and COMPARE-FN, see `add-to-list'."
 #+end_src
 
 ** Generate and insert random passwords
-These functions got replaced by my custom package, see [[file:./misc.md#password-generator][Password
+These functions got replaced by my custom package, see [[file:packages/misc.md#password-generator][Password
 generator]].
 
 ** Handle new windows

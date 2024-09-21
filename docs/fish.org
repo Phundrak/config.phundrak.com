@@ -538,7 +538,7 @@ abbr webcam 'devour mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=
 
 **** Sudo
 First, I make it so that ~sudo~ comes with the ~-A~ switch in order to call my
-custom graphical script for getting my password (see [[file:bin.org::#Askpass-d0d7a8c0][askpass]]). I also made it so
+custom graphical script for getting my password (see [[file:./scripts.md#askpass][askpass]]). I also made it so
 ~please~ is an equivalent to ~sudo -A~ as a joke.
 #+BEGIN_SRC fish
 abbr please 'sudo -A'

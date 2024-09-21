@@ -746,7 +746,7 @@ installed this major mode.
 #+end_src
 
 *** Shells
-Aside from Eshell, my main shell on my machine is fish (see my [[file:fish.org][fish
+Aside from Eshell, my main shell on my machine is fish (see my [[file:/fish.md][fish
 config]]), therefore I need a mode for it.
 #+begin_src emacs-lisp
 (use-package fish-mode
@@ -900,7 +900,7 @@ when entering ~lisp-mode~.
 #+end_src
 
 Sly enables some deep interactivity between Emacs and a CommonLisp
-application running the Slynk backend. For an example, see [[file:stumpwm.org::#Utilities-Sly-kkok6oi0yaj0][my Sly
+application running the Slynk backend. For an example, see [[file:/stumpwm/utilities.md#sly][my Sly
 configuration for StumpWM]].
 #+begin_src emacs-lisp
 (use-package sly

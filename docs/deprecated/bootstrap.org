@@ -334,7 +334,7 @@ Some visual packages:
 | nordic-theme-git               | Nord theme for GTK                  |
 | noto-fonts-emoji               | Font with emojis                    |
 | otf-ipafont                    | Japanese font                       |
-| picom                          | See [[file:picom.org]]                  |
+| picom                          | See [[file:/picom.org][my Picom config]]                 |
 | powerline-fonts                | Powerline fonts                     |
 | siji-git                       | Siji font                           |
 | ttf-arphic-uming               | CJK font Ming style                 |
@@ -824,7 +824,7 @@ end
 #+END_SRC
 
 *** Symlink some system config files
-Let’s symlink the ~plock~ script ([[file:bin.org::#Lock-635fcb38][source here]]) to ~/usr/bin~ so ~xss-lock~
+Let’s symlink the ~plock~ script ([[file:../scripts.md#plock][source here]]) to ~/usr/bin~ so ~xss-lock~
 can find it.
 #+BEGIN_SRC fish
 sudo ln -s ~/.local/bin/plock /usr/bin/plock
@@ -838,7 +838,7 @@ mkdir -p ~/fromGIT
 
 **** Reveal.JS
 I sometimes use Reveal.JS to make presentations, and I set its
-location in my [[file:emacs.org][Emacs config]] to be in =~/fromGIT=, so let’s clone it
+location in my [[file:../emacs/index.md][Emacs config]] to be in =~/fromGIT=, so let’s clone it
 there.
 #+BEGIN_SRC fish
 printf "\n# Install Reveal.JS ###########################################################\n\n"

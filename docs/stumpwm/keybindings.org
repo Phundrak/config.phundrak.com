@@ -525,7 +525,7 @@ with Emacs’ buffers.
 My music is managed through MPD, and I often use ~playerctl~ commands in
 order to interact with it without any GUI application. So, we’ll see a
 lot of its usage here, and numerous commands used here come from the
-~mpd~ minor mode loaded [[file:./stumpwm.md#init-file][above]].
+~mpd~ minor mode loaded [[file:init.md][in the init file]].
 
 First, let’s declare an interactive keymap in order to easily change
 several times in a row either the current song playing or the volume

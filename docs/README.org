@@ -18,13 +18,5 @@ keys or whose remap feature is kind of buggy with some keys, such as
 the «é» placed where the «w» is on a Qwerty layout (I’m looking at
 you, HoloCure).
 
-** Installation
-If you wish to install my dotfiles and you are on ArchLinux, you can
-follow the [[file:bootstrap.org][bootstrap]] page where you can find a walkthrough of how I
-configure my environment and what I install. If you have [[https://github.com/TheLocehiliosan/yadm][YADM]]
-installed, you can even execute =yadm bootstrap= to execute it after
-cloning my repo with =yadm clone
-https://labs.phundrak.com/phundrak/dotfiles.git=.
-
 ** License
 See [[https://labs.phundrak.com/phundrak/dotfiles/src/branch/master/LICENSE.org][the repository’s license file]].

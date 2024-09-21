@@ -97,7 +97,7 @@ formatter is U+E082, which symbolizes the CPU.
 *** Generating the Mode-Line
 We can indicate what to display in our modeline. Each formatter will
 be separated by a Powerline separator with the code point ~0xE0B0~ in
-the font I am using (see [[file:./stumpwm.md#fonts][Fonts]]).
+the font I am using (see [[file:theme.md#fonts][Theme » Fonts]]).
 
 #+name: modeline-format
 #+caption: Formatters for the modeline

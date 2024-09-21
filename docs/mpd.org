@@ -11,8 +11,7 @@ It can be manipulated by various front-end applications, such as the
 command-line utility ~mpc~, TUI ~ncmpcpp~, or GUI ~cantata~. In my case, I
 use mainly ~ncmpcpp~ and Emacs’ EMMS.
 
-On my computer, MPD runs as a user daemon, as seen in [[file:bootstrap.org::#Execute_bootstrap-Enable_some_services-Mpd-f0f5b9b7][my bootstrap
-file here]].
+On my computer, MPD runs as a user daemon.
 
 ** Required Parameters
 MPD requires a few compulsory parameters that we will see below.
