@@ -235,7 +235,7 @@ Keywords=Text;Editor;
 #+end_src
 
 I also have ~mu4e.desktop~ which is used to set my default email client.
-It relies on ~emacsmail~ defined in [[file:bin.org::#Emacsmail-afffb7cd][this document]].
+It relies on ~emacsmail~ defined in [[file:./scripts.md#emacsmail][this document]].
 #+begin_src conf-desktop :tangle ~/.local/share/applications/mu4e.desktop
 [Desktop Entry]
 Name=Mu4e
@@ -344,7 +344,7 @@ Type=Application
 
 *** YouTube ~.desktop~ files
 The first ~.desktop~ file related to YouTube is ~ytdl.desktop~ which runs
-~ytdl~ defined in [[file:bin.org::#ytdl-a-youtube-dl-wrapper-03bd63e0][this document]].
+~ytdl~ defined in [[file:scripts.md#ytdl][this document]].
 #+begin_src conf-desktop :tangle ~/.local/share/applications/ytdl.desktop
 [Desktop Entry]
 Version=0.3
@@ -357,7 +357,7 @@ Type=Application
 Categories=Network;Video
 #+end_src
 
-There is also ~ytplay.desktop~ for ~ytplay~ defined in [[file:bin.org::#Media-youtube-dl-wrappers-ytplay-z6ka39h0m9j0][this document]].
+There is also ~ytplay.desktop~ for ~ytplay~ defined in [[file:scripts.md#ytplay][this document]].
 #+begin_src conf-desktop
 [Desktop Entry]
 Type=Application
