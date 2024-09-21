@@ -14,12 +14,12 @@ jobs:
           version: 29.1
       - name: "Export org to md"
         run: emacs -Q --script export.el
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
       - run: corepack enable
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - run: npm ci
+      - run: npm run build
       - name: "Deploy to remote server"
         uses: appleboy/scp-action@v0.1.4
         with:
