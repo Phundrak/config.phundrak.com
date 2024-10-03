@@ -357,6 +357,7 @@ document.
     "r" #'writegood-reading-ease))
 #+end_src
 
+**** TODO Auto detection of langtool java classpath              :noexport:
 ** DSLs
 DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
