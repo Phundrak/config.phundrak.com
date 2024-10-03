@@ -188,6 +188,7 @@ My buffer-related keybindings are all prefixed by ~b~.
 | n   | next-buffer                        |             |           |
 | p   | previous-buffer                    |             |           |
 | r   | counsel-buffer-or-recentf          |             | counsel   |
+| R   | rename-uniquely                    |             |           |
 | s   | switch-to-scratch-buffer           |             |           |
 
 ** Code
