@@ -1671,43 +1671,5 @@ Tide enabled interactivity with Typescript.
     "roi" #'tide-organize-imports))
 #+end_src
 
-*** Zig
-[[https://ziglang.org/][Zig]] is to C kind of what Rust is to C++: a modern replacement without
-sacrificing performance. It is much safer than C while providing
-interop with it. Plus, its [[https://ziglang.org/documentation/master/std/][standard library]] is pretty complete.
-
-First, here is its major mode.
-#+begin_src emacs-lisp
-(use-package zig-mode
-  :defer t
-  :straight (:build t)
-  :after flycheck
-  :hook (zig-mode . lsp-deferred)
-  :config
-  ;; This is from DoomEmacs
-  (flycheck-define-checker zig
-    "A zig syntax checker using the zig-fmt interpreter."
-    :command ("zig" "fmt" (eval (buffer-file-name)))
-    :error-patterns
-    ((error line-start (file-name) ":" line ":" column ": error: " (message) line-end))
-    :modes zig-mode)
-  (add-to-list 'flycheck-checkers 'zig)
-  :general
-  (phundrak/major-leader-key
-   :keymaps 'zip-mode-map
-   :packages 'lsp-mode
-   "l"  '(:keymap lsp-command-map :which-key "lsp"))
-  (phundrak/major-leader-key
-    :packages 'zig-mode
-    :keymaps 'zig-mode-map
-    "c" #'zig-compile
-    "f" #'zig-format-buffer
-    "r" #'zig-run
-    "t" #'zig-test-buffer))
 #+end_src
 
-For LSP to work, we need ~zls~ to be installed. In my case, as I am on
-Arch Linux, I can install it from the AUR, and my AUR helper is ~paru~.
-#+begin_src fish :results raw :wrap "src text" :exports code
-paru --skipreview --noconfirm -S zls-bin 2>&1
-#+end_src
