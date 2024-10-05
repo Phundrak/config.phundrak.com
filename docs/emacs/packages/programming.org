@@ -20,7 +20,8 @@ variables to install grammars for different languages.
           json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
           css-ts-mode yaml-ts-mode) . lsp-deferred)
   :init
-  (setq treesit-language-source-alist
+  (setq treesit-font-lock-level 4
+        treesit-language-source-alist
         '((astro "https://github.com/virchau13/tree-sitter-astro")
           (bash "https://github.com/tree-sitter/tree-sitter-bash")
           (c "https://github.com/tree-sitter/tree-sitter-c")
