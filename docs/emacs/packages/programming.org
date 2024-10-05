@@ -289,6 +289,7 @@ You can find the keybinds of Treemacs here.
     [remap xref-find-apropos] #'consult-lsp-symbols))
 #+end_src
 
+*** dap-mode
 ~dap-mode~ is an advanced debugging mode that works through LSP. Note
 that currently, ~dap-firefox~ and ~dap-chrome~ don’t work correctly due to
 [[https://github.com/emacs-lsp/dap-mode/issues/547][this issue]]. A workaround can be found in [[https://github.com/emacs-lsp/dap-mode/issues/554#issuecomment-1171256089][this comment]] though.
