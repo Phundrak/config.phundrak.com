@@ -1671,5 +1671,16 @@ Tide enabled interactivity with Typescript.
     "roi" #'tide-organize-imports))
 #+end_src
 
+**** Vue
+There isn’t really any configuration in this heading, but an important
+note concerning the usage of LSP with Vue. If the packages =typescript=
+and =vue-tsc= are not in the =package.json= of a project, =volar= (or
+=vue-semantic-server= according to =lsp-mode=) won’t start properly. The
+simplest fix is to run the following command:
+#+begin_src sh
+npm install --save-dev vue-tsc typescript
 #+end_src
+Or replace =npm= with whichever package manager you prefer.
 
+If you want to work with Vue in Emacs, =web-mode= is more than enough
+when paired with an LSP server.
