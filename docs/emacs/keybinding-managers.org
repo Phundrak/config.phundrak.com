@@ -1,7 +1,7 @@
 #+title: Emacs — Keybinding Managers
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/keybinding-managemers.el
+#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/keybinding-managers.el
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 * Keybinding Managers
