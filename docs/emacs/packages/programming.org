@@ -60,8 +60,8 @@ it is.
                       :host github
                       :repo "Phundrak/appwrite.el")
   :config
-  (csetq appwrite-endpoint "https://appwrite.phundrak.com"
-         appwrite-devel t))
+  (setopt appwrite-endpoint "https://appwrite.phundrak.com"
+          appwrite-devel t))
 #+end_src
 
 *** Databases
@@ -1419,11 +1419,11 @@ languages in the same buffer, mainly HTML, CSS, and JavaScript.
          ("\\.djhtml\\'"     . web-mode)
          ("\\.vue\\'"        . web-mode))
   :config
-  (csetq web-mode-markup-indent-offset 2
-         web-mode-code-indent-offset   2
-         web-mode-css-indent-offset    2
-         web-mode-style-padding        0
-         web-mode-script-padding       0)
+  (setopt web-mode-markup-indent-offset 2
+          web-mode-code-indent-offset   2
+          web-mode-css-indent-offset    2
+          web-mode-style-padding        0
+          web-mode-script-padding       0)
   :general
   (phundrak/major-leader-key
    :keymaps 'web-mode-map

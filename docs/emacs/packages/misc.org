@@ -25,16 +25,16 @@ it bépo-compatible.
   :defer t
   :straight t
   :config
-  (csetq avy-keys           '(?a ?u ?i ?e ?c ?t ?s ?r ?n)
-         avy-dispatch-alist '((?x . avy-action-kill-move)
-                              (?X . avy-action-kill-stay)
-                              (?T . avy-action-teleport)
-                              (?m . avy-action-mark)
-                              (?C . avy-action-copy)
-                              (?y . avy-action-yank)
-                              (?Y . avy-action-yank-line)
-                              (?I . avy-action-ispell)
-                              (?z . avy-action-zap-to-char)))
+  (setopt avy-keys           '(?a ?u ?i ?e ?c ?t ?s ?r ?n)
+          avy-dispatch-alist '((?x . avy-action-kill-move)
+                               (?X . avy-action-kill-stay)
+                               (?T . avy-action-teleport)
+                               (?m . avy-action-mark)
+                               (?C . avy-action-copy)
+                               (?y . avy-action-yank)
+                               (?Y . avy-action-yank-line)
+                               (?I . avy-action-ispell)
+                               (?z . avy-action-zap-to-char)))
   (defun my/avy-goto-url ()
     "Jump to url with avy."
     (interactive)
@@ -71,12 +71,12 @@ What’s the point of using Emacs if you can’t tell everyone?
   :straight (:built t)
   :defer t
   :config
-  (csetq elcord-use-major-mode-as-main-icon t
-         elcord-refresh-rate                5
-         elcord-boring-buffers-regexp-list  `("^ "
-                                              ,(rx "*" (+ any) "*")
-                                              ,(rx bol (or "Re: "
-                                                           "Fwd: ")))))
+  (setopt elcord-use-major-mode-as-main-icon t
+          elcord-refresh-rate                5
+          elcord-boring-buffers-regexp-list  `("^ "
+                                               ,(rx "*" (+ any) "*")
+                                               ,(rx bol (or "Re: "
+                                                            "Fwd: ")))))
 #+end_src
 
 ** Elpher

@@ -81,20 +81,20 @@ Since Emacs 29, it is possible to enable drag-and-drop between Emacs
 and other applications.
 #+name: dired-drag-and-drop
 #+begin_src emacs-lisp :tangle no
-(csetq dired-mouse-drag-files                   t
-       mouse-drag-and-drop-region-cross-program t)
+(setopt dired-mouse-drag-files                   t
+        mouse-drag-and-drop-region-cross-program t)
 #+end_src
 
 In Dirvish, it’s best to use the long name of flags whenever possible,
 otherwise some commands won’t work.
 #+name: dired-listing-flags
 #+begin_src emacs-lisp :tangle no
-(csetq dired-listing-switches (string-join '("--all"
-                                             "--human-readable"
-                                             "--time-style=long-iso"
-                                             "--group-directories-first"
-                                             "-lv1")
-                                           " "))
+(setopt dired-listing-switches (string-join '("--all"
+                                              "--human-readable"
+                                              "--time-style=long-iso"
+                                              "--group-directories-first"
+                                              "-lv1")
+                                            " "))
 #+end_src
 
 However, it is possible to instead use =eza= when it is available (it’s
@@ -121,12 +121,12 @@ files and images.
       (my/dir (lambda (path &optional dir)
                 (expand-file-name (file-name-as-directory path)
                                   (or dir user-emacs-directory)))))
-  (csetq image-dired-thumb-size             150
-         image-dired-dir                    (funcall my/dir "dired-img")
-         image-dired-db-file                (funcall my/file "dired-db.el")
-         image-dired-gallery-dir            (funcall my/dir "gallery")
-         image-dired-temp-image-file        (funcall my/file "temp-image" image-dired-dir)
-         image-dired-temp-rotate-image-file (funcall my/file "temp-rotate-image" image-dired-dir)))
+  (setopt image-dired-thumb-size             150
+          image-dired-dir                    (funcall my/dir "dired-img")
+          image-dired-db-file                (funcall my/file "dired-db.el")
+          image-dired-gallery-dir            (funcall my/dir "gallery")
+          image-dired-temp-image-file        (funcall my/file "temp-image" image-dired-dir)
+          image-dired-temp-rotate-image-file (funcall my/file "temp-rotate-image" image-dired-dir)))
 #+end_src
 
 Copying files with Dired is a blocking process. It’s usually fine when
@@ -461,10 +461,10 @@ supported natively. I will describe them here.
   :straight (tramp :type built-in :build t)
   :config
   <<tramp-add-yadm>>
-  (csetq tramp-ssh-controlmaster-options nil
-         tramp-verbose 0
-         tramp-auto-save-directory (locate-user-emacs-file "tramp/")
-         tramp-chunksize 2000)
+  (setopt tramp-ssh-controlmaster-options nil
+          tramp-verbose 0
+          tramp-auto-save-directory (locate-user-emacs-file "tramp/")
+          tramp-chunksize 2000)
   (add-to-list 'backup-directory-alist ; deactivate auto-save with TRAMP
                (cons tramp-file-name-regexp nil)))
 #+end_src

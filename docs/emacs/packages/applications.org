@@ -409,13 +409,13 @@ configuration for the ~mu4e~ package itself.
   <<mu4e-ical-setup>>
   <<mu4e-ical-init-config>>
 
-  (csetq mu4e-completing-read-function 'completing-read
-         mu4e-use-fancy-chars          t
-         message-kill-buffer-on-exit   t
-         mu4e-org-support              nil)
+  (setopt mu4e-completing-read-function 'completing-read
+          mu4e-use-fancy-chars          t
+          message-kill-buffer-on-exit   t
+          mu4e-org-support              nil)
   (let ((dir (concat (getenv "HOME") "/Downloads/mu4e")))
     (when (file-directory-p dir)
-      (csetq mu4e-attachment-dir dir)))
+      (setopt mu4e-attachment-dir dir)))
   (defmacro mu4e-view-mode--prepare ()
     `(lambda () (visual-line-mode 1)))
   :gfhook ('mu4e-view-mode-hook (mu4e-view-mode--prepare))
@@ -1331,7 +1331,7 @@ dark mode for PDFs.
     "m"  'pdf-view-midnight-minor-mode)
   :config
   (with-eval-after-load 'pdf-view
-    (csetq pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
+    (setopt pdf-view-midnight-colors '("#d8dee9" . "#2e3440"))))
 #+end_src
 
 One thing ~pdf-tools~ doesn’t handle is restoring the PDF to the last
@@ -1365,8 +1365,8 @@ doing and what Git is doing! In short, I absolutely love it!
   :config
   (add-hook 'magit-process-find-password-functions 'magit-process-password-auth-source)
   <<magit-angular-keywords-highlight>>
-  (csetq magit-clone-default-directory "~/fromGIT/"
-         magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (setopt magit-clone-default-directory "~/fromGIT/"
+          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (with-eval-after-load 'evil-collection
     (phundrak/evil
       :packages '(evil-collection magit)
