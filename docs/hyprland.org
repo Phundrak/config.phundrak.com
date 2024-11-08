@@ -362,7 +362,7 @@ It is sort of the general menu for my keybindings.
 #+name: apps-submap
 | Modifiers | Key | Action | Argument          | Submap |
 |-----------+-----+--------+-------------------+--------|
-|           | b   | exec   | =firefox=           | reset  |
+|           | b   | exec   | =zen-browser=       | reset  |
 | SHIFT     | b   | exec   | =qutebrowser=       | reset  |
 |           | d   | exec   | =vesktop=           | reset  |
 |           | e   | exec   | =emacsclient -c -n= | reset  |

@@ -119,9 +119,9 @@ It’s always nice to have the =BROWSER= variable available in case you
 want to do stuff with scripts and your default browser.
 
 #+name: browser
-| Variable | Value   |
-|----------+---------|
-| =BROWSER=  | =firefox= |
+| Variable | Value       |
+|----------+-------------|
+| =BROWSER=  | =zen-browser= |
 
 #+begin_src sh
 <<export-variables(browser)>>

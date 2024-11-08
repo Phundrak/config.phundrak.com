@@ -41,7 +41,7 @@
 
 #+begin_src conf-unix
 [web]
-	browser = firefox
+	browser = zen-browser
 #+end_src
 
 ** Aliases
