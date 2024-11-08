@@ -126,13 +126,13 @@ fi
 ** cli utilities
 *** Backup
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/backup
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/backup
 :END:
 ~backup~ is a very simple, one-liner script that will create a local
 copy of a file and add the date at which it was copied in the
 filename. You can see its source code here:
-#+BEGIN_SRC fish
-cp -r $argv[1] $argv[1].bak.(date +"%Y%m%d%H%M%S")
+#+BEGIN_SRC sh
+cp -r "$1" "$1.bak.$(date +%Y%m%d%H%M%S)"
 #+END_SRC
 
 *** CPU Scaling
@@ -309,15 +309,15 @@ fi
 
 *** sshbind
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/sshbind
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/sshbind
 :END:
 Something that I did not know for quite some time, but that is
 actually crazy useful about SSH is its ability to bind locally the
 port of a remote machine, and vice versa. The syntax is actually very
 simple, but I prefer a more intuitive way of writing it. Its usage is
 ~sshbind PORT FROMHOST TOHOST~.
-#+BEGIN_SRC fish
-ssh -L $argv[1]:$argv[3]:$argv[1] $argv[2] -N
+#+BEGIN_SRC sh
+ssh -L "$1:$3:$1" "$2" -N
 #+END_SRC
 
 *** Nsxiv key handler
@@ -452,70 +452,13 @@ tr -cd '[:alnum:]' < /dev/urandom | fold -w 64 | head -n 1 | tr -d '\n'
 
 *** Starwars
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/starwars
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/starwars
 :END:
 This is a one-liner that allows you to watch Star Wars episode 4 in ASCII art in
 your terminal. Here is the code:
-#+BEGIN_SRC fish
+#+BEGIN_SRC sh
 telnet towel.blinkenlights.nl
 #+END_SRC
-
-*** Toggle touchpad tapping
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/tttapping
-:END:
-For some reason, my firmware does not recognize the function key for
-toggling the touchpad. I’m not going to really complain about it since
-it lets me program it like I want. Since I often don’t need to
-completely deactivate the touchpad, I’ll instead toggle whether
-tapping is enabled or not when pressing ~XF86TouchpadToggle~. And for
-that, I need this small script that will actually toggle it, and it
-will be used in my window manager configuration.
-
-First let’s declare some variables to make this script more personal. With my
-current computer (a Gazelle by System76), the name of my touchpad is the
-following:
-#+BEGIN_SRC fish
-set TPNAME "ELAN0412:00 04F3:3162 Touchpad"
-#+END_SRC
-
-Let’s now get the identifier of the touchpad for ~xinput~:
-#+BEGIN_SRC fish
-set TPID (xinput list | grep $TPNAME | awk '{print $6}' | sed 's|id=\(.*\)|\1|g')
-#+END_SRC
-
-Now, let’s detect the current status of the touchpad:
-#+BEGIN_SRC fish
-set TPSTATUS (xinput list-props $TPID | grep "Tapping Enabled" | \
-              grep -v "Default" | awk '{print $5}')
-#+END_SRC
-
-This will set ~TPSTATUS~ either to ~0~, meaning tapping is disabled, or to ~1~,
-meaning it’s enabled. I will consider any other value as being disabled.
-#+BEGIN_SRC fish
-test [[ $TPSTATUS = "1" ]] && set NEWTPSTATUS 0 || set NEWTPSTATUS 1
-#+END_SRC
-
-Finally, let’s update the touchpad’s options:
-#+BEGIN_SRC fish
-xinput set-prop $TPNAME "libinput Tapping Enabled" $NEWTPSTATUS
-#+END_SRC
-
-*** Wacom setup
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/wacom-setup
-:END:
-I made a small and quick utility to set up my Wacom tablet to bind it
-to one screen when in Xorg. This is quite easy, we simply need to find
-the Wacom stylus’ ID and assign it to the display we want.
-#+begin_src sh
-ID=$(xinput | grep -oPi "wacom.+stylus.+id=\K([0-9]+)")
-SCREEN=$(xrandr -q --current | \
-             grep -iPo '^([^ ])+(?= connected)' | \
-             rofi -dmenu -i -p 'Select your display' | \
-             tr -d '\n')
-xinput map-to-output "$ID" "$SCREEN"
-#+end_src
 
 ** Emacs stuff
 *** Dired
@@ -568,35 +511,36 @@ fi
 ** Media
 *** mp42webm
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/mp42webm
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/mp42webm
 :END:
 This function allows me to convert easily a MP4 video to the webm
 format. Nothing too fancy here.
-#+BEGIN_SRC fish
-ffmpeg -i $argv[1] -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis $argv[1].webm
+#+BEGIN_SRC sh
+ffmpeg -i "$1" -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis "$1".webm
 #+END_SRC
 
 *** youtube-dl wrappers
 **** ytplay
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytplay
+:HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/ytplay
 :END:
 ~ytplay~ is a simple script I’ve written that allows me to play in MPV
 any YouTube video at the desired resolution. The script relies on
 ~dmenu~ (or ~rofi~ in dmenu-mode), ~youtube-dl~ and of course ~mpv~ itself.
-#+BEGIN_SRC fish
-set URL (rofi -dmenu -i -p "Video URL")
-if test -n "$URL"
-    set FORMAT                              \
-        (youtube-dl --list-formats "$URL" | \
-        egrep "webm.*[0-9]+x[0-9]+"       | \
-        awk '{print $3 " " $1}'           | \
-        sort -gu                          | \
-        rofi -dmenu -i -p "Resolution"    | \
-        string split " ")
-    set FCODE $FORMAT[2]
-    mpv --ytdl-format=$FCODE+bestaudio/best "$URL"
-end
+#+BEGIN_SRC bash
+URL=$(rofi -dmenu -i -p "Video URL")
+if [ -z "$URL" ]; then
+    echo "You need to provide a URL"
+    exit 1
+fi
+RESOLUTION_CHOICE=$(yt-dlp --list-formats "$URL" | \
+                        grep -E "webm.*[0-9]+x[0-9]" | \
+                        awk '{print $3 " " $1}' | \
+                        sort -gu | \
+                        rofi -dmenu -i -p "Resolution")
+mapfile -t RESOLUTION <<< "$RESOLUTION_CHOICE"
+RESOLUTION_CODE=${RESOLUTION[0]}
+mpv --ytdl-format="${RESOLUTION_CODE}+bestaudio/best" "$URL"
 #+END_SRC
 
 I’ll even add a ~.desktop~ entry for this script:
@@ -611,436 +555,6 @@ Path=/home/phundrak/.local/bin
 Terminal=false
 Categories=Media
 #+END_SRC
-
-**** ytdl - a ~youtube-dl~ wrapper
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/ytdl
-:HEADER-ARGS:EMACS-LISP: :exports none :tangle no
-:END:
-This script is a wrapper around ~youtube-dl~ which I use mainly for
-archiving YouTube videos on my NAS (at the time I’m writing this, I
-have already 2.1 TB worth of videos archived). The principle behind
-this script is quite simple: I want to avoid as much as possible to
-redownload any video already downloaded in order to avoid pinging too
-much YouTube’s servers, 429 Too Many Requests errors are really
-annoying, and it comes really early when you have only a couple of new
-videos to download among the few 14k videos already downloaded.
-
-Be aware this script was written for the Fish shell (3.1.0 and above), and makes
-use of youtube-dl 2020.03.24 and above, [[https://github.com/jorgebucaran/fish-getopts][Fish getopts]] and [[https://github.com/BurntSushi/ripgrep][ripgrep]].
-
-***** Setting default values
-Some variables in this script will have default values, we do not want to have a
-mile-long command each time we wish to download a single video. We’ll also set
-some global variables that won’t change:
-#+NAME: ytdl-default-vars
-| Variable Name    | Default Value                                             | String? |
-|------------------+-----------------------------------------------------------+---------|
-| ~YTDL_SHARED_DIR~  | ~$HOME/.local/share/ytdl~                                   | no      |
-| ~FORMAT_DEFAULT~   | ~%(uploader)s/%(upload_date)s ~- ~%(title)s.%(ext)s~          | yes     |
-| ~DOWNFILE_DEFAULT~ | ~$YTDL_SHARED_DIR/downloaded~                               | no      |
-| ~ERRFILE_DEFAULT~  | ~$YTDL_SHARED_DIR/video-errors~                             | no      |
-| ~LOGFILE_DEFAULT~  | ~$YTDL_SHARED_DIR/ytdl.log~                                 | no      |
-| ~PREFFERED_FORMAT~ | ~bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio~ | yes     |
-| ~VERSION~          | ~0.3~                                                       | yes     |
-
-There is one more default variable pointing to ytdl’s root directory which
-depends on whether the videos directory has a French or English name:
-#+NAME: ytdl-default-vars-root
-#+BEGIN_SRC fish :tangle no
-if test -d "$HOME/Vidéos"
-    set -g ROOTDIR_DEFAULT "$HOME/Vidéos" # French name
-else
-    set -g ROOTDIR_DEFAULT "$HOME/Videos" # English name
-end
-#+END_SRC
-
-#+NAME: ytdl-default-vars-make
-#+header:  :wrap "src fish :tangle no"
-#+BEGIN_SRC emacs-lisp :var vars=ytdl-default-vars :exports results
-(let ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str))))
- (mapconcat (lambda (var)
-              (let ((varname  (funcall clean-string (car  var)))
-                    (varvalue (funcall clean-string (cadr var)))
-                    (string?  (string= (nth 2 var) "yes")))
-                (format "set -g %-16s \"%s\"" varname varvalue)))
-            vars
-            "\n"))
-#+END_SRC
-
-#+RESULTS: ytdl-default-vars-make
-#+begin_src fish :tangle no
-set -g YTDL_SHARED_DIR  "$HOME/.local/share/ytdl"
-set -g FORMAT_DEFAULT   "%(uploader)s/%(upload_date)s - %(title)s.%(ext)s"
-set -g DOWNFILE_DEFAULT "$YTDL_SHARED_DIR/downloaded"
-set -g ERRFILE_DEFAULT  "$YTDL_SHARED_DIR/video-errors"
-set -g LOGFILE_DEFAULT  "$YTDL_SHARED_DIR/ytdl.log"
-set -g PREFFERED_FORMAT "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio"
-set -g VERSION          "0.3"
-#+end_src
-
-#+BEGIN_SRC fish :noweb yes
-<<ytdl-default-vars-make()>>
-<<ytdl-default-vars-root>>
-#+END_SRC
-
-We’ll also create the directory pointed at by ~YTDL_SHARED_DIR~ if it doesn’t
-exist already:
-#+BEGIN_SRC fish
-mkdir -p $YTDL_SHARED_DIR
-#+END_SRC
-
-***** Help message
-The next step is displaying the help message for the script. For that, just a
-long string echo’d will do, wrapped in the function ~_ytdl_help~.
-#+BEGIN_SRC fish
-function _ytdl_help
-    echo "Usage: ytdl [OPTION]... URL [URL]...
-
-    -4, --ipv4
-        Download with forced IPv4
-        Default: no
-
-    -6, --ipv6
-        Download with forced IPv6
-        Default: no
-
-    -a, --batch-file <file>
-        File containing URLs to download, one URL per line. Lines starting with
-        '#', ';' or ']' are considered as comments and ignored.
-        Default: None
-
-    -c, --id-cache <file>
-        File containing the video IDs that were already downloaded, one ID per
-        line.
-        Default: $DOWNFILE_DEFAULT
-
-    -d, --directory <dir>
-        Root directory in which to download videos.
-        Default: $ROOTDIR_DEFAULT
-
-    -e, --error-file <file>
-        File containing the IDs of videos that failed to download, one ID per
-        line
-        Default: $ERRFILE_DEFAULT
-
-    -f, --format <format>
-        Format name for downloaded videos, including path relative to root
-        directory
-        Default: $FORMAT_DEFAULT
-
-    -l, --logs <file>
-        File in which to store logs.
-        Default: $LOGFILE_DEFAULT
-
-    -V, --verbose
-        Show verbose output
-        Default: no
-
-    -v, --version
-        Show version of ytdl.
-
-    -h, --help
-        Shows this help message"
-end
-#+END_SRC
-
-We also have the function ~_ytdl_version~ to display the current version of
-~ytdl~:
-#+BEGIN_SRC fish
-function _ytdl_version
-    echo "ytdl 0.3, developped for fish 3.1.0 and youtube-dl 2020.03.24 or newer"
-    echo "requires Fish getopts <https://github.com/jorgebucaran/fish-getopts>"
-    echo "and ripgrep <https://github.com/BurntSushi/ripgrep>"
-end
-#+END_SRC
-
-***** Arguments Handling
-The function ~_ytdl_parse_ops~ is a little bit trickier: we use ~getopts~ to
-parse the arguments passed to the script in order to get some preferences from
-the user. Here is a quick reference on what options are available and what they
-do:
-#+NAME: ytdl-table-arguments
-| Short | Long       | Takes a value? | Associated Variable | Default Value     | What it does         |
-|-------+------------+----------------+---------------------+-------------------+----------------------|
-| 4     | ipv4       | no             | ~IPV4~                | None              | Force IPv4           |
-| 6     | ipv6       | no             | ~IPV6~                | None              | Force IPv6           |
-| a     | batch-file | yes            | ~FILE~                | None              | Batch file           |
-| c     | cache      | yes            | ~DOWNFILE~            | ~$DOWNFILE_DEFAULT~ | Cache file           |
-| d     | directory  | yes            | ~ROOTDIR~             | ~$ROOTDIR_DEFAULT~  | Root directory       |
-| e     | error-file | yes            | ~ERRFILE~             | ~$ERRFILE_DEFAULT~  | Error logs           |
-| f     | format     | yes            | ~FORMAT~              | ~$FORMAT_DEFAULT~   | Filename format      |
-| l     | logs       | yes            | ~LOGFILE~             | ~$LOGFILE_DEFAULT~  | Logs                 |
-| V     | verbose    | no             | ~VERBOSE~             | ~1~                 | Verbose output       |
-| v     | version    | command        | None                | None              | Script version       |
-| h     | help       | command        | None                | None              | Display this message |
-
-We can also pass individual YouTube URLs without any options or switches
-associated to them, they will be downloaded as part of a single queue.
-
-#+NAME: ytdl-arg-handling-gen
-#+header: :cache yes :wrap "src fish :tangle no :exports code"
-#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments :exports results
-(let ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str))))
-    (mapconcat (lambda (arg)
-                 (let* ((short (format "%s" (nth 0 arg)))
-                        (long  (nth 1 arg))
-                        (arg?  (string= "yes" (nth 2 arg)))
-                        (var   (unless (string= "None" (nth 3 arg))
-                                 (funcall clean-string (nth 3 arg)))))
-                   (format "case %s %s\n\t%s"
-                           short long
-                           (if var (format "set -g %s %s" var
-                                           (if arg? "$value" ""))
-                             (format "_ytdl_%s && exit"
-                                     (if (string= "h" short) "help" "version"))))))
-               args
-               "\n"))
-#+END_SRC
-
-#+RESULTS[df04709ff17a3d37a20528a5066a2efcda0cad5c]: ytdl-arg-handling-gen
-#+begin_src fish :tangle no :exports code
-case 4 ipv4
-        set -g IPV4
-case 6 ipv6
-        set -g IPV6
-case a batch-file
-        set -g FILE $value
-case c cache
-        set -g DOWNFILE $value
-case d directory
-        set -g ROOTDIR $value
-case e error-file
-        set -g ERRFILE $value
-case f format
-        set -g FORMAT $value
-case l logs
-        set -g LOGFILE $value
-case V verbose
-        set -g VERBOSE
-case v version
-        _ytdl_version && exit
-case h help
-        _ytdl_help && exit
-#+end_src
-
-The following shows how ~getopts~ is used to catch the options and switches
-passed to the script:
-#+NAME: ytdl-getopts
-#+BEGIN_SRC fish :noweb yes :tangle no
-getopts $argv | while read -l key value
-    switch $key
-        <<ytdl-arg-handling-gen()>>
-        case _
-            for v in $value
-                set -g VIDEOS $VIDEOS $v
-            end
-    end
-end
-#+END_SRC
-
-#+NAME: ytdl-arg-set-default-value-gen
-#+header: :cache yes :wrap "src fish :tangle no :exports code"
-#+BEGIN_SRC emacs-lisp :var args=ytdl-table-arguments
-(let* ((clean-string (lambda (str) (replace-regexp-in-string "~" "" str)))
-       (args (seq-filter (lambda (arg)
-                           (let* ((var     (unless (string= "None" (nth 3 arg))
-                                             (funcall clean-string (nth 3 arg))))
-                                  (default (funcall clean-string (format "%s" (nth 4 arg))))
-                                  (default (unless (string= "None" default)
-                                             default)))
-                             (and var default)))
-                         args)))
-  (mapconcat (lambda (arg)
-               (let* ((var     (funcall clean-string (nth 3 arg)))
-                      (default (funcall clean-string (format "%s" (nth 4 arg)))))
-                 (format "if set -q $%s\n\tset -g %s %s\nend"
-                         var var default)))
-             args
-             "\n"))
-#+END_SRC
-
-#+RESULTS[5a32e875ea434a3522bd2272f4e5fd422d722dca]: ytdl-arg-set-default-value-gen
-#+begin_src fish :tangle no :exports code
-if set -q $DOWNFILE
-        set -g DOWNFILE $DOWNFILE_DEFAULT
-end
-if set -q $ROOTDIR
-        set -g ROOTDIR $ROOTDIR_DEFAULT
-end
-if set -q $ERRFILE
-        set -g ERRFILE $ERRFILE_DEFAULT
-end
-if set -q $FORMAT
-        set -g FORMAT $FORMAT_DEFAULT
-end
-if set -q $LOGFILE
-        set -g LOGFILE $LOGFILE_DEFAULT
-end
-if set -q $VERBOSE
-        set -g VERBOSE 1
-end
-#+end_src
-
-Some values need to be set to their default, so let’s assign them their value if
-no user value was passed:
-#+NAME: ytdl-arg-set-default-value
-#+BEGIN_SRC fish :noweb yes :tangle no
-<<ytdl-arg-set-default-value-gen()>>
-set -g FORMAT "$ROOTDIR/$FORMAT"
-#+END_SRC
-
-Both these code blocks are executed in ~_ytdl_parse_ops~:
-#+BEGIN_SRC fish :noweb yes
-function _ytdl_parse_ops
-    <<ytdl-getopts>>
-    <<ytdl-arg-set-default-value>>
-end
-#+END_SRC
-
-***** Logging
-~_ytdl_log~ is a very simple function used for logging information for the user
-in the file pointed to by ~LOGFILE~. The first argument the function should
-receive is its log level. I generally use either ~"INFO"~ or ~"ERR"~. The second
-argument is the message to log.
-#+BEGIN_SRC fish
-function _ytdl_log
-    set -l INFOLEVEL $argv[1]
-    set -l MSG $argv[2]
-    set -l LOG (printf "[%s] %s %s\n" $INFOLEVEL (date +"%F %T") $MSG)
-    printf "%s\n" $LOG >> $LOGFILE
-    if test $VERBOSE -eq 1
-        echo $LOG
-    end
-end
-#+END_SRC
-
-***** Download a Single Video
-In order to download a single video, a simple function has been
-written for this that will display when downloaded how far it is down
-the list of videos to be downloaded, and it will add its ID to the
-file listing all videos downloaded. The script will also try to
-download the video according to the ~PREFFERED_FORMAT~ variable, but if
-the download fails it will download the default format selected by
-~youtube-dl~. If both downloads fail, the ID of the video will be added
-to the list of failed videos. If one of the downloads succeeds, it
-will remove the ID from the list of failed downloads.
-
-The first argument of the function is the video ID from YouTube, the second
-argument is the position of the video in the queue, and the third argument is
-the queue length –can be the amount of videos in a whole YouTube channel, the
-amount of videos in a playlist, or simply the amount of YouTube URLs passed as
-arguments to the script.
-#+BEGIN_SRC fish
-function _ytdl_download_video
-    set ID $argv[1]
-    _ytdl_log "INFO" (printf "Downloading video with ID $ID (%4d/%4d)" $argv[2] $argv[3])
-    if youtube-dl -f $PREFFERED_FORMAT -ciw -o $FORMAT "https://youtube.com/watch?v=$ID"
-        echo $ID >> $DOWNFILE
-    else if youtube-dl -ciw -o $FORMAT "https://youtube.com/watch?v=$ID"
-        echo $ID >> $DOWNFILE
-    else
-        _ytdl_log "ERR" "Could not download $VIDEO"
-        echo $ID >> $ERRFILE
-    end
-end
-#+END_SRC
-
-/Note that this function is not meant to be called without any checks before./
-It is meant to be called by ~_ytdl_download_queue~ described below.
-
-***** Download a Queue of Videos
-One of the main goals of this tool is to check if a video has already been
-downloaded. This is why, as you will see below, we use ripgrep to check if the
-ID of the video we want to download is already present in the list of downloaded
-videos. If not, it will then be downloaded though ~_ytdl_download_video~
-described above.
-#+BEGIN_SRC fish
-function _ytdl_download_queue
-    for i in (seq (count $argv))
-        rg -- $argv[$i] $DOWNFILE 2&> /dev/null
-        if test $status -ne 0
-            _ytdl_download_video $argv[$i] $i (count $argv)
-        end
-    end
-end
-#+END_SRC
-
-***** Download Videos From Arguments
-The main aim of this function is to transform the URLs contained in the
-arguments passed to the script to a list of IDs usable later on by ~ytdl~.
-#+BEGIN_SRC fish
-function _ytdl_download_arg_urls
-    set -g IDs
-    for VIDEO in $argv
-        _ytdl_log "Info" "Getting video ID for $VIDEO"
-        set -g IDs $IDs (youtube-dl --get-id $VIDEO)
-    end
-    _ytdl_download_queue $IDs
-end
-#+END_SRC
-
-***** Download Videos From a Batch File
-The final function to declare before the main body of the script is
-~_ytdl_download_batch~: it will look for each line, ignoring the ones beginning
-by ~#~, ~;~ and ~]~ (just like ~youtube-dl~) and will download them, assuming
-these are channel URLs or playlist URLs, however it should also work with direct
-video URLs.
-
-What this function does is for each line, it will fetch the entirety
-of the video IDs found in a playlist or channel. Then, it will look
-each ID up the list of already downloaded videos and will add all new
-IDs to a queue of videos to be downloaded. It will then pass each new
-video ID to ~_ytdl_download_video~ directly. Beware that if you pass
-directly the URL of the channel, such as
-~https://www.youtube.com/user/enyay~ if you want to download Tom Scott’s
-videos, it will download everything on the main page of their channel,
-which means it will even download videos from playlists they decided
-to put on their channel’s front page, even if it is not theirs. So in
-that case, we need to append ~/videos~ to any channel URL.
-#+BEGIN_SRC fish
-function _ytdl_download_batch
-    set -q $FILE
-    if test $status -eq 1
-        set -g NEW
-        set CHANNELS (cat $FILE | grep -vE "#|;|\]")
-        for c in $CHANNELS
-            _ytdl_log "INFO" "Getting IDs for channel $c"
-            if test (egrep '\/c\/|user|channel' (echo $c |psub))
-                set -g IDS (youtube-dl --get-id "$c/videos")
-            else
-                set -g IDS (youtube-dl --get-id $c)
-            end
-            _ytdl_log "INFO" "Fetching new videos from channel"
-            for i in (seq (count $IDS))
-                printf "\rsearching (%d/%d)" $IDn (count $IDS)
-                rg -- $IDS[$i] $DOWNFILE 2&> /dev/null
-                if test $status -ne 0
-                    set -g NEW $IDS[$i] $NEW
-                end
-            end
-            printf "\n"
-        end
-        for i in (seq (count $NEW))
-            _ytdl_download_video $NEW[$i] $i (count $NEW)
-        end
-    end
-end
-#+END_SRC
-
-***** Main Body
-Now that we have all our functions declared, let’s call them! First, we need to
-parse our arguments. We’ll then download all files passed as arguments. Finally,
-we’ll download videos, playlists and channels specified from a batch file.
-#+BEGIN_SRC fish
-_ytdl_parse_ops $argv
-_ytdl_download_arg_urls $VIDEOS
-_ytdl_download_batch
-#+END_SRC
-
-And that’s all! If you’re interested with a very simple interface for
-downloading one video once, I wrote a small [[file:./scripts.md#rofi-ytdl][=rofi-ytdl=]] script that
-calls the ~rofi~ utility to specify a single link and download it.
 
 ** Misc
 *** Broadway
@@ -1125,19 +639,19 @@ notify-send "Polybar restarted!" -a "polybar-launch"
 ** Rofi utilities
 *** askpass
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/askpass
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/askpass
 :END:
 Askpass is a simple script that invokes ~rofi~ as a way to get from a GUI the
-user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in fish
+user’s sudo password. It is inspired by [[https://github.com/ODEX-TOS/tools/blob/master/rofi/askpass][this original tool]], rewritten in bash
 and with [[https://wiki.archlinux.org/index.php/Rofi][rofi]] support instead of [[https://wiki.archlinux.org/index.php/Dmenu][dmenu]]. As you can see, this is a oneliner if we
 ignore the initial shebang. This executable is pointed at by the
-#+BEGIN_SRC fish
-rofi -dmenu -password -no-fixed-num-lines -p (printf $argv[1] | sed s/://)
+#+BEGIN_SRC sh
+rofi -dmenu -password -no-fixed-num-lines -p $(printf "$*" | sed 's/://')
 #+END_SRC
 
 *** awiki
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/awiki
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/awiki
 :END:
 ~awiki~ is a simple script used with ~rofi~ that relies on the ~arch-wiki-docs~
 package in order to provide the user a way to quickly find and display any
@@ -1153,61 +667,36 @@ simple ~ls~ piped in three ~sed~ will give us a list of page titles. We then
 pipe that into rofi in dmenu mode in order to choose the page we want to
 display. By the way, setting the location of the HTML files will come in handy
 later.
-#+BEGIN_SRC fish
-set WLOCATION /usr/share/doc/arch-wiki/html/en/
-set WPAGE (/bin/ls $WLOCATION                              | \
-    sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
-    rofi -dmenu -p "Arch Wiki" -i)
-set WPAGE (echo $WPAGE | sed -r 's/\s+/_/g')
+#+BEGIN_SRC sh
+WLOCATION=/usr/share/doc/arch-wiki/html/en/
+WPAGE=$(/bin/ls "$WLOCATION" | \
+            sed -e 's/_/ /g' -e 's/\.html$//' -e 's|.*/\(.*\)|\1|' | \
+            rofi -dmenu -p "Arch Wiki" -i)
+WPAGE=$(echo $WPAGE | sed -r 's/\s+/_/g')
 #+END_SRC
 
 Now, all I need to do is to send this list into rofi and tell it to open the
 result with our favorite browser with ~xdg-open~.
-#+BEGIN_SRC fish
-xdg-open $WLOCATION$WPAGE.html
+#+BEGIN_SRC sh
+xdg-open "$WLOCATION$WPAGE.html"
 #+END_SRC
-
-*** ConnectWifi                                                      :noexport:
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/connect-wifi
-:END:
-~connect-wifi~ is a small utility tool that allows the user to connect to
-available WiFi networks. The first thing to do is to select the WiFi we want to
-connect to. We’ll use the ~nmcli c s~ command to get the list of the available
-networks, and we’ll chose one with ~rofi~.
-#+BEGIN_SRC fish
-set SELECTEDWIFI (nmcli d w l | \
-egrep -o '([0-9A-F]{2}:){5}[0-9A-F]{2}\s*(.*)Infra' | \
-egrep -o '\s+(.*)\s+' | awk '{$1=$1}1' | \
-rofi -dmenu -p "Select your WiFi network")
-#+END_SRC
-Now, if a network was selected, let’s attempt to connect to it. Otherwise, let’s
-just send a notification no network was selected.
-#+BEGIN_SRC fish
-if test -z $SELECTEDWIFI
-    notify-send "No WiFi network selected" -u low && exit
-end
-nmcli c u $SELECTEDWIFI
-#+END_SRC
-
-**** TODO fix it
 
 *** dmenu
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/dmenu
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/dmenu
 :END:
 I wrote this very simple script in order to replace =dmenu= with rofi’s
 emulation of dmenu, since I prefer rofi’s appearance. It basically calls rofi’s
 dmenu emulation with the arguments initially passed to dmenu.
-#+BEGIN_SRC fish
-rofi -dmenu $argv
+#+BEGIN_SRC sh
+rofi -dmenu "$*"
 #+END_SRC
 
 *** Emoji picker
 :PROPERTIES:
 :HEADER-ARGS: :shebang "#!/usr/bin/env bash" :mkdirp yes :tangle ~/.local/bin/rofi-emoji
 :END:
-The emoji picker is a simple fish script that uses rofi and
+The emoji picker is a simple bash script that uses rofi and
 [[file:~/.config/emoji.txt][~/.config/emoji.txt]] to provide a small, local search for emojis. It is
 relatively easy to build this file from the Unicode’s [[https://unicode.org/Public/emoji/15.0/emoji-test.txt][test file]]. Once
 the emoji is selected, it is copied to the clipboard using =xclipboard=
@@ -1223,682 +712,17 @@ fi
 
 Also, let’s send a notification telling the user the emoji has been copied!
 #+BEGIN_SRC bash
-# EMOJI=$([ "$XDG_SESSION_TYPE" = "wayland" ] && xclip -o -selection clipboard || wl-paste)
 if [ "$XDG_SESSION_TYPE" = "wayland" ]
 then EMOJI=$(wl-paste)
 else EMOJI=$(xclip -o)
 fi
 
-# EMOJI=$(xclip -o -selection clipboard | tr -d '\n')
 test -z "$EMOJI" && notify-send "No emoji copied" -u low && exit
 EMOJI="$EMOJI copied to clipboard"
 notify-send -u low "$EMOJI"
 #+END_SRC
 
-It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]], rewritten in Fish.
-
-*** Partition mounting and unmounting
-**** rofi-mount
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-mount
-:END:
-=rofimount= is a script inspired by [[https://github.com/ihebchagra/dotfiles/blob/master/.local/bin/dmount][this one]], based on dmenu, which
-interactively asks the user what to mount, and where to mount it. What I did was
-replace dmenu with rofi, and fix a couple of bugs I encountered in the original
-script.
-
-***** Get the mountable elements
-#+BEGIN_SRC fish
-begin
-#+END_SRC
-
-What the script does first is detect everything that can be mounted. Between a
-=begin= and =end=, let’s set =LFS= as a local variable. This is in order to get
-sane variables in the current block.
-#+BEGIN_SRC fish
-set -l LFS
-#+END_SRC
-
-Now, let’s detect the amount of mountable Android filesystems, and if any are
-detected, let’s read them into a global variable.
-#+BEGIN_SRC fish
-set -l a (math (jmtpfs -l | wc -l) - 2)
-test $a -ge 0 && jmtpfs -l 2> /dev/null | tail -n $a | read -zg anddrives
-#+END_SRC
-
-We’ll do the same for external and internal drives and partitions that can be
-mounted here.
-#+BEGIN_SRC fish
-lsblk -rpo "name,type,size,mountpoint" | \
-awk '$2=="part"&&$4==""{printf "%s (%s)\n",$1,$3}' | \
-read -zg usbdrives
-#+END_SRC
-
-Finally, we look for any CD drive that could be mounted on our device.
-#+BEGIN_SRC fish
-blkid /dev/sr0 | awk '{print $1}' | sed 's/://' | read -z cddrives
-#+END_SRC
-
-And that’s the end of our first block!
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-Alright, we’ll save what kind on drives we can mount in a temporary
-file called =/tmp/drives=. We’ll make sure it’s blank by erasing it then
-creating it again with =touch=, like so. The =-f= flag on =rm= is here, so
-we get no error if we try to delete a file that doesn’t exist (yet).
-#+BEGIN_SRC fish
-set -g TMPDRIVES /tmp/drives
-rm -f $TMPDRIVES
-touch $TMPDRIVES
-#+END_SRC
-
-Now, let’s write what type of drives we can mount in this temporary file.
-#+BEGIN_SRC fish
-test -n "$usbdrives" && echo "USB" >> $TMPDRIVES
-test -n "$cddrives" && echo "CD" >> $TMPDRIVES
-test -n "$anddrives" && echo "Android" >> $TMPDRIVES
-#+END_SRC
-
-Now, we want to declare where to look for mount directories. For now, we’ll only
-look in =/media=, but you can add more if you wish.
-#+BEGIN_SRC fish
-set -g basemount /media
-#+END_SRC
-
-***** Get the mount point
-Now, let’s declare a function that will allow us to choose the drive
-we want to mount.
-#+BEGIN_SRC fish
-function getmount
-#+END_SRC
-
-First, we want to get our mount point. We’ll run a =find= command on
-each of the directories listed in =$basemount= to look for folders on
-which our drive could be mounted. This list will be passed to rofi
-from which we will choose our mount point.
-#+BEGIN_SRC fish
-set -g mp (for d in $basemount
-    find $d -maxdepth 5 -type d
-end | rofi -dmenu -i -p 'Type in mount point.')
-#+END_SRC
-
-We should verify that something has been actually selected, otherwise we should
-abort the script.
-#+BEGIN_SRC fish
-if test -z $mp || test $mp = ""
-    return 1
-end
-#+END_SRC
-
-Now, if the selected mount point does not exist, we’ll ask the user whether the
-directory should be created. If no, the script will abort. If yes, an attempt
-will be made at creating the directory as the user; if that fails, a new attempt
-will be made as sudo.
-#+BEGIN_SRC fish
-if test ! -d $mp
-    switch (printf "No\\nYes" | rofi -dmenu -i -p "$mp does not exist. Create it?")
-        case 'Yes'
-            mkdir -p $mp || sudo -A mkdir -p $mp
-        case '*'
-            return 1
-    end
-end
-#+END_SRC
-
-Finally, let’s close the function
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Mount a USB drive, hard drive or partition
-Alright, we want to mount a partition that answers by the name of =/dev/sdXX=,
-how do we do that? Let’s create first the function =mountusb= that will take
-care of it for us.
-#+BEGIN_SRC fish
-function mountusb
-#+END_SRC
-
-Now, the first thing we want to do is select the partition we want to
-mount. Remember, we stored those in =$usbdrives= earlier, so let’s pipe
-them into rofi, so we can choose from it. Also, =awk= will get their
-path in =/dev=.
-#+BEGIN_SRC fish
-set -g chosen (echo $usbdrives | \
-rofi -dmenu -i -p "Mount which drive?" | \
-awk '{print $1}')
-#+END_SRC
-
-As usual after a user selection, let’s verify something has actually been
-selected. If not, let’s abort the script.
-#+BEGIN_SRC fish
-test -z $chosen && return 1
-#+END_SRC
-
-Now, let’s select the mount point of our partition. We’ll call the
-function =getmount= described in [[file:./scripts.md#get-the-mount-point][Get the mount point]] to select it.
-#+BEGIN_SRC fish
-getmount
-#+END_SRC
-
-Let’s verify the variable =mp= set in =getmount= is not empty, otherwise abort
-the script.
-#+BEGIN_SRC fish
-test -z $mp && return 1
-#+END_SRC
-
-Now, let’s mount it! We’ll use a switch which will detect the
-filesystem used, so we know how to mount the partition.
-#+BEGIN_SRC fish
-switch (lsblk -no "fstype" $chosen)
-#+END_SRC
-
-We have two named case: =vfat= filesystems.
-#+BEGIN_SRC fish
-case "vfat"
-    sudo -A mount -t vfat $chosen $mp -o rw,umask=0000
-#+END_SRC
-
-And =ntfs= filesystems.
-#+BEGIN_SRC fish
-case "ntfs"
-    sudo -A mount -t ntfs $chosen $mp -o rw,umask=0000
-#+END_SRC
-
-Else, we’ll let =mount= determine which filesystem is used by the partition
-(generally =ext4=).
-#+BEGIN_SRC fish
-case '*'
-    sudo -A mount $chosen $mp
-#+END_SRC
-
-We’ll also run a =chown= on this newly mounted filesystem, so the user
-can access it without any issues.
-#+BEGIN_SRC fish
-sudo -A chown -R $USER:(id -g $USER) $mp
-#+END_SRC
-
-Let’s close the switch block and send a notification the partition has been
-mounted.
-#+BEGIN_SRC fish
-end && notify-send -a "dmount" "💻 USB mounting" "$chosen mounted to $mp."
-#+END_SRC
-
-And let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Mount an Android device
-The function that manages to mount Android filesystems is =mountandroid=. Let’s
-declare it.
-#+BEGIN_SRC fish
-function mountandroid -d "Mount an Android device"
-#+END_SRC
-
-We’ll select which Android we want to mount. We will be asked through rofi.
-#+BEGIN_SRC fish
-set chosen (echo $anddrives | rofi -dmenu -i -p "Which Android device?" | awk '{print $1 $2}' | sed 's/,$//')
-#+END_SRC
-
-Now, we need to get the bus of the Android device we want to mount. It will be
-useful later, after we authorized mounting from our device, to get the path to
-our partition.
-#+BEGIN_SRC fish
-set bus (echo $chosen | sed 's/,.*//')
-#+END_SRC
-
-Let’s temporarily mount our device.
-#+BEGIN_SRC fish
-jmtpfs -device=$chosen $mp
-#+END_SRC
-
-Now, we need to allow our computer to mount our Android device.
-Depending on the Android version it is running on, we either need to
-specify our device is USB connected in order to exchange files, or
-Android will explicitly ask us if it is OK for our computer to access
-it. Let’s inform the user of that.
-#+BEGIN_SRC fish
-echo "OK" | \
-rofi -dmenu -i -p "Press (Allow) on your phone screen, or set your USB settings to allow file transfer"
-#+END_SRC
-
-Now, let’s get the actual path of our Android filesystem we wish to mount, and
-let’s unmount the previous temporary filesystem.
-#+BEGIN_SRC fish
-set newchosen (jmtpfs -l | grep $bus | awk '{print $1 $2}' | sed 's/,$//')
-sudo -A umount $mp
-#+END_SRC
-
-Now we can mount the new filesystem and send a notification if everything went
-well.
-#+BEGIN_SRC fish
-jmtpfs -device=$newchosen $mp && \
-notify-send -a "dmount" "🤖 Android Mounting" "Android device mounted to $mp."
-#+END_SRC
-
-And now, we can close our function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Mount a CD drive
-This part is way easier than the previous functions. As we will see, the
-function =mountcd='s body is only three lines long. First, let’s declare the
-function.
-#+BEGIN_SRC fish
-function mountcd
-#+END_SRC
-
-Now, let’s chose the CD drive we want to mount using =rofi=.
-#+BEGIN_SRC fish
-set chosen (echo $cddrives | rofi -dmenu -i -p "Which CD drive?")
-#+END_SRC
-
-We’ll also get the mountpoint thanks to the =getmount= function described
-earlier.
-#+BEGIN_SRC fish
-getmount
-#+END_SRC
-
-And finally, let’s mount it and send the notification everything went well.
-#+BEGIN_SRC fish
-sudo -A mount $chosen $mp && \
-notify-send -a "dmount" "💿 CD mounting" "$chosen mounted."
-#+END_SRC
-
-Finally, let’s close our function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Ask what type of drive we want to mount
-The first thing we will be asked if different types of drives are
-detected is which of these types the user wishes to mount. This is
-done with the function =asktype= which is declared below.
-#+BEGIN_SRC fish
-function asktype
-#+END_SRC
-
-We will use a switch statement which will use our answer to rofi about
-what we wish to mount.
-#+BEGIN_SRC fish
-switch (cat $TMPDRIVES | rofi -dmenu -i -p "Mount which drive?")
-#+END_SRC
-
-If we chose the option "USB", we’ll mount a hard drive, partition or USB drive.
-In which case we’ll call the =mountusb= function.
-#+BEGIN_SRC fish
-case "USB"
-    mountusb
-#+END_SRC
-
-If we chose the "Android" option, the =mountandroid= function is called.
-#+BEGIN_SRC fish
-case "Android"
-    mountandroid
-#+END_SRC
-
-Else if we chose the "CD" option, we’ll call the =mountcd= function.
-#+BEGIN_SRC fish
-case "CD"
-    mountcd
-#+END_SRC
-
-If nothing is selected, the function will naturally exit. Now, let’s close our
-switch statement and our function.
-#+BEGIN_SRC fish
-end
-end
-#+END_SRC
-
-***** Launch the mounting functions
-Now that we have declared our functions and set our variables, we’ll
-read the temporary file described in [[file:./scripts.md#get-the-mountable-elements][Get the mountable elements]]. The
-amount of lines is passed in a switch statement.
-#+BEGIN_SRC fish
-switch (wc -l < $TMPDRIVES)
-#+END_SRC
-
-If the file has no lines, i.e. it is empty, we have no mountable media. Let’s
-inform our user this is the case.
-#+BEGIN_SRC fish
-case 0
-    notify-send "No USB drive or Android device or CD detected" -a "dmount"
-#+END_SRC
-
-If we only have one line, we have only one type of mountable media. We’ll pass
-this line to a second switch statement.
-#+BEGIN_SRC fish
-case 1
-    switch (cat $TMPDRIVES)
-#+END_SRC
-This will allow the script to automatically detect what type of media it is, and
-mount the corresponding function.
-#+BEGIN_SRC fish
-case "USB"
-    mountusb
-case "Android"
-    mountandroid
-case "CD"
-    mountCD
-#+END_SRC
-Let’s close this nested switch case.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-If we have more than one line, we’ll have to ask the user what type of media
-they want to mount.
-#+BEGIN_SRC fish
-case '*'
-    asktype
-#+END_SRC
-
-Now, let’s end our switch statement!
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-Finally, we’ll delete our temporary file.
-#+BEGIN_SRC fish
-rm -f $TMPDRIVES
-#+END_SRC
-
-And with that, this is the end of our script!
-
-**** rofi-umount
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-umount
-:END:
-~rofiumount~ is the counterpart of ~rofimount~ for unmounting our mounted
-partitions.
-
-***** Get the unmountable drives
-First, we will need to list all the drives that can be safely unmounted. Let’s
-run this.
-#+BEGIN_SRC fish
-set -g drives (lsblk -nrpo "name,type,size,mountpoint" | \
-awk '$2=="part"&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "%s (%s)\n",$4,$3}')
-#+END_SRC
-
-Now, let’s get the android devices that are mounted.
-#+BEGIN_SRC fish
-set -g androids (awk '/jmtpfs/ {print $2}' /etc/mtab)
-#+END_SRC
-
-And let’s get the CD drives that are mounted.
-#+BEGIN_SRC fish
-set -g cds (awk '/sr0/ {print $2}' /etc/mtab)
-#+END_SRC
-
-We’ll store all of our information in a temporary file, =/tmp/undrives=.
-#+BEGIN_SRC fish
-set -g undrivefile /tmp/undrives
-#+END_SRC
-
-Let’s make sure we begin with a clean, empty file.
-#+BEGIN_SRC fish
-rm -f $undrivefile
-touch $undrivefile
-#+END_SRC
-
-Depending on if the related variables are set, write the different types of
-mounted drives in the temporary file.
-#+BEGIN_SRC fish
-test -n "$drives" && echo "USB" >> $undrivefile
-test -n "$cds" && echo "CD" >> $undrivefile
-test -n "$androids" && echo "Android" >> $undrivefile
-#+END_SRC
-
-***** Unmount disk partitions
-The function =unmountusb= will take care of unmounting any drive we can safely
-unmount. First, let’s declare the function.
-#+BEGIN_SRC fish
-function unmountusb
-#+END_SRC
-
-Let’s chose the drive to unmount with rofi.
-#+BEGIN_SRC fish
-set chosen (echo $drives | \
-rofi -dmenu -i -p "Unmount which drive?" | \
-awk '{print $1}')
-#+END_SRC
-
-Let’s verify if the user actually selected any drive. If no, let’s abort the
-script.
-#+BEGIN_SRC fish
-test -z "$chosen" && exit 0
-#+END_SRC
-
-Now, let’s unmount the chosen drive and send a notification if it has been done.
-#+BEGIN_SRC fish
-sudo -A umount $chosen && \
-notify-send "💻 USB unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Now, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Unmount Android device
-The function =unmountandroid= will take care of unmounting any mounted Android
-device. First, let’s declare our function.
-#+BEGIN_SRC fish
-function unmountandroid
-#+END_SRC
-
-Let the user choose which Android device to unmount.
-#+BEGIN_SRC fish
-set chosen (echo $androids | rofi -dmenu -i -p "Unmount which device?")
-#+END_SRC
-
-We’ll verify the user chose any device.
-#+BEGIN_SRC fish
-test -z "$chosen" && exit 0
-#+END_SRC
-
-If a device has been chosen, let’s unmount it and send a notification it has
-been successfuly unmounted.
-#+BEGIN_SRC fish
-sudo -A umount -l $chosen && \
-notify-send "🤖 Android unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Finally, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Unmount CD drive
-=unmountcd= will take care of unmounting any mounted CD drive. Let’s declare
-this function.
-#+BEGIN_SRC fish
-function unmountcd
-#+END_SRC
-
-As before, let the user chose which CD drive to unmount.
-#+BEGIN_SRC fish
-set chosen (echo "$cds" | rofi -dmenu -i -p "Unmount which CD?")
-#+END_SRC
-
-We’ll verify the user chose any device.
-#+BEGIN_SRC fish
-test -z "$chosen" && exit 0
-#+END_SRC
-
-If a drive has been chosen, let’s unmount it and send a notification it has been
-successfuly unmounted.
-#+BEGIN_SRC fish
-sudo -A umount -l $chosen && \
-notify-send "💿 CD unmounting" "$chosen unmounted." -a "dumount"
-#+END_SRC
-
-Now, let’s close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Ask what type of drive to unmount
-If several types of unmountable drives are available, let’s ask the
-user which type to unmount based on the content of the temporary file
-declared in [[file:./scripts.md#get-the-unmountable-drives][Get the unmountable drives]]. First, let’s declare the
-function.
-#+BEGIN_SRC fish
-function asktype
-#+END_SRC
-
-Let’s create a switch statement to which will be passed the selection of the
-user from rofi.
-#+BEGIN_SRC fish
-switch (cat $undrivefile | rofi -dmenu -i -p "Unmount which type of device?")
-#+END_SRC
-
-Three types of values can be returned: "USB", "CD", or "Android". These values
-will be used to launch their corresponding function.
-#+BEGIN_SRC fish
-case 'USB'
-    unmountusb
-case 'CD'
-    unmountcd
-case 'Android'
-    unmountandroid
-#+END_SRC
-
-Let’s close the switch statement.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-Let’s now close the function.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-***** Launch the unmounting functions
-Now back to the body of our script, let’s input in a switch case the number of
-lines contained in our temporary file.
-#+BEGIN_SRC fish
-switch (wc -l < $undrivefile)
-#+END_SRC
-
-If the file containes no lines. i.e. it is empty, nothing is to be unmounted.
-Let’s inform the user of that.
-#+BEGIN_SRC fish
-case 0
-    notify-send "No USB drive or Android device or CD to unmount" -a "dumount"
-#+END_SRC
-
-Else, if there is only one type of drive, we’ll automatically let our script
-choose based on the content of this sole line.
-#+BEGIN_SRC fish
-case 1
-    switch (cat $undrivefile)
-        case 'USB'
-            unmountusb
-        case 'CD'
-            unmountcd
-        case 'Android'
-            unmountandroid
-    end
-#+END_SRC
-
-And if there are more types than one, let’s ask the user.
-#+BEGIN_SRC fish
-case '*'
-     asktype
-#+END_SRC
-
-Let’s close our main switch statement.
-#+BEGIN_SRC fish
-end
-#+END_SRC
-
-And finally, let’s delete our temporary file.
-#+BEGIN_SRC fish
-rm -f $undrivefile
-#+END_SRC
-
-*** rofi-pass
-:PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/rofi-pass
-:END:
-=rofi-pass= is a simple utility that gets a password stored in the [[https://www.passwordstore.org/][=pass=]]
-password manager with rofi as its interface, and then stores the password in the
-clipboard.
-
-Let’s parse all the arguments passed to the script. If one of them is =--type=,
-=-t= or =type=, the script will attempt to type the password to the text area
-already selected without pasting the password to the clipboard.
-#+BEGIN_SRC fish
-for arg in $argv
-    switch $arg
-        case '--type' '-t' 'type'
-            set -g TYPE "yes"
-        case '*'
-            printf 'Unknown argument: %s\n.' $arg
-            exit 1
-    end
-end
-#+END_SRC
-
-Now, let’s get the list of the passwords that exist in our =pass= repository.
-#+BEGIN_SRC fish
-set passwords (find $HOME/.password-store -type f -name "*.gpg" | \
-string replace -r ".*.password-store/" "" | \
-string replace -r ".gpg" "" | sort)
-#+END_SRC
-
-Let the user choose which password they wish to select.
-#+BEGIN_SRC fish
-set password (for elem in $passwords
-    echo $elem
-end | rofi -dmenu -i -p "Select your password")
-#+END_SRC
-
-Let’s verify we actually selected a password and not just exited. If no password
-was selected, let’s simply exit the script.
-#+BEGIN_SRC fish
-if test -z $password
-    exit
-end
-#+END_SRC
-
-Depending on the arguments passed earlier, we might want some
-different behaviour.
-#+BEGIN_SRC fish :noweb yes
-if test $TYPE = "yes"
-    <<rofi-pass-type>>
-else
-    <<rofi-pass-copy>>
-end
-#+END_SRC
-
-The default behaviour is to copy the password to the clipboard for 45
-seconds, so let’s do that.
-#+NAME: rofi-pass-copy
-#+BEGIN_SRC fish :noweb yes :tangle no
-pass show -c $password 2> /dev/null
-#+END_SRC
-
-Else, if we passed =--type=, =-t= or =type= as an argument of the script, we
-want it to attempt to type our password in the currently selected text input.
-Let’s do that.
-#+NAME: rofi-pass-type
-#+BEGIN_SRC fish :noweb yes :tangle no
-set -l IFS
-<<rofi-pass-type-get-password>>
-printf %s $pass | xvkbd -file -
-#+END_SRC
-
-To correctly get the password from ~pass~, we need to parse the output and only
-get the first line, hence the following command.
-#+NAME: rofi-pass-type-get-password
-#+BEGIN_SRC fish :tangle no
-set pass (pass show $password | string split -n \n)[1]
-#+END_SRC
+It is inspired from [[https://www.youtube.com/watch?v=UCEXY46t3OA][this video]] from [[https://lukesmith.xyz/][Luke Smith]].
 
 *** rofi-ytdl
 :PROPERTIES:
@@ -2117,19 +941,20 @@ echo "$(sb_docker)$(sb_playerctl)$(sb_date)$(sb_battery) "
 
 ** Weather
 :PROPERTIES:
-:HEADER-ARGS: :shebang "#!/usr/bin/env fish" :mkdirp yes :tangle ~/.local/bin/we
+:HEADER-ARGS: :shebang "#!/usr/bin/env sh" :mkdirp yes :tangle ~/.local/bin/we
 :END:
 A quick and useful script I often use is a ~curl~ request to [[http://v2.wttr.in/][v2.wttr.in]] to get a
 weather forecast in the terminal. By default, I want the request to be about the
 city I live in, but it is also possible for the script to accept as its
 arguments a search inquiry.
-#+BEGIN_SRC fish
-if count $argv > /dev/null
-    set -l SEARCH (string join '+' $argv)
-    curl http://v2.wttr.in/~$SEARCH
+#+BEGIN_SRC sh
+if [ $# -gt 0 ]; then
+    SEARCH=$(printf "%s+" "$@")
+    SEARCH=${SEARCH%+}
+    curl "http://v2.wttr.in/~$SEARCH"
 else
-    curl http://v2.wttr.in/Aubervilliers
-end
+    curl "http://v2.wttr.in/Aubervilliers"
+fi
 #+END_SRC
 
 ** Wrappers
