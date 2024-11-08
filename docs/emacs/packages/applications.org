@@ -1413,7 +1413,7 @@ I also want to highlight these angular-style keywords in commit messages.
   "Highlight angular-style keywords in commit messages."
   (let ((boundary 0))
     (when (string-match (rx (seq (or "feat" "fix" "docs" "style" "refactor"
-                                     "perf" "test" "chore")
+                                     "perf" "test" "ci" "chore")
                                  (* "(" (* (not ")")) ")")
                                  ":"))
                         msg
