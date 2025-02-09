@@ -12,10 +12,10 @@
   "private": true,
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.14",
-    "@vuepress/plugin-umami-analytics": "2.0.0-rc.41",
-    "@vuepress/theme-default": "2.0.0-rc.41",
+    "@vuepress/plugin-umami-analytics": "2.0.0-rc.74",
+    "@vuepress/theme-default": "2.0.0-rc.74",
     "vuepress": "2.0.0-rc.14",
-    "vuepress-plugin-search-pro": "2.0.0-rc.52"
+    "vuepress-plugin-search-pro": "2.0.0-rc.59"
   },
   "dependencies": {
     "less": "^4.2.0",
