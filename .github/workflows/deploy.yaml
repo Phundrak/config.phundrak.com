@@ -1,0 +1,40 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: purcell/setup-emacs@master
+        with:
+          version: 29.1
+      - name: "Export org to md"
+        run: emacs -Q --script export.el
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: corepack enable
+      - run: npm ci
+      - run: npm run build
+      - name: "Deploy to Cloudflare Pages"
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.ACCOUNT_ID }}
+          projectName: config-phundrak-com
+          directory: docs/.vuepress/dist/
+          githubToken: ${{ secrets.TOKEN }}
+      # - name: "Deploy to remote server"
+      #   uses: appleboy/scp-action@v0.1.4
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.KEY }}
+      #     port: ${{ secrets.PORT }}
+      #     source: docs/.vuepress/dist/*
+      #     target: ${{ secrets.DESTPATH }}
+      #     strip_components: 3
