@@ -112,10 +112,12 @@ decoration {
         size = 9
         passes = 1
     }
-    drop_shadow = true
-    shadow_range = 4
-    shadow_render_power = 3
-    col.shadow = rgba(2e3440aa)
+    shadow {
+        enabled = true
+        color = rgba(2e3440aa)
+        range = 4
+        render_power = 3
+    }
 }
 #+end_src
 
@@ -134,14 +136,11 @@ animations {
 }
 #+end_src
 
-Now, we can take care of the configuration of the layouts. The only
-notable thing here is that I prefer to have no gaps when there is only
-one window in the dwindle layout.
+Now, we can take care of the configuration of the layouts.
 #+begin_src conf
 dwindle {
     pseudotile = true
     preserve_split = true
-    no_gaps_when_only = 1
 }
 #+end_src
 
