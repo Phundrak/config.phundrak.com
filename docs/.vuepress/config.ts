@@ -82,13 +82,13 @@ export default defineUserConfig({
         ],
       },
       '/tmux',
-      '/bootstrap',
       {
         text: 'Deprecated Configs',
         link: '/deprecated/',
         collapsible: true,
         children: [
           '/deprecated/awesome',
+          '/deprecated/bootstrap',
           '/deprecated/i3',
           '/deprecated/nano',
           '/deprecated/polybar',
