@@ -50,7 +50,6 @@ stuff.
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-
 #+end_src
 
 From time to time, I fork some packages either because I’m trying to

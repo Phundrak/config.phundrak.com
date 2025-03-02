@@ -156,7 +156,9 @@ it looks really uncomfortable! This is why I prefer to tell Emacs to
 keep its backup files to itself in a directory it only will access.
 #+begin_src emacs-lisp
 (setq backup-directory-alist `(("." . ,(expand-file-name ".tmp/backups/"
-                                                         user-emacs-directory))))
+                                                         user-emacs-directory)))
+      tramp-backup-directory-alist `(("." . ,(expand-file-name ".tmp/tramp-backups/"
+                                                               user-emacs-directory))))
 #+end_src
 
 When using LSP with Typescript projects, my =tsconfig.json= or its
