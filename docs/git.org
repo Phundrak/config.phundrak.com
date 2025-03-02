@@ -6,10 +6,15 @@
 
 * Git
 ** Basic configuration
+Just to make Emacs follow the convention in terms of indentation, I’m
+forcing it to use tabs.
 #+begin_src conf-unix
 # -*- indent-tabs-mode: t; -*-
 #+end_src
 
+*** Setting Up Personal Information and Preferences
+Let’s set some of my personal information, namely my name, my email,
+and which GPG key I sign my commits with.
 #+begin_src conf-unix
 [user]
 	email = lucien@phundrak.com
@@ -17,31 +22,187 @@
 	signingkey = BD7789E705CB8DCA
 #+end_src
 
+In terms of core configuration, I simply set Emacs as my default Git
+editor. I also have my global gitignore file, described below in
+[[file:./git.md#global-gitignore-file][Global gitignore file]].
 #+begin_src conf-unix
 [core]
 	editor = emacsclient -c -a emacs
-	whitespace = fix,-indent-with-non-tab,trailing-space
-	excludesfile = /home/phundrak/.gitignore_global
+	excludesfile = ~/.config/git/global-ignore
 #+end_src
 
-#+begin_src conf-unix
-[pull]
-	rebase = true
-#+end_src
-
+Let’s not forget to tell Git to use the =main= branch by default.
 #+begin_src conf-unix
 [init]
 	defaultBranch = main
 #+end_src
 
+This is entirely a matter of personal preferences, but I like to use
+[[https://zen-browser.app/][Zen]], a Firefox fork with really nice features.
+#+begin_src conf-unix
+[web]
+	browser = zen-browser
+#+end_src
+
+*** Better Diffing
+Git’s diffing algorithm evolved and improved over time, but its
+default algorithm did not. Take this example, from [[https://blog.gitbutler.com/how-git-core-devs-configure-git/][this Gitbutler
+article]]:
+
+[[file:./img/git/diff-default.png]]
+
+Not really readable, I think you’ll agree. I mean, you can sort of see
+what happens, but really, we just moved the =h2= styling below the
+=.event= styling. Git seems to think otherwise. However, let’s turn on
+the =histogram= algorithm on:
+
+[[file:./img/git/diff-histogram.png]]
+
+Immediately, we have a much clearer picture of what happened! But I’ll
+let you on another secret: you can make it even clearer by using the
+=colorMoved= option to color differently lines that were moved from
+lines that were actually modified!
+
+[[file:./img/git/diff-moved.png]]
+
+I’ll also add a configuration to make it easier to see what is being
+compared using =mnemonicPrefix=. As per =man git-config=:
+#+begin_src text
+git diff
+    compares the (i)ndex and the (w)ork tree;
+
+git diff HEAD
+    compares a (c)ommit and the (w)ork tree;
+
+git diff --cached
+    compares a (c)ommit and the (i)ndex;
+
+git diff HEAD:<file1> <file2>
+    compares an (o)bject and a (w)ork tree entity;
+
+git diff --no-index <a> <b>
+    compares two non-git things <a> and <b>.
+#+end_src
+
+That means you can see I was comparing to objects not tracked by git
+in my screenshot above.
+
+Finally, =renames= set to =copies= not only better detects file renames,
+but also file copies.
+
+#+begin_src conf-unix
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = copy
+#+end_src
+
+*** Better Fetching, Pulling, Rebasing, and Pushing
+By default, when I pull new commits, I do not want to create a merge
+commit, but rather to rebase my commits on what’s new upstream.
+#+begin_src conf-unix
+[pull]
+	rebase = true
+#+end_src
+
+However, there is a problem with git’s default behaviour: it wont
+allow me to pull changes or perform a rebase as long as my worktree is
+dirty. I either have to commit or stash my changes before I can do
+something. And you know what? Git can auto stash your changes for you
+before performing a rebase. In fact, while we’re at it, let’s also
+automatically squash commits that need to be squashed, and update all
+refs.
+#+begin_src conf-unix
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+#+end_src
+
+And oh, buggers, you have a merge conflict! I’m used to it, but since
+git 2.3, there is a new feature that adds some context to git
+conflicts: =zdiff3= (which stands for /zealous diff3/). Not only will it
+show you the conflicting incoming and HEAD changes, but it will also
+show you what the code was before either modified the conflicting
+area. Not a must-have feature, but a nice one to have. Compare this:
+
+[[file:./img/git/merge-default.png]]
+
+To this:
+
+[[file:./img/git/merge-zdiff3.png]]
+
+We have a new line beginning with =|||||||= with the original line
+below. Also, it’s nice to see Emacs supports this syntax out of the
+box!
+
+#+begin_src conf-unix
+[merge]
+	conflictstyle = zdiff3
+#+end_src
+
+Finally, once we’re good to go, we may want to push our changes to the
+remote repository. Sometimes, git is confused and isn’t sure where it
+should push your branch. Let’s tell it to simply push your current
+branch to the branch with the same name on the remote with
+=push.default=. If the upstream branch is not set yet, you can
+automatically set it up with =push.autoSetupRemote=. Finally, I don’t
+want to push separately my tags, so let’s push them with any other
+push.
+#+begin_src conf-unix
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+#+end_src
+
+*** Making Git Look Better
+First, let’s activate colors in git by default when we are in a terminal.
 #+begin_src conf-unix
 [color]
 	ui = auto
 #+end_src
 
+Getting a raw list of things –branches, tags, …– is *not nice*. So,
+let’s make it a bit nicer and split these lists in columns.
 #+begin_src conf-unix
-[web]
-	browser = zen-browser
+[column]
+	ui = auto
+#+end_src
+
+Simply using the =column.ui= option sets everything to use columns when
+using a terminal. If you want more granularity, you can instead use
+=column.branch=, =column.status=, etc... Look up =man git-config= for more
+info.
+
+*** Better Sorting Branches and Tags
+By default, branches are sorted alphabetically. This may be fine for
+most people, but I prefer something else: sorting them by how recently
+they were comitted to. This is actually quite easy to configure:
+#+begin_src conf-unix
+[branch]
+	sort = -committerdate
+#+end_src
+
+Sorting tags is not nice by default. For instance, git will show you
+version 11 before version 2, because 11 is technically before 2
+alphabetically speaking. Let’s fix that.
+#+begin_src conf-unix
+[tag]
+	sort = version:refname
+#+end_src
+
+*** Did You Mean "Commit"?
+Sometimes, I fat finger my git commands and white a subcommand that
+does not exist, like =git pul= or =git comitt=. By default, git will
+simply tell you that, no, that subcommand does not exist, but will be
+kind enough to suggest a few commands that may be what you are looking
+for. Let’s make git not only suggest these, but also ask you if you
+want to run the one you most likely wanted to run.
+#+begin_src conf-unix
+[help]
+	autocorrect = prompt
 #+end_src
 
 ** Aliases
@@ -178,7 +339,6 @@
 | =l=            | =log --oneline --graph --decorate= |
 | =s=            | =status=                           |
 | =staged=       | =diff --cached=                    |
-| =upstream=     | =!git push -u origin HEAD=         |
 
 #+RESULTS:
 :       a = add --all
@@ -247,30 +407,6 @@
 	cmd = emacs --eval \" (progn (defun ediff-write-merge-buffer () (let ((file ediff-merge-store-file)) (set-buffer ediff-buffer-C) (write-region (point-min) (point-max) file) (message \\\"Merge buffer saved in: %s\\\" file) (set-buffer-modified-p nil) (sit-for 1))) (setq ediff-quit-hook 'kill-emacs ediff-quit-merge-hook 'ediff-write-merge-buffer) (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
 #+end_src
 
-*** Pager
-#+begin_src conf-unix
-[pager]
-	diff = delta
-	log = delta
-	reflog = delta
-	show = delta
-#+end_src
-
-*** Delta
-#+begin_src conf-unix
-[delta]
-	features = side-by-side line-numbers decorations
-	whitespace-error-style = 22 reverse
-
-[delta "decorations"]
-	commit-decoration-style = bold yellow box ul
-	file-style = bold yellow ul
-	file-decoration-style = none
-
-[interactive]
-	diffFilter = delta --color-only
-#+end_src
-
 *** Git forges
 #+begin_src conf-unix
 [github]
@@ -283,6 +419,9 @@
 
 [url "https://phundrak@labs.phundrak.com"]
 	insteadOf = https://labs.phundrak.com
+
+[url "https://github.com/RustSec/advisory-db"]
+    insteadOf = https://github.com/RustSec/advisory-db
 #+end_src
 
 *** LFS
@@ -292,4 +431,60 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+#+end_src
+
+** Global gitignore file
+:PROPERTIES:
+:HEADER-ARGS: :mkdirp yes :tangle ~/.config/git/global-ignore
+:END:
+This is my global gitignore file, specifying files that will always be
+ignored by Git, as described in [[file:./git.md#basic-configuration][Basic configuration]].
+
+You may see some lines beginning with =,*=. Just read it as a simple =*=,
+this is done in order to avoid org-mode being confused by a
+line-initial =*= usually marking headings.
+
+First, let’s just ignore dotenv files and direnv’s directories.
+#+begin_src gitignore
+.env
+.direnv/
+#+end_src
+
+Now, let’s ignore files generated by Emacs.
+#+begin_src gitignore
+,*~
+\#*\#
+,*.elc
+auto-save-list
+.\#*
+,*_flymake.*
+/auto/
+.projectile
+.dir-locals.el
+
+# Org mode files
+.org-id-locations
+,*_archive
+#+end_src
+
+Finally, let’s ignore some files we generally do not want.
+#+begin_src text
+,*.out
+,*.o
+,*.so
+
+# Archives
+,*.7zz
+,*.dmg
+,*.gz
+,*.iso
+,*.jar
+,*.rar
+,*.tar
+,*.zip
+
+,*.log
+,*.sqlite
+
+dist/
 #+end_src
