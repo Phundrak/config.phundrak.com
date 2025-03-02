@@ -67,6 +67,13 @@ Let’s give ~calc-mode~ some better defaults.
 ** Elcord
 What’s the point of using Emacs if you can’t tell everyone?
 #+begin_src emacs-lisp
+(defun my/elcord-buffer-details-format ()
+  "Return the buffer details string shown on Discord."
+  (format "Editing %s"
+          (if (projectile-project-p default-directory)
+              (f-relative (buffer-file-name) (projectile-project-root))
+            (buffer-name))))
+
 (use-package elcord
   :straight (:built t)
   :defer t
@@ -76,7 +83,8 @@ What’s the point of using Emacs if you can’t tell everyone?
           elcord-boring-buffers-regexp-list  `("^ "
                                                ,(rx "*" (+ any) "*")
                                                ,(rx bol (or "Re: "
-                                                            "Fwd: ")))))
+                                                            "Fwd: ")))
+          elcord-buffer-details-format-function #'my/elcord-buffer-details-format))
 #+end_src
 
 ** Elpher
