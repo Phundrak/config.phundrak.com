@@ -975,7 +975,3 @@ HOME="$XDG_DATA_HOME"/android /usr/bin/adb "$@"
 #+begin_src sh :tangle ~/.local/bin/wget
 /usr/bin/wget --hsts-file="$XDG_DATA_HOME"/wget-hsts "$@"
 #+end_src
-
-#+begin_src sh :tangle ~/.local/bin/yarn
-/usr/bin/yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config "$@"
-#+end_src
