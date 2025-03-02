@@ -1278,8 +1278,19 @@ Finally, I’m using [[https://github.com/microsoft/pyright][Pyright]] as my LSP
 *** Rust
 Rust is a general programming language, akin to C++ in some ways, but
 much more oriented towards safe code, and much better suited for web
-development. First, let’s install the most important package,
-~rustic~.
+development.
+
+First, I’m using =rust-mode= to tell it to use [[https://tree-sitter.github.io/tree-sitter/][tree sitter]].
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :straight
+  :defer t
+  :init
+  (setq rust-mode-treesitter-derive t))
+#+end_src
+
+Then, let’s install the most important package, =rustic=, which provides
+several improvements on top of =rust-mode=.
 #+begin_src emacs-lisp
 (use-package rustic
   :defer t
