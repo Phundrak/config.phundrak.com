@@ -365,6 +365,9 @@ want to run the one you most likely wanted to run.
 
 ** Tools
 *** Sendemail
+With git, it is possible to directly send commits as patches to a
+mailing list by email. However, it needs to know how. I’ll just
+configure my mail server here.
 #+begin_src conf-unix
 [sendemail]
 	smtpserver = mail.phundrak.com
@@ -373,12 +376,24 @@ want to run the one you most likely wanted to run.
 	smtpserverport = 587
 #+end_src
 
+Git also needs to know my password for my email address. Obviously, I
+won’t share it here, but I am using a helper which will itself return
+my password to git.
 #+begin_src conf-unix
 [credentials "smtp://lucien@phundrak.com@mail.phundrak.com:587"]
 	helper = "secret-tool lookup password email_lucien-phundrak-com"
 #+end_src
 
 *** Magit
+This configuration is specific for what I consider to be the best git
+client out there, [[https://magit.vc/][Magit]]. Not just because it is an Emacs git client,
+but also because it is quite transparent in terms of what happens with
+the command line, but it also lets you see so much more easily what
+happens with so many niceties. Rebases, including interactive rebases,
+are a breeze with Magit.
+
+I also can interact with some Git forges, including GitHub. Here are
+some configurations recommended by Magit for Git.
 #+begin_src conf-unix
 [magithub]
 	online = true
@@ -397,6 +412,9 @@ want to run the one you most likely wanted to run.
 #+end_src
 
 *** Merge
+I like to use Emacs for everything (is it surprising?). Let’s declare
+the merge tool =ediff= and use it in my git configuration.
+
 #+begin_src conf-unix
 [merge]
 	tool = ediff
