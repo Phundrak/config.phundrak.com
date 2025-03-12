@@ -19,7 +19,7 @@ and which GPG key I sign my commits with.
 [user]
 	email = lucien@phundrak.com
 	name = Lucien Cartier-Tilet
-	signingkey = BD7789E705CB8DCA
+	signingkey = ~/.ssh/id_ed25519.pub
 #+end_src
 
 In terms of core configuration, I simply set Emacs as my default Git
@@ -406,7 +406,9 @@ some configurations recommended by Magit for Git.
 *** GPG
 #+begin_src conf-unix
 [gpg]
-	program = gpg2
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = "~/.ssh/allowed_signers"
 [commit]
 	gpgsign = true
 #+end_src
