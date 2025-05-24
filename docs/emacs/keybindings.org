@@ -169,6 +169,53 @@ I also have two main shell-related functions, prefixed with ~as~.
 | yr  | treemacs-copy-relative-path-at-point   |             | treemacs |
 | yf  | treemacs-copy-file                     |             | treemacs |
 
+*** Treemacs
+#+name: keybindings-treemacs
+| Key | Function                               | Description | Package  |
+|-----+----------------------------------------+-------------+----------|
+|     |                                        | treemacs    |          |
+| c   |                                        | create      |          |
+| cd  | treemacs-create-dir                    |             | treemacs |
+| cf  | treemacs-create-file                   |             | treemacs |
+| ci  | treemacs-create-icon                   |             | treemacs |
+| ct  | treemacs-create-theme                  |             | treemacs |
+| cw  | treemacs-create-workspace              |             | treemacs |
+| d   | treemacs-delete-file                   |             | treemacs |
+| f   |                                        | files       |          |
+| ff  | treemacs-find-file                     |             | treemacs |
+| ft  | treemacs-find-tag                      |             | treemacs |
+| l   |                                        | lsp         |          |
+| ls  | treemacs-expand-lsp-symbol             |             | treemacs |
+| ld  | treemacs-expand-lsp-treemacs-deps      |             | treemacs |
+| lD  | treemacs-collapse-lsp-treemacs-deps    |             | treemacs |
+| lS  | treemacs-collapse-lsp-symbol           |             | treemacs |
+| p   |                                        | projects    |          |
+| pa  | treemacs-add-project-to-workspace      |             | treemacs |
+| pf  | treemacs-project-follow-mode           |             | treemacs |
+| pn  | treemacs-project-of-node               |             | treemacs |
+| pp  | treemacs-project-at-point              |             | treemacs |
+| pr  | treemacs-remove-project-from-workspace |             | treemacs |
+| pt  | treemacs-move-project-down             |             | treemacs |
+| ps  | treemacs-move-project-up               |             | treemacs |
+| r   |                                        | rename      |          |
+| rf  | treemacs-rename-file                   |             | treemacs |
+| rp  | treemacs-rename-project                |             | treemacs |
+| rr  | treemacs-rename                        |             | treemacs |
+| rw  | treemacs-rename-workspace              |             | treemacs |
+| t   | treemacs                               |             | treemacs |
+| T   |                                        | toggles     |          |
+| Td  | treemacs-toggle-show-dotfiles          |             | treemacs |
+| Tn  | treemacs-toggle-node                   |             | treemacs |
+| v   |                                        | visit node  |          |
+| va  | treemacs-visit-node-ace                |             | treemacs |
+| vc  | treemacs-visit-node-close-treemacs     |             | treemacs |
+| vn  | treemacs-visit-node-default            |             | treemacs |
+| y   |                                        | yank        |          |
+| ya  | treemacs-copy-absolute-path-at-point   |             | treemacs |
+| yp  | treemacs-copy-project-path-at-point    |             | treemacs |
+| yr  | treemacs-copy-relative-path-at-point   |             | treemacs |
+| yf  | treemacs-copy-file                     |             | treemacs |
+
 ** Buffers
 My buffer-related keybindings are all prefixed by ~b~.
 #+name: keybindings-buffers
