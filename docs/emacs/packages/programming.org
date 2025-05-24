@@ -892,26 +892,6 @@ configuration for StumpWM]].
   :straight (:build t))
 #+end_src
 
-*** Dart
-#+begin_src emacs-lisp
-(use-package dart-mode
-  :straight (:build t)
-  :defer t
-  :hook (dart-mode . lsp-deferred)
-  :mode "\\.dart\\'")
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package lsp-dart
-  :straight (:build t)
-  :defer t
-  :general
-  (phundrak/major-leader-key
-   :keymaps 'dart-mode-map
-   :packages '(lsp-mode lsp-dart)
-   "l"  '(:keymap lsp-command-map :which-key "lsp")))
-#+end_src
-
 *** EmacsLisp
 This package displays the function’s arglist or variable’s docstring
 in the echo area at the bottom of the frame. Quite useful indeed.
