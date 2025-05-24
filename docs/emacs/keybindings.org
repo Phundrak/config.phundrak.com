@@ -180,7 +180,7 @@ My buffer-related keybindings are all prefixed by ~b~.
 | c   | clone-indirect-buffer              |             |           |
 | C   | clone-indirect-buffer-other-window |             |           |
 | l   | bufler                             |             | bufler    |
-| d   | kill-this-buffer                   |             |           |
+| d   | kill-current-buffer                |             |           |
 | D   | kill-buffer                        |             |           |
 | h   | dashboard-refresh-buffer           |             | dashboard |
 | m   | switch-to-messages-buffer          |             |           |
@@ -515,7 +515,7 @@ much to say. The prefix here is ~w~.
 | 7   | winum-select-window-7         | none        | winum          |
 | 8   | winum-select-window-8         | none        | winum          |
 | 9   | winum-select-window-9         | none        | winum          |
-| b   | kill-buffer-and-delete-window |             |                |
+| b   | kill-buffer-and-window        |             |                |
 | d   | delete-window                 |             |                |
 | o   | other-window                  |             |                |
 | D   | delete-other-windows          |             |                |

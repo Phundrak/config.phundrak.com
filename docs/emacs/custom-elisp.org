@@ -59,13 +59,6 @@ focus the new window immediately.
   (interactive)
   (split-window-below)
   (windmove-down))
-
-(defun kill-buffer-and-delete-window ()
-  "Kill the current buffer and delete its window."
-  (interactive)
-  (progn
-    (kill-this-buffer)
-    (delete-window)))
 #+end_src
 
 ** Resize windows
