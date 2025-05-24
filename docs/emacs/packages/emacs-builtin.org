@@ -460,6 +460,7 @@ supported natively. I will describe them here.
 (use-package tramp
   :straight (tramp :type built-in :build t)
   :config
+  <<tramp-nixos>>
   <<tramp-add-yadm>>
   (setopt tramp-ssh-controlmaster-options nil
           tramp-verbose 0
@@ -467,6 +468,19 @@ supported natively. I will describe them here.
           tramp-chunksize 2000)
   (add-to-list 'backup-directory-alist ; deactivate auto-save with TRAMP
                (cons tramp-file-name-regexp nil)))
+#+end_src
+
+*** SSHing into NixOS remotes
+When using TRAMP to SSH into remote NixOS hosts, the true =$PATH= gets
+truncated, rendering some binaries unavailable, such as =git= or =nil= (an
+LSP server for the Nix language). To fix that, we simply need to write
+the following code.
+#+name: tramp-nixos
+#+begin_src emacs-lisp :tangle no
+(require 'tramp-sh)
+(setq tramp-remote-path (append tramp-remote-path
+                                '(tramp-own-remote-path)))
+
 #+end_src
 
 *** Yadm
