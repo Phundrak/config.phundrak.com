@@ -499,21 +499,6 @@ Quick sidenote: on Arch Linux, you’ll need to install either ~mu~ or
 ~mu-git~ from the AUR in order to use mu4e. I also have a ~.desktop~ file
 to make it possible to open mu4e directly from my program picker. It
 uses the shell script ~emacsmail~ I’ve written [[file:/scripts.md#emacsmail][here]].
-#+header: :mkdirp yes
-#+begin_src conf-desktop :tangle ~/.local/share/applications/mu4e.desktop
-[Desktop Entry]
-Name=Mu4e
-GenericName=Mu4e
-Comment=Maildir Utils for Emacs
-MimeType=x-scheme-handler/mailto;
-Exec=/home/phundrak/.local/bin/emacsmail %U
-Icon=emacs
-Type=Application
-Terminal=false
-Categories=Network;Email;TextEditor
-StartupWMClass=Gnus
-Keywords=Text;Editor;
-#+end_src
 
 **** Interact with iCalendar events
 Something that has always bugged me was how to properly with iCalendar
