@@ -395,7 +395,7 @@ configuration for the ~mu4e~ package itself.
 #+begin_src emacs-lisp
 (use-package mu4e
   :after all-the-icons
-  :straight (:build t)
+  :straight (:build nil)
   :commands mu4e mu4e-compose-new
   :init
   (defun mu4e--main-action-str (name func)
@@ -556,7 +556,7 @@ and how to retrieve them.
 #+name: mu4e-mail-on-machine
 #+begin_src emacs-lisp :tangle no
 (setq mu4e-get-mail-command "mbsync -a"
-      mu4e-root-maildir     "~/Mail"
+      mu4e-root-maildir     (concat (getenv "HOME") "/Mail/lucien@phundrak.com/")
       mu4e-trash-folder     "/Trash"
       mu4e-refile-folder    "/Archive"
       mu4e-sent-folder      "/Sent"
@@ -790,29 +790,6 @@ With this piece of code, I can simply jump to my inbox maildir with
         (:maildir "/Junk" :key ?j)
         (:maildir "/Trash" :key ?t)))
 #+end_src
-
-**** Dealing with spammers
-I’m sure you have received at least one email recently from a sketchy
-email address asking you something that might be completely unrelated
-to what you do, or at least somewhat related. Fortunately, [[https://twitter.com/Boris/status/1360208504544444417][we have a
-hero]]! Now, let me write a function that will insert their
-pre-written text at point to avoid me going back to their Twitter
-thread each time I want to shut spammers up.
-#+begin_src emacs-lisp
-(defun reply-to-bill ()
-  (interactive)
-  (insert "Please forward this email to bill@noprocurement.com,
-and delete my email, as I’ll be changing jobs soon, and this
-email address will no longer be active.
-
-Bill Whiskoney is a senior partner at Nordic Procurement
-Services, and he handles our budget and will help you further or
-introduce you to someone who can."))
-#+end_src
-
-If you want the full story, make sure to read the whole thread, I
-guarantee it, it’s worth your time! And in case the Twitter thread
-disappear in the future, [[https://threader.app/thread/1360208504544444417][here is a backup]].
 
 **** Getting Fancy
 I’m not a huge fan of mu4e’s default icons marking my emails, so I’ll
@@ -1561,7 +1538,8 @@ excluded files.
                           eol)
                      ,(rx "/"
                           (or "rsync" "ssh" "tmp" "yadm" "sudoedit" "sudo")
-                          (* any)))))
+                          (* any))
+                     "/nix/.*")))
 #+end_src
 
 ** Screenshot
