@@ -14,6 +14,14 @@ through [[https://www.gnu.org/software/emacs/][Emacs]].
 These Markdown files are then compiled by [[https://v2.vuepress.vuejs.org/][Vuepress]] into a beautiful
 website available at [[https://beta.config.phundrak.com][config.phundrak.com]].
 
+Note that a few configs here are no longer up to date. I am in the
+process of switching over to [[https://nixos.org/][NixOS]]. You can find my current NixOS
+configuration [[https://labs.phundrak.com/phundrak/nix-config][in this repository]]. It will eventually circle back to
+being a litterary configuration. Not every piece of software will be
+configured by Nix exclusively though, Emacs for instance will stay
+relatively free of Nix configurations aside from its basic
+installation.
+
 * Running the project
 In order to run the project, you need to export all =.org= files in the
 Markdown format. To do that easily, you can use an org project setup
