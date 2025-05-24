@@ -190,6 +190,7 @@ awesome!
   :init
   (setq lsp-keymap-prefix "C-c l"
         read-process-output-max (* 3 1024 1024))
+  (setenv "LSP_USE_PLISTS" "true")
   :hook ((c-mode          . lsp-deferred)
          (c++-mode        . lsp-deferred)
          (html-mode       . lsp-deferred)
