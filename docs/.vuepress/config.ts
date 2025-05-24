@@ -72,6 +72,7 @@ export default defineUserConfig({
         children: [
           '/deprecated/awesome',
           '/deprecated/bootstrap',
+          '/emacs/packages/exwm',
           '/deprecated/i3',
           '/deprecated/nano',
           '/neofetch',

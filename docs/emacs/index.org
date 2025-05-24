@@ -90,7 +90,6 @@ block.
 | =autocompletion.el=      | [[file:./packages/autocompletion.org][Packages — Autocompletion]]        |
 | =editing.el=             | [[file:./packages/editing.org][Packages — Editing]]               |
 | =emacs-builtin.el=       | [[file:./packages/emacs-builtin.org][Packages — Emacs Built-ins]]       |
-| =exwm.el=                | [[file:./packages/exwm.org][Packages — EXWM]]                  |
 | =helpful.el=             | [[file:./packages/helpful.org][Packages — Making My Life Easier]] |
 | =latex.el=               | [[file:./packages/latex.org][Packages — LaTeX]]                 |
 | =misc.el=                | [[file:./packages/misc.org][Packages — Misc]]                  |
@@ -107,8 +106,8 @@ block.
            " ")
 #+end_src
 
-#+RESULTS[f76449860408293997e174ff94c743d46951835b]: generate-modules
-: "basic-config.el" "custom-elisp.el" "package-manager.el" "keybinding-managemers.el" "applications.el" "autocompletion.el" "editing.el" "emacs-builtin.el" "exwm.el" "helpful.el" "latex.el" "misc.el" "org.el" "programming.el" "visual-config.el" "keybindings.el"
+#+RESULTS[05f9bb535bec2ba84390cc118600323683f51e7c]: generate-modules
+: "basic-config.el" "custom-elisp.el" "package-manager.el" "keybinding-managers.el" "applications.el" "autocompletion.el" "editing.el" "emacs-builtin.el" "helpful.el" "latex.el" "misc.el" "org.el" "programming.el" "visual-config.el" "keybindings.el"
 
 #+begin_src emacs-lisp :noweb yes
 (dolist (module '(<<generate-modules()>>))
