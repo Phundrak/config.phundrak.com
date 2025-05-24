@@ -1263,7 +1263,7 @@ development.
 First, I’m using =rust-mode= to tell it to use [[https://tree-sitter.github.io/tree-sitter/][tree sitter]].
 #+begin_src emacs-lisp
 (use-package rust-mode
-  :straight
+  :straight t
   :defer t
   :init
   (setq rust-mode-treesitter-derive t))
@@ -1283,7 +1283,6 @@ several improvements on top of =rust-mode=.
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
   (setq rustic-lsp-client 'lsp-mode)
-  (add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
   :general
   (general-define-key
    :keymaps 'rustic-mode-map
