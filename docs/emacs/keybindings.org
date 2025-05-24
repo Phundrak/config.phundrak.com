@@ -120,8 +120,7 @@ I also have two main shell-related functions, prefixed with ~as~.
 |-----+-------------+-------------+-------------|
 |     |             | shells      |             |
 | e   | eshell-new  |             |             |
-| v   | vterm       |             | vterm       |
-| V   | multi-vterm |             | multi-vterm |
+| t   | eat         |             | eat         |
 
 *** Treemacs
 #+name: keybindings-treemacs

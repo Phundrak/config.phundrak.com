@@ -1557,6 +1557,22 @@ look nice.
 #+end_src
 
 ** Shells
+*** Eat
+Eat is a modern shell emulator for Emacs. I use it as a replacement
+for VTerm as I never got VTerm to actually work on NixOS.
+#+begin_src emacs-lisp
+(use-package eat
+  :defer t
+  :straight (eat :type git
+                 :host codeberg
+                 :repo "akib/emacs-eat"
+                 :files ("*.el" ("term" "term/*.el") "*.texi"
+                         "*.ti" ("terminfo/e" "terminfo/e/*")
+                         ("terminfo/65" "terminfo/65/*")
+                         ("integration" "integration/*")
+                         (:exclude ".dir-locals.el" "*-tests.el"))))
+#+end_src
+
 *** Shell-pop
 Shell-pop allows the user to easily call for a new shell in a pop-up
 buffer.
@@ -1566,54 +1582,13 @@ buffer.
   :straight (:build t)
   :custom
   (shell-pop-default-directory "/home/phundrak")
-  (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda () (eshell shell-pop-term-shell)))))
+  (shell-pop-shell-type (quote ("eat" "*eat-pop*" (lambda () (eat)))))
   (shell-pop-window-size 30)
   (shell-pop-full-span nil)
   (shell-pop-window-position "bottom")
   (shell-pop-autocd-to-working-dir t)
   (shell-pop-restore-window-configuration t)
   (shell-pop-cleanup-buffer-at-process-exit t))
-#+end_src
-
-*** VTerm
-VTerm gives Emacs access to regular shells with an almost regular
-emulator. Be aware you will most likely need to hit ~C-c~ twice to send
-an interrupt signal.
-#+begin_src emacs-lisp
-(use-package vterm
-  :defer t
-  :straight (:build t)
-  :config
-  (setq vterm-shell "/usr/bin/fish"
-        vterm-always-compile-module t))
-#+end_src
-
-One annoying think with vterm is it only can create one buffer, you
-can’t have multiple vterm buffers by default. ~multi-vterm~ fixes this
-issue.
-#+begin_src emacs-lisp
-(use-package multi-vterm
-  :after vterm
-  :defer t
-  :straight (:build t)
-  :general
-  (phundrak/major-leader-key
-    :packages '(vterm multi-vterm)
-    :keymap 'vterm-mode-map
-    "c" #'multi-vterm
-    "n" #'multi-vterm-next
-    "p" #'multi-vterm-prev))
-#+end_src
-
-Another really neat package is =eshell-vterm= which allows to use vterm
-to run visual commands when in Eshell.
-#+begin_src emacs-lisp
-(use-package eshell-vterm
-  :after eshell
-  :straight (:build t)
-  :config
-  (eshell-vterm-mode)
-  (defalias 'eshell/v 'eshell-exec-visual))
 #+end_src
 
 ** XWidgets Webkit Browser
