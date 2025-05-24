@@ -1,10 +1,17 @@
-#+title: StumpWM
+#+title: StumpWM (Deprecated)
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
 [[file:../img/stumpwm.png]]
 
-* StumpWM
+* StumpWM (deprecated)
+
+#+html: ::: warning
+This configuration of StumpWM is no longer maintained and was
+deprecated on May 24th, 2025. Therefore, it may not be up to date with
+the latest versions of StumpWM.
+#+html: :::
+
 ** Introduction
 *** What is StumpWM?
 [[https://stumpwm.github.io/][StumpWM]] is a tiling window manager inheriting from [[http://www.nongnu.org/ratpoison/][RatPoison]], written

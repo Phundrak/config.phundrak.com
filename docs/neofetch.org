@@ -1,10 +1,17 @@
-#+title: Neofetch
+#+title: Neofetch (Deprecated)
 #+setupfile: headers
 #+PROPERTY: header-args :noweb yes :exports code :tangle no :exports none
 #+PROPERTY: header-args:sh :tangle ~/.config/neofetch/config.conf :exports code
 #+PROPERTY: header-args:sh+ :noweb yes :padline no :mkdirp yes
 
-* Neofetch
+* Neofetch (Deprecated)
+
+#+html: ::: warning
+This configuration of Neofetch is no longer maintained and was
+deprecated on May 24th, 2025. Therefore, it may not be up to date with
+the latest versions of Neofetch.
+#+html: :::
+
 [[https://github.com/dylanaraps/neofetch][Neofetch]] is a CLI utility used to display system information. It was
 written in Bash, and thus its configuration file is written as a Bash
 script too. This document was written with org-mode, and my

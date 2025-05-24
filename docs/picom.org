@@ -2,7 +2,14 @@
 #+setupfile: headers
 #+PROPERTY: header-args:conf :exports code :mkdirp yes :tangle ~/.config/picom/picom.conf
 
-* Picom
+* Picom (deprecated)
+
+#+html: ::: warning
+This configuration of Picom is no longer maintained and was deprecated
+on May 24th, 2025. Therefore, it may not be up to date with the latest
+versions of Picom.
+#+html: :::
+
 Picom is the successor to Compton, a standalone compositor for Xorg. It provides
 compositing for WM that do not provide any, such as i3. I am currently using
 [[https://github.com/ibhagwan/picom][ibhagwan’s fork of compton]] which provides the ~dual-kawase~ blur from [[https://github.com/tryone144/compton][tryone’s
