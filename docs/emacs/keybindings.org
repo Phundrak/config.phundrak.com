@@ -116,11 +116,11 @@ Here are my apps keybindings. Each one of them is prefixed by ~a~.
 *** Shell apps
 I also have two main shell-related functions, prefixed with ~as~.
 #+name: keybindings-apps-shell
-| Key | Function    | Description | Package     |
-|-----+-------------+-------------+-------------|
-|     |             | shells      |             |
-| e   | eshell-new  |             |             |
-| t   | eat         |             | eat         |
+| Key | Function   | Description | Package |
+|-----+------------+-------------+---------|
+|     |            | shells      |         |
+| e   | eshell-new |             |         |
+| t   | eat        |             | eat     |
 
 *** Treemacs
 #+name: keybindings-treemacs

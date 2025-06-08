@@ -1555,7 +1555,12 @@ for VTerm as I never got VTerm to actually work on NixOS.
                          "*.ti" ("terminfo/e" "terminfo/e/*")
                          ("terminfo/65" "terminfo/65/*")
                          ("integration" "integration/*")
-                         (:exclude ".dir-locals.el" "*-tests.el"))))
+                         (:exclude ".dir-locals.el" "*-tests.el")))
+  :init
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+  (eat-eshell-mode 1)
+  :config
+  (add-hook 'eat-exit-hook #'kill-this-buffer))
 #+end_src
 
 *** Shell-pop
