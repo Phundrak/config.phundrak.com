@@ -1337,6 +1337,10 @@ hand.
          (scss-mode . emmet-mode)
          (web-mode  . emmet-mode))
   :config
+  (setopt standard-indent 2
+          web-mode-block-padding 0
+          web-mode-part-padding 0
+          web-mode-markup-indent-offset 0)
   (general-define-key
    :keymaps 'emmet-mode-keymap
    "M-RET" #'emmet-expand-yas)
