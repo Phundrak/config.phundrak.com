@@ -45,6 +45,7 @@ variables to install grammars for different languages.
           (toml "https://github.com/tree-sitter/tree-sitter-toml")
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (qml "https://github.com/yuja/tree-sitter-qmljs")
           (yaml "https://github.com/ikatyang/tree-sitter-yaml"))))
 #+end_src
 
@@ -718,6 +719,29 @@ or some I write myself.
   (setq plantuml-default-exec-mode 'jar
         plantuml-jar-path "~/.local/bin/plantuml.jar"
         org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
+#+end_src
+
+*** QML
+I’m currently working on a [[https://quickshell.org/][Quickshell]] configuration to replace my
+[[https://github.com/Alexays/Waybar][Waybar]] one. Quickshell is configured with [[https://doc.qt.io/qt-6/qmlapplications.html][QML]], which requires its
+major mode.
+
+#+begin_src emacs-lisp
+(use-package qml-ts-mode
+  :after lsp-mode
+  :straight (qml-ts-mode :build t
+                         :type git
+                         :host github
+                         :repo "xhcoding/qml-ts-mode")
+  :config
+  (add-to-list 'lsp-language-id-configuration '(qml-ts-mode . "qml-ts"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("qmlls" "-E"))
+                    :activation-fn (lsp-activate-on "qml-ts")
+                    :server-id 'qmlls))
+  (add-hook 'qml-ts-mode-hook (lambda ()
+                                (setq-local electric-indent-chars '(?\n ?\( ?\) ?{ ?} ?\[ ?\] ?\; ?,))
+                                (lsp-deferred))))
 #+end_src
 
 *** Ron files
