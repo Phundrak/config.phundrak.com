@@ -1413,6 +1413,7 @@ languages in the same buffer, mainly HTML, CSS, and JavaScript.
          ("\\.svelte\\'"     . web-mode)
          ("\\.ctp\\'"        . web-mode)
          ("\\.djhtml\\'"     . web-mode)
+         ("\\.ftl\\'"     . web-mode)
          ("\\.vue\\'"        . web-mode))
   :config
   (setopt web-mode-markup-indent-offset 2
@@ -1460,6 +1461,7 @@ Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
 (use-package astro-ts-mode
   :straight (:build t)
   :defer t
+  :mode "\\.astro\\'"
   :init
   (mapc #'treesit-install-language-grammar '(astro css tsx)))
 #+end_src
@@ -1475,6 +1477,7 @@ Let’s customize a bit the built-in CSS mode.
   :hook (scss-mode . prettier-js-mode)
   :init
   (put 'css-indent-offset 'safe-local-variable #'integerp)
+  :config (setopt css-indent-offset 2)
   :general
   (phundrak/major-leader-key
    :keymaps 'css-mode-map
@@ -1528,6 +1531,18 @@ activate when I open ~.less~ files by default. Let’s fix that.
    :keymaps 'less-css-mode-map
    :packages 'lsp-mode
    "l"  '(:keymap lsp-command-map :which-key "lsp")))
+#+end_src
+
+I also use from time to time TailwindCSS. Let’s add its LSP
+configuration.
+#+begin_src emacs-lisp
+(use-package lsp-tailwindcss
+  :defer t
+  :after lsp
+  :init (setq lsp-tailwindcss-add-on-mode t)
+  :straight (lsp-tailwindcss :type git
+                             :host github
+                             :repo "merrickluo/lsp-tailwindcss"))
 #+end_src
 
 **** Javascript
@@ -1606,6 +1621,19 @@ And finally, here is a formatter for JavaScript.
   :hook ((rjsx-mode typescript-mode) . prettier-js-mode)
   :config
   (setq prettier-js-args '("--single-quote" "--jsx-single-quote")))
+#+end_src
+
+**** Json
+My configuration for Json is quite short, I’m just defaulting to
+Emacs’ built-in tree-sitter mode for any =.json= file and reducing the
+indentation to 2 spaces for any file using a mode from the built-in
+package =js=.
+
+#+begin_src emacs-lisp
+(use-package js
+  :straight (:type built-in)
+  :mode ("\\.json\\'" . json-ts-mode)
+  :config (setopt js-indent-level 2))
 #+end_src
 
 **** Typescript
