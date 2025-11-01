@@ -466,7 +466,13 @@ My keybindings for my projects are prefixed by ~p~.
 | Key | Function                       | Description | Package  |
 |-----+--------------------------------+-------------+----------|
 |     |                                | org         |          |
-| c   | org-capture                    |             | org      |
+| c   |                                | clock       |          |
+| cc  | org-clock-cancel               |             | org      |
+| cd  | org-clock-display              |             | org      |
+| cg  | org-clock-goto                 |             | org      |
+| ci  | org-clock-in                   |             | org      |
+| co  | org-clock-out                  |             | org      |
+| C   | org-capture                    |             | org      |
 | r   |                                | roam        |          |
 | rb  | org-mark-ring-goto             | back        | org-roam |
 | rB  | org-roam-buffer-toggle         |             | org-roam |
