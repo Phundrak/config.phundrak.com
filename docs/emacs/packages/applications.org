@@ -1311,6 +1311,51 @@ left it.
 #+end_src
 
 ** Project Management
+*** Jujutsu
+Let’s face it: [[https://git-scm.com/][git]] is awesome. There’s a reason it took over the world
+of software development, replacing pretty much all competitors such as
+subversion. And I will forever love it. But, it has a lot of
+drawbacks, especially its interface that is... not great, to put it
+mildly. I absolutely respect its commitment to staying backward
+compatible, but it’s not great.
+
+[[https://jj-vcs.github.io/][Jujutsu]] on the other hand, is awesome! It’s interface is really clean,
+really intuitive, especially for someone like me who rebases a LOT!
+And, for now, it still uses git as its backend, so it’s entirely
+compatible with git repositories. In fact, I pretty much don’t use git
+anymore, jj (abbreviation of Jujutsu) has almost completely replaced
+git for me.
+
+It comes to no surprise then that I will use [[https://elpa.gnu.org/packages/vc-jj.html][=vc-jj=]], a Jujutsu
+backend for =vc.el= and =project.el=.
+
+#+begin_src emacs-lisp
+(use-package vc-jj
+  :straight (:build t)
+  :defer nil)
+#+end_src
+
+As mentioned in the package’s README, I do need to set these lines in
+my jj config:
+#+begin_src toml :tangle no
+[ui]
+diff-formatter = ":git"
+conflict-marker-style = "git"
+#+end_src
+
+I also like Magit’s interface, as you can see in my [[file:./applications.md#magit][Magit]] config.
+Therefore, let’s install =jujutsu-mode= which attempts to recreate a
+Magit-style interface for Jujutsu.
+
+#+begin_src emacs-lisp
+(use-package jj-mode
+  :straight (:build t :host github :repo "bolivier/jj-mode.el")
+  :defer t)
+#+end_src
+
+Though, I’ll be honest, I generally prefer to use Jujutsu in the
+terminal, unlike git.
+
 *** Magit
 Magit is an awesome wrapper around Git for Emacs! Very often, I go
 from disliking to really hating Git GUI clients because they often
