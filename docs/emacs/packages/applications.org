@@ -1697,31 +1697,6 @@ buffer.
   (shell-pop-cleanup-buffer-at-process-exit t))
 #+end_src
 
-** XWidgets Webkit Browser
-I used to use the xwidgets webkit browser in order to view or preview
-HTML files from Emacs, but it seems the Cairo background transparency
-patch breaks it. So while this isn’t patched, I will disable Xwidgets
-in my Emacs build, and these keybinds *will not* be tangled.
-#+begin_src emacs-lisp :tangle no
-(phundrak/evil
- :keymaps 'xwidget-webkit-mode-map
- "<mouse-4>" #'xwidget-webkit-scroll-down-line
- "<mouse-5>" #'xwidget-webkit-scroll-up-line
- "c"         #'xwidget-webkit-scroll-backward
- "t"         #'xwidget-webkit-scroll-up-line
- "s"         #'xwidget-webkit-scroll-down-line
- "r"         #'xwidget-webkit-scroll-forward
- "h"         #'xwidget-webkit-goto-history
- "C"         #'xwidget-webkit-back
- "R"         #'xwidget-webkit-forward
- "C-r"       #'xwidget-webkit-reload
- "j"         nil
- "k"         nil
- "l"         nil
- "H"         nil
- "L"         nil
- "C-d"       #'xwidget-webkit-scroll-up
- "C-u"       #'xwidget-webkit-scroll-down)
 #+end_src
 
 ** Wttr.in
