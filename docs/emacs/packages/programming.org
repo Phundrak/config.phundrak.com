@@ -615,6 +615,13 @@ Markdown.
   :defer t)
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package nix-ts-mode
+  :mode "\\.nix\\'"
+  :straight (:build t)
+  :config (add-to-list 'major-mode-remap-alist '((nix-mode . nix-ts-mode))))
+#+end_src
+
 *** Nginx
 Nginx is another webserver, older and more mature than Caddy. A couple
 of packages are required in order to be able to properly work with
