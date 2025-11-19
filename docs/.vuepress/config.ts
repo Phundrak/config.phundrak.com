@@ -1,19 +1,14 @@
 import { defaultTheme } from '@vuepress/theme-default';
 import { viteBundler } from '@vuepress/bundler-vite';
 import { defineUserConfig } from 'vuepress';
-import { searchProPlugin } from 'vuepress-plugin-search-pro';
+import { slimsearchPlugin } from '@vuepress/plugin-slimsearch';
 
 import head from './head';
-
-interface ChildPage {
-  text: string;
-  link: string;
-}
 
 export default defineUserConfig({
   lang: 'en-US',
   title: "Phundrak's Dotfiles",
-  head: head,
+  head: head as any,
   description: "Documentation of the GNU/Linux configuration of P'undrak",
   bundler: viteBundler({}),
   markdown: {
@@ -25,9 +20,9 @@ export default defineUserConfig({
     },
   },
   plugins: [
-    searchProPlugin({
-      indexContent: true,
-    }),
+    slimsearchPlugin({
+      indexContent: true
+    })
   ],
   theme: defaultTheme({
     sidebarDepth: 5,

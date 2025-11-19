@@ -11,14 +11,14 @@
   "license": "AGPL-3.0",
   "private": true,
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.14",
-    "@vuepress/plugin-umami-analytics": "2.0.0-rc.41",
-    "@vuepress/theme-default": "2.0.0-rc.41",
-    "vuepress": "2.0.0-rc.14",
-    "vuepress-plugin-search-pro": "2.0.0-rc.52"
+    "@vuepress/bundler-vite": "2.0.0-rc.26",
+    "@vuepress/plugin-slimsearch": "^2.0.0-rc.118",
+    "@vuepress/plugin-umami-analytics": "2.0.0-rc.118",
+    "@vuepress/theme-default": "2.0.0-rc.118",
+    "vuepress": "2.0.0-rc.26"
   },
   "dependencies": {
-    "less": "^4.2.0",
+    "less": "^4.4.2",
     "nord": "^0.2.1"
   },
   "scripts": {

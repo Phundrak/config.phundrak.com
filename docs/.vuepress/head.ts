@@ -1,9 +1,9 @@
 interface SimplifiedHeader {
   tag: string;
-  content: [any];
+  content: any[];
 }
 
-const simplifiedHead = [
+const simplifiedHead:SimplifiedHeader[] = [
   {
     tag: 'script',
     content: [
@@ -128,7 +128,7 @@ const simplifiedHead = [
   },
 ];
 
-let head = [];
+let head:[string, any, string?][] = [];
 simplifiedHead.forEach((tag: SimplifiedHeader) => {
   let tagName = tag.tag;
   tag.content.forEach((element) => {
