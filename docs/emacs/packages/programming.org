@@ -1425,9 +1425,7 @@ Auto-completion for ~emmet-mode~, ~html-mode~, and ~web-mode~.
 (use-package astro-ts-mode
   :straight (:build t)
   :defer t
-  :mode "\\.astro\\'"
-  :init
-  (mapc #'treesit-install-language-grammar '(astro css tsx)))
+  :mode "\\.astro\\'")
 #+end_src
 
 **** CSS
