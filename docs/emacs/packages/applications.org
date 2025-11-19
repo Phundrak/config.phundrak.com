@@ -1697,6 +1697,12 @@ buffer.
   (shell-pop-cleanup-buffer-at-process-exit t))
 #+end_src
 
+** Wakatime
+#+begin_src emacs-lisp
+(use-package wakatime-mode
+  :defer t
+  :straight (:build t)
+  :init (global-wakatime-mode))
 #+end_src
 
 ** Wttr.in
