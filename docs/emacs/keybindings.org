@@ -407,10 +407,10 @@ My keybindings for jumping around are prefixed by ~j~.
 | Key | Function                         | Description | Package  |
 |-----+----------------------------------+-------------+----------|
 |     |                                  | language    |          |
+| .   | langtool-correct-at-point        |             | langtool |
 | B   | langtool-correct-buffer          |             | langtool |
 | b   | langtool-check-buffer            |             | langtool |
 | c   | langtool-check                   |             | langtool |
-| C   | langtool-correct-at-point        |             | langtool |
 | d   | langtool-check-done              |             | langtool |
 | l   | langtool-switch-default-language |             | langtool |
 | p   | langtool-show-message-at-point   |             | langtool |
