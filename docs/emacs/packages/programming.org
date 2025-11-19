@@ -1510,9 +1510,7 @@ configuration.
   :defer t
   :after lsp
   :init (setq lsp-tailwindcss-add-on-mode t)
-  :straight (lsp-tailwindcss :type git
-                             :host github
-                             :repo "merrickluo/lsp-tailwindcss"))
+  :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss"))
 #+end_src
 
 **** Javascript
@@ -1605,8 +1603,8 @@ package =js=.
   :config (setopt js-indent-level 2))
 #+end_src
 
-**** Typescript
-Typescript is a safer alternative to JavaScript. Let’s install its major mode then.
+**** TypeScript
+TypeScript is a safer alternative to JavaScript. Let’s install its major mode then.
 #+begin_src emacs-lisp
 (use-package typescript-mode
   :defer t
@@ -1673,7 +1671,12 @@ simplest fix is to run the following command:
 #+begin_src sh
 npm install --save-dev vue-tsc typescript
 #+end_src
+
 Or replace =npm= with whichever package manager you prefer.
 
 If you want to work with Vue in Emacs, =web-mode= is more than enough
 when paired with an LSP server.
+
+With the Nix package manager, the Vue 3 LSP server is
+=nodePackages."@vue/language-server"= and not =vue-language-server=. The
+latter is for Vue 2.
