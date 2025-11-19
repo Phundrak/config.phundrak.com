@@ -33,6 +33,35 @@
   :defer t)
 #+end_src
 
+** AI
+*** Claude Code Emacs
+#+begin_src emacs-lisp
+(use-package claude-code-ide
+  :defer t
+  :straight (:build t :type git :host github :repo "manzaltu/claude-code-ide.el")
+  :custom
+  ((claude-code-ide-terminal-backend 'eat)
+   (claude-code-ide-enable-mcp-server t))
+  :config
+  (claude-code-ide-emacs-tools-setup))
+#+end_src
+
+*** Editor Code Assistant
+The Editor Code Assistant, or ECA, is a nice package that allows the
+user to use an AI agent right in Emacs. AI is certainly not something
+that will replace programmers any time soon, but it’s still a nice
+tool to have when you know what you’re doing.
+
+#+begin_src emacs-lisp
+(use-package eca
+  :defer t
+  :init (setopt eca-extra-args '("--verbose" "--log-level debug"))
+  :straight (:build t
+                    :host github
+                    :repo "editor-code-assistant/eca-emacs"
+                    :files ("*.el")))
+#+end_src
+
 ** Bitwarden
 This package is still a very much work in progress one I’m developing
 in order to interact with Bitwarden in Emacs with the help of the
@@ -295,6 +324,7 @@ know about it since I don’t want it to include it a second time after
 (setq message-signature nil
       mail-signature    nil)
 #+end_src
+
 *** Gnus
 #+begin_src emacs-lisp
 (use-package gnus

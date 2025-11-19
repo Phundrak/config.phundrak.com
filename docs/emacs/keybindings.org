@@ -90,28 +90,32 @@ Undefining some stuff to make keybind prefixes work correctly.
 ** Apps
 Here are my apps keybindings. Each one of them is prefixed by ~a~.
 #+name: keybindings-apps
-| Key | Function                   | Description | Package    |
-|-----+----------------------------+-------------+------------|
-|     |                            | apps        |            |
-| c   | calc                       |             |            |
-| C   |                            | calendar    |            |
-| CC  | calendar                   |             |            |
-| Co  | org-agenda                 |             | org        |
-| Cs  | org-caldav-sync            |             | org-caldav |
-| d   | docker                     |             | docker     |
-| E   | elfeed                     |             | elfeed     |
-| e   |                            | email       |            |
-| ec  | mu4e-compose-new           |             | mu4e       |
-| em  | mu4e                       |             | mu4e       |
-| k   | keycast-mode               |             | keycast    |
-| K   | keycast-log-mode           |             | keycast    |
-| m   |                            | mastodon    |            |
-| mm  | mastodon                   |             | mastodon   |
-| mn  | mastodon-notifications-get |             | mastodon   |
-| mt  | mastodon-toot              |             | mastodon   |
-| T   | tetris                     |             |            |
-| S   | screenshot                 |             | screenshot |
-| w   | wttrin                     |             | wttrin     |
+| Key | Function                   | Description | Package         |
+|-----+----------------------------+-------------+-----------------|
+|     |                            | apps        |                 |
+| a   |                            | AI          |                 |
+| ae  | eca                        |             | eca             |
+| aC  | claude-code-ide            |             | claude-code-ide |
+| ac  | claude-code-ide-menu       |             | claude-code-ide |
+| c   | calc                       |             |                 |
+| C   |                            | calendar    |                 |
+| CC  | calendar                   |             |                 |
+| Co  | org-agenda                 |             | org             |
+| Cs  | org-caldav-sync            |             | org-caldav      |
+| d   | docker                     |             | docker          |
+| E   | elfeed                     |             | elfeed          |
+| e   |                            | email       |                 |
+| ec  | mu4e-compose-new           |             | mu4e            |
+| em  | mu4e                       |             | mu4e            |
+| k   | keycast-mode               |             | keycast         |
+| K   | keycast-log-mode           |             | keycast         |
+| m   |                            | mastodon    |                 |
+| mm  | mastodon                   |             | mastodon        |
+| mn  | mastodon-notifications-get |             | mastodon        |
+| mt  | mastodon-toot              |             | mastodon        |
+| T   | tetris                     |             |                 |
+| S   | screenshot                 |             | screenshot      |
+| w   | wttrin                     |             | wttrin          |
 
 *** Shell apps
 I also have two main shell-related functions, prefixed with ~as~.
