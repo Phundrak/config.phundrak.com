@@ -18,17 +18,17 @@ variables to install grammars for different languages.
   :hook ((bash-ts-mode c-ts-mode c++-ts-mode
           html-ts-mode js-ts-mode typescript-ts-mode
           json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
-          css-ts-mode yaml-ts-mode) . lsp-deferred)
-  :init
-  (add-to-list 'treesit-extra-load-path
-               (expand-file-name "bin" tree-sitter-langs-grammar-dir)))
+          css-ts-mode yaml-ts-mode) . lsp-deferred))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package tree-sitter-langs
   :after tree-sitter
   :straight t
-  :custom (global-tree-sitter-mode t))
+  :custom (global-tree-sitter-mode t)
+  :init
+  (add-to-list 'treesit-extra-load-path
+               (expand-file-name "bin" tree-sitter-langs-grammar-dir)))
 
 (use-package treesit-auto
   :after tree-sitter
@@ -36,6 +36,7 @@ variables to install grammars for different languages.
   :config (global-treesit-auto-mode))
 
 (use-package treesit-fold
+  :after tree-sitter
   :straight (:build t :host github :repo "emacs-tree-sitter/treesit-fold")
   :config (treesit-fold-mode))
 #+end_src
