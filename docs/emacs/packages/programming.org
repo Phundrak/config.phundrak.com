@@ -307,42 +307,6 @@ that currently, ~dap-firefox~ and ~dap-chrome~ don’t work correctly due to
            :cwd nil))))
 #+end_src
 
-*** Langtool
-LanguageTool is a great tool for catching typos and grammatical errors
-in quite a few languages.
-#+begin_src emacs-lisp
-(use-package langtool
-  :defer t
-  :straight (:build t)
-  :commands (langtool-check
-             langtool-check-done
-             langtool-show-message-at-point
-             langtool-correct-buffer)
-  :custom
-  (langtool-default-language "en-US")
-  (langtool-mother-tongue "fr")
-  :config
-  (setq langtool-java-classpath (string-join '("/usr/share/languagetool"
-                                               "/usr/share/java/languagetool/*")
-                                             ":")))
-#+end_src
-
-Finally, =writegood-mode= detects some simple general rules when writing
-in English and can also calculate the Flesh-Kincaid levels of a
-document.
-#+begin_src emacs-lisp
-(use-package writegood-mode
-  :defer t
-  :straight (:build t)
-  :hook org-mode latex-mode
-  :general
-  (phundrak/major-leader-key
-    :keymaps 'writegood-mode-map
-    "g" #'writegood-grade-level
-    "r" #'writegood-reading-ease))
-#+end_src
-
-**** TODO Auto detection of langtool java classpath              :noexport:
 ** DSLs
 DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
