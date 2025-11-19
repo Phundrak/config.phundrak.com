@@ -1416,7 +1416,16 @@ Magit-style interface for Jujutsu.
 #+end_src
 
 Though, I’ll be honest, I generally prefer to use Jujutsu in the
-terminal, unlike git.
+terminal, unlike git. Something I do use Emacs for, however, is
+writing my commit messages.
+
+#+begin_src emacs-lisp
+(use-package jjdescription
+  :defer nil
+  :straight (:build t)
+  :commands jjdescription-mode
+  :init (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . jjdescription-mode)))
+#+end_src
 
 *** Magit
 Magit is an awesome wrapper around Git for Emacs! Very often, I go
