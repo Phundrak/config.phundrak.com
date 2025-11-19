@@ -1571,15 +1571,14 @@ don’t. Let’s interact with NPM through Emacs then.
 #+begin_src emacs-lisp
 (use-package npm-transient
   :defer t
-  :straight (npm-transient :build t
-                           :type git
-                           :host github
-                           :repo "Phundrak/npm-transient"))
-  ;; :general
-  ;; (phundrak/major-leader-key
-  ;;   :packages '(npm-transient rjsx-mode web-mode)
-  ;;   :keymaps '(rjsx-mode-map web-mode-map)
-  ;;   "n" #'npm-transient))
+  :straight (:build t
+             :type git
+             :repo "labs.phundrak.com/phundrak/npm-transient.el")
+  :general
+  (phundrak/major-leader-key
+    :packages '(npm-transient typescript-ts-mode web-mode)
+    :keymaps '(web-mode-map)
+    "n" #'npm-transient))
 #+end_src
 
 And finally, here is a formatter for JavaScript.
