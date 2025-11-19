@@ -1041,8 +1041,6 @@ skipping the export part and write your emails directly in org-mode?
         org-msg-signature            (format "\n--\n#+begin_signature\n%s\n#+end_signature"
                                              (with-temp-buffer
                                                (insert-file-contents mail-signature-file)
-                                               (while (re-search-forward "\n" nil t)
-                                                 (replace-match "\n\n"))
                                                (buffer-string))))
   :general
   (phundrak/major-leader-key
