@@ -637,7 +637,7 @@ simple inbox, outbox and all. Actually, four of my bookmarks have a
 couple of filtering:
 - anything in my inbox linked to my university
 - the [[https://emacs-doctor.com/lists/listinfo][emacs-doctor mailing list]] (French Emacs mailing list)
-- emails related to my internship
+- emails related to my job
 - and my inbox for any mail not caught by any of these filters
 And all of them will have the requirement not to display any trashed
 email. Actually, all of my bookmarks will have this requirement,
@@ -682,17 +682,6 @@ Paris 8 (my university).
 
 #+RESULTS[083992a66ea6339d3a55773108e520a6024102c5]: mu4e-bookmarks-filter-uni
 : f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk
-
-Next I need an inbox dedicated to the association I’m part of.
-#+name: mu4e-bookmarks-filter-asso
-#+header: :tangle no :cache yes
-#+begin_src emacs-lisp
-(let ((regex "/.*supran\\.fr/"))
-  <<mu4e-bookmarks-from-copy-to-gen>>)
-#+end_src
-
-#+RESULTS[e04566a9d56624e063b3dd4e2c639e87cf9683aa]: mu4e-bookmarks-filter-asso
-: f:/.*supran\.fr/ OR c:/.*supran\.fr/ OR t:/.*supran\.fr/
 
 As for the Emacs-doctor list, I need to match both the current, modern
 mailing list address but also its old address. The same applies for
@@ -739,7 +728,7 @@ more general development topics, including issues and PRs from GitHub.
 #+RESULTS[673f76e7a682ed64f98dbe6d4a06810436ba6799]: mu4e-bookmarks-filter-github-list
 : list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )
 
-When it comes to my internship, all emails will contain an address containing ~aubay.com~ (that’s where my internship takes place).
+When it comes to my job, all emails will contain an address containing ~aubay.com~ (that’s where my internship takes place).
 - ~/.*aubay.com/~
 
 #+name: mu4e-bookmarks-filter-aubay
@@ -777,7 +766,6 @@ And for the last string-generating code, let’s describe my main inbox:
            (cons "<<mu4e-bookmarks-default-filter()>>"
                  `(,(format "(%s)"
                             <<mu4e-bookmarks-filter-aubay>>)
-                   ,(format "(%s)" "<<mu4e-bookmarks-filter-asso()>>")
                    ,(format "(%s)"
                             <<mu4e-bookmarks-filter-emacs-list>>)
                    ,(format "(%s)"
@@ -787,8 +775,8 @@ And for the last string-generating code, let’s describe my main inbox:
            " AND NOT ")
 #+end_src
 
-#+RESULTS[94290b02a0da24cffeba43e1d47395e801bc0158]: mu4e-bookmarks-inbox-filters
-: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:/.*aubay\.com/ OR c:/.*aubay\.com/ OR t:/.*aubay\.com/) AND NOT (f:/.*supran.fr/ OR c:/.*supran.fr/ OR t:/.*supran.fr/) AND NOT (list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/) AND NOT (list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk)
+#+RESULTS[bcdff5943898f52a55d2e0c124b85fb157983d2f]: mu4e-bookmarks-inbox-filters
+: NOT flag:trashed AND (maildir:/Inbox OR maildir:/Junk) AND NOT (f:/.*aubay\.com/ OR c:/.*aubay\.com/ OR t:/.*aubay\.com/) AND NOT (list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/) AND NOT (list:/.*\.github\.com/ OR t:/.*\.github\.com/ OR f:/.*\.github\.com/ OR contact:/.*\.github\.com/ OR list:/.*\.gitlab\.com/ OR t:/.*\.gitlab\.com/ OR f:/.*\.gitlab\.com/ OR contact:/.*\.gitlab\.com/ OR list:stumpwm-devel@nongnu.org OR t:stumpwm-devel@nongnu.org OR f:stumpwm-devel@nongnu.org OR contact:stumpwm-devel@nongnu.org OR list:/.*sr\.ht/ OR t:/.*sr\.ht/ OR f:/.*sr\.ht/ OR contact:/.*sr\.ht/ AND NOT ( list:/ateliers.*emacs.*/ OR t:/ateliers.*emacs.*/ OR f:/ateliers.*emacs.*/ OR contact:/ateliers.*emacs.*/ OR list:/emacs-.*@gnu.org/ OR t:/emacs-.*@gnu.org/ OR f:/emacs-.*@gnu.org/ OR contact:/emacs-.*@gnu.org/ OR list:/.*eshell-info-banner.*/ OR t:/.*eshell-info-banner.*/ OR f:/.*eshell-info-banner.*/ OR contact:/.*eshell-info-banner.*/ OR list:/.*emacsfr.*/ OR t:/.*emacsfr.*/ OR f:/.*emacsfr.*/ OR contact:/.*emacsfr.*/ )) AND NOT (f:/.*up8\.edu|.*univ-paris8.*/ OR c:/.*up8\.edu|.*univ-paris8.*/ OR t:/.*up8\.edu|.*univ-paris8.*/ OR maildir:/Univ/Inbox OR maildir:/Univ/Junk)
 
 We can finally define our bookmarks! The code reads as follows:
 #+name: mu4e-bookmarks
@@ -798,7 +786,7 @@ We can finally define our bookmarks! The code reads as follows:
          :key ?i
          :query ,(format "%s"
                          <<mu4e-bookmarks-inbox-filters>>))
-        (:name "Internship"
+        (:name "Aubay"
          :key ?a
          :query ,(format "(%s) AND (%s)"
                      "<<mu4e-bookmarks-default-filter()>>"
@@ -818,11 +806,6 @@ We can finally define our bookmarks! The code reads as follows:
          :query ,(format "%s AND %s"
                          "<<mu4e-bookmarks-default-filter()>>"
                          <<mu4e-bookmarks-filter-emacs-list>>))
-        (:name "Supran"
-         :key ?s
-         :query ,(format "%s AND %s"
-                         "<<mu4e-bookmarks-default-filter()>>"
-                         "<<mu4e-bookmarks-filter-asso()>>"))
         (:name "Sent"       :key ?S :query "maildir:/Sent OR maildir:/Univ/Sent")
         (:name "All Unread" :key ?U :query "flag:unread AND NOT flag:trashed")
         (:name "Today"      :key ?t :query "date:today..now AND NOT flag:trashed")
