@@ -43,6 +43,7 @@
   ((claude-code-ide-terminal-backend 'eat)
    (claude-code-ide-enable-mcp-server t))
   :config
+  (setopt claude-code-ide-cli-path "claude-jj")
   (claude-code-ide-emacs-tools-setup))
 #+end_src
 
@@ -60,6 +61,48 @@ tool to have when you know what you’re doing.
                     :host github
                     :repo "editor-code-assistant/eca-emacs"
                     :files ("*.el")))
+#+end_src
+
+*** Ellama
+#+begin_src emacs-lisp
+(use-package ellama
+  :ensure t
+  :bind ("C-c e" . ellama)
+  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+  :init
+  (require 'llm-ollama)
+  (setopt ellama-provider
+          (make-llm-ollama :chat-model "gemma3:27b"
+                           :embedding-model "nomic-embed-text"
+                           :default-chat-non-standard-params `(("num_ctx" . ,(* 8 1024)))))
+  (setopt ellama-summarization-provider
+          (make-llm-ollama :chat-model "qwen2.5:8b"
+                           :embedding-model "nomic-embed-text"
+                           :default-chat-non-standard-params `(("num_ctx" . ,(* 16 1024)))))
+  (setopt ellama-coding-provider
+          (make-llm-ollama :chat-model "gpt-oss:20b"
+                           :embedding-model "nomic-embed-text"
+                           :default-chat-non-standard-params `(("num_ctx" . ,(* 8 1024)))))
+  (setopt ellama-providers
+          '(("deepseek-coder" . (make-llm-ollama :chat-model "deepseek-coder:6.7b"
+                                                 :embedding-model "nomic-embed-text"))
+            ("qwen2.5-coder" . (make-llm-ollama :chat-model "qwen2.5-coder:1.5b"
+                                                 :embedding-model "nomic-embed-text"))
+            ("qwen3-coder" . (make-llm-ollama :chat-model "qwen3-coder:30b"
+                                              :embedding-model "nomic-embed-text"))
+            ("qwen3-vl" . (make-llm-ollama :chat-model "qwen3-vl:30b"
+                                           :embedding-model "nomic-embed-text"))))
+  (setopt ellama-naming-provider (make-llm-ollama :chat-model "phi3:mini-4k"
+                                                  :embedding-model "nomic-embed-text"))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
+  (setopt ellama-auto-scroll t)
+  :config
+  (ellama-context-header-line-global-mode +1)
+  (ellama-session-header-line-global-mode +1)
+  (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+  (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
 #+end_src
 
 ** Bitwarden
