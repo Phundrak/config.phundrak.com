@@ -705,7 +705,8 @@ default packages:
                    ("AUTO" "polyglossia" nil ("xelatex" "lualatex"))
                    ("capitalize" "cleveref")
                    (""           "booktabs")
-                   (""           "tabularx")))
+                   (""           "tabularx")
+                   (""           "amssymb")))
   (add-to-list 'org-latex-default-packages-alist package t))
 
 (setq org-latex-reference-command "\\cref{%s}")
