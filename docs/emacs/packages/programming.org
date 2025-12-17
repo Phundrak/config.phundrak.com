@@ -313,14 +313,6 @@ DSLs, or /Domain Specific Languages/, are languages dedicated to some
 very tasks, such as configuration languages or non-general programming
 such as SQL.
 
-*** Makefiles
-#+begin_src emacs-lisp
-(defun my/local-tab-indent ()
-  (setq-local indent-tabs-mode 1))
-
-(add-hook 'makefile-mode-hook #'my/local-tab-indent)
-#+end_src
-
 *** Caddy
 [[https://caddyserver.com/][Caddy]] (or /Caddyserver/) is a web server akin to Nginx or Apache which I
 find much easier to configure that the latter two, plus it has
@@ -401,6 +393,19 @@ And finally, let’s enable some Eldoc integration for CMake.
     "yt" #'csv-yank-as-new-table))
 #+end_src
 
+*** Cucumber
+[[https://cucumber.io/][Cucumber]] is a library that lets you write =.feature= files for
+Behaviour-Driven Development, or /BDD/. Although not much configuration
+is required to use it in Emacs, we do need to install =feature-mode= to
+support the Gherkin syntax in =.feature= files.
+
+#+begin_src emacs-lisp
+(use-package feature-mode
+  :defer t
+  :straight (:build t)
+  :mode (("\\.feature\\'" . feature-mode)))
+#+end_src
+
 *** Dotenv
 It is not rare to encounter a dotenv file, that is, a file with either
 the ~.env~ extension or simply called ~.env~. They contain environment
@@ -455,6 +460,14 @@ visual graphs and networks.
     "c" #'compile)
   :config
   (setq graphviz-dot-indent-width 4))
+#+end_src
+
+*** Makefiles
+#+begin_src emacs-lisp
+(defun my/local-tab-indent ()
+  (setq-local indent-tabs-mode 1))
+
+(add-hook 'makefile-mode-hook #'my/local-tab-indent)
 #+end_src
 
 *** Markdown
