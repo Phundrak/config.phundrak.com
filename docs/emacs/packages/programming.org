@@ -38,7 +38,7 @@ variables to install grammars for different languages.
 (use-package treesit-fold
   :after tree-sitter
   :straight (:build t :host github :repo "emacs-tree-sitter/treesit-fold")
-  :config (treesit-fold-mode))
+  :init (global-treesit-fold-mode t))
 #+end_src
 
 *** Appwrite
