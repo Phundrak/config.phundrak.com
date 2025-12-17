@@ -60,6 +60,16 @@ enough for me.
   :straight (:build t))
 #+end_src
 
+** Evil Surround
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :straight (:build t)
+  :after evil
+  :config
+  (add-to-list 'evil-surround-pairs-alist '(?$ . ("${" . "}")))
+  (global-evil-surround-mode 1))
+#+end_src
+
 ** Iedit
 Iedit is a powerful text editing tool that can be used to refactor
 code through the edition of multiple regions at once, be it in a
