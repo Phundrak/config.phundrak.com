@@ -1440,6 +1440,12 @@ writing my commit messages.
   :init (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . jjdescription-mode)))
 #+end_src
 
+And I want Emacs to know that any directory which has a =.jj= repository
+is the root of a project.
+#+begin_src emacs-lisp
+(add-to-list 'project-vc-extra-root-markers ".jj")
+#+end_src
+
 *** Magit
 Magit is an awesome wrapper around Git for Emacs! Very often, I go
 from disliking to really hating Git GUI clients because they often
