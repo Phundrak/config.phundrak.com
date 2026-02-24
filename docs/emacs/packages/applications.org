@@ -1388,31 +1388,18 @@ compatible with git repositories. In fact, I pretty much don’t use git
 anymore, jj (abbreviation of Jujutsu) has almost completely replaced
 git for me.
 
-It comes to no surprise then that I will use [[https://elpa.gnu.org/packages/vc-jj.html][=vc-jj=]], a Jujutsu
-backend for =vc.el= and =project.el=.
-
+I like Magit’s interface, as you can see in my [[file:./applications.md#magit][Magit]] config.
+Therefore, let’s install =majjit=, my slow and scuffed attempt at
+bringing some Magit features to jujutsu.
 #+begin_src emacs-lisp
-(use-package vc-jj
-  :straight (:build t)
-  :defer nil)
-#+end_src
-
-As mentioned in the package’s README, I do need to set these lines in
-my jj config:
-#+begin_src toml :tangle no
-[ui]
-diff-formatter = ":git"
-conflict-marker-style = "git"
-#+end_src
-
-I also like Magit’s interface, as you can see in my [[file:./applications.md#magit][Magit]] config.
-Therefore, let’s install =jujutsu-mode= which attempts to recreate a
-Magit-style interface for Jujutsu.
-
-#+begin_src emacs-lisp
-(use-package jj-mode
-  :straight (:build t :host github :repo "bolivier/jj-mode.el")
-  :defer t)
+(use-package majjit
+  :defer t
+  :after magit
+  :straight (majjit :built t
+                            :type git
+                            :host nil
+                            :repo "https://labs.phundrak.com/phundrak/majjit")
+  :custom ((majjit-default-directory "~/code/")))
 #+end_src
 
 Though, I’ll be honest, I generally prefer to use Jujutsu in the
