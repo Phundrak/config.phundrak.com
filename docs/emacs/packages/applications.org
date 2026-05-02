@@ -1280,7 +1280,7 @@ in quite a few languages.
              langtool-show-message-at-point
              langtool-correct-buffer)
   :custom
-  (langtool-default-language "en-US")
+  (langtool-default-language "en-GB")
   (langtool-mother-tongue "fr")
   :config
   (setq langtool-http-server-host "localhost"
