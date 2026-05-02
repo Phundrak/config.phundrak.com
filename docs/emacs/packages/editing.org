@@ -67,6 +67,9 @@ enough for me.
   :after evil
   :config
   (add-to-list 'evil-surround-pairs-alist '(?$ . ("${" . "}")))
+  (add-to-list 'evil-surround-pairs-alist '(?« . ("« " . " »")))
+  (add-to-list 'evil-surround-pairs-alist '(?“ . ("“ " . " ”")))
+  (add-to-list 'evil-surround-pairs-alist '(?‘ . ("‘" . "’")))
   (global-evil-surround-mode 1))
 #+end_src
 
