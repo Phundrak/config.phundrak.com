@@ -176,4 +176,30 @@ is a bit too small for me, and I prefer not to go full-screen.
         writeroom-maximize-window   nil
         writeroom-mode-line         t
         writeroom-major-modes       '(text-mode org-mode markdown-mode nov-mode Info-mode)))
+
+(with-eval-after-load 'transient
+  (defun my/writeroom-reset ()
+    (interactive)
+    (setq writeroom-width 100)
+    (writeroom-adjust-width nil))
+
+  (defun my/writeroom-fit-buffer ()
+    "Set writeroom to fit the longest line in the current buffer."
+    (interactive)
+    (when writeroom-mode
+      (let ((max-width 0))
+        (save-excursion
+          (goto-char (point-min))
+          (while (not (eobp))
+            (end-of-line)
+            (setq max-width (max max-width (current-column)))
+            (forward-line 1)))
+        (writeroom-adjust-width (- max-width visual-fill-column-width)))))
+
+  (transient-define-prefix my/writeroom-transient ()
+    "Writewroom Transient"
+    ["Adjust"
+     ("r" "widen" writeroom-increase-width :transient t)
+     ("c" "tighten" writeroom-decrease-width :transient t)
+     ("q" "quit" transient-quit-all)]))
 #+end_src
