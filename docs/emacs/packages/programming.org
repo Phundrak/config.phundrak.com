@@ -6,6 +6,15 @@
 
 * Programming
 ** Tools
+*** Nix environments
+#+begin_src emacs-lisp
+(use-package envrc
+  :straight (:build t)
+  :hook (after-init . envrc-global-mode))
+
+(use-package inheritenv :straight (:built t))
+#+end_src
+
 *** Treesitter
 Treesit is a native Emacs [[https://tree-sitter.github.io/tree-sitter/][tree-sitter]] implementation which provides a
 very fast and flexible way of performing code-highlighting in Emacs.
