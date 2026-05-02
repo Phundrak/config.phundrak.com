@@ -1619,6 +1619,8 @@ to projectile.
   (projectile-mode)
   (add-to-list 'projectile-ignored-projects "~/")
   (add-to-list 'projectile-globally-ignored-directories "^node_modules$")
+  (setopt projectile-ignored-project-function
+          (lambda (path) (string-prefix-p "/nix/" (file-truename path))))
   :general
   (phundrak/leader-key
     "p" '(:keymap projectile-command-map :which-key "projectile")))
