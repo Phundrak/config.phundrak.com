@@ -629,6 +629,7 @@ Markdown.
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
   :straight (:build t)
+  :hook (nix-ts-mode . lsp-deferred)
   :config (add-to-list 'major-mode-remap-alist '((nix-mode . nix-ts-mode))))
 #+end_src
 
