@@ -37,22 +37,6 @@ variables to install grammars for different languages.
   :init (global-treesit-fold-mode t))
 #+end_src
 
-*** Appwrite
-[[https://appwrite.io][Appwrite]] is an open-source and self-hostable alternative to Firebase.
-I am currently working on a server SDK for Appwrite in Emacs, so here
-it is.
-#+begin_src emacs-lisp
-(use-package appwrite
-  :defer t
-  :straight (appwrite :build t
-                      :type git
-                      :host github
-                      :repo "Phundrak/appwrite.el")
-  :config
-  (setopt appwrite-endpoint "https://appwrite.phundrak.com"
-          appwrite-devel t))
-#+end_src
-
 *** Flycheck
 #+begin_src emacs-lisp
 (use-package flycheck
@@ -658,74 +642,6 @@ Nginx syntax.
                                (add-to-list 'company-backends #'company-nginx))))
 #+end_src
 
-*** PKGBUILD
-As I am an ArchLinux user, I sometimes have to interact with PKGBUILD
-files, both from the AUR when I want to install something from there
-or some I write myself.
-#+begin_src emacs-lisp
-(use-package pkgbuild-mode
-  :straight (:build t)
-  :defer t
-  :custom
-  (pkgbuild-update-sums-on-save nil)
-  (pkgbuild-ask-about-save nil)
-  :general
-  (phundrak/major-leader-key
-    :keymaps 'pkgbuild-mode-map
-    "c"  #'pkgbuild-syntax-check
-    "i"  #'pkgbuild-initialize
-    "I"  #'pkgbuild-increase-release-tag
-    "m"  #'pkgbuild-makepkg
-    "u"  '(:ignore :wk "update")
-    "us" #'pkgbuild-update-sums-line
-    "uS" #'pkgbuild-update-srcinfo))
-#+end_src
-
-*** PlantUML
-#+begin_src emacs-lisp
-(use-package plantuml-mode
-  :defer t
-  :straight (:build t)
-  :mode ("\\.\\(pum\\|puml\\)\\'" . plantuml-mode)
-  :after ob
-  :init
-  (add-to-list 'org-babel-load-languages '(plantuml . t))
-  :general
-  (phundrak/major-leader-key
-   :keymaps 'plantuml-mode-map
-   :packages 'plantuml-mode
-   "c"  '(:ignore t :which-key "compile")
-   "cc" #'plantuml-preview
-   "co" #'plantuml-set-output-type)
-  :config
-  (setq plantuml-default-exec-mode 'jar
-        plantuml-jar-path "~/.local/bin/plantuml.jar"
-        org-plantuml-jar-path "~/.local/bin/plantuml.jar"))
-#+end_src
-
-*** QML
-I’m currently working on a [[https://quickshell.org/][Quickshell]] configuration to replace my
-[[https://github.com/Alexays/Waybar][Waybar]] one. Quickshell is configured with [[https://doc.qt.io/qt-6/qmlapplications.html][QML]], which requires its
-major mode.
-
-#+begin_src emacs-lisp
-(use-package qml-ts-mode
-  :after lsp-mode
-  :straight (qml-ts-mode :build t
-                         :type git
-                         :host github
-                         :repo "xhcoding/qml-ts-mode")
-  :config
-  (add-to-list 'lsp-language-id-configuration '(qml-ts-mode . "qml-ts"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("qmlls" "-E"))
-                    :activation-fn (lsp-activate-on "qml-ts")
-                    :server-id 'qmlls))
-  (add-hook 'qml-ts-mode-hook (lambda ()
-                                (setq-local electric-indent-chars '(?\n ?\( ?\) ?{ ?} ?\[ ?\] ?\; ?,))
-                                (lsp-deferred))))
-#+end_src
-
 *** Ron files
 Rusty Object Notation, or RON for short, is to Rust what Json is to
 Javascript. Sometimes, I have to work with such files, which is why I
@@ -795,17 +711,6 @@ When editing some scripts though, I need to use the built-in ~shell-mode~.
   :straight (:build t)
   :mode "\\.yml\\'"
   :mode "\\.yaml\\'")
-#+end_src
-
-*** yuck
-This is one of the two file formats used by [[https://github.com/elkowar/eww/][eww]]’s configuration, a
-Lisp-like language. Therefore, it will also use [[file:./editing.md#parinfer][parinfer]] to manage its
-parenthesis.
-#+begin_src emacs-lisp
-(use-package yuck-mode
-  :straight (:build t)
-  :defer t
-  :hook ((yuck-mode . parinfer-rust-mode)))
 #+end_src
 
 ** General Programming Languages
@@ -1323,13 +1228,6 @@ several improvements on top of =rust-mode=.
   (remove-hook 'rustic-mode-hook #'flycheck-mode)
   (remove-hook 'rustic-mode-hook #'flymake-mode-off)
   (remove-hook 'rustic-mode-hook #'rustic-setup-lsp))
-#+end_src
-
-*** Uiua
-#+begin_src emacs-lisp
-(use-package uiua-ts-mode
-  :mode "\\.ua\\'"
-  :straight (:build t))
 #+end_src
 
 *** Web programming
