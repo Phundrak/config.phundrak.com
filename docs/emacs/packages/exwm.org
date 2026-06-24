@@ -1,7 +1,7 @@
 #+title: Emacs — Packages — EXWM (Deprecated)
 #+setupfile: ../../headers
 #+property: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
-#+property: header-args:emacs-lisp+ :tangle ~/.config/emacs/lisp/exwm.el
+#+property: header-args:emacs-lisp+ :tangle no
 #+property: header-args:emacs-lisp+ :mkdirp yes :noweb no-export
 
 * EXWM (Deprecated)
@@ -47,7 +47,7 @@ easily.
 
 In order to launch Emacs with EXWM with ~startx~, I need a ~xinit~ file.
 This one is exported to ~$HOME/.xinitrc.emacs~.
-#+begin_src sh :tangle ~/.xinitrc.emacs :shebang "#!/bin/sh"
+#+begin_src sh :tangle no :shebang "#!/bin/sh"
 xhost +SI:localuser:$USER
 
 # Set fallback cursor

@@ -1530,9 +1530,10 @@ compatible with git repositories. In fact, I pretty much don’t use git
 anymore, jj (abbreviation of Jujutsu) has almost completely replaced
 git for me.
 
-I like Magit’s interface, as you can see in my [[file:./applications.md#magit][Magit]] config.
-Therefore, let’s install =majjit=, my slow and scuffed attempt at
-bringing some Magit features to jujutsu.
+I like Magit’s interface, as you can see in my [[file:./applications.md#magit][Magit]] config. But
+reimplementing it entirely probably won’t happen on my end (lack of
+time, mainly), so I’ll leave that up to people more motivated than me.
+In the meantime, I can reimplement some of its API with =majjit=.
 #+begin_src emacs-lisp
 (use-package majjit
   :defer t
@@ -1542,6 +1543,22 @@ bringing some Magit features to jujutsu.
                             :host nil
                             :repo "https://labs.phundrak.com/phundrak/majjit")
   :custom ((majjit-default-directory "~/code/")))
+#+end_src
+
+Speaking of other projects others did better, I use =vc-jj=, which
+brings basic jujutsu support to =project.el= and =vc.el=. And I’ll just
+add my grain of salt to force =project.el= to recognize jujutsu
+repositories as projects.
+#+begin_src emacs-lisp
+(use-package vc-jj
+  :straight (:build t)
+  :after '(project vc)
+  :config
+  (add-to-list 'project-vc-extra-root-markers ".jj")
+  :init
+  (require 'project)
+  (require 'vc)
+  (require 'vc-jj))
 #+end_src
 
 Though, I’ll be honest, I generally prefer to use Jujutsu in the
@@ -1554,12 +1571,6 @@ writing my commit messages.
   :straight (:build t)
   :commands jjdescription-mode
   :init (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . jjdescription-mode)))
-#+end_src
-
-And I want Emacs to know that any directory which has a =.jj= repository
-is the root of a project.
-#+begin_src emacs-lisp
-;;(add-to-list 'project-vc-extra-root-markers ".jj")
 #+end_src
 
 *** Forge

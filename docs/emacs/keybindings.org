@@ -83,6 +83,7 @@ Undefining some stuff to make keybind prefixes work correctly.
   <<general-keybindings-gen(table=keybindings-refactor, prefix="r")>>
   <<general-keybindings-gen(table=keybindings-toggle, prefix="t ")>>
   <<general-keybindings-gen(table=keybindings-text, prefix="T")>>
+  <<general-keybindings-gen(table=keybindings-vc, prefix="v")>>
   <<general-keybindings-gen(table=keybindings-windows, prefix="w")>>
   <<general-keybindings-gen(table=keybindings-quit, prefix="q")>>)
 #+end_src
@@ -499,6 +500,26 @@ My toggle keybindings are prefixed by ~t~.
 | is  | set-input-method                      |              |
 
 *** TODO Rewrite =my/modify-frame-alpha-background/body=           :noexport:
+** VCS
+Magit is awesome, but I rarely use it nowadays in favour of [[https://jj-vcs.github.io/][Jujutsu]].
+And for that, I use =vc.el= in Emacs thanks to =vc-jj= (see [[file:./packages/applications.md#Jujutsu][my Jujutsu
+config for Emacs]]). But this is only half the story, let me now set my
+keybinds for =vc.el=. ethey are all prefixed by =v=.
+
+#+name: keybindings-vc
+| Key | Function              | Description | Package |
+|-----+-----------------------+-------------+---------|
+| a   | vc-annotate           |             | vc      |
+| r   | vc-revset             |             | vc      |
+|     |                       | VCS         |         |
+| j   |                       | jujutsu     |         |
+| ja  | vc-jj-abandon-change  | abandon     | vc-jj   |
+| jb  |                       | bookmarks   |         |
+| jbd | vc-jj-bookmark-delete | delete      | vc-jj   |
+| jbr | vc-jj-bookmark-rename | rename      | vc-jj   |
+| jbs | vc-jj-bookmark-set    | set         | vc-jj   |
+| je  | vc-jj-edit-change     | edit        | vc-jj   |
+| jn  | vc-jj-new-change      | new         | vc-jj   |
 
 ** Windows
 A couple of keybindings are hidden from which-key, otherwise there’s not

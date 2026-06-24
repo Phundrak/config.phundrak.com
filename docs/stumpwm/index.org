@@ -2,7 +2,7 @@
 #+setupfile: ../headers
 #+property: header-args:emacs-lisp :tangle no :exports results :cache yes :noweb yes
 
-[[file:../img/stumpwm.png]]
+#+html: <ImgFigure src="/img/stumpwm.png">StumpWM Screenshot</ImgFigure>
 
 * StumpWM (deprecated)
 

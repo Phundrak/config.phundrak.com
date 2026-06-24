@@ -175,7 +175,7 @@ compilation buffer, as well as enable some syntax highlighting.
 #+end_src
 
 ** Eshell
-[[file:../img/emacs-eshell.svg]]
+#+html: <ImgFigure src="/img/emacs-eshell.svg">Eshell in Emacs</ImgFigure>
 
 Eshell is a built-in shell available from Emacs which I use almost as
 often as fish. Some adjustments are necessary to make it fit my taste

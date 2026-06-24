@@ -2,7 +2,7 @@
 #+title: Git
 #+setupfile: headers
 #+PROPERTY: header-args :exports code :tangle no
-#+PROPERTY: header-args:conf-unix :mkdirp yes :tangle ~/.config/git/config :exports code :noweb yes
+#+PROPERTY: header-args:conf-unix :mkdirp yes :tangle no :exports code :noweb yes
 
 * Git
 ** Basic configuration
@@ -46,24 +46,23 @@ This is entirely a matter of personal preferences, but I like to use
 
 *** Better Diffing
 Git’s diffing algorithm evolved and improved over time, but its
-default algorithm did not. Take this example, from [[https://blog.gitbutler.com/how-git-core-devs-configure-git/][this Gitbutler
-article]]:
+default algorithm did not. Take this example, from [[https://blog.gitbutler.com/how-git-core-devs-configure-git/][this Gitbutler article]]:
 
-[[file:./img/git/diff-default.png]]
+#+html: <ImgFigure src="/img/git/diff-default.png">Default git diff output</ImgFigure>
 
 Not really readable, I think you’ll agree. I mean, you can sort of see
 what happens, but really, we just moved the =h2= styling below the
 =.event= styling. Git seems to think otherwise. However, let’s turn on
 the =histogram= algorithm on:
 
-[[file:./img/git/diff-histogram.png]]
+#+html: <ImgFigure src="/img/git/diff-histogram.png">git diff output with histogram algorithm</ImgFigure>
 
 Immediately, we have a much clearer picture of what happened! But I’ll
 let you on another secret: you can make it even clearer by using the
 =colorMoved= option to color differently lines that were moved from
 lines that were actually modified!
 
-[[file:./img/git/diff-moved.png]]
+#+html: <ImgFigure src="/img/git/diff-moved.png">git diff output with histogram algorithm and specific colours for moved blocks</ImgFigure>
 
 I’ll also add a configuration to make it easier to see what is being
 compared using =mnemonicPrefix=. As per =man git-config=:
@@ -127,11 +126,11 @@ show you the conflicting incoming and HEAD changes, but it will also
 show you what the code was before either modified the conflicting
 area. Not a must-have feature, but a nice one to have. Compare this:
 
-[[file:./img/git/merge-default.png]]
+#+html: <ImgFigure src="/img/git/merge-default.png">Default appearance of a git conflict during a merge</ImgFigure>
 
 To this:
 
-[[file:./img/git/merge-zdiff3.png]]
+#+html: <ImgFigure src="/img/git/merge-zdiff3.png">Same git conflict but with zdiff3</ImgFigure>
 
 We have a new line beginning with =|||||||= with the original line
 below. Also, it’s nice to see Emacs supports this syntax out of the

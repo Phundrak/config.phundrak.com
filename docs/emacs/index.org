@@ -6,7 +6,7 @@
 
 * Emacs Configuration
 
-[[file:./img/emacs.svg]]
+#+html: <ImgFigure src="/img/emacs.svg">Emacs Screenshot</ImgFigure>
 
 ** Introduction
 After a couple of years using Spacemacs and a failed attempt at
@@ -29,9 +29,7 @@ general-purpose programming language. Therefore, if you want to do
 something in Emacs, with enough Elisp you can do it --- if it’s not in
 Emacs already, that is.
 
-#+attr_html: :alt Dammit Emacs… :loading lazy
-#+caption: [[https://xkcd.com/378/][XKCD n°378]]: Real Programmers
-[[file:./img/real_programmers.png]]
+#+html: <ImgFigure src="/img/emacs.svg" alt="XKCD n°378: Real Programmers">Dammit Emacs…</ImgFigure>
 
 ** A Warning Before You Proceed
 :PROPERTIES:

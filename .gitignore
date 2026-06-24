@@ -1,13 +1,31 @@
 node_modules
+/docs/**/*.md
+
+# Vitepress
+/.vitepress/cache/
+/.vitepress/dist/
+/docs/.vitepress/
+/docs/img
+/docs/eittlandic/img
+/docs/proto-nyqy/img
 .temp
 .cache
-/docs/**/*.md
-/docs/.vuepress/dist/
-/.yarn/
 
 # Devenv
 .devenv*
 devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
 
 # direnv
 .direnv

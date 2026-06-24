@@ -455,6 +455,10 @@ Yes, I love org-mode and I largely prefer to use it instead of
 Markdown due to its far superior power and abilities. But still,
 sometimes I need to use Markdown because not everyone uses org-mode,
 unfortunately.
+
+I prefer to use =pandoc= to =markdown= as my =markdown-command=, as it
+better handles modern Markdown, including Github’s dialect, which
+=markdown= has troubles with.
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :defer t
@@ -465,6 +469,9 @@ unfortunately.
    ("\\.mdx\\'" . markdown-mode))
   :hook (markdown-mode . orgtbl-mode)
   :hook (markdown-mode . visual-line-mode)
+  :config
+  (setq markdown-fontify-code-blocks-natively t
+        markdown-command '("," "pandoc" "--from=markdown" "--to=html5"))
   :general
   (phundrak/evil
     :keymaps 'markdown-mode-map
@@ -550,9 +557,7 @@ unfortunately.
     "xp"  #'markdown-insert-pre
     "xP"  #'markdown-pre-region
     "xs"  #'markdown-insert-strike-through
-    "xq"  #'markdown-blockquote-region)
-  :config
-  (setq markdown-fontify-code-blocks-natively t))
+    "xq"  #'markdown-blockquote-region))
 #+end_src
 
 Since most of my Markdown files are related to GitHub, I’d like to be
@@ -702,6 +707,28 @@ When editing some scripts though, I need to use the built-in ~shell-mode~.
   :straight (:build t)
   :defer t
   :mode "/\\(Cargo.lock\\|\\.cargo/config\\)\\'")
+#+end_src
+
+*** Typst
+[[https://typst.app/][Typst]] is an attempt at making a simpler LaTeX alternative with a quite
+simple language that still has some programming capabilities. In my
+case, I use [[https://codeberg.org/meow_king/typst-ts-mode/][typst-ts-mode]] to get a major mode for Typst, relying on
+[[https://github.com/uben0/tree-sitter-typst][uben0’s Typst treesitter module]].
+
+#+begin_src emacs-lisp
+(use-package typst-ts-mode
+  :defer t
+  :straight (:build t))
+#+end_src
+
+I also wrote a package that extends =lsp-mode= to support [[https://github.com/Myriad-Dreamin/tinymist][tinymist]] as an
+LSP server for Typst.
+#+begin_src emacs-lisp
+(use-package lsp-typst
+  :after lsp-mode
+  :mode "\\.typ\\'"
+  :hook (typst-ts-mode . lsp-deferred)
+  :straight (:build t :type git :repo "labs.phundrak.com/phundrak/lsp-typst"))
 #+end_src
 
 *** Yaml

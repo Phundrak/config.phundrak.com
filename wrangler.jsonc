@@ -1,0 +1,7 @@
+// -*- mode: json-ts; -*-
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "config-phundrak-com",
+  "pages_build_output_dir": ".vitepress/dist/",
+  "compatibility_date": "2026-07-11"
+}

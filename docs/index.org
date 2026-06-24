@@ -6,6 +6,13 @@ Hi, I’m P’undrak (pronounced /PUN-drak/, or more exactly {{{phon(pʰynɖak̚
 also known as Lucien Cartier-Tilet. If you want to know more about me,
 you can head to my [[https://phundrak.com/en][main website]].
 
+#+html: ::: warning
+This website is currently not maintained, aside from the Emacs part of
+it. If you want to see my current Linux configuration, head over to my
+[[https://labs.phundrak.com/phundrak/nix-config][NixOS configuration]]. This website will be, at some point, rewritten to
+reflect it.
+#+html: :::
+
 This website is my collection of dotfiles for my daily GNU/Linux
 environment, tweaked to my liking. The sidebar will act as an index of
 the various tools I use and their configuration.
