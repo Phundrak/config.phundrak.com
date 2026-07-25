@@ -1734,7 +1734,9 @@ buffer.
 (use-package wakatime-mode
   :defer t
   :straight (:build t)
-  :init (global-wakatime-mode))
+  :init (global-wakatime-mode)
+  :config
+  (setq wakatime-cli-path (executable-find "wakatime-cli")))
 #+end_src
 
 ** Wttr.in
